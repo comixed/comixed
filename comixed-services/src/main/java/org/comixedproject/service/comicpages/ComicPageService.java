@@ -161,8 +161,15 @@ public class ComicPageService {
       long id = idList.get(index);
       log.trace("Loading page: id={}", id);
       final ComicPage page = this.comicPageRepository.getById(id);
-      page.setPageType(deleted ? ComicPageType.DELETED : ComicPageType.STORY);
-      this.comicBookStateAdaptor.fireEvent(page.getComicBook(), ComicEvent.comicMetadataChanged);
+      if (deleted) {
+        page.setPageType(ComicPageType.DELETED);
+        this.comicBookStateAdaptor.fireEvent(
+            page.getComicBook(), ComicEvent.comicPageMarkedForRemoval);
+      } else {
+        page.setPageType(ComicPageType.STORY);
+        this.comicBookStateAdaptor.fireEvent(
+            page.getComicBook(), ComicEvent.comicPageUnmarkedForRemoval);
+      }
     }
   }
 

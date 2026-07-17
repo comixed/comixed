@@ -53,7 +53,7 @@ import {
 import { SetComicReadRequest } from '@app/library/models/net/set-comic-read-request';
 import { OrganizeLibraryRequest } from '@app/library/models/net/organize-library-request';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
-import { ConvertComicBooksRequest } from '@app/library/models/net/convert-comic-books-request';
+import { ConvertComicsRequest } from '@app/library/models/net/convert-comics-request';
 import { PurgeLibraryRequest } from '@app/library/models/net/purge-library-request';
 import { EditMultipleComics } from '@app/library/models/ui/edit-multiple-comics';
 import { EditMultipleComicsRequest } from '@app/library/models/net/edit-multiple-comics-request';
@@ -79,8 +79,6 @@ describe('LibraryService', () => {
   const IDS = COMIC_DETAILS.map(entry => entry.comicBookId);
   const READ = Math.random() > 0.5;
   const ARCHIVE_TYPE = ArchiveType.CBZ;
-  const RENAME_PAGES = Math.random() > 0.5;
-  const DELETE_PAGES = Math.random() > 0.5;
   const EDIT_MULTIPLE_COMICS: EditMultipleComics = {
     publisher: 'The Publisher',
     series: 'The Series',
@@ -238,9 +236,7 @@ describe('LibraryService', () => {
     service
       .convertSingleComicBook({
         id: COMIC_DETAIL.comicBookId,
-        archiveType: ARCHIVE_TYPE,
-        renamePages: RENAME_PAGES,
-        deletePages: DELETE_PAGES
+        archiveType: ARCHIVE_TYPE
       })
       .subscribe(response => expect(response.status).toEqual(200));
 
@@ -251,19 +247,15 @@ describe('LibraryService', () => {
     );
     expect(req.request.method).toEqual('PUT');
     expect(req.request.body).toEqual({
-      archiveType: ARCHIVE_TYPE,
-      deletePages: DELETE_PAGES,
-      renamePages: RENAME_PAGES
-    } as ConvertComicBooksRequest);
+      archiveType: ARCHIVE_TYPE
+    } as ConvertComicsRequest);
     req.flush(new HttpResponse({ status: 200 }));
   });
 
   it('can convert the selected comic books', () => {
     service
       .convertSelectedComicBooks({
-        archiveType: ARCHIVE_TYPE,
-        renamePages: RENAME_PAGES,
-        deletePages: DELETE_PAGES
+        archiveType: ARCHIVE_TYPE
       })
       .subscribe(response => expect(response.status).toEqual(200));
 
@@ -272,10 +264,8 @@ describe('LibraryService', () => {
     );
     expect(req.request.method).toEqual('PUT');
     expect(req.request.body).toEqual({
-      archiveType: ARCHIVE_TYPE,
-      deletePages: DELETE_PAGES,
-      renamePages: RENAME_PAGES
-    } as ConvertComicBooksRequest);
+      archiveType: ARCHIVE_TYPE
+    } as ConvertComicsRequest);
     req.flush(new HttpResponse({ status: 200 }));
   });
 

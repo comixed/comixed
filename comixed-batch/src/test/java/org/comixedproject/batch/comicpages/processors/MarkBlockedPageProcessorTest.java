@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2024, The ComiXed Project
+ * Copyright (C) 2026, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,39 +16,35 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicpages.writers;
+package org.comixedproject.batch.comicpages.processors;
 
-import java.util.ArrayList;
+import static org.junit.jupiter.api.Assertions.*;
+
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicpages.ComicPage;
-import org.comixedproject.state.comicbooks.ComicBookStateAdaptor;
-import org.comixedproject.state.comicbooks.ComicEvent;
+import org.comixedproject.model.comicpages.ComicPageType;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.batch.infrastructure.item.Chunk;
 
 @ExtendWith(MockitoExtension.class)
-class ComicPageWriterTest {
-  @InjectMocks private ComicPageWriter writer;
-  @Mock private ComicBookStateAdaptor comicBookStateAdaptor;
-
+class MarkBlockedPageProcessorTest {
+  @InjectMocks private MarkBlockedPageProcessor processor;
   @Mock private ComicPage page;
   @Mock private ComicBook comicBook;
 
-  private Chunk<ComicPage> pageList = new Chunk<>(new ArrayList<>());
-
   @Test
-  void write() throws Exception {
+  void process() {
     Mockito.when(page.getComicBook()).thenReturn(comicBook);
-    pageList.add(page);
 
-    writer.write(pageList);
+    final ComicPage result = processor.process(page);
 
-    Mockito.verify(comicBookStateAdaptor, Mockito.times(pageList.size()))
-        .fireEvent(comicBook, ComicEvent.comicMetadataSaved);
+    assertNotNull(result);
+    assertSame(page, result);
+
+    Mockito.verify(page).setPageType(ComicPageType.DELETED);
   }
 }

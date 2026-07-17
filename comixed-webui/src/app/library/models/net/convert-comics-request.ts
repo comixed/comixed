@@ -18,8 +18,6 @@
 
 import { ArchiveType } from '../../../comic-books/models/archive-type.enum';
 
-export interface ConvertComicBooksRequest {
+export interface ConvertComicsRequest {
   archiveType: ArchiveType;
-  renamePages: boolean;
-  deletePages: boolean;
 }

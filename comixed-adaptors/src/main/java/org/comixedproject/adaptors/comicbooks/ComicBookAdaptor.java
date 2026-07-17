@@ -130,21 +130,16 @@ public class ComicBookAdaptor {
    *
    * @param comicBook the comic book
    * @param targetArchiveType the target format
-   * @param removeDeletedPages remove deleted pages flag
    * @param pageRenamingRule the page renaming rule
    * @throws AdaptorException if an error occurs
    */
   public void save(
-      final ComicBook comicBook,
-      final ArchiveType targetArchiveType,
-      final boolean removeDeletedPages,
-      final String pageRenamingRule)
+      final ComicBook comicBook, final ArchiveType targetArchiveType, final String pageRenamingRule)
       throws AdaptorException {
     log.trace(
-        "Saving comic book file: filename={} archive type={} remove deleted pages={} page renaming rule={}",
+        "Saving comic book file: filename={} archive type={} page renaming rule={}",
         comicBook.getComicDetail().getFilename(),
         targetArchiveType,
-        removeDeletedPages,
         pageRenamingRule);
     try {
       final ArchiveAdaptor sourceArchive =

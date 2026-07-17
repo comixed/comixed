@@ -20,6 +20,7 @@ package org.comixedproject.service.comicbooks;
 
 import static junit.framework.TestCase.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
 
 import java.util.*;
 import org.apache.commons.io.FilenameUtils;
@@ -92,8 +93,6 @@ class ComicBookServiceTest {
   private static final int TEST_BATCH_CHUNK_SIZE = 25;
   private static final int TEST_PAGE_SIZE = 25;
   private static final int TEST_PAGE_NUMBER = 3;
-  private static final boolean TEST_RENAME_PAGES = RandomUtils.nextBoolean();
-  private static final boolean TEST_DELETE_PAGES = RandomUtils.nextBoolean();
   private static final ArchiveType TEST_TARGET_ARCHIVE_TYPE = ArchiveType.CB7;
   private static final long TEST_COMIC_DETAIL_ID = 96237L;
 
@@ -144,11 +143,11 @@ class ComicBookServiceTest {
 
   @BeforeEach
   void setUp() {
-    Mockito.when(comicDetail.getFilename()).thenReturn(TEST_COMIC_FILENAME);
-    Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
-    Mockito.when(comicBook.getComicBookId()).thenReturn(TEST_COMIC_BOOK_ID);
-    Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
-    Mockito.when(incomingComicBook.getComicDetail()).thenReturn(incomingComicDetail);
+    when(comicDetail.getFilename()).thenReturn(TEST_COMIC_FILENAME);
+    when(comicBook.getComicDetail()).thenReturn(comicDetail);
+    when(comicBook.getComicBookId()).thenReturn(TEST_COMIC_BOOK_ID);
+    when(comicBook.getComicDetail()).thenReturn(comicDetail);
+    when(incomingComicBook.getComicDetail()).thenReturn(incomingComicDetail);
 
     previousComicBook.setComicDetail(
         new ComicDetail(previousComicBook, TEST_COMIC_FILENAME, ArchiveType.CBZ));
@@ -195,30 +194,20 @@ class ComicBookServiceTest {
 
   @Test
   void getComic() throws ComicBookException {
-    List<ComicBook> previousComicBooks = new ArrayList<>();
-    previousComicBooks.add(previousComicBook);
-    previousComicBooks.add(beforePreviousComicBook);
-    List<ComicBook> nextComicBooks = new ArrayList<>();
-    nextComicBooks.add(nextComicBook);
-    nextComicBooks.add(afterNextComicBook);
-
-    Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(currentComicBook);
-
-    Mockito.when(
-            comicBookRepository.findPreviousComicBookIdInSeries(
-                Mockito.anyString(),
-                Mockito.anyString(),
-                Mockito.anyString(),
-                Mockito.any(Date.class),
-                previousComicBookLimitArgumentCaptor.capture()))
+    when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(currentComicBook);
+    when(comicBookRepository.findPreviousComicBookIdInSeries(
+            Mockito.anyString(),
+            Mockito.anyString(),
+            Mockito.anyString(),
+            Mockito.any(Date.class),
+            previousComicBookLimitArgumentCaptor.capture()))
         .thenReturn(TEST_PREVIOUS_ISSUE_NUMBER);
-    Mockito.when(
-            comicBookRepository.findNextComicBookIdInSeries(
-                Mockito.anyString(),
-                Mockito.anyString(),
-                Mockito.anyString(),
-                Mockito.any(Date.class),
-                nextComicBookLimitArgumentCaptor.capture()))
+    when(comicBookRepository.findNextComicBookIdInSeries(
+            Mockito.anyString(),
+            Mockito.anyString(),
+            Mockito.anyString(),
+            Mockito.any(Date.class),
+            nextComicBookLimitArgumentCaptor.capture()))
         .thenReturn(TEST_NEXT_ISSUE_NUMBER);
 
     final ComicBook result = service.getComic(TEST_COMIC_BOOK_ID);
@@ -233,15 +222,15 @@ class ComicBookServiceTest {
     final Limit nextComicBookLimit = previousComicBookLimitArgumentCaptor.getValue();
     assertEquals(1, nextComicBookLimit.max());
 
-    Mockito.verify(comicBookRepository).getById(TEST_COMIC_BOOK_ID);
-    Mockito.verify(comicBookRepository)
+    verify(comicBookRepository).getById(TEST_COMIC_BOOK_ID);
+    verify(comicBookRepository)
         .findPreviousComicBookIdInSeries(
             TEST_SERIES,
             TEST_VOLUME,
             TEST_CURRENT_ISSUE_NUMBER,
             TEST_COVER_DATE,
             previousComicBookLimit);
-    Mockito.verify(comicBookRepository)
+    verify(comicBookRepository)
         .findNextComicBookIdInSeries(
             TEST_SERIES,
             TEST_VOLUME,
@@ -252,67 +241,65 @@ class ComicBookServiceTest {
 
   @Test
   void deleteComicBook_notFound() {
-    Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(null);
+    when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(null);
 
     assertThrows(ComicBookException.class, () -> service.deleteComicBook(TEST_COMIC_BOOK_ID));
   }
 
   @Test
   void deleteComicBook() throws ComicBookException {
-    Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
-    Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBookRecord);
+    when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
+    when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBookRecord);
 
     final ComicBook result = service.deleteComicBook(TEST_COMIC_BOOK_ID);
 
     assertNotNull(result);
     assertSame(comicBookRecord, result);
 
-    Mockito.verify(comicBookRepository, Mockito.times(2)).getById(TEST_COMIC_BOOK_ID);
-    Mockito.verify(comicBookStateAdaptor)
-        .fireEvent(comicBookRecord, ComicEvent.markComicForRemoval);
+    verify(comicBookRepository, times(2)).getById(TEST_COMIC_BOOK_ID);
+    verify(comicBookStateAdaptor).fireEvent(comicBookRecord, ComicEvent.markComicForRemoval);
   }
 
   @Test
   void restoreComicBook_notFound() {
-    Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(null);
+    when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(null);
 
     assertThrows(ComicBookException.class, () -> service.undeleteComicBook(TEST_COMIC_BOOK_ID));
   }
 
   @Test
   void restoreComic() throws ComicBookException {
-    Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
-    Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBookRecord);
+    when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
+    when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBookRecord);
 
     final ComicBook response = service.undeleteComicBook(TEST_COMIC_BOOK_ID);
 
     assertNotNull(response);
     assertSame(comicBookRecord, response);
 
-    Mockito.verify(comicBookRepository, Mockito.times(2)).getById(TEST_COMIC_BOOK_ID);
-    Mockito.verify(comicBookStateAdaptor)
-        .fireEvent(comicBookRecord, ComicEvent.unmarkComicForRemoval);
+    verify(comicBookRepository, times(2)).getById(TEST_COMIC_BOOK_ID);
+    verify(comicBookStateAdaptor).fireEvent(comicBookRecord, ComicEvent.unmarkComicForRemoval);
   }
 
   @Test
   void GetComicContentNoSuchComicBook() {
-    Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(null);
+    when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(null);
 
     assertThrows(ComicBookException.class, () -> this.service.getComicContent(TEST_COMIC_BOOK_ID));
   }
 
   @Test
   void getComicContentFileNotFound() {
-    Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
-    Mockito.when(comicDetail.getFilename()).thenReturn(TEST_COMIC_FILENAME.substring(1));
+    when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
+    when(comicDetail.getFilename()).thenReturn(TEST_COMIC_FILENAME.substring(1));
 
     assertThrows(ComicBookException.class, () -> this.service.getComicContent(TEST_COMIC_BOOK_ID));
   }
 
   @Test
   void getComicContent() throws ComicBookException {
-    Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
-    Mockito.when(comicDetail.getFilename()).thenReturn(TEST_COMIC_FILENAME);
+    when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
+    when(comicDetail.getFilename()).thenReturn(TEST_COMIC_FILENAME);
 
     final DownloadDocument result = this.service.getComicContent(TEST_COMIC_BOOK_ID);
 
@@ -321,13 +308,13 @@ class ComicBookServiceTest {
     assertNotNull(result.getContent());
     assertTrue(result.getContent().length > 0);
 
-    Mockito.verify(comicBookRepository, Mockito.atLeast(1)).getById(TEST_COMIC_BOOK_ID);
-    Mockito.verify(fileTypeAdaptor).getMimeTypeFor(Mockito.any());
+    verify(comicBookRepository, Mockito.atLeast(1)).getById(TEST_COMIC_BOOK_ID);
+    verify(fileTypeAdaptor).getMimeTypeFor(Mockito.any());
   }
 
   @Test
   void updateComicInvalidComic() {
-    Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(null);
+    when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(null);
 
     assertThrows(
         ComicBookException.class,
@@ -348,19 +335,19 @@ class ComicBookServiceTest {
 
   @Test
   void updateComic() throws ComicBookException {
-    Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
-    Mockito.when(incomingComicDetail.getComicType()).thenReturn(TEST_COMIC_TYPE);
-    Mockito.when(incomingComicDetail.getPublisher()).thenReturn(TEST_PUBLISHER);
-    Mockito.when(incomingComicDetail.getImprint()).thenReturn(TEST_IMPRINT);
-    Mockito.when(incomingComicDetail.getSeries()).thenReturn(TEST_SERIES);
-    Mockito.when(incomingComicDetail.getVolume()).thenReturn(TEST_VOLUME);
-    Mockito.when(incomingComicDetail.getIssueNumber()).thenReturn(TEST_ISSUE_NUMBER);
-    Mockito.when(incomingComicDetail.getSortName()).thenReturn(TEST_SORTABLE_NAME);
-    Mockito.when(incomingComicDetail.getTitle()).thenReturn(TEST_TITLE);
-    Mockito.when(incomingComicDetail.getDescription()).thenReturn(TEST_DESCRIPTION);
-    Mockito.when(incomingComicDetail.getCoverDate()).thenReturn(TEST_COVER_DATE);
-    Mockito.when(incomingComicDetail.getStoreDate()).thenReturn(TEST_STORE_DATE);
-    Mockito.when(incomingComicDetail.getNotes()).thenReturn(TEST_NOTES);
+    when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
+    when(incomingComicDetail.getComicType()).thenReturn(TEST_COMIC_TYPE);
+    when(incomingComicDetail.getPublisher()).thenReturn(TEST_PUBLISHER);
+    when(incomingComicDetail.getImprint()).thenReturn(TEST_IMPRINT);
+    when(incomingComicDetail.getSeries()).thenReturn(TEST_SERIES);
+    when(incomingComicDetail.getVolume()).thenReturn(TEST_VOLUME);
+    when(incomingComicDetail.getIssueNumber()).thenReturn(TEST_ISSUE_NUMBER);
+    when(incomingComicDetail.getSortName()).thenReturn(TEST_SORTABLE_NAME);
+    when(incomingComicDetail.getTitle()).thenReturn(TEST_TITLE);
+    when(incomingComicDetail.getDescription()).thenReturn(TEST_DESCRIPTION);
+    when(incomingComicDetail.getCoverDate()).thenReturn(TEST_COVER_DATE);
+    when(incomingComicDetail.getStoreDate()).thenReturn(TEST_STORE_DATE);
+    when(incomingComicDetail.getNotes()).thenReturn(TEST_NOTES);
 
     final ComicBook result =
         service.updateComic(
@@ -379,26 +366,25 @@ class ComicBookServiceTest {
     assertNotNull(result);
     assertSame(comicBook, result);
 
-    Mockito.verify(comicBookRepository, Mockito.times(2)).getById(TEST_COMIC_BOOK_ID);
-    Mockito.verify(comicDetail).setComicType(TEST_COMIC_TYPE);
-    Mockito.verify(comicDetail).setPublisher(TEST_PUBLISHER);
-    Mockito.verify(comicDetail).setImprint(TEST_IMPRINT);
-    Mockito.verify(comicDetail).setSeries(TEST_SERIES);
-    Mockito.verify(comicDetail).setVolume(TEST_VOLUME);
-    Mockito.verify(comicDetail).setIssueNumber(TEST_ISSUE_NUMBER);
-    Mockito.verify(comicDetail).setSortName(TEST_SORTABLE_NAME);
-    Mockito.verify(comicDetail).setTitle(TEST_TITLE);
-    Mockito.verify(comicDetail).setCoverDate(TEST_COVER_DATE);
-    Mockito.verify(comicDetail).setStoreDate(TEST_STORE_DATE);
-    Mockito.verify(comicBookStateAdaptor).fireEvent(comicBook, ComicEvent.comicMetadataChanged);
-    Mockito.verify(imprintService).update(comicBook);
+    verify(comicBookRepository, times(2)).getById(TEST_COMIC_BOOK_ID);
+    verify(comicDetail).setComicType(TEST_COMIC_TYPE);
+    verify(comicDetail).setPublisher(TEST_PUBLISHER);
+    verify(comicDetail).setImprint(TEST_IMPRINT);
+    verify(comicDetail).setSeries(TEST_SERIES);
+    verify(comicDetail).setVolume(TEST_VOLUME);
+    verify(comicDetail).setIssueNumber(TEST_ISSUE_NUMBER);
+    verify(comicDetail).setSortName(TEST_SORTABLE_NAME);
+    verify(comicDetail).setTitle(TEST_TITLE);
+    verify(comicDetail).setCoverDate(TEST_COVER_DATE);
+    verify(comicDetail).setStoreDate(TEST_STORE_DATE);
+    verify(comicBookStateAdaptor).fireEvent(comicBook, ComicEvent.comicMetadataChanged);
+    verify(imprintService).update(comicBook);
   }
 
   @Test
   void save() {
     Mockito.doNothing().when(comicDetail).setLastModifiedDate(dateArgumentCaptor.capture());
-    Mockito.when(comicBookRepository.saveAndFlush(Mockito.any(ComicBook.class)))
-        .thenReturn(savedComicBook);
+    when(comicBookRepository.saveAndFlush(Mockito.any(ComicBook.class))).thenReturn(savedComicBook);
 
     final ComicBook result = this.service.save(comicBook);
 
@@ -408,9 +394,9 @@ class ComicBookServiceTest {
     final Date lastModifiedDate = dateArgumentCaptor.getValue();
     assertNotNull(lastModifiedDate);
 
-    Mockito.verify(comicFileAdaptor).standardizeFilename(TEST_COMIC_FILENAME);
-    Mockito.verify(comicDetail).setLastModifiedDate(lastModifiedDate);
-    Mockito.verify(comicBookRepository).saveAndFlush(comicBook);
+    verify(comicFileAdaptor).standardizeFilename(TEST_COMIC_FILENAME);
+    verify(comicDetail).setLastModifiedDate(lastModifiedDate);
+    verify(comicBookRepository).saveAndFlush(comicBook);
   }
 
   @Test
@@ -422,13 +408,13 @@ class ComicBookServiceTest {
 
     service.deleteComicBook(comicBook);
 
-    Mockito.verify(comicTagRepository).deleteAllByComicDetail(comicDetail);
-    Mockito.verify(comicBookRepository).delete(comicBook);
+    verify(comicTagRepository).deleteAllByComicDetail(comicDetail);
+    verify(comicBookRepository).delete(comicBook);
   }
 
   @Test
   void findComicsToMove() {
-    Mockito.when(comicBookRepository.findComicsToMove(pageRequestCaptor.capture()))
+    when(comicBookRepository.findComicsToMove(pageRequestCaptor.capture()))
         .thenReturn(comicBookList);
 
     final List<ComicBook> result = service.findComicsToMove(TEST_PAGE_NUMBER, TEST_MAXIMUM_COMICS);
@@ -441,60 +427,58 @@ class ComicBookServiceTest {
     assertEquals(TEST_PAGE_NUMBER, request.getPageNumber());
     assertEquals(TEST_MAXIMUM_COMICS, request.getPageSize());
 
-    Mockito.verify(comicBookRepository).findComicsToMove(pageRequestCaptor.getValue());
+    verify(comicBookRepository).findComicsToMove(pageRequestCaptor.getValue());
   }
 
   @Test
   void findByFilename() {
-    Mockito.when(comicBookRepository.findByFilename(TEST_COMIC_FILENAME)).thenReturn(comicBook);
+    when(comicBookRepository.findByFilename(TEST_COMIC_FILENAME)).thenReturn(comicBook);
 
     final ComicBook result = service.findByFilename(TEST_COMIC_FILENAME);
 
     assertNotNull(result);
     assertSame(comicBook, result);
 
-    Mockito.verify(comicBookRepository).findByFilename(TEST_COMIC_FILENAME);
+    verify(comicBookRepository).findByFilename(TEST_COMIC_FILENAME);
   }
 
   @Test
   void deleteMetadataInvalidComicId() {
-    Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(null);
+    when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(null);
 
     assertThrows(ComicBookException.class, () -> service.deleteMetadata(TEST_COMIC_BOOK_ID));
   }
 
   @Test
   void deleteMetadata() throws ComicBookException {
-    Mockito.when(comicBookRepository.getById(Mockito.anyLong()))
-        .thenReturn(comicBook, comicBookRecord);
+    when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook, comicBookRecord);
 
     final ComicBook result = service.deleteMetadata(TEST_COMIC_BOOK_ID);
 
     assertNotNull(result);
     assertSame(comicBookRecord, result);
 
-    Mockito.verify(comicBookRepository, Mockito.times(2)).getById(TEST_COMIC_BOOK_ID);
-    Mockito.verify(comicBookMetadataAdaptor).clear(comicBook);
-    Mockito.verify(comicBookStateAdaptor).fireEvent(comicBook, ComicEvent.comicMetadataCleared);
+    verify(comicBookRepository, times(2)).getById(TEST_COMIC_BOOK_ID);
+    verify(comicBookMetadataAdaptor).clear(comicBook);
+    verify(comicBookStateAdaptor).fireEvent(comicBook, ComicEvent.comicMetadataCleared);
   }
 
   @Test
   void getComicsWithoutContentCount() {
-    Mockito.when(comicBookRepository.findUnprocessedComicsWithoutContentCount())
+    when(comicBookRepository.findUnprocessedComicsWithoutContentCount())
         .thenReturn(TEST_MAXIMUM_COMICS);
 
     final long result = service.getComicsWithoutContentCount();
 
     assertEquals(TEST_MAXIMUM_COMICS, result);
 
-    Mockito.verify(comicBookRepository).findUnprocessedComicsWithoutContentCount();
+    verify(comicBookRepository).findUnprocessedComicsWithoutContentCount();
   }
 
   @Test
   void findComicsWithCreateMetadataFlagSet() {
-    Mockito.when(
-            comicBookRepository.findUnprocessedComicsWithCreateMetadataFlagSet(
-                pageableCaptor.capture()))
+    when(comicBookRepository.findUnprocessedComicsWithCreateMetadataFlagSet(
+            pageableCaptor.capture()))
         .thenReturn(comicBookList);
 
     final List<ComicBook> result = service.findComicsWithCreateMetadataFlagSet(TEST_MAXIMUM_COMICS);
@@ -507,12 +491,12 @@ class ComicBookServiceTest {
     assertEquals(0, pageable.getPageNumber());
     assertEquals(TEST_MAXIMUM_COMICS, pageable.getPageSize());
 
-    Mockito.verify(comicBookRepository).findUnprocessedComicsWithCreateMetadataFlagSet(pageable);
+    verify(comicBookRepository).findUnprocessedComicsWithCreateMetadataFlagSet(pageable);
   }
 
   @Test
   void findComicsWithContentToLoad() {
-    Mockito.when(comicBookRepository.findComicsWithContentToLoad(pageableCaptor.capture()))
+    when(comicBookRepository.findComicsWithContentToLoad(pageableCaptor.capture()))
         .thenReturn(comicBookList);
 
     final List<ComicBook> result = service.findComicsWithContentToLoad(TEST_MAXIMUM_COMICS);
@@ -525,31 +509,31 @@ class ComicBookServiceTest {
     assertEquals(0, pageable.getPageNumber());
     assertEquals(TEST_MAXIMUM_COMICS, pageable.getPageSize());
 
-    Mockito.verify(comicBookRepository).findComicsWithContentToLoad(pageable);
+    verify(comicBookRepository).findComicsWithContentToLoad(pageable);
   }
 
   @Test
   void findProcessedComics() {
-    Mockito.when(comicBookRepository.findProcessedComics()).thenReturn(comicBookList);
+    when(comicBookRepository.findProcessedComics()).thenReturn(comicBookList);
 
     final List<ComicBook> result = service.findProcessedComics();
 
     assertNotNull(result);
     assertSame(comicBookList, result);
 
-    Mockito.verify(comicBookRepository).findProcessedComics();
+    verify(comicBookRepository).findProcessedComics();
   }
 
   @Test
   void prepareForRescan() {
     for (long index = 0L; index < 25L; index++) idList.add(index + 100);
 
-    Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
+    when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
 
     service.prepareForRescan(idList);
 
-    idList.forEach(id -> Mockito.verify(comicBookRepository).getById(id.longValue()));
-    Mockito.verify(comicBookStateAdaptor, Mockito.times(idList.size()))
+    idList.forEach(id -> verify(comicBookRepository).getById(id.longValue()));
+    verify(comicBookStateAdaptor, times(idList.size()))
         .fireEvent(comicBook, ComicEvent.rescanComicBookFile);
   }
 
@@ -557,32 +541,31 @@ class ComicBookServiceTest {
   void prepareForRescanNoSuchComic() {
     idList.add(TEST_COMIC_BOOK_ID);
 
-    Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(null);
+    when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(null);
 
     service.prepareForRescan(idList);
 
-    idList.forEach(id -> Mockito.verify(comicBookRepository).getById(id.longValue()));
-    Mockito.verify(comicBookStateAdaptor, Mockito.never())
-        .fireEvent(comicBook, ComicEvent.rescanComicBookFile);
+    idList.forEach(id -> verify(comicBookRepository).getById(id.longValue()));
+    verify(comicBookStateAdaptor, never()).fireEvent(comicBook, ComicEvent.rescanComicBookFile);
   }
 
   @Test
   void getCountForState() {
     for (int index = 0; index < 50; index++) comicBookList.add(comicBook);
 
-    Mockito.when(comicBookRepository.findForStateCount(Mockito.any(ComicState.class)))
+    when(comicBookRepository.findForStateCount(Mockito.any(ComicState.class)))
         .thenReturn(TEST_COMIC_COUNT);
 
     final long result = service.getCountForState(TEST_STATE);
 
     assertEquals(TEST_COMIC_COUNT, result);
 
-    Mockito.verify(comicBookRepository).findForStateCount(TEST_STATE);
+    verify(comicBookRepository).findForStateCount(TEST_STATE);
   }
 
   @Test
   void findComicsWithMetadataToUpdate() {
-    Mockito.when(comicBookRepository.findComicsWithMetadataToUpdate(pageableCaptor.capture()))
+    when(comicBookRepository.findComicsWithMetadataToUpdate(pageableCaptor.capture()))
         .thenReturn(comicBookList);
 
     final List<ComicBook> result = service.findComicsWithMetadataToUpdate(TEST_MAXIMUM_COMICS);
@@ -595,12 +578,12 @@ class ComicBookServiceTest {
     assertEquals(0, pageable.getPageNumber());
     assertEquals(TEST_MAXIMUM_COMICS, pageable.getPageSize());
 
-    Mockito.verify(comicBookRepository).findComicsWithMetadataToUpdate(pageable);
+    verify(comicBookRepository).findComicsWithMetadataToUpdate(pageable);
   }
 
   @Test
   void findComicsForBatchMetadataUpdate() {
-    Mockito.when(comicBookRepository.findComicsForBatchMetadataUpdate(pageableCaptor.capture()))
+    when(comicBookRepository.findComicsForBatchMetadataUpdate(pageableCaptor.capture()))
         .thenReturn(comicBookList);
 
     final List<ComicBook> result = service.findComicsForBatchMetadataUpdate(TEST_MAXIMUM_COMICS);
@@ -613,71 +596,70 @@ class ComicBookServiceTest {
     assertEquals(0, pageable.getPageNumber());
     assertEquals(TEST_MAXIMUM_COMICS, pageable.getPageSize());
 
-    Mockito.verify(comicBookRepository).findComicsForBatchMetadataUpdate(pageable);
+    verify(comicBookRepository).findComicsForBatchMetadataUpdate(pageable);
   }
 
   @Test
   void findComicsForBatchMetadataUpdateCount() {
-    Mockito.when(comicBookRepository.findComicsForBatchMetadataUpdateCount())
-        .thenReturn(TEST_COMIC_COUNT);
+    when(comicBookRepository.findComicsForBatchMetadataUpdateCount()).thenReturn(TEST_COMIC_COUNT);
 
     final long result = service.findComicsForBatchMetadataUpdateCount();
 
     assertEquals(TEST_COMIC_COUNT, result);
 
-    Mockito.verify(comicBookRepository).findComicsForBatchMetadataUpdateCount();
+    verify(comicBookRepository).findComicsForBatchMetadataUpdateCount();
   }
 
   @Test
   void getComicBooksToBePurgedCount() {
-    Mockito.when(comicBookRepository.findComicsToPurgeCount()).thenReturn(TEST_COMIC_COUNT);
+    when(comicBookRepository.findComicsToPurgeCount()).thenReturn(TEST_COMIC_COUNT);
 
     final long result = service.findComicsToPurgeCount();
 
     assertEquals(TEST_COMIC_COUNT, result);
 
-    Mockito.verify(comicBookRepository).findComicsToPurgeCount();
+    verify(comicBookRepository).findComicsToPurgeCount();
   }
 
   @Test
   void findAllComicsMarkedForDeletion() {
     service.prepareComicBooksForDeleting();
 
-    Mockito.verify(comicBookRepository).prepareComicBooksForDeleting();
+    verify(comicBookRepository).prepareComicBooksForDeleting();
   }
 
   @Test
   void findComicsToRecreateCount() {
-    Mockito.when(comicBookRepository.findComicsToBeRecreatedCount()).thenReturn(TEST_COMIC_COUNT);
+    when(comicBookRepository.findComicsToBeRecreatedCount()).thenReturn(TEST_COMIC_COUNT);
 
     final long result = service.findComicsToRecreateCount();
 
     assertEquals(TEST_COMIC_COUNT, result);
 
-    Mockito.verify(comicBookRepository).findComicsToBeRecreatedCount();
+    verify(comicBookRepository).findComicsToBeRecreatedCount();
   }
 
   @Test
   void FindComicsToPurgeCount() {
-    Mockito.when(comicBookRepository.findComicsToPurgeCount()).thenReturn(TEST_COMIC_COUNT);
+    when(comicBookRepository.findComicsToPurgeCount()).thenReturn(TEST_COMIC_COUNT);
 
     final long result = service.findComicsToPurgeCount();
 
     assertEquals(TEST_COMIC_COUNT, result);
 
-    Mockito.verify(comicBookRepository).findComicsToPurgeCount();
+    verify(comicBookRepository).findComicsToPurgeCount();
   }
 
   @Test
   void findAll() {
-    Mockito.when(comicBookRepository.findAll()).thenReturn(comicBookList);
+    when(comicBookRepository.findAll()).thenReturn(comicBookList);
 
     final List<ComicBook> result = service.findAll();
 
     assertNotNull(result);
     assertSame(comicBookList, result);
 
-    Mockito.verify(comicBookRepository).findAll();
+    verify(comicBookRepository).findAll();
   }
 
   @Test
@@ -685,12 +667,11 @@ class ComicBookServiceTest {
     idList.clear();
     idList.add(TEST_COMIC_BOOK_ID);
 
-    Mockito.when(comicBookRepository.getByComicDetailId(Mockito.anyLong())).thenReturn(null);
+    when(comicBookRepository.getByComicDetailId(Mockito.anyLong())).thenReturn(null);
 
     service.deleteComicBooksById(idList);
 
-    Mockito.verify(comicBookRepository, Mockito.times(idList.size()))
-        .getByComicDetailId(TEST_COMIC_BOOK_ID);
+    verify(comicBookRepository, times(idList.size())).getByComicDetailId(TEST_COMIC_BOOK_ID);
   }
 
   @Test
@@ -698,13 +679,12 @@ class ComicBookServiceTest {
     idList.clear();
     idList.add(TEST_COMIC_BOOK_ID);
 
-    Mockito.when(comicBookRepository.getByComicDetailId(Mockito.anyLong())).thenReturn(comicBook);
+    when(comicBookRepository.getByComicDetailId(Mockito.anyLong())).thenReturn(comicBook);
 
     service.deleteComicBooksById(idList);
 
-    Mockito.verify(comicBookRepository, Mockito.times(idList.size()))
-        .getByComicDetailId(TEST_COMIC_BOOK_ID);
-    Mockito.verify(comicBookStateAdaptor, Mockito.times(idList.size()))
+    verify(comicBookRepository, times(idList.size())).getByComicDetailId(TEST_COMIC_BOOK_ID);
+    verify(comicBookStateAdaptor, times(idList.size()))
         .fireEvent(comicBook, ComicEvent.markComicForRemoval);
   }
 
@@ -712,31 +692,29 @@ class ComicBookServiceTest {
   void undeleteComicBookByIdInvalidId() {
     idList.add(TEST_COMIC_BOOK_ID);
 
-    Mockito.when(comicBookRepository.getByComicDetailId(Mockito.anyLong())).thenReturn(null);
+    when(comicBookRepository.getByComicDetailId(Mockito.anyLong())).thenReturn(null);
 
     service.undeleteComicBooksById(idList);
 
-    Mockito.verify(comicBookRepository, Mockito.times(idList.size()))
-        .getByComicDetailId(TEST_COMIC_BOOK_ID);
+    verify(comicBookRepository, times(idList.size())).getByComicDetailId(TEST_COMIC_BOOK_ID);
   }
 
   @Test
   void undeleteComicBooksById() {
     idList.add(TEST_COMIC_BOOK_ID);
 
-    Mockito.when(comicBookRepository.getByComicDetailId(Mockito.anyLong())).thenReturn(comicBook);
+    when(comicBookRepository.getByComicDetailId(Mockito.anyLong())).thenReturn(comicBook);
 
     service.undeleteComicBooksById(idList);
 
-    Mockito.verify(comicBookRepository, Mockito.times(idList.size()))
-        .getByComicDetailId(TEST_COMIC_BOOK_ID);
-    Mockito.verify(comicBookStateAdaptor, Mockito.times(idList.size()))
+    verify(comicBookRepository, times(idList.size())).getByComicDetailId(TEST_COMIC_BOOK_ID);
+    verify(comicBookStateAdaptor, times(idList.size()))
         .fireEvent(comicBook, ComicEvent.unmarkComicForRemoval);
   }
 
   @Test
   void findAllComicsToRecreate() {
-    Mockito.when(comicBookRepository.findComicsToRecreate(pageableCaptor.capture()))
+    when(comicBookRepository.findComicsToRecreate(pageableCaptor.capture()))
         .thenReturn(comicBookList);
 
     final List<ComicBook> result = service.findComicsToRecreate(TEST_MAXIMUM_COMICS);
@@ -749,14 +727,13 @@ class ComicBookServiceTest {
     assertEquals(0, pageable.getPageNumber());
     assertEquals(TEST_MAXIMUM_COMICS, pageable.getPageSize());
 
-    Mockito.verify(comicBookRepository).findComicsToRecreate(pageable);
+    verify(comicBookRepository).findComicsToRecreate(pageable);
   }
 
   @Test
   void findComicNotFound() {
-    Mockito.when(
-            comicBookRepository.findComic(
-                Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
+    when(comicBookRepository.findComic(
+            Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
         .thenReturn(Collections.emptyList());
 
     final List<ComicBook> result =
@@ -765,7 +742,7 @@ class ComicBookServiceTest {
     assertNotNull(result);
     assertTrue(result.isEmpty());
 
-    Mockito.verify(comicBookRepository)
+    verify(comicBookRepository)
         .findComic(TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME, TEST_ISSUE_NUMBER);
   }
 
@@ -773,9 +750,8 @@ class ComicBookServiceTest {
   void findComic() {
     comicBookList.add(comicBook);
 
-    Mockito.when(
-            comicBookRepository.findComic(
-                Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
+    when(comicBookRepository.findComic(
+            Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
         .thenReturn(comicBookList);
 
     final List<ComicBook> result =
@@ -784,25 +760,25 @@ class ComicBookServiceTest {
     assertNotNull(result);
     assertSame(comicBookList, result);
 
-    Mockito.verify(comicBookRepository)
+    verify(comicBookRepository)
         .findComic(TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME, TEST_ISSUE_NUMBER);
   }
 
   @Test
   void findSeries() {
-    Mockito.when(comicBookRepository.findDistinctSeries()).thenReturn(collectionList);
+    when(comicBookRepository.findDistinctSeries()).thenReturn(collectionList);
 
     final List<String> result = service.getAllSeries();
 
     assertNotNull(result);
     assertSame(collectionList, result);
 
-    Mockito.verify(comicBookRepository).findDistinctSeries();
+    verify(comicBookRepository).findDistinctSeries();
   }
 
   @Test
   void getAllPublishersForStory() {
-    Mockito.when(comicBookRepository.findDistinctPublishersForStory(Mockito.anyString()))
+    when(comicBookRepository.findDistinctPublishersForStory(Mockito.anyString()))
         .thenReturn(publisherList);
 
     final List<String> result = service.getAllPublishersForStory(TEST_STORY_NAME);
@@ -810,12 +786,12 @@ class ComicBookServiceTest {
     assertNotNull(result);
     assertSame(publisherList, result);
 
-    Mockito.verify(comicBookRepository).findDistinctPublishersForStory(TEST_STORY_NAME);
+    verify(comicBookRepository).findDistinctPublishersForStory(TEST_STORY_NAME);
   }
 
   @Test
   void findComicsMarkedForPurging() {
-    Mockito.when(comicBookRepository.findComicsMarkedForPurging(pageableCaptor.capture()))
+    when(comicBookRepository.findComicsMarkedForPurging(pageableCaptor.capture()))
         .thenReturn(comicBookList);
 
     final List<ComicBook> result = service.findComicsMarkedForPurging(TEST_MAXIMUM_COMICS);
@@ -828,13 +804,13 @@ class ComicBookServiceTest {
     assertEquals(0, pageable.getPageNumber());
     assertEquals(TEST_MAXIMUM_COMICS, pageable.getPageSize());
 
-    Mockito.verify(comicBookRepository).findComicsMarkedForPurging(pageable);
+    verify(comicBookRepository).findComicsMarkedForPurging(pageable);
   }
 
   @Test
   void savePageOrder_invalidId() {
     List<PageOrderEntry> entryList = new ArrayList<>();
-    Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(null);
+    when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(null);
 
     assertThrows(
         ComicBookException.class, () -> service.savePageOrder(TEST_COMIC_BOOK_ID, entryList));
@@ -854,12 +830,12 @@ class ComicBookServiceTest {
       }
     }
 
-    Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
-    Mockito.when(comicBook.getPages()).thenReturn(pageList);
+    when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
+    when(comicBook.getPages()).thenReturn(pageList);
 
     service.savePageOrder(TEST_COMIC_BOOK_ID, entryList);
 
-    Mockito.verify(comicBookStateAdaptor).fireEvent(comicBook, ComicEvent.comicMetadataChanged);
+    verify(comicBookStateAdaptor).fireEvent(comicBook, ComicEvent.comicMetadataChanged);
   }
 
   @Test
@@ -874,8 +850,8 @@ class ComicBookServiceTest {
       pageList.add(page);
     }
 
-    Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
-    Mockito.when(comicBook.getPages()).thenReturn(pageList);
+    when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
+    when(comicBook.getPages()).thenReturn(pageList);
 
     assertThrows(
         ComicBookException.class, () -> service.savePageOrder(TEST_COMIC_BOOK_ID, entryList));
@@ -893,8 +869,8 @@ class ComicBookServiceTest {
       pageList.add(page);
     }
 
-    Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
-    Mockito.when(comicBook.getPages()).thenReturn(pageList);
+    when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
+    when(comicBook.getPages()).thenReturn(pageList);
 
     service.savePageOrder(TEST_COMIC_BOOK_ID, entryList);
 
@@ -909,15 +885,15 @@ class ComicBookServiceTest {
       assertEquals(pageOrderEntry.getPosition(), pageListEntry.get().getPageNumber().intValue());
     }
 
-    Mockito.verify(comicBookRepository).getById(TEST_COMIC_BOOK_ID);
-    Mockito.verify(comicBookStateAdaptor).fireEvent(comicBook, ComicEvent.comicMetadataChanged);
+    verify(comicBookRepository).getById(TEST_COMIC_BOOK_ID);
+    verify(comicBookStateAdaptor).fireEvent(comicBook, ComicEvent.comicMetadataChanged);
   }
 
   @Test
   void updateMultipleComics_invalidId() {
     idList.add(TEST_COMIC_BOOK_ID);
 
-    Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(null);
+    when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(null);
 
     assertThrows(ComicBookException.class, () -> service.updateMultipleComics(idList));
   }
@@ -926,149 +902,148 @@ class ComicBookServiceTest {
   void updateMultipleComics() throws ComicBookException {
     idList.add(TEST_COMIC_BOOK_ID);
 
-    Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
+    when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
 
     service.updateMultipleComics(idList);
 
-    Mockito.verify(comicBookStateAdaptor)
-        .fireEvent(comicBook, ComicEvent.prepareComicsForBatchEditing);
+    verify(comicBookStateAdaptor).fireEvent(comicBook, ComicEvent.prepareComicsForBatchEditing);
   }
 
   @Test
   void getComicBookCount() {
-    Mockito.when(comicBookRepository.count()).thenReturn(TEST_COMIC_COUNT);
+    when(comicBookRepository.count()).thenReturn(TEST_COMIC_COUNT);
 
     final long result = service.getComicBookCount();
 
     assertEquals(TEST_COMIC_COUNT, result);
 
-    Mockito.verify(comicBookRepository).count();
+    verify(comicBookRepository).count();
   }
 
   @Test
   void getDeletedComicBookCount() {
-    Mockito.when(comicBookRepository.findForStateCount(Mockito.any())).thenReturn(TEST_COMIC_COUNT);
+    when(comicBookRepository.findForStateCount(Mockito.any())).thenReturn(TEST_COMIC_COUNT);
 
     final long result = service.getDeletedComicCount();
 
     assertEquals(TEST_COMIC_COUNT, result);
 
-    Mockito.verify(comicBookRepository).findForStateCount(ComicState.DELETED);
+    verify(comicBookRepository).findForStateCount(ComicState.DELETED);
   }
 
   @Test
   void getPublishersState() {
-    Mockito.when(comicBookRepository.getPublishersState()).thenReturn(librarySegmentList);
+    when(comicBookRepository.getPublishersState()).thenReturn(librarySegmentList);
 
     final List<RemoteLibrarySegmentState> result = service.getPublishersState();
 
     assertNotNull(result);
     assertSame(librarySegmentList, result);
 
-    Mockito.verify(comicBookRepository).getPublishersState();
+    verify(comicBookRepository).getPublishersState();
   }
 
   @Test
   void getSeriesState() {
-    Mockito.when(comicBookRepository.getSeriesState()).thenReturn(librarySegmentList);
+    when(comicBookRepository.getSeriesState()).thenReturn(librarySegmentList);
 
     final List<RemoteLibrarySegmentState> result = service.getSeriesState();
 
     assertNotNull(result);
     assertSame(librarySegmentList, result);
 
-    Mockito.verify(comicBookRepository).getSeriesState();
+    verify(comicBookRepository).getSeriesState();
   }
 
   @Test
   void getCharactersState() {
-    Mockito.when(comicBookRepository.getCharactersState()).thenReturn(librarySegmentList);
+    when(comicBookRepository.getCharactersState()).thenReturn(librarySegmentList);
 
     final List<RemoteLibrarySegmentState> result = service.getCharactersState();
 
     assertNotNull(result);
     assertSame(librarySegmentList, result);
 
-    Mockito.verify(comicBookRepository).getCharactersState();
+    verify(comicBookRepository).getCharactersState();
   }
 
   @Test
   void getTeamsState() {
-    Mockito.when(comicBookRepository.getTeamsState()).thenReturn(librarySegmentList);
+    when(comicBookRepository.getTeamsState()).thenReturn(librarySegmentList);
 
     final List<RemoteLibrarySegmentState> result = service.getTeamsState();
 
     assertNotNull(result);
     assertSame(librarySegmentList, result);
 
-    Mockito.verify(comicBookRepository).getTeamsState();
+    verify(comicBookRepository).getTeamsState();
   }
 
   @Test
   void getLocationsState() {
-    Mockito.when(comicBookRepository.getLocationsState()).thenReturn(librarySegmentList);
+    when(comicBookRepository.getLocationsState()).thenReturn(librarySegmentList);
 
     final List<RemoteLibrarySegmentState> result = service.getLocationsState();
 
     assertNotNull(result);
     assertSame(librarySegmentList, result);
 
-    Mockito.verify(comicBookRepository).getLocationsState();
+    verify(comicBookRepository).getLocationsState();
   }
 
   @Test
   void getStoriesState() {
-    Mockito.when(comicBookRepository.getStoriesState()).thenReturn(librarySegmentList);
+    when(comicBookRepository.getStoriesState()).thenReturn(librarySegmentList);
 
     final List<RemoteLibrarySegmentState> result = service.getStoriesState();
 
     assertNotNull(result);
     assertSame(librarySegmentList, result);
 
-    Mockito.verify(comicBookRepository).getStoriesState();
+    verify(comicBookRepository).getStoriesState();
   }
 
   @Test
   void getComicBooksState() {
-    Mockito.when(comicBookRepository.getComicBooksState()).thenReturn(librarySegmentList);
+    when(comicBookRepository.getComicBooksState()).thenReturn(librarySegmentList);
 
     final List<RemoteLibrarySegmentState> result = service.getComicBooksState();
 
     assertNotNull(result);
     assertSame(librarySegmentList, result);
 
-    Mockito.verify(comicBookRepository).getComicBooksState();
+    verify(comicBookRepository).getComicBooksState();
   }
 
   @Test
   void getComicBookArchiveTypes() {
-    Mockito.when(comicBookRepository.getComicBookArchiveTypes()).thenReturn(librarySegmentList);
+    when(comicBookRepository.getComicBookArchiveTypes()).thenReturn(librarySegmentList);
 
     final List<RemoteLibrarySegmentState> result = service.getComicBookArchiveTypes();
 
     assertNotNull(result);
     assertSame(librarySegmentList, result);
 
-    Mockito.verify(comicBookRepository, Mockito.times(1)).getComicBookArchiveTypes();
+    verify(comicBookRepository).getComicBookArchiveTypes();
   }
 
   @Test
   void getByPublisherAndYear() {
-    Mockito.when(comicBookRepository.getByPublisherAndYear()).thenReturn(byPublisherAndYearList);
+    when(comicBookRepository.getByPublisherAndYear()).thenReturn(byPublisherAndYearList);
 
     final List<PublisherAndYearSegment> result = service.getByPublisherAndYear();
 
     assertNotNull(result);
     assertSame(byPublisherAndYearList, result);
 
-    Mockito.verify(comicBookRepository).getByPublisherAndYear();
+    verify(comicBookRepository).getByPublisherAndYear();
   }
 
   @Test
   void markComicsForBatchMetadataUpdate_invalidId() {
     idList.add(TEST_COMIC_BOOK_ID);
 
-    Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(null);
+    when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(null);
 
     assertThrows(
         ComicBookException.class, () -> service.markComicBooksForBatchMetadataUpdate(idList));
@@ -1078,31 +1053,30 @@ class ComicBookServiceTest {
   void markComicsForBatchMetadataUpdate() throws ComicBookException {
     idList.add(TEST_COMIC_BOOK_ID);
 
-    Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
+    when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
 
     service.markComicBooksForBatchMetadataUpdate(idList);
 
-    Mockito.verify(comicBookRepository).getById(TEST_COMIC_BOOK_ID);
-    Mockito.verify(comicBook).setBatchMetadataUpdate(true);
-    Mockito.verify(comicBookRepository).save(comicBook);
-    Mockito.verify(applicationEventPublisher).publishEvent(UpdateMetadataEvent.instance);
+    verify(comicBookRepository).getById(TEST_COMIC_BOOK_ID);
+    verify(comicBook).setBatchMetadataUpdate(true);
+    verify(comicBookRepository).save(comicBook);
+    verify(applicationEventPublisher).publishEvent(UpdateMetadataEvent.instance);
   }
 
   @Test
   void getComicBookssForSearchTerms() {
-    Mockito.when(comicBookRepository.findForSearchTerms(Mockito.anyString()))
-        .thenReturn(comicDetailList);
+    when(comicBookRepository.findForSearchTerms(Mockito.anyString())).thenReturn(comicDetailList);
 
     final List<ComicDetail> result = service.getComicBooksForSearchTerms(TEST_SEARCH_TERMS);
 
     assertNotNull(result);
 
-    Mockito.verify(comicBookRepository).findForSearchTerms(TEST_SEARCH_TERMS);
+    verify(comicBookRepository).findForSearchTerms(TEST_SEARCH_TERMS);
   }
 
   @Test
   void findComicsWithEditDetails() {
-    Mockito.when(comicBookRepository.findComicsWithEditDetails(pageableCaptor.capture()))
+    when(comicBookRepository.findComicsWithEditDetails(pageableCaptor.capture()))
         .thenReturn(comicBookList);
 
     final List<ComicBook> result = service.findComicsWithEditDetails(TEST_MAXIMUM_COMICS);
@@ -1114,14 +1088,13 @@ class ComicBookServiceTest {
     assertEquals(0, pageable.getPageNumber());
     assertEquals(TEST_MAXIMUM_COMICS, pageable.getPageSize());
 
-    Mockito.verify(comicBookRepository).findComicsWithEditDetails(pageable);
+    verify(comicBookRepository).findComicsWithEditDetails(pageable);
   }
 
   @Test
   void getPublisherDetail_unsorted() {
-    Mockito.when(
-            comicBookRepository.getAllSeriesAndVolumesForPublisher(
-                Mockito.anyString(), pageableCaptor.capture()))
+    when(comicBookRepository.getAllSeriesAndVolumesForPublisher(
+            Mockito.anyString(), pageableCaptor.capture()))
         .thenReturn(publisherDetail);
 
     final List<SeriesDetail> result =
@@ -1136,15 +1109,13 @@ class ComicBookServiceTest {
     assertEquals(TEST_PAGE_SIZE, pageable.getPageSize());
     assertFalse(pageable.getSort().isSorted());
 
-    Mockito.verify(comicBookRepository)
-        .getAllSeriesAndVolumesForPublisher(TEST_PUBLISHER, pageable);
+    verify(comicBookRepository).getAllSeriesAndVolumesForPublisher(TEST_PUBLISHER, pageable);
   }
 
   @Test
   void getPublisherDetail_ascendingNameSort() {
-    Mockito.when(
-            comicBookRepository.getAllSeriesAndVolumesForPublisher(
-                Mockito.anyString(), pageableCaptor.capture()))
+    when(comicBookRepository.getAllSeriesAndVolumesForPublisher(
+            Mockito.anyString(), pageableCaptor.capture()))
         .thenReturn(publisherDetail);
 
     final List<SeriesDetail> result =
@@ -1160,15 +1131,13 @@ class ComicBookServiceTest {
     assertEquals(TEST_PAGE_SIZE, pageable.getPageSize());
     assertTrue(pageable.getSort().isSorted());
 
-    Mockito.verify(comicBookRepository)
-        .getAllSeriesAndVolumesForPublisher(TEST_PUBLISHER, pageable);
+    verify(comicBookRepository).getAllSeriesAndVolumesForPublisher(TEST_PUBLISHER, pageable);
   }
 
   @Test
   void getPublisherDetail_descendingNameSort() {
-    Mockito.when(
-            comicBookRepository.getAllSeriesAndVolumesForPublisher(
-                Mockito.anyString(), pageableCaptor.capture()))
+    when(comicBookRepository.getAllSeriesAndVolumesForPublisher(
+            Mockito.anyString(), pageableCaptor.capture()))
         .thenReturn(publisherDetail);
 
     final List<SeriesDetail> result =
@@ -1184,15 +1153,13 @@ class ComicBookServiceTest {
     assertEquals(TEST_PAGE_SIZE, pageable.getPageSize());
     assertTrue(pageable.getSort().isSorted());
 
-    Mockito.verify(comicBookRepository)
-        .getAllSeriesAndVolumesForPublisher(TEST_PUBLISHER, pageable);
+    verify(comicBookRepository).getAllSeriesAndVolumesForPublisher(TEST_PUBLISHER, pageable);
   }
 
   @Test
   void getPublisherDetail_ascendingVolumeSort() {
-    Mockito.when(
-            comicBookRepository.getAllSeriesAndVolumesForPublisher(
-                Mockito.anyString(), pageableCaptor.capture()))
+    when(comicBookRepository.getAllSeriesAndVolumesForPublisher(
+            Mockito.anyString(), pageableCaptor.capture()))
         .thenReturn(publisherDetail);
 
     final List<SeriesDetail> result =
@@ -1208,15 +1175,13 @@ class ComicBookServiceTest {
     assertEquals(TEST_PAGE_SIZE, pageable.getPageSize());
     assertTrue(pageable.getSort().isSorted());
 
-    Mockito.verify(comicBookRepository)
-        .getAllSeriesAndVolumesForPublisher(TEST_PUBLISHER, pageable);
+    verify(comicBookRepository).getAllSeriesAndVolumesForPublisher(TEST_PUBLISHER, pageable);
   }
 
   @Test
   void getPublisherDetail_descendingVolumeSort() {
-    Mockito.when(
-            comicBookRepository.getAllSeriesAndVolumesForPublisher(
-                Mockito.anyString(), pageableCaptor.capture()))
+    when(comicBookRepository.getAllSeriesAndVolumesForPublisher(
+            Mockito.anyString(), pageableCaptor.capture()))
         .thenReturn(publisherDetail);
 
     final List<SeriesDetail> result =
@@ -1232,35 +1197,34 @@ class ComicBookServiceTest {
     assertEquals(TEST_PAGE_SIZE, pageable.getPageSize());
     assertTrue(pageable.getSort().isSorted());
 
-    Mockito.verify(comicBookRepository)
-        .getAllSeriesAndVolumesForPublisher(TEST_PUBLISHER, pageable);
+    verify(comicBookRepository).getAllSeriesAndVolumesForPublisher(TEST_PUBLISHER, pageable);
   }
 
   @Test
   void getAllSeriesAndVolumes() {
-    Mockito.when(comicBookRepository.getAllSeriesAndVolumes()).thenReturn(seriesDetailList);
+    when(comicBookRepository.getAllSeriesAndVolumes()).thenReturn(seriesDetailList);
 
     final List<SeriesDetail> result = service.getAllSeriesAndVolumes();
 
     assertSame(seriesDetailList, result);
 
-    Mockito.verify(comicBookRepository).getAllSeriesAndVolumes();
+    verify(comicBookRepository).getAllSeriesAndVolumes();
   }
 
   @Test
   void getUnscrapedComicCount() {
-    Mockito.when(comicBookRepository.getUnscrapedComicCount()).thenReturn(TEST_COMIC_COUNT);
+    when(comicBookRepository.getUnscrapedComicCount()).thenReturn(TEST_COMIC_COUNT);
 
     final long result = service.getUnscrapedComicCount();
 
     assertEquals(TEST_COMIC_COUNT, result);
 
-    Mockito.verify(comicBookRepository).getUnscrapedComicCount();
+    verify(comicBookRepository).getUnscrapedComicCount();
   }
 
   @Test
   void getComicBooksWithoutDetails() {
-    Mockito.when(comicBookRepository.getComicBooksWithoutDetails(Mockito.anyInt()))
+    when(comicBookRepository.getComicBooksWithoutDetails(Mockito.anyInt()))
         .thenReturn(comicBookList);
 
     final List<ComicBook> result = service.getComicBooksWithoutDetails(TEST_BATCH_CHUNK_SIZE);
@@ -1268,260 +1232,255 @@ class ComicBookServiceTest {
     assertNotNull(result);
     assertSame(comicBookList, result);
 
-    Mockito.verify(comicBookRepository).getComicBooksWithoutDetails(TEST_BATCH_CHUNK_SIZE);
+    verify(comicBookRepository).getComicBooksWithoutDetails(TEST_BATCH_CHUNK_SIZE);
   }
 
   @Test
   void prepareForMetadataUpdate() {
     service.prepareForMetadataUpdate(idList);
 
-    Mockito.verify(comicBookRepository).prepareForMetadataUpdate(idList);
+    verify(comicBookRepository).prepareForMetadataUpdate(idList);
   }
 
   @Test
   void prepareForOrganization() {
     service.prepareForOrganization(idList);
 
-    Mockito.verify(comicBookRepository).markForOrganizationById(idList);
-    Mockito.verify(applicationEventPublisher).publishEvent(OrganizingLibraryEvent.instance);
+    verify(comicBookRepository).markForOrganizationById(idList);
+    verify(applicationEventPublisher).publishEvent(OrganizingLibraryEvent.instance);
   }
 
   @Test
   void prepareAllForOrganization() {
     service.prepareAllForOrganization();
 
-    Mockito.verify(comicBookRepository).markAllForOrganization();
-    Mockito.verify(applicationEventPublisher).publishEvent(OrganizingLibraryEvent.instance);
+    verify(comicBookRepository).markAllForOrganization();
+    verify(applicationEventPublisher).publishEvent(OrganizingLibraryEvent.instance);
   }
 
   @Test
   void prepareForRecreation() {
-    service.prepareForRecreation(idList, targetArchiveType, TEST_RENAME_PAGES, TEST_DELETE_PAGES);
+    service.prepareForRecreation(idList, targetArchiveType);
 
-    Mockito.verify(comicBookRepository)
-        .markForRecreationById(idList, targetArchiveType, TEST_RENAME_PAGES, TEST_DELETE_PAGES);
+    verify(comicBookRepository).markForRecreationById(idList, targetArchiveType);
   }
 
   @Test
   void getUnprocessedComicBookCount() {
-    Mockito.when(comicBookRepository.getUnprocessedComicBookCount()).thenReturn(TEST_COMIC_COUNT);
+    when(comicBookRepository.getUnprocessedComicBookCount()).thenReturn(TEST_COMIC_COUNT);
 
     final long result = service.getUnprocessedComicBookCount();
 
     assertEquals(TEST_COMIC_COUNT, result);
 
-    Mockito.verify(comicBookRepository).getUnprocessedComicBookCount();
+    verify(comicBookRepository).getUnprocessedComicBookCount();
   }
 
   @Test
   void getUpdateMetatdataCount() {
-    Mockito.when(comicBookRepository.getUpdateMetadataCount()).thenReturn(TEST_COMIC_COUNT);
+    when(comicBookRepository.getUpdateMetadataCount()).thenReturn(TEST_COMIC_COUNT);
 
     final long result = service.getUpdateMetadataCount();
 
     assertEquals(TEST_COMIC_COUNT, result);
 
-    Mockito.verify(comicBookRepository).getUpdateMetadataCount();
+    verify(comicBookRepository).getUpdateMetadataCount();
   }
 
   @Test
   void getRecreatingCount() {
-    Mockito.when(comicBookRepository.getRecreatingCount()).thenReturn(TEST_COMIC_COUNT);
+    when(comicBookRepository.getRecreatingCount()).thenReturn(TEST_COMIC_COUNT);
 
     final long result = service.getRecreatingCount();
 
     assertEquals(TEST_COMIC_COUNT, result);
 
-    Mockito.verify(comicBookRepository).getRecreatingCount();
+    verify(comicBookRepository).getRecreatingCount();
   }
 
   @Test
   void getAllComicDetails_missingFiles() {
-    Mockito.when(comicBookRepository.getComicFilenames(true)).thenReturn(comicFilenameList);
+    when(comicBookRepository.getComicFilenames(true)).thenReturn(comicFilenameList);
 
     final Set<String> result = service.getAllComicDetails(true);
 
     assertNotNull(result);
     assertSame(comicFilenameList, result);
 
-    Mockito.verify(comicBookRepository).getComicFilenames(true);
+    verify(comicBookRepository).getComicFilenames(true);
   }
 
   @Test
   void getAllComicDetails_notMissingFiles() {
-    Mockito.when(comicBookRepository.getComicFilenames(false)).thenReturn(comicFilenameList);
+    when(comicBookRepository.getComicFilenames(false)).thenReturn(comicFilenameList);
 
     final Set<String> result = service.getAllComicDetails(false);
 
     assertNotNull(result);
     assertSame(comicFilenameList, result);
 
-    Mockito.verify(comicBookRepository).getComicFilenames(false);
+    verify(comicBookRepository).getComicFilenames(false);
   }
 
   @Test
   void markComicAsMissing_caseInsensitive_noRecordFound() {
-    Mockito.when(comicFileAdaptor.standardizeFilename(Mockito.anyString()))
+    when(comicFileAdaptor.standardizeFilename(Mockito.anyString()))
         .thenReturn(TEST_STANDARDIZED_FILENAME);
-    Mockito.when(comicFileAdaptor.isCaseSensitiveFilenames()).thenReturn(false);
-    Mockito.when(comicBookRepository.findByFilenameCaseInsensitive(Mockito.anyString()))
-        .thenReturn(null);
+    when(comicFileAdaptor.isCaseSensitiveFilenames()).thenReturn(false);
+    when(comicBookRepository.findByFilenameCaseInsensitive(Mockito.anyString())).thenReturn(null);
 
     service.markComicAsMissing(TEST_COMIC_FILENAME);
 
-    Mockito.verify(comicFileAdaptor).standardizeFilename(TEST_COMIC_FILENAME);
-    Mockito.verify(comicBookRepository).findByFilenameCaseInsensitive(TEST_STANDARDIZED_FILENAME);
-    Mockito.verify(comicBookStateAdaptor, Mockito.never()).fireEvent(Mockito.any(), Mockito.any());
+    verify(comicFileAdaptor).standardizeFilename(TEST_COMIC_FILENAME);
+    verify(comicBookRepository).findByFilenameCaseInsensitive(TEST_STANDARDIZED_FILENAME);
+    verify(comicBookStateAdaptor, never()).fireEvent(Mockito.any(), Mockito.any());
   }
 
   @Test
   void markComicAsMissing_caseInsensitive_hasTargetArchiveType() {
-    Mockito.when(comicFileAdaptor.standardizeFilename(Mockito.anyString()))
+    when(comicFileAdaptor.standardizeFilename(Mockito.anyString()))
         .thenReturn(TEST_STANDARDIZED_FILENAME);
-    Mockito.when(comicFileAdaptor.isCaseSensitiveFilenames()).thenReturn(false);
-    Mockito.when(comicBookRepository.findByFilenameCaseInsensitive(Mockito.anyString()))
+    when(comicFileAdaptor.isCaseSensitiveFilenames()).thenReturn(false);
+    when(comicBookRepository.findByFilenameCaseInsensitive(Mockito.anyString()))
         .thenReturn(comicBook);
-    Mockito.when(comicBook.getTargetArchiveType()).thenReturn(TEST_TARGET_ARCHIVE_TYPE);
+    when(comicBook.getTargetArchiveType()).thenReturn(TEST_TARGET_ARCHIVE_TYPE);
 
     service.markComicAsMissing(TEST_COMIC_FILENAME);
 
-    Mockito.verify(comicFileAdaptor).standardizeFilename(TEST_COMIC_FILENAME);
-    Mockito.verify(comicBookRepository).findByFilenameCaseInsensitive(TEST_STANDARDIZED_FILENAME);
-    Mockito.verify(comicBookStateAdaptor, Mockito.never()).fireEvent(Mockito.any(), Mockito.any());
+    verify(comicFileAdaptor).standardizeFilename(TEST_COMIC_FILENAME);
+    verify(comicBookRepository).findByFilenameCaseInsensitive(TEST_STANDARDIZED_FILENAME);
+    verify(comicBookStateAdaptor, never()).fireEvent(Mockito.any(), Mockito.any());
   }
 
   @Test
   void markComicAsMissing_caseInsensitive() {
-    Mockito.when(comicFileAdaptor.standardizeFilename(Mockito.anyString()))
+    when(comicFileAdaptor.standardizeFilename(Mockito.anyString()))
         .thenReturn(TEST_STANDARDIZED_FILENAME);
-    Mockito.when(comicFileAdaptor.isCaseSensitiveFilenames()).thenReturn(false);
-    Mockito.when(comicBookRepository.findByFilenameCaseInsensitive(Mockito.anyString()))
+    when(comicFileAdaptor.isCaseSensitiveFilenames()).thenReturn(false);
+    when(comicBookRepository.findByFilenameCaseInsensitive(Mockito.anyString()))
         .thenReturn(comicBook);
 
     service.markComicAsMissing(TEST_COMIC_FILENAME);
 
-    Mockito.verify(comicFileAdaptor).standardizeFilename(TEST_COMIC_FILENAME);
-    Mockito.verify(comicBookRepository).findByFilenameCaseInsensitive(TEST_STANDARDIZED_FILENAME);
-    Mockito.verify(comicBookStateAdaptor, Mockito.never())
-        .fireEvent(comicBook, ComicEvent.comicFileDiscovered);
+    verify(comicFileAdaptor).standardizeFilename(TEST_COMIC_FILENAME);
+    verify(comicBookRepository).findByFilenameCaseInsensitive(TEST_STANDARDIZED_FILENAME);
+    verify(comicBookStateAdaptor, never()).fireEvent(comicBook, ComicEvent.comicFileDiscovered);
   }
 
   @Test
   void markComicAsMissing_caseSensitive_noRecordFound() {
-    Mockito.when(comicFileAdaptor.standardizeFilename(Mockito.anyString()))
+    when(comicFileAdaptor.standardizeFilename(Mockito.anyString()))
         .thenReturn(TEST_STANDARDIZED_FILENAME);
-    Mockito.when(comicFileAdaptor.isCaseSensitiveFilenames()).thenReturn(true);
-    Mockito.when(comicBookRepository.findByFilename(Mockito.anyString())).thenReturn(null);
+    when(comicFileAdaptor.isCaseSensitiveFilenames()).thenReturn(true);
+    when(comicBookRepository.findByFilename(Mockito.anyString())).thenReturn(null);
 
     service.markComicAsMissing(TEST_COMIC_FILENAME);
 
-    Mockito.verify(comicFileAdaptor).standardizeFilename(TEST_COMIC_FILENAME);
-    Mockito.verify(comicBookRepository).findByFilename(TEST_STANDARDIZED_FILENAME);
-    Mockito.verify(comicBookStateAdaptor, Mockito.never()).fireEvent(Mockito.any(), Mockito.any());
+    verify(comicFileAdaptor).standardizeFilename(TEST_COMIC_FILENAME);
+    verify(comicBookRepository).findByFilename(TEST_STANDARDIZED_FILENAME);
+    verify(comicBookStateAdaptor, never()).fireEvent(Mockito.any(), Mockito.any());
   }
 
   @Test
   void markComicAsMissing_caseSensitive_hasTargetArchiveType() {
-    Mockito.when(comicFileAdaptor.standardizeFilename(Mockito.anyString()))
+    when(comicFileAdaptor.standardizeFilename(Mockito.anyString()))
         .thenReturn(TEST_STANDARDIZED_FILENAME);
-    Mockito.when(comicFileAdaptor.isCaseSensitiveFilenames()).thenReturn(true);
-    Mockito.when(comicBookRepository.findByFilename(Mockito.anyString())).thenReturn(comicBook);
-    Mockito.when(comicBook.getTargetArchiveType()).thenReturn(TEST_TARGET_ARCHIVE_TYPE);
+    when(comicFileAdaptor.isCaseSensitiveFilenames()).thenReturn(true);
+    when(comicBookRepository.findByFilename(Mockito.anyString())).thenReturn(comicBook);
+    when(comicBook.getTargetArchiveType()).thenReturn(TEST_TARGET_ARCHIVE_TYPE);
 
     service.markComicAsMissing(TEST_COMIC_FILENAME);
 
-    Mockito.verify(comicFileAdaptor).standardizeFilename(TEST_COMIC_FILENAME);
-    Mockito.verify(comicBookRepository).findByFilename(TEST_STANDARDIZED_FILENAME);
-    Mockito.verify(comicBookStateAdaptor, Mockito.never()).fireEvent(Mockito.any(), Mockito.any());
+    verify(comicFileAdaptor).standardizeFilename(TEST_COMIC_FILENAME);
+    verify(comicBookRepository).findByFilename(TEST_STANDARDIZED_FILENAME);
+    verify(comicBookStateAdaptor, never()).fireEvent(Mockito.any(), Mockito.any());
   }
 
   @Test
   void markComicAsMissing_caseSensitive() {
-    Mockito.when(comicFileAdaptor.standardizeFilename(Mockito.anyString()))
+    when(comicFileAdaptor.standardizeFilename(Mockito.anyString()))
         .thenReturn(TEST_STANDARDIZED_FILENAME);
-    Mockito.when(comicFileAdaptor.isCaseSensitiveFilenames()).thenReturn(true);
-    Mockito.when(comicBookRepository.findByFilename(Mockito.anyString())).thenReturn(comicBook);
+    when(comicFileAdaptor.isCaseSensitiveFilenames()).thenReturn(true);
+    when(comicBookRepository.findByFilename(Mockito.anyString())).thenReturn(comicBook);
 
     service.markComicAsMissing(TEST_COMIC_FILENAME);
 
-    Mockito.verify(comicFileAdaptor).standardizeFilename(TEST_COMIC_FILENAME);
-    Mockito.verify(comicBookRepository).findByFilename(TEST_STANDARDIZED_FILENAME);
-    Mockito.verify(comicBookStateAdaptor, Mockito.never())
-        .fireEvent(comicBook, ComicEvent.comicFileDiscovered);
+    verify(comicFileAdaptor).standardizeFilename(TEST_COMIC_FILENAME);
+    verify(comicBookRepository).findByFilename(TEST_STANDARDIZED_FILENAME);
+    verify(comicBookStateAdaptor, never()).fireEvent(comicBook, ComicEvent.comicFileDiscovered);
   }
 
   @Test
   void markComicAsFound_caseInsensitive_noRecordFound() {
-    Mockito.when(comicFileAdaptor.standardizeFilename(Mockito.anyString()))
+    when(comicFileAdaptor.standardizeFilename(Mockito.anyString()))
         .thenReturn(TEST_STANDARDIZED_FILENAME);
-    Mockito.when(comicFileAdaptor.isCaseSensitiveFilenames()).thenReturn(false);
-    Mockito.when(comicBookRepository.findByFilenameCaseInsensitive(Mockito.anyString()))
-        .thenReturn(null);
+    when(comicFileAdaptor.isCaseSensitiveFilenames()).thenReturn(false);
+    when(comicBookRepository.findByFilenameCaseInsensitive(Mockito.anyString())).thenReturn(null);
 
     service.markComicAsFound(TEST_COMIC_FILENAME);
 
-    Mockito.verify(comicFileAdaptor).standardizeFilename(TEST_COMIC_FILENAME);
-    Mockito.verify(comicBookRepository).findByFilenameCaseInsensitive(TEST_STANDARDIZED_FILENAME);
-    Mockito.verify(comicBookStateAdaptor, Mockito.never()).fireEvent(Mockito.any(), Mockito.any());
+    verify(comicFileAdaptor).standardizeFilename(TEST_COMIC_FILENAME);
+    verify(comicBookRepository).findByFilenameCaseInsensitive(TEST_STANDARDIZED_FILENAME);
+    verify(comicBookStateAdaptor, never()).fireEvent(Mockito.any(), Mockito.any());
   }
 
   @Test
   void markComicAsFound_caseInsensitive() {
-    Mockito.when(comicFileAdaptor.standardizeFilename(Mockito.anyString()))
+    when(comicFileAdaptor.standardizeFilename(Mockito.anyString()))
         .thenReturn(TEST_STANDARDIZED_FILENAME);
-    Mockito.when(comicFileAdaptor.isCaseSensitiveFilenames()).thenReturn(false);
-    Mockito.when(comicBookRepository.findByFilenameCaseInsensitive(Mockito.anyString()))
+    when(comicFileAdaptor.isCaseSensitiveFilenames()).thenReturn(false);
+    when(comicBookRepository.findByFilenameCaseInsensitive(Mockito.anyString()))
         .thenReturn(comicBook);
 
     service.markComicAsFound(TEST_COMIC_FILENAME);
 
-    Mockito.verify(comicFileAdaptor).standardizeFilename(TEST_COMIC_FILENAME);
-    Mockito.verify(comicBookRepository).findByFilenameCaseInsensitive(TEST_STANDARDIZED_FILENAME);
-    Mockito.verify(comicBookStateAdaptor).fireEvent(comicBook, ComicEvent.comicFileFound);
+    verify(comicFileAdaptor).standardizeFilename(TEST_COMIC_FILENAME);
+    verify(comicBookRepository).findByFilenameCaseInsensitive(TEST_STANDARDIZED_FILENAME);
+    verify(comicBookStateAdaptor).fireEvent(comicBook, ComicEvent.comicFileFound);
   }
 
   @Test
   void markComicAsFound_caseSensitive_noRecordFound() {
-    Mockito.when(comicFileAdaptor.standardizeFilename(Mockito.anyString()))
+    when(comicFileAdaptor.standardizeFilename(Mockito.anyString()))
         .thenReturn(TEST_STANDARDIZED_FILENAME);
-    Mockito.when(comicFileAdaptor.isCaseSensitiveFilenames()).thenReturn(true);
-    Mockito.when(comicBookRepository.findByFilename(Mockito.anyString())).thenReturn(null);
+    when(comicFileAdaptor.isCaseSensitiveFilenames()).thenReturn(true);
+    when(comicBookRepository.findByFilename(Mockito.anyString())).thenReturn(null);
 
     service.markComicAsFound(TEST_COMIC_FILENAME);
 
-    Mockito.verify(comicFileAdaptor).standardizeFilename(TEST_COMIC_FILENAME);
-    Mockito.verify(comicBookRepository).findByFilename(TEST_STANDARDIZED_FILENAME);
-    Mockito.verify(comicBookStateAdaptor, Mockito.never()).fireEvent(Mockito.any(), Mockito.any());
+    verify(comicFileAdaptor).standardizeFilename(TEST_COMIC_FILENAME);
+    verify(comicBookRepository).findByFilename(TEST_STANDARDIZED_FILENAME);
+    verify(comicBookStateAdaptor, never()).fireEvent(Mockito.any(), Mockito.any());
   }
 
   @Test
   void markComicAsFound_caseSensitive() {
-    Mockito.when(comicFileAdaptor.standardizeFilename(Mockito.anyString()))
+    when(comicFileAdaptor.standardizeFilename(Mockito.anyString()))
         .thenReturn(TEST_STANDARDIZED_FILENAME);
-    Mockito.when(comicFileAdaptor.isCaseSensitiveFilenames()).thenReturn(true);
-    Mockito.when(comicBookRepository.findByFilename(Mockito.anyString())).thenReturn(comicBook);
+    when(comicFileAdaptor.isCaseSensitiveFilenames()).thenReturn(true);
+    when(comicBookRepository.findByFilename(Mockito.anyString())).thenReturn(comicBook);
 
     service.markComicAsFound(TEST_COMIC_FILENAME);
 
-    Mockito.verify(comicFileAdaptor).standardizeFilename(TEST_COMIC_FILENAME);
-    Mockito.verify(comicBookRepository).findByFilename(TEST_STANDARDIZED_FILENAME);
-    Mockito.verify(comicBookStateAdaptor).fireEvent(comicBook, ComicEvent.comicFileFound);
+    verify(comicFileAdaptor).standardizeFilename(TEST_COMIC_FILENAME);
+    verify(comicBookRepository).findByFilename(TEST_STANDARDIZED_FILENAME);
+    verify(comicBookStateAdaptor).fireEvent(comicBook, ComicEvent.comicFileFound);
   }
 
   @Test
   void getBatchScrapingCount() {
-    Mockito.when(comicBookRepository.getBatchScrapingCount()).thenReturn(TEST_COMIC_COUNT);
+    when(comicBookRepository.getBatchScrapingCount()).thenReturn(TEST_COMIC_COUNT);
 
     final long result = service.getBatchScrapingCount();
 
     assertEquals(TEST_COMIC_COUNT, result);
 
-    Mockito.verify(comicBookRepository).getBatchScrapingCount();
+    verify(comicBookRepository).getBatchScrapingCount();
   }
 
   @Test
   void findBatchScrapingComics() {
-    Mockito.when(comicBookRepository.findBatchScrapingComics(pageableCaptor.capture()))
+    when(comicBookRepository.findBatchScrapingComics(pageableCaptor.capture()))
         .thenReturn(comicBookList);
 
     final List<ComicBook> result = service.findBatchScrapingComics(TEST_MAXIMUM_COMICS);
@@ -1534,31 +1493,31 @@ class ComicBookServiceTest {
     assertEquals(0, pageable.getPageNumber());
     assertEquals(TEST_MAXIMUM_COMICS, pageable.getPageSize());
 
-    Mockito.verify(comicBookRepository).findBatchScrapingComics(pageable);
+    verify(comicBookRepository).findBatchScrapingComics(pageable);
   }
 
   @Test
   void markComicBooksForBatchScraping() {
     service.markComicBooksForBatchScraping(idList);
 
-    Mockito.verify(comicBookRepository).prepareForBatchScraping(idList);
+    verify(comicBookRepository).prepareForBatchScraping(idList);
   }
 
   @Test
   void getSeriesCountForPublisher() {
-    Mockito.when(comicDetailRepository.getSeriesCountForPublisher(Mockito.anyString()))
+    when(comicDetailRepository.getSeriesCountForPublisher(Mockito.anyString()))
         .thenReturn(TEST_COMIC_COUNT);
 
     final long result = service.getSeriesCountForPublisher(TEST_PUBLISHER);
 
     assertEquals(TEST_COMIC_COUNT, result);
 
-    Mockito.verify(comicDetailRepository).getSeriesCountForPublisher(TEST_PUBLISHER);
+    verify(comicDetailRepository).getSeriesCountForPublisher(TEST_PUBLISHER);
   }
 
   @Test
   void findComicsWithUnhashedPages() {
-    Mockito.when(comicBookRepository.findComicsWithUnhashedPages(pageableCaptor.capture()))
+    when(comicBookRepository.findComicsWithUnhashedPages(pageableCaptor.capture()))
         .thenReturn(comicBookList);
 
     final List<ComicBook> result = service.findComicsWithUnhashedPages(TEST_MAXIMUM_COMICS);
@@ -1571,53 +1530,51 @@ class ComicBookServiceTest {
     assertEquals(0, pageable.getPageNumber());
     assertEquals(TEST_MAXIMUM_COMICS, pageable.getPageSize());
 
-    Mockito.verify(comicBookRepository).findComicsWithUnhashedPages(pageable);
+    verify(comicBookRepository).findComicsWithUnhashedPages(pageable);
   }
 
   @Test
   void findComicsWithUnhashedPagesCount() {
-    Mockito.when(comicBookRepository.findComicsWithUnhashedPagesCount())
-        .thenReturn(TEST_COMIC_COUNT);
+    when(comicBookRepository.findComicsWithUnhashedPagesCount()).thenReturn(TEST_COMIC_COUNT);
 
     final long result = service.findComicsWithUnhashedPagesCount();
 
     assertEquals(TEST_COMIC_COUNT, result);
 
-    Mockito.verify(comicBookRepository).findComicsWithUnhashedPagesCount();
+    verify(comicBookRepository).findComicsWithUnhashedPagesCount();
   }
 
   @Test
   void hasComicsWithUnhashedPagesCount_withNoSuchComics() {
-    Mockito.when(comicBookRepository.findComicsWithUnhashedPagesCount()).thenReturn(0L);
+    when(comicBookRepository.findComicsWithUnhashedPagesCount()).thenReturn(0L);
 
     final boolean result = service.hasComicsWithUnhashedPages();
 
     assertFalse(result);
 
-    Mockito.verify(comicBookRepository).findComicsWithUnhashedPagesCount();
+    verify(comicBookRepository).findComicsWithUnhashedPagesCount();
   }
 
   @Test
   void hasComicsWithUnhashedPagesCount_withComics() {
-    Mockito.when(comicBookRepository.findComicsWithUnhashedPagesCount())
-        .thenReturn(TEST_COMIC_COUNT);
+    when(comicBookRepository.findComicsWithUnhashedPagesCount()).thenReturn(TEST_COMIC_COUNT);
 
     final boolean result = service.hasComicsWithUnhashedPages();
 
     assertTrue(result);
 
-    Mockito.verify(comicBookRepository).findComicsWithUnhashedPagesCount();
+    verify(comicBookRepository).findComicsWithUnhashedPagesCount();
   }
 
   @Test
   void getComicDetailIdForComicBook() {
-    Mockito.when(comicDetailRepository.getComicDetailIdForComicBook(Mockito.anyLong()))
+    when(comicDetailRepository.getComicDetailIdForComicBook(Mockito.anyLong()))
         .thenReturn(TEST_COMIC_DETAIL_ID);
 
     final long result = service.getComicDetailIdForComicBook(TEST_COMIC_BOOK_ID);
 
     assertEquals(TEST_COMIC_DETAIL_ID, result);
 
-    Mockito.verify(comicDetailRepository).getComicDetailIdForComicBook(TEST_COMIC_BOOK_ID);
+    verify(comicDetailRepository).getComicDetailIdForComicBook(TEST_COMIC_BOOK_ID);
   }
 }

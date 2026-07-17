@@ -24,8 +24,6 @@ export const convertSingleComicBook = createAction(
   props<{
     id: number;
     archiveType: ArchiveType;
-    deletePages: boolean;
-    renamePages: boolean;
   }>()
 );
 
@@ -33,8 +31,6 @@ export const convertSelectedComicBooks = createAction(
   '[Convert Comic Books] Convert comics',
   props<{
     archiveType: ArchiveType;
-    deletePages: boolean;
-    renamePages: boolean;
   }>()
 );
 

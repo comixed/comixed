@@ -18,12 +18,12 @@
 
 package org.comixedproject.service.library;
 
-import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.adaptors.file.FileAdaptor;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.batch.UpdateMetadataEvent;
@@ -40,8 +40,6 @@ import org.springframework.context.ApplicationEventPublisher;
 class LibraryServiceTest {
   private static final String TEST_IMAGE_CACHE_DIRECTORY =
       "/home/ComiXedReader/.comixed/image-cache";
-  private static final boolean TEST_RENAME_PAGES = RandomUtils.nextBoolean();
-  private static final boolean TEST_DELETE_PAGES = RandomUtils.nextBoolean();
 
   @InjectMocks private LibraryService service;
   @Mock private ComicBookService comicBookService;
@@ -56,22 +54,19 @@ class LibraryServiceTest {
 
   @Test
   void ClearImageCache() throws LibraryException, IOException {
-    Mockito.when(pageCacheService.getRootDirectory()).thenReturn(TEST_IMAGE_CACHE_DIRECTORY);
+    when(pageCacheService.getRootDirectory()).thenReturn(TEST_IMAGE_CACHE_DIRECTORY);
     Mockito.doNothing().when(fileAdaptor).deleteDirectoryContents(Mockito.anyString());
 
     service.clearImageCache();
 
-    Mockito.verify(pageCacheService, Mockito.times(1)).getRootDirectory();
-    Mockito.verify(fileAdaptor, Mockito.times(1))
-        .deleteDirectoryContents(TEST_IMAGE_CACHE_DIRECTORY);
+    verify(pageCacheService).getRootDirectory();
+    verify(fileAdaptor).deleteDirectoryContents(TEST_IMAGE_CACHE_DIRECTORY);
   }
 
   @Test
   void clearImageCacheError() throws IOException {
-    Mockito.when(pageCacheService.getRootDirectory()).thenReturn(TEST_IMAGE_CACHE_DIRECTORY);
-    Mockito.doThrow(IOException.class)
-        .when(fileAdaptor)
-        .deleteDirectoryContents(Mockito.anyString());
+    when(pageCacheService.getRootDirectory()).thenReturn(TEST_IMAGE_CACHE_DIRECTORY);
+    doThrow(IOException.class).when(fileAdaptor).deleteDirectoryContents(Mockito.anyString());
 
     assertThrows(LibraryException.class, () -> service.clearImageCache());
   }
@@ -82,39 +77,37 @@ class LibraryServiceTest {
 
     service.updateMetadata(comicIdList);
 
-    Mockito.verify(comicBookService, Mockito.times(1)).prepareForMetadataUpdate(comicIdList);
-    Mockito.verify(applicationEventPublisher, Mockito.times(1))
-        .publishEvent(UpdateMetadataEvent.instance);
+    verify(comicBookService).prepareForMetadataUpdate(comicIdList);
+    verify(applicationEventPublisher).publishEvent(UpdateMetadataEvent.instance);
   }
 
   @Test
-  void prepareForOrganization() throws LibraryException {
+  void prepareForOrganization() {
     for (int index = 0; index < 25; index++) comicBookList.add(comicBook);
 
     service.prepareForOrganization(comicIdList);
 
-    Mockito.verify(comicBookService, Mockito.times(1)).prepareForOrganization(comicIdList);
+    verify(comicBookService).prepareForOrganization(comicIdList);
   }
 
   @Test
   void prepareAllForOrganization() {
     service.prepareAllForOrganization();
 
-    Mockito.verify(comicBookService, Mockito.times(1)).prepareAllForOrganization();
+    verify(comicBookService).prepareAllForOrganization();
   }
 
   @Test
   void prepareToRecreate() {
-    service.prepareToRecreate(comicIdList, archiveType, TEST_RENAME_PAGES, TEST_DELETE_PAGES);
+    service.prepareToRecreate(comicIdList, archiveType);
 
-    Mockito.verify(comicBookService, Mockito.times(1))
-        .prepareForRecreation(comicIdList, archiveType, TEST_RENAME_PAGES, TEST_DELETE_PAGES);
+    verify(comicBookService).prepareForRecreation(comicIdList, archiveType);
   }
 
   @Test
   void prepareForPurge() {
     service.prepareForPurging();
 
-    Mockito.verify(comicBookService, Mockito.times(1)).prepareComicBooksForDeleting();
+    verify(comicBookService).prepareComicBooksForDeleting();
   }
 }

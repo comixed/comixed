@@ -47,7 +47,7 @@ public class UpdateMetadataProcessor implements ItemProcessor<ComicBook, ComicBo
       log.debug("Comic file is missing, skipping: id={}", comicBook.getComicBookId());
       return null;
     }
-    if (comicBook.isFileContentsLoaded() == false
+    if (!comicBook.isFileContentsLoaded()
         || comicBook.isPurging()
         || comicBook.isBatchMetadataUpdate()
         || comicBook.isEditDetails()) {
@@ -80,7 +80,7 @@ public class UpdateMetadataProcessor implements ItemProcessor<ComicBook, ComicBo
 
     try {
       log.debug("Updating comic book metadata: id={}", comicBook.getComicBookId());
-      this.comicBookAdaptor.save(comicBook, comicBook.getComicDetail().getArchiveType(), false, "");
+      this.comicBookAdaptor.save(comicBook, comicBook.getComicDetail().getArchiveType(), "");
     } catch (AdaptorException error) {
       log.error("Failed to update metadata for comic book", error);
     }

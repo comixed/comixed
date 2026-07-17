@@ -869,21 +869,15 @@ public class ComicBookService {
   }
 
   /**
-   * Marks the specified comics for recreation, optionally renaming pages and deleting pages.
+   * Marks the specified comics for recreation, optionally renaming pages.
    *
    * @param ids the comic ids
    * @param archiveType the targe archive type
-   * @param renamePages the rename pages flag
-   * @param deletePages the delete pages flag
    */
   @Transactional
-  public void prepareForRecreation(
-      final List<Long> ids,
-      final ArchiveType archiveType,
-      final boolean renamePages,
-      final boolean deletePages) {
+  public void prepareForRecreation(final List<Long> ids, final ArchiveType archiveType) {
     log.trace("Marking comics for recreation");
-    this.comicBookRepository.markForRecreationById(ids, archiveType, renamePages, deletePages);
+    this.comicBookRepository.markForRecreationById(ids, archiveType);
     this.applicationEventPublisher.publishEvent(RecreateComicFilesEvent.instance);
   }
 

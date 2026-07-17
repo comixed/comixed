@@ -21,9 +21,9 @@ package org.comixedproject.batch.comicpages;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.batch.comicpages.listeners.MarkBlockedPagesChunkListener;
 import org.comixedproject.batch.comicpages.listeners.MarkBlockedPagesJobListener;
+import org.comixedproject.batch.comicpages.processors.MarkBlockedPageProcessor;
 import org.comixedproject.batch.comicpages.readers.MarkBlockedPagesReader;
-import org.comixedproject.batch.comicpages.writers.ComicPageWriter;
-import org.comixedproject.batch.processors.NoopProcessor;
+import org.comixedproject.batch.comicpages.writers.MarkBlockedPageWriter;
 import org.comixedproject.model.comicpages.ComicPage;
 import org.springframework.batch.core.job.Job;
 import org.springframework.batch.core.job.builder.JobBuilder;
@@ -86,8 +86,8 @@ public class MarkBlockedPagesConfiguration {
       final JobRepository jobRepository,
       final PlatformTransactionManager platformTransactionManager,
       final MarkBlockedPagesReader reader,
-      final NoopProcessor<ComicPage> processor,
-      final ComicPageWriter writer,
+      final MarkBlockedPageProcessor processor,
+      final MarkBlockedPageWriter writer,
       final MarkBlockedPagesChunkListener<ComicPage, ComicPage> chunkListener) {
     return new StepBuilder("markBlockedPagesStep", jobRepository)
         .<ComicPage, ComicPage>chunk(this.chunkSize)

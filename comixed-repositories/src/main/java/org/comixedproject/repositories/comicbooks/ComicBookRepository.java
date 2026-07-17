@@ -583,12 +583,9 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
 
   @Modifying
   @Query(
-      "UPDATE ComicBook c SET c.targetArchiveType = :archiveType, c.renamePages = :renamePages, c.deletePages = :deletePages WHERE c.comicDetail.comicDetailId IN (:ids)")
+      "UPDATE ComicBook c SET c.targetArchiveType = :archiveType WHERE c.comicDetail.comicDetailId IN (:ids)")
   void markForRecreationById(
-      @Param("ids") List<Long> ids,
-      @Param("archiveType") final ArchiveType archiveType,
-      @Param("renamePages") final boolean renamePages,
-      @Param("deletePages") final boolean deletePages);
+      @Param("ids") List<Long> ids, @Param("archiveType") final ArchiveType archiveType);
 
   /**
    * Returns the number of unprocessed comic books.

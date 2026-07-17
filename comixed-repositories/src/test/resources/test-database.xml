@@ -30,8 +30,6 @@
                     batch_metadata_update="false"
                     batch_scraping="false"
                     organizing="false"
-                    rename_pages="false"
-                    delete_pages="true"
                     purging="false"
                     edit_details="false"
                     last_modified_on="2020-01-09 06:25:00"/>
@@ -46,8 +44,6 @@
                     batch_metadata_update="false"
                     batch_scraping="false"
                     organizing="false"
-                    rename_pages="false"
-                    delete_pages="true"
                     purging="false"
                     edit_details="false"
                     last_modified_on="2020-01-09 06:27:00"/>
@@ -57,8 +53,6 @@
                     batch_metadata_update="false"
                     batch_scraping="false"
                     organizing="false"
-                    rename_pages="false"
-                    delete_pages="true"
                     purging="false"
                     edit_details="false"
                     last_modified_on="2020-01-09 06:26:00"/>
@@ -68,8 +62,6 @@
                     batch_metadata_update="false"
                     batch_scraping="false"
                     organizing="false"
-                    rename_pages="false"
-                    delete_pages="true"
                     purging="false"
                     edit_details="false"
                     last_modified_on="2020-01-09 06:25:00"/>
@@ -79,8 +71,6 @@
                     batch_metadata_update="false"
                     batch_scraping="false"
                     organizing="false"
-                    rename_pages="false"
-                    delete_pages="true"
                     purging="false"
                     edit_details="false"
                     last_modified_on="2020-01-09 06:27:11"/>
@@ -90,8 +80,6 @@
                     batch_metadata_update="false"
                     batch_scraping="false"
                     organizing="true"
-                    rename_pages="false"
-                    delete_pages="true"
                     purging="false"
                     edit_details="false"
                     last_modified_on="2020-01-09 06:27:02"/>
@@ -101,8 +89,6 @@
                     batch_metadata_update="false"
                     batch_scraping="false"
                     organizing="false"
-                    rename_pages="false"
-                    delete_pages="true"
                     purging="false"
                     edit_details="false"
                     last_modified_on="2020-01-09 06:27:30"/>
@@ -112,8 +98,6 @@
                     batch_metadata_update="false"
                     batch_scraping="false"
                     organizing="false"
-                    rename_pages="false"
-                    delete_pages="true"
                     purging="false"
                     edit_details="false"
                     last_modified_on="2020-01-09 06:27:30"/>
@@ -123,8 +107,6 @@
                     batch_metadata_update="false"
                     batch_scraping="false"
                     organizing="false"
-                    rename_pages="false"
-                    delete_pages="true"
                     purging="false"
                     edit_details="false"
                     last_modified_on="2019-04-24 09:35:00"/>
@@ -134,8 +116,6 @@
                     batch_metadata_update="false"
                     batch_scraping="false"
                     organizing="false"
-                    rename_pages="false"
-                    delete_pages="true"
                     purging="false"
                     edit_details="false"
                     last_modified_on="2019-04-24 09:36:00"/>
@@ -145,8 +125,6 @@
                     batch_metadata_update="false"
                     batch_scraping="false"
                     organizing="false"
-                    rename_pages="false"
-                    delete_pages="true"
                     purging="false"
                     edit_details="false"
                     last_modified_on="2019-04-24 09:36:00"/>

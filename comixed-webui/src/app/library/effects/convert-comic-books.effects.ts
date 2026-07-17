@@ -49,9 +49,7 @@ export class ConvertComicBooksEffects {
         this.libraryService
           .convertSingleComicBook({
             id: action.id,
-            archiveType: action.archiveType,
-            renamePages: action.renamePages,
-            deletePages: action.deletePages
+            archiveType: action.archiveType
           })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
@@ -86,9 +84,7 @@ export class ConvertComicBooksEffects {
       switchMap(action =>
         this.libraryService
           .convertSelectedComicBooks({
-            archiveType: action.archiveType,
-            renamePages: action.renamePages,
-            deletePages: action.deletePages
+            archiveType: action.archiveType
           })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),

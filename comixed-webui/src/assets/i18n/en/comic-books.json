@@ -199,6 +199,7 @@
       "thumbnail": "Thumbnail"
     },
     "text": {
+      "DELETED": "Marked For Removal",
       "FRONT_COVER": "Front Cover",
       "BACK_COVER": "Back Cover",
       "INNER_COVER": "Inner Cover",

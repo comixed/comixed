@@ -33,8 +33,6 @@ import {
 describe('ConvertComicBooks Reducer', () => {
   const ID = DISPLAYABLE_COMIC_1.comicBookId;
   const ARCHIVE_TYPE = ArchiveType.CBZ;
-  const RENAME_PAGES = Math.random() > 0.5;
-  const DELETE_PAGES = Math.random() > 0.5;
 
   let state: ConvertComicBooksState;
 
@@ -58,9 +56,7 @@ describe('ConvertComicBooks Reducer', () => {
         { ...state, converting: false },
         convertSingleComicBook({
           id: ID,
-          archiveType: ARCHIVE_TYPE,
-          deletePages: DELETE_PAGES,
-          renamePages: RENAME_PAGES
+          archiveType: ARCHIVE_TYPE
         })
       );
     });
@@ -75,9 +71,7 @@ describe('ConvertComicBooks Reducer', () => {
       state = reducer(
         { ...state, converting: false },
         convertSelectedComicBooks({
-          archiveType: ARCHIVE_TYPE,
-          deletePages: DELETE_PAGES,
-          renamePages: RENAME_PAGES
+          archiveType: ARCHIVE_TYPE
         })
       );
     });

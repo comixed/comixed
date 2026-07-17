@@ -112,19 +112,11 @@ public class LibraryController {
     }
 
     final ArchiveType archiveType = request.getArchiveType();
-    final boolean renamePages = request.isRenamePages();
-    final boolean deletePages = request.isDeletePages();
 
-    log.info(
-        "Converting single comic book: target={} delete pages={} rename pages={}",
-        comicBookId,
-        archiveType,
-        renamePages,
-        deletePages);
+    log.info("Converting single comic book: target={}", comicBookId, archiveType);
 
     log.trace("Preparing to recreate comic book file");
-    this.libraryService.prepareToRecreate(
-        new ArrayList<>(Arrays.asList(comicBookId)), archiveType, renamePages, deletePages);
+    this.libraryService.prepareToRecreate(new ArrayList<>(Arrays.asList(comicBookId)), archiveType);
   }
 
   /**
@@ -157,18 +149,11 @@ public class LibraryController {
       final List<Long> idList =
           this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
       final ArchiveType archiveType = request.getArchiveType();
-      final boolean renamePages = request.isRenamePages();
-      final boolean deletePages = request.isDeletePages();
 
-      log.info(
-          "Converting comic(s): email={} target={} delete pages={} rename pages={}",
-          email,
-          archiveType,
-          renamePages,
-          deletePages);
+      log.info("Converting comic(s): email={} target={} rename pages={}", email, archiveType);
 
       log.trace("Preparing to recreate comic files");
-      this.libraryService.prepareToRecreate(idList, archiveType, renamePages, deletePages);
+      this.libraryService.prepareToRecreate(idList, archiveType);
       log.trace("Clearing comic book selections");
       this.comicSelectionService.clearSelectedComicBooks(email, idList);
       log.trace("Saving comic book selections");

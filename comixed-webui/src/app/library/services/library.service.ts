@@ -39,7 +39,7 @@ import {
 import { SetComicReadRequest } from '@app/library/models/net/set-comic-read-request';
 import { OrganizeLibraryRequest } from '@app/library/models/net/organize-library-request';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
-import { ConvertComicBooksRequest } from '@app/library/models/net/convert-comic-books-request';
+import { ConvertComicsRequest } from '@app/library/models/net/convert-comics-request';
 import { PurgeLibraryRequest } from '@app/library/models/net/purge-library-request';
 import { EditMultipleComics } from '@app/library/models/ui/edit-multiple-comics';
 import { EditMultipleComicsRequest } from '@app/library/models/net/edit-multiple-comics-request';
@@ -151,8 +151,6 @@ export class LibraryService {
   convertSingleComicBook(args: {
     id: number;
     archiveType: ArchiveType;
-    renamePages: boolean;
-    deletePages: boolean;
   }): Observable<any> {
     this.logger.trace('Converting comics:', args);
     return this.http.put(
@@ -160,24 +158,18 @@ export class LibraryService {
         comicBookId: args.id
       }),
       {
-        archiveType: args.archiveType,
-        renamePages: args.renamePages,
-        deletePages: args.deletePages
-      } as ConvertComicBooksRequest
+        archiveType: args.archiveType
+      } as ConvertComicsRequest
     );
   }
 
   convertSelectedComicBooks(args: {
     archiveType: ArchiveType;
-    renamePages: boolean;
-    deletePages: boolean;
   }): Observable<any> {
     this.logger.trace('Converting comics:', args);
     return this.http.put(interpolate(CONVERT_SELECTED_COMIC_BOOKS_URL), {
-      archiveType: args.archiveType,
-      renamePages: args.renamePages,
-      deletePages: args.deletePages
-    } as ConvertComicBooksRequest);
+      archiveType: args.archiveType
+    } as ConvertComicsRequest);
   }
 
   purgeLibrary(): Observable<any> {

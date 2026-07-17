@@ -15,4 +15,7 @@
     <!-- create v4.0 views -->
     <include file="/db/migrations/4.0/create_views/create_views_changelog.xml" />
 
+    <include file="/db/migrations/4.0/001_2718_remove_comic_books_delete_pages_column.xml"/>
+    <include file="/db/migrations/4.0/002_2718_remove_comic_books_rename_pages_column.xml"/>
+
 </databaseChangeLog>

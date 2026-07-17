@@ -142,18 +142,6 @@ public class ComicBook implements StatefulItem<ComicState> {
   @Setter
   private ArchiveType targetArchiveType;
 
-  @Column(name = "rename_pages", nullable = false, updatable = true)
-  @JsonIgnore
-  @Getter
-  @Setter
-  private boolean renamePages = false;
-
-  @Column(name = "delete_pages", nullable = false, updatable = true)
-  @JsonIgnore
-  @Getter
-  @Setter
-  private boolean deletePages = false;
-
   @Column(name = "edit_details", nullable = false, updatable = true)
   @JsonIgnore
   @Getter
@@ -225,13 +213,7 @@ public class ComicBook implements StatefulItem<ComicState> {
 
   public void updatePageNumbers() {
     Collections.sort(
-        this.pages,
-        new Comparator<ComicPage>() {
-          @Override
-          public int compare(final ComicPage o1, final ComicPage o2) {
-            return o1.getPageNumber().compareTo(o2.getPageNumber());
-          }
-        });
+        this.pages, (left, right) -> left.getPageNumber().compareTo(right.getPageNumber()));
     for (int index = 0; index < this.pages.size(); index++) {
       this.pages.get(index).setPageNumber(index);
     }

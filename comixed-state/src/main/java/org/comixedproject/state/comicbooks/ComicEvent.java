@@ -38,6 +38,8 @@ public enum ComicEvent {
   prepareComicsForBatchEditing,
   comicMetadataSaved,
   comicMetadataCleared,
+  comicPageMarkedForRemoval,
+  comicPageUnmarkedForRemoval,
   comicFileRecreated,
   markComicForRemoval,
   unmarkComicForRemoval,

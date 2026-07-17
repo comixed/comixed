@@ -433,9 +433,7 @@ describe('ComicListViewComponent', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
           convertSingleComicBook({
             id: COMIC_BOOK.comicBookId,
-            archiveType: archiveTypeFromString(ARCHIVE_TYPE),
-            renamePages: true,
-            deletePages: true
+            archiveType: archiveTypeFromString(ARCHIVE_TYPE)
           })
         );
       });
@@ -456,9 +454,7 @@ describe('ComicListViewComponent', () => {
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
           convertSelectedComicBooks({
-            archiveType: archiveTypeFromString(ARCHIVE_TYPE),
-            renamePages: true,
-            deletePages: true
+            archiveType: archiveTypeFromString(ARCHIVE_TYPE)
           })
         );
       });

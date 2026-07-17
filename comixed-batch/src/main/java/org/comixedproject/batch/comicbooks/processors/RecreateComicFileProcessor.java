@@ -48,7 +48,7 @@ public class RecreateComicFileProcessor implements ItemProcessor<ComicBook, Comi
       log.debug("Comic file is missing, skipping: id={}", comicBook.getComicBookId());
       return null;
     }
-    if (comicBook.isFileContentsLoaded() == false
+    if (!comicBook.isFileContentsLoaded()
         || comicBook.isPurging()
         || comicBook.isBatchMetadataUpdate()
         || comicBook.isEditDetails()
@@ -64,7 +64,6 @@ public class RecreateComicFileProcessor implements ItemProcessor<ComicBook, Comi
         this.comicBookAdaptor.save(
             comicBook,
             comicBook.getTargetArchiveType(),
-            comicBook.isDeletePages(),
             this.configurationService.getOptionValue(CFG_LIBRARY_PAGE_RENAMING_RULE, ""));
       } catch (AdaptorException error) {
         log.error("Failed to recreate comic book file", error);

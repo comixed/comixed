@@ -39,8 +39,6 @@ import { hot } from 'jasmine-marbles';
 describe('ConvertComicBooksEffects', () => {
   const ID = DISPLAYABLE_COMIC_1.comicBookId;
   const ARCHIVE_TYPE = ArchiveType.CBZ;
-  const RENAME_PAGES = Math.random() > 0.5;
-  const DELETE_PAGES = Math.random() > 0.5;
 
   let actions$: Observable<any>;
   let effects: ConvertComicBooksEffects;
@@ -90,9 +88,7 @@ describe('ConvertComicBooksEffects', () => {
       const serviceResponse = new HttpResponse({ status: 200 });
       const action = convertSingleComicBook({
         id: ID,
-        archiveType: ARCHIVE_TYPE,
-        deletePages: DELETE_PAGES,
-        renamePages: RENAME_PAGES
+        archiveType: ARCHIVE_TYPE
       });
       const outcome = convertComicBooksSuccess();
 
@@ -100,9 +96,7 @@ describe('ConvertComicBooksEffects', () => {
       libraryService.convertSingleComicBook
         .withArgs({
           id: ID,
-          archiveType: ARCHIVE_TYPE,
-          deletePages: DELETE_PAGES,
-          renamePages: RENAME_PAGES
+          archiveType: ARCHIVE_TYPE
         })
         .and.returnValue(of(serviceResponse));
 
@@ -115,9 +109,7 @@ describe('ConvertComicBooksEffects', () => {
       const serviceResponse = new HttpErrorResponse({});
       const action = convertSingleComicBook({
         id: ID,
-        archiveType: ARCHIVE_TYPE,
-        deletePages: DELETE_PAGES,
-        renamePages: RENAME_PAGES
+        archiveType: ARCHIVE_TYPE
       });
       const outcome = convertComicBooksFailure();
 
@@ -125,9 +117,7 @@ describe('ConvertComicBooksEffects', () => {
       libraryService.convertSingleComicBook
         .withArgs({
           id: ID,
-          archiveType: ARCHIVE_TYPE,
-          deletePages: DELETE_PAGES,
-          renamePages: RENAME_PAGES
+          archiveType: ARCHIVE_TYPE
         })
         .and.returnValue(throwError(serviceResponse));
 
@@ -139,9 +129,7 @@ describe('ConvertComicBooksEffects', () => {
     it('fires an action on general failure', () => {
       const action = convertSingleComicBook({
         id: ID,
-        archiveType: ARCHIVE_TYPE,
-        deletePages: DELETE_PAGES,
-        renamePages: RENAME_PAGES
+        archiveType: ARCHIVE_TYPE
       });
       const outcome = convertComicBooksFailure();
 
@@ -149,9 +137,7 @@ describe('ConvertComicBooksEffects', () => {
       libraryService.convertSingleComicBook
         .withArgs({
           id: ID,
-          archiveType: ARCHIVE_TYPE,
-          deletePages: DELETE_PAGES,
-          renamePages: RENAME_PAGES
+          archiveType: ARCHIVE_TYPE
         })
         .and.throwError('expected');
 
@@ -165,18 +151,14 @@ describe('ConvertComicBooksEffects', () => {
     it('fires an action on success', () => {
       const serviceResponse = new HttpResponse({ status: 200 });
       const action = convertSelectedComicBooks({
-        archiveType: ARCHIVE_TYPE,
-        deletePages: DELETE_PAGES,
-        renamePages: RENAME_PAGES
+        archiveType: ARCHIVE_TYPE
       });
       const outcome = convertComicBooksSuccess();
 
       actions$ = hot('-a', { a: action });
       libraryService.convertSelectedComicBooks
         .withArgs({
-          archiveType: ARCHIVE_TYPE,
-          deletePages: DELETE_PAGES,
-          renamePages: RENAME_PAGES
+          archiveType: ARCHIVE_TYPE
         })
         .and.returnValue(of(serviceResponse));
 
@@ -188,18 +170,14 @@ describe('ConvertComicBooksEffects', () => {
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
       const action = convertSelectedComicBooks({
-        archiveType: ARCHIVE_TYPE,
-        deletePages: DELETE_PAGES,
-        renamePages: RENAME_PAGES
+        archiveType: ARCHIVE_TYPE
       });
       const outcome = convertComicBooksFailure();
 
       actions$ = hot('-a', { a: action });
       libraryService.convertSelectedComicBooks
         .withArgs({
-          archiveType: ARCHIVE_TYPE,
-          deletePages: DELETE_PAGES,
-          renamePages: RENAME_PAGES
+          archiveType: ARCHIVE_TYPE
         })
         .and.returnValue(throwError(serviceResponse));
 
@@ -210,18 +188,14 @@ describe('ConvertComicBooksEffects', () => {
 
     it('fires an action on general failure', () => {
       const action = convertSelectedComicBooks({
-        archiveType: ARCHIVE_TYPE,
-        deletePages: DELETE_PAGES,
-        renamePages: RENAME_PAGES
+        archiveType: ARCHIVE_TYPE
       });
       const outcome = convertComicBooksFailure();
 
       actions$ = hot('-a', { a: action });
       libraryService.convertSelectedComicBooks
         .withArgs({
-          archiveType: ARCHIVE_TYPE,
-          deletePages: DELETE_PAGES,
-          renamePages: RENAME_PAGES
+          archiveType: ARCHIVE_TYPE
         })
         .and.throwError('expected');
 

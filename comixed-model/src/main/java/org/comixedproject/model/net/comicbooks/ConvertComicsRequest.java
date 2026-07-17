@@ -40,14 +40,4 @@ public class ConvertComicsRequest {
   @Setter
   @JsonProperty("archiveType")
   private ArchiveType archiveType;
-
-  @Getter
-  @Setter
-  @JsonProperty("renamePages")
-  private boolean renamePages;
-
-  @Getter
-  @Setter
-  @JsonProperty("deletePages")
-  private boolean deletePages;
 }

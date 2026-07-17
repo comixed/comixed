@@ -18,17 +18,16 @@
 
 package org.comixedproject.rest.library;
 
-import static junit.framework.TestCase.*;
 import static org.comixedproject.batch.comicbooks.EditComicBookMetadataConfiguration.*;
 import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LIBRARY_SELECTIONS;
-import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 import jakarta.servlet.http.HttpSession;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.net.admin.ClearImageCacheResponse;
 import org.comixedproject.model.net.comicbooks.ConvertComicsRequest;
@@ -61,9 +60,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 @MockitoSettings(strictness = Strictness.LENIENT)
 class LibraryControllerTest {
   private static final ArchiveType TEST_ARCHIVE_TYPE = ArchiveType.CBZ;
-  private static final Random RANDOM = new Random();
-  private static final boolean TEST_RENAME_PAGES = RANDOM.nextBoolean();
-  private static final Boolean TEST_DELETE_MARKED_PAGES = RANDOM.nextBoolean();
   private static final long TEST_COMIC_BOOK_ID = 718L;
   private static final String TEST_PUBLISHER = "The Publisher";
   private static final String TEST_SERIES = "The Series";
@@ -98,113 +94,88 @@ class LibraryControllerTest {
 
   @BeforeEach
   void setUp() throws ComicBookSelectionException {
-    Mockito.when(httpSession.getAttribute(LIBRARY_SELECTIONS)).thenReturn(TEST_ENCODED_IDS);
-    Mockito.when(principal.getName()).thenReturn(TEST_EMAIL);
-    Mockito.when(comicSelectionService.decodeSelections(TEST_ENCODED_IDS)).thenReturn(selectedIds);
-    Mockito.when(comicSelectionService.encodeSelections(Mockito.anyList()))
-        .thenReturn(TEST_REENCODED_IDS);
+    when(httpSession.getAttribute(LIBRARY_SELECTIONS)).thenReturn(TEST_ENCODED_IDS);
+    when(principal.getName()).thenReturn(TEST_EMAIL);
+    when(comicSelectionService.decodeSelections(TEST_ENCODED_IDS)).thenReturn(selectedIds);
+    when(comicSelectionService.encodeSelections(Mockito.anyList())).thenReturn(TEST_REENCODED_IDS);
     selectedIds.add(TEST_COMIC_BOOK_ID);
   }
 
   @Test
   void getLibraryState() {
-    Mockito.when(remoteLibraryStateService.getLibraryState()).thenReturn(remoteLibraryState);
+    when(remoteLibraryStateService.getLibraryState()).thenReturn(remoteLibraryState);
 
     final RemoteLibraryState result = controller.getLibraryState();
 
     assertNotNull(result);
     assertSame(remoteLibraryState, result);
 
-    Mockito.verify(remoteLibraryStateService, Mockito.times(1)).getLibraryState();
+    verify(remoteLibraryStateService).getLibraryState();
   }
 
   @Test
   void convertSingleComicBookNoRecreateAllowed() {
-    Mockito.when(
-            configurationService.isFeatureEnabled(
-                ConfigurationService.CFG_LIBRARY_NO_RECREATE_COMICS))
+    when(configurationService.isFeatureEnabled(ConfigurationService.CFG_LIBRARY_NO_RECREATE_COMICS))
         .thenReturn(true);
 
     assertThrows(
         LibraryException.class,
         () ->
             controller.convertSingleComicBooks(
-                new ConvertComicsRequest(
-                    TEST_ARCHIVE_TYPE, TEST_RENAME_PAGES, TEST_DELETE_MARKED_PAGES),
-                TEST_COMIC_BOOK_ID));
+                new ConvertComicsRequest(TEST_ARCHIVE_TYPE), TEST_COMIC_BOOK_ID));
   }
 
   @Test
   void convertSingleComicBook() throws Exception {
-    Mockito.when(
-            configurationService.isFeatureEnabled(
-                ConfigurationService.CFG_LIBRARY_NO_RECREATE_COMICS))
+    when(configurationService.isFeatureEnabled(ConfigurationService.CFG_LIBRARY_NO_RECREATE_COMICS))
         .thenReturn(false);
 
     controller.convertSingleComicBooks(
-        new ConvertComicsRequest(TEST_ARCHIVE_TYPE, TEST_RENAME_PAGES, TEST_DELETE_MARKED_PAGES),
-        TEST_COMIC_BOOK_ID);
+        new ConvertComicsRequest(TEST_ARCHIVE_TYPE), TEST_COMIC_BOOK_ID);
 
-    Mockito.verify(libraryService, Mockito.times(1))
-        .prepareToRecreate(
-            new ArrayList<>(Arrays.asList(TEST_COMIC_BOOK_ID)),
-            TEST_ARCHIVE_TYPE,
-            TEST_RENAME_PAGES,
-            TEST_DELETE_MARKED_PAGES);
+    verify(libraryService)
+        .prepareToRecreate(new ArrayList<>(Arrays.asList(TEST_COMIC_BOOK_ID)), TEST_ARCHIVE_TYPE);
   }
 
   @Test
   void convertSelectedComicBooksNoRecreateAllowed() {
-    Mockito.when(
-            configurationService.isFeatureEnabled(
-                ConfigurationService.CFG_LIBRARY_NO_RECREATE_COMICS))
+    when(configurationService.isFeatureEnabled(ConfigurationService.CFG_LIBRARY_NO_RECREATE_COMICS))
         .thenReturn(true);
 
     assertThrows(
         LibraryException.class,
         () ->
             controller.convertSelectedComicBooks(
-                httpSession,
-                principal,
-                new ConvertComicsRequest(
-                    TEST_ARCHIVE_TYPE, TEST_RENAME_PAGES, TEST_DELETE_MARKED_PAGES)));
+                httpSession, principal, new ConvertComicsRequest(TEST_ARCHIVE_TYPE)));
   }
 
   @Test
   void convertSelectedComicBooks() throws Exception {
-    Mockito.when(
-            configurationService.isFeatureEnabled(
-                ConfigurationService.CFG_LIBRARY_NO_RECREATE_COMICS))
+    when(configurationService.isFeatureEnabled(ConfigurationService.CFG_LIBRARY_NO_RECREATE_COMICS))
         .thenReturn(false);
 
     controller.convertSelectedComicBooks(
-        httpSession,
-        principal,
-        new ConvertComicsRequest(TEST_ARCHIVE_TYPE, TEST_RENAME_PAGES, TEST_DELETE_MARKED_PAGES));
+        httpSession, principal, new ConvertComicsRequest(TEST_ARCHIVE_TYPE));
 
-    Mockito.verify(libraryService, Mockito.times(1))
-        .prepareToRecreate(
-            selectedIds, TEST_ARCHIVE_TYPE, TEST_RENAME_PAGES, TEST_DELETE_MARKED_PAGES);
+    verify(libraryService).prepareToRecreate(selectedIds, TEST_ARCHIVE_TYPE);
   }
 
   @Test
   void organizeLibrary() throws Exception {
     controller.organizeLibrary(httpSession, principal);
 
-    Mockito.verify(libraryService, Mockito.times(1)).prepareForOrganization(selectedIds);
-    Mockito.verify(httpSession, Mockito.times(1)).getAttribute(LIBRARY_SELECTIONS);
-    Mockito.verify(comicSelectionService, Mockito.times(1)).decodeSelections(TEST_ENCODED_IDS);
-    Mockito.verify(comicSelectionService, Mockito.times(1))
-        .clearSelectedComicBooks(TEST_EMAIL, selectedIds);
-    Mockito.verify(httpSession, Mockito.times(1))
-        .setAttribute(LIBRARY_SELECTIONS, TEST_REENCODED_IDS);
+    verify(libraryService).prepareForOrganization(selectedIds);
+    verify(httpSession).getAttribute(LIBRARY_SELECTIONS);
+    verify(comicSelectionService).decodeSelections(TEST_ENCODED_IDS);
+    verify(comicSelectionService).clearSelectedComicBooks(TEST_EMAIL, selectedIds);
+    verify(httpSession).setAttribute(LIBRARY_SELECTIONS, TEST_REENCODED_IDS);
   }
 
   @Test
   void organizeEntireLibrary() {
     controller.organizeEntireLibrary();
 
-    Mockito.verify(libraryService, Mockito.times(1)).prepareAllForOrganization();
+    verify(libraryService).prepareAllForOrganization();
   }
 
   @Test
@@ -216,33 +187,33 @@ class LibraryControllerTest {
     assertNotNull(result);
     assertTrue(result.isSuccess());
 
-    Mockito.verify(libraryService, Mockito.times(1)).clearImageCache();
+    verify(libraryService).clearImageCache();
   }
 
   @Test
   void clearImageCacheWithError() throws LibraryException {
-    Mockito.doThrow(LibraryException.class).when(libraryService).clearImageCache();
+    doThrow(LibraryException.class).when(libraryService).clearImageCache();
 
     ClearImageCacheResponse result = controller.clearImageCache();
 
     assertNotNull(result);
     assertFalse(result.isSuccess());
 
-    Mockito.verify(libraryService, Mockito.times(1)).clearImageCache();
+    verify(libraryService).clearImageCache();
   }
 
   @Test
   void rescanComicBooks() throws Exception {
     controller.rescanSelectedComicBooks(httpSession, principal);
 
-    Mockito.verify(comicBookService, Mockito.times(1)).prepareForRescan(selectedIds);
+    verify(comicBookService).prepareForRescan(selectedIds);
   }
 
   @Test
   void updateSingleComicBookMetadata() throws Exception {
     controller.updateSingleComicBookMetadata(TEST_COMIC_BOOK_ID);
 
-    Mockito.verify(comicBookService, Mockito.times(1))
+    verify(comicBookService)
         .prepareForMetadataUpdate(new ArrayList<>(Arrays.asList(TEST_COMIC_BOOK_ID)));
   }
 
@@ -250,21 +221,21 @@ class LibraryControllerTest {
   void updateSelectedComicBooksMetadata() throws Exception {
     controller.updateSelectedComicBooksMetadata(httpSession, principal);
 
-    Mockito.verify(libraryService, Mockito.times(1)).updateMetadata(selectedIds);
+    verify(libraryService).updateMetadata(selectedIds);
   }
 
   @Test
   void purge() throws Exception {
     controller.purgeLibrary(new PurgeLibraryRequest());
 
-    Mockito.verify(libraryService, Mockito.times(1)).prepareForPurging();
+    verify(libraryService).prepareForPurging();
   }
 
   @Test
   void editMultipleComicsServiceThrowsException() throws Exception {
-    Mockito.when(editMultipleComicsRequest.getIds()).thenReturn(idList);
+    when(editMultipleComicsRequest.getIds()).thenReturn(idList);
 
-    Mockito.doThrow(ComicBookException.class)
+    doThrow(ComicBookException.class)
         .when(comicBookService)
         .updateMultipleComics(Mockito.anyList());
 
@@ -274,18 +245,18 @@ class LibraryControllerTest {
 
   @Test
   void editMultipleComics() throws Exception {
-    Mockito.when(editMultipleComicsRequest.getIds()).thenReturn(idList);
-    Mockito.when(editMultipleComicsRequest.getPublisher()).thenReturn(TEST_PUBLISHER);
-    Mockito.when(editMultipleComicsRequest.getSeries()).thenReturn(TEST_SERIES);
-    Mockito.when(editMultipleComicsRequest.getVolume()).thenReturn(TEST_VOLUME);
-    Mockito.when(editMultipleComicsRequest.getIssueNumber()).thenReturn(TEST_ISSUE_NUMBER);
-    Mockito.when(editMultipleComicsRequest.getImprint()).thenReturn(TEST_IMPRINT);
-    Mockito.when(jobOperator.start(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
+    when(editMultipleComicsRequest.getIds()).thenReturn(idList);
+    when(editMultipleComicsRequest.getPublisher()).thenReturn(TEST_PUBLISHER);
+    when(editMultipleComicsRequest.getSeries()).thenReturn(TEST_SERIES);
+    when(editMultipleComicsRequest.getVolume()).thenReturn(TEST_VOLUME);
+    when(editMultipleComicsRequest.getIssueNumber()).thenReturn(TEST_ISSUE_NUMBER);
+    when(editMultipleComicsRequest.getImprint()).thenReturn(TEST_IMPRINT);
+    when(jobOperator.start(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
         .thenReturn(jobExecution);
 
     controller.editMultipleComics(editMultipleComicsRequest);
 
-    Mockito.verify(comicBookService, Mockito.times(1)).updateMultipleComics(idList);
+    verify(comicBookService).updateMultipleComics(idList);
 
     final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
 
@@ -302,7 +273,7 @@ class LibraryControllerTest {
                     EDIT_COMIC_METADATA_JOB_ISSUE_NUMBER,
                     EDIT_COMIC_METADATA_JOB_IMPRINT)));
 
-    Mockito.verify(comicBookService, Mockito.times(1)).updateMultipleComics(idList);
-    Mockito.verify(jobOperator, Mockito.times(1)).start(editComicMetadataJob, jobParameters);
+    verify(comicBookService).updateMultipleComics(idList);
+    verify(jobOperator).start(editComicMetadataJob, jobParameters);
   }
 }

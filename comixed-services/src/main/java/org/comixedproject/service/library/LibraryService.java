@@ -96,17 +96,11 @@ public class LibraryService {
    *
    * @param ids the comic ids
    * @param archiveType the target archive type
-   * @param renamePages the rename pages flag
-   * @param deletePages the delete pages flag
    */
-  public void prepareToRecreate(
-      final List<Long> ids,
-      final ArchiveType archiveType,
-      final boolean renamePages,
-      final boolean deletePages) {
+  public void prepareToRecreate(final List<Long> ids, final ArchiveType archiveType) {
     final long started = System.currentTimeMillis();
     log.debug("Preparing to recreate {} comic book file(s)", ids.size());
-    this.comicBookService.prepareForRecreation(ids, archiveType, renamePages, deletePages);
+    this.comicBookService.prepareForRecreation(ids, archiveType);
     log.debug(
         "Comic book files prepared for recreation: {}ms", System.currentTimeMillis() - started);
   }

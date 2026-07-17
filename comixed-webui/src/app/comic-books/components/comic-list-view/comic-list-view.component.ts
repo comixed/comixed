@@ -399,9 +399,7 @@ export class ComicListViewComponent
         this.store.dispatch(
           convertSingleComicBook({
             id: this.selectedComic.comicBookId,
-            archiveType: archiveTypeFromString(archiveTypeString),
-            deletePages: true,
-            renamePages: true
+            archiveType: archiveTypeFromString(archiveTypeString)
           })
         );
       }
@@ -432,9 +430,7 @@ export class ComicListViewComponent
         );
         this.store.dispatch(
           convertSelectedComicBooks({
-            archiveType: archiveTypeFromString(archiveTypeString),
-            deletePages: true,
-            renamePages: true
+            archiveType: archiveTypeFromString(archiveTypeString)
           })
         );
       }

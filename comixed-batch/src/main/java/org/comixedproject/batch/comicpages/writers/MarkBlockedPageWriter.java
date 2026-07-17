@@ -28,20 +28,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>ComicPageWriter</code> handles updating comic pages after batch processing.
+ * <code>MarkBlockedPageWriter</code> handles updating comic books after a page has been marked for
+ * removal.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public class ComicPageWriter implements ItemWriter<ComicPage> {
+public class MarkBlockedPageWriter implements ItemWriter<ComicPage> {
   @Autowired private ComicBookStateAdaptor comicBookStateAdaptor;
 
   @Override
   public void write(final Chunk<? extends ComicPage> pages) throws Exception {
     pages.forEach(
         page -> {
-          this.comicBookStateAdaptor.fireEvent(page.getComicBook(), ComicEvent.comicMetadataSaved);
+          this.comicBookStateAdaptor.fireEvent(
+              page.getComicBook(), ComicEvent.comicPageMarkedForRemoval);
         });
   }
 }
