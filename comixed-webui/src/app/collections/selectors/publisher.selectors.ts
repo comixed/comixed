@@ -22,8 +22,13 @@ import {
   PublisherState
 } from '../reducers/publisher.reducer';
 
-export const selectPublisherState = createFeatureSelector<PublisherState>(
+const selectPublisherState = createFeatureSelector<PublisherState>(
   PUBLISHER_FEATURE_KEY
+);
+
+export const selectPublisherListBusy = createSelector(
+  selectPublisherState,
+  state => state.busy
 );
 
 export const selectPublisherList = createSelector(

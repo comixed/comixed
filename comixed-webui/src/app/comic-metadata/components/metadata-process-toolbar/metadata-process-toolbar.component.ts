@@ -16,33 +16,41 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, inject, Input, OnDestroy } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { ConfirmationService } from '@tragically-slick/confirmation';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { startMetadataUpdateProcess } from '@app/comic-metadata/actions/single-book-scraping.actions';
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import { SKIP_CACHE_PREFERENCE } from '@app/library/library.constants';
-import { Subscription } from 'rxjs';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { getUserPreference } from '@app/user';
-import { filter } from 'rxjs/operators';
+import { filter, tap } from 'rxjs/operators';
 import { MatToolbar } from '@angular/material/toolbar';
 import { MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
+import { AsyncPipe } from '@angular/common';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'cx-metadata-process-toolbar',
   templateUrl: './metadata-process-toolbar.component.html',
   styleUrls: ['./metadata-process-toolbar.component.scss'],
-  imports: [MatToolbar, MatIconButton, MatTooltip, MatIcon, TranslateModule]
+  imports: [
+    MatToolbar,
+    MatIconButton,
+    MatTooltip,
+    MatIcon,
+    TranslateModule,
+    AsyncPipe
+  ]
 })
-export class MetadataProcessToolbarComponent implements OnDestroy {
+export class MetadataProcessToolbarComponent {
   @Input() selectedIds: number[] = [];
-  userSubscription: Subscription;
-  skipCache = false;
+
+  skipCache$ = new BehaviorSubject(false);
 
   logger = inject(LoggerService);
   store = inject(Store);
@@ -50,23 +58,21 @@ export class MetadataProcessToolbarComponent implements OnDestroy {
   translateService = inject(TranslateService);
 
   constructor() {
-    this.logger.trace('Subscribing to user updates');
-    this.userSubscription = this.store
+    this.store
       .select(selectUser)
       .pipe(filter(user => !!user))
-      .subscribe(user => {
-        this.skipCache =
-          getUserPreference(
-            user.preferences || [],
-            SKIP_CACHE_PREFERENCE,
-            `${false}`
-          ) === `${true}`;
-      });
-  }
-
-  ngOnDestroy(): void {
-    this.logger.trace('Unsubscribing from user updates');
-    this.userSubscription.unsubscribe();
+      .pipe(
+        tap(user => {
+          this.skipCache$.next(
+            getUserPreference(
+              user.preferences || [],
+              SKIP_CACHE_PREFERENCE,
+              `${false}`
+            ) === `${true}`
+          );
+        })
+      )
+      .subscribe();
   }
 
   onStartBatchProcess(): void {
@@ -82,7 +88,7 @@ export class MetadataProcessToolbarComponent implements OnDestroy {
         this.logger.trace('Starting the metadata batch processing');
         this.store.dispatch(
           startMetadataUpdateProcess({
-            skipCache: this.skipCache
+            skipCache: this.skipCache$.value
           })
         );
       }
@@ -90,11 +96,11 @@ export class MetadataProcessToolbarComponent implements OnDestroy {
   }
 
   onToggleSkipCache(): void {
-    this.logger.trace('Saving skip cache preference:', !this.skipCache);
+    this.logger.trace('Saving skip cache preference:', !this.skipCache$.value);
     this.store.dispatch(
       saveUserPreference({
         name: SKIP_CACHE_PREFERENCE,
-        value: `${!this.skipCache}`
+        value: `${!this.skipCache$.value}`
       })
     );
   }

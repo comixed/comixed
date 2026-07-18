@@ -20,47 +20,44 @@ import {
   AfterViewInit,
   Component,
   inject,
-  OnDestroy,
   OnInit,
   ViewChild
 } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import {
-  MatTableDataSource,
-  MatTable,
-  MatColumnDef,
-  MatHeaderCellDef,
-  MatHeaderCell,
-  MatCellDef,
   MatCell,
-  MatHeaderRowDef,
+  MatCellDef,
+  MatColumnDef,
+  MatHeaderCell,
+  MatHeaderCellDef,
   MatHeaderRow,
-  MatRowDef,
+  MatHeaderRowDef,
+  MatNoDataRow,
   MatRow,
-  MatNoDataRow
+  MatRowDef,
+  MatTable,
+  MatTableDataSource
 } from '@angular/material/table';
 import { Publisher } from '@app/collections/models/publisher';
-import { Subscription } from 'rxjs';
 import { loadPublisherList } from '@app/collections/actions/publisher.actions';
 import {
   selectPublisherCount,
   selectPublisherList,
-  selectPublisherState
+  selectPublisherListBusy
 } from '@app/collections/selectors/publisher.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
-import { MatSort, SortDirection, MatSortHeader } from '@angular/material/sort';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/core/services/title.service';
-import { selectUser } from '@app/user/selectors/user.selectors';
-import { getUserPreference } from '@app/user';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
-import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@app/core';
-import { PREFERENCE_PAGE_SIZE } from '@app/comic-files/comic-file.constants';
+import { PAGE_SIZE_OPTIONS } from '@app/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FilterTextFormComponent } from '../../components/filter-text-form/filter-text-form.component';
 import { MatPaginator } from '@angular/material/paginator';
 import { AsyncPipe } from '@angular/common';
+import { tap } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'cx-publisher-list-page',
@@ -87,27 +84,15 @@ import { AsyncPipe } from '@angular/common';
     TranslateModule
   ]
 })
-export class PublisherListPageComponent
-  implements OnInit, OnDestroy, AfterViewInit
-{
+export class PublisherListPageComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
 
   readonly displayedColumns = ['name', 'issue-count', 'series-count'];
   readonly pageOptions = PAGE_SIZE_OPTIONS;
 
-  queryParamsSubscription: Subscription;
-  langChangeSubscription: Subscription;
-  publisherListSubscription: Subscription;
-  publisherCountSubscription: Subscription;
-  publisherStateSubscription: Subscription;
-  userSubscription: Subscription;
-  totalPublishers = 0;
-
   dataSource = new MatTableDataSource<Publisher>([]);
-  pageIndex = 0;
-  pageSize = PAGE_SIZE_DEFAULT;
-  sortBy = 'name';
-  sortDirection: SortDirection = 'asc';
+
+  totalPublishers$ = new BehaviorSubject(0);
 
   logger = inject(LoggerService);
   activatedRoute = inject(ActivatedRoute);
@@ -117,49 +102,36 @@ export class PublisherListPageComponent
   queryParameterService = inject(QueryParameterService);
 
   constructor() {
-    this.logger.trace('Subscribing to language change updates');
-    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
-      () => this.loadTranslations()
-    );
-    this.logger.trace('Subscribing to query parameter updates');
-    this.queryParamsSubscription = this.activatedRoute.queryParams.subscribe(
-      () => {
-        this.store.dispatch(
-          loadPublisherList({
-            searchText: this.queryParameterService.filterText$.value,
-            page: this.queryParameterService.pageIndex$.value,
-            size: this.queryParameterService.pageSize$.value,
-            sortBy: this.queryParameterService.sortBy$.value,
-            sortDirection: this.queryParameterService.sortDirection$.value
-          })
-        );
-      }
-    );
-    this.logger.trace('Subscribing to publisher list updates');
-    this.publisherListSubscription = this.store
+    this.translateService.onLangChange
+      .pipe(tap(() => this.loadTranslations()))
+      .subscribe();
+    this.activatedRoute.queryParams
+      .pipe(
+        tap(() => {
+          this.store.dispatch(
+            loadPublisherList({
+              searchText: this.queryParameterService.filterText$.value,
+              page: this.queryParameterService.pageIndex$.value,
+              size: this.queryParameterService.pageSize$.value,
+              sortBy: this.queryParameterService.sortBy$.value,
+              sortDirection: this.queryParameterService.sortDirection$.value
+            })
+          );
+        })
+      )
+      .subscribe();
+    this.store
       .select(selectPublisherList)
-      .subscribe(publishers => (this.dataSource.data = publishers));
-    this.logger.trace('Subscribing to publisher count updates');
-    this.publisherCountSubscription = this.store
+      .pipe(tap(publishers => (this.dataSource.data = publishers)))
+      .subscribe();
+    this.store
       .select(selectPublisherCount)
-      .subscribe(count => (this.totalPublishers = count));
-    this.logger.trace('Subscribing to publisher state updates');
-    this.publisherStateSubscription = this.store
-      .select(selectPublisherState)
-      .subscribe(state =>
-        this.store.dispatch(setBusyState({ enabled: state.busy }))
-      );
-    this.logger.trace('Subscribing to user updates');
-    this.userSubscription = this.store.select(selectUser).subscribe(user => {
-      this.pageSize = parseInt(
-        getUserPreference(
-          user.preferences,
-          PREFERENCE_PAGE_SIZE,
-          `${PAGE_SIZE_DEFAULT}`
-        ),
-        10
-      );
-    });
+      .pipe(tap(count => this.totalPublishers$.next(count)))
+      .subscribe();
+    this.store
+      .select(selectPublisherListBusy)
+      .pipe(tap(enabled => this.store.dispatch(setBusyState({ enabled }))))
+      .subscribe();
   }
 
   ngOnInit(): void {
@@ -179,21 +151,6 @@ export class PublisherListPageComponent
   ngAfterViewInit(): void {
     this.logger.trace('Setting up sorting');
     this.dataSource.sort = this.sort;
-  }
-
-  ngOnDestroy(): void {
-    this.logger.trace('Unsubscribing from language changes');
-    this.langChangeSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing to query parameter updates');
-    this.queryParamsSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from publisher list updates');
-    this.publisherListSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from publisher count updates');
-    this.publisherCountSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from publisher state updates');
-    this.publisherStateSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from user updates');
-    this.userSubscription.unsubscribe();
   }
 
   loadTranslations(): void {

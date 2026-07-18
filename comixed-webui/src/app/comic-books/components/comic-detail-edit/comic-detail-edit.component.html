@@ -57,6 +57,7 @@
         </mat-option>
       }
     </mat-select>
+    <input matInput hidden />
   </mat-form-field>
 
   <mat-form-field appearance="fill" class="cx-width-25" required>
@@ -66,12 +67,13 @@
       formControlName="imprint"
       (selectionChange)="onImprintSelected($event.value)"
     >
-      @for (option of imprintOptions; track option) {
-        <mat-option [value]="option.value.name">
+      @for (option of imprintOptions$ | async; track option) {
+        <mat-option [value]="option.value">
           {{ option.label }}
         </mat-option>
       }
     </mat-select>
+    <input matInput hidden />
   </mat-form-field>
 
   <mat-form-field appearance="fill" class="cx-width-50" required>
@@ -98,7 +100,7 @@
       [readonly]="!isAdmin"
     />
     <mat-datepicker-toggle
-      matSuffix
+      matIconSuffix
       [for]="coverDatePicker"
     ></mat-datepicker-toggle>
     <mat-datepicker #coverDatePicker></mat-datepicker>
@@ -113,7 +115,7 @@
       [readonly]="!isAdmin"
     />
     <mat-datepicker-toggle
-      matSuffix
+      matIconSuffix
       [for]="storeDatePicker"
     ></mat-datepicker-toggle>
     <mat-datepicker #storeDatePicker></mat-datepicker>
@@ -158,5 +160,3 @@
     ></textarea>
   </mat-form-field>
 </form>
-
-<pre>{{ comicBookForm.controls.imprint.value }}</pre>

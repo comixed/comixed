@@ -17,60 +17,49 @@
  */
 
 import { inject, Injectable } from '@angular/core';
-import { Subscription } from 'rxjs';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { WebSocketService } from '@app/messaging';
 import { Store } from '@ngrx/store';
-import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
+import { selectMessagingStarted } from '@app/messaging/selectors/messaging.selectors';
 import { PROCESS_COMIC_BOOKS_TOPIC } from '@app/app.constants';
 import { processComicBooksUpdate } from '@app/actions/process-comics.actions';
 import { ProcessComicBooksStatus } from '@app/models/messages/process-comic-books-status';
-import { filter } from 'rxjs/operators';
+import { filter, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProcessComicsService {
-  processComicsSubscription: Subscription;
-
   logger = inject(LoggerService);
   store = inject(Store);
   webSocketService = inject(WebSocketService);
 
   constructor() {
     this.store
-      .select(selectMessagingState)
-      .pipe(filter(state => !!state))
-      .subscribe(state => {
-        if (state.started) {
-          if (!this.processComicsSubscription) {
-            this.logger.trace('Subscribing to import count updates');
-            this.processComicsSubscription =
-              this.webSocketService.subscribe<ProcessComicBooksStatus>(
-                PROCESS_COMIC_BOOKS_TOPIC,
-                update => {
-                  this.logger.debug(
-                    'Received process comic status update:',
-                    update
-                  );
-                  this.store.dispatch(
-                    processComicBooksUpdate({
-                      active: update.active,
-                      stepName: update.stepName,
-                      total: update.total,
-                      processed: update.processed
-                    })
-                  );
-                }
+      .select(selectMessagingStarted)
+      .pipe(
+        filter(started => started),
+        tap(() => {
+          this.logger.trace('Subscribing to import count updates');
+          this.webSocketService.subscribe<ProcessComicBooksStatus>(
+            PROCESS_COMIC_BOOKS_TOPIC,
+            update => {
+              this.logger.debug(
+                'Received process comic status update:',
+                update
               );
-          }
-        } else if (!state.started) {
-          if (!!this.processComicsSubscription) {
-            this.logger.trace('Unsubscribing from process count updates');
-            this.processComicsSubscription.unsubscribe();
-            this.processComicsSubscription = null;
-          }
-        }
-      });
+              this.store.dispatch(
+                processComicBooksUpdate({
+                  active: update.active,
+                  stepName: update.stepName,
+                  total: update.total,
+                  processed: update.processed
+                })
+              );
+            }
+          );
+        })
+      )
+      .subscribe();
   }
 }

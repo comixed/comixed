@@ -55,7 +55,7 @@
     </mat-label>
   </button>
 }
-@if (isAdmin) {
+@if (isAdmin$ | async) {
   <button
     mat-button
     class="menu-button"
@@ -84,7 +84,7 @@
     </mat-label>
   </button>
 }
-@if (isAdmin) {
+@if (isAdmin$ | async) {
   <button
     mat-button
     class="menu-button"
@@ -98,7 +98,7 @@
     </mat-label>
   </button>
 }
-@if (isAdmin) {
+@if (isAdmin$ | async) {
   <button
     mat-button
     class="menu-button"
@@ -112,7 +112,7 @@
     </mat-label>
   </button>
 }
-@if (isAdmin) {
+@if (isAdmin$ | async) {
   <button
     mat-button
     class="menu-button"
@@ -126,7 +126,7 @@
     </mat-label>
   </button>
 }
-@if (isAdmin) {
+@if (isAdmin$ | async) {
   <button
     mat-button
     class="menu-button"
@@ -139,7 +139,7 @@
     </mat-label>
   </button>
 }
-@if (isAdmin) {
+@if (isAdmin$ | async) {
   <button
     mat-button
     class="menu-button"
@@ -153,7 +153,7 @@
     </mat-label>
   </button>
 }
-@if (isAdmin) {
+@if (isAdmin$ | async) {
   <button
     mat-button
     class="menu-button"
@@ -166,7 +166,7 @@
     </mat-label>
   </button>
 }
-@if (isAdmin && blockedPagesEnabled) {
+@if ((isAdmin$ | async) && (blockedPagesEnabled$ | async)) {
   <button
     mat-button
     class="menu-button"
@@ -179,7 +179,7 @@
     </mat-label>
   </button>
 }
-@if (isAdmin) {
+@if (isAdmin$ | async) {
   <button
     mat-button
     class="menu-button"
@@ -192,7 +192,7 @@
     </mat-label>
   </button>
 }
-@if (isAdmin) {
+@if (isAdmin$ | async) {
   <button
     mat-button
     class="menu-button"
@@ -205,7 +205,7 @@
     </mat-label>
   </button>
 }
-@if (isAdmin) {
+@if (isAdmin$ | async) {
   <button
     mat-button
     class="menu-button"
@@ -218,7 +218,7 @@
     </mat-label>
   </button>
 }
-@if (isAdmin) {
+@if (isAdmin$ | async) {
   <button
     mat-button
     class="menu-button"
@@ -231,7 +231,7 @@
     </mat-label>
   </button>
 }
-@if (isAdmin) {
+@if (isAdmin$ | async) {
   <button
     mat-button
     class="menu-button"
@@ -364,15 +364,15 @@
     </mat-label>
   </button>
 }
-@if (isAdmin) {
+@if (isAdmin$ | async) {
   <mat-divider></mat-divider>
 }
-@if (isAdmin) {
+@if (isAdmin$ | async) {
   <h4 class="section-title">
     {{ "navigation.heading.admin" | translate }}
   </h4>
 }
-@if (isAdmin) {
+@if (isAdmin$ | async) {
   <button
     mat-button
     class="menu-button"
@@ -385,7 +385,7 @@
     </mat-label>
   </button>
 }
-@if (isAdmin) {
+@if (isAdmin$ | async) {
   <button
     mat-button
     class="menu-button"
@@ -398,7 +398,7 @@
     </mat-label>
   </button>
 }
-@if (isAdmin) {
+@if (isAdmin$ | async) {
   <button
     mat-button
     class="menu-button"

@@ -27,6 +27,16 @@ export const selectDuplicatePageDetailState =
     DUPLICATE_PAGE_DETAIL_FEATURE_KEY
   );
 
+export const selectDuplicatePageDetailBusy = createSelector(
+  selectDuplicatePageDetailState,
+  state => state.loading
+);
+
+export const selectDuplicatePageDetailNotFound = createSelector(
+  selectDuplicatePageDetailState,
+  state => state.notFound
+);
+
 export const selectDuplicatePageDetail = createSelector(
   selectDuplicatePageDetailState,
   state => state.detail

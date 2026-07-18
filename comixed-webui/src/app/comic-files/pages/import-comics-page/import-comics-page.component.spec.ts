@@ -190,8 +190,8 @@ describe('ImportComicsPageComponent', () => {
   describe('when loading files', () => {
     describe('when loading stops', () => {
       beforeEach(() => {
-        component.allSelected = false;
-        component.anySelected = false;
+        component.allSelected$.next(false);
+        component.anySelected$.next(false);
         store.setState({
           ...initialState,
           [COMIC_FILE_LIST_FEATURE_KEY]: {
@@ -209,11 +209,11 @@ describe('ImportComicsPageComponent', () => {
       });
 
       it('updates the any selected flag', () => {
-        expect(component.anySelected).toBeTrue();
+        expect(component.anySelected$.value).toBeTrue();
       });
 
       it('updates the all selected flag', () => {
-        expect(component.allSelected).toBeTrue();
+        expect(component.allSelected$.value).toBeTrue();
       });
     });
   });
@@ -258,7 +258,7 @@ describe('ImportComicsPageComponent', () => {
 
   describe('starting the import process', () => {
     beforeEach(() => {
-      component.files = FILES;
+      component.files$.next(FILES);
 
       spyOn(confirmationService, 'confirm').and.callFake(
         (confirm: Confirmation) => confirm.confirm()
@@ -309,7 +309,7 @@ describe('ImportComicsPageComponent', () => {
   describe('selecting comic files', () => {
     describe('it can select all', () => {
       beforeEach(() => {
-        component.currentPath = '';
+        component.currentPath$.next('');
         component.onSelectAll(true);
       });
 
@@ -326,7 +326,7 @@ describe('ImportComicsPageComponent', () => {
 
     describe('it can select all with a current path', () => {
       beforeEach(() => {
-        component.currentPath = GROUPS[0].directory;
+        component.currentPath$.next(GROUPS[0].directory);
         component.onSelectAll(true);
       });
 
@@ -343,7 +343,7 @@ describe('ImportComicsPageComponent', () => {
 
     describe('it can deselect all', () => {
       beforeEach(() => {
-        component.currentPath = '';
+        component.currentPath$.next('');
         component.onSelectAll(false);
       });
 
@@ -360,7 +360,7 @@ describe('ImportComicsPageComponent', () => {
 
     describe('it can deselect all with a current path', () => {
       beforeEach(() => {
-        component.currentPath = GROUPS[0].directory;
+        component.currentPath$.next(GROUPS[0].directory);
         component.onSelectAll(false);
       });
 
@@ -397,33 +397,33 @@ describe('ImportComicsPageComponent', () => {
   describe('the comic file cover popup', () => {
     describe('showing the popup', () => {
       beforeEach(() => {
-        component.comicFile = null;
-        component.showCoverPopup = false;
+        component.comicFile$.next(null);
+        component.showCoverPopup$.next(false);
         component.onShowPopup(true, FILE);
       });
 
       it('stores the comic file reference', () => {
-        expect(component.comicFile).toBe(FILE);
+        expect(component.comicFile$.value).toBe(FILE);
       });
 
       it('sets the show popup flag', () => {
-        expect(component.showCoverPopup).toBeTrue();
+        expect(component.showCoverPopup$.value).toBeTrue();
       });
     });
 
     describe('showing the popup', () => {
       beforeEach(() => {
-        component.comicFile = FILE;
-        component.showCoverPopup = true;
+        component.comicFile$.next(FILE);
+        component.showCoverPopup$.next(true);
         component.onShowPopup(false, null);
       });
 
       it('clears the comic file reference', () => {
-        expect(component.comicFile).toBeNull();
+        expect(component.comicFile$.value).toBeNull();
       });
 
       it('clears the show popup flag', () => {
-        expect(component.showCoverPopup).toBeFalse();
+        expect(component.showCoverPopup$.value).toBeFalse();
       });
     });
   });
@@ -451,7 +451,9 @@ describe('ImportComicsPageComponent', () => {
 
     describe('when already previously loaded', () => {
       beforeEach(() => {
-        component.blockedPagesEnabled = !BLOCKED_PAGES_ENABLED_FEATURE_ENABLED;
+        component.blockedPagesEnabled$.next(
+          !BLOCKED_PAGES_ENABLED_FEATURE_ENABLED
+        );
         spyOnStoreDispatch.calls.reset();
         store.setState({
           ...initialState,
@@ -473,7 +475,7 @@ describe('ImportComicsPageComponent', () => {
       });
 
       it('sets the blocked pages enabled flag', () => {
-        expect(component.blockedPagesEnabled).toEqual(
+        expect(component.blockedPagesEnabled$.value).toEqual(
           BLOCKED_PAGES_ENABLED_FEATURE_ENABLED
         );
       });
@@ -509,7 +511,7 @@ describe('ImportComicsPageComponent', () => {
   describe('updating displayed comic files', () => {
     describe('when a current path is set', () => {
       beforeEach(() => {
-        component.currentPath = GROUPS[0].directory;
+        component.currentPath$.next(GROUPS[0].directory);
         component.dataSource.data = [];
         store.setState({
           ...initialState,
@@ -528,7 +530,7 @@ describe('ImportComicsPageComponent', () => {
 
     describe('when a current path is invalid', () => {
       beforeEach(() => {
-        component.currentPath = GROUPS[0].directory.substring(1);
+        component.currentPath$.next(GROUPS[0].directory.substring(1));
         component.dataSource.data = [];
         store.setState({
           ...initialState,
@@ -547,7 +549,7 @@ describe('ImportComicsPageComponent', () => {
 
     describe('when no current path is set', () => {
       beforeEach(() => {
-        component.currentPath = null;
+        component.currentPath$.next(null);
         component.dataSource.data = [];
         store.setState({
           ...initialState,

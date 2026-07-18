@@ -20,37 +20,36 @@ import {
   AfterViewInit,
   Component,
   inject,
-  OnDestroy,
   OnInit,
   ViewChild
 } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/core/services/title.service';
 import { Store } from '@ngrx/store';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { Subscription } from 'rxjs';
 import { loadDuplicatePageDetail } from '@app/library/actions/duplicate-page-detail.actions';
 import {
   selectDuplicatePageDetail,
-  selectDuplicatePageDetailState
+  selectDuplicatePageDetailBusy,
+  selectDuplicatePageDetailNotFound
 } from '@app/library/selectors/duplicate-page-detail.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import {
-  MatTableDataSource,
-  MatTable,
-  MatColumnDef,
-  MatHeaderCellDef,
-  MatHeaderCell,
-  MatCellDef,
   MatCell,
-  MatHeaderRowDef,
+  MatCellDef,
+  MatColumnDef,
+  MatHeaderCell,
+  MatHeaderCellDef,
   MatHeaderRow,
+  MatHeaderRowDef,
+  MatRow,
   MatRowDef,
-  MatRow
+  MatTable,
+  MatTableDataSource
 } from '@angular/material/table';
 import { DuplicatePage } from '@app/library/models/duplicate-page';
-import { filter } from 'rxjs/operators';
+import { filter, tap } from 'rxjs/operators';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
@@ -66,6 +65,7 @@ import { MatIcon } from '@angular/material/icon';
 import { ComicPageComponent } from '../../../comic-books/components/comic-page/comic-page.component';
 import { AsyncPipe, DatePipe } from '@angular/common';
 import { PageHashUrlPipe } from '../../../comic-books/pipes/page-hash-url.pipe';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'cx-duplicate-page-detail-page',
@@ -95,19 +95,8 @@ import { PageHashUrlPipe } from '../../../comic-books/pipes/page-hash-url.pipe';
     TranslateModule
   ]
 })
-export class DuplicatePageDetailPageComponent
-  implements OnInit, OnDestroy, AfterViewInit
-{
+export class DuplicatePageDetailPageComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
-
-  paramSubscription: Subscription;
-  duplicatePageStateSubscription: Subscription;
-  duplicatePageSubscription: Subscription;
-  blockedHashesSubscription: Subscription;
-  blockedHashes: string[] = [];
-  langChangeSubscription: Subscription;
-  hash = '';
-  dataSource = new MatTableDataSource<ComicDetail>([]);
 
   readonly displayedColumns = [
     'publisher',
@@ -117,6 +106,10 @@ export class DuplicatePageDetailPageComponent
     'cover-date',
     'added-date'
   ];
+
+  dataSource = new MatTableDataSource<ComicDetail>([]);
+  blockedHashes$ = new BehaviorSubject<string[]>([]);
+  hash$ = new BehaviorSubject('');
 
   logger = inject(LoggerService);
   activatedRoute = inject(ActivatedRoute);
@@ -128,39 +121,53 @@ export class DuplicatePageDetailPageComponent
   queryParameterService = inject(QueryParameterService);
 
   constructor() {
-    this.paramSubscription = this.activatedRoute.params.subscribe(params => {
-      this.hash = params.hash;
-      this.logger.trace('Loading duplicate page detail:', this.hash);
-      this.store.dispatch(loadDuplicatePageDetail({ hash: this.hash }));
-    });
-    this.duplicatePageStateSubscription = this.store
-      .select(selectDuplicatePageDetailState)
-      .pipe(filter(state => !!state))
-      .subscribe(state => {
-        this.logger.trace('Duplicate page state changed:', state);
-        if (state.notFound) {
-          this.logger.trace(
-            'Page hash not found: redirecting to duplicate page list'
+    this.activatedRoute.params
+      .pipe(
+        tap(params => {
+          this.hash$.next(params.hash);
+          this.logger.trace('Loading duplicate page detail:', this.hash$.value);
+          this.store.dispatch(
+            loadDuplicatePageDetail({ hash: this.hash$.value })
           );
-          this.router.navigateByUrl('/library/pages/duplicates');
-        } else {
-          this.logger.trace('Updating busy state:', state.loading);
-          this.store.dispatch(setBusyState({ enabled: state.loading }));
-        }
-      });
-    this.duplicatePageSubscription = this.store
+        })
+      )
+      .subscribe();
+    this.store
+      .select(selectDuplicatePageDetailNotFound)
+      .pipe(
+        tap(notFound => {
+          this.logger.trace('Duplicate page state changed:', notFound);
+          if (notFound) {
+            this.logger.trace(
+              'Page hash not found: redirecting to duplicate page list'
+            );
+            this.router.navigateByUrl('/library/pages/duplicates');
+          }
+        })
+      )
+      .subscribe();
+    this.store
+      .select(selectDuplicatePageDetailBusy)
+      .pipe(tap(enabled => this.store.dispatch(setBusyState({ enabled }))))
+      .subscribe();
+    this.store
       .select(selectDuplicatePageDetail)
-      .pipe(filter(detail => !!detail))
-      .subscribe(detail => (this.detail = detail));
-    this.blockedHashesSubscription = this.store
+      .pipe(
+        filter(detail => !!detail),
+        tap(detail => (this.detail = detail))
+      )
+      .subscribe();
+    this.store
       .select(selectBlockedHashesList)
-      .subscribe(
-        blockedHashes =>
-          (this.blockedHashes = blockedHashes.map(hash => hash.hash))
-      );
-    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
-      () => this.loadTranslation()
-    );
+      .pipe(
+        tap(blockedHashes =>
+          this.blockedHashes$.next(blockedHashes.map(hash => hash.hash))
+        )
+      )
+      .subscribe();
+    this.translateService.onLangChange
+      .pipe(tap(() => this.loadTranslation()))
+      .subscribe();
   }
 
   private _detail: DuplicatePage;
@@ -200,14 +207,6 @@ export class DuplicatePageDetailPageComponent
     this.loadTranslation();
   }
 
-  ngOnDestroy(): void {
-    this.paramSubscription.unsubscribe();
-    this.duplicatePageStateSubscription.unsubscribe();
-    this.duplicatePageSubscription.unsubscribe();
-    this.blockedHashesSubscription.unsubscribe();
-    this.langChangeSubscription.unsubscribe();
-  }
-
   onBlockPage(): void {
     this.logger.trace('Confirming blocking duplicate page');
     this.confirmationService.confirm({
@@ -220,7 +219,7 @@ export class DuplicatePageDetailPageComponent
       confirm: () => {
         this.logger.trace('Dispatching action to block page');
         this.store.dispatch(
-          setBlockedStateForHash({ hashes: [this.hash], blocked: true })
+          setBlockedStateForHash({ hashes: [this.hash$.value], blocked: true })
         );
       }
     });
@@ -238,7 +237,7 @@ export class DuplicatePageDetailPageComponent
       confirm: () => {
         this.logger.trace('Dispatching action to unblock page');
         this.store.dispatch(
-          setBlockedStateForHash({ hashes: [this.hash], blocked: false })
+          setBlockedStateForHash({ hashes: [this.hash$.value], blocked: false })
         );
       }
     });
@@ -247,7 +246,7 @@ export class DuplicatePageDetailPageComponent
   private loadTranslation(): void {
     this.titleService.setTitle(
       this.translateService.instant('duplicate-page-detail.tab-title', {
-        hash: this.hash
+        hash: this.hash$.value
       })
     );
   }

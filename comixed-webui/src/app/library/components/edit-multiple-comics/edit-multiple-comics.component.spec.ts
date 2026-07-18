@@ -111,7 +111,7 @@ describe('EditMultipleComicsComponent', () => {
     beforeEach(() => {
       component.detailsForm.controls.publisher.setValue('');
       component.detailsForm.controls.imprint.setValue('');
-      component.onImprintSelected(IMPRINT.name);
+      component.onImprintSelected(IMPRINT);
     });
 
     it('sets the publisher form field', () => {

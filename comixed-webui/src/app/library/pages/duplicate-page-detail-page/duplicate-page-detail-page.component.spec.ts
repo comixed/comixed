@@ -200,7 +200,7 @@ describe('DuplicatePageDetailPageComponent', () => {
 
   describe('setting the blocked state for a page', () => {
     beforeEach(() => {
-      component.hash = DUPLICATE_PAGE.hash;
+      component.hash$.next(DUPLICATE_PAGE.hash);
       spyOn(confirmationService, 'confirm').and.callFake(
         (confirmation: Confirmation) => confirmation.confirm()
       );
@@ -247,7 +247,7 @@ describe('DuplicatePageDetailPageComponent', () => {
 
   describe('loading blocked hashes', () => {
     beforeEach(() => {
-      component.blockedHashes = [];
+      component.blockedHashes$.next([]);
       store.setState({
         ...initialState,
         [BLOCKED_HASHES_FEATURE_KEY]: {
@@ -258,7 +258,7 @@ describe('DuplicatePageDetailPageComponent', () => {
     });
 
     it('updates the blocked hashes', () => {
-      expect(component.blockedHashes).toEqual([BLOCKED_HASH.hash]);
+      expect(component.blockedHashes$.value).toEqual([BLOCKED_HASH.hash]);
     });
   });
 

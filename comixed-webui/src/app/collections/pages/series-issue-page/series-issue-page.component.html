@@ -3,18 +3,18 @@
     "collections.series.list-issues-page.page-title"
       | translate
         : {
-            publisher: publisherName,
-            series: seriesName,
-            volume: volume
+            publisher: publisherName$ | async,
+            series: seriesName$,
+            volume: volume$
           }
   }}
 </h2>
 
 <cx-comic-list-view
-  [isAdmin]="isAdmin"
-  [comics]="comics"
-  [selectedIds]="selectedIds"
-  [totalComics]="totalComics"
+  [isAdmin]="isAdmin$ | async"
+  [comics]="comics$ | async"
+  [selectedIds]="selectedIds$ | async"
+  [totalComics]="totalComics$ | async"
   [showFilter]="false"
   (selectAll)="onSelectAll($event)"
 ></cx-comic-list-view>

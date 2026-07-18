@@ -27,7 +27,6 @@ import {
   IMPRINT_2,
   IMPRINT_3
 } from '@app/comic-books/comic-books.fixtures';
-import { RouterTestingModule } from '@angular/router/testing';
 import { ComicState } from '@app/comic-books/models/comic-state';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -52,6 +51,7 @@ import {
 import { MatSelectModule } from '@angular/material/select';
 import { ComicType } from '@app/comic-books/models/comic-type';
 import { Clipboard } from '@angular/cdk/clipboard';
+import { provideRouter } from '@angular/router';
 
 describe('ComicDetailEditComponent', () => {
   const COMIC = DISPLAYABLE_COMIC_1;
@@ -75,12 +75,6 @@ describe('ComicDetailEditComponent', () => {
         ReactiveFormsModule,
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
-        RouterTestingModule.withRoutes([
-          {
-            path: '*',
-            redirectTo: ''
-          }
-        ]),
         MatGridListModule,
         MatDialogModule,
         MatToolbarModule,
@@ -94,6 +88,12 @@ describe('ComicDetailEditComponent', () => {
         ComicCoverUrlPipe
       ],
       providers: [
+        provideRouter([
+          {
+            path: '*',
+            redirectTo: ''
+          }
+        ]),
         provideMockStore({ initialState }),
         ConfirmationService,
         Clipboard
@@ -228,8 +228,8 @@ describe('ComicDetailEditComponent', () => {
           imprint: COMIC.imprint,
           sortName: COMIC.sortName,
           title: COMIC.title,
-          coverDate: COMIC.storeDate,
-          storeDate: COMIC.coverDate
+          storeDate: COMIC.coverDate,
+          coverDate: COMIC.storeDate
         })
       );
     });
@@ -241,9 +241,7 @@ describe('ComicDetailEditComponent', () => {
       component.comicBookForm.controls.publisher.setValue(
         COMIC.publisher.substr(1)
       );
-      component.comicBookForm.controls.imprint.setValue(
-        COMIC.imprint.substr(1)
-      );
+      component.comicBookForm.controls.imprint.setValue(null);
       component.comicBookForm.controls.series.setValue(COMIC.series.substr(1));
       component.comicBookForm.controls.volume.setValue(COMIC.volume.substr(1));
       component.comicBookForm.controls.issueNumber.setValue(
@@ -310,37 +308,23 @@ describe('ComicDetailEditComponent', () => {
       component.comicBook = COMIC;
     });
 
-    describe('when the imprint is valid', () => {
+    describe('selecting a new one', () => {
       beforeEach(() => {
-        component.onImprintSelected(IMPRINT.name);
+        component.onImprintSelected(IMPRINT);
       });
 
       it('updates the imprint', () => {
-        expect(component.comicBookForm.controls.imprint.value).toEqual(
-          IMPRINT.name
-        );
-      });
-
-      it('updates the publisher', () => {
-        expect(component.comicBookForm.controls.publisher.value).toEqual(
-          IMPRINT.publisher
-        );
+        expect(component.comicBookForm.controls.imprint.value).toEqual(IMPRINT);
       });
     });
 
-    describe('when the imprint is invalid', () => {
+    describe('clearing the selected one', () => {
       beforeEach(() => {
-        component.onImprintSelected(IMPRINT.name.substr(1));
+        component.onImprintSelected(null);
       });
 
       it('updates the imprint', () => {
-        expect(component.comicBookForm.controls.imprint.value).toEqual('');
-      });
-
-      it('updates the publisher', () => {
-        expect(component.comicBookForm.controls.publisher.value).toEqual(
-          COMIC.publisher
-        );
+        expect(component.comicBookForm.controls.imprint.value).toBeNull();
       });
     });
   });

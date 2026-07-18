@@ -25,6 +25,11 @@ import {
 export const selectBlockedHashesState =
   createFeatureSelector<BlockedHashesState>(BLOCKED_HASHES_FEATURE_KEY);
 
+export const selectBlockedHashesBusy = createSelector(
+  selectBlockedHashesState,
+  state => state.busy
+);
+
 export const selectBlockedHashesList = createSelector(
   selectBlockedHashesState,
   state => state.entries
@@ -33,4 +38,9 @@ export const selectBlockedHashesList = createSelector(
 export const selectBlockedHashDetail = createSelector(
   selectBlockedHashesState,
   state => state.entry
+);
+
+export const selectBlockedHashNotFound = createSelector(
+  selectBlockedHashesState,
+  state => !state.busy && state.notFound
 );

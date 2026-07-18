@@ -10,7 +10,11 @@
 
   <span id="cx-logo">ComiXed</span>
 
-  @if (isAdmin && !!latestRelease && latestRelease.newer) {
+  @if (
+    (isAdmin$ | async) &&
+    (latestRelease$ | async) !== null &&
+    (latestRelease$ | async).newer
+  ) {
     <button
       id="view-latest-release-button"
       mat-icon-button
@@ -18,11 +22,11 @@
         'menu.tooltip.new-release-available'
           | translate
             : {
-                version: latestRelease.version,
-                released: latestRelease.updated | date: 'mediumDate'
+                version: (latestRelease$ | async).version,
+                released: (latestRelease$ | async).updated | date: 'mediumDate'
               }
       "
-      [disabled]="checkingLatestVersion"
+      [disabled]="checkingLatestVersion$ | async"
       (click)="onViewLatestRelease()"
     >
       <mat-icon>new_releases</mat-icon>
@@ -77,12 +81,12 @@
     class="cx-toolbar-button"
     mat-icon-button
     [matTooltip]="'navigation.tooltip.dark-mode' | translate"
-    (click)="onToggleDarkMode(!darkMode)"
+    (click)="onToggleDarkMode()"
   >
-    @if (!darkMode) {
+    @if (!darkMode$) {
       <mat-icon>light_mode</mat-icon>
     }
-    @if (darkMode) {
+    @if (darkMode$) {
       <mat-icon>dark_mode</mat-icon>
     }
   </button>
@@ -135,10 +139,10 @@
 <mat-menu #languageMenu="matMenu">
   @for (option of languages; track option) {
     <button mat-menu-item (click)="onSelectLanguage(option.value)">
-      @if (currentLanguage === option.value) {
+      @if ((currentLanguage$ | async) === option.value) {
         <mat-icon>check_box</mat-icon>
       }
-      @if (currentLanguage !== option.value) {
+      @if ((currentLanguage$ | async) !== option.value) {
         <mat-icon>check_box_outline_blank</mat-icon>
       }
       <mat-label>{{ option.label }}</mat-label>

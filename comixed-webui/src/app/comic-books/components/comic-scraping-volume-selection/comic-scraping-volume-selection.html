@@ -127,7 +127,7 @@
       <mat-row
         *matRowDef="let row; columns: displayedColumns"
         [style.background]="
-          selectedVolume?.id === row.item.id ? 'lightblue' : ''
+          (selectedVolume$ | async)?.id === row.item.id ? 'lightblue' : ''
         "
         (click)="onVolumeSelected(row.item)"
         (keyup)="onVolumeSelected(row.item)"
@@ -163,8 +163,8 @@
             mat-raised-button
             color="accent"
             [matTooltip]="'scraping.tooltip.select-scraping-issue' | translate"
-            (click)="onDecision(true, selectedVolume)"
-            (keyup)="onDecision(true, selectedVolume)"
+            (click)="onDecision(true, selectedVolume$.value)"
+            (keyup)="onDecision(true, selectedVolume$.value)"
           >
             <mat-icon>thumb_up</mat-icon>
             <mat-label>{{ "button.scrape" | translate }}</mat-label>

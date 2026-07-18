@@ -141,7 +141,7 @@ describe('ComicScrapingVolumeSelectionComponent', () => {
       });
 
       it('does not preselect a volume', () => {
-        expect(component.selectedVolume).toBeNull();
+        expect(component.selectedVolume$.value).toBeNull();
       });
 
       it('does not contain an exact match', () => {
@@ -178,7 +178,7 @@ describe('ComicScrapingVolumeSelectionComponent', () => {
       });
 
       it('preselects a volume', () => {
-        expect(component.selectedVolume).not.toBeNull();
+        expect(component.selectedVolume$.value).not.toBeNull();
       });
 
       it('contains an exact match', () => {
@@ -216,7 +216,7 @@ describe('ComicScrapingVolumeSelectionComponent', () => {
       });
 
       it('preselects a volume', () => {
-        expect(component.selectedVolume).not.toBeNull();
+        expect(component.selectedVolume$.value).not.toBeNull();
       });
 
       it('contains an exact match', () => {
@@ -284,25 +284,25 @@ describe('ComicScrapingVolumeSelectionComponent', () => {
   describe('when a volume is selected', () => {
     describe('selecting a volume', () => {
       beforeEach(() => {
-        component.selectedVolume = null;
+        component.selectedVolume$.next(null);
         component.metadataSource = METADATA_SOURCE;
         component.onVolumeSelected(SCRAPING_VOLUME);
       });
 
       it('sets the selected volume', () => {
-        expect(component.selectedVolume).toBe(SCRAPING_VOLUME);
+        expect(component.selectedVolume$.value).toBe(SCRAPING_VOLUME);
       });
     });
 
     describe('deselecting a volume', () => {
       beforeEach(() => {
-        component.selectedVolume = SCRAPING_VOLUME;
+        component.selectedVolume$.next(SCRAPING_VOLUME);
         component.metadataSource = METADATA_SOURCE;
         component.onVolumeSelected(SCRAPING_VOLUME);
       });
 
       it('clears the selected volume', () => {
-        expect(component.selectedVolume).toBeNull();
+        expect(component.selectedVolume$.value).toBeNull();
       });
     });
   });

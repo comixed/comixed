@@ -11,7 +11,9 @@
     <cx-health-metrics></cx-health-metrics>
   </mat-tab>
   <mat-tab [label]="'configuration.tab.library' | translate">
-    <cx-library-configuration [options]="options"></cx-library-configuration>
+    <cx-library-configuration
+      [options]="options$ | async"
+    ></cx-library-configuration>
   </mat-tab>
   <mat-tab [label]="'configuration.tab.metadata-sources' | translate">
     <cx-metadata-source-list></cx-metadata-source-list>

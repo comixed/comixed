@@ -22,8 +22,14 @@ import {
   LibraryPluginState
 } from '../reducers/library-plugin.reducer';
 
-export const selectLibraryPluginState =
-  createFeatureSelector<LibraryPluginState>(LIBRARY_PLUGIN_FEATURE_KEY);
+const selectLibraryPluginState = createFeatureSelector<LibraryPluginState>(
+  LIBRARY_PLUGIN_FEATURE_KEY
+);
+
+export const selectLibraryPluginListBusy = createSelector(
+  selectLibraryPluginState,
+  state => state.busy
+);
 
 export const selectLibraryPluginList = createSelector(
   selectLibraryPluginState,

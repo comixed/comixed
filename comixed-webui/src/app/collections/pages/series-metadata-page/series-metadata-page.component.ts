@@ -20,31 +20,29 @@ import {
   AfterViewInit,
   Component,
   inject,
-  OnDestroy,
   OnInit,
   ViewChild
 } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 import {
-  MatTableDataSource,
-  MatTable,
-  MatColumnDef,
-  MatHeaderCellDef,
-  MatHeaderCell,
-  MatCellDef,
   MatCell,
-  MatHeaderRowDef,
+  MatCellDef,
+  MatColumnDef,
+  MatHeaderCell,
+  MatHeaderCellDef,
   MatHeaderRow,
+  MatHeaderRowDef,
+  MatRow,
   MatRowDef,
-  MatRow
+  MatTable,
+  MatTableDataSource
 } from '@angular/material/table';
 import { selectSeriesDetail } from '@app/collections/selectors/series.selectors';
 import { Issue } from '@app/collections/models/issue';
 import { loadSeriesDetail } from '@app/collections/actions/series.actions';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { TitleService } from '@app/core/services/title.service';
@@ -59,8 +57,10 @@ import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 import { MatFabButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
-import { AsyncPipe, DecimalPipe, DatePipe } from '@angular/common';
+import { AsyncPipe, DatePipe, DecimalPipe } from '@angular/common';
 import { SeriesDetailNamePipe } from '../../pipes/series-detail-name.pipe';
+import { tap } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'cx-series-metadata-page',
@@ -91,9 +91,7 @@ import { SeriesDetailNamePipe } from '../../pipes/series-detail-name.pipe';
     SeriesDetailNamePipe
   ]
 })
-export class SeriesMetadataPageComponent
-  implements OnInit, OnDestroy, AfterViewInit
-{
+export class SeriesMetadataPageComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -105,27 +103,17 @@ export class SeriesMetadataPageComponent
     'store-date',
     'in-library'
   ];
-  paramSubscription: Subscription;
-  seriesDetailSubscription: Subscription;
-  comicBookListSubscription: Subscription;
-  totalComicsSubscription: Subscription;
-  totalComics = 0;
-  pageChangedSubscription: Subscription;
-  userSubscription: Subscription;
-  librarySubscription: Subscription;
-  langChangeSubscription: Subscription;
-
-  dataSource = new MatTableDataSource<Issue>([]);
-
   readonly pageOptions = PAGE_SIZE_OPTIONS;
 
-  publisher = '';
-  name = '';
-  volume = '';
-  comics: DisplayableComic[] = [];
-  percentageComplete = 0;
-  inLibrary = 0;
-  totalIssues = 0;
+  dataSource = new MatTableDataSource<Issue>([]);
+  totalComics$ = new BehaviorSubject(0);
+  publisher$ = new BehaviorSubject('');
+  name$ = new BehaviorSubject('');
+  volume$ = new BehaviorSubject('');
+  comics$ = new BehaviorSubject<DisplayableComic[]>([]);
+  percentageComplete$ = new BehaviorSubject(0);
+  inLibrary$ = new BehaviorSubject(0);
+  totalIssues$ = new BehaviorSubject(0);
 
   logger = inject(LoggerService);
   activatedRoute = inject(ActivatedRoute);
@@ -135,72 +123,82 @@ export class SeriesMetadataPageComponent
   queryParameterService = inject(QueryParameterService);
 
   constructor() {
-    this.logger.trace('Subscribing to parameter updates');
-    this.paramSubscription = this.activatedRoute.params.subscribe(params => {
-      this.publisher = params['publisher'];
-      this.name = params['name'];
-      this.volume = params['volume'];
-      this.logger.debug(
-        `Loading series detail: publisher=${this.publisher} name=${this.name} volume=${this.volume}`
-      );
-      this.store.dispatch(
-        loadSeriesDetail({
-          publisher: this.publisher,
-          name: this.name,
-          volume: this.volume
+    this.activatedRoute.params
+      .pipe(
+        tap(params => {
+          this.publisher$.next(params['publisher']);
+          this.name$.next(params['name']);
+          this.volume$.next(params['volume']);
+          this.logger.debug(
+            `Loading series detail: publisher=${this.publisher$.value} name=${this.name$.value} volume=${this.volume$.value}`
+          );
+          this.store.dispatch(
+            loadSeriesDetail({
+              publisher: this.publisher$.value,
+              name: this.name$.value,
+              volume: this.volume$.value
+            })
+          );
         })
-      );
-    });
-    this.logger.trace('Subscribing to language change updates');
-    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
-      () => this.loadTranslations()
-    );
-    this.logger.trace('Subscribing to series detail updates');
-    this.seriesDetailSubscription = this.store
+      )
+      .subscribe();
+    this.translateService.onLangChange
+      .pipe(tap(() => this.loadTranslations()))
+      .subscribe();
+    this.store
       .select(selectSeriesDetail)
-      .subscribe(issues => {
-        this.dataSource.data = issues;
-        this.calculatePercentageComplete();
-      });
-    this.logger.trace('Subscribing to comic book list updates');
-    this.comicBookListSubscription = this.store
+      .pipe(
+        tap(issues => {
+          this.dataSource.data = issues;
+          this.calculatePercentageComplete();
+        })
+      )
+      .subscribe();
+    this.store
       .select(selectComicList)
-      .subscribe(comics => {
-        this.comics = comics;
-        this.calculatePercentageComplete();
-      });
-    this.logger.trace('Subscribing to total comics count updates');
-    this.totalComicsSubscription = this.store
+      .pipe(
+        tap(comics => {
+          this.comics$.next(comics);
+          this.calculatePercentageComplete();
+        })
+      )
+      .subscribe();
+    this.store
       .select(selectComicFilteredCount)
-      .subscribe(filteredCount => {
-        this.totalComics = filteredCount;
-        this.calculatePercentageComplete();
-      });
-    this.pageChangedSubscription = this.activatedRoute.queryParams.subscribe(
-      () => {
-        this.store.dispatch(
-          loadComicsByFilter({
-            pageIndex: this.queryParameterService.pageIndex$.value,
-            pageSize: this.queryParameterService.pageSize$.value,
-            coverMonth: null,
-            coverYear: null,
-            archiveType: null,
-            comicType: null,
-            comicState: null,
-            selected: false,
-            missing: false,
-            unscrapedState: false,
-            searchText: null,
-            publisher: this.publisher,
-            series: this.name,
-            volume: this.volume,
-            sortBy: null,
-            sortDirection: null,
-            pageCount: null
-          })
-        );
-      }
-    );
+      .pipe(
+        tap(filteredCount => {
+          this.totalComics$.next(filteredCount);
+          this.calculatePercentageComplete();
+        })
+      )
+      .subscribe();
+    this.activatedRoute.queryParams
+      .pipe(
+        tap(() => {
+          this.store.dispatch(
+            loadComicsByFilter({
+              pageIndex: this.queryParameterService.pageIndex$.value,
+              pageSize: this.queryParameterService.pageSize$.value,
+              coverMonth: null,
+              coverYear: null,
+              archiveType: null,
+              comicType: null,
+              comicState: null,
+              selected: false,
+              missing: false,
+              unscrapedState: false,
+              searchText: null,
+              publisher: this.publisher$.value,
+              series: this.name$.value,
+              volume: this.volume$.value,
+              sortBy: null,
+              sortDirection: null,
+              pageCount: null
+            })
+          );
+        })
+      )
+      .subscribe();
   }
 
   ngAfterViewInit(): void {
@@ -223,27 +221,12 @@ export class SeriesMetadataPageComponent
     this.dataSource.paginator = this.paginator;
   }
 
-  ngOnDestroy(): void {
-    this.logger.trace('Unsubscribing from language change updates');
-    this.langChangeSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from parameter updates');
-    this.paramSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from series detail updates');
-    this.seriesDetailSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from comic book list updates');
-    this.comicBookListSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from total comics updates');
-    this.totalComicsSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from page query updates');
-    this.pageChangedSubscription.unsubscribe();
-  }
-
   ngOnInit(): void {
     this.loadTranslations();
   }
 
   getComicBookIdForRow(issue: Issue): number {
-    const found = this.comics.find(
+    const found = this.comics$.value.find(
       comicBook =>
         comicBook.publisher === issue.publisher &&
         comicBook.series === issue.series &&
@@ -256,23 +239,25 @@ export class SeriesMetadataPageComponent
   private loadTranslations(): void {
     this.titleService.setTitle(
       this.translateService.instant('collections.series-detail.tab-title', {
-        publisher: this.publisher,
-        name: this.name,
-        volume: this.volume
+        publisher: this.publisher$.value,
+        name: this.name$.value,
+        volume: this.volume$.value
       })
     );
   }
 
   private calculatePercentageComplete(): void {
-    this.inLibrary = this.totalComics;
-    this.totalIssues = this.dataSource.data.length;
+    this.inLibrary$.next(this.totalComics$.value);
+    this.totalIssues$.next(this.dataSource.data.length);
     this.logger.debug(
-      `Calculating percentage completed: ${this.inLibrary} / ${this.totalComics} * 100 = ${this.percentageComplete}`
+      `Calculating percentage completed: ${this.inLibrary$.value} / ${this.totalComics$.value} * 100 = ${this.percentageComplete$}`
     );
-    if (this.totalIssues > 0 && this.inLibrary > 0) {
-      this.percentageComplete = (this.inLibrary / this.totalIssues) * 100;
+    if (this.totalIssues$.value > 0 && this.inLibrary$.value > 0) {
+      this.percentageComplete$.next(
+        (this.inLibrary$.value / this.totalIssues$.value) * 100
+      );
     } else {
-      this.percentageComplete = 0;
+      this.percentageComplete$.next(0);
     }
   }
 }

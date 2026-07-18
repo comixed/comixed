@@ -27,6 +27,11 @@ export const selectFilenameScrapingRulesState =
     FILENAME_SCRAPING_RULES_FEATURE_KEY
   );
 
+export const selectFilenameScrapingRulesBusy = createSelector(
+  selectFilenameScrapingRulesState,
+  state => state.busy
+);
+
 export const selectFilenameScrapingRules = createSelector(
   selectFilenameScrapingRulesState,
   state => state.rules

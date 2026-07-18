@@ -20,10 +20,10 @@ import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { User } from '@app/user/models/user';
 import { LoggerLevel, LoggerService } from '@angular-ru/cdk/logger';
 import { Router, RouterLinkActive } from '@angular/router';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { logoutUser, saveUserPreference } from '@app/user/actions/user.actions';
 import { Store } from '@ngrx/store';
-import { isAdmin, isReader } from '@app/user/user.functions';
+import { isAdmin } from '@app/user/user.functions';
 import {
   DARK_MODE_PREFERENCE,
   ISSUE_PAGE_TARGET,
@@ -38,10 +38,12 @@ import { ComicViewMode } from '@app/library/models/comic-view-mode.enum';
 import { SelectionOption } from '@app/core/models/ui/selection-option';
 import { ListItem } from '@app/core/models/ui/list-item';
 import { ConfirmationService } from '@tragically-slick/confirmation';
-import { Subscription } from 'rxjs';
 import { LatestRelease } from '@app/models/latest-release';
-import { selectReleaseDetailsState } from '@app/selectors/release.selectors';
-import { filter } from 'rxjs/operators';
+import {
+  selectReleaseDetailsLatestRelease,
+  selectReleaseDetailsNotLoaded
+} from '@app/selectors/release.selectors';
+import { filter, tap } from 'rxjs/operators';
 import { loadLatestReleaseDetails } from '@app/actions/release.actions';
 import { selectDarkThemeActive } from '@app/selectors/dark-theme.selectors';
 import { toggleDarkThemeMode } from '@app/actions/dark-theme.actions';
@@ -51,10 +53,11 @@ import { MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
 import { GravatarModule } from 'ngx-gravatar';
-import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { MatLabel } from '@angular/material/form-field';
 import { MatDivider } from '@angular/material/divider';
-import { DatePipe } from '@angular/common';
+import { AsyncPipe, DatePipe } from '@angular/common';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'cx-navigation-bar',
@@ -73,19 +76,15 @@ import { DatePipe } from '@angular/common';
     MatLabel,
     MatDivider,
     DatePipe,
-    TranslateModule
+    TranslateModule,
+    AsyncPipe
   ]
 })
 export class NavigationBarComponent {
   @Output() toggleSidebar = new EventEmitter<boolean>();
   @Output() toggleAccountBar = new EventEmitter<boolean>();
 
-  isReader = false;
-  isAdmin = false;
-  checkingLatestVersion = false;
-
   readonly languages: ListItem<string>[] = [{ label: 'English', value: 'en' }];
-  currentLanguage = '';
   readonly loggingOptions = [
     LoggerLevel.INFO,
     LoggerLevel.DEBUG,
@@ -98,11 +97,13 @@ export class NavigationBarComponent {
     { label: 'recently-read', value: ComicViewMode.RECENTLY_READ },
     { label: 'unread', value: ComicViewMode.UNREAD }
   ];
-  stacked = false;
-  readingLists: string[] = [];
-  releaseStateSubscription: Subscription;
-  latestRelease: LatestRelease;
-  darkMode = false;
+
+  isAdmin$ = new BehaviorSubject(false);
+  checkingLatestVersion$ = new BehaviorSubject(false);
+  currentLanguage$ = new BehaviorSubject('');
+  stacked$ = new BehaviorSubject(false);
+  latestRelease$ = new BehaviorSubject<LatestRelease | null>(null);
+  darkMode$ = new BehaviorSubject(false);
 
   logger = inject(LoggerService);
   router = inject(Router);
@@ -114,24 +115,30 @@ export class NavigationBarComponent {
   constructor() {
     this.translateService.onLangChange.subscribe(language => {
       this.logger.debug('Active language changed:', language.lang);
-      this.currentLanguage = language.lang;
+      this.currentLanguage$.next(language.lang);
     });
-    this.releaseStateSubscription = this.store
-      .select(selectReleaseDetailsState)
-      .pipe(filter(state => !!state))
-      .subscribe(state => {
-        this.checkingLatestVersion = state.latestLoading;
-        if (!state.latestLoading && !state.loaded) {
-          this.logger.trace('Fetching latest release details');
-          this.store.dispatch(loadLatestReleaseDetails());
-        } else {
-          this.logger.trace('Release state updated');
-          this.latestRelease = state.latest;
-        }
-      });
+    this.store
+      .select(selectReleaseDetailsNotLoaded)
+      .pipe(
+        tap(notLoaded => {
+          this.checkingLatestVersion$.next(notLoaded);
+          if (notLoaded) {
+            this.store.dispatch(loadLatestReleaseDetails());
+          }
+        })
+      )
+      .subscribe();
+    this.store
+      .select(selectReleaseDetailsLatestRelease)
+      .pipe(
+        filter(release => !!release),
+        tap(latestRelease => this.latestRelease$.next(latestRelease))
+      )
+      .subscribe();
     this.store
       .select(selectDarkThemeActive)
-      .subscribe(toggle => (this.darkMode = toggle));
+      .pipe(tap(toggle => this.darkMode$.next(toggle)))
+      .subscribe();
   }
 
   private _sidebarOpened = false;
@@ -165,8 +172,7 @@ export class NavigationBarComponent {
   set user(user: User) {
     this.logger.trace('Setting user');
     this._user = user;
-    this.isReader = isReader(user);
-    this.isAdmin = isAdmin(user);
+    this.isAdmin$.next(isAdmin(user));
   }
 
   onLogin(): void {
@@ -221,8 +227,8 @@ export class NavigationBarComponent {
   }
 
   onToggleStacked(): void {
-    this.logger.debug('Toggling stacked mode:', !this.stacked);
-    this.stacked = !this.stacked;
+    this.logger.debug('Toggling stacked mode:', !this.stacked$.value);
+    this.stacked$.next(!this.stacked$.value);
   }
 
   onComicViewChange(viewMode: ComicViewMode): void {
@@ -256,7 +262,7 @@ export class NavigationBarComponent {
 
   onViewLatestRelease(): void {
     this.logger.trace('Opening latest release page');
-    window.open(this.latestRelease.url, LATEST_RELEASE_TARGET);
+    window.open(this.latestRelease$.value.url, LATEST_RELEASE_TARGET);
   }
 
   onToggleAccountBar(): void {
@@ -264,7 +270,8 @@ export class NavigationBarComponent {
     this.toggleAccountBar.emit(!this.accountBarOpened);
   }
 
-  onToggleDarkMode(toggle: boolean): void {
+  onToggleDarkMode(): void {
+    const toggle = !this.darkMode$.value;
     this.logger.debug('Toggling dark mode:', toggle);
     this.store.dispatch(toggleDarkThemeMode({ toggle }));
     this.logger.debug('Saving user preference');

@@ -1,36 +1,39 @@
-@if (showComicDetailPopup) {
+@if (showComicDetailPopup$ | async) {
   <div class="cx-hover cx-centered cx-width-25 cx-border-primary-1">
     <mat-card
       appearance="outlined"
-      (click)="showComicDetailPopup = false"
-      (keyup)="showComicDetailPopup = false"
+      (click)="showComicDetailPopup$.next(false)"
+      (keyup)="showComicDetailPopup$.next(false)"
     >
       <mat-card-title class="cx-text-nowrap">
-        {{ selectedComic | comicTitle }}
+        {{ selectedComic$ | async | comicTitle }}
       </mat-card-title>
-      @if (!!selectedComic.title && selectedComic.title.length > 0) {
+      @if (
+        !!(selectedComic$ | async).title &&
+        (selectedComic$ | async).title.length > 0
+      ) {
         <mat-card-subtitle class="cx-text-nowrap">
-          {{ selectedComic.title }}
+          {{ (selectedComic$ | async).title }}
         </mat-card-subtitle>
       }
       <mat-card-content class="cx-padding-5">
         <img
           loading="lazy"
-          [src]="selectedComic | comicCoverUrl"
+          [src]="selectedComic$ | async | comicCoverUrl"
           width="100%"
           height="auto"
-          [alt]="selectedComic | comicTitle"
+          [alt]="selectedComic$ | async | comicTitle"
         />
       </mat-card-content>
     </mat-card>
   </div>
 }
-@if (showComicFilterPopup) {
+@if (showComicFilterPopup$ | async) {
   <div id="comic-detail-filter">
     <cx-comic-list-filter
       [coverYears]="coverYears"
       [coverMonths]="coverMonths"
-      (closeFilter)="showComicFilterPopup = false"
+      (closeFilter)="showComicFilterPopup$.next(false)"
     ></cx-comic-list-filter>
   </div>
 }
@@ -110,8 +113,8 @@
         </mat-header-cell>
         <mat-cell *matCellDef="let entry">
           <mat-icon
-            (click)="selectedComic = entry.item; $event.stopPropagation()"
-            (keyup)="selectedComic = entry.item; $event.stopPropagation()"
+            (click)="selectedComic$.next(entry.item); $event.stopPropagation()"
+            (keyup)="selectedComic$.next(entry.item); $event.stopPropagation()"
             [matMenuTriggerFor]="contextMenu"
           >
             more_vert
@@ -123,7 +126,9 @@
           @if (showSelectAll) {
             <mat-checkbox
               color="primary"
-              [disabled]="dataSource.data.length === 0 || selectionState.busy"
+              [disabled]="
+                dataSource.data.length === 0 || (selectionBusy$ | async)
+              "
               [checked]="
                 selectedIds.length > 0 && selectedIds.length === totalComics
               "
@@ -137,7 +142,7 @@
           <mat-checkbox
             color="primary"
             [checked]="entry.selected"
-            [disabled]="selectionState.busy"
+            [disabled]="selectionBusy$ | async"
             (change)="onSetSelectedState(entry, $event.checked)"
             (keyup)="onSetSelectedState(entry, $event.checked)"
             (click)="$event.stopImmediatePropagation()"
@@ -370,33 +375,33 @@
   <button mat-menu-item [matMenuTriggerFor]="currentComicConvertMenu">
     <mat-label>{{ "library.context-menu.convert" | translate }}</mat-label>
   </button>
-  @if (comicBookPluginList?.length > 0) {
+  @if ((comicBookPluginList$ | async).length > 0) {
     <button mat-menu-item [matMenuTriggerFor]="currentComicPluginMenu">
       <mat-label>
         {{ "library.context-menu.plugin-menu" | translate }}
       </mat-label>
     </button>
   }
-  @if (!isRead(selectedComic)) {
+  @if (!isRead(selectedComic$ | async)) {
     <button mat-menu-item (click)="onMarkOneAsRead(true)">
       <mat-label>
         {{ "library.context-menu.mark-as-read" | translate }}
       </mat-label>
     </button>
   }
-  @if (isRead(selectedComic)) {
+  @if (isRead(selectedComic$ | async)) {
     <button mat-menu-item (click)="onMarkOneAsRead(false)">
       <mat-label>
         {{ "library.context-menu.mark-as-unread" | translate }}
       </mat-label>
     </button>
   }
-  @if (!isDeleted(selectedComic)) {
+  @if (!isDeleted(selectedComic$ | async)) {
     <button mat-menu-item (click)="onMarkOneAsDeleted(true)">
       <mat-label>{{ "library.context-menu.delete-one" | translate }}</mat-label>
     </button>
   }
-  @if (isDeleted(selectedComic)) {
+  @if (isDeleted(selectedComic$ | async)) {
     <button mat-menu-item (click)="onMarkOneAsDeleted(false)">
       <mat-label>
         {{ "library.context-menu.undelete-one" | translate }}
@@ -406,7 +411,7 @@
   @if (isAdmin) {
     <button
       mat-menu-item
-      (click)="onUpdateSingleComicBookMetadata(selectedComic)"
+      (click)="onUpdateSingleComicBookMetadata(selectedComic$.value)"
     >
       <mat-label>
         {{ "library.context-menu.update-metadata-one" | translate }}
@@ -414,7 +419,10 @@
     </button>
   }
   @if (isAdmin) {
-    <button mat-menu-item (click)="onRescanSingleComicBook(selectedComic)">
+    <button
+      mat-menu-item
+      (click)="onRescanSingleComicBook(selectedComic$.value)"
+    >
       <mat-label>
         {{ "library.context-menu.rescan-one" | translate }}
       </mat-label>
@@ -436,10 +444,12 @@
 </mat-menu>
 
 <mat-menu #currentComicPluginMenu="matMenu">
-  @for (plugin of comicBookPluginList; track plugin) {
+  @for (plugin of comicBookPluginList$ | async; track plugin) {
     <button
       mat-menu-item
-      (click)="onRunLibraryPluginSingleOnComicBook(plugin, selectedComic)"
+      (click)="
+        onRunLibraryPluginSingleOnComicBook(plugin, selectedComic$.value)
+      "
     >
       <mat-label>{{ plugin.name }}</mat-label>
     </button>
@@ -474,7 +484,7 @@
   >
     <mat-label>{{ "library.context-menu.convert" | translate }}</mat-label>
   </button>
-  @if (comicListPluginList?.length > 0) {
+  @if ((comicListPluginList$ | async).length > 0) {
     <button mat-menu-item [matMenuTriggerFor]="selectedComicsPluginMenu">
       <mat-label>
         {{ "library.context-menu.plugin-menu" | translate }}
@@ -562,7 +572,7 @@
 </mat-menu>
 
 <mat-menu #selectedComicsPluginMenu="matMenu">
-  @for (plugin of comicListPluginList; track plugin) {
+  @for (plugin of comicListPluginList$ | async; track plugin) {
     <button
       mat-menu-item
       (click)="onRunLibraryPluginOnSelectedComicBooks(plugin)"

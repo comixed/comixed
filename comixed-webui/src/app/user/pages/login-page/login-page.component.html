@@ -8,13 +8,14 @@
     </mat-card-title>
     <mat-card-content class="cx-padding-left-15 cx-padding-right-15">
       <mat-form-field class="cx-width-100" required>
+        <mat-label>{{ "user.login-user.label.email" | translate }}</mat-label>
         <input
           id="cx-login-email"
           matInput
           type="email"
           formControlName="email"
-          [readonly]="busy"
-          [placeholder]="'user.login-user.email-placeholder' | translate"
+          [readonly]="busy$ | async"
+          [placeholder]="'user.login-user.placeholder.email' | translate"
         />
         <mat-error>
           @if (controls.email.errors?.required) {
@@ -30,13 +31,16 @@
         </mat-error>
       </mat-form-field>
       <mat-form-field class="cx-width-100" required>
+        <mat-label>
+          {{ "user.login-user.label.password" | translate }}
+        </mat-label>
         <input
           id="cx-login-password"
           matInput
           type="password"
           formControlName="password"
-          [readonly]="busy"
-          [placeholder]="'user.login-user.password-placeholder' | translate"
+          [readonly]="busy$ | async"
+          [placeholder]="'user.login-user.placeholder.password' | translate"
         />
         <mat-error>
           @if (controls.password.errors?.required) {
@@ -74,8 +78,8 @@
         id="cx-login-submit-button"
         mat-raised-button
         color="primary"
-        [class.cx-spinner]="busy"
-        [disabled]="!loginForm.valid || busy"
+        [class.cx-spinner]="busy$ | async"
+        [disabled]="!loginForm.valid || (busy$ | async)"
         (click)="onSubmitLogin()"
       >
         <mat-label>{{ "button.login" | translate }}</mat-label>

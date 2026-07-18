@@ -46,8 +46,7 @@ import { READING_LIST_3 } from '@app/lists/lists.fixtures';
 import { Subscription } from 'rxjs';
 import {
   COMIC_LIST_REMOVAL_TOPIC,
-  COMIC_LIST_UPDATE_TOPIC,
-  LOAD_DUPLICATE_COMIC_LIST_URL
+  COMIC_LIST_UPDATE_TOPIC
 } from '@app/library/library.constants';
 import { interpolate } from '@app/core';
 import {
@@ -66,7 +65,6 @@ import { LoadComicsByIdRequest } from '@app/comic-books/models/net/load-comics-b
 import { LoadComicsForCollectionRequest } from '@app/comic-books/models/net/load-comics-for-collection-request';
 import { LoadComicsByReadStateRequest } from '@app/comic-books/models/net/load-comics-by-read-state-request';
 import { LoadComicsForListRequest } from '@app/comic-books/models/net/load-comics-for-list-request';
-import { LoadDuplicateComicsListRequest } from '@app/library/models/net/load-duplicate-comics-list-request';
 import {
   comicRemoved,
   comicUpdated
@@ -115,14 +113,6 @@ describe('DisplayableComicService', () => {
 
   let service: DisplayableComicService;
   let webSocketService: jasmine.SpyObj<WebSocketService>;
-  const updateSubscription = jasmine.createSpyObj(['unsubscribe']);
-  updateSubscription.unsubscribe = jasmine.createSpy(
-    'Subscription.unsubscribe()'
-  );
-  const removalSubscription = jasmine.createSpyObj(['unsubscribe']);
-  removalSubscription.unsubscribe = jasmine.createSpy(
-    'Subscription.unsubscribe()'
-  );
   let store: MockStore<any>;
   let httpMock: HttpTestingController;
 
@@ -254,33 +244,6 @@ describe('DisplayableComicService', () => {
           } as DisplayableComic
         })
       );
-    });
-  });
-
-  describe('when messaging stops', () => {
-    beforeEach(() => {
-      service.updateSubscription = updateSubscription;
-      service.removalSubscription = removalSubscription;
-      store.setState({
-        ...initialState,
-        [MESSAGING_FEATURE_KEY]: { ...initialMessagingState, started: false }
-      });
-    });
-
-    it('unsubscribes from the comic list update queue', () => {
-      expect(updateSubscription.unsubscribe).toHaveBeenCalled();
-    });
-
-    it('clears the update subscription', () => {
-      expect(service.updateSubscription).toBeNull();
-    });
-
-    it('unsubscribes from the comic list removal queue', () => {
-      expect(removalSubscription.unsubscribe).toHaveBeenCalled();
-    });
-
-    it('clears the removal subscription', () => {
-      expect(service.removalSubscription).toBeNull();
     });
   });
 

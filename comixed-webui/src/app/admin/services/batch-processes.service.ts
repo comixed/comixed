@@ -19,7 +19,7 @@
 import { inject, Injectable } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { HttpClient } from '@angular/common/http';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { interpolate } from '@app/core';
 import {
   BATCH_PROCESS_LIST_UPDATE_TOPIC,
@@ -28,49 +28,43 @@ import {
   GET_ALL_BATCH_PROCESSES_URL
 } from '@app/admin/admin.constants';
 import { Store } from '@ngrx/store';
-import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
+import { selectMessagingStarted } from '@app/messaging/selectors/messaging.selectors';
 import { WebSocketService } from '@app/messaging';
 import {
   batchProcessUpdateReceived,
   loadBatchProcessList
 } from '@app/admin/actions/batch-processes.actions';
-import { filter } from 'rxjs/operators';
+import { filter, tap } from 'rxjs/operators';
 import { DeleteSelectedJobsRequest } from '@app/admin/models/net/delete-selected-jobs-request';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BatchProcessesService {
-  messagingSubscription: Subscription;
-  processListUpdateSubscription: Subscription;
-
   logger = inject(LoggerService);
   http = inject(HttpClient);
   store = inject(Store);
   webSocketService = inject(WebSocketService);
 
   constructor() {
-    this.messagingSubscription = this.store
-      .select(selectMessagingState)
-      .pipe(filter(state => !!state))
-      .subscribe(state => {
-        if (state.started && !this.processListUpdateSubscription) {
+    this.store
+      .select(selectMessagingStarted)
+      .pipe(
+        filter(started => started),
+        tap(() => {
           this.logger.trace('Loading the batch process list');
           this.store.dispatch(loadBatchProcessList());
           this.logger.trace('Subscribing to batch process list updates');
-          this.processListUpdateSubscription = this.webSocketService.subscribe(
+          this.webSocketService.subscribe(
             BATCH_PROCESS_LIST_UPDATE_TOPIC,
             update => {
               this.logger.debug('Received batch process list update:', update);
               this.store.dispatch(batchProcessUpdateReceived({ update }));
             }
           );
-        } else if (!state.started && !!this.processListUpdateSubscription) {
-          this.logger.trace('Unsubscribing from batch process list updates');
-          this.processListUpdateSubscription.unsubscribe();
-          this.processListUpdateSubscription = null;
-        }
-      });
+        })
+      )
+      .subscribe();
   }
 
   getAll(): Observable<any> {

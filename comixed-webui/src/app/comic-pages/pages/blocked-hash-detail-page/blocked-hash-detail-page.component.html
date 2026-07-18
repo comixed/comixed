@@ -5,7 +5,7 @@
 </div>
 
 <h2>
-  {{ "blocked-hash.page-title" | translate: { hash: hash } }}
+  {{ "blocked-hash.page-title" | translate: { hash: hash$ | async } }}
 </h2>
 
 <div class="cx-horizontal-container">

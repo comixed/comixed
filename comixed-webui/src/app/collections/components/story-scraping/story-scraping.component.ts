@@ -21,7 +21,6 @@ import {
   Component,
   inject,
   Input,
-  OnDestroy,
   OnInit,
   ViewChild
 } from '@angular/core';
@@ -31,10 +30,9 @@ import { Store } from '@ngrx/store';
 import {
   FormBuilder,
   FormGroup,
-  Validators,
-  ReactiveFormsModule
+  ReactiveFormsModule,
+  Validators
 } from '@angular/forms';
-import { Subscription } from 'rxjs';
 import { loadMetadataSources } from '@app/comic-metadata/actions/metadata-source-list.actions';
 import { selectMetadataSourceList } from '@app/comic-metadata/selectors/metadata-source-list.selectors';
 import {
@@ -50,37 +48,40 @@ import {
 } from '@app/comic-metadata/selectors/scrape-story.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import {
-  MatTableDataSource,
-  MatTable,
-  MatColumnDef,
-  MatHeaderCellDef,
-  MatHeaderCell,
-  MatCellDef,
   MatCell,
-  MatHeaderRowDef,
+  MatCellDef,
+  MatColumnDef,
+  MatHeaderCell,
+  MatHeaderCellDef,
   MatHeaderRow,
-  MatRowDef,
+  MatHeaderRowDef,
+  MatNoDataRow,
   MatRow,
-  MatNoDataRow
+  MatRowDef,
+  MatTable,
+  MatTableDataSource
 } from '@angular/material/table';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { PAGE_SIZE_OPTIONS } from '@app/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import { MatToolbar } from '@angular/material/toolbar';
 import { MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
-import { MatCard, MatCardTitle, MatCardContent } from '@angular/material/card';
+import { MatCard, MatCardContent, MatCardTitle } from '@angular/material/card';
 import {
   MatFormField,
   MatLabel,
   MatSuffix
 } from '@angular/material/form-field';
-import { MatSelect, MatOption } from '@angular/material/select';
+import { MatOption, MatSelect } from '@angular/material/select';
 import { MatInput } from '@angular/material/input';
+import { tap } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'cx-story-scraping',
@@ -115,29 +116,28 @@ import { MatInput } from '@angular/material/input';
     MatRowDef,
     MatRow,
     MatNoDataRow,
-    TranslateModule
+    TranslateModule,
+    AsyncPipe
   ]
 })
-export class StoryScrapingComponent
-  implements OnInit, OnDestroy, AfterViewInit
-{
+export class StoryScrapingComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
+  protected readonly pageSizeOptions = PAGE_SIZE_OPTIONS;
   readonly maxRecordsOptions = METADATA_RECORD_LIMITS;
   readonly displayedColumns = ['action', 'thumbnail', 'name', 'publisher'];
-  skipCache = false;
-  metadataSource: MetadataSource | null = null;
+
   storyScrapingForm: FormGroup;
-  metadataSourcesSubscription: Subscription;
-  metadataSources: MetadataSource[] = [];
-  scrapeStoryStateSubscription: Subscription;
-  storyCandidateSubscription: Subscription;
   dataSource = new MatTableDataSource<StoryMetadata>([]);
-  imageUrl: string | null = null;
-  imageTitle: string | null = null;
+
+  skipCache$ = new BehaviorSubject(false);
+  metadataSource$ = new BehaviorSubject<MetadataSource | null>(null);
+  metadataSources$ = new BehaviorSubject<MetadataSource[]>([]);
+  imageUrl$ = new BehaviorSubject('');
+  imageTitle$ = new BehaviorSubject('');
+
   queryParameterService = inject(QueryParameterService);
-  protected readonly pageSizeOptions = PAGE_SIZE_OPTIONS;
   logger = inject(LoggerService);
   store = inject(Store);
   formBuilder = inject(FormBuilder);
@@ -145,27 +145,26 @@ export class StoryScrapingComponent
   translateService = inject(TranslateService);
 
   constructor() {
-    this.logger.trace('Creating story scraping form');
     this.storyScrapingForm = this.formBuilder.group({
       metadataSource: [null, [Validators.required]],
       referenceId: [''],
       maxRecords: [0, [Validators.required]],
       storyName: ['', [Validators.required]]
     });
-    this.logger.trace('Subscribing to metadata source list updates');
-    this.metadataSourcesSubscription = this.store
+    this.store
       .select(selectMetadataSourceList)
-      .subscribe(list => (this.metadataSources = list));
-    this.logger.trace('Subscribing to story scraping state updates');
-    this.scrapeStoryStateSubscription = this.store
+      .pipe(tap(list => this.metadataSources$.next(list)))
+      .subscribe();
+    this.store
       .select(selectScrapeStoryState)
-      .subscribe(state =>
-        this.store.dispatch(setBusyState({ enabled: state.busy }))
-      );
-    this.logger.trace('Subscribing to story candidates updates');
-    this.storyCandidateSubscription = this.store
+      .pipe(
+        tap(state => this.store.dispatch(setBusyState({ enabled: state.busy })))
+      )
+      .subscribe();
+    this.store
       .select(selectScrapedStoryCandidates)
-      .subscribe(list => (this.dataSource.data = list));
+      .pipe(tap(list => (this.dataSource.data = list)))
+      .subscribe();
   }
 
   @Input() set storyName(storyName: string) {
@@ -202,21 +201,12 @@ export class StoryScrapingComponent
     this.store.dispatch(resetStoryCandidates());
   }
 
-  ngOnDestroy(): void {
-    this.logger.trace('Unsubscribing from metadata source list updates');
-    this.metadataSourcesSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from scrape story state updates');
-    this.scrapeStoryStateSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from story candidate list updates');
-    this.storyCandidateSubscription.unsubscribe();
-  }
-
   onLoadStoryCandidates(): void {
     this.logger.debug('Loading story candidates:');
     const sourceId = this.storyScrapingForm.controls.metadataSource.value;
     const name = this.storyScrapingForm.controls.storyName.value;
     const maxRecords = this.storyScrapingForm.controls.maxRecords.value;
-    const skipCache = this.skipCache;
+    const skipCache = this.skipCache$.value;
     this.store.dispatch(
       loadStoryCandidates({ sourceId, name, maxRecords, skipCache })
     );
@@ -227,19 +217,23 @@ export class StoryScrapingComponent
   }
 
   onShowPopup(entry: StoryMetadata): void {
-    this.imageUrl = entry?.imageUrl || null;
-    this.imageTitle = entry?.name || null;
+    this.imageUrl$.next(entry?.imageUrl || '');
+    this.imageTitle$.next(entry?.name || '');
   }
 
   onScrapeStory(entry: StoryMetadata): void {
     this.doScrapeStory(entry.referenceId);
   }
 
+  protected onToggleSkipCache() {
+    this.skipCache$.next(this.skipCache$.value === false);
+  }
+
   private doScrapeStory(referenceId: string): void {
     const storyName = this.storyScrapingForm.controls.storyName.value;
     const sourceId = this.storyScrapingForm.controls.metadataSource.value;
     /* istanbul ignore next */
-    const sourceName = this.metadataSources.filter(
+    const sourceName = this.metadataSources$.value.filter(
       entry => entry.metadataSourceId === sourceId
     )[0]?.name;
 
@@ -256,13 +250,13 @@ export class StoryScrapingComponent
           'Scraping story with reference ID',
           referenceId,
           ' from source',
-          this.metadataSource
+          this.metadataSource$.value
         );
         this.store.dispatch(
           scrapeStoryMetadata({
             sourceId,
             referenceId,
-            skipCache: this.skipCache
+            skipCache: this.skipCache$.value
           })
         );
       }

@@ -16,11 +16,27 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createFeatureSelector } from '@ngrx/store';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
 import {
   RELEASE_DETAILS_FEATURE_KEY,
   ReleaseDetailsState
 } from '@app/reducers/release.reducer';
 
-export const selectReleaseDetailsState =
-  createFeatureSelector<ReleaseDetailsState>(RELEASE_DETAILS_FEATURE_KEY);
+const selectReleaseDetailsState = createFeatureSelector<ReleaseDetailsState>(
+  RELEASE_DETAILS_FEATURE_KEY
+);
+
+export const selectReleaseDetailsNotLoaded = createSelector(
+  selectReleaseDetailsState,
+  state => !state.loaded
+);
+
+export const selectReleaseDetailsCurrentRelease = createSelector(
+  selectReleaseDetailsState,
+  state => state.current
+);
+
+export const selectReleaseDetailsLatestRelease = createSelector(
+  selectReleaseDetailsState,
+  state => state.latest
+);

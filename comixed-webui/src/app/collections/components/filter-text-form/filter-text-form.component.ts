@@ -16,23 +16,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import {
-  Component,
-  EventEmitter,
-  inject,
-  OnDestroy,
-  Output
-} from '@angular/core';
+import { Component, EventEmitter, inject, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { QUERY_PARAM_FILTER_TEXT } from '@app/core';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
-import { Subscription } from 'rxjs';
 import { MatFormField, MatPrefix } from '@angular/material/form-field';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
 import { TranslateModule } from '@ngx-translate/core';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'cx-filter-text-form',
@@ -48,11 +42,11 @@ import { TranslateModule } from '@ngx-translate/core';
     TranslateModule
   ]
 })
-export class FilterTextFormComponent implements OnDestroy {
+export class FilterTextFormComponent {
   @Output() filterTextChanged = new EventEmitter<string>();
 
   filterTextForm: FormGroup;
-  queryParamSubscription: Subscription;
+
   queryParameterService = inject(QueryParameterService);
   logger = inject(LoggerService);
   formBuilder = inject(FormBuilder);
@@ -62,16 +56,11 @@ export class FilterTextFormComponent implements OnDestroy {
     this.filterTextForm = this.formBuilder.group({
       filterTextInput: ['']
     });
-    this.logger.trace('Subscribing to query parameters updates');
-    this.queryParamSubscription =
-      this.queryParameterService.filterText$.subscribe(text =>
-        this.filterTextForm.controls.filterTextInput.setValue(text)
-      );
-  }
-
-  ngOnDestroy(): void {
-    this.logger.trace('Unsubscribing from query parameters updates');
-    this.queryParamSubscription.unsubscribe();
+    this.queryParameterService.filterText$
+      .pipe(
+        tap(text => this.filterTextForm.controls.filterTextInput.setValue(text))
+      )
+      .subscribe();
   }
 
   onApplyFilter(searchText: string): void {

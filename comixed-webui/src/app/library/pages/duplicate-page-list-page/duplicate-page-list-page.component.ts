@@ -16,16 +16,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { AfterViewInit, Component, inject, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { AfterViewInit, Component, inject } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { TitleService } from '@app/core/services/title.service';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import {
   selectDuplicatePageCount,
   selectDuplicatePageList,
-  selectDuplicatePageListState
+  selectDuplicatePageListBusy
 } from '@app/library/selectors/duplicate-page-list.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import {
@@ -35,25 +34,25 @@ import {
 } from '@app/library/actions/duplicate-page-list.actions';
 import { DuplicatePage } from '@app/library/models/duplicate-page';
 import {
-  MatTableDataSource,
-  MatTable,
-  MatColumnDef,
-  MatHeaderCellDef,
-  MatHeaderCell,
-  MatCellDef,
   MatCell,
-  MatHeaderRowDef,
+  MatCellDef,
+  MatColumnDef,
+  MatHeaderCell,
+  MatHeaderCellDef,
   MatHeaderRow,
+  MatHeaderRowDef,
+  MatRow,
   MatRowDef,
-  MatRow
+  MatTable,
+  MatTableDataSource
 } from '@angular/material/table';
 import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
-import { MessagingSubscription, WebSocketService } from '@app/messaging';
+import { WebSocketService } from '@app/messaging';
 import {
   DUPLICATE_PAGE_LIST_UPDATE_TOPIC,
   DUPLICATE_PAGES_UNBLOCKED_PAGES_ONLY
 } from '@app/library/library.constants';
-import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
+import { selectMessagingStarted } from '@app/messaging/selectors/messaging.selectors';
 import { BlockedHash } from '@app/comic-pages/models/blocked-hash';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import { saveUserPreference } from '@app/user/actions/user.actions';
@@ -77,17 +76,17 @@ import {
   removeHashSelection
 } from '@app/comic-pages/actions/hash-selection.actions';
 import {
-  selectHashSelectionList,
-  selectHashSelectionState
+  selectHashSelectionBusy,
+  selectHashSelectionList
 } from '@app/comic-pages/selectors/hash-selection.selectors';
 import { MatFabButton, MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
 import {
   MatCard,
-  MatCardTitle,
+  MatCardContent,
   MatCardSubtitle,
-  MatCardContent
+  MatCardTitle
 } from '@angular/material/card';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
@@ -95,6 +94,8 @@ import { MatCheckbox } from '@angular/material/checkbox';
 import { AsyncPipe } from '@angular/common';
 import { YesNoPipe } from '../../../core/pipes/yes-no.pipe';
 import { PageHashUrlPipe } from '../../../comic-books/pipes/page-hash-url.pipe';
+import { tap } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'cx-duplicate-page-list-page',
@@ -130,30 +131,16 @@ import { PageHashUrlPipe } from '../../../comic-books/pipes/page-hash-url.pipe';
     TranslateModule
   ]
 })
-export class DuplicatePageListPageComponent
-  implements OnDestroy, AfterViewInit
-{
+export class DuplicatePageListPageComponent implements AfterViewInit {
   dataSource = new MatTableDataSource<SelectableListItem<DuplicatePage>>([]);
 
-  langChangeSubscription: Subscription;
-  queryParamsSubscription: Subscription;
-  duplicatePageListSubscription: Subscription;
-  duplicatePageCountSubscription: Subscription;
-  totalPages = 0;
-  duplicatePageStateSubscription: Subscription;
-  blockedHashListSubscription: Subscription;
-  blockedHashList: BlockedHash[] = [];
-  messagingStateSubscription: Subscription;
-  pageUpdatesSubscription: MessagingSubscription;
-  hashSelectionStateSubscription: Subscription;
-  selectedHashes: string[] = [];
-  hashSelectionBusy = false;
-  hashSelectionListSubscription: Subscription;
-  allSelected = false;
-  anySelected = false;
-  userSubscription: Subscription;
-  showPopup = false;
-  popupPage: DuplicatePage | null = null;
+  totalPages$ = new BehaviorSubject(0);
+  blockedHashList$ = new BehaviorSubject<BlockedHash[]>([]);
+  selectedHashes$ = new BehaviorSubject<string[]>([]);
+  hashSelectionBusy$ = new BehaviorSubject(false);
+  allSelected$ = new BehaviorSubject(false);
+  showPopup$ = new BehaviorSubject(false);
+  popupPage$ = new BehaviorSubject<DuplicatePage | null>(null);
   readonly displayColumns = [
     'selection',
     'thumbnail',
@@ -162,7 +149,6 @@ export class DuplicatePageListPageComponent
     'blocked',
     'actions'
   ];
-  protected readonly PAGE_SIZE_OPTIONS = PAGE_SIZE_OPTIONS;
 
   logger = inject(LoggerService);
   activatedRoute = inject(ActivatedRoute);
@@ -172,94 +158,105 @@ export class DuplicatePageListPageComponent
   confirmationService = inject(ConfirmationService);
   webSocketService = inject(WebSocketService);
   queryParameterService = inject(QueryParameterService);
+  protected readonly PAGE_SIZE_OPTIONS = PAGE_SIZE_OPTIONS;
 
   constructor() {
-    this.queryParamsSubscription = this.activatedRoute.queryParams.subscribe(
-      params =>
-        this.store.dispatch(
-          loadDuplicatePageList({
-            page: this.queryParameterService.pageIndex$.value,
-            size: this.queryParameterService.pageSize$.value,
-            sortBy: this.queryParameterService.sortBy$.value,
-            sortDirection: this.queryParameterService.sortDirection$.value
-          })
+    this.activatedRoute.queryParams
+      .pipe(
+        tap(() =>
+          this.store.dispatch(
+            loadDuplicatePageList({
+              page: this.queryParameterService.pageIndex$.value,
+              size: this.queryParameterService.pageSize$.value,
+              sortBy: this.queryParameterService.sortBy$.value,
+              sortDirection: this.queryParameterService.sortDirection$.value
+            })
+          )
         )
-    );
-    this.logger.trace('Subscribing to duplicate page list changes');
-    this.userSubscription = this.store.select(selectUser).subscribe(user => {
-      this.unblockedOnly =
-        getUserPreference(
-          user.preferences,
-          DUPLICATE_PAGES_UNBLOCKED_PAGES_ONLY,
-          `${false}`
-        ) === `${true}`;
-    });
-    this.duplicatePageListSubscription = this.store
+      )
+      .subscribe();
+    this.store
+      .select(selectUser)
+      .pipe(
+        tap(user => {
+          this.unblockedOnly =
+            getUserPreference(
+              user.preferences,
+              DUPLICATE_PAGES_UNBLOCKED_PAGES_ONLY,
+              `${false}`
+            ) === `${true}`;
+        })
+      )
+      .subscribe();
+    this.store
       .select(selectDuplicatePageList)
-      .subscribe(pages => (this.duplicatePages = pages));
-    this.duplicatePageCountSubscription = this.store
+      .pipe(tap(pages => (this.duplicatePages = pages)))
+      .subscribe();
+    this.store
       .select(selectDuplicatePageCount)
-      .subscribe(count => (this.totalPages = count));
-    this.logger.trace('Subscribing to duplicate page state changes');
-    this.duplicatePageStateSubscription = this.store
-      .select(selectDuplicatePageListState)
-      .subscribe(state => {
-        this.store.dispatch(setBusyState({ enabled: state.loading }));
-      });
-    this.logger.trace('Subscribing to blocked page list');
-    this.blockedHashListSubscription = this.store
+      .pipe(tap(count => this.totalPages$.next(count)))
+      .subscribe();
+    this.store
+      .select(selectDuplicatePageListBusy)
+      .pipe(
+        tap(enabled => {
+          this.store.dispatch(setBusyState({ enabled }));
+        })
+      )
+      .subscribe();
+    this.store
       .select(selectBlockedHashesList)
-      .subscribe(blockedPages => (this.blockedHashList = blockedPages));
-    this.logger.trace('Subscribing to hash selection state updates');
-    this.hashSelectionStateSubscription = this.store
-      .select(selectHashSelectionState)
-      .subscribe(state => (this.hashSelectionBusy = state.busy));
-    this.logger.trace('Subscribing to hash selection updates');
-    this.hashSelectionListSubscription = this.store
+      .pipe(tap(blockedPages => this.blockedHashList$.next(blockedPages)))
+      .subscribe();
+    this.store
       .select(selectHashSelectionList)
-      .subscribe(hashes => {
-        this.logger.debug('Updating selected hash state:', hashes);
-        this.selectedHashes = hashes;
-        this.updateSelectionState();
-      });
-    this.logger.trace('Subscribing to language changes');
-    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
-      () => this.loadTranslations()
-    );
-    this.messagingStateSubscription = this.store
-      .select(selectMessagingState)
-      .subscribe(state => {
-        if (state.started) {
-          if (!this.pageUpdatesSubscription) {
-            this.logger.trace('Subscribing to duplicate page list updates');
-            this.pageUpdatesSubscription = this.webSocketService.subscribe(
-              DUPLICATE_PAGE_LIST_UPDATE_TOPIC,
-              (response: DuplicatePageUpdate) => {
-                this.logger.trace('Duplicate page update received:', response);
-                if (response.removed) {
-                  this.store.dispatch(
-                    duplicatePageRemoved({
-                      page: response.page,
-                      total: response.total
-                    })
-                  );
-                } else {
-                  this.store.dispatch(
-                    duplicatePageUpdated({
-                      page: response.page,
-                      total: response.total
-                    })
-                  );
-                }
+      .pipe(
+        tap(hashes => {
+          this.logger.debug('Updating selected hash state:', hashes);
+          this.selectedHashes$.next(hashes);
+          this.updateSelectionState();
+        })
+      )
+      .subscribe();
+    this.store
+      .select(selectHashSelectionBusy)
+      .pipe(tap(busy => this.hashSelectionBusy$.next(busy)))
+      .subscribe();
+    this.translateService.onLangChange
+      .pipe(tap(() => this.loadTranslations()))
+      .subscribe();
+    this.store
+      .select(selectMessagingStarted)
+      .pipe(
+        tap(started => {
+          this.webSocketService.subscribe(
+            DUPLICATE_PAGE_LIST_UPDATE_TOPIC,
+            (response: DuplicatePageUpdate) => {
+              this.logger.trace('Duplicate page update received:', response);
+              if (response.removed) {
+                this.store.dispatch(
+                  duplicatePageRemoved({
+                    page: response.page,
+                    total: response.total
+                  })
+                );
+              } else {
+                this.store.dispatch(
+                  duplicatePageUpdated({
+                    page: response.page,
+                    total: response.total
+                  })
+                );
               }
-            );
-          }
-        }
-      });
+            }
+          );
+        })
+      )
+      .subscribe();
   }
 
   get selectedCount(): number {
-    return this.selectedHashes.length;
+    return this.selectedHashes$.value.length;
   }
 
   private _unblockedOnly = false;
@@ -280,28 +277,13 @@ export class DuplicatePageListPageComponent
   }
 
   set duplicatePages(pages: DuplicatePage[]) {
-    this._duplicatePages = _.cloneDeep(pages);
+    this._duplicatePages = structuredClone(pages);
     this.loadDataSource();
   }
 
   ngAfterViewInit(): void {
     this.store.dispatch(loadHashSelections());
     this.loadTranslations();
-  }
-
-  ngOnDestroy(): void {
-    this.duplicatePageListSubscription.unsubscribe();
-    this.duplicatePageCountSubscription.unsubscribe();
-    this.duplicatePageStateSubscription.unsubscribe();
-    this.blockedHashListSubscription.unsubscribe();
-    this.hashSelectionStateSubscription.unsubscribe();
-    this.hashSelectionListSubscription.unsubscribe();
-    this.langChangeSubscription.unsubscribe();
-    if (!!this.pageUpdatesSubscription) {
-      this.logger.trace('Unsubscribing from duplicate page list updates');
-      this.pageUpdatesSubscription.unsubscribe();
-      this.pageUpdatesSubscription = null;
-    }
   }
 
   onBlockPage(row: SelectableListItem<DuplicatePage>): void {
@@ -371,7 +353,7 @@ export class DuplicatePageListPageComponent
       ),
       message: this.translateService.instant(
         'duplicate-pages.block-selection.confirmation-message',
-        { count: this.selectedHashes.length }
+        { count: this.selectedHashes$.value.length }
       ),
       confirm: () => {
         this.logger.trace('Blocking selected page hashes');
@@ -392,7 +374,7 @@ export class DuplicatePageListPageComponent
       ),
       message: this.translateService.instant(
         'duplicate-pages.unblock-selection.confirmation-message',
-        { count: this.selectedHashes.length }
+        { count: this.selectedHashes$.value.length }
       ),
       confirm: () => {
         this.logger.trace('Unblocking selected page hashes');
@@ -415,25 +397,25 @@ export class DuplicatePageListPageComponent
   }
 
   isBlocked(item: SelectableListItem<DuplicatePage>): boolean {
-    return this.blockedHashList
+    return this.blockedHashList$.value
       .map(entry => entry.hash)
       .includes(item.item.hash);
   }
 
   onShowPagePopup(showPopup: boolean, page: DuplicatePage) {
-    this.popupPage = page;
-    this.showPopup = showPopup;
+    this.popupPage$.next(page);
+    this.showPopup$.next(showPopup);
   }
 
   private loadDataSource(): void {
     this.logger.info('Loading duplicate pages:', this.unblockedOnly);
-    const blockedHashes = this.blockedHashList.map(page => page.hash);
+    const blockedHashes = this.blockedHashList$.value.map(page => page.hash);
     this.dataSource.data = this.duplicatePages
       .filter(page => !this.unblockedOnly || !blockedHashes.includes(page.hash))
       .map(page => {
         return {
           item: page,
-          selected: this.selectedHashes.includes(page.hash)
+          selected: this.selectedHashes$.value.includes(page.hash)
         };
       });
     this.updateSelectionState();
@@ -447,12 +429,13 @@ export class DuplicatePageListPageComponent
 
   private updateSelectionState(): void {
     this.dataSource.data.forEach(
-      entry => (entry.selected = this.selectedHashes.includes(entry.item.hash))
+      entry =>
+        (entry.selected = this.selectedHashes$.value.includes(entry.item.hash))
     );
     /* istanbul ignore next */
-    this.allSelected =
-      this.totalPages > 0 && this.totalPages === this.selectedCount;
-    /* istanbul ignore next */
-    this.anySelected = this.selectedCount > 0;
+    this.allSelected$.next(
+      this.totalPages$.value > 0 &&
+        this.totalPages$.value === this.selectedCount
+    );
   }
 }

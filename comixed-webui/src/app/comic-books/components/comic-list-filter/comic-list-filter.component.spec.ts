@@ -87,23 +87,23 @@ describe('ComicListFilterComponent', () => {
 
   describe('setting the cover years', () => {
     beforeEach(() => {
-      component.displayableCoverYears = [];
+      component.displayableCoverYears$.next([]);
       component.coverYears = [1965, 1971];
     });
 
     it('populates the displayable cover years', () => {
-      expect(component.displayableCoverYears).not.toEqual([]);
+      expect(component.displayableCoverYears$.value).not.toEqual([]);
     });
   });
 
   describe('setting the cover months', () => {
     beforeEach(() => {
-      component.displayableCoverMonths = [];
+      component.displayableCoverMonths$.next([]);
       component.coverMonths = [1, 7];
     });
 
     it('populates the displayable cover months', () => {
-      expect(component.displayableCoverMonths).not.toEqual([]);
+      expect(component.displayableCoverMonths$.value).not.toEqual([]);
     });
   });
 

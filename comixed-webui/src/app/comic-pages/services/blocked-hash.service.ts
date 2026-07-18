@@ -17,11 +17,11 @@
  */
 
 import { inject, Injectable } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { HttpClient } from '@angular/common/http';
-import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
+import { selectMessagingStarted } from '@app/messaging/selectors/messaging.selectors';
 import { WebSocketService } from '@app/messaging';
 import { BlockedHash } from '@app/comic-pages/models/blocked-hash';
 import {
@@ -50,55 +50,45 @@ import {
   blockedHashUpdated,
   loadBlockedHashList
 } from '@app/comic-pages/actions/blocked-hashes.actions';
+import { filter, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BlockedHashService {
-  updateSubscription: Subscription;
-  removalSubscription: Subscription;
-  entriesLoaded = false;
-
   logger = inject(LoggerService);
   http = inject(HttpClient);
   store = inject(Store);
   webSocketService = inject(WebSocketService);
 
   constructor() {
-    this.store.select(selectMessagingState).subscribe(state => {
-      if (state.started && !this.updateSubscription) {
-        this.logger.trace('Loading blocked page list');
-        this.store.dispatch(loadBlockedHashList());
-        this.logger.trace('Subscribing to blocked page updates');
-        this.updateSubscription = this.webSocketService.subscribe<BlockedHash>(
-          BLOCKED_HASH_LIST_UPDATE_TOPIC,
-          entry => {
-            this.logger.trace('Received blocked page update:', entry);
-            this.store.dispatch(blockedHashUpdated({ entry }));
-          }
-        );
-      }
-      if (state.started && !this.removalSubscription) {
-        this.logger.trace('Subscribing to blocked page removals');
-        this.removalSubscription = this.webSocketService.subscribe<BlockedHash>(
-          BLOCKED_HASH_LIST_REMOVAL_TOPIC,
-          entry => {
-            this.logger.trace('Received blocked page removal:', entry);
-            this.store.dispatch(blockedHashRemoved({ entry }));
-          }
-        );
-      }
-      if (!state.started && !!this.updateSubscription) {
-        this.logger.trace('Unsubscribing from blocked page updates');
-        this.updateSubscription.unsubscribe();
-        this.updateSubscription = null;
-      }
-      if (!state.started && !!this.removalSubscription) {
-        this.logger.trace('Unsubscribing from blocked page removals');
-        this.removalSubscription.unsubscribe();
-        this.removalSubscription = null;
-      }
-    });
+    this.store
+      .select(selectMessagingStarted)
+      .pipe(
+        filter(started => started),
+        tap(() => {
+          this.logger.trace('Loading blocked page list');
+          this.store.dispatch(loadBlockedHashList());
+          this.logger.trace('Subscribing to blocked page updates');
+          this.webSocketService.subscribe<BlockedHash>(
+            BLOCKED_HASH_LIST_UPDATE_TOPIC,
+            entry => {
+              this.logger.trace('Received blocked page update:', entry);
+              this.store.dispatch(blockedHashUpdated({ entry }));
+            }
+          );
+
+          this.logger.trace('Subscribing to blocked page removals');
+          this.webSocketService.subscribe<BlockedHash>(
+            BLOCKED_HASH_LIST_REMOVAL_TOPIC,
+            entry => {
+              this.logger.trace('Received blocked page removal:', entry);
+              this.store.dispatch(blockedHashRemoved({ entry }));
+            }
+          );
+        })
+      )
+      .subscribe();
   }
 
   /**

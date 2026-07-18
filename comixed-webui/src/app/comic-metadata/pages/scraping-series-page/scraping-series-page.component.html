@@ -1,14 +1,14 @@
 <h2>
-  @if (scrapingVolumes.length === 0) {
+  @if ((scrapingVolumes$ | async).length === 0) {
     <span>
       {{ "scraping-series-page.page-title-with-form" | translate }}
     </span>
   }
-  @if (scrapingVolumes.length > 0) {
+  @if ((scrapingVolumes$ | async).length > 0) {
     <span>
       {{
         "scraping-series-page.page-title-with-volumes"
-          | translate: { count: scrapingVolumes.length }
+          | translate: { count: (scrapingVolumes$ | async).length }
       }}
     </span>
   }
@@ -88,9 +88,9 @@
         [value]="metadataSource?.metadataSourceId"
         (selectionChange)="onMetadataSourceSelected($event.value)"
       >
-        @for (source of metadataSourceList; track source) {
+        @for (source of metadataSourceList$.value; track source) {
           <mat-option
-            [disabled]="scrapingVolumes.length > 0"
+            [disabled]="(scrapingVolumes$ | async).length > 0"
             [value]="source.metadataSourceId"
           >
             {{ source.name }}
@@ -141,11 +141,11 @@
     <cx-volume-metadata-table
       [class.cx-width-100]="selectedVolume === null"
       [class.cx-width-75]="selectedVolume !== null"
-      [volumes]="scrapingVolumes"
+      [volumes]="scrapingVolumes$ | async"
       [publisher]="publisher"
       [series]="series"
       [volume]="volume"
-      [pageSize]="pageSize"
+      [pageSize]="pageSize$ | async"
       (volumeSelected)="onVolumeSelected($event)"
       (volumeChosen)="onVolumeChosen($event)"
     ></cx-volume-metadata-table>

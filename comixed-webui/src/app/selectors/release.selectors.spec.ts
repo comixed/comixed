@@ -16,7 +16,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { selectReleaseDetailsState } from './release.selectors';
+import {
+  selectReleaseDetailsCurrentRelease,
+  selectReleaseDetailsLatestRelease,
+  selectReleaseDetailsNotLoaded
+} from './release.selectors';
 import {
   RELEASE_DETAILS_FEATURE_KEY,
   ReleaseDetailsState
@@ -36,11 +40,41 @@ describe('Release Selectors', () => {
     };
   });
 
-  it('selects the feature state', () => {
+  it('selects when nothing is loaded', () => {
     expect(
-      selectReleaseDetailsState({
+      selectReleaseDetailsNotLoaded({
+        [RELEASE_DETAILS_FEATURE_KEY]: {
+          ...state,
+          loaded: false
+        }
+      })
+    ).toEqual(true);
+  });
+
+  it('selects when loaded', () => {
+    expect(
+      selectReleaseDetailsNotLoaded({
+        [RELEASE_DETAILS_FEATURE_KEY]: {
+          ...state,
+          loaded: true
+        }
+      })
+    ).toEqual(false);
+  });
+
+  it('returns the current version', () => {
+    expect(
+      selectReleaseDetailsCurrentRelease({
         [RELEASE_DETAILS_FEATURE_KEY]: state
       })
-    ).toEqual(state);
+    ).toEqual(state.current);
+  });
+
+  it('returns the latest version', () => {
+    expect(
+      selectReleaseDetailsLatestRelease({
+        [RELEASE_DETAILS_FEATURE_KEY]: state
+      })
+    ).toEqual(state.latest);
   });
 });
