@@ -16,40 +16,31 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import {
-  Component,
-  HostListener,
-  inject,
-  OnDestroy,
-  OnInit
-} from '@angular/core';
+import { Component, HostListener, inject, OnInit } from '@angular/core';
 import {
   FormGroup,
+  ReactiveFormsModule,
   UntypedFormBuilder,
-  Validators,
-  ReactiveFormsModule
+  Validators
 } from '@angular/forms';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
 import {
   selectMetadataSourceList,
-  selectMetadataSourceListState
+  selectMetadataSourceListBusy
 } from '@app/comic-metadata/selectors/metadata-source-list.selectors';
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 import { loadMetadataSources } from '@app/comic-metadata/actions/metadata-source-list.actions';
 import { setBusyState } from '@app/core/actions/busy.actions';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/core/services/title.service';
-import { MetadataSourceListState } from '@app/comic-metadata/reducers/metadata-source-list.reducer';
 import { loadVolumeMetadata } from '@app/comic-metadata/actions/single-book-scraping.actions';
 import { VolumeMetadata } from '@app/comic-metadata/models/volume-metadata';
 import {
   selectScrapingVolumeMetadata,
-  selectSingleBookScrapingState
+  selectSingleBookScrapingBusy
 } from '@app/comic-metadata/selectors/single-book-scraping.selectors';
-import { SingleBookScrapingState } from '@app/comic-metadata/reducers/single-book-scraping.reducer';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { getUserPreference } from '@app/user';
 import {
@@ -60,26 +51,28 @@ import {
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import { scrapeSeriesMetadata } from '@app/comic-metadata/actions/scrape-series.actions';
-import { SeriesScrapingState } from '@app/comic-metadata/reducers/scrape-series.reducer';
-import { selectScrapeSeriesState } from '@app/comic-metadata/selectors/scrape-series.selectors';
+import { selectScrapeSeriesBusy } from '@app/comic-metadata/selectors/scrape-series.selectors';
 import { METADATA_RECORD_LIMITS } from '@app/comic-metadata/comic-metadata.constants';
 import { MatDialog } from '@angular/material/dialog';
 import { MatToolbar } from '@angular/material/toolbar';
-import { MatIconButton, MatButton } from '@angular/material/button';
+import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
-import { MatSelect, MatOption } from '@angular/material/select';
+import { MatOption, MatSelect } from '@angular/material/select';
 import { MatInput } from '@angular/material/input';
 import { VolumeMetadataTableComponent } from '../../../comic-books/components/volume-metadata-table/volume-metadata-table.component';
 import {
   MatCard,
-  MatCardTitle,
-  MatCardSubtitle,
+  MatCardActions,
   MatCardContent,
-  MatCardActions
+  MatCardSubtitle,
+  MatCardTitle
 } from '@angular/material/card';
 import { VolumeMetadataTitlePipe } from '../../../comic-books/pipes/volume-metadata-title.pipe';
+import { tap } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'cx-scraping-series-page',
@@ -104,10 +97,11 @@ import { VolumeMetadataTitlePipe } from '../../../comic-books/pipes/volume-metad
     MatCardActions,
     MatButton,
     TranslateModule,
-    VolumeMetadataTitlePipe
+    VolumeMetadataTitlePipe,
+    AsyncPipe
   ]
 })
-export class ScrapingSeriesPageComponent implements OnInit, OnDestroy {
+export class ScrapingSeriesPageComponent implements OnInit {
   readonly maximumRecordsOptions = METADATA_RECORD_LIMITS;
   maximumRecords = 0;
 
@@ -116,21 +110,12 @@ export class ScrapingSeriesPageComponent implements OnInit, OnDestroy {
   originalSeries = '';
   originalVolume = '';
 
-  userSubscription: Subscription;
-  paramSubscription: Subscription;
-  metadataSourceListSubscription: Subscription;
-  metadataSourceListStateSubscription: Subscription;
-  metadataSourceListState: MetadataSourceListState;
-  scrapingVolumeSubscription: Subscription;
-  fetchIssuesForSeriesStateSubscription: Subscription;
-  fetchIssuesForSeriesState: SeriesScrapingState;
-  scrapingVolumes: VolumeMetadata[] = [];
-  pageSize = 10;
-  metadataStateSubscription: Subscription;
-  metadataState: SingleBookScrapingState;
-  busy = false;
-  metadataSourceList: MetadataSource[] = [];
-  langChangeSubscription: Subscription;
+  metadataSourceListBusy$ = new BehaviorSubject(false);
+  fetchIssuesForSeriesBusy$ = new BehaviorSubject(false);
+  metadataBusy$ = new BehaviorSubject(false);
+  scrapingVolumes$ = new BehaviorSubject<VolumeMetadata[]>([]);
+  pageSize$ = new BehaviorSubject(10);
+  metadataSourceList$ = new BehaviorSubject<MetadataSource[]>([]);
   selectedVolume: VolumeMetadata;
 
   logger = inject(LoggerService);
@@ -143,14 +128,16 @@ export class ScrapingSeriesPageComponent implements OnInit, OnDestroy {
   dialog = inject(MatDialog);
 
   constructor() {
-    this.logger.trace('Loading page parameters');
-    this.paramSubscription = this.activatedRoute.params.subscribe(params => {
-      this.logger.debug('Route parameters:', params);
-      this.originalPublisher = params.publisher;
-      this.originalSeries = params.series;
-      this.originalVolume = params.volume;
-    });
-    this.logger.trace('Building the issue form');
+    this.activatedRoute.params
+      .pipe(
+        tap(params => {
+          this.logger.debug('Route parameters:', params);
+          this.originalPublisher = params.publisher;
+          this.originalSeries = params.series;
+          this.originalVolume = params.volume;
+        })
+      )
+      .subscribe();
     this.scrapeSeriesForm = this.formBuilder.group({
       publisher: [this.originalPublisher],
       series: [this.originalSeries],
@@ -159,63 +146,73 @@ export class ScrapingSeriesPageComponent implements OnInit, OnDestroy {
       skipCache: [''],
       matchPublisher: ['']
     });
-    this.logger.trace('Subscribing to user updates');
-    this.userSubscription = this.store.select(selectUser).subscribe(user => {
-      this.scrapeSeriesForm.controls.skipCache.setValue(
-        getUserPreference(
-          user.preferences,
-          SKIP_CACHE_PREFERENCE,
-          `${false}`
-        ) === `${true}`
-      );
-      this.scrapeSeriesForm.controls.matchPublisher.setValue(
-        getUserPreference(
-          user.preferences,
-          MATCH_PUBLISHER_PREFERENCE,
-          `${false}`
-        ) === `${true}`
-      );
-    });
-    this.logger.trace('Subscribing to metadata source list');
-    this.metadataSourceListSubscription = this.store
+    this.store
+      .select(selectUser)
+      .pipe(
+        tap(user => {
+          this.scrapeSeriesForm.controls.skipCache.setValue(
+            getUserPreference(
+              user.preferences,
+              SKIP_CACHE_PREFERENCE,
+              `${false}`
+            ) === `${true}`
+          );
+          this.scrapeSeriesForm.controls.matchPublisher.setValue(
+            getUserPreference(
+              user.preferences,
+              MATCH_PUBLISHER_PREFERENCE,
+              `${false}`
+            ) === `${true}`
+          );
+        })
+      )
+      .subscribe();
+    this.store
       .select(selectMetadataSourceList)
-      .subscribe(list => {
-        this.logger.trace('Setting metadata source list');
-        this.metadataSourceList = list;
-        this.metadataSource = this.metadataSourceList.find(
-          source => source.preferred
-        );
-      });
-    this.logger.trace('Subscribing to metadata source list state');
-    this.metadataSourceListStateSubscription = this.store
-      .select(selectMetadataSourceListState)
-      .subscribe(state => {
-        this.metadataSourceListState = state;
-        this.updateBusyState();
-      });
-    this.logger.trace('Subscribing to language change updates');
-    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
-      () => this.loadTranslations()
-    );
-    this.logger.trace('Subscribing to metadata volume list updates');
-    this.scrapingVolumeSubscription = this.store
+      .pipe(
+        tap(list => {
+          this.logger.trace('Setting metadata source list');
+          this.metadataSourceList$.next(list);
+          this.metadataSource = this.metadataSourceList$.value.find(
+            source => source.preferred
+          );
+        })
+      )
+      .subscribe();
+    this.store
+      .select(selectMetadataSourceListBusy)
+      .pipe(
+        tap(state => {
+          this.metadataSourceListBusy$.next(state);
+          this.updateBusyState();
+        })
+      )
+      .subscribe();
+    this.translateService.onLangChange
+      .pipe(tap(() => this.loadTranslations()))
+      .subscribe();
+    this.store
       .select(selectScrapingVolumeMetadata)
-      .subscribe(volumes => (this.scrapingVolumes = volumes));
-    this.logger.trace(
-      'Subscribing to fetching issues for series state updates'
-    );
-    this.fetchIssuesForSeriesStateSubscription = this.store
-      .select(selectScrapeSeriesState)
-      .subscribe(state => {
-        this.fetchIssuesForSeriesState = state;
-        this.updateBusyState();
-      });
-    this.metadataStateSubscription = this.store
-      .select(selectSingleBookScrapingState)
-      .subscribe(state => {
-        this.metadataState = state;
-        this.updateBusyState();
-      });
+      .pipe(tap(volumes => this.scrapingVolumes$.next(volumes)))
+      .subscribe();
+    this.store
+      .select(selectScrapeSeriesBusy)
+      .pipe(
+        tap(busy => {
+          this.fetchIssuesForSeriesBusy$.next(busy);
+          this.updateBusyState();
+        })
+      )
+      .subscribe();
+    this.store
+      .select(selectSingleBookScrapingBusy)
+      .pipe(
+        tap(busy => {
+          this.metadataBusy$.next(busy);
+          this.updateBusyState();
+        })
+      )
+      .subscribe();
     this.loadTranslations();
   }
 
@@ -255,7 +252,7 @@ export class ScrapingSeriesPageComponent implements OnInit, OnDestroy {
   }
 
   get metadataSource(): MetadataSource {
-    return this.metadataSourceList.find(
+    return this.metadataSourceList$.value.find(
       source =>
         source.metadataSourceId ===
         this.scrapeSeriesForm.controls.metadataSource.value
@@ -273,27 +270,12 @@ export class ScrapingSeriesPageComponent implements OnInit, OnDestroy {
     this.logger.trace('Fetching metadata source list');
     this.store.dispatch(loadMetadataSources());
     this.logger.trace('Clearing volumes');
-    this.scrapingVolumes = [];
-  }
-
-  ngOnDestroy(): void {
-    this.logger.trace('Unsubscribing from parameter updates');
-    this.paramSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from metadata source list updates');
-    this.metadataSourceListSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from metadata source list state updates');
-    this.metadataSourceListStateSubscription.unsubscribe();
-    this.logger.trace(
-      'Unsubscribing from fetching issues for series state updates'
-    );
-    this.fetchIssuesForSeriesStateSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from language change updates');
-    this.langChangeSubscription.unsubscribe();
+    this.scrapingVolumes$.next([]);
   }
 
   onMetadataSourceSelected(id: number): void {
     this.logger.debug(`Selected metadata source: id=${id}`);
-    this.metadataSource = this.metadataSourceList.find(
+    this.metadataSource = this.metadataSourceList$.value.find(
       source => source.metadataSourceId === id
     );
   }
@@ -327,12 +309,11 @@ export class ScrapingSeriesPageComponent implements OnInit, OnDestroy {
   }
 
   updateBusyState(): void {
-    this.busy =
-      this.metadataSourceListState?.busy ||
-      this.metadataState?.busy ||
-      this.metadataState?.loadingRecords ||
-      this.fetchIssuesForSeriesState?.busy;
-    this.store.dispatch(setBusyState({ enabled: this.busy }));
+    const enabled =
+      this.metadataSourceListBusy$.value ||
+      this.metadataBusy$.value ||
+      this.fetchIssuesForSeriesBusy$.value;
+    this.store.dispatch(setBusyState({ enabled }));
   }
 
   onVolumeSelected(volume: VolumeMetadata): void {

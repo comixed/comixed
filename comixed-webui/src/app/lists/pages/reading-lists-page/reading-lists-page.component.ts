@@ -20,24 +20,23 @@ import {
   AfterViewInit,
   Component,
   inject,
-  OnDestroy,
   OnInit,
   ViewChild
 } from '@angular/core';
 import {
-  MatTableDataSource,
-  MatTable,
-  MatColumnDef,
-  MatHeaderCellDef,
-  MatHeaderCell,
-  MatCellDef,
   MatCell,
-  MatHeaderRowDef,
+  MatCellDef,
+  MatColumnDef,
+  MatHeaderCell,
+  MatHeaderCellDef,
   MatHeaderRow,
+  MatHeaderRowDef,
+  MatRow,
   MatRowDef,
-  MatRow
+  MatTable,
+  MatTableDataSource
 } from '@angular/material/table';
-import { Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { ReadingList } from '@app/lists/models/reading-list';
@@ -48,13 +47,12 @@ import {
 import { MatSort, MatSortHeader } from '@angular/material/sort';
 import {
   selectUserReadingLists,
-  selectUserReadingListsState
+  selectUserReadingListsBusy
 } from '@app/lists/selectors/reading-lists.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { MatPaginator } from '@angular/material/paginator';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { uploadReadingList } from '@app/lists/actions/upload-reading-list.actions';
-import { selectUploadReadingListState } from '@app/lists/selectors/upload-reading-list.selectors';
 import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 import { TitleService } from '@app/core/services/title.service';
 import { ConfirmationService } from '@tragically-slick/confirmation';
@@ -65,7 +63,8 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
 import { MatToolbar } from '@angular/material/toolbar';
 import { MatCheckbox } from '@angular/material/checkbox';
-import { AsyncPipe, DecimalPipe, DatePipe } from '@angular/common';
+import { AsyncPipe, DatePipe, DecimalPipe } from '@angular/common';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'cx-reading-lists-page',
@@ -97,16 +96,11 @@ import { AsyncPipe, DecimalPipe, DatePipe } from '@angular/common';
     TranslateModule
   ]
 })
-export class ReadingListsPageComponent
-  implements OnInit, AfterViewInit, OnDestroy
-{
+export class ReadingListsPageComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   dataSource = new MatTableDataSource<SelectableListItem<ReadingList>>([]);
-  readingListStateSubscription: Subscription;
-  readingListsSubscription: Subscription;
-  uploadReadingListSubscription: Subscription;
   langChangeSubscription: Subscription;
 
   readonly displayedColumns = [
@@ -116,9 +110,9 @@ export class ReadingListsPageComponent
     'comic-count',
     'created-on'
   ];
-  showUploadRow = false;
-  hasSelections = false;
-  allSelected = false;
+  showUploadRow$ = new BehaviorSubject(false);
+  hasSelections$ = new BehaviorSubject(false);
+  allSelected$ = new BehaviorSubject(false);
 
   logger = inject(LoggerService);
   store = inject(Store);
@@ -128,22 +122,14 @@ export class ReadingListsPageComponent
   queryParameterService = inject(QueryParameterService);
 
   constructor() {
-    this.logger.trace('Subscribing to reading list state updates');
-    this.readingListStateSubscription = this.store
-      .select(selectUserReadingListsState)
-      .subscribe(state => {
-        this.store.dispatch(setBusyState({ enabled: state.loading }));
-      });
-    this.logger.trace('Suscribing to user reading list updates');
-    this.readingListsSubscription = this.store
+    this.store
+      .select(selectUserReadingListsBusy)
+      .pipe(tap(enabled => this.store.dispatch(setBusyState({ enabled }))))
+      .subscribe();
+    this.store
       .select(selectUserReadingLists)
-      .subscribe(readingLists => (this.readingLists = readingLists));
-    this.uploadReadingListSubscription = this.store
-      .select(selectUploadReadingListState)
-      .subscribe(state => {
-        this.logger.trace('Uploading reading list state change');
-        this.store.dispatch(setBusyState({ enabled: state.uploading }));
-      });
+      .pipe(tap(readingLists => (this.readingLists = readingLists)))
+      .subscribe();
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
     );
@@ -198,20 +184,9 @@ export class ReadingListsPageComponent
     this.dataSource.paginator = this.paginator;
   }
 
-  ngOnDestroy(): void {
-    this.logger.trace('Unsubscribing from user reading list state updates');
-    this.readingListStateSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from user reading list updates');
-    this.readingListsSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from upload reading list state updates');
-    this.uploadReadingListSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from language change updates');
-    this.langChangeSubscription.unsubscribe();
-  }
-
   onToggleUploadReadingLists(): void {
     this.logger.trace('Showing upload row');
-    this.showUploadRow = !this.showUploadRow;
+    this.showUploadRow$.next(!this.showUploadRow$.value);
   }
 
   onFileSelected(file: File): void {
@@ -229,7 +204,7 @@ export class ReadingListsPageComponent
       }
     });
     this.logger.trace('Hiding upload row');
-    this.showUploadRow = false;
+    this.showUploadRow$.next(false);
   }
 
   onSelectAll(selected: boolean): void {
@@ -265,9 +240,11 @@ export class ReadingListsPageComponent
   }
 
   private updateSelectedState(): void {
-    this.allSelected = this.dataSource.data.every(entry => entry.selected);
-    this.hasSelections =
-      this.allSelected || this.dataSource.data.some(entry => entry.selected);
+    this.allSelected$.next(this.dataSource.data.every(entry => entry.selected));
+    this.hasSelections$.next(
+      this.allSelected$.value ||
+        this.dataSource.data.some(entry => entry.selected)
+    );
   }
 
   private loadTranslations(): void {

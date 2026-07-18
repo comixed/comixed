@@ -16,9 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, inject, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { MessagingSubscription, WebSocketService } from '@app/messaging';
+import { Component, inject } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import { WebSocketService } from '@app/messaging';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -30,20 +30,20 @@ import {
 } from '@app/lists/actions/reading-list-detail.actions';
 import {
   selectReadingList,
-  selectReadingListState
+  selectReadingListBusy,
+  selectReadingListNotFound
 } from '@app/lists/selectors/reading-list-detail.selectors';
-import { setBusyState } from '@app/core/actions/busy.actions';
 import { ReadingList } from '@app/lists/models/reading-list';
 import {
+  FormGroup,
+  ReactiveFormsModule,
   UntypedFormBuilder,
-  UntypedFormGroup,
-  Validators,
-  ReactiveFormsModule
+  Validators
 } from '@angular/forms';
-import { filter } from 'rxjs/operators';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { filter, tap } from 'rxjs/operators';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { removeSelectedComicBooksFromReadingList } from '@app/lists/actions/reading-list-entries.actions';
-import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
+import { selectMessagingStarted } from '@app/messaging/selectors/messaging.selectors';
 import {
   READING_LIST_REMOVAL_TOPIC,
   READING_LIST_UPDATES_TOPIC
@@ -55,8 +55,6 @@ import {
 } from '@app/lists/actions/reading-lists.actions';
 import { TitleService } from '@app/core/services/title.service';
 import { ConfirmationService } from '@tragically-slick/confirmation';
-import { MatTableDataSource } from '@angular/material/table';
-import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 import { selectComicBookSelectionIds } from '@app/comic-books/selectors/comic-book-selection.selectors';
 import { setMultipleComicBookByIdSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
@@ -75,6 +73,8 @@ import { MatIcon } from '@angular/material/icon';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { ComicListViewComponent } from '../../../comic-books/components/comic-list-view/comic-list-view.component';
+import { setBusyState } from '@app/core/actions/busy.actions';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'cx-user-reading-list-page',
@@ -89,30 +89,17 @@ import { ComicListViewComponent } from '../../../comic-books/components/comic-li
     MatFormField,
     MatInput,
     ComicListViewComponent,
-    TranslateModule
+    TranslateModule,
+    AsyncPipe
   ]
 })
-export class ReadingListDetailPageComponent implements OnDestroy {
-  dataSource = new MatTableDataSource<SelectableListItem<DisplayableComic>>([]);
-
-  paramsSubscription: Subscription;
-  queryParamsSubscription: Subscription;
-  readingListStateSubscription: Subscription;
-  readingListSubscription: Subscription;
-  messagingSubscription: Subscription;
-  userSubscription: Subscription;
-  readingListUpdateSubscription: MessagingSubscription | null = null;
-  readingListRemovalSubscription: MessagingSubscription | null = null;
-  selectionSubscription: Subscription;
-  lastReadDataSubscription: Subscription;
-  readingListForm: UntypedFormGroup;
-  readingListId = -1;
-  selectedIds: number[] = [];
-  comicBooksRead: number[] = [];
-  langChangeSubscription: Subscription;
-  comicDetailListSubscription: Subscription;
-  comics: DisplayableComic[] = [];
-  email: string | null = null;
+export class ReadingListDetailPageComponent {
+  readingListForm: FormGroup;
+  readingListId$ = new BehaviorSubject(-1);
+  selectedIds$ = new BehaviorSubject<number[]>([]);
+  comicBooksRead$ = new BehaviorSubject<number[]>([]);
+  comics$ = new BehaviorSubject<DisplayableComic[]>([]);
+  email$ = new BehaviorSubject<string | null>(null);
 
   logger = inject(LoggerService);
   store = inject(Store);
@@ -126,105 +113,107 @@ export class ReadingListDetailPageComponent implements OnDestroy {
   queryParameterService = inject(QueryParameterService);
 
   constructor() {
-    this.logger.trace('Subscribing to parameter updates');
-    this.paramsSubscription = this.activatedRoute.params.subscribe(params => {
-      if (!!params.id) {
-        this.readingListId = +params.id;
-        this.logger.trace(
-          'Firing action to load reading list by id:',
-          this.readingListId
-        );
-        this.store.dispatch(loadReadingList({ id: this.readingListId }));
-      } else {
-        this.readingListId = -1;
-        this.logger.trace('Resetting comic list');
-        this.store.dispatch(resetComicList());
-        this.logger.trace('Firing action to create a reading list');
-        this.store.dispatch(createReadingList());
-      }
-    });
-    this.logger.trace('Subscribing to query parameter updates');
-    this.queryParamsSubscription = this.activatedRoute.queryParams.subscribe(
-      params => this.loadReadingListEntries()
-    );
+    this.activatedRoute.params
+      .pipe(
+        tap(params => {
+          if (!!params.id) {
+            this.readingListId$.next(+params.id);
+            this.logger.trace(
+              'Firing action to load reading list by id:',
+              this.readingListId$.value
+            );
+            this.store.dispatch(
+              loadReadingList({ id: this.readingListId$.value })
+            );
+          } else {
+            this.readingListId$.next(-1);
+            this.logger.trace('Resetting comic list');
+            this.store.dispatch(resetComicList());
+            this.logger.trace('Firing action to create a reading list');
+            this.store.dispatch(createReadingList());
+          }
+        })
+      )
+      .subscribe();
+    this.activatedRoute.queryParams
+      .pipe(tap(() => this.loadReadingListEntries()))
+      .subscribe();
     this.readingListForm = this.formBuilder.group({
       name: ['', [Validators.required, Validators.maxLength(128)]],
       summary: ['']
     });
-    this.logger.trace('Subscribing to reading list state updates');
-    this.readingListStateSubscription = this.store
-      .select(selectReadingListState)
-      .subscribe(state => {
-        if (state.notFound) {
-          this.logger.trace('Reading list not found');
-          this.router.navigateByUrl('/lists/reading/all');
-        } else {
-          this.store.dispatch(setBusyState({ enabled: state.loading }));
-        }
-      });
-    this.logger.trace('Subscribing to reading list updates');
-    this.readingListSubscription = this.store
+    this.store
+      .select(selectReadingListBusy)
+      .pipe(tap(enabled => this.store.dispatch(setBusyState({ enabled }))))
+      .subscribe();
+    this.store
+      .select(selectReadingListNotFound)
+      .pipe(
+        tap(notFound => {
+          if (notFound) {
+            this.logger.trace('Reading list not found');
+            this.router.navigateByUrl('/lists/reading/all');
+          }
+        })
+      )
+      .subscribe();
+    this.store
       .select(selectReadingList)
-      .pipe(filter(list => !!list))
-      .subscribe(readingList => {
-        if (this.readingListId === -1 && !!readingList.readingListId) {
-          this.logger.trace('Redirecting to reading list details');
-          this.router.navigate([
-            '/lists',
-            'reading',
-            readingList.readingListId
-          ]);
-        } else {
-          this.logger.trace('Received reading list');
-          this.readingList = readingList;
-          this.loadTranslations();
-        }
-      });
-    this.logger.trace('Subscribing to comic detail list updates');
-    this.comicDetailListSubscription = this.store
+      .pipe(
+        filter(list => !!list),
+        tap(readingList => {
+          if (this.readingListId$.value === -1 && !!readingList.readingListId) {
+            this.logger.trace('Redirecting to reading list details');
+            this.router.navigate([
+              '/lists',
+              'reading',
+              readingList.readingListId
+            ]);
+          } else {
+            this.logger.trace('Received reading list');
+            this.readingList = readingList;
+            this.loadTranslations();
+          }
+        })
+      )
+      .subscribe();
+    this.store
       .select(selectComicList)
-      .subscribe(comics => {
-        this.comics = comics;
-        this.doLoadDataSource();
-      });
-    this.selectionSubscription = this.store
+      .pipe(tap(comics => this.comics$.next(comics)))
+      .subscribe();
+    this.store
       .select(selectComicBookSelectionIds)
-      .subscribe(selections => {
-        this.selectedIds = selections;
-      });
-    this.logger.trace('Subscribing to last read updates');
-    this.lastReadDataSubscription = this.store
+      .pipe(
+        tap(selections => {
+          this.selectedIds$.next(selections);
+        })
+      )
+      .subscribe();
+    this.store
       .select(selectReadComicBooksList)
-      .subscribe(comicBooksRead => (this.comicBooksRead = comicBooksRead));
-    this.logger.trace('Subscribing to messaging updates');
-    this.messagingSubscription = this.store
-      .select(selectMessagingState)
-      .subscribe(state => {
-        if (state.started && this.readingListId !== -1) {
+      .pipe(tap(comicBooksRead => this.comicBooksRead$.next(comicBooksRead)))
+      .subscribe();
+    this.store
+      .select(selectMessagingStarted)
+      .pipe(
+        filter(started => started === true),
+        tap(started => {
           this.doSubscribeToListUpdates();
-        }
-
-        if (!state.started && !!this.readingListUpdateSubscription) {
-          this.logger.trace('Unsubscribing from reading list details updates');
-          this.readingListUpdateSubscription.unsubscribe();
-          this.readingListUpdateSubscription = null;
-        }
-
-        if (!state.started && !!this.readingListRemovalSubscription) {
-          this.logger.trace('Unsubscribing from reading list removal updates');
-          this.readingListRemovalSubscription.unsubscribe();
-          this.readingListRemovalSubscription = null;
-        }
-      });
-    this.logger.trace('Subscribing to user updates');
-    this.userSubscription = this.store.select(selectUser).subscribe(user => {
-      this.email = user?.email;
-      this.doSubscribeToListUpdates();
-    });
-    this.logger.trace('Subscribing to language change updates');
-    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
-      () => this.loadTranslations()
-    );
+        })
+      )
+      .subscribe();
+    this.store
+      .select(selectUser)
+      .pipe(
+        tap(user => {
+          this.email$.next(user?.email);
+          this.doSubscribeToListUpdates();
+        })
+      )
+      .subscribe();
+    this.translateService.onLangChange
+      .pipe(tap(() => this.loadTranslations()))
+      .subscribe();
   }
 
   private _readingList: ReadingList;
@@ -239,27 +228,6 @@ export class ReadingListDetailPageComponent implements OnDestroy {
     this.readingListForm.controls.summary.setValue(readingList.summary);
     this.readingListForm.markAsPristine();
     this.loadReadingListEntries();
-  }
-
-  ngOnDestroy(): void {
-    this.logger.trace('Unsubscribing from parameter updates');
-    this.paramsSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from query parameter updates');
-    this.queryParamsSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from messaging updates');
-    this.messagingSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from user updates');
-    this.userSubscription.unsubscribe();
-    if (!!this.readingListSubscription) {
-      this.logger.trace('Unsubscribing from reading list updates');
-    }
-    this.readingListSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from comic detail list updates');
-    this.comicDetailListSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from selection updates');
-    this.selectionSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from last read updates');
-    this.lastReadDataSubscription.unsubscribe();
   }
 
   onSave(): void {
@@ -346,16 +314,6 @@ export class ReadingListDetailPageComponent implements OnDestroy {
     );
   }
 
-  private doLoadDataSource() {
-    this.logger.trace('Loading comics from reading list');
-    this.dataSource.data = this.comics.map(entry => {
-      return {
-        selected: this.selectedIds.includes(entry.comicDetailId),
-        item: entry
-      };
-    });
-  }
-
   private encodeForm(): ReadingList {
     return {
       ...this.readingList,
@@ -380,7 +338,7 @@ export class ReadingListDetailPageComponent implements OnDestroy {
     this.logger.trace('Loading reading list entries');
     this.store.dispatch(
       loadComicsForReadingList({
-        readingListId: this.readingListId,
+        readingListId: this.readingListId$.value,
         pageSize: this.queryParameterService.pageSize$.value,
         pageIndex: this.queryParameterService.pageIndex$.value,
         sortBy: this.queryParameterService.sortBy$.value,
@@ -390,35 +348,30 @@ export class ReadingListDetailPageComponent implements OnDestroy {
   }
 
   private doSubscribeToListUpdates() {
-    if (!!this.email) {
-      if (this.readingListUpdateSubscription === null) {
-        this.logger.trace('Subscribing to reading list updates');
-        this.readingListUpdateSubscription = this.webSocketService.subscribe(
-          interpolate(READING_LIST_UPDATES_TOPIC, {
-            id: this.readingListId,
-            email: this.email
-          }),
-          list => {
-            this.logger.trace('Reading list updated received');
-            this.store.dispatch(readingListLoaded({ list }));
-            this.loadReadingListEntries();
+    if (!!this.email$.value && this.readingListId$.value) {
+      this.webSocketService.subscribe(
+        interpolate(READING_LIST_UPDATES_TOPIC, {
+          id: this.readingListId$.value,
+          email: this.email$.value
+        }),
+        list => {
+          this.logger.trace('Reading list updated received');
+          this.store.dispatch(readingListLoaded({ list }));
+          this.loadReadingListEntries();
+        }
+      );
+
+      this.webSocketService.subscribe(
+        interpolate(READING_LIST_REMOVAL_TOPIC, { email: this.email$.value }),
+        list => {
+          this.logger.trace('Reading list removal received');
+          this.store.dispatch(readingListRemoved({ list }));
+          if (list.readingListId === this.readingListId$.value) {
+            this.logger.trace('This reading list was removed');
+            this.router.navigateByUrl('/lists/reading/all');
           }
-        );
-      }
-      if (this.readingListRemovalSubscription === null) {
-        this.logger.trace('Subscribing to reading list removal');
-        this.readingListRemovalSubscription = this.webSocketService.subscribe(
-          interpolate(READING_LIST_REMOVAL_TOPIC, { email: this.email }),
-          list => {
-            this.logger.trace('Reading list removal received');
-            this.store.dispatch(readingListRemoved({ list }));
-            if (list.readingListId === this.readingListId) {
-              this.logger.trace('This reading list was removed');
-              this.router.navigateByUrl('/lists/reading/all');
-            }
-          }
-        );
-      }
+        }
+      );
     }
   }
 }

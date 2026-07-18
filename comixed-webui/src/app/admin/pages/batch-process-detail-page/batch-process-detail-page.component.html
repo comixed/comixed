@@ -1,7 +1,11 @@
 <h2>
   {{
     "batch-processes.batch-process-detail.page-title"
-      | translate: { jobId: detail?.jobId, jobName: detail?.jobName }
+      | translate
+        : {
+            jobId: (detail$ | async)?.jobId,
+            jobName: (detail$ | async)?.jobName
+          }
   }}
 </h2>
 
@@ -14,7 +18,7 @@
       </tr>
     </thead>
     <tbody>
-      @for (entry of detail?.parameters | keyvalue; track entry) {
+      @for (entry of (detail$ | async)?.parameters | keyvalue; track entry) {
         <tr>
           <td>{{ entry.key }}</td>
           <td>{{ entry.value }}</td>
@@ -27,27 +31,28 @@
 <div class="batch-process-detail-row cx-centered-horiz">
   <div class="cx-width-90">
     <ul>
-      @if (detail?.running) {
+      @if ((detail$ | async)?.running) {
         <li>
           {{
             "batch-processes.text.running-now"
-              | translate: { started: detail?.startTime | date: "medium" }
+              | translate
+                : { started: (detail$ | async)?.startTime | date: "medium" }
           }}
         </li>
       }
-      @if (!detail?.running) {
+      @if (!(detail$ | async)?.running) {
         <li>
           {{
             "batch-processes.text.status"
-              | translate: { status: detail?.status }
+              | translate: { status: (detail$ | async)?.status }
           }}
         </li>
       }
-      @if (!detail?.running) {
+      @if (!(detail$ | async)?.running) {
         <li>
           {{
             "batch-processes.text.exit-code"
-              | translate: { status: detail?.exitStatus }
+              | translate: { status: (detail$ | async)?.exitStatus }
           }}
         </li>
       }
@@ -55,17 +60,18 @@
       <li>
         {{
           "batch-processes.text.created"
-            | translate: { created: detail?.createTime | date: "medium" }
+            | translate
+              : { created: (detail$ | async)?.createTime | date: "medium" }
         }}
       </li>
-      @if (!detail?.running) {
+      @if (!(detail$ | async)?.running) {
         <li>
           {{
             "batch-processes.text.duration"
               | translate
                 : {
-                    started: detail?.startTime | date: "medium",
-                    ended: detail?.endTime | date: "medium"
+                    started: (detail$ | async)?.startTime | date: "medium",
+                    ended: (detail$ | async)?.endTime | date: "medium"
                   }
           }}
         </li>
@@ -73,18 +79,19 @@
       <li>
         {{
           "batch-processes.text.last-updated"
-            | translate: { updated: detail?.lastUpdateTime | date: "medium" }
+            | translate
+              : { updated: (detail$ | async)?.lastUpdateTime | date: "medium" }
         }}
       </li>
     </ul>
   </div>
 </div>
 
-@if (detail?.errors?.length > 0) {
+@if ((detail$ | async)?.errors?.length > 0) {
   <div class="cx-width-100">
     <h3>{{ "batch-processes.text.error-header" | translate }}</h3>
     <pre class="cx-padding-5 cx-width-100">
-      {{ detail?.errors }}
+      {{ (detail$ | async)?.errors }}
     </pre>
   </div>
 }

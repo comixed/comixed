@@ -183,10 +183,6 @@ describe('CollectionListComponent', () => {
     it('sets the routable type name', () => {
       expect(component.routableTypeName).toEqual('stories');
     });
-
-    it('subscribes to comic list updates', () => {
-      expect(component.collectionEntrySubscription).not.toBeNull();
-    });
   });
 
   describe('when a collection is selected', () => {

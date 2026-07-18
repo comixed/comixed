@@ -139,15 +139,15 @@ describe('SeriesMetadataPageComponent', () => {
 
   describe('parameters', () => {
     it('loads the publisher name', () => {
-      expect(component.publisher).toEqual(PUBLISHER);
+      expect(component.publisher$.value).toEqual(PUBLISHER);
     });
 
     it('loads the series name', () => {
-      expect(component.name).toEqual(SERIES);
+      expect(component.name$.value).toEqual(SERIES);
     });
 
     it('loads the volume', () => {
-      expect(component.volume).toEqual(VOLUME);
+      expect(component.volume$.value).toEqual(VOLUME);
     });
   });
 
@@ -196,7 +196,7 @@ describe('SeriesMetadataPageComponent', () => {
 
   describe('getting the id for an issue', () => {
     beforeEach(() => {
-      component.comics = COMIC_LIST;
+      component.comics$.next(COMIC_LIST);
     });
 
     it('returns a value when the issue is found', () => {
@@ -217,9 +217,9 @@ describe('SeriesMetadataPageComponent', () => {
 
   describe('the series percentage complete', () => {
     beforeEach(() => {
-      component.percentageComplete = 0;
-      component.inLibrary = 0;
-      component.totalIssues = 0;
+      component.percentageComplete$.next(0);
+      component.inLibrary$.next(0);
+      component.totalIssues$.next(0);
       component.dataSource.data = [ISSUE];
       store.setState({
         ...initialState,
@@ -232,16 +232,16 @@ describe('SeriesMetadataPageComponent', () => {
       });
     });
 
+    it('sets the percentage', () => {
+      expect(component.percentageComplete$.value).not.toEqual(0);
+    });
+
     it('sets the total in library', () => {
-      expect(component.inLibrary).not.toEqual(0);
+      expect(component.inLibrary$.value).not.toEqual(0);
     });
 
     it('sets the total issues', () => {
-      expect(component.inLibrary).not.toEqual(0);
-    });
-
-    it('sets the percentage', () => {
-      expect(component.percentageComplete).not.toEqual(0);
+      expect(component.totalIssues$.value).not.toEqual(0);
     });
   });
 });

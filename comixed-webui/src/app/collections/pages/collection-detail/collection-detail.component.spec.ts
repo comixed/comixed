@@ -233,14 +233,6 @@ describe('CollectionDetailComponent', () => {
     it('sets the collection name', () => {
       expect(component.tagValue).toEqual(COLLECTION_NAME);
     });
-
-    it('subscribes to comic updates', () => {
-      expect(component.comicDetailListSubscription).not.toBeNull();
-    });
-
-    it('subscribes to selection updates', () => {
-      expect(component.selectedSubscription).not.toBeNull();
-    });
   });
 
   describe('show collections', () => {
@@ -260,7 +252,7 @@ describe('CollectionDetailComponent', () => {
       ).value;
 
       beforeEach(() => {
-        component.comics = [];
+        component.comics$.next([]);
         (activatedRoute.params as BehaviorSubject<{}>).next({
           collectionType: 'characters',
           collectionName: TAG_VALUE,
@@ -288,7 +280,7 @@ describe('CollectionDetailComponent', () => {
       ).value;
 
       beforeEach(() => {
-        component.comics = [];
+        component.comics$.next([]);
         (activatedRoute.params as BehaviorSubject<{}>).next({
           collectionType: 'teams',
           collectionName: TAG_VALUE,
@@ -316,7 +308,7 @@ describe('CollectionDetailComponent', () => {
       ).value;
 
       beforeEach(() => {
-        component.comics = [];
+        component.comics$.next([]);
         (activatedRoute.params as BehaviorSubject<{}>).next({
           collectionType: 'locations',
           collectionName: TAG_VALUE,
@@ -344,7 +336,7 @@ describe('CollectionDetailComponent', () => {
       ).value;
 
       beforeEach(() => {
-        component.comics = [];
+        component.comics$.next([]);
         (activatedRoute.params as BehaviorSubject<{}>).next({
           collectionType: 'stories',
           collectionName: TAG_VALUE,

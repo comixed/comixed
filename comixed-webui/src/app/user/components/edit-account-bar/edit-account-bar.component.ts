@@ -27,18 +27,18 @@ import {
   ViewChild
 } from '@angular/core';
 import { User } from '@app/user/models/user';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import {
   AbstractControl,
+  ReactiveFormsModule,
   UntypedFormBuilder,
   UntypedFormGroup,
-  Validators,
-  ReactiveFormsModule
+  Validators
 } from '@angular/forms';
 import { ConfirmationService } from '@tragically-slick/confirmation';
-import { selectUserState } from '@app/user/selectors/user.selectors';
+import { selectUserSaving } from '@app/user/selectors/user.selectors';
 import {
   MAX_PASSWORD_LENGTH,
   MIN_PASSWORD_LENGTH
@@ -47,30 +47,30 @@ import {
   saveCurrentUser,
   saveUserPreference
 } from '@app/user/actions/user.actions';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { passwordVerifyValidator } from '@app/user/user.functions';
 import {
-  MatTableDataSource,
-  MatTable,
-  MatColumnDef,
-  MatHeaderCellDef,
-  MatHeaderCell,
-  MatCellDef,
   MatCell,
-  MatHeaderRowDef,
+  MatCellDef,
+  MatColumnDef,
+  MatHeaderCell,
+  MatHeaderCellDef,
   MatHeaderRow,
+  MatHeaderRowDef,
+  MatRow,
   MatRowDef,
-  MatRow
+  MatTable,
+  MatTableDataSource
 } from '@angular/material/table';
 import { Preference } from '@app/user/models/preference';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { GravatarModule } from 'ngx-gravatar';
 import {
   MatCard,
-  MatCardContent,
-  MatCardActions
+  MatCardActions,
+  MatCardContent
 } from '@angular/material/card';
-import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
@@ -138,10 +138,10 @@ export class EditAccountBarComponent implements OnDestroy, AfterViewInit {
       passwordVerify: ['']
     });
     this.userStateSubscription = this.store
-      .select(selectUserState)
-      .subscribe(state => {
-        this.logger.debug(`Setting busy state to ${state.saving}`);
-        this.busy = state.saving;
+      .select(selectUserSaving)
+      .subscribe(saving => {
+        this.logger.debug(`Setting busy state to ${saving}`);
+        this.busy = saving;
       });
   }
 

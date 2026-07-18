@@ -86,13 +86,17 @@ export class WebSocketService {
   subscribe<T>(destination: string, callback: (T) => void): Subscription {
     this.logger.debug('Subscribing to topic:', destination);
     /* istanbul ignore next */
-    return this.stompService
-      .watch(destination)
-      .subscribe((message: Message) => {
+    return this.stompService.watch(destination).subscribe({
+      next(message: Message) {
+        // this.logger.debug('Received content:', message);
+        console.log('Received content:', message);
         const content = JSON.parse(message.body);
-        this.logger.debug('Received content:', content);
         callback(content);
-      });
+      },
+      error(error) {
+        this.logger.error('Subscription error:', error);
+      }
+    });
   }
 
   /**

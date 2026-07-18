@@ -20,17 +20,16 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MetadataProcessStatusComponent } from './metadata-process-status.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
-import { MetadataUpdateProcessState } from '@app/comic-metadata/reducers/metadata-update-process.reducer';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MetadataUpdateProgress } from '@app/comic-metadata/selectors/metadata-update-process.selectors';
 
 describe('MetadataProcessStatusComponent', () => {
+  const progressState = {
+    completed: Math.abs(Math.floor(Math.random())),
+    total: Math.abs(Math.floor(Math.random()))
+  } as MetadataUpdateProgress;
   let component: MetadataProcessStatusComponent;
   let fixture: ComponentFixture<MetadataProcessStatusComponent>;
-  let processState: MetadataUpdateProcessState = {
-    active: Math.random() > 0.5,
-    completedComics: Math.abs(Math.floor(Math.random())),
-    totalComics: Math.abs(Math.floor(Math.random()))
-  };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -55,15 +54,15 @@ describe('MetadataProcessStatusComponent', () => {
     beforeEach(() => {
       component.current = 0;
       component.total = 0;
-      component.processState = processState;
+      component.progress = progressState;
     });
 
     it('sets the completed comics', () => {
-      expect(component.current).toEqual(processState.completedComics);
+      expect(component.current).toEqual(progressState.completed);
     });
 
     it('sets the total comics', () => {
-      expect(component.total).toEqual(processState.totalComics);
+      expect(component.total).toEqual(progressState.total);
     });
   });
 });

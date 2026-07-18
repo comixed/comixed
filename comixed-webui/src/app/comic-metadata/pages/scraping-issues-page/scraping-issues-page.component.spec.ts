@@ -170,18 +170,18 @@ describe('ScrapingIssuesPageComponent', () => {
 
   describe('when the comic is changed', () => {
     beforeEach(() => {
-      component.currentComicBook = null;
+      component.currentComicBook$.next(null);
       component.onSelectionChanged(DISPLAYABLE_COMIC);
     });
 
     it('updates the current comic', () => {
-      expect(component.currentComicBook).toBe(DISPLAYABLE_COMIC);
+      expect(component.currentComicBook$.value).toBe(DISPLAYABLE_COMIC);
     });
   });
 
   describe('when scraping starts', () => {
     beforeEach(() => {
-      component.metadataSource = METADATA_SOURCE;
+      component.metadataSource$.next(METADATA_SOURCE);
       component.onScrape({
         metadataSource: METADATA_SOURCE,
         publisher: DISPLAYABLE_COMIC.publisher,
@@ -210,17 +210,17 @@ describe('ScrapingIssuesPageComponent', () => {
 
   describe('showing the cover of different comic in a popup', () => {
     beforeEach(() => {
-      component.showPopup = false;
-      component.popupComic;
+      component.showPopup$.next(false);
+      component.popupComic$.value;
       component.onShowPopup(true, DISPLAYABLE_COMIC);
     });
 
     it('sets the comic to show', () => {
-      expect(component.popupComic).toBe(DISPLAYABLE_COMIC);
+      expect(component.popupComic$.value).toBe(DISPLAYABLE_COMIC);
     });
 
     it('shows the popup', () => {
-      expect(component.showPopup).toBeTrue();
+      expect(component.showPopup$.value).toBeTrue();
     });
   });
 
@@ -253,8 +253,8 @@ describe('ScrapingIssuesPageComponent', () => {
 
   describe('when the multibook current comic is changed', () => {
     beforeEach(() => {
-      component.scrapingVolumes = [SCRAPING_VOLUME_1];
-      component.currentVolume = SCRAPING_VOLUME_1.id;
+      component.scrapingVolumes$.next([SCRAPING_VOLUME_1]);
+      component.currentVolume$.next(SCRAPING_VOLUME_1.id);
       store.setState({
         ...initialState,
         [MULTI_BOOK_SCRAPING_FEATURE_KEY]: {
@@ -265,11 +265,11 @@ describe('ScrapingIssuesPageComponent', () => {
     });
 
     it('clears the list of scraping volumes', () => {
-      expect(component.scrapingVolumes).toEqual([]);
+      expect(component.scrapingVolumes$.value).toEqual([]);
     });
 
     it('clears the current volume', () => {
-      expect(component.currentVolume).toBeNull();
+      expect(component.currentVolume$.value).toBeNull();
     });
   });
 });

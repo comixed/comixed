@@ -203,7 +203,6 @@ describe('DuplicatePageListPageComponent', () => {
     setTitleSpy = spyOn(titleService, 'setTitle');
     translateService = TestBed.inject(TranslateService);
     confirmationService = TestBed.inject(ConfirmationService);
-    component.pageUpdatesSubscription = null;
     queryParameterService = TestBed.inject(QueryParameterService);
     fixture.detectChanges();
   }));
@@ -212,113 +211,13 @@ describe('DuplicatePageListPageComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('when duplicate page updates are subscribed', () => {
-    let subscription: any;
-
-    beforeEach(() => {
-      subscription = jasmine.createSpyObj(['unsubscribe']);
-      component.pageUpdatesSubscription = subscription;
-      component.ngOnDestroy();
-    });
-
-    it('unsubscribes from duplicate page updates', () => {
-      expect(subscription.unsubscribe).toHaveBeenCalled();
-    });
-
-    it('clears the reference', () => {
-      expect(component.pageUpdatesSubscription).toBeNull();
-    });
-  });
-
-  it('loads the page title', () => {
-    expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
-  });
-
-  describe('when the language changes', () => {
+  describe('language changes', () => {
     beforeEach(() => {
       translateService.use('fr');
     });
 
-    it('reloads the page title', () => {
+    it('updates the tab title', () => {
       expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
-    });
-  });
-
-  describe('when messaging starts', () => {
-    describe('receiving updates', () => {
-      const UPDATE = {
-        page: DUPLICATE_PAGES[0],
-        removed: false,
-        total: TOTAL_PAGES
-      } as DuplicatePageUpdate;
-
-      beforeEach(() => {
-        component.pageUpdatesSubscription = null;
-        webSocketService.subscribe
-          .withArgs(DUPLICATE_PAGE_LIST_UPDATE_TOPIC, jasmine.anything())
-          .and.callFake((topic, callback) => {
-            callback(UPDATE);
-            return {} as Subscription;
-          });
-        store.setState({
-          ...initialState,
-          [MESSAGING_FEATURE_KEY]: { ...initialMessagingState, started: true }
-        });
-      });
-
-      it('subscribes to duplicate page list updates', () => {
-        expect(webSocketService.subscribe).toHaveBeenCalledWith(
-          DUPLICATE_PAGE_LIST_UPDATE_TOPIC,
-          jasmine.anything()
-        );
-      });
-
-      it('processes duplicate page list updates', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(
-          duplicatePageUpdated({
-            page: UPDATE.page,
-            total: UPDATE.total
-          })
-        );
-      });
-    });
-
-    describe('receiving removals', () => {
-      const UPDATE = {
-        page: DUPLICATE_PAGES[0],
-        removed: true,
-        total: TOTAL_PAGES
-      } as DuplicatePageUpdate;
-
-      beforeEach(() => {
-        component.pageUpdatesSubscription = null;
-        webSocketService.subscribe
-          .withArgs(DUPLICATE_PAGE_LIST_UPDATE_TOPIC, jasmine.anything())
-          .and.callFake((topic, callback) => {
-            callback(UPDATE);
-            return {} as Subscription;
-          });
-        store.setState({
-          ...initialState,
-          [MESSAGING_FEATURE_KEY]: { ...initialMessagingState, started: true }
-        });
-      });
-
-      it('subscribes to duplicate page list updates', () => {
-        expect(webSocketService.subscribe).toHaveBeenCalledWith(
-          DUPLICATE_PAGE_LIST_UPDATE_TOPIC,
-          jasmine.anything()
-        );
-      });
-
-      it('processes duplicate page list updates', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(
-          duplicatePageRemoved({
-            page: UPDATE.page,
-            total: UPDATE.total
-          })
-        );
-      });
     });
   });
 
@@ -374,7 +273,7 @@ describe('DuplicatePageListPageComponent', () => {
     const PAGE = DUPLICATE_PAGES[0];
 
     beforeEach(() => {
-      component.selectedHashes = [DUPLICATE_PAGES[0].hash];
+      component.selectedHashes$.next([DUPLICATE_PAGES[0].hash]);
       component.duplicatePages = DUPLICATE_PAGES;
     });
 
@@ -470,41 +369,76 @@ describe('DuplicatePageListPageComponent', () => {
   describe('when messaging starts', () => {
     const DUPLICATE_PAGE = DUPLICATE_PAGES[0];
 
-    beforeEach(() => {
-      webSocketService.subscribe.and.callFake((destination, callback) => {
-        callback({
-          page: DUPLICATE_PAGE,
-          removed: false,
-          total: TOTAL_PAGES
-        } as DuplicatePageUpdate);
-        return {} as Subscription;
+    describe('receiving a list update', () => {
+      beforeEach(() => {
+        webSocketService.subscribe.and.callFake((destination, callback) => {
+          callback({
+            page: DUPLICATE_PAGE,
+            removed: false,
+            total: TOTAL_PAGES
+          } as DuplicatePageUpdate);
+          return {} as Subscription;
+        });
+        store.setState({
+          ...initialState,
+          [MESSAGING_FEATURE_KEY]: { ...initialMessagingState, started: true }
+        });
       });
-      store.setState({
-        ...initialState,
-        [MESSAGING_FEATURE_KEY]: { ...initialMessagingState, started: true }
+
+      it('subscribes to the update topic', () => {
+        expect(webSocketService.subscribe).toHaveBeenCalledWith(
+          DUPLICATE_PAGE_LIST_UPDATE_TOPIC,
+          jasmine.anything()
+        );
+      });
+
+      it('processes duplicate page list updates', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          duplicatePageUpdated({
+            page: DUPLICATE_PAGE,
+            total: TOTAL_PAGES
+          })
+        );
       });
     });
 
-    it('subscribes to the update topic', () => {
-      expect(webSocketService.subscribe).toHaveBeenCalledWith(
-        DUPLICATE_PAGE_LIST_UPDATE_TOPIC,
-        jasmine.anything()
-      );
-    });
+    describe('receiving a list removal', () => {
+      beforeEach(() => {
+        webSocketService.subscribe.and.callFake((destination, callback) => {
+          callback({
+            page: DUPLICATE_PAGE,
+            removed: true,
+            total: TOTAL_PAGES
+          } as DuplicatePageUpdate);
+          return {} as Subscription;
+        });
+        store.setState({
+          ...initialState,
+          [MESSAGING_FEATURE_KEY]: { ...initialMessagingState, started: true }
+        });
+      });
 
-    it('processes duplicate page list updates', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        duplicatePageUpdated({
-          page: DUPLICATE_PAGE,
-          total: TOTAL_PAGES
-        })
-      );
+      it('subscribes to the update topic', () => {
+        expect(webSocketService.subscribe).toHaveBeenCalledWith(
+          DUPLICATE_PAGE_LIST_UPDATE_TOPIC,
+          jasmine.anything()
+        );
+      });
+
+      it('processes duplicate page list updates', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          duplicatePageRemoved({
+            page: DUPLICATE_PAGE,
+            total: TOTAL_PAGES
+          })
+        );
+      });
     });
   });
 
   describe('the unblocked only flag', () => {
     beforeEach(() => {
-      component.blockedHashList = BLOCKED_HASHES;
+      component.blockedHashList$.next(BLOCKED_HASHES);
       component.duplicatePages = DUPLICATE_PAGES;
     });
 
@@ -554,7 +488,7 @@ describe('DuplicatePageListPageComponent', () => {
 
   describe('getting the selected count', () => {
     beforeEach(() => {
-      component.selectedHashes = DUPLICATE_PAGES.map(entry => entry.hash);
+      component.selectedHashes$.next(DUPLICATE_PAGES.map(entry => entry.hash));
     });
 
     it('returns the selected count', () => {
@@ -564,7 +498,7 @@ describe('DuplicatePageListPageComponent', () => {
 
   describe('blocked hashes', () => {
     beforeEach(() => {
-      component.blockedHashList = BLOCKED_HASHES;
+      component.blockedHashList$.next(BLOCKED_HASHES);
     });
 
     it('identifies a blocked hash', () => {
@@ -588,17 +522,17 @@ describe('DuplicatePageListPageComponent', () => {
     const DUPLICATE_PAGE = DUPLICATE_PAGES[0];
 
     beforeEach(() => {
-      component.showPopup = false;
-      component.popupPage = null;
+      component.showPopup$.next(false);
+      component.popupPage$.next(null);
       component.onShowPagePopup(true, DUPLICATE_PAGE);
     });
 
     it('shows the popup', () => {
-      expect(component.showPopup).toBeTrue();
+      expect(component.showPopup$.value).toBeTrue();
     });
 
     it('sets the page the show', () => {
-      expect(component.popupPage).toBe(DUPLICATE_PAGE);
+      expect(component.popupPage$.value).toBe(DUPLICATE_PAGE);
     });
 
     describe('hiding the popup', () => {
@@ -607,11 +541,11 @@ describe('DuplicatePageListPageComponent', () => {
       });
 
       it('hides the popup', () => {
-        expect(component.showPopup).toBeFalse();
+        expect(component.showPopup$.value).toBeFalse();
       });
 
       it('clears the page the show', () => {
-        expect(component.popupPage).toBeNull();
+        expect(component.popupPage$.value).toBeNull();
       });
     });
   });

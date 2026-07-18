@@ -13,13 +13,13 @@
     mat-fab
     color="accent"
     [matTooltip]="'metadata-source.tooltip.create-source' | translate"
-    (click)="showConfigPopup = true"
+    (click)="showConfigPopup$.next(true)"
   >
     <mat-icon>settings</mat-icon>
   </button>
 </div>
 
-@if (showConfigPopup) {
+@if (showConfigPopup$ | async) {
   <div class="cx-hover cx-centered cx-width-25 cx-border-primary-1">
     <form [formGroup]="metadataForm" class="cx-width-100">
       <mat-card>

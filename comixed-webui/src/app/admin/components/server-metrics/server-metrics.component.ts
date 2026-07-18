@@ -16,10 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
-import { Subscription } from 'rxjs';
 import {
   selectMetricDetail,
   selectMetricList,
@@ -33,10 +32,13 @@ import {
   loadMetricList
 } from '@app/admin/actions/metrics.actions';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
-import { MatSelect, MatOption } from '@angular/material/select';
+import { MatOption, MatSelect } from '@angular/material/select';
 import { MatInput } from '@angular/material/input';
 import { ServerMetricDetailsComponent } from '../server-metric-details/server-metric-details.component';
 import { TranslateModule } from '@ngx-translate/core';
+import { tap } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'cx-health-metrics',
@@ -49,47 +51,36 @@ import { TranslateModule } from '@ngx-translate/core';
     MatOption,
     MatInput,
     ServerMetricDetailsComponent,
-    TranslateModule
+    TranslateModule,
+    AsyncPipe
   ]
 })
-export class ServerMetricsComponent implements OnInit, OnDestroy {
-  metricStateSubscription: Subscription;
-  metricListSubscription: Subscription;
-  metricList: MetricList;
-  metricDetailsSubscription: Subscription;
-  metricDetail: MetricDetail;
+export class ServerMetricsComponent implements OnInit {
+  metricList$ = new BehaviorSubject<MetricList | null>(null);
+  metricDetail$ = new BehaviorSubject<MetricDetail | null>(null);
 
   logger = inject(LoggerService);
   store = inject(Store);
 
   constructor() {
-    this.logger.trace('Subscribing to metric state updates');
-    this.metricStateSubscription = this.store
+    this.store
       .select(selectMetricsState)
-      .subscribe(state =>
-        this.store.dispatch(setBusyState({ enabled: state.busy }))
-      );
-    this.logger.trace('Subscribing to metric list updates');
-    this.metricListSubscription = this.store
+      .pipe(
+        tap(state => this.store.dispatch(setBusyState({ enabled: state.busy })))
+      )
+      .subscribe();
+    this.store
       .select(selectMetricList)
-      .subscribe(list => (this.metricList = list));
-    this.logger.trace('Subscribing to metric detail updates');
-    this.metricDetailsSubscription = this.store
+      .pipe(tap(list => this.metricList$.next(list)))
+      .subscribe();
+    this.store
       .select(selectMetricDetail)
-      .subscribe(detail => (this.metricDetail = detail));
+      .pipe(tap(detail => this.metricDetail$.next(detail)))
+      .subscribe();
   }
 
   ngOnInit(): void {
     this.loadMetricList();
-  }
-
-  ngOnDestroy(): void {
-    this.logger.trace('Unsubscribing from metric state updates');
-    this.metricStateSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from metric list updates');
-    this.metricListSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from metric detail updates');
-    this.metricDetailsSubscription.unsubscribe();
   }
 
   onMetricNameSelected(name: string): void {

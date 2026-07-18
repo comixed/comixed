@@ -20,38 +20,36 @@ import {
   AfterViewInit,
   Component,
   inject,
-  OnDestroy,
   OnInit,
   ViewChild
 } from '@angular/core';
-import { Subscription } from 'rxjs';
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { loadMetadataSources } from '@app/comic-metadata/actions/metadata-source-list.actions';
 import { selectMetadataSourceList } from '@app/comic-metadata/selectors/metadata-source-list.selectors';
 import {
-  MatTableDataSource,
-  MatTable,
-  MatColumnDef,
-  MatHeaderCellDef,
-  MatHeaderCell,
-  MatCellDef,
   MatCell,
-  MatHeaderRowDef,
+  MatCellDef,
+  MatColumnDef,
+  MatHeaderCell,
+  MatHeaderCellDef,
   MatHeaderRow,
-  MatRowDef,
+  MatHeaderRowDef,
+  MatNoDataRow,
   MatRow,
-  MatNoDataRow
+  MatRowDef,
+  MatTable,
+  MatTableDataSource
 } from '@angular/material/table';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { ConfirmationService } from '@tragically-slick/confirmation';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import {
   FormBuilder,
   FormGroup,
-  Validators,
-  ReactiveFormsModule
+  ReactiveFormsModule,
+  Validators
 } from '@angular/forms';
 import { saveConfigurationOptions } from '@app/admin/actions/save-configuration-options.actions';
 import {
@@ -71,21 +69,24 @@ import { MatDialog } from '@angular/material/dialog';
 import { METADATA_SOURCE_TEMPLATE } from '@app/comic-metadata/comic-metadata.constants';
 import { deleteMetadataSource } from '@app/comic-metadata/actions/metadata-source.actions';
 import {
-  MatFabButton,
   MatButton,
+  MatFabButton,
   MatIconButton
 } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
 import {
   MatCard,
-  MatCardTitle,
+  MatCardActions,
   MatCardContent,
-  MatCardActions
+  MatCardTitle
 } from '@angular/material/card';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatCheckbox } from '@angular/material/checkbox';
+import { tap } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'cx-metadata-source-list',
@@ -119,16 +120,13 @@ import { MatCheckbox } from '@angular/material/checkbox';
     MatRowDef,
     MatRow,
     MatNoDataRow,
-    TranslateModule
+    TranslateModule,
+    AsyncPipe
   ]
 })
-export class MetadataSourceListComponent
-  implements OnInit, OnDestroy, AfterViewInit
-{
+export class MetadataSourceListComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
 
-  sourcesSubscription: Subscription;
-  dataSource = new MatTableDataSource<MetadataSource>([]);
   readonly displayedColumns = [
     'actions',
     'name',
@@ -136,11 +134,11 @@ export class MetadataSourceListComponent
     'property-count',
     'homepage'
   ];
+
+  dataSource = new MatTableDataSource<MetadataSource>([]);
   metadataForm: FormGroup;
-  configurationStateSubscription: Subscription;
-  configurationOptionListSubscription: Subscription;
-  showConfigPopup = false;
-  configurationOptionList: ConfigurationOption[];
+  showConfigPopup$ = new BehaviorSubject(false);
+  configurationOptionList$ = new BehaviorSubject<ConfigurationOption[]>([]);
 
   private logger = inject(LoggerService);
   private store = inject(Store);
@@ -150,10 +148,6 @@ export class MetadataSourceListComponent
   private dialog = inject(MatDialog);
 
   constructor() {
-    this.sourcesSubscription = this.store
-      .select(selectMetadataSourceList)
-      .subscribe(sources => (this.dataSource.data = sources));
-    this.logger.debug('Creating metadata form');
     this.metadataForm = this.formBuilder.group({
       ignoreEmptyValues: [''],
       expirationDays: [
@@ -165,28 +159,29 @@ export class MetadataSourceListComponent
         [Validators.required, Validators.min(1), Validators.max(10)]
       ]
     });
-    this.configurationStateSubscription = this.store
+    this.store
+      .select(selectMetadataSourceList)
+      .pipe(tap(sources => (this.dataSource.data = sources)))
+      .subscribe();
+    this.store
       .select(selectConfigurationOptionListState)
-      .subscribe(state => {
-        this.store.dispatch(
-          setBusyState({ enabled: state.loading || state.saving })
-        );
-      });
-    this.configurationOptionListSubscription = this.store
+      .pipe(
+        tap(state => {
+          this.store.dispatch(
+            setBusyState({ enabled: state.loading || state.saving })
+          );
+        })
+      )
+      .subscribe();
+    this.store
       .select(selectConfigurationOptions)
-      .subscribe(list => {
-        this.configurationOptionList = list;
-        this.loadMetadataForm();
-      });
-  }
-
-  ngOnDestroy(): void {
-    this.logger.debug('Unsubscribing from source list updates');
-    this.sourcesSubscription.unsubscribe();
-    this.logger.debug('Unsubscribing from configuration option state updates');
-    this.configurationStateSubscription.unsubscribe();
-    this.logger.debug('Unsubscribing from configuration option updates');
-    this.configurationOptionListSubscription.unsubscribe();
+      .pipe(
+        tap(list => {
+          this.configurationOptionList$.next(list);
+          this.loadMetadataForm();
+        })
+      )
+      .subscribe();
   }
 
   ngOnInit(): void {
@@ -230,13 +225,13 @@ export class MetadataSourceListComponent
         ]
       })
     );
-    this.showConfigPopup = false;
+    this.showConfigPopup$.next(false);
   }
 
   onCancelConfig() {
     this.logger.debug('Canceling configuration changes');
     this.loadMetadataForm();
-    this.showConfigPopup = false;
+    this.showConfigPopup$.next(false);
   }
 
   onCreateSource(): void {
@@ -273,21 +268,21 @@ export class MetadataSourceListComponent
   private loadMetadataForm(): void {
     this.metadataForm.controls.expirationDays.setValue(
       getConfigurationOption(
-        this.configurationOptionList,
+        this.configurationOptionList$.value,
         METADATA_CACHE_EXPIRATION_DAYS,
         '7'
       )
     );
     this.metadataForm.controls.scrapingErrorThreshold.setValue(
       getConfigurationOption(
-        this.configurationOptionList,
+        this.configurationOptionList$.value,
         METADATA_SCRAPING_ERROR_THRESHOLD,
         '10'
       )
     );
     this.metadataForm.controls.ignoreEmptyValues.setValue(
       getConfigurationOption(
-        this.configurationOptionList,
+        this.configurationOptionList$.value,
         METADATA_IGNORE_EMPTY_VALUES,
         `${false}`
       ) === `${true}`

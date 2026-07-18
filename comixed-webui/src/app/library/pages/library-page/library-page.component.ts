@@ -16,8 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Component, inject, OnInit } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { TitleService } from '@app/core/services/title.service';
@@ -53,16 +52,18 @@ import {
 import {
   selectComicCoverMonths,
   selectComicCoverYears,
+  selectComicFilteredCount,
   selectComicList,
-  selectComicListState,
-  selectComicTotalCount
+  selectComicListBusy
 } from '@app/comic-books/selectors/comic-list.selectors';
 import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
-import { ComicListState } from '@app/comic-books/reducers/comic-list.reducer';
 import { MatFabButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
 import { ComicListViewComponent } from '../../../comic-books/components/comic-list-view/comic-list-view.component';
+import { tap } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'cx-library-page',
@@ -73,46 +74,11 @@ import { ComicListViewComponent } from '../../../comic-books/components/comic-li
     MatTooltip,
     MatIcon,
     ComicListViewComponent,
-    TranslateModule
+    TranslateModule,
+    AsyncPipe
   ]
 })
-export class LibraryPageComponent implements OnInit, OnDestroy {
-  comicListStateSubscription: Subscription;
-  comicListState: ComicListState;
-  comicsDetailListSubscription: Subscription;
-  comics: DisplayableComic[] = [];
-  comicsDetailCoverYearsSubscription: Subscription;
-  coverYears: number[] = [];
-  comicsDetailCoverMonthsSubscription: Subscription;
-  coverMonths: number[] = [];
-  loadComicsTotalSubscription: Subscription;
-  totalComics = 0;
-  selectedSubscription: Subscription;
-  selectedIds: number[] = [];
-  langChangeSubscription: Subscription;
-  userSubscription: Subscription;
-  isAdmin = false;
-  filtered = false;
-  showing = 0;
-  showUpdateMetadata = false;
-  showOrganize = false;
-  showPurge = false;
-  dataSubscription: Subscription;
-  selectedOnly = false;
-  unreadOnly = false;
-  showReadOnly = true;
-  unscrapedOnly = false;
-  changedOnly = false;
-  deletedOnly = false;
-  missingOnly = false;
-  unprocessedOnly = false;
-  lastReadDatesSubscription: Subscription;
-  comicBooksRead: number[] = [];
-  readingListsSubscription: Subscription;
-  pageChangedSubscription: Subscription;
-  readingLists: ReadingList[] = [];
-  pageContent = 'comics';
-  showCovers = true;
+export class LibraryPageComponent implements OnInit {
   readonly archiveTypeOptions: SelectionOption<ArchiveType>[] = [
     { label: 'archive-type.label.all', value: null },
     { label: 'archive-type.label.cbz', value: ArchiveType.CBZ },
@@ -129,6 +95,30 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     }
   ];
 
+  filteredCount$ = new BehaviorSubject(0);
+  comics$ = new BehaviorSubject<DisplayableComic[]>([]);
+  coverYears$ = new BehaviorSubject<number[]>([]);
+  coverMonths$ = new BehaviorSubject<number[]>([]);
+  selectedIds$ = new BehaviorSubject<number[]>([]);
+  isAdmin$ = new BehaviorSubject(false);
+  filtered$ = new BehaviorSubject(false);
+  showing$ = new BehaviorSubject(0);
+  showUpdateMetadata$ = new BehaviorSubject(false);
+  showOrganize$ = new BehaviorSubject(false);
+  showPurge$ = new BehaviorSubject(false);
+  selectedOnly$ = new BehaviorSubject(false);
+  unreadOnly$ = new BehaviorSubject(false);
+  showReadOnly$ = new BehaviorSubject(true);
+  unscrapedOnly$ = new BehaviorSubject(false);
+  changedOnly$ = new BehaviorSubject(false);
+  deletedOnly$ = new BehaviorSubject(false);
+  missingOnly$ = new BehaviorSubject(false);
+  unprocessedOnly$ = new BehaviorSubject(false);
+  comicBooksRead$ = new BehaviorSubject<number[]>([]);
+  readingLists$ = new BehaviorSubject<ReadingList[]>([]);
+  pageContent$ = new BehaviorSubject('comics');
+  showCovers$ = new BehaviorSubject(true);
+
   logger = inject(LoggerService);
   store = inject(Store);
   titleService = inject(TitleService);
@@ -137,155 +127,184 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   queryParameterService = inject(QueryParameterService);
 
   constructor() {
-    this.dataSubscription = this.activatedRoute.data.subscribe(data => {
-      this.selectedOnly = !!data.selected && data.selected === true;
-      this.unreadOnly = !!data.unread && data.unread === true;
-      this.unscrapedOnly = !!data.unscraped && data.unscraped === true;
-      this.changedOnly = !!data.changed && data.changed === true;
-      this.deletedOnly = !!data.deleted && data.deleted === true;
-      this.missingOnly = !!data.missing && data.missing === true;
-      this.unprocessedOnly = !!data.unprocessed && data.unprocessed === true;
-      this.showUpdateMetadata = !this.unprocessedOnly && !this.deletedOnly;
-      this.showOrganize =
-        !this.unreadOnly && !this.unscrapedOnly && !this.deletedOnly;
-      this.showPurge = this.deletedOnly;
-      this.pageContent = 'all';
-      if (this.selectedOnly) {
-        this.pageContent = 'selected-only';
-      }
-      if (this.unreadOnly) {
-        this.pageContent = 'unread-only';
-      }
-      if (this.unscrapedOnly) {
-        this.pageContent = 'unscraped-only';
-      }
-      if (this.changedOnly) {
-        this.pageContent = 'changed-only';
-      }
-      if (this.deletedOnly) {
-        this.pageContent = 'deleted-only';
-      }
-      if (this.missingOnly) {
-        this.pageContent = 'missing-only';
-      }
-      if (this.unprocessedOnly) {
-        this.pageContent = 'unprocessed-only';
-      }
-    });
-    this.comicListStateSubscription = this.store
-      .select(selectComicListState)
-      .subscribe(state => {
-        this.comicListState = state;
-        this.store.dispatch(setBusyState({ enabled: state.busy }));
-      });
-    this.comicsDetailListSubscription = this.store
+    this.activatedRoute.data
+      .pipe(
+        tap(data => {
+          this.selectedOnly$.next(!!data.selected && data.selected === true);
+          this.unreadOnly$.next(!!data.unread && data.unread === true);
+          this.unscrapedOnly$.next(!!data.unscraped && data.unscraped === true);
+          this.changedOnly$.next(!!data.changed && data.changed === true);
+          this.deletedOnly$.next(!!data.deleted && data.deleted === true);
+          this.missingOnly$.next(!!data.missing && data.missing === true);
+          this.unprocessedOnly$.next(
+            !!data.unprocessed && data.unprocessed === true
+          );
+          this.showUpdateMetadata$.next(
+            !this.unprocessedOnly$.value && !this.deletedOnly$.value
+          );
+          this.showOrganize$.next(
+            !this.unreadOnly$.value &&
+              !this.unscrapedOnly$.value &&
+              !this.deletedOnly$.value
+          );
+          this.showPurge$.next(this.deletedOnly$.value);
+          this.pageContent$.next('all');
+          if (this.selectedOnly$.value) {
+            this.pageContent$.next('selected-only');
+          }
+          if (this.unreadOnly$.value) {
+            this.pageContent$.next('unread-only');
+          }
+          if (this.unscrapedOnly$.value) {
+            this.pageContent$.next('unscraped-only');
+          }
+          if (this.changedOnly$.value) {
+            this.pageContent$.next('changed-only');
+          }
+          if (this.deletedOnly$.value) {
+            this.pageContent$.next('deleted-only');
+          }
+          if (this.missingOnly$.value) {
+            this.pageContent$.next('missing-only');
+          }
+          if (this.unprocessedOnly$.value) {
+            this.pageContent$.next('unprocessed-only');
+          }
+        })
+      )
+      .subscribe();
+    this.store
+      .select(selectComicListBusy)
+      .pipe(tap(enabled => this.store.dispatch(setBusyState({ enabled }))))
+      .subscribe();
+    this.store
+      .select(selectComicFilteredCount)
+      .pipe(tap(filteredCount => this.filteredCount$.next(filteredCount)))
+      .subscribe();
+    this.store
       .select(selectComicList)
-      .subscribe(comics => (this.comics = comics));
-    this.comicsDetailCoverYearsSubscription = this.store
+      .pipe(tap(comics => this.comics$.next(comics)))
+      .subscribe();
+    this.store
       .select(selectComicCoverYears)
-      .subscribe(coverYears => (this.coverYears = coverYears));
-    this.comicsDetailCoverMonthsSubscription = this.store
+      .pipe(tap(coverYears => this.coverYears$.next(coverYears)))
+      .subscribe();
+    this.store
       .select(selectComicCoverMonths)
-      .subscribe(coverMonths => (this.coverMonths = coverMonths));
-    this.loadComicsTotalSubscription = this.store
-      .select(selectComicTotalCount)
-      .subscribe(total => (this.totalComics = total));
-    this.selectedSubscription = this.store
+      .pipe(tap(coverMonths => this.coverMonths$.next(coverMonths)))
+      .subscribe();
+    this.store
       .select(selectComicBookSelectionIds)
-      .subscribe(selectedIds => (this.selectedIds = selectedIds));
-    this.userSubscription = this.store.select(selectUser).subscribe(user => {
-      this.logger.debug('Setting admin flag');
-      this.isAdmin = isAdmin(user);
-      this.logger.debug('Getting page size');
-      const usersPreferredPageSize = getPageSize(user);
-      if (this.queryParameterService.pageSize$.value === PAGE_SIZE_DEFAULT) {
-        if (usersPreferredPageSize !== PAGE_SIZE_DEFAULT) {
-          this.queryParameterService.pageSize$.next(usersPreferredPageSize);
-        }
-      }
-      this.showCovers =
-        getUserPreference(
-          user.preferences,
-          SHOW_COMIC_COVERS_PREFERENCE,
-          `${true}`
-        ) === `${true}`;
-      this.comicBooksRead = user.readComicBooks;
-    });
-    this.lastReadDatesSubscription = this.store
+      .pipe(tap(selectedIds => this.selectedIds$.next(selectedIds)))
+      .subscribe();
+    this.store
+      .select(selectUser)
+      .pipe(
+        tap(user => {
+          this.logger.debug('Setting admin flag');
+          this.isAdmin$.next(isAdmin(user));
+          this.logger.debug('Getting page size');
+          const usersPreferredPageSize = getPageSize(user);
+          if (
+            this.queryParameterService.pageSize$.value === PAGE_SIZE_DEFAULT
+          ) {
+            if (usersPreferredPageSize !== PAGE_SIZE_DEFAULT) {
+              this.queryParameterService.pageSize$.next(usersPreferredPageSize);
+            }
+          }
+          this.showCovers$.next(
+            getUserPreference(
+              user.preferences,
+              SHOW_COMIC_COVERS_PREFERENCE,
+              `${true}`
+            ) === `${true}`
+          );
+          this.comicBooksRead$.next(user.readComicBooks);
+        })
+      )
+      .subscribe();
+    this.store
       .select(selectReadComicBooksList)
-      .subscribe(comicBooksRead => {
-        this.comicBooksRead = comicBooksRead;
-      });
-    this.readingListsSubscription = this.store
+      .pipe(
+        tap(comicBooksRead => {
+          this.comicBooksRead$.next(comicBooksRead);
+        })
+      )
+      .subscribe();
+    this.store
       .select(selectUserReadingLists)
-      .subscribe(lists => (this.readingLists = lists));
-    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
-      () => this.loadTranslations()
-    );
-    this.pageChangedSubscription = this.activatedRoute.queryParams.subscribe(
-      params => {
-        if (this.unreadOnly) {
-          this.showReadOnly =
-            !params[QUERY_PARAM_UNREAD_ONLY] ||
-            params[QUERY_PARAM_UNREAD_ONLY] === `${true}`;
-          if (this.showReadOnly) {
-            this.logger.debug('Loading read comics');
-            this.pageContent = 'read-only';
-            this.store.dispatch(
-              loadReadComics({
-                pageSize: this.queryParameterService.pageSize$.value,
-                pageIndex: this.queryParameterService.pageIndex$.value,
-                sortBy: this.queryParameterService.sortBy$.value,
-                sortDirection: this.queryParameterService.sortDirection$.value
-              })
+      .pipe(tap(lists => this.readingLists$.next(lists)))
+      .subscribe();
+    this.translateService.onLangChange
+      .pipe(tap(() => this.loadTranslations()))
+      .subscribe();
+    this.activatedRoute.queryParams
+      .pipe(
+        tap(params => {
+          if (this.unreadOnly$.value) {
+            this.showReadOnly$.next(
+              !params[QUERY_PARAM_UNREAD_ONLY] ||
+                params[QUERY_PARAM_UNREAD_ONLY] === `${true}`
             );
+            if (this.showReadOnly$.value) {
+              this.logger.debug('Loading read comics');
+              this.pageContent$.next('read-only');
+              this.store.dispatch(
+                loadReadComics({
+                  pageSize: this.queryParameterService.pageSize$.value,
+                  pageIndex: this.queryParameterService.pageIndex$.value,
+                  sortBy: this.queryParameterService.sortBy$.value,
+                  sortDirection: this.queryParameterService.sortDirection$.value
+                })
+              );
+            } else {
+              this.logger.debug('Loading unread comics');
+              this.pageContent$.next('unread-only');
+              this.store.dispatch(
+                loadUnreadComics({
+                  pageSize: this.queryParameterService.pageSize$.value,
+                  pageIndex: this.queryParameterService.pageIndex$.value,
+                  sortBy: this.queryParameterService.sortBy$.value,
+                  sortDirection: this.queryParameterService.sortDirection$.value
+                })
+              );
+            }
           } else {
-            this.logger.debug('Loading unread comics');
-            this.pageContent = 'unread-only';
             this.store.dispatch(
-              loadUnreadComics({
+              loadComicsByFilter({
                 pageSize: this.queryParameterService.pageSize$.value,
                 pageIndex: this.queryParameterService.pageIndex$.value,
+                coverYear: this.queryParameterService.coverYear$?.value?.year,
+                coverMonth: this.queryParameterService.coverYear$?.value?.month,
+                archiveType: this.queryParameterService.archiveType$.value,
+                comicType: this.queryParameterService.comicType$.value,
+                comicState: this.targetComicState,
+                selected: this.selectedOnly$.value,
+                missing: this.missingOnly$.value,
+                unscrapedState: this.unscrapedOnly$.value,
+                searchText: this.queryParameterService.filterText$.value,
+                publisher: null,
+                series: null,
+                volume: null,
+                pageCount: this.queryParameterService.pageCount$.value,
                 sortBy: this.queryParameterService.sortBy$.value,
                 sortDirection: this.queryParameterService.sortDirection$.value
               })
             );
           }
-        } else {
-          this.store.dispatch(
-            loadComicsByFilter({
-              pageSize: this.queryParameterService.pageSize$.value,
-              pageIndex: this.queryParameterService.pageIndex$.value,
-              coverYear: this.queryParameterService.coverYear$?.value?.year,
-              coverMonth: this.queryParameterService.coverYear$?.value?.month,
-              archiveType: this.queryParameterService.archiveType$.value,
-              comicType: this.queryParameterService.comicType$.value,
-              comicState: this.targetComicState,
-              selected: this.selectedOnly,
-              missing: this.missingOnly,
-              unscrapedState: this.unscrapedOnly,
-              searchText: this.queryParameterService.filterText$.value,
-              publisher: null,
-              series: null,
-              volume: null,
-              pageCount: this.queryParameterService.pageCount$.value,
-              sortBy: this.queryParameterService.sortBy$.value,
-              sortDirection: this.queryParameterService.sortDirection$.value
-            })
-          );
-        }
-      }
-    );
+        })
+      )
+      .subscribe();
   }
 
   private get targetComicState(): ComicState {
-    if (this.unprocessedOnly) {
+    if (this.unprocessedOnly$.value) {
       return ComicState.UNPROCESSED;
     }
-    if (this.deletedOnly) {
+    if (this.deletedOnly$.value) {
       return ComicState.DELETED;
     }
-    if (this.changedOnly) {
+    if (this.changedOnly$.value) {
       return ComicState.CHANGED;
     }
     return null;
@@ -296,29 +315,17 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     this.loadTranslations();
   }
 
-  ngOnDestroy(): void {
-    this.dataSubscription.unsubscribe();
-    this.comicListStateSubscription.unsubscribe();
-    this.comicsDetailListSubscription.unsubscribe();
-    this.loadComicsTotalSubscription.unsubscribe();
-    this.selectedSubscription.unsubscribe();
-    this.userSubscription.unsubscribe();
-    this.langChangeSubscription.unsubscribe();
-    this.readingListsSubscription.unsubscribe();
-    this.pageChangedSubscription.unsubscribe();
-  }
-
   onSetAllComicsSelectedState(selected: boolean) {
-    if (this.unreadOnly) {
+    if (this.unreadOnly$.value) {
       this.logger.debug(
         'Setting all comic books selected state based on read state:',
         selected,
-        this.showReadOnly
+        this.showReadOnly$.value
       );
       this.store.dispatch(
         setComicBookSelectionByUnreadState({
           selected,
-          unreadOnly: !this.showReadOnly
+          unreadOnly: !this.showReadOnly$.value
         })
       );
     } else {
@@ -330,7 +337,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
           archiveType: this.queryParameterService.archiveType$.value,
           comicType: this.queryParameterService.comicType$.value,
           comicState: this.targetComicState,
-          unscrapedState: this.unscrapedOnly,
+          unscrapedState: this.unscrapedOnly$.value,
           searchText: this.queryParameterService.filterText$.value,
           selected
         })
@@ -343,40 +350,40 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     this.queryParameterService.updateQueryParam([
       {
         name: QUERY_PARAM_UNREAD_ONLY,
-        value: `${!this.showReadOnly}`
+        value: `${!this.showReadOnly$.value}`
       }
     ]);
   }
 
   private loadTranslations(): void {
     this.logger.debug('Setting page title');
-    if (this.selectedOnly) {
+    if (this.selectedOnly$.value) {
       this.titleService.setTitle(
         this.translateService.instant('library.all-comics.tab-title-selected')
       );
-    } else if (this.unprocessedOnly) {
+    } else if (this.unprocessedOnly$.value) {
       this.titleService.setTitle(
         this.translateService.instant(
           'library.all-comics.tab-title-unprocessed'
         )
       );
-    } else if (this.deletedOnly) {
+    } else if (this.deletedOnly$.value) {
       this.titleService.setTitle(
         this.translateService.instant('library.all-comics.tab-title-deleted')
       );
-    } else if (this.missingOnly) {
+    } else if (this.missingOnly$.value) {
       this.titleService.setTitle(
         this.translateService.instant('library.all-comics.tab-title-missing')
       );
-    } else if (this.unscrapedOnly) {
+    } else if (this.unscrapedOnly$.value) {
       this.titleService.setTitle(
         this.translateService.instant('library.all-comics.tab-title-unscraped')
       );
-    } else if (this.changedOnly) {
+    } else if (this.changedOnly$.value) {
       this.titleService.setTitle(
         this.translateService.instant('library.all-comics.tab-title-changed')
       );
-    } else if (this.unreadOnly) {
+    } else if (this.unreadOnly$.value) {
       this.titleService.setTitle(
         this.translateService.instant('library.all-comics.tab-title-unread')
       );

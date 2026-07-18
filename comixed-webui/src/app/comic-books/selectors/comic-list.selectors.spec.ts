@@ -28,12 +28,13 @@ import {
   ComicListState
 } from '@app/comic-books/reducers/comic-list.reducer';
 import {
+  selectComicCoverMonths,
+  selectComicCoverYears,
   selectComicFilteredCount,
   selectComicList,
+  selectComicListBusy,
   selectComicListState,
-  selectComicTotalCount,
-  selectComicCoverMonths,
-  selectComicCoverYears
+  selectComicTotalCount
 } from '@app/comic-books/selectors/comic-list.selectors';
 
 describe('ComicList Selectors', () => {
@@ -62,7 +63,7 @@ describe('ComicList Selectors', () => {
     };
   });
 
-  it('should select the feature state', () => {
+  it('selects the feature state', () => {
     expect(
       selectComicListState({
         [COMIC_LIST_FEATURE_KEY]: state
@@ -70,7 +71,15 @@ describe('ComicList Selectors', () => {
     ).toEqual(state);
   });
 
-  it('should select the list of comic details', () => {
+  it('selects the comic detail list busy state', () => {
+    expect(
+      selectComicListBusy({
+        [COMIC_LIST_FEATURE_KEY]: state
+      })
+    ).toEqual(state.busy);
+  });
+
+  it('selects the list of comic details', () => {
     expect(
       selectComicList({
         [COMIC_LIST_FEATURE_KEY]: state
@@ -78,7 +87,7 @@ describe('ComicList Selectors', () => {
     ).toEqual(state.comics);
   });
 
-  it('should select the list of cover years', () => {
+  it('selects the list of cover years', () => {
     expect(
       selectComicCoverYears({
         [COMIC_LIST_FEATURE_KEY]: state
@@ -86,7 +95,7 @@ describe('ComicList Selectors', () => {
     ).toEqual(state.coverYears);
   });
 
-  it('should select the list of cover months', () => {
+  it('selects the list of cover months', () => {
     expect(
       selectComicCoverMonths({
         [COMIC_LIST_FEATURE_KEY]: state
@@ -94,7 +103,7 @@ describe('ComicList Selectors', () => {
     ).toEqual(state.coverMonths);
   });
 
-  it('should select the total count of comic details', () => {
+  it('selects the total count of comic details', () => {
     expect(
       selectComicTotalCount({
         [COMIC_LIST_FEATURE_KEY]: state
@@ -102,7 +111,7 @@ describe('ComicList Selectors', () => {
     ).toEqual(state.totalCount);
   });
 
-  it('should select the filtered count of comic details', () => {
+  it('selects the filtered count of comic details', () => {
     expect(
       selectComicFilteredCount({
         [COMIC_LIST_FEATURE_KEY]: state

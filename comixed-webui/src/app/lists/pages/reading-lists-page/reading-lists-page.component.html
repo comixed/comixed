@@ -18,7 +18,7 @@
   <button
     id="remove-button"
     mat-fab
-    [disabled]="!hasSelections"
+    [disabled]="(hasSelections$ | async) === false"
     [matTooltip]="'reading-lists.tooltip.delete-reading-lists' | translate"
     (click)="onDeleteReadingLists()"
   >
@@ -26,7 +26,7 @@
   </button>
 </div>
 
-@if (showUploadRow) {
+@if (showUploadRow$ | async) {
   <mat-toolbar>
     <input
       id="fileUpload"
@@ -59,7 +59,7 @@
   <ng-container matColumnDef="selection">
     <mat-header-cell mat-sort-header *matHeaderCellDef>
       <mat-checkbox
-        [checked]="allSelected"
+        [checked]="allSelected$ | async"
         (change)="onSelectAll($event.checked)"
         (click)="$event.stopPropagation()"
       ></mat-checkbox>

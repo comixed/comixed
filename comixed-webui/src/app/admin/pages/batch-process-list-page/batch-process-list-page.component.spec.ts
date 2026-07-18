@@ -261,7 +261,7 @@ describe('BatchProcessListPageComponent', () => {
     describe('selecting one element', () => {
       beforeEach(() => {
         component.dataSource.data[0].selected = false;
-        component.anySelected = false;
+        component.anySelected$.next(false);
         component.onSelectOne(component.dataSource.data[0], true);
       });
 
@@ -270,14 +270,14 @@ describe('BatchProcessListPageComponent', () => {
       });
 
       it('sets the any selected flag', () => {
-        expect(component.anySelected).toBeTrue();
+        expect(component.anySelected$.value).toBeTrue();
       });
     });
 
     describe('deselecting one element', () => {
       beforeEach(() => {
         component.dataSource.data[0].selected = true;
-        component.anySelected = true;
+        component.anySelected$.next(true);
         component.onSelectOne(component.dataSource.data[0], false);
       });
 
@@ -286,14 +286,14 @@ describe('BatchProcessListPageComponent', () => {
       });
 
       it('clears the any selected flag', () => {
-        expect(component.anySelected).toBeFalse();
+        expect(component.anySelected$.value).toBeFalse();
       });
     });
 
     describe('selecting all elements', () => {
       beforeEach(() => {
         component.dataSource.data.forEach(entry => (entry.selected = false));
-        component.allSelected = false;
+        component.allSelected$.next(false);
         component.onSelectAll(true);
       });
 
@@ -304,14 +304,14 @@ describe('BatchProcessListPageComponent', () => {
       });
 
       it('sets the all selected flag', () => {
-        expect(component.allSelected).toBeTrue();
+        expect(component.allSelected$.value).toBeTrue();
       });
     });
 
     describe('deselecting all elements', () => {
       beforeEach(() => {
         component.dataSource.data.forEach(entry => (entry.selected = true));
-        component.allSelected = true;
+        component.allSelected$.next(true);
         component.onSelectAll(false);
       });
 
@@ -322,7 +322,7 @@ describe('BatchProcessListPageComponent', () => {
       });
 
       it('clears the all selected flag', () => {
-        expect(component.allSelected).toBeFalse();
+        expect(component.allSelected$.value).toBeFalse();
       });
     });
   });

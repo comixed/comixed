@@ -24,7 +24,7 @@ import {
   selectPublisherCount,
   selectPublisherDetail,
   selectPublisherList,
-  selectPublisherState
+  selectPublisherListBusy
 } from './publisher.selectors';
 import {
   PUBLISHER_1,
@@ -54,15 +54,15 @@ describe('Publisher Selectors', () => {
     };
   });
 
-  it('should select the feature state', () => {
+  it('selects the publisher list busy flag', () => {
     expect(
-      selectPublisherState({
+      selectPublisherListBusy({
         [PUBLISHER_FEATURE_KEY]: state
       })
-    ).toEqual(state);
+    ).toEqual(state.busy);
   });
 
-  it('should select the publisher list', () => {
+  it('selects the publisher list', () => {
     expect(
       selectPublisherList({
         [PUBLISHER_FEATURE_KEY]: state
@@ -70,7 +70,7 @@ describe('Publisher Selectors', () => {
     ).toEqual(state.publishers);
   });
 
-  it('should select the publisher count', () => {
+  it('selects the publisher count', () => {
     expect(
       selectPublisherCount({
         [PUBLISHER_FEATURE_KEY]: state
@@ -78,7 +78,7 @@ describe('Publisher Selectors', () => {
     ).toEqual(state.total);
   });
 
-  it('should select the publisher detail', () => {
+  it('selects the publisher detail', () => {
     expect(
       selectPublisherDetail({
         [PUBLISHER_FEATURE_KEY]: state

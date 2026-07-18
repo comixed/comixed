@@ -11,7 +11,7 @@
   <button
     id="delete-selected-jobs-button"
     mat-fab
-    [disabled]="!anySelected"
+    [disabled]="(anySelected$ | async) === false"
     [matTooltip]="'batch-processes.delete-selected-jobs.tooltip' | translate"
     (click)="onDeleteSelectedJobs()"
   >
@@ -48,7 +48,7 @@
   <ng-container matColumnDef="selection">
     <mat-header-cell mat-sort-header *matHeaderCellDef>
       <mat-checkbox
-        [checked]="allSelected"
+        [checked]="allSelected$ | async"
         [disabled]="dataSource.data.length === 0"
         (change)="onSelectAll($event.checked)"
         (click)="$event.stopPropagation()"

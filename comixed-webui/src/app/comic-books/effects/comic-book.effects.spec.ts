@@ -62,6 +62,8 @@ import {
 import { DownloadDocument } from '@app/core/models/download-document';
 import { FileDownloadService } from '@app/core/services/file-download.service';
 import { LoadComicBookResponse } from '@app/comic-books/models/net/load-comic-book-response';
+import { Router, RouterModule } from '@angular/router';
+import { LIBRARY_ROOT_URL } from '@app/app.constants';
 
 describe('ComicBookEffects', () => {
   const DETAILS = DISPLAYABLE_COMIC_1;
@@ -87,10 +89,12 @@ describe('ComicBookEffects', () => {
   let comicService: jasmine.SpyObj<ComicBookService>;
   let alertService: AlertService;
   let fileDownloadService: FileDownloadService;
+  let router: Router;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
+        RouterModule.forRoot([]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatSnackBarModule
@@ -128,6 +132,8 @@ describe('ComicBookEffects', () => {
     spyOn(alertService, 'info');
     fileDownloadService = TestBed.inject(FileDownloadService);
     spyOn(fileDownloadService, 'saveFile');
+    router = TestBed.inject(Router);
+    spyOn(router, 'navigateByUrl');
   });
 
   it('should be created', () => {
@@ -168,6 +174,7 @@ describe('ComicBookEffects', () => {
       const expected = hot('-b', { b: outcome });
       expect(effects.loadOne$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+      expect(router.navigateByUrl).toHaveBeenCalledWith(LIBRARY_ROOT_URL);
     });
 
     it('fires an action on general failure', () => {
@@ -180,6 +187,7 @@ describe('ComicBookEffects', () => {
       const expected = hot('-(b|)', { b: outcome });
       expect(effects.loadOne$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+      expect(router.navigateByUrl).toHaveBeenCalledWith(LIBRARY_ROOT_URL);
     });
   });
 

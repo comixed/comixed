@@ -16,11 +16,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, inject, Input, OnDestroy } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { User } from '@app/user/models/user';
 import { isAdmin } from '@app/user/user.functions';
 import { LoggerService } from '@angular-ru/cdk/logger';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { selectUserReadingLists } from '@app/lists/selectors/reading-lists.selectors';
 import { ReadingList } from '@app/lists/models/reading-list';
@@ -40,6 +40,7 @@ import { MatLabel } from '@angular/material/form-field';
 import { MatDivider } from '@angular/material/divider';
 import { AsyncPipe, DecimalPipe } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'cx-side-navigation',
@@ -57,17 +58,12 @@ import { TranslateModule } from '@ngx-translate/core';
     TranslateModule
   ]
 })
-export class SideNavigationComponent implements OnDestroy {
-  isAdmin = false;
-  blockedPagesEnabled = false;
-  featureEnabledSubscription$: Subscription;
-  comicsCollapsed = false;
-  collectionCollapsed = false;
-  readingListsCollapsed = false;
-  libraryStateSubscription$: Subscription;
-  libraryState: LibraryState;
-  lastReadUnreadCountSubscription$: Subscription;
-  selectedComicsSubscription$: Subscription;
+export class SideNavigationComponent {
+  isAdmin$ = new BehaviorSubject(false);
+  blockedPagesEnabled$ = new BehaviorSubject(false);
+  comicsCollapsed$ = new BehaviorSubject(false);
+  collectionCollapsed$ = new BehaviorSubject(false);
+  readingListsCollapsed$ = new BehaviorSubject(false);
   totalComicBooks$ = new BehaviorSubject<number>(0);
   selectedComicBooks$ = new BehaviorSubject<number>(0);
   unprocessedComicBooks$ = new BehaviorSubject<number>(0);
@@ -76,54 +72,63 @@ export class SideNavigationComponent implements OnDestroy {
   changedComicBooks$ = new BehaviorSubject<number>(0);
   deletedComicBooks$ = new BehaviorSubject<number>(0);
   duplicateComicBooks$ = new BehaviorSubject<number>(0);
-  readingListsSubscription$: Subscription;
   readingLists: ReadingList[] = [];
 
   logger = inject(LoggerService);
   store = inject(Store);
 
   constructor() {
-    this.featureEnabledSubscription$ = this.store
+    this.store
       .select(selectFeatureEnabledState)
-      .subscribe(state => {
-        if (!state.busy && !hasFeature(state.features, BLOCKED_PAGES_ENABLED)) {
-          this.logger.debug('Loading feature state:', BLOCKED_PAGES_ENABLED);
-          this.store.dispatch(
-            getFeatureEnabled({ name: BLOCKED_PAGES_ENABLED })
-          );
-        } else {
-          this.blockedPagesEnabled = isFeatureEnabled(
-            state.features,
-            BLOCKED_PAGES_ENABLED
-          );
-        }
-      });
-    this.libraryStateSubscription$ = this.store
+      .pipe(
+        tap(state => {
+          if (
+            !state.busy &&
+            !hasFeature(state.features, BLOCKED_PAGES_ENABLED)
+          ) {
+            this.logger.debug('Loading feature state:', BLOCKED_PAGES_ENABLED);
+            this.store.dispatch(
+              getFeatureEnabled({ name: BLOCKED_PAGES_ENABLED })
+            );
+          } else {
+            this.blockedPagesEnabled$.next(
+              isFeatureEnabled(state.features, BLOCKED_PAGES_ENABLED)
+            );
+          }
+        })
+      )
+      .subscribe();
+    this.store
       .select(selectLibraryState)
-      .subscribe(state => {
-        this.libraryState = state;
-        this.totalComicBooks$.next(state.totalComics);
-        this.unprocessedComicBooks$.next(
-          this.getCountForState(state, ComicState.UNPROCESSED)
-        );
-        this.unscrapedComicBooks$.next(state.unscrapedComics);
-        this.changedComicBooks$.next(
-          this.getCountForState(state, ComicState.CHANGED)
-        );
-        this.deletedComicBooks$.next(state.deletedComics);
-        this.duplicateComicBooks$.next(state.duplicateComics);
-      });
-    this.lastReadUnreadCountSubscription$ = this.store
+      .pipe(
+        tap(state => {
+          this.totalComicBooks$.next(state.totalComics);
+          this.unprocessedComicBooks$.next(
+            this.getCountForState(state, ComicState.UNPROCESSED)
+          );
+          this.unscrapedComicBooks$.next(state.unscrapedComics);
+          this.changedComicBooks$.next(
+            this.getCountForState(state, ComicState.CHANGED)
+          );
+          this.deletedComicBooks$.next(state.deletedComics);
+          this.duplicateComicBooks$.next(state.duplicateComics);
+        })
+      )
+      .subscribe();
+    this.store
       .select(selectReadComicBooksList)
-      .subscribe(comicBooksRead =>
-        this.readComicBooks$.next(comicBooksRead.length)
-      );
-    this.selectedComicsSubscription$ = this.store
+      .pipe(
+        tap(comicBooksRead => this.readComicBooks$.next(comicBooksRead.length))
+      )
+      .subscribe();
+    this.store
       .select(selectComicBookSelectionState)
-      .subscribe(state => this.selectedComicBooks$.next(state.ids.length));
-    this.readingListsSubscription$ = this.store
+      .pipe(tap(state => this.selectedComicBooks$.next(state.ids.length)))
+      .subscribe();
+    this.store
       .select(selectUserReadingLists)
-      .subscribe(lists => (this.readingLists = lists));
+      .pipe(tap(lists => (this.readingLists = lists)))
+      .subscribe();
   }
 
   private _user = null;
@@ -135,32 +140,19 @@ export class SideNavigationComponent implements OnDestroy {
   @Input() set user(user: User) {
     this.logger.debug('Setting user:', user);
     this._user = user;
-    this.isAdmin = isAdmin(this.user);
-  }
-
-  ngOnDestroy(): void {
-    this.logger.trace('Unsubscribing from comic list updates');
-    this.libraryStateSubscription$.unsubscribe();
-    this.logger.trace('Unsubscribing from unread count updates');
-    this.lastReadUnreadCountSubscription$.unsubscribe();
-    this.logger.trace('Unsubscribing from reading list updates');
-    this.readingListsSubscription$.unsubscribe();
-    this.logger.trace('Unsubscribing from selected comic book updates');
-    this.selectedComicsSubscription$.unsubscribe();
-    this.logger.trace('Unsubscribing from feature enabled updates');
-    this.featureEnabledSubscription$.unsubscribe();
+    this.isAdmin$.next(isAdmin(this.user));
   }
 
   onCollapseComics(collapsed: boolean): void {
-    this.comicsCollapsed = collapsed;
+    this.comicsCollapsed$.next(collapsed);
   }
 
   onCollapseCollection(collapsed: boolean): void {
-    this.collectionCollapsed = collapsed;
+    this.collectionCollapsed$.next(collapsed);
   }
 
   onCollapseReadingLists(collapsed: boolean): void {
-    this.readingListsCollapsed = collapsed;
+    this.readingListsCollapsed$.next(collapsed);
   }
 
   private getCountForState(
@@ -170,6 +162,6 @@ export class SideNavigationComponent implements OnDestroy {
     /* istanbul ignore next */
     const found = libraryState.states.find(entry => entry.name === state);
     /* istanbul ignore next */
-    return !!found ? found.count : 0;
+    return found?.count || 0;
   }
 }

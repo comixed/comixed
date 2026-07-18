@@ -16,9 +16,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
-import { Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import {
@@ -52,7 +51,6 @@ import {
   startMultiBookScraping
 } from '@app/comic-metadata/actions/multi-book-scraping.actions';
 import { MultiBookScrapingState } from '@app/comic-metadata/reducers/multi-book-scraping.reducer';
-import { selectMetadataSourceListState } from '@app/comic-metadata/selectors/metadata-source-list.selectors';
 import {
   MatCell,
   MatCellDef,
@@ -85,7 +83,8 @@ import { AsyncPipe } from '@angular/common';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 import { ComicDetailCoverUrlPipe } from '@app/comic-books/pipes/comic-detail-cover-url.pipe';
 import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
-import { filter } from 'rxjs/operators';
+import { filter, tap } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'cx-scraping-issues-page',
@@ -121,7 +120,7 @@ import { filter } from 'rxjs/operators';
     ComicDetailCoverUrlPipe
   ]
 })
-export class ScrapingIssuesPageComponent implements OnInit, OnDestroy {
+export class ScrapingIssuesPageComponent implements OnInit {
   readonly displayColumns = [
     'actions',
     'thumbnail',
@@ -131,122 +130,139 @@ export class ScrapingIssuesPageComponent implements OnInit, OnDestroy {
     'issue-number'
   ];
 
-  langChangeSubscription: Subscription;
-  userSubscription: Subscription;
-  multiBookScrapingStateSubscription: Subscription;
-  multiBookScrapingState: MultiBookScrapingState;
-  multiBookListSubscription: Subscription;
-  comicBooks: DisplayableComic[] = [];
   dataSource = new MatTableDataSource<DisplayableComic>();
-  multiBookCurrentComicDetailSubscription: Subscription;
-  currentComicBook: DisplayableComic = null;
-  metadataSourceSubscription: Subscription;
-  metadataSource: MetadataSource;
-  pageChangedSubscription: Subscription;
-  currentSeries = '';
-  currentVolume = '';
-  currentIssueNumber = '';
-  skipCache = false;
-  matchPublisher = false;
-  maximumRecords = 0;
-  scrapingStateSubscription: Subscription;
-  scrapingVolumeSubscription: Subscription;
-  scrapingVolumes: VolumeMetadata[] = [];
-  selectedIds: number[] = [];
-  showPopup = false;
-  popupComic: DisplayableComic = null;
+  multiBookScrapingState: MultiBookScrapingState;
+  comicBooks$ = new BehaviorSubject<DisplayableComic[]>([]);
+  currentComicBook$ = new BehaviorSubject<DisplayableComic | null>(null);
+  metadataSource$ = new BehaviorSubject<MetadataSource | null>(null);
+  currentSeries$ = new BehaviorSubject('');
+  currentVolume$ = new BehaviorSubject('');
+  currentIssueNumber$ = new BehaviorSubject('');
+  skipCache$ = new BehaviorSubject(false);
+  matchPublisher$ = new BehaviorSubject(false);
+  maximumRecords$ = new BehaviorSubject(0);
+  scrapingVolumes$ = new BehaviorSubject<VolumeMetadata[]>([]);
+  selectedIds$ = new BehaviorSubject<number[]>([]);
+  showPopup$ = new BehaviorSubject(false);
+  popupComic$ = new BehaviorSubject<DisplayableComic | null>(null);
+
   logger = inject(LoggerService);
   store = inject(Store);
   titleService = inject(TitleService);
   translateService = inject(TranslateService);
   activatedRoute = inject(ActivatedRoute);
   queryParameterService = inject(QueryParameterService);
-  protected readonly selectMetadataSourceListState =
-    selectMetadataSourceListState;
 
   constructor() {
-    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
-      () => this.loadTranslations()
-    );
-    this.userSubscription = this.store.select(selectUser).subscribe(user => {
-      this.skipCache =
-        getUserPreference(
-          user.preferences,
-          SKIP_CACHE_PREFERENCE,
-          `${false}`
-        ) === `${true}`;
-      this.matchPublisher =
-        getUserPreference(
-          user.preferences,
-          MATCH_PUBLISHER_PREFERENCE,
-          `${false}`
-        ) === `${true}`;
-      this.maximumRecords = parseInt(
-        getUserPreference(
-          user.preferences,
-          MAXIMUM_SCRAPING_RECORDS_PREFERENCE,
-          '0'
-        ),
-        10
-      );
-    });
-    this.multiBookScrapingStateSubscription = this.store
-      .select(selectMultiBookScrapingState)
-      .subscribe(state => {
-        this.multiBookScrapingState = state;
-        if (
-          this.multiBookScrapingState.status ===
-            MultiBookScrapingProcessStatus.SETUP &&
-          !this.multiBookScrapingState.busy
-        ) {
-          this.logger.debug('Starting multi-book comic scraping');
-          this.store.dispatch(
-            startMultiBookScraping({
-              pageSize: this.queryParameterService.pageSize$.value
-            })
+    this.translateService.onLangChange
+      .pipe(tap(() => this.loadTranslations()))
+      .subscribe();
+    this.store
+      .select(selectUser)
+      .pipe(
+        tap(user => {
+          this.skipCache$.next(
+            getUserPreference(
+              user.preferences,
+              SKIP_CACHE_PREFERENCE,
+              `${false}`
+            ) === `${true}`
           );
-        }
-        this.store.dispatch(
-          setBusyState({ enabled: this.multiBookScrapingState.busy })
-        );
-      });
-    this.multiBookListSubscription = this.store
+          this.matchPublisher$.next(
+            getUserPreference(
+              user.preferences,
+              MATCH_PUBLISHER_PREFERENCE,
+              `${false}`
+            ) === `${true}`
+          );
+          this.maximumRecords$.next(
+            Number.parseInt(
+              getUserPreference(
+                user.preferences,
+                MAXIMUM_SCRAPING_RECORDS_PREFERENCE,
+                '0'
+              ),
+              10
+            )
+          );
+        })
+      )
+      .subscribe();
+    this.store
+      .select(selectMultiBookScrapingState)
+      .pipe(
+        tap(state => {
+          this.multiBookScrapingState = state;
+          if (
+            this.multiBookScrapingState.status ===
+              MultiBookScrapingProcessStatus.SETUP &&
+            !this.multiBookScrapingState.busy
+          ) {
+            this.logger.debug('Starting multi-book comic scraping');
+            this.store.dispatch(
+              startMultiBookScraping({
+                pageSize: this.queryParameterService.pageSize$.value
+              })
+            );
+          }
+          this.store.dispatch(
+            setBusyState({ enabled: this.multiBookScrapingState.busy })
+          );
+        })
+      )
+      .subscribe();
+    this.store
       .select(selectMultiBookScrapingList)
-      .subscribe(comicBooks => {
-        this.comicBooks = comicBooks;
-        this.dataSource.data = this.comicBooks;
-      });
-    this.multiBookCurrentComicDetailSubscription = this.store
+      .pipe(
+        tap(comicBooks => {
+          this.comicBooks$.next(comicBooks);
+          this.dataSource.data = comicBooks;
+        })
+      )
+      .subscribe();
+    this.store
       .select(selectMultiBookScrapingCurrent)
       .pipe(filter(comicBook => !!comicBook))
-      .subscribe(currentComicBook => {
-        this.currentComicBook = currentComicBook;
-        this.scrapingVolumes = [];
-        this.currentVolume = null;
-      });
-    this.metadataSourceSubscription = this.store
+      .pipe(
+        tap(currentComicBook => {
+          this.currentComicBook$.next(currentComicBook);
+          this.scrapingVolumes$.next([]);
+          this.currentVolume$.next(null);
+        })
+      )
+      .subscribe();
+    this.store
       .select(selectChosenMetadataSource)
-      .subscribe(metadataSource => {
-        this.metadataSource = metadataSource;
-      });
-    this.scrapingStateSubscription = this.store
+      .pipe(
+        tap(metadataSource => {
+          this.metadataSource$.next(metadataSource);
+        })
+      )
+      .subscribe();
+    this.store
       .select(selectSingleBookScrapingState)
-      .subscribe(state => {
-        this.store.dispatch(setBusyState({ enabled: state.loadingRecords }));
-      });
-    this.scrapingVolumeSubscription = this.store
+      .pipe(
+        tap(state => {
+          this.store.dispatch(setBusyState({ enabled: state.loadingRecords }));
+        })
+      )
+      .subscribe();
+    this.store
       .select(selectScrapingVolumeMetadata)
-      .subscribe(volumes => (this.scrapingVolumes = volumes));
-    this.pageChangedSubscription = this.activatedRoute.queryParams.subscribe(
-      params => {
-        this.store.dispatch(
-          loadMultiBookScrapingPage({
-            pageSize: this.queryParameterService.pageSize$.value,
-            pageNumber: this.queryParameterService.pageIndex$.value
-          })
-        );
-      }
-    );
+      .pipe(tap(volumes => this.scrapingVolumes$.next(volumes)))
+      .subscribe();
+    this.activatedRoute.queryParams
+      .pipe(
+        tap(params => {
+          this.store.dispatch(
+            loadMultiBookScrapingPage({
+              pageSize: this.queryParameterService.pageSize$.value,
+              pageNumber: this.queryParameterService.pageIndex$.value
+            })
+          );
+        })
+      )
+      .subscribe();
   }
 
   get started(): boolean {
@@ -265,26 +281,16 @@ export class ScrapingIssuesPageComponent implements OnInit, OnDestroy {
     this.loadTranslations();
   }
 
-  ngOnDestroy(): void {
-    this.userSubscription.unsubscribe();
-    this.multiBookScrapingStateSubscription.unsubscribe();
-    this.multiBookListSubscription.unsubscribe();
-    this.multiBookCurrentComicDetailSubscription.unsubscribe();
-    this.metadataSourceSubscription.unsubscribe();
-    this.scrapingVolumeSubscription.unsubscribe();
-    this.pageChangedSubscription.unsubscribe();
-  }
-
   onSelectionChanged(comicBook: DisplayableComic): void {
     this.logger.trace('Selected comic changed:', comicBook);
-    this.currentComicBook = comicBook;
+    this.currentComicBook$.next(comicBook);
   }
 
   onScrape(event: MetadataEvent): void {
     this.logger.trace('Storing comic details');
-    this.currentSeries = event.series;
-    this.currentVolume = event.volume;
-    this.currentIssueNumber = event.issueNumber;
+    this.currentSeries$.next(event.series);
+    this.currentVolume$.next(event.volume);
+    this.currentIssueNumber$.next(event.issueNumber);
     this.logger.trace('Fetching scraping volumes:', event);
     this.store.dispatch(
       loadVolumeMetadata({
@@ -299,14 +305,14 @@ export class ScrapingIssuesPageComponent implements OnInit, OnDestroy {
   }
 
   onShowPopup(showPopup: boolean, comic: DisplayableComic): void {
-    this.showPopup = showPopup;
-    this.popupComic = comic;
+    this.showPopup$.next(showPopup);
+    this.popupComic$.next(comic);
   }
 
   onRemoveComicBook(comicDetail: DisplayableComic) {
     this.store.dispatch(
       multiBookScrapingRemoveBook({
-        comicBook: this.comicBooks.find(
+        comicBook: this.comicBooks$.value.find(
           entry => entry.comicBookId === comicDetail.comicBookId
         ),
         pageSize: this.queryParameterService.pageSize$.value
@@ -315,7 +321,7 @@ export class ScrapingIssuesPageComponent implements OnInit, OnDestroy {
   }
 
   onSelectComicBook(comicDetail: DisplayableComic): void {
-    const comicBook = this.comicBooks.find(
+    const comicBook = this.comicBooks$.value.find(
       entry => entry.comicBookId === comicDetail.comicBookId
     );
     this.logger.debug('Selecting comic book:', comicDetail);
