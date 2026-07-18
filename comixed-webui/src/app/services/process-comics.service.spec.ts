@@ -39,7 +39,6 @@ describe('ProcessComicsService', () => {
 
   let service: ProcessComicsService;
   let webSocketService: jasmine.SpyObj<WebSocketService>;
-  const processComicsSubscription = jasmine.createSpyObj(['unsubscribe']);
   let store: MockStore<any>;
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -60,9 +59,6 @@ describe('ProcessComicsService', () => {
     webSocketService = TestBed.inject(
       WebSocketService
     ) as jasmine.SpyObj<WebSocketService>;
-    processComicsSubscription.unsubscribe = jasmine.createSpy(
-      'processComicsSubscription.unsubscribe()'
-    );
     store = TestBed.inject(MockStore);
     spyOn(store, 'dispatch');
   });
@@ -96,24 +92,6 @@ describe('ProcessComicsService', () => {
         PROCESS_COMIC_BOOKS_TOPIC,
         jasmine.anything()
       );
-    });
-  });
-
-  describe('when messaging stops', () => {
-    beforeEach(() => {
-      service.processComicsSubscription = processComicsSubscription;
-      store.setState({
-        ...initialState,
-        [MESSAGING_FEATURE_KEY]: { ...initialMessagingState, started: false }
-      });
-    });
-
-    it('unsubscribes from process comics updates', () => {
-      expect(processComicsSubscription.unsubscribe).toHaveBeenCalled();
-    });
-
-    it('clears the process comics subscription', () => {
-      expect(service.processComicsSubscription).toBeNull();
     });
   });
 });

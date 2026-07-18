@@ -16,11 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { loadPluginLanguages } from '@app/library-plugins/actions/plugin-language.actions';
-import { Subscription } from 'rxjs';
 import { PluginLanguage } from '@app/library-plugins/models/plugin-language';
 import {
   FormBuilder,
@@ -29,10 +28,9 @@ import {
   Validators
 } from '@angular/forms';
 import {
-  selectPluginLanguageList,
-  selectPluginLanguageState
+  selectPluginLanguageBusy,
+  selectPluginLanguageList
 } from '@app/library-plugins/selectors/plugin-language.selectors';
-import { PluginLanguageState } from '@app/library-plugins/reducers/plugin-language.reducer';
 import { TranslateModule } from '@ngx-translate/core';
 import {
   MatCard,
@@ -47,6 +45,9 @@ import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { CreatePluginDetails } from '@app/admin/models/ui/create-plugin-details';
 import { MatDialogClose } from '@angular/material/dialog';
+import { tap } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'cx-create-plugin-dialog',
@@ -66,31 +67,33 @@ import { MatDialogClose } from '@angular/material/dialog';
     MatButton,
     MatIcon,
     TranslateModule,
-    MatDialogClose
+    MatDialogClose,
+    AsyncPipe
   ]
 })
-export class CreatePluginDialogComponent implements OnInit, OnDestroy {
-  pluginLanguageStateSubscription: Subscription;
-  pluginLanguageState: PluginLanguageState;
-  pluginLanguageListSubscription: Subscription;
-  pluginLanguageList: PluginLanguage[] = [];
+export class CreatePluginDialogComponent implements OnInit {
   pluginForm: FormGroup;
+
+  busy$ = new BehaviorSubject(false);
+  pluginLanguageList$ = new BehaviorSubject<PluginLanguage[]>([]);
 
   logger = inject(LoggerService);
   store = inject(Store);
   formBuilder = inject(FormBuilder);
 
   constructor() {
-    this.logger.trace('Subscribing to plugin language state updates');
-    this.pluginLanguageStateSubscription = this.store
-      .select(selectPluginLanguageState)
-      .subscribe(state => {
-        this.pluginLanguageState = state;
-      });
-    this.logger.trace('Subscribing to plugin language list updates');
-    this.pluginLanguageListSubscription = this.store
+    this.store
+      .select(selectPluginLanguageBusy)
+      .pipe(
+        tap(busy => {
+          this.busy$.next(busy);
+        })
+      )
+      .subscribe();
+    this.store
       .select(selectPluginLanguageList)
-      .subscribe(list => (this.pluginLanguageList = list));
+      .pipe(tap(list => this.pluginLanguageList$.next(list)))
+      .subscribe();
     this.pluginForm = this.formBuilder.group({
       filename: [
         '',
@@ -102,11 +105,6 @@ export class CreatePluginDialogComponent implements OnInit, OnDestroy {
       ],
       language: ['', [Validators.required]]
     });
-  }
-
-  ngOnDestroy(): void {
-    this.logger.trace('Unsubscribing from plugin language list updates');
-    this.pluginLanguageListSubscription.unsubscribe();
   }
 
   ngOnInit(): void {

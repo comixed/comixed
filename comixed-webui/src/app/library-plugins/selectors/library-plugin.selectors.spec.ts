@@ -22,8 +22,7 @@ import {
 } from '../reducers/library-plugin.reducer';
 import {
   selectLibraryPluginCurrent,
-  selectLibraryPluginList,
-  selectLibraryPluginState
+  selectLibraryPluginList
 } from './library-plugin.selectors';
 import { PLUGIN_LIST } from '@app/library-plugins/library-plugins.fixtures';
 
@@ -38,15 +37,7 @@ describe('LibraryPlugin Selectors', () => {
     };
   });
 
-  it('should select the feature state', () => {
-    expect(
-      selectLibraryPluginState({
-        [LIBRARY_PLUGIN_FEATURE_KEY]: state
-      })
-    ).toEqual(state);
-  });
-
-  it('should select the list of plugins', () => {
+  it('selects the list of plugins', () => {
     expect(
       selectLibraryPluginList({
         [LIBRARY_PLUGIN_FEATURE_KEY]: state
@@ -54,7 +45,7 @@ describe('LibraryPlugin Selectors', () => {
     ).toEqual(state.list);
   });
 
-  it('should select the current plugin', () => {
+  it('selects the current plugin', () => {
     expect(
       selectLibraryPluginCurrent({
         [LIBRARY_PLUGIN_FEATURE_KEY]: state

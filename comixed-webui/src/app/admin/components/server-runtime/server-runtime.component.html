@@ -3,7 +3,7 @@
     id="refresh-button"
     mat-fab
     color="primary"
-    [disabled]="shuttingDown"
+    [disabled]="shuttingDown$ | async"
     [matTooltip]="'server-runtime.tooltip.refresh' | translate"
     (click)="onRefresh()"
   >
@@ -13,7 +13,7 @@
     id="shutdown-button"
     mat-fab
     color="warn"
-    [disabled]="shuttingDown"
+    [disabled]="shuttingDown$ | async"
     [matTooltip]="'server-runtime.tooltip.shutdown' | translate"
     (click)="onShutdown()"
   >
@@ -21,7 +21,7 @@
   </button>
 </div>
 
-@if (!!health) {
+@if (health$ | async) {
   <div class="cx-detail-card-container">
     <div id="server-status-card" class="cx-grow-1">
       <mat-card appearance="outlined">
@@ -31,7 +31,8 @@
         <mat-card-content>
           <div>
             {{
-              "server-health.text.status" | translate: { status: health.status }
+              "server-health.text.status"
+                | translate: { status: (health$ | async).status }
             }}
           </div>
         </mat-card-content>
@@ -46,7 +47,7 @@
           <div>
             {{
               "server-health.text.status"
-                | translate: { status: health.components.db.status }
+                | translate: { status: (health$ | async).components.db.status }
             }}
           </div>
         </mat-card-content>
@@ -61,7 +62,8 @@
           <div>
             {{
               "server-health.text.status"
-                | translate: { status: health.components.ping.status }
+                | translate
+                  : { status: (health$ | async).components.ping.status }
             }}
           </div>
         </mat-card-content>
@@ -76,7 +78,8 @@
           <div>
             {{
               "server-health.text.status"
-                | translate: { status: health.components.diskSpace.status }
+                | translate
+                  : { status: (health$ | async).components.diskSpace.status }
             }}
           </div>
           <div>
@@ -85,8 +88,8 @@
                 | translate
                   : {
                       size:
-                        health.components.diskSpace.details.free / (1024 * 1024)
-                        | number: "1.0-2"
+                        (health$ | async).components.diskSpace.details.free /
+                          (1024 * 1024) | number: "1.0-2"
                     }
             }}
           </div>
@@ -96,7 +99,7 @@
                 | translate
                   : {
                       size:
-                        health.components.diskSpace.details.total /
+                        (health$ | async).components.diskSpace.details.total /
                           (1024 * 1024) | number: "1.0-2"
                     }
             }}
@@ -107,7 +110,8 @@
                 | translate
                   : {
                       size:
-                        health.components.diskSpace.details.threshold /
+                        (health$ | async).components.diskSpace.details
+                          .threshold /
                           (1024 * 1024) | number: "1.0-2"
                     }
             }}
@@ -116,7 +120,10 @@
             {{
               "server-health.disk-status.exists"
                 | translate
-                  : { exists: health.components.diskSpace.details.exists }
+                  : {
+                      exists: (health$ | async).components.diskSpace.details
+                        .exists
+                    }
             }}
           </div>
         </mat-card-content>

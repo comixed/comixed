@@ -20,17 +20,15 @@ import {
   AfterViewInit,
   Component,
   inject,
-  OnDestroy,
   OnInit,
   ViewChild
 } from '@angular/core';
-import { Subscription } from 'rxjs';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import {
   selectLibraryPluginCurrent,
   selectLibraryPluginList,
-  selectLibraryPluginState
+  selectLibraryPluginListBusy
 } from '@app/library-plugins/selectors/library-plugin.selectors';
 import {
   MatCell,
@@ -67,6 +65,7 @@ import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { AsyncPipe } from '@angular/common';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import { PluginTitlePipe } from '@app/library-plugins/pipes/plugin-title.pipe';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'cx-library-plugins-configuration',
@@ -96,7 +95,7 @@ import { PluginTitlePipe } from '@app/library-plugins/pipes/plugin-title.pipe';
   ]
 })
 export class LibraryPluginsConfigurationComponent
-  implements OnInit, OnDestroy, AfterViewInit
+  implements OnInit, AfterViewInit
 {
   readonly displayedColumns = [
     'actions',
@@ -108,9 +107,6 @@ export class LibraryPluginsConfigurationComponent
 
   @ViewChild(MatSort) sort: MatSort;
   dataSource = new MatTableDataSource<LibraryPlugin>();
-  libraryPluginStateSubscription: Subscription;
-  libraryPluginListSubscription: Subscription;
-  currentPluginSubscription: Subscription;
   dialogRef: MatDialogRef<LibraryPluginSetupComponent, any>;
 
   queryParameterService = inject(QueryParameterService);
@@ -123,46 +119,47 @@ export class LibraryPluginsConfigurationComponent
   confirmationService = inject(ConfirmationService);
 
   constructor() {
-    this.logger.trace('Subscription to library plugin list state updates');
-    this.libraryPluginStateSubscription = this.store
-      .select(selectLibraryPluginState)
-      .subscribe(state =>
-        this.store.dispatch(setBusyState({ enabled: state.busy }))
-      );
-    this.logger.trace('Subscription to library plugin list updates');
-    this.libraryPluginListSubscription = this.store
+    this.store
+      .select(selectLibraryPluginListBusy)
+      .pipe(tap(enabled => this.store.dispatch(setBusyState({ enabled }))))
+      .subscribe();
+    this.store
       .select(selectLibraryPluginList)
-      .subscribe(pluginList => (this.dataSource.data = pluginList));
-    this.logger.trace('Subscribing to the current library plugin updates');
-    this.currentPluginSubscription = this.store
+      .pipe(tap(pluginList => (this.dataSource.data = pluginList)))
+      .subscribe();
+    this.store
       .select(selectLibraryPluginCurrent)
-      .subscribe(libraryPlugin => {
-        if (!!libraryPlugin) {
-          if (libraryPlugin.properties.length > 0) {
-            this.dialogRef = this.dialog.open(LibraryPluginSetupComponent, {
-              data: libraryPlugin
-            });
+      .pipe(
+        tap(libraryPlugin => {
+          if (!!libraryPlugin) {
+            if (libraryPlugin.properties.length > 0) {
+              this.dialogRef = this.dialog.open(LibraryPluginSetupComponent, {
+                data: libraryPlugin
+              });
+            } else {
+              this.store.dispatch(setCurrentLibraryPlugin({ plugin: null }));
+              this.alertService.info(
+                this.translateService.instant(
+                  'library-plugin-setup.text.plugin-has-no-properties',
+                  {
+                    name: libraryPlugin.name,
+                    language: libraryPlugin.language
+                  }
+                )
+              );
+            }
           } else {
-            this.store.dispatch(setCurrentLibraryPlugin({ plugin: null }));
-            this.alertService.info(
-              this.translateService.instant(
-                'library-plugin-setup.text.plugin-has-no-properties',
-                {
-                  name: libraryPlugin.name,
-                  language: libraryPlugin.language
-                }
-              )
-            );
+            if (!!this.dialogRef) {
+              this.dialogRef.close();
+              this.dialogRef = null;
+              this.store.dispatch(setCurrentLibraryPlugin({ plugin: null }));
+            }
           }
-        } else {
-          if (!!this.dialogRef) {
-            this.dialogRef.close();
-            this.dialogRef = null;
-            this.store.dispatch(setCurrentLibraryPlugin({ plugin: null }));
-          }
-        }
-      });
+        })
+      )
+      .subscribe();
   }
+
   ngAfterViewInit(): void {
     this.logger.trace('Setting up sorting');
     this.dataSource.sort = this.sort;
@@ -179,15 +176,6 @@ export class LibraryPluginsConfigurationComponent
           return data.filename;
       }
     };
-  }
-
-  ngOnDestroy(): void {
-    this.logger.trace('Unsubscribing from library plugin list state updates');
-    this.libraryPluginStateSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from library plugin list updates');
-    this.libraryPluginListSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from current library plugin updates');
-    this.currentPluginSubscription.unsubscribe();
   }
 
   ngOnInit(): void {

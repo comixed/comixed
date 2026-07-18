@@ -5,45 +5,50 @@
     <mat-card-content class="cx-padding-15">
       <div>
         {{
-          "build-details.label.branch" | translate: { name: details?.branch }
+          "build-details.label.branch"
+            | translate: { name: (details$ | async)?.branch }
         }}
       </div>
       <div>
         {{
           "build-details.label.build-time"
-            | translate: { time: details?.buildTime | date: "long" }
+            | translate: { time: (details$ | async)?.buildTime | date: "long" }
         }}
       </div>
       <div>
         {{
           "build-details.label.build-host"
-            | translate: { name: details?.buildHost }
+            | translate: { name: (details$ | async)?.buildHost }
         }}
       </div>
       <div>
         {{
           "build-details.label.build-version"
-            | translate: { version: details?.buildVersion }
+            | translate: { version: (details$ | async)?.buildVersion }
         }}
       </div>
       <div>
         {{
           "build-details.label.commit-time"
-            | translate: { time: details?.commitTime | date: "long" }
+            | translate: { time: (details$ | async)?.commitTime | date: "long" }
         }}
       </div>
       <div>
-        {{ "build-details.label.dirty" | translate: { name: details?.dirty } }}
+        {{
+          "build-details.label.dirty"
+            | translate: { name: (details$ | async)?.dirty }
+        }}
       </div>
       <div>
         {{
           "build-details.label.remote-origin-url"
-            | translate: { url: details?.remoteOriginURL }
+            | translate: { url: (details$ | async)?.remoteOriginURL }
         }}
       </div>
       <div>
         {{
-          "build-details.label.jdbc-url" | translate: { url: details?.jdbcUrl }
+          "build-details.label.jdbc-url"
+            | translate: { url: (details$ | async)?.jdbcUrl }
         }}
       </div>
       <div>
@@ -51,11 +56,11 @@
           "build-details.label.java-runtime"
             | translate
               : {
-                  version: details?.javaVersion,
-                  vendor: details?.javaVendor,
-                  osName: details?.osName,
-                  osArch: details?.osArch,
-                  osVersion: details?.osVersion
+                  version: (details$ | async)?.javaVersion,
+                  vendor: (details$ | async)?.javaVendor,
+                  osName: (details$ | async)?.osName,
+                  osArch: (details$ | async)?.osArch,
+                  osVersion: (details$ | async)?.osVersion
                 }
         }}
       </div>

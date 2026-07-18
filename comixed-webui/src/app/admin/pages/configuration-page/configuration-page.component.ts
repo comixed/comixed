@@ -16,10 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
-import { Subscription } from 'rxjs';
 import { ConfigurationOption } from '@app/admin/models/configuration-option';
 import {
   selectConfigurationOptionListState,
@@ -27,10 +26,10 @@ import {
 } from '@app/admin/selectors/configuration-option-list.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { TitleService } from '@app/core/services/title.service';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { loadConfigurationOptions } from '@app/admin/actions/configuration-option-list.actions';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
-import { MatTabGroup, MatTab } from '@angular/material/tabs';
+import { MatTab, MatTabGroup } from '@angular/material/tabs';
 import { ServerRuntimeComponent } from '../../components/server-runtime/server-runtime.component';
 import { ServerMetricsComponent } from '../../components/server-metrics/server-metrics.component';
 import { LibraryConfigurationComponent } from '../../components/library-configuration/library-configuration.component';
@@ -38,6 +37,8 @@ import { MetadataSourceListComponent } from '../../components/metadata-source-li
 import { FilenameScrapingRulesConfigurationComponent } from '../../components/filename-scraping-rules-configuration/filename-scraping-rules-configuration.component';
 import { LibraryPluginsConfigurationComponent } from '../../components/library-plugins-configuration/library-plugins-configuration.component';
 import { AsyncPipe } from '@angular/common';
+import { tap } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'cx-configuration-page',
@@ -56,11 +57,9 @@ import { AsyncPipe } from '@angular/common';
     TranslateModule
   ]
 })
-export class ConfigurationPageComponent implements OnInit, OnDestroy {
-  configStateSubscription: Subscription;
-  langChangeSubscription: Subscription;
-  optionSubscription: Subscription;
-  options: ConfigurationOption[] = [];
+export class ConfigurationPageComponent implements OnInit {
+  options$ = new BehaviorSubject<ConfigurationOption[]>([]);
+
   queryParameterService = inject(QueryParameterService);
   logger = inject(LoggerService);
   store = inject(Store);
@@ -68,30 +67,28 @@ export class ConfigurationPageComponent implements OnInit, OnDestroy {
   translateService = inject(TranslateService);
 
   constructor() {
-    this.configStateSubscription = this.store
+    this.store
       .select(selectConfigurationOptionListState)
-      .subscribe(state => {
-        this.store.dispatch(
-          setBusyState({ enabled: state.loading || state.saving })
-        );
-      });
-    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
-      () => this.loadTranslations()
-    );
-    this.optionSubscription = this.store
+      .pipe(
+        tap(state => {
+          this.store.dispatch(
+            setBusyState({ enabled: state.loading || state.saving })
+          );
+        })
+      )
+      .subscribe();
+    this.translateService.onLangChange
+      .pipe(tap(() => this.loadTranslations()))
+      .subscribe();
+    this.store
       .select(selectConfigurationOptions)
-      .subscribe(options => (this.options = options));
+      .pipe(tap(options => this.options$.next(options)))
+      .subscribe();
   }
 
   ngOnInit(): void {
     this.loadTranslations();
     this.store.dispatch(loadConfigurationOptions());
-  }
-
-  ngOnDestroy(): void {
-    this.configStateSubscription.unsubscribe();
-    this.langChangeSubscription.unsubscribe();
-    this.optionSubscription.unsubscribe();
   }
 
   private loadTranslations(): void {

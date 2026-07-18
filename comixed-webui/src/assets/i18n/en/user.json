@@ -18,9 +18,6 @@
   "initial-account": {
     "effect-failure": "Failed to check for existing user accounts..."
   },
-  "login": {
-    "title": "Login"
-  },
   "manage-users": {
     "delete-user-account": {
       "effect-failure": "Failed to delete {email}.",
@@ -50,12 +47,16 @@
       }
     },
     "login-user": {
-      "page-title": "Please Enter Your User Details",
-      "email-placeholder": "Your email address",
-      "password-placeholder": "Your password",
       "effect-failure": "Email or password is invalid.",
-      "login-tooltip": "Go to the login page...",
-      "logout-tooltip": "Log out..."
+      "page-title": "Please Enter Your User Details",
+      "label": {
+        "email": "Your email address",
+        "password": "Your password"
+      },
+      "placeholder": {
+        "email": "youremail@address.com",
+        "password": "Your password"
+      }
     },
     "logout-user": {
       "confirmation-title": "Logout",

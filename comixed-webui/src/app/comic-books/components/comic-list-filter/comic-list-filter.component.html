@@ -25,7 +25,7 @@
           formControlName="coverYear"
           [disabled]="queryParameterService.filterText$.value?.length > 0"
         >
-          @for (option of displayableCoverYears; track option) {
+          @for (option of displayableCoverYears$ | async; track option) {
             <mat-option [value]="option.value">
               {{ option.label | translate }}
             </mat-option>
@@ -41,7 +41,7 @@
           formControlName="coverMonth"
           [disabled]="queryParameterService.filterText$.value?.length > 0"
         >
-          @for (option of displayableCoverMonths; track option) {
+          @for (option of displayableCoverMonths$ | async; track option) {
             <mat-option [value]="option.value">
               {{ option.label | translate }}
             </mat-option>

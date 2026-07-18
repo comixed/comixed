@@ -4,14 +4,14 @@
     mat-fab
     color="primary"
     [matTooltip]="'user-accounts.button.create-user' | translate"
-    [disabled]="showUserForm"
+    [disabled]="showUserForm$ | async"
     (click)="onShowUserForm(null)"
   >
     <mat-icon>person_add</mat-icon>
   </button>
 </div>
 
-@if (showUserForm) {
+@if (showUserForm$ | async) {
   <div>
     <form [formGroup]="editUserForm">
       <mat-card appearance="outlined">
@@ -140,7 +140,7 @@
             mat-raised-button
             color="accent"
             [matTooltip]="'user-accounts.button.close-user-form' | translate"
-            (click)="showUserForm = false"
+            (click)="showUserForm$.next(false)"
           >
             <mat-label>{{ "button.close" | translate }}</mat-label>
             <mat-icon>close</mat-icon>

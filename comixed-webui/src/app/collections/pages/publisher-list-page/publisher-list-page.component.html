@@ -14,7 +14,7 @@
 
 <mat-paginator
   showFirstLastButtons="true"
-  [length]="totalPublishers"
+  [length]="totalPublishers$ | async"
   [pageSize]="queryParameterService.pageSize$ | async"
   [pageIndex]="queryParameterService.pageIndex$ | async"
   [pageSizeOptions]="pageOptions"

@@ -32,6 +32,7 @@ import org.comixedproject.model.library.DisplayableComic;
 import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.repositories.library.DisplayableComicRepository;
+import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.lists.ReadingListException;
 import org.comixedproject.service.lists.ReadingListService;
 import org.springframework.beans.factory.ObjectFactory;
@@ -636,8 +637,11 @@ public class DisplayableComicService {
    * @param id the comic book id
    * @return the displayable comic
    */
-  public DisplayableComic getForComicBookId(final long id) {
+  public DisplayableComic getForComicBookId(final long id) throws ComicBookException {
     log.debug("Loading displayable comic book: comic book id={}", id);
-    return this.displayableComicRepository.getByComicBookId(id);
+    final DisplayableComic result = this.displayableComicRepository.getByComicBookId(id);
+    if (Objects.isNull(result))
+      throw new ComicBookException(String.format("No such comic books: id=%d", id));
+    return result;
   }
 }

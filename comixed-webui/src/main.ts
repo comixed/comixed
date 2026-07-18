@@ -46,7 +46,6 @@ import { APP_REDUCERS } from '@app/app.reducers';
 import { EffectsModule } from '@ngrx/effects';
 import { AppEffects } from './app/app.effects';
 import { ReleaseEffects } from '@app/effects/release.effects';
-import { ImportCountEffects } from '@app/effects/import-count.effects';
 import { ComicsReadStatisticsEffects } from '@app/effects/comics-read-statistics.effects';
 import { StoreRouterConnectingModule } from '@ngrx/router-store';
 import { LoggerModule } from '@angular-ru/cdk/logger';
@@ -104,7 +103,6 @@ bootstrapApplication(AppComponent, {
       EffectsModule.forRoot([
         AppEffects,
         ReleaseEffects,
-        ImportCountEffects,
         ComicsReadStatisticsEffects
       ]),
       StoreRouterConnectingModule.forRoot(),

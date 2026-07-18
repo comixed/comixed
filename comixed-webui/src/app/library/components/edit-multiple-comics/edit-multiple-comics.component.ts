@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import {
   MAT_DIALOG_DATA,
   MatDialogActions,
@@ -31,7 +31,7 @@ import {
   Validators
 } from '@angular/forms';
 import { LoggerService } from '@angular-ru/cdk/logger';
-import { Subscription } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { SelectionOption } from '@app/core/models/ui/selection-option';
 import { Imprint } from '@app/comic-books/models/imprint';
 import { Store } from '@ngrx/store';
@@ -47,6 +47,8 @@ import { MatOption, MatSelect } from '@angular/material/select';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
+import { AsyncPipe } from '@angular/common';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'cx-edit-multiple-comics',
@@ -66,14 +68,11 @@ import { TranslateModule } from '@ngx-translate/core';
     MatButton,
     MatDialogClose,
     MatIcon,
-    TranslateModule
+    TranslateModule,
+    AsyncPipe
   ]
 })
-export class EditMultipleComicsComponent implements OnInit, OnDestroy {
-  detailsForm: UntypedFormGroup;
-  imprintSubscription: Subscription;
-  imprintOptions: SelectionOption<Imprint>[] = [];
-  imprints: Imprint[];
+export class EditMultipleComicsComponent implements OnInit {
   readonly comicTypeOptions: SelectionOption<ComicType>[] = [
     {
       label: '---',
@@ -81,6 +80,10 @@ export class EditMultipleComicsComponent implements OnInit, OnDestroy {
       selected: false
     } as SelectionOption<ComicType>
   ].concat(COMIC_TYPE_SELECTION_OPTIONS);
+
+  detailsForm: UntypedFormGroup;
+
+  imprintOptions$ = new BehaviorSubject<SelectionOption<Imprint>[]>([]);
 
   logger = inject(LoggerService);
   formBuilder = inject(UntypedFormBuilder);
@@ -99,25 +102,29 @@ export class EditMultipleComicsComponent implements OnInit, OnDestroy {
       imprint: ['', [Validators.required, Validators.maxLength(64)]],
       comicType: [null, [Validators.required]]
     });
-    this.imprintSubscription = this.store
+    this.store
       .select(selectImprints)
-      .subscribe(imprints => {
-        this.logger.trace('Loading imprint options');
-        this.imprints = imprints;
-        this.imprintOptions = [
-          {
-            label: '---',
-            value: { imprintId: -1, name: '', publisher: '' }
-          } as SelectionOption<Imprint>
-        ].concat(
-          imprints.map(imprint => {
-            return {
-              label: imprint.name,
-              value: imprint
-            } as SelectionOption<Imprint>;
-          })
-        );
-      });
+      .pipe(
+        tap(imprints => {
+          this.logger.trace('Loading imprint options');
+          this.imprintOptions$.next(
+            [
+              {
+                label: '---',
+                value: { imprintId: -1, name: '', publisher: '' }
+              } as SelectionOption<Imprint>
+            ].concat(
+              imprints.map(imprint => {
+                return {
+                  label: imprint.name,
+                  value: imprint
+                } as SelectionOption<Imprint>;
+              })
+            )
+          );
+        })
+      )
+      .subscribe();
   }
 
   private _comics: ComicDetail[] = [];
@@ -156,18 +163,11 @@ export class EditMultipleComicsComponent implements OnInit, OnDestroy {
     this.store.dispatch(loadImprints());
   }
 
-  ngOnDestroy(): void {
-    this.logger.trace('Unsubscribing from imprint updates');
-    this.imprintSubscription.unsubscribe();
-  }
-
-  onImprintSelected(name: string): void {
-    this.logger.trace('Finding imprint');
-    const imprint = this.imprints.find(entry => entry.name === name);
+  onImprintSelected(imprint: Imprint | null): void {
     this.logger.trace('Setting publisher name');
-    this.detailsForm.controls.publisher.setValue(imprint.publisher);
+    this.detailsForm.controls.publisher.setValue(imprint?.publisher);
     this.logger.trace('Setting imprint name');
-    this.detailsForm.controls.imprint.setValue(imprint.name);
+    this.detailsForm.controls.imprint.setValue(imprint?.name);
   }
 
   encodeDetails(): EditMultipleComics {

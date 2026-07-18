@@ -37,29 +37,28 @@ import {
   startMessaging,
   stopMessaging
 } from '@app/messaging/actions/messaging.actions';
-import { Subscription } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { User } from '@app/user/models/user';
-import { loadLibraryState } from '@app/library/actions/library.actions';
-import { selectLibraryState } from '@app/library/selectors/library.selectors';
-import { LibraryState } from '@app/library/reducers/library.reducer';
 import { toggleDarkThemeMode } from '@app/actions/dark-theme.actions';
 import { selectDarkThemeActive } from '@app/selectors/dark-theme.selectors';
 import { BusyIcon } from '@app/core/actions/busy.actions';
-import { resetReadComicBooks } from '@app/user/actions/read-comic-books.actions';
 import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
 import { WebSocketService } from '@app/messaging';
 import { AlertService } from '@app/core/services/alert.service';
 import { filter } from 'rxjs/operators';
 import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component';
 import {
-  MatSidenavContainer,
   MatSidenav,
+  MatSidenavContainer,
   MatSidenavContent
 } from '@angular/material/sidenav';
 import { SideNavigationComponent } from './components/side-navigation/side-navigation.component';
 import { EditAccountBarComponent } from './user/components/edit-account-bar/edit-account-bar.component';
 import { RouterOutlet } from '@angular/router';
 import { FooterComponent } from './components/footer/footer.component';
+import { AsyncPipe } from '@angular/common';
+import { loadLibraryState } from '@app/library/actions/library.actions';
+import { resetReadComicBooks } from '@app/user/actions/read-comic-books.actions';
 
 @Component({
   selector: 'cx-root',
@@ -73,21 +72,19 @@ import { FooterComponent } from './components/footer/footer.component';
     EditAccountBarComponent,
     MatSidenavContent,
     RouterOutlet,
-    FooterComponent
+    FooterComponent,
+    AsyncPipe
   ]
 })
 export class AppComponent implements OnInit {
   @HostBinding('class') currentTheme: 'lite-theme' | 'dark-theme' =
     'lite-theme';
 
-  user: User = null;
-  busy = false;
-  sessionActive = false;
-  libraryStateSubscription: Subscription;
-  libraryState: LibraryState;
-  darkMode = false;
-  busyIcon = BusyIcon.DEFAULT;
-  appMessagingSubscription: Subscription | null = null;
+  user$ = new BehaviorSubject<User | null>(null);
+  busy$ = new BehaviorSubject(false);
+  sessionActive$ = new BehaviorSubject(false);
+  darkMode$ = new BehaviorSubject(false);
+  busyIcon$ = new BehaviorSubject<BusyIcon>(BusyIcon.DEFAULT);
 
   logger = inject(LoggerService);
   translateService = inject(TranslateService);
@@ -101,11 +98,11 @@ export class AppComponent implements OnInit {
     this.logger.trace('Subscribing to user changes');
     this.store.select(selectUser).subscribe(user => {
       this.logger.debug('User updated:', user);
-      this.user = user;
+      this.user$.next(user);
 
       const darkMode =
         getUserPreference(
-          this.user?.preferences || [],
+          this.user$.value?.preferences || [],
           DARK_MODE_PREFERENCE,
           'false'
         ) === `${true}`;
@@ -114,35 +111,24 @@ export class AppComponent implements OnInit {
           toggle: darkMode
         })
       );
-      if (!!this.user && !this.sessionActive) {
+      if (!!this.user$.value && !this.sessionActive$.value) {
         this.logger.trace('Marking the session as active');
-        this.sessionActive = true;
+        this.sessionActive$.next(true);
         this.logger.trace('Starting messaging subsystem');
         this.store.dispatch(startMessaging());
-      }
-      if (!!this.user && !this.libraryStateSubscription) {
-        this.logger.trace('Subscribing to library state');
-        this.subscribeToLibraryState();
-        this.logger.trace('Loading remote library state');
         this.store.dispatch(loadLibraryState());
       }
-      if (!this.user && this.sessionActive) {
+      if (!this.user$.value && this.sessionActive$.value) {
         this.logger.trace('Stopping the messaging subsystem');
+        this.store.dispatch(resetReadComicBooks());
         this.store.dispatch(stopMessaging());
         this.logger.trace('Marking the session as inactive');
-        this.sessionActive = false;
+        this.sessionActive$.next(false);
       }
-      if (!this.user && this.libraryStateSubscription) {
-        this.logger.trace('Clearing read comic books list');
-        this.store.dispatch(resetReadComicBooks());
-        this.logger.trace('Unsubscribing from library state changes');
-        this.libraryStateSubscription.unsubscribe();
-        this.libraryStateSubscription = null;
-      }
-      if (!!this.user) {
+      if (!!this.user$.value) {
         const preferredLevel = parseInt(
           getUserPreference(
-            this.user.preferences,
+            this.user$.value.preferences,
             LOGGER_LEVEL_PREFERENCE,
             `${LoggerLevel.INFO}`
           ),
@@ -163,17 +149,21 @@ export class AppComponent implements OnInit {
             break;
         }
         this.translateService.use(
-          getUserPreference(this.user.preferences, LANGUAGE_PREFERENCE, 'en')
+          getUserPreference(
+            this.user$.value.preferences,
+            LANGUAGE_PREFERENCE,
+            'en'
+          )
         );
       }
     });
     this.store.select(selectBusyState).subscribe(state => {
-      this.busy = state.enabled;
-      this.busyIcon = state.icon;
+      this.busy$.next(state.enabled);
+      this.busyIcon$.next(state.icon);
     });
     this.store.select(selectDarkThemeActive).subscribe(toggle => {
-      this.darkMode = toggle;
-      if (this.darkMode) {
+      this.darkMode$.next(toggle);
+      if (this.darkMode$.value) {
         this.currentTheme = 'dark-theme';
       } else {
         this.currentTheme = 'lite-theme';
@@ -183,29 +173,17 @@ export class AppComponent implements OnInit {
       .select(selectMessagingState)
       .pipe(filter(state => !!state))
       .subscribe(state => {
-        if (state.started && this.appMessagingSubscription === null) {
-          this.logger.debug('Subscribing from application messages');
-          this.appMessagingSubscription = this.webSocketService.subscribe(
-            APP_MESSAGING_TOPIC,
-            appEvent => {
-              this.logger.debug(
-                'Application event message received:',
-                appEvent
-              );
-              this.alertService.info(appEvent.message);
-            }
-          );
-        }
-        if (!state.started && this.appMessagingSubscription !== null) {
-          this.logger.debug('Unsubscribing from application messages');
-          this.appMessagingSubscription.unsubscribe();
-          this.appMessagingSubscription = null;
+        if (state.started) {
+          this.webSocketService.subscribe(APP_MESSAGING_TOPIC, appEvent => {
+            this.logger.debug('Application event message received:', appEvent);
+            this.alertService.info(appEvent.message);
+          });
         }
       });
   }
 
   get busyIconURL(): string {
-    switch (this.busyIcon) {
+    switch (this.busyIcon$.value) {
       case BusyIcon.LOADING:
         return LOADING_ICON_URL;
       case BusyIcon.SEARCHING:
@@ -220,11 +198,5 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.logger.debug('Loading current user');
     this.store.dispatch(loadCurrentUser());
-  }
-
-  subscribeToLibraryState(): void {
-    this.libraryStateSubscription = this.store
-      .select(selectLibraryState)
-      .subscribe(state => (this.libraryState = state));
   }
 }

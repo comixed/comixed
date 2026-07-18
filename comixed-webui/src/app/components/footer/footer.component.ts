@@ -22,11 +22,11 @@ import { Store } from '@ngrx/store';
 import { User } from '@app/user/models/user';
 import { selectLibraryState } from '@app/library/selectors/library.selectors';
 import { selectComicBookSelectionState } from '@app/comic-books/selectors/comic-book-selection.selectors';
-import { Subscription } from 'rxjs';
 import { selectBatchProcessList } from '@app/admin/selectors/batch-processes.selectors';
 import { TranslateModule } from '@ngx-translate/core';
 import { isAdmin } from '@app/user/user.functions';
 import { RouterModule } from '@angular/router';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'cx-footer',
@@ -35,9 +35,6 @@ import { RouterModule } from '@angular/router';
   imports: [RouterModule, TranslateModule]
 })
 export class FooterComponent {
-  libraryStateSubscription: Subscription;
-  selectionsSubscription: Subscription;
-  jobsSubscription: Subscription;
   unscrapedCount = 0;
   comicCount = 0;
   readCount = 0;
@@ -58,27 +55,28 @@ export class FooterComponent {
     this._user = user;
 
     if (!!this._user) {
-      this.logger.debug('User updated:', user);
-      this.libraryStateSubscription = this.store
+      this.store
         .select(selectLibraryState)
-        .subscribe(state => {
-          this.comicCount = state.totalComics;
-          this.unscrapedCount = state.unscrapedComics;
-          this.deletedCount = state.deletedComics;
-        });
-      this.selectionsSubscription = this.store
+        .pipe(
+          tap(state => {
+            this.comicCount = state.totalComics;
+            this.unscrapedCount = state.unscrapedComics;
+            this.deletedCount = state.deletedComics;
+          })
+        )
+        .subscribe();
+      this.store
         .select(selectComicBookSelectionState)
-        .subscribe(state => (this.selectedCount = state.ids.length));
-      this.jobsSubscription = this.store
+        .pipe(tap(state => (this.selectedCount = state.ids.length)))
+        .subscribe();
+      this.store
         .select(selectBatchProcessList)
-        .subscribe(
-          list => (this.batchJobs = list.filter(job => job.running).length)
-        );
+        .pipe(
+          tap(list => (this.batchJobs = list.filter(job => job.running).length))
+        )
+        .subscribe();
       this.readCount = this.user.readComicBooks.length;
     } else {
-      this.libraryStateSubscription?.unsubscribe();
-      this.selectionsSubscription?.unsubscribe();
-      this.jobsSubscription?.unsubscribe();
       this.readCount = 0;
     }
   }

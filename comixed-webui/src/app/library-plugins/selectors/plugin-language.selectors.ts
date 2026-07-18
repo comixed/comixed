@@ -22,8 +22,14 @@ import {
   PluginLanguageState
 } from '../reducers/plugin-language.reducer';
 
-export const selectPluginLanguageState =
-  createFeatureSelector<PluginLanguageState>(PLUGIN_LANGUAGE_FEATURE_KEY);
+const selectPluginLanguageState = createFeatureSelector<PluginLanguageState>(
+  PLUGIN_LANGUAGE_FEATURE_KEY
+);
+
+export const selectPluginLanguageBusy = createSelector(
+  selectPluginLanguageState,
+  state => state.busy
+);
 
 export const selectPluginLanguageList = createSelector(
   selectPluginLanguageState,

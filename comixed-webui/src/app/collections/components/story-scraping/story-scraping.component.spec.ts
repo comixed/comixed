@@ -152,7 +152,7 @@ describe('StoryScrapingComponent', () => {
         STORY_METADATA.name
       );
       component.storyScrapingForm.controls.maxRecords.setValue(MAX_RECORDS);
-      component.skipCache = SKIP_CACHE;
+      component.skipCache$.next(SKIP_CACHE);
       component.onLoadStoryCandidates();
     });
 
@@ -170,17 +170,17 @@ describe('StoryScrapingComponent', () => {
 
   describe('showing a story popup', () => {
     beforeEach(() => {
-      component.imageUrl = null;
-      component.imageTitle = null;
+      component.imageUrl$.next('');
+      component.imageTitle$.next('');
       component.onShowPopup(STORY_METADATA);
     });
 
     it('sets the image url', () => {
-      expect(component.imageUrl).toEqual(STORY_METADATA.imageUrl);
+      expect(component.imageUrl$.value).toEqual(STORY_METADATA.imageUrl);
     });
 
     it('sets the image title', () => {
-      expect(component.imageTitle).toEqual(STORY_METADATA.name);
+      expect(component.imageTitle$.value).toEqual(STORY_METADATA.name);
     });
 
     describe('hiding the popup', () => {
@@ -189,11 +189,11 @@ describe('StoryScrapingComponent', () => {
       });
 
       it('clears the image url', () => {
-        expect(component.imageUrl).toBeNull();
+        expect(component.imageUrl$.value).toEqual('');
       });
 
       it('clears the image title', () => {
-        expect(component.imageTitle).toBeNull();
+        expect(component.imageTitle$.value).toEqual('');
       });
     });
   });
@@ -207,7 +207,7 @@ describe('StoryScrapingComponent', () => {
         STORY_METADATA.referenceId
       );
       component.storyScrapingForm.controls.maxRecords.setValue(MAX_RECORDS);
-      component.skipCache = SKIP_CACHE;
+      component.skipCache$.next(SKIP_CACHE);
       spyOn(confirmationService, 'confirm').and.callFake(confirmation =>
         confirmation.confirm()
       );

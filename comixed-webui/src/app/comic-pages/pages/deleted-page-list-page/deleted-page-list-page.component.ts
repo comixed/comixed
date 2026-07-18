@@ -20,27 +20,25 @@ import {
   AfterViewInit,
   Component,
   inject,
-  OnDestroy,
   OnInit,
   ViewChild
 } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/core/services/title.service';
-import { Subscription } from 'rxjs';
 import {
-  MatTableDataSource,
-  MatTable,
-  MatColumnDef,
-  MatHeaderCellDef,
-  MatHeaderCell,
-  MatCellDef,
   MatCell,
-  MatHeaderRowDef,
+  MatCellDef,
+  MatColumnDef,
+  MatHeaderCell,
+  MatHeaderCellDef,
   MatHeaderRow,
+  MatHeaderRowDef,
+  MatRow,
   MatRowDef,
-  MatRow
+  MatTable,
+  MatTableDataSource
 } from '@angular/material/table';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
@@ -59,6 +57,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatToolbar } from '@angular/material/toolbar';
 import { AsyncPipe } from '@angular/common';
 import { PageHashUrlPipe } from '../../../comic-books/pipes/page-hash-url.pipe';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'cx-deleted-page-list-page',
@@ -84,17 +83,11 @@ import { PageHashUrlPipe } from '../../../comic-books/pipes/page-hash-url.pipe';
     PageHashUrlPipe
   ]
 })
-export class DeletedPageListPageComponent
-  implements OnInit, OnDestroy, AfterViewInit
-{
+export class DeletedPageListPageComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
   readonly displayedColumns = ['thumbnail', 'hash', 'comic-count'];
-  langChangeSubscription: Subscription;
-
-  deletedPageStateSubscription: Subscription;
-  deletedPageListSubscription: Subscription;
   dataSource = new MatTableDataSource<DeletedPage>([]);
 
   logger = inject(LoggerService);
@@ -106,20 +99,19 @@ export class DeletedPageListPageComponent
   dialog = inject(MatDialog);
 
   constructor() {
-    this.langChangeSubscription =
-      this.translationService.onLangChange.subscribe(() =>
-        this.loadTranslations()
-      );
-    this.logger.trace('Subscribing to user changes');
-    this.logger.trace('Subscribing to comic list changes');
-    this.deletedPageStateSubscription = this.store
+    this.translationService.onLangChange
+      .pipe(tap(() => this.loadTranslations()))
+      .subscribe();
+    this.store
       .select(selectDeletedPagesState)
-      .subscribe(state =>
-        this.store.dispatch(setBusyState({ enabled: state.busy }))
-      );
-    this.deletedPageListSubscription = this.store
+      .pipe(
+        tap(state => this.store.dispatch(setBusyState({ enabled: state.busy })))
+      )
+      .subscribe();
+    this.store
       .select(selectDeletedPageList)
-      .subscribe(pages => (this.pages = pages));
+      .pipe(tap(pages => (this.pages = pages)))
+      .subscribe();
   }
 
   get pages(): DeletedPage[] {
@@ -149,15 +141,6 @@ export class DeletedPageListPageComponent
           return data.comics.length;
       }
     };
-  }
-
-  ngOnDestroy(): void {
-    this.logger.trace('Unsubscribing from language change updates');
-    this.langChangeSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from deleted page state updates');
-    this.deletedPageStateSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from delete page list updates');
-    this.deletedPageListSubscription.unsubscribe();
   }
 
   ngOnInit(): void {

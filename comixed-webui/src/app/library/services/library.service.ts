@@ -17,7 +17,7 @@
  */
 
 import { inject, Injectable } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { HttpClient } from '@angular/common/http';
 import { interpolate } from '@app/core';
@@ -49,36 +49,35 @@ import { selectMessagingState } from '@app/messaging/selectors/messaging.selecto
 import { User } from '@app/user/models/user';
 import { libraryStateLoaded } from '@app/library/actions/library.actions';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
+import { tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LibraryService {
-  subscription: Subscription;
-
   logger = inject(LoggerService);
   http = inject(HttpClient);
   store = inject(Store);
   webSocketService = inject(WebSocketService);
 
   constructor() {
-    this.store.select(selectMessagingState).subscribe(state => {
-      if (state.started && !this.subscription) {
-        this.logger.trace('Subscribing to remote library state updates');
-        this.subscription = this.webSocketService.subscribe<User>(
-          REMOTE_LIBRARY_STATE_TOPIC,
-          state => {
-            this.logger.debug('Received library state update:', state);
-            this.store.dispatch(libraryStateLoaded({ state }));
+    this.store
+      .select(selectMessagingState)
+      .pipe(
+        tap(state => {
+          if (state.started) {
+            this.webSocketService.subscribe<User>(
+              REMOTE_LIBRARY_STATE_TOPIC,
+              state => {
+                this.logger.debug('Received library state update:', state);
+                console.log('Received library state update:', state);
+                this.store.dispatch(libraryStateLoaded({ state }));
+              }
+            );
           }
-        );
-      }
-      if (!state.started && !!this.subscription) {
-        this.logger.debug('Stopping library state update subscription');
-        this.subscription.unsubscribe();
-        this.subscription = null;
-      }
-    });
+        })
+      )
+      .subscribe();
   }
 
   loadLibraryState(): Observable<any> {

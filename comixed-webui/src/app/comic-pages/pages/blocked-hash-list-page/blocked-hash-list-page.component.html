@@ -11,7 +11,7 @@
     mat-fab
     color="primary"
     [matTooltip]="'blocked-hash-list.tooltip.set-deleted' | translate"
-    [disabled]="!hasSelections"
+    [disabled]="(hasSelections$ | async) === false"
     (click)="onMarkSelectedForDeletion()"
   >
     <mat-icon>flag</mat-icon>
@@ -21,7 +21,7 @@
     mat-fab
     color="primary"
     [matTooltip]="'blocked-hash-list.tooltip.clear-deleted' | translate"
-    [disabled]="!hasSelections"
+    [disabled]="(hasSelections$ | async) === false"
     (click)="onClearSelectedForDeletion()"
   >
     <mat-icon>outlined_flag</mat-icon>
@@ -49,7 +49,7 @@
     mat-fab
     color="warn"
     [matTooltip]="'blocked-hash-list.tooltip.delete-entries' | translate"
-    [disabled]="!hasSelections"
+    [disabled]="(hasSelections$ | async) === false"
     (click)="onDeleteEntries()"
   >
     <mat-icon>delete</mat-icon>
@@ -88,7 +88,7 @@
   <ng-container matColumnDef="selected">
     <mat-header-cell mat-sort-header *matHeaderCellDef>
       <mat-checkbox
-        [checked]="allSelected"
+        [checked]="allSelected$ | async"
         (change)="onSelectAll($event.checked)"
       ></mat-checkbox>
     </mat-header-cell>

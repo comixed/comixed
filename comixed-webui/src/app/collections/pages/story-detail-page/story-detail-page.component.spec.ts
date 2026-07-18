@@ -94,6 +94,10 @@ import { setMultipleComicBooksByTagTypeAndValueSelectionState } from '@app/comic
 import { StoryScrapingComponent } from '@app/collections/components/story-scraping/story-scraping.component';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { SCRAPE_STORY_PARAMETER } from '@app/collections/collections.constants';
+import {
+  initialState as initialReadComicBooksState,
+  READ_COMIC_BOOKS_FEATURE_KEY
+} from '@app/user/reducers/read-comic-books.reducer';
 
 describe('StoryDetailPageComponent', () => {
   const PAGE_SIZE = 10;
@@ -111,6 +115,7 @@ describe('StoryDetailPageComponent', () => {
   const initialState = {
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
     [COMIC_BOOK_SELECTION_FEATURE_KEY]: initialComicBookSelectionState,
+    [READ_COMIC_BOOKS_FEATURE_KEY]: initialReadComicBooksState,
     [COMIC_LIST_FEATURE_KEY]: {
       ...initialComicListState,
       comicBooks: COMIC_LIST
@@ -218,15 +223,7 @@ describe('StoryDetailPageComponent', () => {
     });
 
     it('sets the collection name', () => {
-      expect(component.storyName).toEqual(COLLECTION_NAME);
-    });
-
-    it('subscribes to comic updates', () => {
-      expect(component.comicDetailListSubscription).not.toBeNull();
-    });
-
-    it('subscribes to selection updates', () => {
-      expect(component.selectedSubscription).not.toBeNull();
+      expect(component.storyName$.value).toEqual(COLLECTION_NAME);
     });
   });
 
@@ -247,7 +244,7 @@ describe('StoryDetailPageComponent', () => {
       ).value;
 
       beforeEach(() => {
-        component.comics = [];
+        component.comics$.next([]);
         (activatedRoute.params as BehaviorSubject<{}>).next({
           storyName: STORY_NAME,
           volume: COMIC_DETAIL_1.volume
@@ -275,7 +272,7 @@ describe('StoryDetailPageComponent', () => {
     const STORY_NAME = 'Wakanda';
 
     beforeEach(() => {
-      component.storyName = STORY_NAME;
+      component.storyName$.next(STORY_NAME);
       component.onSelectAll(SELECT);
     });
 

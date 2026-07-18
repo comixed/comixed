@@ -97,6 +97,10 @@ import {
   BATCH_PROCESSES_FEATURE_KEY,
   initialState as initialBatchProcessesState
 } from '@app/admin/reducers/batch-processes.reducer';
+import {
+  initialState as initialReleaseDetailsState,
+  RELEASE_DETAILS_FEATURE_KEY
+} from '@app/reducers/release.reducer';
 
 describe('AppComponent', () => {
   const USER = USER_READER;
@@ -117,7 +121,8 @@ describe('AppComponent', () => {
     [COMIC_BOOK_SELECTION_FEATURE_KEY]: initialComicBookSelectionState,
     [DARK_THEME_FEATURE_KEY]: initialDarkThemeState,
     [FEATURE_ENABLED_FEATURE_KEY]: { ...initialFeatureEnabledState },
-    [BATCH_PROCESSES_FEATURE_KEY]: initialBatchProcessesState
+    [BATCH_PROCESSES_FEATURE_KEY]: initialBatchProcessesState,
+    [RELEASE_DETAILS_FEATURE_KEY]: initialReleaseDetailsState
   };
 
   let component: AppComponent;
@@ -181,7 +186,7 @@ describe('AppComponent', () => {
 
   describe('when the user authenticates', () => {
     beforeEach(() => {
-      component.sessionActive = false;
+      component.sessionActive$.next(false);
       store.setState({
         ...initialState,
         [USER_FEATURE_KEY]: { ...initialUserState, user: USER }
@@ -189,11 +194,12 @@ describe('AppComponent', () => {
     });
 
     it('sets the session active flag', () => {
-      expect(component.sessionActive).toBeTrue();
+      expect(component.sessionActive$.value).toBeTrue();
     });
 
     describe('when the user logs out', () => {
       beforeEach(() => {
+        component.sessionActive$.next(true);
         store.setState({
           ...initialState,
           [USER_FEATURE_KEY]: { ...initialUserState, user: null }
@@ -201,7 +207,7 @@ describe('AppComponent', () => {
       });
 
       it('clear the session active flag', () => {
-        expect(component.sessionActive).toBeFalse();
+        expect(component.sessionActive$.value).toBeFalse();
       });
     });
   });
@@ -317,28 +323,28 @@ describe('AppComponent', () => {
     });
 
     it('updates the component state', () => {
-      expect(component.darkMode).toEqual(DARK_MODE);
+      expect(component.darkMode$.value).toEqual(DARK_MODE);
     });
   });
 
   describe('busy icon urls', () => {
     it('returns the loading image url', () => {
-      component.busyIcon = BusyIcon.LOADING;
+      component.busyIcon$.next(BusyIcon.LOADING);
       expect(component.busyIconURL).toEqual(LOADING_ICON_URL);
     });
 
     it('returns the searcing image url', () => {
-      component.busyIcon = BusyIcon.SEARCHING;
+      component.busyIcon$.next(BusyIcon.SEARCHING);
       expect(component.busyIconURL).toEqual(SEARCHING_ICON_URL);
     });
 
     it('returns the working image url', () => {
-      component.busyIcon = BusyIcon.WORKING;
+      component.busyIcon$.next(BusyIcon.WORKING);
       expect(component.busyIconURL).toEqual(WORKING_ICON_URL);
     });
 
     it('returns the default image url', () => {
-      component.busyIcon = BusyIcon.DEFAULT;
+      component.busyIcon$.next(BusyIcon.DEFAULT);
       expect(component.busyIconURL).toEqual(WORKING_ICON_URL);
     });
   });
@@ -348,7 +354,6 @@ describe('AppComponent', () => {
     let subscription: any;
 
     beforeEach(() => {
-      component.appMessagingSubscription = null;
       webSocketService.subscribe.and.callFake((topicUsed, callback) => {
         topic = topicUsed;
         subscription = callback;
@@ -374,26 +379,6 @@ describe('AppComponent', () => {
       it('notifies the user', () => {
         expect(alertService.info).toHaveBeenCalledWith(APP_MESSAGE);
       });
-    });
-  });
-
-  describe('when messaging is stopped', () => {
-    const subscription = jasmine.createSpyObj(['unsubscribe']);
-
-    beforeEach(() => {
-      component.appMessagingSubscription = subscription;
-      store.setState({
-        ...initialState,
-        [MESSAGING_FEATURE_KEY]: { ...initialMessagingState, started: false }
-      });
-    });
-
-    it('unsubscribes from updates', () => {
-      expect(subscription.unsubscribe).toHaveBeenCalled();
-    });
-
-    it('clears the subscription reference', () => {
-      expect(component.appMessagingSubscription).toBeNull();
     });
   });
 });

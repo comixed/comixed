@@ -27,6 +27,16 @@ export const selectReadingListState =
     READING_LIST_DETAIL_FEATURE_KEY
   );
 
+export const selectReadingListBusy = createSelector(
+  selectReadingListState,
+  state => state.loading || state.saving
+);
+
+export const selectReadingListNotFound = createSelector(
+  selectReadingListState,
+  state => !state.loading && state.notFound
+);
+
 export const selectReadingList = createSelector(
   selectReadingListState,
   state => state.list

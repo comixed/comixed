@@ -22,6 +22,8 @@ import {
 } from '../reducers/duplicate-page-detail.reducer';
 import {
   selectDuplicatePageDetail,
+  selectDuplicatePageDetailBusy,
+  selectDuplicatePageDetailNotFound,
   selectDuplicatePageDetailState
 } from './duplicate-page-detail.selectors';
 import { DUPLICATE_PAGE_3 } from '@app/library/library.fixtures';
@@ -37,7 +39,7 @@ describe('DuplicatePageDetail Selectors', () => {
     };
   });
 
-  it('should select the feature state', () => {
+  it('selects the feature state', () => {
     expect(
       selectDuplicatePageDetailState({
         [DUPLICATE_PAGE_DETAIL_FEATURE_KEY]: state
@@ -45,7 +47,23 @@ describe('DuplicatePageDetail Selectors', () => {
     ).toEqual(state);
   });
 
-  it('should select the duplicate page detail', () => {
+  it('selects the duplicate page loading state', () => {
+    expect(
+      selectDuplicatePageDetailBusy({
+        [DUPLICATE_PAGE_DETAIL_FEATURE_KEY]: state
+      })
+    ).toEqual(state.loading);
+  });
+
+  it('selects the duplicate page detail', () => {
+    expect(
+      selectDuplicatePageDetailNotFound({
+        [DUPLICATE_PAGE_DETAIL_FEATURE_KEY]: state
+      })
+    ).toEqual(state.notFound);
+  });
+
+  it('selects the duplicate page detail', () => {
     expect(
       selectDuplicatePageDetail({
         [DUPLICATE_PAGE_DETAIL_FEATURE_KEY]: state

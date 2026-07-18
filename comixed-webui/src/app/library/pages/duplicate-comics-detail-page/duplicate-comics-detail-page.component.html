@@ -1,9 +1,9 @@
 <h2>{{ "duplicate-comic-detail.page-title" | translate }}</h2>
 
 <cx-comic-list-view
-  [comics]="comicList"
-  [totalComics]="totalDuplicates"
-  [selectedIds]="selectedIds"
+  [comics]="comics$ | async"
+  [totalComics]="totalDuplicates$ | async"
+  [selectedIds]="selectedIds$ | async"
   [showAction]="true"
   [showSelection]="true"
   [showSelectAll]="false"

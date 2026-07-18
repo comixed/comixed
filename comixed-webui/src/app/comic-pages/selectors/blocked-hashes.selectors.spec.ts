@@ -22,8 +22,10 @@ import {
 } from '../reducers/blocked-hashes.reducer';
 import {
   selectBlockedHashDetail,
+  selectBlockedHashesBusy,
   selectBlockedHashesList,
-  selectBlockedHashesState
+  selectBlockedHashesState,
+  selectBlockedHashNotFound
 } from './blocked-hashes.selectors';
 import {
   BLOCKED_HASH_1,
@@ -48,7 +50,7 @@ describe('BlockedHashes Selectors', () => {
     };
   });
 
-  it('should select the feature state', () => {
+  it('selects the feature state', () => {
     expect(
       selectBlockedHashesState({
         [BLOCKED_HASHES_FEATURE_KEY]: state
@@ -56,7 +58,15 @@ describe('BlockedHashes Selectors', () => {
     ).toEqual(state);
   });
 
-  it('should select the list of blocked hashes', () => {
+  it('selects the busy state', () => {
+    expect(
+      selectBlockedHashesBusy({
+        [BLOCKED_HASHES_FEATURE_KEY]: state
+      })
+    ).toEqual(state.busy);
+  });
+
+  it('selects the list of blocked hashes', () => {
     expect(
       selectBlockedHashesList({
         [BLOCKED_HASHES_FEATURE_KEY]: state
@@ -64,11 +74,49 @@ describe('BlockedHashes Selectors', () => {
     ).toEqual(state.entries);
   });
 
-  it('should select the blocked hash detail', () => {
+  it('selects the blocked hash detail', () => {
     expect(
       selectBlockedHashDetail({
         [BLOCKED_HASHES_FEATURE_KEY]: state
       })
     ).toEqual(state.entry);
+  });
+
+  describe('checking if the blocked has is valid', () => {
+    it('selects when not yet checked', () => {
+      expect(
+        selectBlockedHashNotFound({
+          [BLOCKED_HASHES_FEATURE_KEY]: {
+            ...state,
+            busy: false,
+            notFound: false
+          }
+        })
+      ).toEqual(false);
+    });
+
+    it('selects when checking', () => {
+      expect(
+        selectBlockedHashNotFound({
+          [BLOCKED_HASHES_FEATURE_KEY]: {
+            ...state,
+            busy: true,
+            notFound: false
+          }
+        })
+      ).toEqual(false);
+    });
+
+    it('selects when not yet checked', () => {
+      expect(
+        selectBlockedHashNotFound({
+          [BLOCKED_HASHES_FEATURE_KEY]: {
+            ...state,
+            busy: false,
+            notFound: true
+          }
+        })
+      ).toEqual(true);
+    });
   });
 });

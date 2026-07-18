@@ -11,14 +11,14 @@
 
 <cx-comic-list-view
   class="cx-width-100"
-  [isAdmin]="isAdmin"
-  [comics]="comics"
-  [totalComics]="totalComics"
-  [coverYears]="coverYears"
-  [coverMonths]="coverMonths"
-  [selectedIds]="selectedIds"
-  [comicBooksRead]="lastReadDates"
-  [readingLists]="readingLists"
+  [isAdmin]="isAdmin$ | async"
+  [comics]="comics$ | async"
+  [totalComics]="totalComics$ | async"
+  [coverYears]="coverYears$ | async"
+  [coverMonths]="coverMonths$ | async"
+  [selectedIds]="selectedIds$ | async"
+  [comicBooksRead]="lastReadDates$ | async"
+  [readingLists]="readingLists$ | async"
   [showAction]="false"
   (selectAll)="onSelectAll($event)"
 ></cx-comic-list-view>

@@ -27,6 +27,11 @@ export const selectComicBookSelectionState =
     COMIC_BOOK_SELECTION_FEATURE_KEY
   );
 
+export const selectComicBookSelectionBusy = createSelector(
+  selectComicBookSelectionState,
+  state => state.busy
+);
+
 export const selectComicBookSelectionIds = createSelector(
   selectComicBookSelectionState,
   state => state.ids

@@ -1,5 +1,5 @@
 <div class="cx-fab-container-bottom-right">
-  @if (!!detail && !blockedHashes.includes(detail.hash)) {
+  @if (!!detail && !(blockedHashes$ | async).includes(detail.hash)) {
     <button
       id="block-page-button"
       mat-fab
@@ -9,7 +9,7 @@
       <mat-icon>block</mat-icon>
     </button>
   }
-  @if (!!detail && blockedHashes.includes(detail.hash)) {
+  @if (!!detail && (blockedHashes$ | async).includes(detail.hash)) {
     <button
       id="unblock-page-button"
       mat-fab
@@ -23,11 +23,13 @@
 
 <div class="cx-horizontal-container">
   <div class="cx-grow-0 cx-width-25">
-    <cx-comic-page [imageUrl]="hash | pageHashUrl"></cx-comic-page>
+    <cx-comic-page [imageUrl]="hash$ | async | pageHashUrl"></cx-comic-page>
   </div>
   <div class="cx-grow-1 cx-padding-5">
     <h2>
-      {{ "duplicate-page-detail.page-title" | translate: { hash: hash } }}
+      {{
+        "duplicate-page-detail.page-title" | translate: { hash: hash$ | async }
+      }}
     </h2>
     <mat-table
       [dataSource]="dataSource"

@@ -183,9 +183,9 @@ describe('SeriesIssuePageComponent', () => {
 
   describe('selecting all comics', () => {
     beforeEach(() => {
-      component.publisherName = PUBLISHER_NAME;
-      component.seriesName = SERIES_NAME;
-      component.volume = VOLUME;
+      component.publisherName$.next(PUBLISHER_NAME);
+      component.seriesName$.next(SERIES_NAME);
+      component.volume$.next(VOLUME);
     });
 
     describe('selecting all', () => {

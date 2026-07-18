@@ -1,9 +1,12 @@
 <h2>
-  {{ "library.page-title." + pageContent | translate: { filtered: filtered } }}
+  {{
+    "library.page-title." + (pageContent$ | async)
+      | translate: { filtered: filtered$ | async }
+  }}
 </h2>
 
 <div class="cx-fab-container-bottom-left">
-  @if (unreadOnly) {
+  @if (unreadOnly$ | async) {
     <button
       id="toggle-unread-only-flag"
       mat-fab
@@ -11,10 +14,10 @@
       [matTooltip]="'library.tooltip.toggle-unread-comics' | translate"
       (click)="onToggleUnreadOnly()"
     >
-      @if (showReadOnly) {
+      @if (showReadOnly$ | async) {
         <mat-icon>mark_chat_read</mat-icon>
       }
-      @if (!showReadOnly) {
+      @if ((showReadOnly$ | async) === false) {
         <mat-icon>mark_chat_unread</mat-icon>
       }
     </button>
@@ -22,18 +25,18 @@
 </div>
 
 <cx-comic-list-view
-  [isAdmin]="isAdmin"
-  [comics]="comics"
-  [coverYears]="coverYears"
-  [coverMonths]="coverMonths"
-  [totalComics]="comicListState?.filteredCount"
+  [isAdmin]="isAdmin$ | async"
+  [comics]="comics$ | async"
+  [coverYears]="coverYears$ | async"
+  [coverMonths]="coverMonths$ | async"
+  [totalComics]="filteredCount$ | async"
   [showPageCount]="true"
-  [comicBooksRead]="comicBooksRead"
-  [selectedIds]="selectedIds"
-  [readingLists]="readingLists"
-  [unreadOnly]="unreadOnly"
-  [showFilter]="!(unreadOnly || selectedOnly)"
+  [comicBooksRead]="comicBooksRead$ | async"
+  [selectedIds]="selectedIds$ | async"
+  [readingLists]="readingLists$ | async"
+  [unreadOnly]="unreadOnly$ | async"
+  [showFilter]="(unreadOnly$ | async) === false || (selectedOnly$ | async)"
   (selectAll)="onSetAllComicsSelectedState($event)"
-  (filtered)="filtered = $event"
-  (showing)="showing = $event"
+  (filtered)="filtered$.next($event)"
+  (showing)="showing$.next($event)"
 ></cx-comic-list-view>

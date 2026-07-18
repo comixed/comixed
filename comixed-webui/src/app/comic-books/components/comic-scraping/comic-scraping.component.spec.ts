@@ -491,7 +491,7 @@ describe('ComicScrapingComponent', () => {
 
   describe('selecting a metadata source', () => {
     beforeEach(() => {
-      component.metadataSourceList = [
+      component.metadataSourceList$.next([
         { label: 'first', value: OTHER_METADATA_SOURCE },
         {
           label: 'second',
@@ -499,7 +499,7 @@ describe('ComicScrapingComponent', () => {
             metadataSourceId: OTHER_METADATA_SOURCE.metadataSourceId + 100
           } as MetadataSource
         }
-      ];
+      ]);
       component.onMetadataSourceChosen(OTHER_METADATA_SOURCE.metadataSourceId);
     });
 
@@ -579,7 +579,7 @@ describe('ComicScrapingComponent', () => {
     const confirm = Math.random() > 0.5;
 
     beforeEach(() => {
-      component.confirmBeforeScraping = !confirm;
+      component.confirmBeforeScraping$.next(!confirm);
     });
 
     describe('from the button', () => {
@@ -618,7 +618,7 @@ describe('ComicScrapingComponent', () => {
     const confirm = Math.random() > 0.5;
 
     beforeEach(() => {
-      component.autoSelectExactMatch = !confirm;
+      component.autoSelectExactMatch$.next(!confirm);
     });
 
     describe('from the button', () => {

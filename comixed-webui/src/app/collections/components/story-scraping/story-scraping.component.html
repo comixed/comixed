@@ -5,14 +5,14 @@
     class="cx-toolbar-button cx-margin-left-5"
     mat-icon-button
     [matTooltip]="
-      'scraping.tooltip.skip-cache' | translate: { enabled: skipCache }
+      'scraping.tooltip.skip-cache' | translate: { enabled: skipCache$ | async }
     "
-    (click)="skipCache = !skipCache"
+    (click)="onToggleSkipCache()"
   >
-    @if (skipCache) {
+    @if (skipCache$ | async) {
       <mat-icon>block</mat-icon>
     }
-    @if (!skipCache) {
+    @if ((skipCache$ | async) === false) {
       <mat-icon>remove_circle_outline</mat-icon>
     }
   </button>
@@ -44,9 +44,9 @@
             </mat-label>
             <mat-select
               formControlName="metadataSource"
-              [value]="metadataSource?.metadataSourceId"
+              [value]="(metadataSource$ | async)?.metadataSourceId"
             >
-              @for (source of metadataSources; track source) {
+              @for (source of metadataSources$ | async; track source) {
                 <mat-option [value]="source.metadataSourceId">
                   {{ source.name }}
                 </mat-option>
@@ -101,17 +101,17 @@
       </mat-card>
     </form>
 
-    @if (imageUrl?.length > 0) {
+    @if ((imageUrl$ | async).length > 0) {
       <div class="cx-width-100">
         <mat-card>
           <mat-card-title class="cx-align-content-center cx-text-nowrap">
-            {{ imageTitle }}
+            {{ imageTitle$ | async }}
           </mat-card-title>
           <mat-card-content>
             <img
               loading="lazy"
-              [src]="imageUrl"
-              [alt]="imageUrl"
+              [src]="imageUrl$ | async"
+              [alt]="imageUrl$ | async"
               width="100%"
               height="auto"
             />

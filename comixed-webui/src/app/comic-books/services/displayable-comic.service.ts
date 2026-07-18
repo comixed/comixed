@@ -19,13 +19,13 @@
 import { inject, Injectable } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { HttpClient } from '@angular/common/http';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ComicType } from '@app/comic-books/models/comic-type';
 import { ComicState } from '@app/comic-books/models/comic-state';
 import { Store } from '@ngrx/store';
 import { WebSocketService } from '@app/messaging';
-import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
+import { selectMessagingStarted } from '@app/messaging/selectors/messaging.selectors';
 import { ComicBook } from '@app/comic-books/models/comic-book';
 import {
   COMIC_LIST_REMOVAL_TOPIC,
@@ -54,59 +54,49 @@ import {
   comicUpdated
 } from '@app/comic-books/actions/comic-list.actions';
 import { ComicTagType } from '@app/comic-books/models/comic-tag-type';
+import { filter, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DisplayableComicService {
-  updateSubscription: Subscription;
-  removalSubscription: Subscription;
-
   logger = inject(LoggerService);
   store = inject(Store);
   webSocketService = inject(WebSocketService);
   http = inject(HttpClient);
 
   constructor() {
-    this.store.select(selectMessagingState).subscribe(state => {
-      if (state.started && !this.updateSubscription) {
-        this.logger.trace('Subscribing to comic list updates');
-        this.updateSubscription = this.webSocketService.subscribe<ComicBook>(
-          COMIC_LIST_UPDATE_TOPIC,
-          comic => {
-            this.logger.debug('Received comic list update:', comic);
-            this.store.dispatch(
-              comicUpdated({
-                comic: this.doConvertToDisplayableComic(comic.detail)
-              })
-            );
-          }
-        );
-        this.logger.trace('Subscribing to comic list removals');
-        this.removalSubscription = this.webSocketService.subscribe<ComicBook>(
-          COMIC_LIST_REMOVAL_TOPIC,
-          comic => {
-            this.logger.debug('Received comic removal update:', comic);
-            this.store.dispatch(
-              comicRemoved({
-                comic: this.doConvertToDisplayableComic(comic.detail)
-              })
-            );
-          }
-        );
-      }
-
-      if (!state.started && !!this.updateSubscription) {
-        this.logger.trace('Unsubscribing from comic list updates');
-        this.updateSubscription.unsubscribe();
-        this.updateSubscription = null;
-      }
-      if (!state.started && !!this.removalSubscription) {
-        this.logger.trace('Unsubscribing from comic list removals');
-        this.removalSubscription.unsubscribe();
-        this.removalSubscription = null;
-      }
-    });
+    this.store
+      .select(selectMessagingStarted)
+      .pipe(
+        filter(started => started),
+        tap(() => {
+          this.logger.trace('Subscribing to comic list updates');
+          this.webSocketService.subscribe<ComicBook>(
+            COMIC_LIST_UPDATE_TOPIC,
+            comic => {
+              this.logger.debug('Received comic list update:', comic);
+              this.store.dispatch(
+                comicUpdated({
+                  comic: this.doConvertToDisplayableComic(comic.detail)
+                })
+              );
+            }
+          );
+          this.webSocketService.subscribe<ComicBook>(
+            COMIC_LIST_REMOVAL_TOPIC,
+            comic => {
+              this.logger.debug('Received comic removal update:', comic);
+              this.store.dispatch(
+                comicRemoved({
+                  comic: this.doConvertToDisplayableComic(comic.detail)
+                })
+              );
+            }
+          );
+        })
+      )
+      .subscribe();
   }
 
   loadComicsByFilter(args: {

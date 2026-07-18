@@ -3,12 +3,12 @@
     "story-detail.page-title"
       | translate
         : {
-            tagValue: storyName
+            tagValue: storyName$ | async
           }
   }}
 </h2>
 
-@if (isAdmin && !showStoryScraping) {
+@if (showScrapingButton) {
   <div class="cx-fab-container-bottom-left">
     <button
       id="show-scraping-form-button"
@@ -21,20 +21,20 @@
     </button>
   </div>
 }
-@if (!showStoryScraping) {
+@if ((showStoryScraping$ | async) === false) {
   <cx-comic-list-view
     class="cx-width-100"
-    [isAdmin]="isAdmin"
-    [comics]="comics"
-    [totalComics]="totalComics"
-    [coverYears]="coverYears"
-    [coverMonths]="coverMonths"
-    [selectedIds]="selectedIds"
-    [comicBooksRead]="lastReadDates"
-    [readingLists]="readingLists"
+    [isAdmin]="isAdmin$ | async"
+    [comics]="comics$ | async"
+    [totalComics]="totalComics$ | async"
+    [coverYears]="coverYears$ | async"
+    [coverMonths]="coverMonths$ | async"
+    [selectedIds]="selectedIds$ | async"
+    [comicBooksRead]="readComicBookList$ | async"
+    [readingLists]="readingLists$ | async"
     (selectAll)="onSelectAll($event)"
   ></cx-comic-list-view>
 }
-@if (showStoryScraping) {
-  <cx-story-scraping [storyName]="storyName"></cx-story-scraping>
+@if (showStoryScraping$ | async) {
+  <cx-story-scraping [storyName]="storyName$ | async"></cx-story-scraping>
 }

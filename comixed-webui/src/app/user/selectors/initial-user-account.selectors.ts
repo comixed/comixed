@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createFeatureSelector } from '@ngrx/store';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
 import {
   INITIAL_USER_ACCOUNT_FEATURE_KEY,
   InitialUserAccountState
@@ -26,3 +26,13 @@ export const selectInitialUserAccountState =
   createFeatureSelector<InitialUserAccountState>(
     INITIAL_USER_ACCOUNT_FEATURE_KEY
   );
+
+export const selectHasExistingAccounts = createSelector(
+  selectInitialUserAccountState,
+  state => !(state.busy || state.checked)
+);
+
+export const selectCreateInitialUserAccount = createSelector(
+  selectInitialUserAccountState,
+  state => !state.busy && state.checked && !state.hasExisting
+);
