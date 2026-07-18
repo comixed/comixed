@@ -18,10 +18,73 @@
 
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { USER_FEATURE_KEY, UserState } from '../reducers/user.reducer';
+import {
+  getPageSize,
+  getUserPreference,
+  isAdmin
+} from '@app/user/user.functions';
+import {
+  MATCH_PUBLISHER_PREFERENCE,
+  MAXIMUM_SCRAPING_RECORDS_PREFERENCE,
+  SKIP_CACHE_PREFERENCE
+} from '@app/library/library.constants';
 
-/** Selects for the feature state. */
 export const selectUserState =
   createFeatureSelector<UserState>(USER_FEATURE_KEY);
 
-/** Selects for the user. */
+export const selectUserAuthenticated = createSelector(
+  selectUserState,
+  state => state.authenticated
+);
+
+export const selectUserAuthenticating = createSelector(
+  selectUserState,
+  state => state.initializing || state.authenticated
+);
+
 export const selectUser = createSelector(selectUserState, state => state.user);
+
+export const selectUserIsAdmin = createSelector(selectUserState, state => {
+  return isAdmin(state?.user);
+});
+
+export const selectUserPageSize = createSelector(selectUserState, state => {
+  return getPageSize(state?.user);
+});
+
+export const selectUserSkipCache = createSelector(selectUserState, state => {
+  return (
+    getUserPreference(
+      state?.user?.preferences,
+      SKIP_CACHE_PREFERENCE,
+      `${false}`
+    ) === `${true}`
+  );
+});
+
+export const selectUserMatchPublisher = createSelector(
+  selectUserState,
+  state => {
+    return (
+      getUserPreference(
+        state?.user?.preferences,
+        MATCH_PUBLISHER_PREFERENCE,
+        `${false}`
+      ) === `${true}`
+    );
+  }
+);
+
+export const selectUserMaximumRecords = createSelector(
+  selectUserState,
+  state => {
+    return parseInt(
+      getUserPreference(
+        state?.user?.preferences,
+        MAXIMUM_SCRAPING_RECORDS_PREFERENCE,
+        '0'
+      ),
+      10
+    );
+  }
+);

@@ -16,27 +16,22 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import {
-  AfterViewInit,
-  Component,
-  inject,
-  OnDestroy,
-  OnInit
-} from '@angular/core';
+import { AfterViewInit, Component, inject, OnInit } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import {
   AbstractControl,
+  ReactiveFormsModule,
   UntypedFormBuilder,
   UntypedFormGroup,
-  Validators,
-  ReactiveFormsModule
+  Validators
 } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { UserModuleState } from '@app/user';
-import { Subscription } from 'rxjs';
-import { selectUserState } from '@app/user/selectors/user.selectors';
+import {
+  selectUserAuthenticated,
+  selectUserAuthenticating
+} from '@app/user/selectors/user.selectors';
 import { loginUser } from '@app/user/actions/user.actions';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import { TitleService } from '@app/core/services/title.service';
 import { setBusyState } from '@app/core/actions/busy.actions';
@@ -44,13 +39,19 @@ import {
   MAX_PASSWORD_LENGTH,
   MIN_PASSWORD_LENGTH
 } from '@app/user/user.constants';
-import { selectInitialUserAccountState } from '@app/user/selectors/initial-user-account.selectors';
+import {
+  selectCreateInitialUserAccount,
+  selectHasExistingAccounts
+} from '@app/user/selectors/initial-user-account.selectors';
 import { loadInitialUserAccount } from '@app/user/actions/initial-user-account.actions';
-import { MatCard, MatCardTitle, MatCardContent } from '@angular/material/card';
-import { MatFormField, MatError, MatLabel } from '@angular/material/form-field';
+import { MatCard, MatCardContent, MatCardTitle } from '@angular/material/card';
+import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
+import { filter, tap } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'cx-login',
@@ -67,16 +68,13 @@ import { MatIcon } from '@angular/material/icon';
     MatButton,
     MatLabel,
     MatIcon,
-    TranslateModule
+    TranslateModule,
+    AsyncPipe
   ]
 })
-export class LoginPageComponent implements OnInit, OnDestroy, AfterViewInit {
+export class LoginPageComponent implements OnInit, AfterViewInit {
   loginForm: UntypedFormGroup;
-  initialAccountSubscription: Subscription;
-  userSubscription: Subscription;
-  langChangeSubscription: Subscription;
-  busy = false;
-  private;
+  busy$ = new BehaviorSubject(false);
 
   logger = inject(LoggerService);
   formBuilder = inject(UntypedFormBuilder);
@@ -98,32 +96,43 @@ export class LoginPageComponent implements OnInit, OnDestroy, AfterViewInit {
         ]
       ]
     });
-    this.logger.trace('Subscribing to initial account state updates');
-    this.initialAccountSubscription = this.store
-      .select(selectInitialUserAccountState)
-      .subscribe(state => {
-        if (!state.busy && !state.checked) {
-          this.logger.debug('Loading initial user accounts');
+    this.store
+      .select(selectHasExistingAccounts)
+      .pipe(
+        filter(flag => flag),
+        tap(() => {
+          this.logger.info('Loading initial user accounts');
           this.store.dispatch(loadInitialUserAccount());
-        } else if (!state.busy && state.checked && !state.hasExisting) {
+        })
+      )
+      .subscribe();
+    this.store
+      .select(selectCreateInitialUserAccount)
+      .pipe(
+        filter(flag => flag),
+        tap(() => {
           this.logger.trace('Redirecting to account creation page');
           this.router.navigateByUrl('/users/create/admin');
-        }
-      });
-    this.logger.trace('Subscribing to user account updates');
-    this.userSubscription = this.store
-      .select(selectUserState)
-      .subscribe(state => {
-        this.busy = state.initializing || state.authenticating;
-        if (state.authenticated) {
-          this.logger.debug('Already authenticated: sending to home');
+        })
+      )
+      .subscribe();
+    this.store
+      .select(selectUserAuthenticated)
+      .pipe(
+        filter(flag => flag),
+        tap(() => {
+          this.logger.info('Already authenticated: redirecting to home');
           this.router.navigateByUrl('/');
-        }
-      });
-    this.logger.trace('Subscribing to language updates');
-    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
-      () => this.loadTranslations()
-    );
+        })
+      )
+      .subscribe();
+    this.store
+      .select(selectUserAuthenticating)
+      .pipe(tap(busy => this.busy$.next(busy)))
+      .subscribe();
+    this.translateService.onLangChange
+      .pipe(tap(() => this.loadTranslations()))
+      .subscribe();
   }
 
   get controls(): { [p: string]: AbstractControl } {
@@ -139,14 +148,6 @@ export class LoginPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.loadTranslations();
     this.logger.trace('Checking for existing accounts');
     this.store.dispatch(loadInitialUserAccount());
-  }
-
-  ngOnDestroy(): void {
-    this.logger.trace('Unsubscribing from initial user updates');
-    this.logger.trace('Unsubscribing from user updates');
-    this.userSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from language change updates');
-    this.langChangeSubscription.unsubscribe();
   }
 
   onSubmitLogin(): void {

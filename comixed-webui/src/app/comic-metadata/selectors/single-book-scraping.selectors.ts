@@ -28,6 +28,12 @@ export const selectSingleBookScrapingState =
     SINGLE_BOOK_SCRAPING_FEATURE_KEY
   );
 
+/** Selects for the busy state. */
+export const selectSingleBookScrapingBusy = createSelector(
+  selectSingleBookScrapingState,
+  state => state.busy
+);
+
 /** Selects for the scraping volumes. */
 export const selectScrapingVolumeMetadata = createSelector(
   selectSingleBookScrapingState,

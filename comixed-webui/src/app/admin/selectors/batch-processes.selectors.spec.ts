@@ -22,6 +22,7 @@ import {
 } from '../reducers/batch-processes.reducer';
 import {
   selectBatchProcessDetail,
+  selectBatchProcessesBusy,
   selectBatchProcessesState,
   selectBatchProcessList
 } from './batch-processes.selectors';
@@ -43,12 +44,12 @@ describe('BatchProcesses Selectors', () => {
     };
   });
 
-  it('should select the feature state', () => {
+  it('should select the busy state', () => {
     expect(
-      selectBatchProcessesState({
+      selectBatchProcessesBusy({
         [BATCH_PROCESSES_FEATURE_KEY]: state
       })
-    ).toEqual(state);
+    ).toEqual(state.busy);
   });
 
   it('returns the list of processes', () => {

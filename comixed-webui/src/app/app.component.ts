@@ -52,8 +52,8 @@ import { AlertService } from '@app/core/services/alert.service';
 import { filter } from 'rxjs/operators';
 import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component';
 import {
-  MatSidenavContainer,
   MatSidenav,
+  MatSidenavContainer,
   MatSidenavContent
 } from '@angular/material/sidenav';
 import { SideNavigationComponent } from './components/side-navigation/side-navigation.component';
@@ -225,6 +225,8 @@ export class AppComponent implements OnInit {
   subscribeToLibraryState(): void {
     this.libraryStateSubscription = this.store
       .select(selectLibraryState)
-      .subscribe(state => (this.libraryState = state));
+      .subscribe({
+        next: state => (this.libraryState = state)
+      });
   }
 }

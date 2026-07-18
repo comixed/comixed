@@ -5,6 +5,7 @@
     </div>
   </div>
 }
+
 @if (!!comic) {
   <div class="cx-fab-container-bottom-left cx-z-index-99">
     <div class="cx-horizontal-container">
@@ -45,7 +46,7 @@
           <mat-icon>list_view</mat-icon>
         }
       </button>
-      @if (isAdmin) {
+      @if (isAdmin$ | async) {
         <button
           id="save-page-order-button"
           class="cx-toolbar-button"
@@ -63,7 +64,7 @@
         mat-fab
         color="warn"
         [matTooltip]="'comic-book.tooltip.update-comic-info' | translate"
-        [disabled]="!isAdmin || !hasChangedState"
+        [disabled]="(isAdmin$ | async) === false || !hasChangedState"
         (click)="onUpdateMetadata()"
       >
         <mat-icon>sync_alt</mat-icon>
@@ -78,7 +79,7 @@
       >
         <mat-icon>arrow_downward</mat-icon>
       </button>
-      @if (!isRead) {
+      @if (!(isRead$ | async)) {
         <button
           id="mark-as-read-button"
           class="cx-toolbar-button"
@@ -90,7 +91,7 @@
           <mat-icon>turned_in_not</mat-icon>
         </button>
       }
-      @if (isRead) {
+      @if (isRead$ | async) {
         <button
           id="mark-as-unread-button"
           class="cx-toolbar-button"
@@ -102,7 +103,7 @@
           <mat-icon>turned_in</mat-icon>
         </button>
       }
-      @if (isAdmin && !isDeleted) {
+      @if ((isAdmin$ | async) && !isDeleted) {
         <button
           id="delete-button"
           class="cx-toolbar-button"
@@ -114,7 +115,7 @@
           <mat-icon>delete</mat-icon>
         </button>
       }
-      @if (isAdmin && isDeleted) {
+      @if ((isAdmin$ | async) && isDeleted) {
         <button
           id="undelete-button"
           class="cx-toolbar-button"
@@ -230,7 +231,7 @@
         <mat-tab [label]="'comic-book.label.comic-overview' | translate">
           <cx-comic-detail-edit
             [comicBook]="comic"
-            [isAdmin]="isAdmin"
+            [isAdmin]="isAdmin$ | async"
           ></cx-comic-detail-edit>
         </mat-tab>
         <mat-tab [label]="'comic-book.label.comic-story' | translate">
@@ -241,20 +242,20 @@
             class="cx-width-100"
             [pages]="pages"
             [showPagesAsGrid]="queryParameterService.pagesAsGrid$ | async"
-            [isAdmin]="isAdmin"
+            [isAdmin]="isAdmin$ | async"
             (pagesChanged)="onPagesChanged($event)"
           ></cx-comic-pages>
         </mat-tab>
-        @if (isAdmin) {
+        @if (isAdmin$ | async) {
           <mat-tab [label]="'comic-book.label.comic-scraping' | translate">
             @if (!!comic && volumes.length === 0) {
               <cx-comic-scraping
                 class="cx-width-100"
                 [comic]="comic"
                 [previousMetadataSource]="comic.metadata?.metadataSource"
-                [skipCache]="skipCache"
-                [matchPublisher]="matchPublisher"
-                [maximumRecords]="maximumRecords"
+                [skipCache]="skipCache$ | async"
+                [matchPublisher]="matchPublisher$ | async"
+                [maximumRecords]="maximumRecords$ | async"
                 (scrape)="
                   onLoadScrapingVolumes({
                     metadataSource: $event.metadataSource,
@@ -276,9 +277,9 @@
                 [comicSeriesName]="scrapingSeriesName"
                 [comicVolume]="scrapingVolume"
                 [comicIssueNumber]="scrapingIssueNumber"
-                [skipCache]="skipCache"
-                [pageSize]="pageSize"
-                [pageNumber]="pageNumber"
+                [skipCache]="skipCache$ | async"
+                [pageSize]="pageSize$ | async"
+                [pageNumber]="pageNumber$ | async"
                 [volumes]="volumes"
               ></cx-scraping-volume-selection>
             }

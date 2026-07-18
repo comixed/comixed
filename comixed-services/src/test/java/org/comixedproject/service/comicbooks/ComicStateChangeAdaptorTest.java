@@ -41,7 +41,7 @@ class ComicStateChangeAdaptorTest {
   private Set<ComicTag> comicTagList = new HashSet<>();
 
   @BeforeEach
-  void setUp() {
+  void setUp() throws ComicBookException {
     Mockito.when(comicDetail.getTags()).thenReturn(comicTagList);
     Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
     Mockito.when(comicBookRecord.getComicDetail()).thenReturn(comicDetail);

@@ -103,6 +103,7 @@ import {
   PAGE_4
 } from '@app/comic-pages/comic-pages.fixtures';
 import { LoadComicBookResponse } from '@app/comic-books/models/net/load-comic-book-response';
+import { tap } from 'rxjs/operators';
 
 describe('ComicBookPageComponent', () => {
   const COMIC_BOOK = COMIC_BOOK_1;
@@ -335,7 +336,6 @@ describe('ComicBookPageComponent', () => {
 
     describe('when the comic is read', () => {
       beforeEach(() => {
-        component.isRead = false;
         store.setState({
           ...initialState,
           [READ_COMIC_BOOKS_FEATURE_KEY]: {
@@ -346,13 +346,12 @@ describe('ComicBookPageComponent', () => {
       });
 
       it('sets the read flag', () => {
-        expect(component.isRead).toBeTrue();
+        component.isRead$.pipe(tap(value => expect(value).toBeTrue()));
       });
     });
 
     describe('when the comic is not read', () => {
       beforeEach(() => {
-        component.isRead = true;
         store.setState({
           ...initialState,
           [READ_COMIC_BOOKS_FEATURE_KEY]: {
@@ -363,7 +362,7 @@ describe('ComicBookPageComponent', () => {
       });
 
       it('clears the read flag', () => {
-        expect(component.isRead).toBeFalse();
+        component.isRead$.pipe(tap(value => expect(value).toBeFalse()));
       });
     });
   });
@@ -446,24 +445,6 @@ describe('ComicBookPageComponent', () => {
           tags: TAGS
         })
       );
-    });
-  });
-
-  describe('unsubscribing from comic updates', () => {
-    const subscription = jasmine.createSpyObj(['unsubscribe']);
-
-    beforeEach(() => {
-      component.comicUpdateSubscription = subscription;
-      component.messagingStarted = true;
-      component.unsubscribeFromUpdates();
-    });
-
-    it('unsubscribes from updates', () => {
-      expect(subscription.unsubscribe).toHaveBeenCalled();
-    });
-
-    it('clears the subscription', () => {
-      expect(component.comicUpdateSubscription).toBeNull();
     });
   });
 

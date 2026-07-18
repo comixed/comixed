@@ -24,7 +24,8 @@ import {
   selectChosenMetadataSource,
   selectScrapingIssueMetadata,
   selectSingleBookScrapingState,
-  selectScrapingVolumeMetadata
+  selectScrapingVolumeMetadata,
+  selectSingleBookScrapingBusy
 } from './single-book-scraping.selectors';
 import {
   METADATA_SOURCE_1,
@@ -59,6 +60,14 @@ describe('SingleBookScraping Selectors', () => {
         [SINGLE_BOOK_SCRAPING_FEATURE_KEY]: state
       })
     ).toEqual(state);
+  });
+
+  it('should select the scraping busy state', () => {
+    expect(
+      selectSingleBookScrapingBusy({
+        [SINGLE_BOOK_SCRAPING_FEATURE_KEY]: state
+      })
+    ).toEqual(state.busy);
   });
 
   it('should select the scraping volumes', () => {
