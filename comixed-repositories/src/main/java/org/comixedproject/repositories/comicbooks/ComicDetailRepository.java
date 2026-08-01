@@ -296,16 +296,17 @@ public interface ComicDetailRepository extends JpaRepository<ComicDetail, Long> 
    * @return the matching records
    */
   @Query(
-      "SELECT d FROM ComicDetail d WHERE d.coverDate IS NOT NULL AND d.coverDate IS NOT NULL AND d.coverDate >= :startDate AND d.coverDate <= :endDate AND d.comicBook.comicDetail.comicDetailId NOT IN (SELECT rcb FROM ComiXedUser u INNER JOIN u.readComicBooks rcb WHERE u.email = :email) ORDER BY d.comicBook")
+          "SELECT d FROM ComicDetail d WHERE d.coverDate IS NOT NULL " +"AND d.coverDate >= :startDate " +"AND d.coverDate <= :endDate " +"AND d.comicBook.comicDetail.comicDetailId NOT IN " +"(SELECT rcb FROM ComiXedUser u INNER JOIN u.readComicBooks rcb WHERE u.email = :email) " +"ORDER BY d.comicBook.comicBookId")
   List<ComicDetail> getAllUnreadForYearAndWeek(
-      @Param("startDate") Date startDate,
-      @Param("endDate") Date endDate,
-      @Param("email") String email);
+          @Param("startDate") Date startDate,
+          @Param("endDate") Date endDate,
+          @Param("email") String email);
 
   @Query(
-      "SELECT d FROM ComicDetail d WHERE d.coverDate IS NOT NULL AND d.coverDate IS NOT NULL AND d.coverDate >= :startDate AND d.coverDate <= :endDate ORDER BY d.comicBook")
+          "SELECT d FROM ComicDetail d WHERE d.coverDate IS NOT NULL " +"AND d.coverDate >= :startDate " +"AND d.coverDate <= :endDate " +"ORDER BY d.comicBook.comicBookId")
   List<ComicDetail> getAllForYearAndWeek(
-      @Param("startDate") Date startDate, @Param("endDate") Date endDate);
+          @Param("startDate") Date startDate,
+          @Param("endDate") Date endDate);
 
   /**
    * Returns all comics that match the given search term.
