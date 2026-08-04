@@ -1,15 +1,15 @@
 <h2>
   {{
     "collections.publishers.list-issues-page.page-title"
-      | translate: { publisher: name }
+      | translate: { publisher: name$ | async }
   }}
 </h2>
 
 <cx-comic-list-view
-  [isAdmin]="isAdmin"
-  [comics]="comics"
-  [selectedIds]="selectedIds"
-  [totalComics]="totalComics"
+  [isAdmin]="isAdmin$ | async"
+  [comics]="comics$ | async"
+  [selectedIds]="selectedIds$ | async"
+  [totalComics]="totalComics$ | async"
   [showFilter]="false"
   (selectAll)="onSelectAll($event)"
 ></cx-comic-list-view>

@@ -108,7 +108,7 @@ xdescribe('UserAccountsPageComponent', () => {
 
   describe('creating user', () => {
     beforeEach(() => {
-      component.showUserForm = true;
+      component.showUserForm$.next(true);
       store.setState({
         ...initialState,
         [MANAGER_USERS_FEATURE_KEY]: {
@@ -141,7 +141,7 @@ xdescribe('UserAccountsPageComponent', () => {
 
   describe('editing a reader', () => {
     beforeEach(() => {
-      component.showUserForm = true;
+      component.showUserForm$.next(true);
       store.setState({
         ...initialState,
         [MANAGER_USERS_FEATURE_KEY]: {
@@ -174,7 +174,7 @@ xdescribe('UserAccountsPageComponent', () => {
 
   describe('editing an admin', () => {
     beforeEach(() => {
-      component.showUserForm = true;
+      component.showUserForm$.next(true);
       store.setState({
         ...initialState,
         [MANAGER_USERS_FEATURE_KEY]: {
@@ -207,7 +207,7 @@ xdescribe('UserAccountsPageComponent', () => {
 
   describe('showing the user form', () => {
     beforeEach(() => {
-      component.showUserForm = false;
+      component.showUserForm$.next(false);
     });
 
     describe('for a new user', () => {
@@ -222,7 +222,7 @@ xdescribe('UserAccountsPageComponent', () => {
       });
 
       it('shows the form', () => {
-        expect(component.showUserForm).toBeTrue();
+        expect(component.showUserForm$.value).toBeTrue();
       });
     });
 
@@ -238,7 +238,7 @@ xdescribe('UserAccountsPageComponent', () => {
       });
 
       it('shows the form', () => {
-        expect(component.showUserForm).toBeTrue();
+        expect(component.showUserForm$.value).toBeTrue();
       });
     });
   });

@@ -1,10 +1,10 @@
 <mat-form-field class="cx-width-100">
   <mat-label>{{ "metrics.metric-list.name-options" | translate }}</mat-label>
   <mat-select
-    [value]="metricDetail?.name"
+    [value]="metricDetail$.value?.name"
     (selectionChange)="onMetricNameSelected($event.value)"
   >
-    @for (name of metricList?.names; track name) {
+    @for (name of metricList$.value?.names; track name) {
       <mat-option [value]="name">
         {{ name }}
       </mat-option>
@@ -16,6 +16,6 @@
 <div class="cx-width-100">
   <cx-metric-details
     class="cx-width-100"
-    [metricDetail]="metricDetail"
+    [metricDetail]="metricDetail$ | async"
   ></cx-metric-details>
 </div>

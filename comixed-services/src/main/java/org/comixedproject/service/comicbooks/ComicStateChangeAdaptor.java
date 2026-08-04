@@ -76,7 +76,7 @@ public class ComicStateChangeAdaptor implements InitializingBean, ComicStateChan
         this.publishComicBookUpdateAction.publish(
             new ComicBookData(details, pages, metadata, tags.stream().toList()));
       }
-    } catch (PublishingException error) {
+    } catch (PublishingException | ComicBookException error) {
       log.error("Failed to publish comic state change", error);
     }
   }

@@ -16,11 +16,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createFeatureSelector } from '@ngrx/store';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
 import {
   SCRAPE_SERIES_FEATURE_KEY,
   SeriesScrapingState
 } from '../reducers/scrape-series.reducer';
 
-export const selectScrapeSeriesState =
-  createFeatureSelector<SeriesScrapingState>(SCRAPE_SERIES_FEATURE_KEY);
+const selectScrapeSeriesState = createFeatureSelector<SeriesScrapingState>(
+  SCRAPE_SERIES_FEATURE_KEY
+);
+
+export const selectScrapeSeriesBusy = createSelector(
+  selectScrapeSeriesState,
+  state => state.busy
+);

@@ -56,12 +56,17 @@ import {
   initialState as initialLibraryPluginState,
   LIBRARY_PLUGIN_FEATURE_KEY
 } from '@app/library-plugins/reducers/library-plugin.reducer';
+import {
+  COMIC_BOOK_SELECTION_FEATURE_KEY,
+  initialState as initialComicBookSelectionState
+} from '@app/comic-books/reducers/comic-book-selection.reducer';
 
 describe('ComicDetailListDialogComponent', () => {
   const COMICS = [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5];
   const HASH = PAGE_1.hash;
   const initialState = {
-    [LIBRARY_PLUGIN_FEATURE_KEY]: initialLibraryPluginState
+    [LIBRARY_PLUGIN_FEATURE_KEY]: initialLibraryPluginState,
+    [COMIC_BOOK_SELECTION_FEATURE_KEY]: initialComicBookSelectionState
   };
 
   let component: ComicDetailListDialogComponent;

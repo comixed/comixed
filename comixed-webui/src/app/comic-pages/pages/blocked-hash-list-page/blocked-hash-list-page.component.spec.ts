@@ -179,7 +179,7 @@ describe('BlockedHashListPageComponent', () => {
         }
       });
       entry = component.dataSource.data[0];
-      component.hasSelections = false;
+      component.hasSelections$.next(false);
       component.onSelectOne(entry, true);
     });
 
@@ -188,7 +188,7 @@ describe('BlockedHashListPageComponent', () => {
     });
 
     it('sets the has selections flag', () => {
-      expect(component.hasSelections).toBeTrue();
+      expect(component.hasSelections$.value).toBeTrue();
     });
   });
 
@@ -205,11 +205,11 @@ describe('BlockedHashListPageComponent', () => {
     });
 
     it('sets the all selected flag', () => {
-      expect(component.allSelected).toBeTrue();
+      expect(component.allSelected$.value).toBeTrue();
     });
 
     it('sets the some selection flag', () => {
-      expect(component.hasSelections).toBeTrue();
+      expect(component.hasSelections$.value).toBeTrue();
     });
 
     describe('unselecting one item', () => {
@@ -218,11 +218,11 @@ describe('BlockedHashListPageComponent', () => {
       });
 
       it('clears the all selected flag', () => {
-        expect(component.allSelected).toBeFalse();
+        expect(component.allSelected$.value).toBeFalse();
       });
 
       it('sets the some selection flag', () => {
-        expect(component.hasSelections).toBeTrue();
+        expect(component.hasSelections$.value).toBeTrue();
       });
     });
 
@@ -232,11 +232,11 @@ describe('BlockedHashListPageComponent', () => {
       });
 
       it('clears the all selected flag', () => {
-        expect(component.allSelected).toBeFalse();
+        expect(component.allSelected$.value).toBeFalse();
       });
 
       it('clears the some selection flag', () => {
-        expect(component.hasSelections).toBeFalse();
+        expect(component.hasSelections$.value).toBeFalse();
       });
     });
   });

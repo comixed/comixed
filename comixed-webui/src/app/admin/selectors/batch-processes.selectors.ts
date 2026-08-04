@@ -25,6 +25,11 @@ import {
 export const selectBatchProcessesState =
   createFeatureSelector<BatchProcessesState>(BATCH_PROCESSES_FEATURE_KEY);
 
+export const selectBatchProcessesBusy = createSelector(
+  selectBatchProcessesState,
+  state => state.busy
+);
+
 export const selectBatchProcessList = createSelector(
   selectBatchProcessesState,
   state => state.entries

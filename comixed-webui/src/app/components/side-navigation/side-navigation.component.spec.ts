@@ -95,12 +95,12 @@ describe('SideNavigationComponent', () => {
   describe('the admin flag', () => {
     it('sets it to true for an admin', () => {
       component.user = USER_ADMIN;
-      expect(component.isAdmin).toBeTrue();
+      expect(component.isAdmin$.value).toBeTrue();
     });
 
     it('sets it to false for a reader', () => {
       component.user = USER_READER;
-      expect(component.isAdmin).toBeFalse();
+      expect(component.isAdmin$.value).toBeFalse();
     });
   });
 
@@ -108,12 +108,12 @@ describe('SideNavigationComponent', () => {
     const COLLAPSED = Math.random() > 0.5;
 
     beforeEach(() => {
-      component.comicsCollapsed = !COLLAPSED;
+      component.comicsCollapsed$.next(!COLLAPSED);
       component.onCollapseComics(COLLAPSED);
     });
 
     it('updates the flag', () => {
-      expect(component.comicsCollapsed).toEqual(COLLAPSED);
+      expect(component.comicsCollapsed$.value).toEqual(COLLAPSED);
     });
   });
 
@@ -121,12 +121,12 @@ describe('SideNavigationComponent', () => {
     const COLLAPSED = Math.random() > 0.5;
 
     beforeEach(() => {
-      component.collectionCollapsed = !COLLAPSED;
+      component.collectionCollapsed$.next(!COLLAPSED);
       component.onCollapseCollection(COLLAPSED);
     });
 
     it('updates the flag', () => {
-      expect(component.collectionCollapsed).toEqual(COLLAPSED);
+      expect(component.collectionCollapsed$.value).toEqual(COLLAPSED);
     });
   });
 
@@ -134,12 +134,12 @@ describe('SideNavigationComponent', () => {
     const COLLAPSED = Math.random() > 0.5;
 
     beforeEach(() => {
-      component.readingListsCollapsed = !COLLAPSED;
+      component.readingListsCollapsed$.next(!COLLAPSED);
       component.onCollapseReadingLists(COLLAPSED);
     });
 
     it('updates the flag', () => {
-      expect(component.readingListsCollapsed).toEqual(COLLAPSED);
+      expect(component.readingListsCollapsed$.value).toEqual(COLLAPSED);
     });
   });
 
@@ -165,7 +165,9 @@ describe('SideNavigationComponent', () => {
 
     describe('when already previously loaded', () => {
       beforeEach(() => {
-        component.blockedPagesEnabled = !BLOCKED_PAGES_ENABLED_FEATURE_ENABLED;
+        component.blockedPagesEnabled$.next(
+          !BLOCKED_PAGES_ENABLED_FEATURE_ENABLED
+        );
         store.setState({
           ...initialState,
           [FEATURE_ENABLED_FEATURE_KEY]: {
@@ -186,7 +188,7 @@ describe('SideNavigationComponent', () => {
       });
 
       it('sets the blocked pages enabled flag', () => {
-        expect(component.blockedPagesEnabled).toEqual(
+        expect(component.blockedPagesEnabled$.value).toEqual(
           BLOCKED_PAGES_ENABLED_FEATURE_ENABLED
         );
       });

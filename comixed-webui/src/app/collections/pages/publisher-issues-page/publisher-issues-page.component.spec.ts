@@ -177,7 +177,7 @@ describe('PublisherIssuesPageComponent', () => {
 
   describe('selecting all comics', () => {
     beforeEach(() => {
-      component.name = PUBLISHER_NAME;
+      component.name$.next(PUBLISHER_NAME);
     });
 
     describe('selecting all', () => {

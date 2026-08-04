@@ -4,9 +4,9 @@
     class="cx-margin-right-5"
     mat-fab
     color="primary"
-    [disabled]="showFinderForm"
+    [disabled]="showFinderForm$ | async"
     [matTooltip]="'comic-files.tooltip.show-finder-form' | translate"
-    (click)="showFinderForm = true"
+    (click)="openFinderForm()"
   >
     <mat-icon>saved_search</mat-icon>
   </button>
@@ -15,7 +15,7 @@
     class="cx-margin-right-5"
     mat-fab
     color="primary"
-    [disabled]="allSelected || showFinderForm"
+    [disabled]="(allSelected$ | async) || (showFinderForm$ | async)"
     [matTooltip]="'comic-files.tooltip.select-all' | translate"
     (click)="onSelectAll(true)"
   >
@@ -26,7 +26,7 @@
     class="cx-margin-right-5"
     mat-fab
     color="primary"
-    [disabled]="!anySelected || showFinderForm"
+    [disabled]="(anySelected$ | async) === false || (showFinderForm$ | async)"
     [matTooltip]="'comic-files.tooltip.deselect-all' | translate"
     (click)="onSelectAll(false)"
   >
@@ -37,7 +37,7 @@
     class="cx-margin-right-5"
     mat-fab
     color="primary"
-    [disabled]="!anySelected || showFinderForm"
+    [disabled]="(anySelected$ | async) === false || (showFinderForm$ | async)"
     [matTooltip]="'comic-files.tooltip.start-import' | translate"
     (click)="onStartImport()"
   >
@@ -45,32 +45,32 @@
   </button>
 </div>
 
-@if (showCoverPopup) {
+@if (showCoverPopup$ | async) {
   <div class="cx-hover cx-centered cx-width-25 cx-border-primary-1">
     <mat-card-title class="cx-text-nowrap">
-      {{ comicFile.baseFilename }}
+      {{ (comicFile$ | async).baseFilename }}
     </mat-card-title>
     <mat-card-subtitle class="cx-text-nowrap">
-      {{ comicFile.filename }}
+      {{ (comicFile$ | async).filename }}
     </mat-card-subtitle>
     <mat-card appearance="outlined">
       <mat-card-content class="cx-padding-5">
         <img
           loading="lazy"
-          [src]="comicFile | comicFileCoverUrl"
+          [src]="comicFile$ | async | comicFileCoverUrl"
           width="100%"
           height="auto"
-          [alt]="comicFile.baseFilename"
+          [alt]="(comicFile$ | async).baseFilename"
         />
       </mat-card-content>
     </mat-card>
   </div>
 }
-@if (showFinderForm) {
+@if (showFinderForm$ | async) {
   <cx-comic-file-loader
     class="cx-centered cx-position-absolute cx-width-50 cx-border-primary-1 cx-z-index-99"
-    [user]="user"
-    (closeForm)="showFinderForm = false"
+    [user]="user$ | async"
+    (closeForm)="closeFinderForm()"
   ></cx-comic-file-loader>
 }
 
@@ -78,7 +78,10 @@
   {{
     "comic-files.page-title"
       | translate
-        : { count: dataSource.data.length, selected: selectedFileCount }
+        : {
+            count: dataSource.data.length,
+            selected: selectedFileCount$ | async
+          }
   }}
 </h2>
 
@@ -87,7 +90,7 @@
     {{ "comic-files.label.filter-options" | translate }}
   </mat-label>
   <mat-select
-    [value]="currentPath"
+    [value]="currentPath$ | async"
     (selectionChange)="onChangeCurrentPath($event.value)"
     [placeholder]="'comic-files.text.all-directories' | translate"
   >
@@ -128,7 +131,7 @@
     <mat-header-cell *matHeaderCellDef mat-sort-header>
       <mat-checkbox
         [disabled]="!dataSource.data.length"
-        [checked]="allSelected"
+        [checked]="allSelected$ | async"
         (change)="onSelectAll($event.checked)"
         (click)="$event.stopPropagation()"
       ></mat-checkbox>
@@ -227,7 +230,7 @@
         </mat-label>
       </button>
     }
-    @if (anySelected) {
+    @if (anySelected$ | asyn) {
       <button mat-menu-item (click)="onDeselectAll()">
         <mat-icon>clear_all</mat-icon>
         <mat-label>

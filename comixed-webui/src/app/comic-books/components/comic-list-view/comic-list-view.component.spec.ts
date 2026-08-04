@@ -268,17 +268,17 @@ describe('ComicListViewComponent', () => {
   describe('the comic cover overlay', () => {
     describe('showing the cover overlay', () => {
       beforeEach(() => {
-        component.showComicDetailPopup = false;
-        component.selectedComic = null;
+        component.showComicDetailPopup$.next(false);
+        component.selectedComic$.next(null);
         component.onShowPopup(true, COMIC_BOOK);
       });
 
       it('sets the show popup flag', () => {
-        expect(component.showComicDetailPopup).toBeTrue();
+        expect(component.showComicDetailPopup$.value).toBeTrue();
       });
 
       it('sets the current comic', () => {
-        expect(component.selectedComic).toBe(COMIC_BOOK);
+        expect(component.selectedComic$.value).toBe(COMIC_BOOK);
       });
 
       describe('hiding the cover overlay', () => {
@@ -287,11 +287,11 @@ describe('ComicListViewComponent', () => {
         });
 
         it('hides the show popup flag', () => {
-          expect(component.showComicDetailPopup).toBeFalse();
+          expect(component.showComicDetailPopup$.value).toBeFalse();
         });
 
         it('clears the current comic', () => {
-          expect(component.selectedComic).toBeNull();
+          expect(component.selectedComic$.value).toBeNull();
         });
       });
     });
@@ -408,7 +408,7 @@ describe('ComicListViewComponent', () => {
     const READING_LIST = READING_LIST_1;
 
     beforeEach(() => {
-      component.selectedComic = COMIC_BOOK;
+      component.selectedComic$.next(COMIC_BOOK);
       component.dataSource.data = COMIC_BOOKS.map(comic => {
         return {
           item: comic,
@@ -544,7 +544,7 @@ describe('ComicListViewComponent', () => {
 
     describe('marking a single comic book as deleted', () => {
       beforeEach(() => {
-        component.selectedComic = COMIC_BOOK;
+        component.selectedComic$.next(COMIC_BOOK);
         component.onMarkOneAsDeleted(true);
       });
 
@@ -557,7 +557,7 @@ describe('ComicListViewComponent', () => {
 
     describe('marking a single comic book as undeleted', () => {
       beforeEach(() => {
-        component.selectedComic = COMIC_BOOK;
+        component.selectedComic$.next(COMIC_BOOK);
         component.onMarkOneAsDeleted(false);
       });
 
@@ -736,12 +736,12 @@ describe('ComicListViewComponent', () => {
 
   describe('showing the filter popup', () => {
     beforeEach(() => {
-      component.showComicFilterPopup = false;
+      component.showComicFilterPopup$.next(false);
       component.onFilterComics();
     });
 
     it('sets the show comic filter popup flag', () => {
-      expect(component.showComicFilterPopup).toBeTrue();
+      expect(component.showComicFilterPopup$.value).toBeTrue();
     });
   });
 

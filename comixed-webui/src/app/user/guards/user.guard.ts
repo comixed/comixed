@@ -25,7 +25,7 @@ import {
 import { Observable, Subject } from 'rxjs';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
-import { selectUserState } from '@app/user/selectors/user.selectors';
+import { selectUserInitializingProgress } from '@app/user/selectors/user.selectors';
 import { filter } from 'rxjs/operators';
 
 @Injectable({
@@ -43,7 +43,7 @@ export class UserGuard {
 
   constructor() {
     this.store
-      .select(selectUserState)
+      .select(selectUserInitializingProgress)
       .pipe(filter(state => !!state && !state.initializing))
       .subscribe(state => {
         this.initialized = true;

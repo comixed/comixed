@@ -26,6 +26,11 @@ export const selectComicListState = createFeatureSelector<ComicListState>(
   COMIC_LIST_FEATURE_KEY
 );
 
+export const selectComicListBusy = createSelector(
+  selectComicListState,
+  state => state.busy
+);
+
 export const selectComicList = createSelector(
   selectComicListState,
   state => state.comics

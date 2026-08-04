@@ -1,26 +1,27 @@
 <cx-metadata-process-toolbar
-  [selectedIds]="selectedIds"
+  [selectedIds]="selectedIds$ | async"
 ></cx-metadata-process-toolbar>
 
-@if (processState?.active) {
+@if (metadataUpdateActive$ | async) {
   <h2>
     {{
-      "metadata-process.page-title" | translate: { count: selectedIds.length }
+      "metadata-process.page-title"
+        | translate: { count: (selectedIds$ | async).length }
     }}
   </h2>
 }
-@if (processState?.active) {
+@if (metadataUpdateActive$ | async) {
   <cx-metadata-process-status
     class="cx-width-100 cx-height-100"
-    [processState]="processState"
+    [progress]="metadataUpdateProgress$ | async"
   ></cx-metadata-process-status>
 }
-@if (!processState || !processState.active) {
+@if ((metadataUpdateActive$ | async) === false) {
   <cx-comic-list-view
     class="cx-width-100"
-    [comics]="comics"
-    [coverYears]="coverYears"
-    [coverMonths]="coverMonths"
-    [selectedIds]="selectedIds"
+    [comics]="comics$ | async"
+    [coverYears]="coverYears$ | async"
+    [coverMonths]="coverMonths$ | async"
+    [selectedIds]="selectedIds$ | async"
   ></cx-comic-list-view>
 }

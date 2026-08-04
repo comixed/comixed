@@ -230,12 +230,12 @@ describe('MetadataSourceListComponent', () => {
       component.metadataForm.controls.ignoreEmptyValues.setValue(
         !IGNORE_EMPTY_VALUES
       );
-      component.showConfigPopup = true;
+      component.showConfigPopup$.next(true);
       component.onCancelConfig();
     });
 
     it('closes the popup', () => {
-      expect(component.showConfigPopup).toBeFalse();
+      expect(component.showConfigPopup$.value).toBeFalse();
     });
   });
 

@@ -20,7 +20,10 @@ import {
   METADATA_UPDATE_PROCESS_FEATURE_KEY,
   MetadataUpdateProcessState
 } from '../reducers/metadata-update-process.reducer';
-import { selectMetadataUpdateProcessState } from './metadata-update-process.selectors';
+import {
+  selectMetadataUpdateProcessActive,
+  selectMetadataUpdateProgress
+} from './metadata-update-process.selectors';
 
 describe('MetadataUpdateProcess Selectors', () => {
   let state: MetadataUpdateProcessState;
@@ -33,11 +36,19 @@ describe('MetadataUpdateProcess Selectors', () => {
     };
   });
 
-  it('should select the feature state', () => {
+  it('selects the feature active state', () => {
     expect(
-      selectMetadataUpdateProcessState({
+      selectMetadataUpdateProcessActive({
         [METADATA_UPDATE_PROCESS_FEATURE_KEY]: state
       })
-    ).toEqual(state);
+    ).toEqual(state.active);
+  });
+
+  it('selects the current progress', () => {
+    expect(
+      selectMetadataUpdateProgress({
+        [METADATA_UPDATE_PROCESS_FEATURE_KEY]: state
+      })
+    ).toEqual({ completed: state.completedComics, total: state.totalComics });
   });
 });

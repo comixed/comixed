@@ -20,29 +20,28 @@ import {
   AfterViewInit,
   Component,
   inject,
-  OnDestroy,
   OnInit,
   ViewChild
 } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import {
-  MatTableDataSource,
-  MatTable,
-  MatColumnDef,
-  MatHeaderCellDef,
-  MatHeaderCell,
-  MatCellDef,
   MatCell,
-  MatHeaderRowDef,
+  MatCellDef,
+  MatColumnDef,
+  MatHeaderCell,
+  MatHeaderCellDef,
   MatHeaderRow,
-  MatRowDef,
+  MatHeaderRowDef,
+  MatNoDataRow,
   MatRow,
-  MatNoDataRow
+  MatRowDef,
+  MatTable,
+  MatTableDataSource
 } from '@angular/material/table';
-import { Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import {
-  selectBatchProcessesState,
+  selectBatchProcessesBusy,
   selectBatchProcessList
 } from '@app/admin/selectors/batch-processes.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
@@ -54,7 +53,7 @@ import {
 } from '@app/admin/actions/batch-processes.actions';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/core/services/title.service';
 import { BatchProcessDetail } from '@app/admin/models/batch-process-detail';
 import { ConfirmationService } from '@tragically-slick/confirmation';
@@ -65,6 +64,7 @@ import { MatIcon } from '@angular/material/icon';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { RouterLink } from '@angular/router';
 import { AsyncPipe, DatePipe } from '@angular/common';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'cx-batch-process-list-page',
@@ -95,9 +95,7 @@ import { AsyncPipe, DatePipe } from '@angular/common';
     TranslateModule
   ]
 })
-export class BatchProcessListPageComponent
-  implements OnInit, OnDestroy, AfterViewInit
-{
+export class BatchProcessListPageComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -105,7 +103,6 @@ export class BatchProcessListPageComponent
     []
   );
 
-  batchProcessStateSubscription: Subscription;
   batchProcessListSubscription: Subscription;
   readonly displayedColumns = [
     'selection',
@@ -119,10 +116,8 @@ export class BatchProcessListPageComponent
     'exit-description'
   ];
 
-  langChangeSubscription: Subscription;
-  detail: BatchProcessDetail | null = null;
-  anySelected = false;
-  allSelected = false;
+  anySelected$ = new BehaviorSubject(false);
+  allSelected$ = new BehaviorSubject(false);
   queryParameterService = inject(QueryParameterService);
   logger = inject(LoggerService);
   store = inject(Store);
@@ -131,20 +126,17 @@ export class BatchProcessListPageComponent
   confirmationService = inject(ConfirmationService);
 
   constructor() {
-    this.logger.debug('Subscribing to batch process state updates');
-    this.batchProcessStateSubscription = this.store
-      .select(selectBatchProcessesState)
-      .subscribe(state => {
-        this.store.dispatch(setBusyState({ enabled: state.busy }));
-      });
-    this.logger.debug('Subscribing to batch process list updates');
-    this.batchProcessListSubscription = this.store
+    this.store
+      .select(selectBatchProcessesBusy)
+      .pipe(tap(enabled => this.store.dispatch(setBusyState({ enabled }))))
+      .subscribe();
+    this.store
       .select(selectBatchProcessList)
-      .subscribe(list => (this.batchList = list));
-    this.logger.debug('Subscribing to language change updates');
-    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
-      () => this.loadTranslations()
-    );
+      .pipe(tap(batchList => (this.batchList = batchList)))
+      .subscribe();
+    this.translateService.onLangChange
+      .pipe(tap(() => this.loadTranslations()))
+      .subscribe();
   }
 
   set batchList(batchList: BatchProcessDetail[]) {
@@ -156,13 +148,6 @@ export class BatchProcessListPageComponent
         selected: oldEntry?.selected || false
       };
     });
-  }
-
-  ngOnDestroy(): void {
-    this.logger.debug('Unsubscribing from batch process state updates');
-    this.batchProcessStateSubscription.unsubscribe();
-    this.logger.debug('Unsubscribing from batch process list updates');
-    this.batchProcessListSubscription.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -205,7 +190,7 @@ export class BatchProcessListPageComponent
         'batch-processes.delete-completed-jobs.confirmation-message'
       ),
       confirm: () => {
-        this.logger.debug('Deleted completed batch jobs:', this.detail);
+        this.logger.debug('Deleting completed batch jobs');
         this.store.dispatch(deleteCompletedBatchJobs());
       }
     });
@@ -233,7 +218,7 @@ export class BatchProcessListPageComponent
         'batch-processes.delete-selected-jobs.confirmation-message'
       ),
       confirm: () => {
-        this.logger.debug('Deleted selected batch jobs:', this.detail);
+        this.logger.debug('Deleted selected batch jobs');
         this.store.dispatch(
           deleteSelectedBatchJobs({
             jobIds: this.dataSource.data
@@ -246,8 +231,8 @@ export class BatchProcessListPageComponent
   }
 
   private updateSelections(): void {
-    this.anySelected = this.dataSource.data.some(entry => entry.selected);
-    this.allSelected = this.dataSource.data.every(entry => entry.selected);
+    this.anySelected$.next(this.dataSource.data.some(entry => entry.selected));
+    this.allSelected$.next(this.dataSource.data.every(entry => entry.selected));
   }
 
   private doLoadBatchProcessList(): void {

@@ -16,15 +16,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Component, inject, OnInit } from '@angular/core';
+import { tap } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { LoggerService } from '@angular-ru/cdk/logger';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/core/services/title.service';
 import {
   selectFilenameScrapingRules,
-  selectFilenameScrapingRulesState
+  selectFilenameScrapingRulesBusy
 } from '@app/admin/selectors/filename-scraping-rules.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { FilenameScrapingRule } from '@app/admin/models/filename-scraping-rule';
@@ -35,24 +35,24 @@ import {
   uploadFilenameScrapingRules
 } from '@app/admin/actions/filename-scraping-rules.actions';
 import {
+  CdkDrag,
   CdkDragDrop,
-  moveItemInArray,
   CdkDropList,
-  CdkDrag
+  moveItemInArray
 } from '@angular/cdk/drag-drop';
 import { EditableListItem } from '@app/core/models/ui/editable-list-item';
 import {
-  MatTableDataSource,
-  MatTable,
-  MatColumnDef,
-  MatHeaderCellDef,
-  MatHeaderCell,
-  MatCellDef,
   MatCell,
-  MatHeaderRowDef,
+  MatCellDef,
+  MatColumnDef,
+  MatHeaderCell,
+  MatHeaderCellDef,
   MatHeaderRow,
+  MatHeaderRowDef,
+  MatRow,
   MatRowDef,
-  MatRow
+  MatTable,
+  MatTableDataSource
 } from '@angular/material/table';
 import * as _ from 'lodash';
 import { ConfirmationService } from '@tragically-slick/confirmation';
@@ -90,12 +90,7 @@ import { MatInput } from '@angular/material/input';
     TranslateModule
   ]
 })
-export class FilenameScrapingRulesConfigurationComponent
-  implements OnInit, OnDestroy
-{
-  langChangeSubscription: Subscription;
-  ruleStateSubscription: Subscription;
-  rulesSubscription: Subscription;
+export class FilenameScrapingRulesConfigurationComponent implements OnInit {
   dataSource = new MatTableDataSource<EditableListItem<FilenameScrapingRule>>(
     []
   );
@@ -117,18 +112,22 @@ export class FilenameScrapingRulesConfigurationComponent
   confirmationService = inject(ConfirmationService);
 
   constructor() {
-    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
-      () => this.loadTranslations()
-    );
-    this.ruleStateSubscription = this.store
-      .select(selectFilenameScrapingRulesState)
-      .subscribe(state => {
-        this.logger.debug('Filename scraping rules state changed');
-        this.store.dispatch(setBusyState({ enabled: state.busy }));
-      });
-    this.rulesSubscription = this.store
+    this.translateService.onLangChange
+      .pipe(tap(() => this.loadTranslations()))
+      .subscribe();
+    this.store
+      .select(selectFilenameScrapingRulesBusy)
+      .pipe(
+        tap(enabled => {
+          this.logger.debug('Filename scraping rules state changed');
+          this.store.dispatch(setBusyState({ enabled }));
+        })
+      )
+      .subscribe();
+    this.store
       .select(selectFilenameScrapingRules)
-      .subscribe(rules => (this.rules = rules));
+      .pipe(tap(rules => (this.rules = rules)))
+      .subscribe();
   }
 
   get rules(): FilenameScrapingRule[] {
@@ -160,15 +159,6 @@ export class FilenameScrapingRulesConfigurationComponent
   ngOnInit(): void {
     this.logger.debug('Loading filename scraping rules');
     this.store.dispatch(loadFilenameScrapingRules());
-  }
-
-  ngOnDestroy(): void {
-    this.logger.debug('Unsubscribing from language changes');
-    this.langChangeSubscription.unsubscribe();
-    this.logger.debug('Unsubscribing from rule list state changes');
-    this.ruleStateSubscription.unsubscribe();
-    this.logger.debug('Unsubscribing from rule list changes');
-    this.rulesSubscription.unsubscribe();
   }
 
   onReorderRules(

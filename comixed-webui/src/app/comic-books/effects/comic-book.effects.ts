@@ -43,6 +43,8 @@ import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { FileDownloadService } from '@app/core/services/file-download.service';
 import { LoadComicBookResponse } from '@app/comic-books/models/net/load-comic-book-response';
+import { Router } from '@angular/router';
+import { LIBRARY_ROOT_URL } from '@app/app.constants';
 
 @Injectable()
 export class ComicBookEffects {
@@ -51,6 +53,7 @@ export class ComicBookEffects {
   comicService = inject(ComicBookService);
   alertService = inject(AlertService);
   translateService = inject(TranslateService);
+  router = inject(Router);
 
   loadOne$ = createEffect(() => {
     return this.actions$.pipe(
@@ -74,6 +77,7 @@ export class ComicBookEffects {
                 'comic-book.load-comic.effect-failure'
               )
             );
+            this.router.navigateByUrl(LIBRARY_ROOT_URL);
             return of(loadComicBookFailed());
           })
         )
@@ -83,6 +87,7 @@ export class ComicBookEffects {
         this.alertService.error(
           this.translateService.instant('app.general-effect-failure')
         );
+        this.router.navigateByUrl(LIBRARY_ROOT_URL);
         return of(loadComicBookFailed());
       })
     );

@@ -25,6 +25,11 @@ import {
 export const selectHashSelectionState =
   createFeatureSelector<HashSelectionState>(HASH_SELECTION_FEATURE_KEY);
 
+export const selectHashSelectionBusy = createSelector(
+  selectHashSelectionState,
+  state => state.busy
+);
+
 export const selectHashSelectionList = createSelector(
   selectHashSelectionState,
   state => state.entries

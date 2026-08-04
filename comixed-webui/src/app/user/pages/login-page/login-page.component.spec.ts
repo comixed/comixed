@@ -100,7 +100,7 @@ describe('LoginPageComponent', () => {
     });
 
     it('sets the busy flag', () => {
-      expect(component.busy).toBeTrue();
+      expect(component.busy$.value).toBeTrue();
     });
   });
 
@@ -111,19 +111,6 @@ describe('LoginPageComponent', () => {
 
     it('updates the page title', () => {
       expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
-    });
-  });
-
-  describe('when authenticating', () => {
-    beforeEach(() => {
-      store.setState({
-        ...initialState,
-        [USER_FEATURE_KEY]: { authenticating: true }
-      });
-    });
-
-    it('sets the busy flag', () => {
-      expect(component.busy).toBeTrue();
     });
   });
 

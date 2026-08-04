@@ -269,8 +269,7 @@ describe('UserService', () => {
     let subscription: any;
 
     beforeEach(() => {
-      service.email = USER.email;
-      service.userUpdateSubscriptions = null;
+      service.email$.next(USER.email);
       webSocketService.subscribe.and.callFake((topicUsed, callback) => {
         topic = topicUsed;
         subscription = callback;
@@ -304,26 +303,6 @@ describe('UserService', () => {
           setReadComicBooks({ entries: READ_COMIC_BOOKS })
         );
       });
-    });
-  });
-
-  describe('when messaging is stopped', () => {
-    const subscription = jasmine.createSpyObj(['unsubscribe']);
-
-    beforeEach(() => {
-      service.userUpdateSubscriptions = subscription;
-      store.setState({
-        ...initialState,
-        [MESSAGING_FEATURE_KEY]: { ...initialMessagingState, started: false }
-      });
-    });
-
-    it('unsubscribes from updates', () => {
-      expect(subscription.unsubscribe).toHaveBeenCalled();
-    });
-
-    it('clears the subscription reference', () => {
-      expect(service.userUpdateSubscriptions).toBeNull();
     });
   });
 

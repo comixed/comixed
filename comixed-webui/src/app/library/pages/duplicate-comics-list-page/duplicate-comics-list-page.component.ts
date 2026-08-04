@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, inject, LOCALE_ID, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, LOCALE_ID, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import {
@@ -24,7 +24,6 @@ import {
   selectDuplicateComicState,
   selectDuplicateComicTotal
 } from '@app/library/selectors/duplicate-comics.selectors';
-import { Subscription } from 'rxjs';
 import {
   MatCell,
   MatCellDef,
@@ -53,6 +52,8 @@ import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { TitleService } from '@app/core/services/title.service';
+import { tap } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'cx-duplicate-comics-page',
@@ -78,7 +79,7 @@ import { TitleService } from '@app/core/services/title.service';
   templateUrl: './duplicate-comics-list-page.component.html',
   styleUrl: './duplicate-comics-list-page.component.scss'
 })
-export class DuplicateComicsListPageComponent implements OnInit, OnDestroy {
+export class DuplicateComicsListPageComponent implements OnInit {
   readonly displayedColumns = [
     'publisher',
     'series',
@@ -87,6 +88,9 @@ export class DuplicateComicsListPageComponent implements OnInit, OnDestroy {
     'cover-date',
     'comic-count'
   ];
+
+  dataSource = new MatTableDataSource<DuplicateComic>([]);
+  totalEntries$ = new BehaviorSubject(0);
 
   logger = inject(LoggerService);
   translateService = inject(TranslateService);
@@ -97,48 +101,27 @@ export class DuplicateComicsListPageComponent implements OnInit, OnDestroy {
   activatedRoute = inject(ActivatedRoute);
   locale = inject(LOCALE_ID);
 
-  langChangeSubscription: Subscription;
-  duplicateComicStateSubscription: Subscription;
-  duplicateComicListSubscription: Subscription;
-  pageChangedSubscription: Subscription;
-  duplicateComicTotalSubscription: Subscription;
-  totalEntries = 0;
-  dataSource = new MatTableDataSource<DuplicateComic>([]);
-
   constructor() {
-    this.logger.debug('Subscribing to language change updates');
-    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
-      () => this.doLoadTranslations()
-    );
-    this.logger.debug('Subscribing to duplicate comic state updates');
-    this.duplicateComicStateSubscription = this.store
+    this.translateService.onLangChange
+      .pipe(tap(() => this.doLoadTranslations()))
+      .subscribe();
+    this.store
       .select(selectDuplicateComicState)
-      .subscribe(state =>
-        this.store.dispatch(setBusyState({ enabled: state.busy }))
-      );
-    this.logger.debug('Subscribing to duplicate comic list updates');
-    this.duplicateComicListSubscription = this.store
+      .pipe(
+        tap(state => this.store.dispatch(setBusyState({ enabled: state.busy })))
+      )
+      .subscribe();
+    this.store
       .select(selectDuplicateComicList)
-      .subscribe(comics => (this.dataSource.data = comics));
-    this.logger.debug('Subscribing to duplicate comic total updates');
-    this.duplicateComicTotalSubscription = this.store
+      .pipe(tap(comics => (this.dataSource.data = comics)))
+      .subscribe();
+    this.store
       .select(selectDuplicateComicTotal)
-      .subscribe(total => (this.totalEntries = total));
-    this.logger.debug('Subscribing to page changes');
-    this.pageChangedSubscription = this.activatedRoute.queryParams.subscribe(
-      params => this.doLoadComics()
-    );
-  }
-
-  ngOnDestroy(): void {
-    this.logger.debug('Unsubscribing from language change updates');
-    this.langChangeSubscription.unsubscribe();
-    this.logger.debug('Unsubscribing from duplicate comic state updates');
-    this.duplicateComicStateSubscription.unsubscribe();
-    this.logger.debug('Unsubscribing from duplicate comic list updates');
-    this.duplicateComicListSubscription.unsubscribe();
-    this.logger.debug('Unsubscribing from duplicate comic total updates');
-    this.duplicateComicTotalSubscription.unsubscribe();
+      .pipe(tap(total => this.totalEntries$.next(total)))
+      .subscribe();
+    this.activatedRoute.queryParams
+      .pipe(tap(params => this.doLoadComics()))
+      .subscribe();
   }
 
   ngOnInit(): void {

@@ -3,16 +3,16 @@
     "collections.publisher-series.page-title"
       | translate
         : {
-            name: name
+            name: name$ | async
           }
   }}
 </h2>
 
 <mat-paginator
   showFirstLastButtons="true"
-  [length]="totalSeries"
-  [pageSize]="pageSize"
-  [pageIndex]="pageIndex"
+  [length]="totalSeries$ | async"
+  [pageSize]="queryParameterService.pageSize$ | async"
+  [pageIndex]="queryParameterService.pageIndex$ | async"
   [pageSizeOptions]="pageOptions"
   (page)="
     queryParameterService.onPageChange(
@@ -77,7 +77,7 @@
     *matRowDef="let row; columns: displayedColumns"
     [routerLink]="[
       '/library/collections/publishers',
-      this.name,
+      name$ | async,
       'series',
       row.name,
       'volumes',

@@ -17,10 +17,10 @@
  */
 
 import { Component, inject, Input } from '@angular/core';
-import { MetadataUpdateProcessState } from '@app/comic-metadata/reducers/metadata-update-process.reducer';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { TranslateModule } from '@ngx-translate/core';
+import { MetadataUpdateProgress } from '@app/comic-metadata/selectors/metadata-update-process.selectors';
 
 @Component({
   selector: 'cx-metadata-process-status',
@@ -35,9 +35,9 @@ export class MetadataProcessStatusComponent {
   logger = inject(LoggerService);
 
   @Input()
-  set processState(state: MetadataUpdateProcessState) {
+  set progress(state: MetadataUpdateProgress) {
     this.logger.trace('Calculating metadata process value');
-    this.total = state.totalComics;
-    this.current = state.completedComics;
+    this.total = state.total;
+    this.current = state.completed;
   }
 }

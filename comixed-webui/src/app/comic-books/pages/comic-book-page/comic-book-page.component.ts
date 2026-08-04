@@ -16,30 +16,20 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import {
-  AfterViewInit,
-  Component,
-  inject,
-  OnDestroy,
-  OnInit
-} from '@angular/core';
-import { Subscription } from 'rxjs';
+import { AfterViewInit, Component, inject, OnInit } from '@angular/core';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { BusyIcon, setBusyStateWithIcon } from '@app/core/actions/busy.actions';
-import { selectUser } from '@app/user/selectors/user.selectors';
 import {
-  getPageSize,
-  getUserPreference,
-  isAdmin
-} from '@app/user/user.functions';
+  selectUserIsAdmin,
+  selectUserMatchPublisher,
+  selectUserMaximumRecords,
+  selectUserPageSize,
+  selectUserSkipCache
+} from '@app/user/selectors/user.selectors';
 import { interpolate, PAGE_SIZE_DEFAULT } from '@app/core';
-import {
-  MATCH_PUBLISHER_PREFERENCE,
-  MAXIMUM_SCRAPING_RECORDS_PREFERENCE,
-  SKIP_CACHE_PREFERENCE
-} from '@app/library/library.constants';
 import {
   loadVolumeMetadata,
   resetMetadataState
@@ -47,7 +37,7 @@ import {
 import {
   selectChosenMetadataSource,
   selectScrapingVolumeMetadata,
-  selectSingleBookScrapingState
+  selectSingleBookScrapingBusy
 } from '@app/comic-metadata/selectors/single-book-scraping.selectors';
 import { VolumeMetadata } from '@app/comic-metadata/models/volume-metadata';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -60,7 +50,7 @@ import {
 } from '@app/comic-books/actions/comic-book.actions';
 import { selectComicBookState } from '@app/comic-books/selectors/comic-book.selectors';
 import { TitleService } from '@app/core/services/title.service';
-import { MessagingSubscription, WebSocketService } from '@app/messaging';
+import { WebSocketService } from '@app/messaging';
 import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
 import { updateSingleComicBookMetadata } from '@app/library/actions/update-metadata.actions';
 import {
@@ -129,37 +119,24 @@ import { filter } from 'rxjs/operators';
     ComicTitlePipe
   ]
 })
-export class ComicBookPageComponent
-  implements OnInit, OnDestroy, AfterViewInit
-{
-  paramSubscription: Subscription;
-  scrapingStateSubscription: Subscription;
-  comicSubscription: Subscription;
-  comicUpdateSubscription: MessagingSubscription;
-  metadataSourceSubscription: Subscription;
-  metadataSource: MetadataSource | null;
-  messagingSubscription: Subscription;
+export class ComicBookPageComponent implements OnInit, AfterViewInit {
+  metadataSource: MetadataSource | null = null;
   comicId = -1;
   pageIndex = 0;
-  comic: DisplayableComic | null;
+  comic: DisplayableComic | null = null;
   tags: ComicTag[] = [];
   pages: ComicPage[];
-  userSubscription: Subscription;
-  readComicBooksSubscription: Subscription;
-  isAdmin = false;
-  pageSize = PAGE_SIZE_DEFAULT;
-  pageNumber = 0;
-  volumesSubscription: Subscription;
-  skipCache = false;
-  matchPublisher = false;
-  maximumRecords = 0;
+  isAdmin$ = of(false);
+  pageSize$ = of(PAGE_SIZE_DEFAULT);
+  pageNumber$ = new BehaviorSubject(0);
+  skipCache$ = of(false);
+  matchPublisher$ = of(false);
+  maximumRecords$ = of(0);
   volumes: VolumeMetadata[] = [];
   scrapingSeriesName = '';
   scrapingVolume = '';
   scrapingIssueNumber = '';
-  langChangeSubscription: Subscription;
-  isRead = false;
-  readComicBookList: number[] = [];
+  readComicBookList$ = new BehaviorSubject<number[]>([]);
 
   messagingStarted = false;
   logger = inject(LoggerService);
@@ -173,85 +150,54 @@ export class ComicBookPageComponent
   queryParameterService = inject(QueryParameterService);
 
   constructor() {
-    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
-      () => this.loadTranslations()
-    );
-    this.paramSubscription = this.activatedRoute.params.subscribe(params => {
-      this.unsubscribeFromUpdates();
+    this.translateService.onLangChange.subscribe(() => this.loadTranslations());
+    this.activatedRoute.params.subscribe(params => {
       this.comicId = +params.comicId;
       this.logger.trace('ComicBook id parameter:', params.comicBookId);
       this.store.dispatch(loadComicBook({ id: this.comicId }));
+      this.subscribeToUpdates();
     });
-    this.subscribeToUpdates();
-    this.scrapingStateSubscription = this.store
-      .select(selectSingleBookScrapingState)
-      .subscribe(state =>
+    this.store.select(selectSingleBookScrapingBusy).subscribe({
+      next: busy =>
         this.store.dispatch(
           setBusyStateWithIcon({
-            enabled: state.loadingRecords,
+            enabled: busy,
             icon: BusyIcon.LOADING
           })
         )
-      );
-    this.comicSubscription = this.store
+    });
+    this.store
       .select(selectComicBookState)
       .pipe(filter(state => !!state?.detail))
-      .subscribe(state => {
-        this.comic = state.detail;
-        this.metadataSource = state.metadata?.metadataSource;
-        this.pages = state.pages;
-        this.tags = state.tags;
-        this.doCheckIfRead();
-        this.loadPageTitle();
+      .subscribe({
+        next: state => {
+          this.comic = state.detail;
+          this.metadataSource = state.metadata?.metadataSource;
+          this.pages = state.pages;
+          this.tags = state.tags;
+          this.loadPageTitle();
+        }
       });
-    this.metadataSourceSubscription = this.store
-      .select(selectChosenMetadataSource)
-      .subscribe(metadataSource => (this.metadataSource = metadataSource));
-    this.userSubscription = this.store.select(selectUser).subscribe(user => {
-      this.isAdmin = isAdmin(user);
-      this.logger.trace('Loading uer page size preference');
-      this.pageSize = getPageSize(user);
-      this.skipCache =
-        getUserPreference(
-          user.preferences,
-          SKIP_CACHE_PREFERENCE,
-          `${this.skipCache === true}`
-        ) === `${true}`;
-      this.matchPublisher =
-        getUserPreference(
-          user.preferences,
-          MATCH_PUBLISHER_PREFERENCE,
-          `${this.matchPublisher === true}`
-        ) === `${true}`;
-      this.maximumRecords = parseInt(
-        getUserPreference(
-          user.preferences,
-          MAXIMUM_SCRAPING_RECORDS_PREFERENCE,
-          '0'
-        ),
-        10
-      );
+    this.store.select(selectChosenMetadataSource).subscribe({
+      next: metadataSource => (this.metadataSource = metadataSource)
     });
-    this.readComicBooksSubscription = this.store
-      .select(selectReadComicBooksList)
-      .subscribe(readComicBookList => {
-        this.readComicBookList = readComicBookList;
-        this.doCheckIfRead();
-      });
-    this.volumesSubscription = this.store
+    this.isAdmin$ = this.store.select(selectUserIsAdmin);
+    this.pageSize$ = this.store.select(selectUserPageSize);
+    this.skipCache$ = this.store.select(selectUserSkipCache);
+    this.matchPublisher$ = this.store.select(selectUserMatchPublisher);
+    this.maximumRecords$ = this.store.select(selectUserMaximumRecords);
+    this.store.select(selectReadComicBooksList).subscribe({
+      next: readComicBookList => this.readComicBookList$.next(readComicBookList)
+    });
+    this.store
       .select(selectScrapingVolumeMetadata)
       .subscribe(volumes => (this.volumes = volumes));
-    this.messagingSubscription = this.store
-      .select(selectMessagingState)
-      .subscribe(state => {
-        this.messagingStarted = state.started;
-        if (state.started) {
-          this.subscribeToUpdates();
-        }
-        if (!state.started) {
-          this.unsubscribeFromUpdates();
-        }
-      });
+    this.store.select(selectMessagingState).subscribe(state => {
+      this.messagingStarted = state.started;
+      if (state.started) {
+        this.subscribeToUpdates();
+      }
+    });
   }
 
   get hasChangedState(): boolean {
@@ -262,22 +208,14 @@ export class ComicBookPageComponent
     return this.comic.comicState === ComicState.DELETED;
   }
 
-  ngOnInit(): void {
-    this.loadTranslations();
+  get isRead$(): Observable<boolean> {
+    return of(
+      this.readComicBookList$.value.includes(this.comic?.comicDetailId)
+    );
   }
 
-  ngOnDestroy(): void {
-    this.langChangeSubscription.unsubscribe();
-    this.paramSubscription.unsubscribe();
-    this.scrapingStateSubscription.unsubscribe();
-    this.comicSubscription.unsubscribe();
-    this.metadataSourceSubscription.unsubscribe();
-    this.userSubscription.unsubscribe();
-    this.readComicBooksSubscription.unsubscribe();
-    this.volumesSubscription.unsubscribe();
-    if (!!this.comicUpdateSubscription) {
-      this.comicUpdateSubscription.unsubscribe();
-    }
+  ngOnInit(): void {
+    this.loadTranslations();
   }
 
   ngAfterViewInit(): void {
@@ -371,14 +309,6 @@ export class ComicBookPageComponent
     });
   }
 
-  unsubscribeFromUpdates(): void {
-    if (!!this.comicUpdateSubscription) {
-      this.logger.trace('Unsubscribing from comic book updates');
-      this.comicUpdateSubscription.unsubscribe();
-      this.comicUpdateSubscription = null;
-    }
-  }
-
   onPagesChanged(pages: ComicPage[]): void {
     this.pages = pages;
   }
@@ -420,32 +350,25 @@ export class ComicBookPageComponent
   }
 
   private loadPageTitle(): void {
-    if (!!this.comic) {
+    if (this.comic) {
       this.logger.trace('Updating page title');
       this.titleService.setTitle(this.comicTitlePipe.transform(this.comic));
     }
   }
 
   private subscribeToUpdates(): void {
-    if (!this.comicUpdateSubscription && this.messagingStarted) {
-      const topic = interpolate(COMIC_BOOK_UPDATE_TOPIC, { id: this.comicId });
-      this.logger.trace('Subscribing to comic book updates:', topic);
-      this.comicUpdateSubscription =
-        this.webSocketService.subscribe<LoadComicBookResponse>(topic, data => {
-          this.logger.debug('ComicBook book update received:', data);
-          this.store.dispatch(
-            comicBookLoaded({
-              detail: data.detail,
-              metadata: data.metadata,
-              pages: data.pages,
-              tags: data.tags
-            })
-          );
-        });
-    }
-  }
-
-  private doCheckIfRead() {
-    this.isRead = this.readComicBookList.includes(this.comic?.comicDetailId);
+    const topic = interpolate(COMIC_BOOK_UPDATE_TOPIC, { id: this.comicId });
+    this.logger.trace('Subscribing to comic book updates:', topic);
+    this.webSocketService.subscribe<LoadComicBookResponse>(topic, data => {
+      this.logger.debug('ComicBook book update received:', data);
+      this.store.dispatch(
+        comicBookLoaded({
+          detail: data.detail,
+          metadata: data.metadata,
+          pages: data.pages,
+          tags: data.tags
+        })
+      );
+    });
   }
 }
