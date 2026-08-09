@@ -20,7 +20,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SeriesIssuePageComponent } from './series-issue-page.component';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -79,7 +78,6 @@ describe('SeriesIssuePageComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatPaginatorModule,

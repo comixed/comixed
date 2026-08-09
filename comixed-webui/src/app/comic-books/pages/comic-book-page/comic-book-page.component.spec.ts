@@ -84,7 +84,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatTabsModule } from '@angular/material/tabs';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
   Confirmation,
   ConfirmationService
@@ -151,7 +150,6 @@ describe('ComicBookPageComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         RouterTestingModule,

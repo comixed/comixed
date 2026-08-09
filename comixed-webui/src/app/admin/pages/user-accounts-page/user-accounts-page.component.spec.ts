@@ -27,7 +27,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormField, MatInputModule } from '@angular/material/input';
 import { MatSortModule } from '@angular/material/sort';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
   initialState as initialManageUsersState,
   MANAGER_USERS_FEATURE_KEY
@@ -64,7 +63,6 @@ xdescribe('UserAccountsPageComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
         FormsModule,
         ReactiveFormsModule,
         RouterModule.forRoot([{ path: '**', redirectTo: '' }]),

@@ -41,7 +41,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { MatNativeDateModule } from '@angular/material/core';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { updateComicBook } from '@app/comic-books/actions/comic-book.actions';
 import {
@@ -70,7 +69,6 @@ describe('ComicDetailEditComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
         FormsModule,
         ReactiveFormsModule,
         LoggerModule.forRoot(),

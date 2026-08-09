@@ -27,10 +27,7 @@ import {
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import {
-  COMIC_BOOK_4,
-  DISPLAYABLE_COMIC_1
-} from '@app/comic-books/comic-books.fixtures';
+import { DISPLAYABLE_COMIC_1 } from '@app/comic-books/comic-books.fixtures';
 import {
   initialState as initialScrapingState,
   SINGLE_BOOK_SCRAPING_FEATURE_KEY
@@ -41,7 +38,6 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSortModule } from '@angular/material/sort';
 import { VolumeMetadata } from '@app/comic-metadata/models/volume-metadata';
 import {
@@ -90,7 +86,6 @@ describe('ComicScrapingVolumeSelectionComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatDialogModule,

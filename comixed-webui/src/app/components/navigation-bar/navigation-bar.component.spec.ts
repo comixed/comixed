@@ -45,7 +45,6 @@ import {
   WIKI_PAGE_URL
 } from '@app/app.constants';
 import { MatSelectModule } from '@angular/material/select';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ComicViewMode } from '@app/library/models/comic-view-mode.enum';
 import { GravatarModule } from 'ngx-gravatar';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -83,7 +82,6 @@ describe('NavigationBarComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
         RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
         TranslateModule.forRoot(),
         LoggerModule.forRoot(),

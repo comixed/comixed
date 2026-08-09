@@ -44,7 +44,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ComicType } from '@app/comic-books/models/comic-type';
 
 describe('EditMultipleComicsComponent', () => {
@@ -68,7 +67,6 @@ describe('EditMultipleComicsComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
         FormsModule,
         ReactiveFormsModule,
         LoggerModule.forRoot(),

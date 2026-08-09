@@ -29,7 +29,6 @@ import {
   DISPLAYABLE_COMIC_1
 } from '@app/comic-books/comic-books.fixtures';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ComicDetailCardComponent } from '@app/comic-books/components/comic-detail-card/comic-detail-card.component';
 import { provideMockStore } from '@ngrx/store/testing';
 import { MatCardModule } from '@angular/material/card';
@@ -55,7 +54,6 @@ describe('ComicStoryComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
         RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),

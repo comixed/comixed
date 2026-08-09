@@ -45,7 +45,6 @@ import {
 } from '@app/comic-metadata/reducers/single-book-scraping.reducer';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
   METADATA_SOURCE_1,
   METADATA_SOURCE_2,
@@ -108,7 +107,6 @@ describe('ScrapingSeriesPageComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
         FormsModule,
         ReactiveFormsModule,
         RouterModule.forRoot([{ path: '*', redirectTo: '' }]),

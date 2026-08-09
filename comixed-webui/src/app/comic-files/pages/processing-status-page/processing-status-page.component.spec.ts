@@ -32,7 +32,6 @@ import { QueryParameterService } from '@app/core/services/query-parameter.servic
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { PROCESSING_COMIC_STATUS_1 } from '@app/comic-files/comic-file.fixtures';
 import { TitleService } from '@app/core/services/title.service';
 
@@ -51,7 +50,6 @@ describe('ProcessingStatusPageComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
         RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),

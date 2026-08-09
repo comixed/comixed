@@ -34,7 +34,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatDividerModule } from '@angular/material/divider';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
   COMIC_DETAIL_1,
   COMIC_DETAIL_3,
@@ -75,7 +74,6 @@ describe('ComicDetailListDialogComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
         RouterTestingModule.withRoutes([
           {
             path: '**',

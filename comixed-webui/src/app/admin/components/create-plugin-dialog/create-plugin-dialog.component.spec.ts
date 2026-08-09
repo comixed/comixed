@@ -33,7 +33,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { CreatePluginDetails } from '@app/admin/models/ui/create-plugin-details';
 
 describe('CreatePluginDialogComponent', () => {
@@ -49,7 +48,6 @@ describe('CreatePluginDialogComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
         FormsModule,
         ReactiveFormsModule,
         LoggerModule.forRoot(),

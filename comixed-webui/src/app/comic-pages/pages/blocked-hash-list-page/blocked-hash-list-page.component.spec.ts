@@ -50,7 +50,6 @@ import {
   ConfirmationService
 } from '@tragically-slick/confirmation';
 import { MatSortModule } from '@angular/material/sort';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDividerModule } from '@angular/material/divider';
 import {
   initialState as initialUserState,
@@ -81,7 +80,6 @@ describe('BlockedHashListPageComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
         RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),

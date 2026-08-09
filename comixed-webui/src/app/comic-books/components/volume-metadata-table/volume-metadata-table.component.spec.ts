@@ -32,7 +32,6 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IssueMetadataTitlePipe } from '@app/comic-books/pipes/issue-metadata-title.pipe';
 import { MatIconModule } from '@angular/material/icon';
 import { VolumeMetadataTitlePipe } from '@app/comic-books/pipes/volume-metadata-title.pipe';
@@ -46,7 +45,6 @@ describe('VolumeMetadataTableComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatFormFieldModule,

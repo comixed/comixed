@@ -34,7 +34,6 @@ import { TitleService } from '@app/core/services/title.service';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
   deleteCompletedBatchJobs,
   deleteSelectedBatchJobs
@@ -73,7 +72,6 @@ describe('BatchProcessListPageComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
         RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
