@@ -62,7 +62,6 @@ import { MatTableModule } from '@angular/material/table';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { PageHashUrlPipe } from '@app/comic-books/pipes/page-hash-url.pipe';
 import { YesNoPipe } from '@app/core/pipes/yes-no.pipe';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
   Confirmation,
   ConfirmationService
@@ -151,7 +150,6 @@ describe('DuplicatePageListPageComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
         RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),

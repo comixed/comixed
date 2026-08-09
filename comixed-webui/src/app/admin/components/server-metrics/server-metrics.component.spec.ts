@@ -31,7 +31,6 @@ import { loadMetricDetails } from '@app/admin/actions/metrics.actions';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('ServerMetricsComponent', () => {
   const initialState = { [METRICS_FEATURE_KEY]: initialMetricsState };
@@ -43,7 +42,6 @@ describe('ServerMetricsComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatFormFieldModule,

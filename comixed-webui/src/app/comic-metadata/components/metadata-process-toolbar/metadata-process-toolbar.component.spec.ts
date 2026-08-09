@@ -36,7 +36,6 @@ import { SKIP_CACHE_PREFERENCE } from '@app/library/library.constants';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { saveUserPreference } from '@app/user/actions/user.actions';
 
 describe('MetadataProcessToolbarComponent', () => {
@@ -54,7 +53,6 @@ describe('MetadataProcessToolbarComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatDialogModule,

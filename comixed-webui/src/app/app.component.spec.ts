@@ -59,7 +59,6 @@ import {
   WORKING_ICON_URL
 } from '@app/app.constants';
 import { MatSelectModule } from '@angular/material/select';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { SideNavigationComponent } from '@app/components/side-navigation/side-navigation.component';
 import { FooterComponent } from '@app/components/footer/footer.component';
@@ -135,7 +134,6 @@ describe('AppComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
         RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
         TranslateModule.forRoot(),
         LoggerModule.forRoot(),

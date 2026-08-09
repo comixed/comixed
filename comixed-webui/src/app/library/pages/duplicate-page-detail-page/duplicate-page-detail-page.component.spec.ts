@@ -53,7 +53,6 @@ import { BLOCKED_HASH_1 } from '@app/comic-pages/comic-pages.fixtures';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { MatSortModule } from '@angular/material/sort';
 import { COMIC_DETAIL_1 } from '@app/comic-books/comic-books.fixtures';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
   BLOCKED_HASHES_FEATURE_KEY,
   initialState as initialBlockedHashesState
@@ -85,7 +84,6 @@ describe('DuplicatePageDetailPageComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
         RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),

@@ -27,7 +27,6 @@ import {
   COMIC_BOOK_4
 } from '@app/comic-books/comic-books.fixtures';
 import { ComicDetailsDialogComponent } from '@app/library/components/comic-details-dialog/comic-details-dialog.component';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('SelectedComicsComponent', () => {
   const COMICS = [
@@ -46,7 +45,6 @@ describe('SelectedComicsComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
         LoggerModule.forRoot(),
         MatDialogModule,
         SelectedComicsComponent

@@ -38,7 +38,6 @@ import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { TitleService } from '@app/core/services/title.service';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ISSUE_1 } from '@app/collections/collections.fixtures';
 import {
   DISPLAYABLE_COMIC_1,
@@ -94,7 +93,6 @@ describe('SeriesMetadataPageComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
         RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),

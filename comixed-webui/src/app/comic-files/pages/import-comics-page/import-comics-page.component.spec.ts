@@ -44,7 +44,6 @@ import { MatTableModule } from '@angular/material/table';
 import { ComicFileCoverUrlPipe } from '@app/comic-files/pipes/comic-file-cover-url.pipe';
 import { MatCardModule } from '@angular/material/card';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import {
   COMIC_FILE_LIST_FEATURE_KEY,
@@ -128,7 +127,6 @@ describe('ImportComicsPageComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
         RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
         ReactiveFormsModule,
         FormsModule,
