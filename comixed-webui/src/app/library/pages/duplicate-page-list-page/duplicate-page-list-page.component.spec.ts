@@ -89,7 +89,6 @@ import {
   setBlockedStateForHash,
   setBlockedStateForSelectedHashes
 } from '@app/comic-pages/actions/blocked-hashes.actions';
-import { RouterTestingModule } from '@angular/router/testing';
 import { PAGE_SIZE_DEFAULT } from '@app/core';
 import { DuplicatePageUpdate } from '@app/library/models/net/duplicate-page-update';
 import {
@@ -102,6 +101,7 @@ import {
   clearHashSelections,
   removeHashSelection
 } from '@app/comic-pages/actions/hash-selection.actions';
+import { provideRouter } from '@angular/router';
 
 describe('DuplicatePageListPageComponent', () => {
   const COMICS = [
@@ -150,7 +150,6 @@ describe('DuplicatePageListPageComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatIconModule,
@@ -167,6 +166,7 @@ describe('DuplicatePageListPageComponent', () => {
       ],
       providers: [
         provideMockStore({ initialState }),
+        provideRouter([]),
         {
           provide: WebSocketService,
           useValue: {

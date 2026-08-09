@@ -38,8 +38,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { PUBLISHER_1, SERIES_1 } from '@app/collections/collections.fixtures';
 import { ScrapeSeriesResponse } from '@app/comic-metadata/models/net/scrape-series-response';
-import { Router } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
+import { provideRouter, Router } from '@angular/router';
 
 describe('SeriesScrapingEffects', () => {
   const ORIGINAL_PUBLISHER = PUBLISHER_1.name;
@@ -57,7 +56,6 @@ describe('SeriesScrapingEffects', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatSnackBarModule
@@ -65,6 +63,7 @@ describe('SeriesScrapingEffects', () => {
       providers: [
         SeriesScrapingEffects,
         provideMockActions(() => actions$),
+        provideRouter([]),
         {
           provide: ComicBookScrapingService,
           useValue: {

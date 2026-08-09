@@ -32,8 +32,7 @@ import {
   TextOnlySnackBar
 } from '@angular/material/snack-bar';
 import { TranslateModule } from '@ngx-translate/core';
-import { RouterTestingModule } from '@angular/router/testing';
-import { Router } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 
 describe('AlertService', () => {
@@ -47,7 +46,6 @@ describe('AlertService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatSnackBarModule
@@ -58,7 +56,8 @@ describe('AlertService', () => {
           useValue: {
             afterOpened: jasmine.createSpy('MatSnackBarRef.afterOpened()')
           }
-        }
+        },
+        provideRouter([])
       ]
     });
 

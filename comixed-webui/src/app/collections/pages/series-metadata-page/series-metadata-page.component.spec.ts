@@ -19,8 +19,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SeriesMetadataPageComponent } from './series-metadata-page.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
-import { RouterTestingModule } from '@angular/router/testing';
-import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
+import {
+  ActivatedRoute,
+  ActivatedRouteSnapshot,
+  provideRouter
+} from '@angular/router';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { BehaviorSubject } from 'rxjs';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -93,7 +96,6 @@ describe('SeriesMetadataPageComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatPaginatorModule,
@@ -107,6 +109,7 @@ describe('SeriesMetadataPageComponent', () => {
       ],
       providers: [
         provideMockStore({ initialState }),
+        provideRouter([]),
         {
           provide: ActivatedRoute,
           useValue: {

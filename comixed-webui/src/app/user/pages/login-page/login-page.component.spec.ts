@@ -33,8 +33,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { TitleService } from '@app/core/services/title.service';
-import { Router } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
+import { provideRouter, Router } from '@angular/router';
 import {
   INITIAL_USER_ACCOUNT_FEATURE_KEY,
   initialState as initialUserAccountState
@@ -59,7 +58,6 @@ describe('LoginPageComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
         FormsModule,
         ReactiveFormsModule,
         TranslateModule.forRoot(),
@@ -70,7 +68,7 @@ describe('LoginPageComponent', () => {
         MatIconModule,
         LoginPageComponent
       ],
-      providers: [provideMockStore({ initialState })]
+      providers: [provideMockStore({ initialState }), provideRouter([])]
     }).compileComponents();
 
     fixture = TestBed.createComponent(LoginPageComponent);

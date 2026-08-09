@@ -33,9 +33,9 @@ import { ComicDetailCardComponent } from '@app/comic-books/components/comic-deta
 import { provideMockStore } from '@ngrx/store/testing';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
-import { RouterTestingModule } from '@angular/router/testing';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
+import { provideRouter } from '@angular/router';
 
 describe('ComicStoryComponent', () => {
   const COMIC_BOOK = DISPLAYABLE_COMIC_1;
@@ -54,7 +54,6 @@ describe('ComicStoryComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatExpansionModule,
@@ -65,7 +64,7 @@ describe('ComicStoryComponent', () => {
         ComicStoryComponent,
         ComicDetailCardComponent
       ],
-      providers: [provideMockStore({ initialState })]
+      providers: [provideMockStore({ initialState }), provideRouter([])]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicStoryComponent);

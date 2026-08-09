@@ -27,13 +27,13 @@ import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { RouterTestingModule } from '@angular/router/testing';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { PROCESSING_COMIC_STATUS_1 } from '@app/comic-files/comic-file.fixtures';
 import { TitleService } from '@app/core/services/title.service';
+import { provideRouter } from '@angular/router';
 
 describe('ProcessingStatusPageComponent', () => {
   const STATUS = PROCESSING_COMIC_STATUS_1;
@@ -50,7 +50,6 @@ describe('ProcessingStatusPageComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatProgressBarModule,
@@ -61,6 +60,7 @@ describe('ProcessingStatusPageComponent', () => {
       ],
       providers: [
         provideMockStore({ initialState }),
+        provideRouter([]),
         QueryParameterService,
         TitleService
       ]

@@ -35,7 +35,6 @@ import {
 import { ComicListViewComponent } from '@app/comic-books/components/comic-list-view/comic-list-view.component';
 import { MetadataProcessToolbarComponent } from '@app/comic-metadata/components/metadata-process-toolbar/metadata-process-toolbar.component';
 import { MatDialogModule } from '@angular/material/dialog';
-import { RouterTestingModule } from '@angular/router/testing';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -63,6 +62,7 @@ import {
   initialState as initialMetadataUpdateProcessState,
   METADATA_UPDATE_PROCESS_FEATURE_KEY
 } from '@app/comic-metadata/reducers/metadata-update-process.reducer';
+import { provideRouter } from '@angular/router';
 
 describe('MetadataProcessPageComponent', () => {
   const COMIC_BOOKS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
@@ -84,7 +84,6 @@ describe('MetadataProcessPageComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatDialogModule,
@@ -104,7 +103,11 @@ describe('MetadataProcessPageComponent', () => {
         ComicCoverUrlPipe,
         ComicTitlePipe
       ],
-      providers: [provideMockStore({ initialState }), TitleService]
+      providers: [
+        provideMockStore({ initialState }),
+        provideRouter([]),
+        TitleService
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(MetadataProcessPageComponent);

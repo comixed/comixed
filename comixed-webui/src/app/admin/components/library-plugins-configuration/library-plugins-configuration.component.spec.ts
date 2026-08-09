@@ -21,7 +21,6 @@ import { LibraryPluginsConfigurationComponent } from './library-plugins-configur
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -47,6 +46,7 @@ import {
 } from '@tragically-slick/confirmation';
 import { of } from 'rxjs';
 import { CreatePluginDetails } from '@app/admin/models/ui/create-plugin-details';
+import { provideRouter } from '@angular/router';
 
 describe('LibraryPluginsConfigurationComponent', () => {
   const initialState = {
@@ -64,7 +64,6 @@ describe('LibraryPluginsConfigurationComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatDialogModule,
@@ -79,6 +78,7 @@ describe('LibraryPluginsConfigurationComponent', () => {
       ],
       providers: [
         provideMockStore({ initialState }),
+        provideRouter([]),
         AlertService,
         ConfirmationService
       ]

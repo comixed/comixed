@@ -20,7 +20,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PublisherSeriesPageComponent } from './publisher-series-page.component';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { LoggerModule } from '@angular-ru/cdk/logger';
-import { RouterTestingModule } from '@angular/router/testing';
 import { TitleService } from '@app/core/services/title.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import {
@@ -39,6 +38,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSortModule } from '@angular/material/sort';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { provideRouter } from '@angular/router';
 
 describe('PublisherSeriesPageComponent', () => {
   const initialState = { [PUBLISHER_FEATURE_KEY]: initialPublisherState };
@@ -54,7 +54,6 @@ describe('PublisherSeriesPageComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatTableModule,
@@ -65,7 +64,11 @@ describe('PublisherSeriesPageComponent', () => {
         MatInputModule,
         PublisherSeriesPageComponent
       ],
-      providers: [provideMockStore({ initialState }), TitleService]
+      providers: [
+        provideMockStore({ initialState }),
+        provideRouter([]),
+        TitleService
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(PublisherSeriesPageComponent);

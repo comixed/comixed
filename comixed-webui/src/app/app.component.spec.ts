@@ -46,7 +46,6 @@ import {
   initialState as initialMessagingState,
   MESSAGING_FEATURE_KEY
 } from '@app/messaging/reducers/messaging.reducer';
-import { RouterTestingModule } from '@angular/router/testing';
 import {
   IMPORT_COMIC_BOOKS_FEATURE_KEY,
   initialState as initialImportCountState
@@ -100,6 +99,7 @@ import {
   initialState as initialReleaseDetailsState,
   RELEASE_DETAILS_FEATURE_KEY
 } from '@app/reducers/release.reducer';
+import { provideRouter } from '@angular/router';
 
 describe('AppComponent', () => {
   const USER = USER_READER;
@@ -134,7 +134,6 @@ describe('AppComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
         TranslateModule.forRoot(),
         LoggerModule.forRoot(),
         MatToolbarModule,
@@ -154,6 +153,7 @@ describe('AppComponent', () => {
       ],
       providers: [
         provideMockStore({ initialState }),
+        provideRouter([]),
         {
           provide: WebSocketService,
           useValue: {

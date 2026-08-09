@@ -50,7 +50,7 @@ import {
   ConfirmationService
 } from '@tragically-slick/confirmation';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { RouterTestingModule } from '@angular/router/testing';
+import { provideRouter } from '@angular/router';
 
 describe('ReadingListsPageComponent', () => {
   const READING_LISTS = [READING_LIST_1, READING_LIST_3, READING_LIST_5];
@@ -73,7 +73,6 @@ describe('ReadingListsPageComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatToolbarModule,
@@ -87,6 +86,7 @@ describe('ReadingListsPageComponent', () => {
       ],
       providers: [
         provideMockStore({ initialState }),
+        provideRouter([]),
         ConfirmationService,
         TitleService
       ]

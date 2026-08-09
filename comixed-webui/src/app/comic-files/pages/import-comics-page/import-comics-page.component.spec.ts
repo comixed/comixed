@@ -65,9 +65,8 @@ import {
 } from '@tragically-slick/confirmation';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { ComicFileLoaderComponent } from '@app/comic-files/components/comic-file-loader/comic-file-loader.component';
-import { RouterTestingModule } from '@angular/router/testing';
 import { MatSortModule } from '@angular/material/sort';
-import { Router } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 import {
   toggleComicFileSelections,
   updateCurrentPath
@@ -127,7 +126,6 @@ describe('ImportComicsPageComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
         ReactiveFormsModule,
         FormsModule,
         LoggerModule.forRoot(),
@@ -151,6 +149,7 @@ describe('ImportComicsPageComponent', () => {
       ],
       providers: [
         provideMockStore({ initialState }),
+        provideRouter([]),
         ConfirmationService,
         TitleService
       ]

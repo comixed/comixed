@@ -23,7 +23,6 @@ import { TranslateModule } from '@ngx-translate/core';
 import { USER_ADMIN, USER_READER } from '@app/user/user.fixtures';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
-import { RouterTestingModule } from '@angular/router/testing';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import {
   initialState as initialReadingListsState,
@@ -52,6 +51,7 @@ import {
   COMIC_BOOK_SELECTION_FEATURE_KEY,
   initialState as initialcomicBookSelectionState
 } from '@app/comic-books/reducers/comic-book-selection.reducer';
+import { provideRouter } from '@angular/router';
 
 describe('SideNavigationComponent', () => {
   const BLOCKED_PAGES_ENABLED_FEATURE_ENABLED = Math.random() > 0.5;
@@ -70,7 +70,6 @@ describe('SideNavigationComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatListModule,
@@ -78,7 +77,7 @@ describe('SideNavigationComponent', () => {
         MatFormFieldModule,
         SideNavigationComponent
       ],
-      providers: [provideMockStore({ initialState })]
+      providers: [provideMockStore({ initialState }), provideRouter([])]
     }).compileComponents();
 
     fixture = TestBed.createComponent(SideNavigationComponent);
