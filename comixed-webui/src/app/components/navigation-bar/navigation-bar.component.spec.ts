@@ -24,9 +24,8 @@ import {
   LoggerModule,
   LoggerService
 } from '@angular-ru/cdk/logger';
-import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { Router } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 import { logoutUser, saveUserPreference } from '@app/user/actions/user.actions';
 import { USER_ADMIN, USER_READER } from '@app/user/user.fixtures';
 import { MatMenuModule } from '@angular/material/menu';
@@ -82,7 +81,6 @@ describe('NavigationBarComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
         TranslateModule.forRoot(),
         LoggerModule.forRoot(),
         GravatarModule,
@@ -96,7 +94,7 @@ describe('NavigationBarComponent', () => {
         MatDialogModule,
         NavigationBarComponent
       ],
-      providers: [provideMockStore({ initialState })]
+      providers: [provideMockStore({ initialState }), provideRouter([])]
     }).compileComponents();
 
     fixture = TestBed.createComponent(NavigationBarComponent);

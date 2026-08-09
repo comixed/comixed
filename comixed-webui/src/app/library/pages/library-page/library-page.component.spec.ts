@@ -30,7 +30,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTreeModule } from '@angular/material/tree';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/core/services/title.service';
-import { RouterTestingModule } from '@angular/router/testing';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -43,6 +42,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import {
   ActivatedRoute,
   ActivatedRouteSnapshot,
+  provideRouter,
   Router
 } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
@@ -158,7 +158,6 @@ describe('LibraryPageComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatSidenavModule,
@@ -187,6 +186,7 @@ describe('LibraryPageComponent', () => {
       ],
       providers: [
         provideMockStore({ initialState }),
+        provideRouter([]),
         {
           provide: ActivatedRoute,
           useValue: {

@@ -24,13 +24,12 @@ import {
   LIBRARY_FEATURE_KEY
 } from '@app/library/reducers/library.reducer';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import {
   initialState as initialUserState,
   USER_FEATURE_KEY
 } from '@app/user/reducers/user.reducer';
-import { Router } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 import {
   COMIC_BOOK_1,
   COMIC_BOOK_2,
@@ -152,7 +151,6 @@ describe('ComicBookPageComponent', () => {
       imports: [
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
-        RouterTestingModule,
         MatCardModule,
         MatToolbarModule,
         MatDialogModule,
@@ -170,6 +168,7 @@ describe('ComicBookPageComponent', () => {
       ],
       providers: [
         provideMockStore({ initialState }),
+        provideRouter([]),
         {
           provide: MatDialogRef,
           useValue: {}

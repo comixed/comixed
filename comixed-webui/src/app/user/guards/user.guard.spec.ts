@@ -24,8 +24,7 @@ import {
   USER_FEATURE_KEY
 } from '@app/user/reducers/user.reducer';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { Router } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
+import { provideRouter, Router } from '@angular/router';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { Observable } from 'rxjs';
 import { USER_ADMIN } from '@app/user/user.fixtures';
@@ -42,11 +41,8 @@ describe('UserGuard', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
-        LoggerModule.forRoot()
-      ],
-      providers: [provideMockStore({ initialState })]
+      imports: [LoggerModule.forRoot()],
+      providers: [provideMockStore({ initialState }), provideRouter([])]
     });
     guard = TestBed.inject(UserGuard);
     store = TestBed.inject(MockStore);

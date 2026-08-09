@@ -19,7 +19,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ComicListFilterComponent } from './comic-list-filter.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
-import { RouterTestingModule } from '@angular/router/testing';
 import { MatCardModule } from '@angular/material/card';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSelectModule } from '@angular/material/select';
@@ -37,6 +36,7 @@ import {
   QUERY_PARAM_FILTER_TEXT,
   QUERY_PARAM_PAGE_COUNT
 } from '@app/core';
+import { provideRouter } from '@angular/router';
 
 describe('ComicListFilterComponent', () => {
   let component: ComicListFilterComponent;
@@ -46,7 +46,6 @@ describe('ComicListFilterComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
         FormsModule,
         ReactiveFormsModule,
         LoggerModule.forRoot(),
@@ -59,7 +58,7 @@ describe('ComicListFilterComponent', () => {
         MatInputModule,
         ComicListFilterComponent
       ],
-      providers: [QueryParameterService]
+      providers: [provideRouter([]), QueryParameterService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicListFilterComponent);

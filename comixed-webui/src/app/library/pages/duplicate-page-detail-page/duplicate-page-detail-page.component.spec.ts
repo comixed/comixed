@@ -19,8 +19,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { DuplicatePageDetailPageComponent } from './duplicate-page-detail-page.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
-import { RouterTestingModule } from '@angular/router/testing';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, provideRouter, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import {
@@ -84,7 +83,6 @@ describe('DuplicatePageDetailPageComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatToolbarModule,
@@ -101,6 +99,7 @@ describe('DuplicatePageDetailPageComponent', () => {
       ],
       providers: [
         provideMockStore({ initialState }),
+        provideRouter([]),
         {
           provide: ActivatedRoute,
           useValue: {

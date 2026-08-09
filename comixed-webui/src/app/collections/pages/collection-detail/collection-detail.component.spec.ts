@@ -23,10 +23,10 @@ import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import {
   ActivatedRoute,
   ActivatedRouteSnapshot,
+  provideRouter,
   Router
 } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
-import { RouterTestingModule } from '@angular/router/testing';
 import {
   initialState as initialLibraryState,
   LIBRARY_FEATURE_KEY
@@ -128,7 +128,6 @@ describe('CollectionDetailComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatDialogModule,
@@ -155,6 +154,7 @@ describe('CollectionDetailComponent', () => {
       ],
       providers: [
         provideMockStore({ initialState }),
+        provideRouter([{ path: '**', redirectTo: '' }]),
         {
           provide: ActivatedRoute,
           useValue: {

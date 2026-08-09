@@ -25,7 +25,6 @@ import {
   READING_LIST_DETAIL_FEATURE_KEY
 } from '@app/lists/reducers/reading-list-detail.reducer';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -34,6 +33,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import {
   ActivatedRoute,
   ActivatedRouteSnapshot,
+  provideRouter,
   Router
 } from '@angular/router';
 import { BehaviorSubject, Subscription } from 'rxjs';
@@ -144,7 +144,6 @@ describe('ReadingListDetailPageComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
         FormsModule,
         ReactiveFormsModule,
         LoggerModule.forRoot(),
@@ -169,6 +168,7 @@ describe('ReadingListDetailPageComponent', () => {
       ],
       providers: [
         provideMockStore({ initialState }),
+        provideRouter([]),
         {
           provide: ActivatedRoute,
           useValue: {

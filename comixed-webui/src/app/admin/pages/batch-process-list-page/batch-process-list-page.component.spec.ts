@@ -24,7 +24,6 @@ import {
   BATCH_PROCESSES_FEATURE_KEY,
   initialState as initialBatchProcessState
 } from '@app/admin/reducers/batch-processes.reducer';
-import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import {
   BATCH_PROCESS_DETAIL_1,
@@ -53,6 +52,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { provideRouter } from '@angular/router';
 
 describe('BatchProcessListPageComponent', () => {
   const DETAIL1 = BATCH_PROCESS_DETAIL_1;
@@ -72,7 +72,6 @@ describe('BatchProcessListPageComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatTooltipModule,
@@ -85,7 +84,11 @@ describe('BatchProcessListPageComponent', () => {
         MatCheckboxModule,
         BatchProcessListPageComponent
       ],
-      providers: [provideMockStore({ initialState }), ConfirmationService]
+      providers: [
+        provideMockStore({ initialState }),
+        provideRouter([]),
+        ConfirmationService
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(BatchProcessListPageComponent);

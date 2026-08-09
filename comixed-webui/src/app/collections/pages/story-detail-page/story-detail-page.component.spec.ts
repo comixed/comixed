@@ -55,6 +55,7 @@ import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import {
   ActivatedRoute,
   ActivatedRouteSnapshot,
+  provideRouter,
   Router
 } from '@angular/router';
 import { TitleService } from '@app/core/services/title.service';
@@ -64,7 +65,6 @@ import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 import { ComicCoverUrlPipe } from '@app/comic-books/pipes/comic-cover-url.pipe';
 import { ArchiveTypePipe } from '@app/library/pipes/archive-type.pipe';
 import { CoverDateFilterPipe } from '@app/comic-books/pipes/cover-date-filter.pipe';
-import { RouterTestingModule } from '@angular/router/testing';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
@@ -137,7 +137,6 @@ describe('StoryDetailPageComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatDialogModule,
@@ -165,6 +164,7 @@ describe('StoryDetailPageComponent', () => {
       ],
       providers: [
         provideMockStore({ initialState }),
+        provideRouter([]),
         {
           provide: ActivatedRoute,
           useValue: {

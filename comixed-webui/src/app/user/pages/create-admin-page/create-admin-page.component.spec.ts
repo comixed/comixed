@@ -27,8 +27,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
+import { provideRouter, Router } from '@angular/router';
 import {
   INITIAL_USER_ACCOUNT_FEATURE_KEY,
   initialState as initialUserAccountState
@@ -67,7 +66,6 @@ describe('CreateAdminPageComponent', () => {
       imports: [
         FormsModule,
         ReactiveFormsModule,
-        RouterTestingModule.withRoutes([]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatDialogModule,
@@ -77,7 +75,11 @@ describe('CreateAdminPageComponent', () => {
         MatInputModule,
         CreateAdminPageComponent
       ],
-      providers: [provideMockStore({ initialState }), ConfirmationService]
+      providers: [
+        provideMockStore({ initialState }),
+        provideRouter([]),
+        ConfirmationService
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(CreateAdminPageComponent);

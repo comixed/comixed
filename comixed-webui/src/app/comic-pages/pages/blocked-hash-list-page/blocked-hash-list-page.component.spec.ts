@@ -20,8 +20,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { BlockedHashListPageComponent } from './blocked-hash-list-page.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { RouterTestingModule } from '@angular/router/testing';
-import { Router } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 import { BlockedHash } from '@app/comic-pages/models/blocked-hash';
 import {
   BLOCKED_HASH_1,
@@ -80,7 +79,6 @@ describe('BlockedHashListPageComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatToolbarModule,
@@ -97,6 +95,7 @@ describe('BlockedHashListPageComponent', () => {
       ],
       providers: [
         provideMockStore({ initialState }),
+        provideRouter([]),
         ConfirmationService,
         TitleService
       ]
