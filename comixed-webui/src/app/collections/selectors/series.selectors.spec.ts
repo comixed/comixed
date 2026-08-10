@@ -18,9 +18,9 @@
 
 import { SERIES_FEATURE_KEY, SeriesState } from '../reducers/series.reducer';
 import {
+  selectSeriesBusy,
   selectSeriesDetail,
   selectSeriesList,
-  selectSeriesState,
   selectSeriesTotal
 } from './series.selectors';
 import {
@@ -46,15 +46,15 @@ describe('Series Selectors', () => {
     };
   });
 
-  it('should select the feature state', () => {
+  it('selects the series count', () => {
     expect(
-      selectSeriesState({
+      selectSeriesBusy({
         [SERIES_FEATURE_KEY]: state
       })
-    ).toEqual(state);
+    ).toEqual(state.busy);
   });
 
-  it('should select the series count', () => {
+  it('selects the series count', () => {
     expect(
       selectSeriesTotal({
         [SERIES_FEATURE_KEY]: state
@@ -62,7 +62,7 @@ describe('Series Selectors', () => {
     ).toEqual(state.totalSeries);
   });
 
-  it('should select the series list', () => {
+  it('selects the series list', () => {
     expect(
       selectSeriesList({
         [SERIES_FEATURE_KEY]: state
@@ -70,7 +70,7 @@ describe('Series Selectors', () => {
     ).toEqual(state.series);
   });
 
-  it('should select the series detail', () => {
+  it('selects the series detail', () => {
     expect(
       selectSeriesDetail({
         [SERIES_FEATURE_KEY]: state

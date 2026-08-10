@@ -22,7 +22,7 @@ import {
 } from '../reducers/duplicate-comics.reducer';
 import {
   selectDuplicateComicList,
-  selectDuplicateComicState,
+  selectDuplicateComicListBusy,
   selectDuplicateComicTotal
 } from './duplicate-comics.selectors';
 import {
@@ -48,15 +48,15 @@ describe('DuplicateComics Selectors', () => {
     total: DUPLICATE_COMIC_LIST.length
   } as DuplicateComicState;
 
-  it('should select the feature state', () => {
+  it('selects the busy state', () => {
     expect(
-      selectDuplicateComicState({
+      selectDuplicateComicListBusy({
         [DUPLICATE_COMICS_FEATURE_KEY]: state
       })
-    ).toEqual(state);
+    ).toEqual(state.busy);
   });
 
-  it('should select the duplicate comic list', () => {
+  it('selects the duplicate comic list', () => {
     expect(
       selectDuplicateComicList({
         [DUPLICATE_COMICS_FEATURE_KEY]: state
@@ -64,7 +64,7 @@ describe('DuplicateComics Selectors', () => {
     ).toEqual(state.entries);
   });
 
-  it('should select the duplicate comic totals', () => {
+  it('selects the duplicate comic totals', () => {
     expect(
       selectDuplicateComicTotal({
         [DUPLICATE_COMICS_FEATURE_KEY]: state

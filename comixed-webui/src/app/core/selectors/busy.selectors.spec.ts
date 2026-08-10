@@ -17,7 +17,7 @@
  */
 
 import { BUSY_FEATURE_KEY, BusyState } from '../reducers/busy.reducer';
-import { selectBusyState } from './busy.selectors';
+import { selectShowAsBusy } from './busy.selectors';
 import { BusyIcon } from '@app/core/actions/busy.actions';
 
 describe('Busy Selectors', () => {
@@ -27,11 +27,11 @@ describe('Busy Selectors', () => {
     state = { enabled: Math.random() > 0.5, icon: BusyIcon.WORKING };
   });
 
-  it('should select the feature state', () => {
+  it('should select the busy state', () => {
     expect(
-      selectBusyState({
+      selectShowAsBusy({
         [BUSY_FEATURE_KEY]: state
       })
-    ).toEqual(state);
+    ).toEqual({ enabled: state.enabled, icon: state.icon });
   });
 });

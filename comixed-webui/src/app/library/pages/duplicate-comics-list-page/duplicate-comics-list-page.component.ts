@@ -21,7 +21,7 @@ import { Store } from '@ngrx/store';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import {
   selectDuplicateComicList,
-  selectDuplicateComicState,
+  selectDuplicateComicListBusy,
   selectDuplicateComicTotal
 } from '@app/library/selectors/duplicate-comics.selectors';
 import {
@@ -106,10 +106,8 @@ export class DuplicateComicsListPageComponent implements OnInit {
       .pipe(tap(() => this.doLoadTranslations()))
       .subscribe();
     this.store
-      .select(selectDuplicateComicState)
-      .pipe(
-        tap(state => this.store.dispatch(setBusyState({ enabled: state.busy })))
-      )
+      .select(selectDuplicateComicListBusy)
+      .pipe(tap(enabled => this.store.dispatch(setBusyState({ enabled }))))
       .subscribe();
     this.store
       .select(selectDuplicateComicList)

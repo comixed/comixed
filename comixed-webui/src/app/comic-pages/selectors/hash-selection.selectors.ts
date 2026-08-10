@@ -22,8 +22,9 @@ import {
   HashSelectionState
 } from '../reducers/hash-selection.reducer';
 
-export const selectHashSelectionState =
-  createFeatureSelector<HashSelectionState>(HASH_SELECTION_FEATURE_KEY);
+const selectHashSelectionState = createFeatureSelector<HashSelectionState>(
+  HASH_SELECTION_FEATURE_KEY
+);
 
 export const selectHashSelectionBusy = createSelector(
   selectHashSelectionState,

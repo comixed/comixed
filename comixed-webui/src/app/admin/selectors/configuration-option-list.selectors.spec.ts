@@ -21,7 +21,7 @@ import {
   ConfigurationOptionListState
 } from '../reducers/configuration-option-list.reducer';
 import {
-  selectConfigurationOptionListState,
+  selectConfigurationOptionListBusy,
   selectConfigurationOptions
 } from './configuration-option-list.selectors';
 import {
@@ -49,15 +49,45 @@ describe('ConfigurationOptionList Selectors', () => {
     };
   });
 
-  it('should select the feature state', () => {
-    expect(
-      selectConfigurationOptionListState({
-        [CONFIGURATION_OPTION_LIST_FEATURE_KEY]: state
-      })
-    ).toEqual(state);
+  describe('the busy state', () => {
+    it('returns true when loading', () => {
+      expect(
+        selectConfigurationOptionListBusy({
+          [CONFIGURATION_OPTION_LIST_FEATURE_KEY]: {
+            ...state,
+            loading: true,
+            saving: false
+          }
+        })
+      ).toEqual(true);
+    });
+
+    it('returns true when saving', () => {
+      expect(
+        selectConfigurationOptionListBusy({
+          [CONFIGURATION_OPTION_LIST_FEATURE_KEY]: {
+            ...state,
+            loading: false,
+            saving: true
+          }
+        })
+      ).toEqual(true);
+    });
+
+    it('returns false when neither loading nor saving', () => {
+      expect(
+        selectConfigurationOptionListBusy({
+          [CONFIGURATION_OPTION_LIST_FEATURE_KEY]: {
+            ...state,
+            loading: false,
+            saving: false
+          }
+        })
+      ).toEqual(false);
+    });
   });
 
-  it('should select the option list', () => {
+  it('selects the option list', () => {
     expect(
       selectConfigurationOptions({
         [CONFIGURATION_OPTION_LIST_FEATURE_KEY]: state

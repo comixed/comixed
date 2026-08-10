@@ -24,7 +24,8 @@ import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 import { loadDuplicateComics } from '@app/library/actions/duplicate-comics.actions';
 import {
   selectComicList,
-  selectComicListState
+  selectComicListBusy,
+  selectComicTotalCount
 } from '@app/comic-books/selectors/comic-list.selectors';
 import { ComicListViewComponent } from '@app/comic-books/components/comic-list-view/comic-list-view.component';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
@@ -87,13 +88,12 @@ export class DuplicateComicsDetailPageComponent implements OnInit {
       )
       .subscribe();
     this.store
-      .select(selectComicListState)
-      .pipe(
-        tap(state => {
-          this.store.dispatch(setBusyState({ enabled: state.busy }));
-          this.totalDuplicates$.next(state.totalCount);
-        })
-      )
+      .select(selectComicListBusy)
+      .pipe(tap(enabled => this.store.dispatch(setBusyState({ enabled }))))
+      .subscribe();
+    this.store
+      .select(selectComicTotalCount)
+      .pipe(tap(totalCount => this.totalDuplicates$.next(totalCount)))
       .subscribe();
     this.store
       .select(selectComicList)

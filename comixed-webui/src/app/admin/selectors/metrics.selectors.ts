@@ -19,8 +19,13 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { METRICS_FEATURE_KEY, MetricsState } from '../reducers/metrics.reducer';
 
-export const selectMetricsState =
+const selectMetricsState =
   createFeatureSelector<MetricsState>(METRICS_FEATURE_KEY);
+
+export const selectMetricsBusy = createSelector(
+  selectMetricsState,
+  state => state.busy
+);
 
 export const selectMetricList = createSelector(
   selectMetricsState,

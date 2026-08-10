@@ -28,8 +28,6 @@ import {
 } from '@angular/material/dialog';
 import {
   COMIC_DETAIL_1,
-  COMIC_DETAIL_3,
-  COMIC_DETAIL_5,
   IMPRINT_1,
   IMPRINT_2,
   IMPRINT_3
@@ -49,8 +47,10 @@ import { ComicType } from '@app/comic-books/models/comic-type';
 describe('EditMultipleComicsComponent', () => {
   const COMICS = [
     COMIC_DETAIL_1,
-    { ...COMIC_DETAIL_3, publisher: COMIC_DETAIL_1.publisher },
-    { ...COMIC_DETAIL_5, publisher: COMIC_DETAIL_1.publisher }
+    COMIC_DETAIL_1,
+    COMIC_DETAIL_1,
+    COMIC_DETAIL_1,
+    COMIC_DETAIL_1
   ];
   const IMPRINTS = [IMPRINT_1, IMPRINT_2, IMPRINT_3];
   const initialState = {
@@ -136,6 +136,48 @@ describe('EditMultipleComicsComponent', () => {
     it('sets the comic type form field', () => {
       expect(component.detailsForm.controls.comicType.value).toEqual(
         COMIC_TYPE
+      );
+    });
+  });
+
+  describe('receiving the list of comics', () => {
+    beforeEach(() => {
+      component.comics = COMICS;
+    });
+
+    it('sets the publisher input', () => {
+      expect(component.detailsForm.controls['publisher'].value).toEqual(
+        COMICS[0].publisher
+      );
+    });
+
+    it('sets the series input', () => {
+      expect(component.detailsForm.controls['series'].value).toEqual(
+        COMICS[0].series
+      );
+    });
+
+    it('sets the volume input', () => {
+      expect(component.detailsForm.controls['volume'].value).toEqual(
+        COMICS[0].volume
+      );
+    });
+
+    it('sets the issue number input', () => {
+      expect(component.detailsForm.controls['issueNumber'].value).toEqual(
+        COMICS[0].issueNumber
+      );
+    });
+
+    it('sets the imprint input', () => {
+      expect(component.detailsForm.controls['imprint'].value).toEqual(
+        COMICS[0].imprint
+      );
+    });
+
+    it('sets the comic type input', () => {
+      expect(component.detailsForm.controls['comicType'].value).toEqual(
+        COMICS[0].comicType
       );
     });
   });

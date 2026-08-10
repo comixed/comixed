@@ -21,8 +21,8 @@ import {
   CollectionListState
 } from '../reducers/collection-list.reducer';
 import {
+  selectCollectionListBusy,
   selectCollectionListEntries,
-  selectCollectionListState,
   selectCollectionListTotalEntries
 } from './collection-list.selectors';
 import {
@@ -53,15 +53,15 @@ describe('CollectionList Selectors', () => {
     };
   });
 
-  it('should select the feature state', () => {
+  it('selects the busy state', () => {
     expect(
-      selectCollectionListState({
+      selectCollectionListBusy({
         [COLLECTION_LIST_FEATURE_KEY]: state
       })
-    ).toEqual(state);
+    ).toEqual(state.busy);
   });
 
-  it('should select the list of collection entries', () => {
+  it('selects the list of collection entries', () => {
     expect(
       selectCollectionListEntries({
         [COLLECTION_LIST_FEATURE_KEY]: state
@@ -69,7 +69,7 @@ describe('CollectionList Selectors', () => {
     ).toEqual(state.entries);
   });
 
-  it('should select the total number of entries', () => {
+  it('selects the total number of entries', () => {
     expect(
       selectCollectionListTotalEntries({
         [COLLECTION_LIST_FEATURE_KEY]: state

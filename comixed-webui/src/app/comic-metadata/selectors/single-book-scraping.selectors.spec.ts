@@ -21,9 +21,10 @@ import {
   SingleBookScrapingState
 } from '../reducers/single-book-scraping.reducer';
 import {
+  selectChosenMetadataAutoSelectExactMatch,
+  selectChosenMetadataConfirmBeforeScraping,
   selectChosenMetadataSource,
   selectScrapingIssueMetadata,
-  selectSingleBookScrapingState,
   selectScrapingVolumeMetadata,
   selectSingleBookScrapingBusy
 } from './single-book-scraping.selectors';
@@ -54,15 +55,7 @@ describe('SingleBookScraping Selectors', () => {
     };
   });
 
-  it('should select the feature state', () => {
-    expect(
-      selectSingleBookScrapingState({
-        [SINGLE_BOOK_SCRAPING_FEATURE_KEY]: state
-      })
-    ).toEqual(state);
-  });
-
-  it('should select the scraping busy state', () => {
+  it('selects the scraping busy state', () => {
     expect(
       selectSingleBookScrapingBusy({
         [SINGLE_BOOK_SCRAPING_FEATURE_KEY]: state
@@ -70,7 +63,7 @@ describe('SingleBookScraping Selectors', () => {
     ).toEqual(state.busy || state.loadingRecords);
   });
 
-  it('should select the scraping volumes', () => {
+  it('selects the scraping volumes', () => {
     expect(
       selectScrapingVolumeMetadata({
         [SINGLE_BOOK_SCRAPING_FEATURE_KEY]: state
@@ -78,7 +71,7 @@ describe('SingleBookScraping Selectors', () => {
     ).toEqual(state.volumes);
   });
 
-  it('should select the scraping issue', () => {
+  it('selects the scraping issue', () => {
     expect(
       selectScrapingIssueMetadata({
         [SINGLE_BOOK_SCRAPING_FEATURE_KEY]: state
@@ -86,11 +79,27 @@ describe('SingleBookScraping Selectors', () => {
     ).toEqual(state.scrapingIssue);
   });
 
-  it('should select the selected metadata source', () => {
+  it('selects the selected metadata source', () => {
     expect(
       selectChosenMetadataSource({
         [SINGLE_BOOK_SCRAPING_FEATURE_KEY]: state
       })
     ).toEqual(state.metadataSource);
+  });
+
+  it('selects if confirming before selection', () => {
+    expect(
+      selectChosenMetadataConfirmBeforeScraping({
+        [SINGLE_BOOK_SCRAPING_FEATURE_KEY]: state
+      })
+    ).toEqual(state.confirmBeforeScraping);
+  });
+
+  it('selects if autoselecting exact matches', () => {
+    expect(
+      selectChosenMetadataAutoSelectExactMatch({
+        [SINGLE_BOOK_SCRAPING_FEATURE_KEY]: state
+      })
+    ).toEqual(state.autoSelectExactMatch);
   });
 });

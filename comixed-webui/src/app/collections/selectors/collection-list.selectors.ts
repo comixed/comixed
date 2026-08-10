@@ -22,8 +22,14 @@ import {
   CollectionListState
 } from '../reducers/collection-list.reducer';
 
-export const selectCollectionListState =
-  createFeatureSelector<CollectionListState>(COLLECTION_LIST_FEATURE_KEY);
+const selectCollectionListState = createFeatureSelector<CollectionListState>(
+  COLLECTION_LIST_FEATURE_KEY
+);
+
+export const selectCollectionListBusy = createSelector(
+  selectCollectionListState,
+  state => state.busy
+);
 
 export const selectCollectionListEntries = createSelector(
   selectCollectionListState,

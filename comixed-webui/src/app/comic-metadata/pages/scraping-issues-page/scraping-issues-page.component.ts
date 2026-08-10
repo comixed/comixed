@@ -33,15 +33,17 @@ import { VolumeMetadata } from '@app/comic-metadata/models/volume-metadata';
 import {
   selectChosenMetadataSource,
   selectScrapingVolumeMetadata,
-  selectSingleBookScrapingState
+  selectSingleBookScrapingBusy
 } from '@app/comic-metadata/selectors/single-book-scraping.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { TitleService } from '@app/core/services/title.service';
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 import {
+  selectMultiBookScrapingBusy,
   selectMultiBookScrapingCurrent,
   selectMultiBookScrapingList,
-  selectMultiBookScrapingState
+  selectMultiBookScrapingStatus,
+  selectMultiBookScrapingTotalCount
 } from '@app/comic-metadata/selectors/multi-book-scraping.selectors';
 import { MultiBookScrapingProcessStatus } from '@app/comic-metadata/models/multi-book-scraping-process-status';
 import {
@@ -50,7 +52,6 @@ import {
   multiBookScrapingSetCurrentBook,
   startMultiBookScraping
 } from '@app/comic-metadata/actions/multi-book-scraping.actions';
-import { MultiBookScrapingState } from '@app/comic-metadata/reducers/multi-book-scraping.reducer';
 import {
   MatCell,
   MatCellDef,
@@ -131,7 +132,11 @@ export class ScrapingIssuesPageComponent implements OnInit {
   ];
 
   dataSource = new MatTableDataSource<DisplayableComic>();
-  multiBookScrapingState: MultiBookScrapingState;
+  multiBookScrapingStatus$ = new BehaviorSubject(
+    MultiBookScrapingProcessStatus.SETUP
+  );
+  multiBookScrapingBusy$ = new BehaviorSubject(false);
+  totalComics$ = new BehaviorSubject(0);
   comicBooks$ = new BehaviorSubject<DisplayableComic[]>([]);
   currentComicBook$ = new BehaviorSubject<DisplayableComic | null>(null);
   metadataSource$ = new BehaviorSubject<MetadataSource | null>(null);
@@ -189,27 +194,30 @@ export class ScrapingIssuesPageComponent implements OnInit {
       )
       .subscribe();
     this.store
-      .select(selectMultiBookScrapingState)
+      .select(selectMultiBookScrapingStatus)
       .pipe(
-        tap(state => {
-          this.multiBookScrapingState = state;
-          if (
-            this.multiBookScrapingState.status ===
-              MultiBookScrapingProcessStatus.SETUP &&
-            !this.multiBookScrapingState.busy
-          ) {
-            this.logger.debug('Starting multi-book comic scraping');
-            this.store.dispatch(
-              startMultiBookScraping({
-                pageSize: this.queryParameterService.pageSize$.value
-              })
-            );
-          }
-          this.store.dispatch(
-            setBusyState({ enabled: this.multiBookScrapingState.busy })
-          );
+        tap(status => {
+          this.multiBookScrapingStatus$.next(status);
+          this.doUpdateScrapingState();
         })
       )
+      .subscribe();
+    this.store
+      .select(selectMultiBookScrapingTotalCount)
+      .pipe(tap(totalComics => this.totalComics$.next(totalComics)))
+      .subscribe();
+    this.store
+      .select(selectMultiBookScrapingBusy)
+      .pipe(
+        tap(enabled => {
+          this.store.dispatch(setBusyState({ enabled }));
+          this.doUpdateScrapingState();
+        })
+      )
+      .subscribe();
+    this.store
+      .select(selectMultiBookScrapingTotalCount)
+      .pipe(tap(totalComics => this.totalComics$.next(totalComics)))
       .subscribe();
     this.store
       .select(selectMultiBookScrapingList)
@@ -240,12 +248,8 @@ export class ScrapingIssuesPageComponent implements OnInit {
       )
       .subscribe();
     this.store
-      .select(selectSingleBookScrapingState)
-      .pipe(
-        tap(state => {
-          this.store.dispatch(setBusyState({ enabled: state.loadingRecords }));
-        })
-      )
+      .select(selectSingleBookScrapingBusy)
+      .pipe(tap(enabled => this.store.dispatch(setBusyState({ enabled }))))
       .subscribe();
     this.store
       .select(selectScrapingVolumeMetadata)
@@ -267,7 +271,7 @@ export class ScrapingIssuesPageComponent implements OnInit {
 
   get started(): boolean {
     return (
-      this.multiBookScrapingState?.status ===
+      this.multiBookScrapingStatus$.value ===
       MultiBookScrapingProcessStatus.STARTED
     );
   }
@@ -333,5 +337,20 @@ export class ScrapingIssuesPageComponent implements OnInit {
     this.titleService.setTitle(
       this.translateService.instant('scraping-issues-page.tab-title')
     );
+  }
+
+  private doUpdateScrapingState() {
+    if (
+      this.multiBookScrapingStatus$.value ===
+        MultiBookScrapingProcessStatus.SETUP &&
+      !this.multiBookScrapingBusy$.value === true
+    ) {
+      this.logger.debug('Starting multi-book comic scraping');
+      this.store.dispatch(
+        startMultiBookScraping({
+          pageSize: this.queryParameterService.pageSize$.value
+        })
+      );
+    }
   }
 }

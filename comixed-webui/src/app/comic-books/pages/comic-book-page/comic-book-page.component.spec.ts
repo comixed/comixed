@@ -102,6 +102,11 @@ import {
 } from '@app/comic-pages/comic-pages.fixtures';
 import { LoadComicBookResponse } from '@app/comic-books/models/net/load-comic-book-response';
 import { tap } from 'rxjs/operators';
+import { provideNativeDateAdapter } from '@angular/material/core';
+import {
+  IMPRINT_LIST_FEATURE_KEY,
+  initialState as initialImprintListState
+} from '@app/comic-books/reducers/imprint-list.reducer';
 
 describe('ComicBookPageComponent', () => {
   const COMIC_BOOK = COMIC_BOOK_1;
@@ -134,7 +139,8 @@ describe('ComicBookPageComponent', () => {
     [SINGLE_BOOK_SCRAPING_FEATURE_KEY]: { ...initialScrapingState },
     [COMIC_BOOK_FEATURE_KEY]: { ...initialComicBookState },
     [MESSAGING_FEATURE_KEY]: { ...initialMessagingState },
-    [READ_COMIC_BOOKS_FEATURE_KEY]: { ...initialReadComicBooksState }
+    [READ_COMIC_BOOKS_FEATURE_KEY]: { ...initialReadComicBooksState },
+    [IMPRINT_LIST_FEATURE_KEY]: { ...initialImprintListState }
   };
 
   let component: ComicBookPageComponent;
@@ -173,6 +179,7 @@ describe('ComicBookPageComponent', () => {
           provide: MatDialogRef,
           useValue: {}
         },
+        provideNativeDateAdapter(),
         ConfirmationService,
         ComicTitlePipe,
         TitleService,
@@ -204,10 +211,27 @@ describe('ComicBookPageComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  describe('receiving the comic book', () => {
+    beforeEach(() => {
+      component.comic$.next(null);
+      store.setState({
+        ...initialState,
+        [COMIC_BOOK_FEATURE_KEY]: {
+          ...initialComicBookState,
+          detail: DETAIL
+        }
+      });
+    });
+
+    it('updates the comic book reference', () => {
+      expect(component.comic$.value).toBe(DETAIL);
+    });
+  });
+
   describe('when the language changes', () => {
     describe('without a comic set', () => {
       beforeEach(() => {
-        component.comic = null;
+        component.comic$.next(null);
         translateService.use('fr');
       });
 
@@ -218,7 +242,7 @@ describe('ComicBookPageComponent', () => {
 
     describe('with a comic set', () => {
       beforeEach(() => {
-        component.comic = DETAIL;
+        component.comic$.next(DETAIL);
         translateService.use('fr');
       });
 
@@ -230,7 +254,7 @@ describe('ComicBookPageComponent', () => {
 
   describe('loading the scraping volumes', () => {
     beforeEach(() => {
-      component.metadataSource = METADATA_SOURCE;
+      component.metadataSource$.next(METADATA_SOURCE);
       component.onLoadScrapingVolumes({
         metadataSource: METADATA_SOURCE,
         publisher: PUBLISHER,
@@ -244,15 +268,15 @@ describe('ComicBookPageComponent', () => {
     });
 
     it('holds the series name', () => {
-      expect(component.scrapingSeriesName).toEqual(SERIES);
+      expect(component.scrapingSeriesName$.value).toEqual(SERIES);
     });
 
     it('holds the volume', () => {
-      expect(component.scrapingVolume).toEqual(VOLUME);
+      expect(component.scrapingVolume$.value).toEqual(VOLUME);
     });
 
     it('holds the issue number', () => {
-      expect(component.scrapingIssueNumber).toEqual(ISSUE_NUMBER);
+      expect(component.scrapingIssueNumber$.value).toEqual(ISSUE_NUMBER);
     });
 
     it('fires an action', () => {
@@ -271,7 +295,7 @@ describe('ComicBookPageComponent', () => {
 
   describe('setting the read status', () => {
     beforeEach(() => {
-      component.comic = DETAIL;
+      component.comic$.next(DETAIL);
     });
 
     describe('marking as read', () => {
@@ -307,7 +331,7 @@ describe('ComicBookPageComponent', () => {
 
   describe('updating the comic metadata', () => {
     beforeEach(() => {
-      component.comic = DETAIL;
+      component.comic$.next(DETAIL);
       spyOn(confirmationService, 'confirm').and.callFake(
         (confirmation: Confirmation) => confirmation.confirm()
       );
@@ -327,8 +351,8 @@ describe('ComicBookPageComponent', () => {
 
   describe('loading the last read state', () => {
     beforeEach(() => {
-      component.comic = DETAIL;
-      component.comicId = DETAIL.comicBookId;
+      component.comic$.next(DETAIL);
+      component.comicId$.next(DETAIL.comicBookId);
     });
 
     describe('when the comic is read', () => {
@@ -369,7 +393,7 @@ describe('ComicBookPageComponent', () => {
       spyOn(confirmationService, 'confirm').and.callFake(
         (confirmation: Confirmation) => confirmation.confirm()
       );
-      component.comic = DETAIL;
+      component.comic$.next(DETAIL);
     });
 
     describe('deleting the comic book', () => {
@@ -407,7 +431,7 @@ describe('ComicBookPageComponent', () => {
 
   describe('subscribing to comic updates', () => {
     beforeEach(() => {
-      component.comicId = DETAIL.comicBookId;
+      component.comicId$.next(DETAIL.comicBookId);
       webSocketService.subscribe.and.callFake((topic, callback) => {
         callback({
           detail: DETAIL,
@@ -447,12 +471,12 @@ describe('ComicBookPageComponent', () => {
 
   describe('when the pages are changed', () => {
     beforeEach(() => {
-      component.pages = [];
+      component.pages$.next([]);
       component.onPagesChanged(PAGES);
     });
 
     it('updates the pages', () => {
-      expect(component.pages).toEqual(PAGES);
+      expect(component.pages$.value).toEqual(PAGES);
     });
   });
 
@@ -461,8 +485,8 @@ describe('ComicBookPageComponent', () => {
       spyOn(confirmationService, 'confirm').and.callFake(
         (confirmation: Confirmation) => confirmation.confirm()
       );
-      component.comic = DETAIL;
-      component.pages = PAGES;
+      component.comic$.next(DETAIL);
+      component.pages$.next(PAGES);
       component.onSavePageOrder();
     });
 
@@ -484,16 +508,16 @@ describe('ComicBookPageComponent', () => {
 
   describe('checking if a comic is deleted', () => {
     beforeEach(() => {
-      component.comic = DETAIL;
+      component.comic$.next(DETAIL);
     });
 
     it('returns true when the state is DELETED', () => {
-      component.comic.comicState = ComicState.DELETED;
+      component.comic$.value.comicState = ComicState.DELETED;
       expect(component.isDeleted).toBeTrue();
     });
 
     it('returns true when the state is not DELETED', () => {
-      component.comic.comicState = ComicState.CHANGED;
+      component.comic$.value.comicState = ComicState.CHANGED;
       expect(component.isDeleted).toBeFalse();
     });
   });
@@ -501,10 +525,10 @@ describe('ComicBookPageComponent', () => {
   describe('checking if a comic has been changed', () => {
     describe('when is has been changed', () => {
       beforeEach(() => {
-        component.comic = {
+        component.comic$.next({
           ...DETAIL,
           comicState: ComicState.CHANGED
-        };
+        });
       });
 
       it('returns true', () => {
@@ -514,10 +538,10 @@ describe('ComicBookPageComponent', () => {
 
     describe('when it has not been changed', () => {
       beforeEach(() => {
-        component.comic = {
+        component.comic$.next({
           ...DETAIL,
           comicState: ComicState.STABLE
-        };
+        });
       });
 
       it('returns false', () => {
@@ -528,7 +552,7 @@ describe('ComicBookPageComponent', () => {
 
   describe('downloading a comic book file', () => {
     beforeEach(() => {
-      component.comic = DETAIL;
+      component.comic$.next(DETAIL);
       component.onDownloadComicFile();
     });
 
@@ -536,6 +560,28 @@ describe('ComicBookPageComponent', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         downloadComicBook({ comicBookId: DETAIL.comicBookId })
       );
+    });
+  });
+
+  describe('clicking the previous page button', () => {
+    beforeEach(() => {
+      component.pageIndex$.next(1);
+      component.onPreviousPage();
+    });
+
+    it('goes to the page', () => {
+      expect(component.pageIndex$.value).toEqual(0);
+    });
+  });
+
+  describe('clicking the next page button', () => {
+    beforeEach(() => {
+      component.pageIndex$.next(0);
+      component.onNextPage();
+    });
+
+    it('goes to the page', () => {
+      expect(component.pageIndex$.value).toEqual(1);
     });
   });
 });

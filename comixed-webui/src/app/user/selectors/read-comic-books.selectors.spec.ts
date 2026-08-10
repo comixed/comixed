@@ -20,10 +20,7 @@ import {
   READ_COMIC_BOOKS_FEATURE_KEY,
   ReadComicBooksState
 } from '../reducers/read-comic-books.reducer';
-import {
-  selectReadComicBooksList,
-  selectReadComicBooksState
-} from './read-comic-books.selectors';
+import { selectReadComicBooksList } from './read-comic-books.selectors';
 
 import {
   READ_COMIC_BOOK_1,
@@ -48,15 +45,7 @@ describe('ReadComicBooks Selectors', () => {
     state = { entries: READ_COMIC_BOOKS };
   });
 
-  it('should select the feature state', () => {
-    expect(
-      selectReadComicBooksState({
-        [READ_COMIC_BOOKS_FEATURE_KEY]: state
-      })
-    ).toEqual(state);
-  });
-
-  it('should select the list of read comic books', () => {
+  it('returns the list of read comic book ids', () => {
     expect(
       selectReadComicBooksList({
         [READ_COMIC_BOOKS_FEATURE_KEY]: state

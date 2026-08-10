@@ -56,8 +56,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { PAGE_SIZE_OPTIONS } from '@app/core';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import {
-  selectBlockedHashesList,
-  selectBlockedHashesState
+  selectBlockedHashesBusy,
+  selectBlockedHashesList
 } from '@app/comic-pages/selectors/blocked-hashes.selectors';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import { MatFabButton } from '@angular/material/button';
@@ -127,12 +127,8 @@ export class BlockedHashListPageComponent implements OnInit, AfterViewInit {
 
   constructor() {
     this.store
-      .select(selectBlockedHashesState)
-      .pipe(
-        tap(state => {
-          this.store.dispatch(setBusyState({ enabled: state.busy }));
-        })
-      )
+      .select(selectBlockedHashesBusy)
+      .pipe(tap(enabled => this.store.dispatch(setBusyState({ enabled }))))
       .subscribe();
     this.store
       .select(selectBlockedHashesList)

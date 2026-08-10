@@ -333,7 +333,7 @@ describe('ComicScrapingVolumeSelectionComponent', () => {
       describe('when in multi-comic scraping mode', () => {
         beforeEach(() => {
           component.multimode = true;
-          component.confirmBeforeScraping = true;
+          component.confirmBeforeScraping$.next(true);
           confirmationSpy.calls.reset();
           component.onDecision(true, SCRAPING_VOLUME);
         });
@@ -346,7 +346,7 @@ describe('ComicScrapingVolumeSelectionComponent', () => {
       describe('when in multi-comic scraping mode with confirmation', () => {
         beforeEach(() => {
           component.multimode = true;
-          component.confirmBeforeScraping = false;
+          component.confirmBeforeScraping$.next(false);
           confirmationSpy.calls.reset();
           component.onDecision(true, SCRAPING_VOLUME);
         });
@@ -424,7 +424,7 @@ describe('ComicScrapingVolumeSelectionComponent', () => {
       beforeEach(() => {
         component.comicVolume = SCRAPING_VOLUME.startYear;
         component.volumes = VOLUMES;
-        component.autoSelectExactMatch = false;
+        component.autoSelectExactMatch$.next(false);
         spyOnStoreDispatch.calls.reset();
         component.issue = SCRAPING_ISSUE;
       });
@@ -440,7 +440,7 @@ describe('ComicScrapingVolumeSelectionComponent', () => {
         component.volumes = VOLUMES;
         component.pageSize = PAGE_SIZE;
         component.pageNumber = PAGE_NUMBER;
-        component.autoSelectExactMatch = true;
+        component.autoSelectExactMatch$.next(true);
         spyOnStoreDispatch.calls.reset();
         component.issue = SCRAPING_ISSUE;
       });
@@ -463,7 +463,7 @@ describe('ComicScrapingVolumeSelectionComponent', () => {
       beforeEach(() => {
         component.volumes = VOLUMES;
         component.comicVolume = SCRAPING_VOLUME.startYear + '1';
-        component.autoSelectExactMatch = false;
+        component.autoSelectExactMatch$.next(false);
         spyOnStoreDispatch.calls.reset();
         component.issue = SCRAPING_ISSUE;
       });

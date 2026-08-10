@@ -72,7 +72,7 @@
       <div class="cx-container-flow-component-grow-2 cx-padding-5">
         <cx-library-stats
           [title]="'dashboard.title.library-stats' | translate"
-          [data]="statistics | async"
+          [data]="statistics$ | async"
           (closePanel)="closePanel(panel)"
         ></cx-library-stats>
       </div>

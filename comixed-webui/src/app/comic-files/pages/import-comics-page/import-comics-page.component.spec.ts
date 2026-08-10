@@ -29,7 +29,6 @@ import {
   initialState as initialUserState,
   USER_FEATURE_KEY
 } from '@app/user/reducers/user.reducer';
-import { setBusyState } from '@app/core/actions/busy.actions';
 import {
   COMIC_FILE_1,
   COMIC_FILE_2,
@@ -193,16 +192,10 @@ describe('ImportComicsPageComponent', () => {
           ...initialState,
           [COMIC_FILE_LIST_FEATURE_KEY]: {
             ...initialComicFileListState,
-            loading: false,
+            busy: false,
             files: FILES
           }
         });
-      });
-
-      it('fires an action', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(
-          setBusyState({ enabled: false })
-        );
       });
 
       it('updates the any selected flag', () => {
@@ -211,44 +204,6 @@ describe('ImportComicsPageComponent', () => {
 
       it('updates the all selected flag', () => {
         expect(component.allSelected$.value).toBeTrue();
-      });
-    });
-  });
-
-  describe('when sending files', () => {
-    describe('when sending starts', () => {
-      beforeEach(() => {
-        store.setState({
-          ...initialState,
-          [IMPORT_COMIC_FILES_FEATURE_KEY]: {
-            ...initialImportComicFilesState,
-            sending: true
-          }
-        });
-      });
-
-      it('fires an action', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(
-          setBusyState({ enabled: true })
-        );
-      });
-    });
-
-    describe('when sending stops', () => {
-      beforeEach(() => {
-        store.setState({
-          ...initialState,
-          [IMPORT_COMIC_FILES_FEATURE_KEY]: {
-            ...initialImportComicFilesState,
-            sending: false
-          }
-        });
-      });
-
-      it('fires an action', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(
-          setBusyState({ enabled: false })
-        );
       });
     });
   });
@@ -560,6 +515,30 @@ describe('ImportComicsPageComponent', () => {
 
       it('updates the data', () => {
         expect(component.dataSource.data).not.toEqual([]);
+      });
+    });
+  });
+
+  describe('the finder form', () => {
+    describe('opening it', () => {
+      beforeEach(() => {
+        component.showFinderForm$.next(false);
+        component.openFinderForm();
+      });
+
+      it('opens the form', () => {
+        expect(component.showFinderForm$.value).toBeTrue();
+      });
+    });
+
+    describe('closing it', () => {
+      beforeEach(() => {
+        component.showFinderForm$.next(true);
+        component.closeFinderForm();
+      });
+
+      it('closing the form', () => {
+        expect(component.showFinderForm$.value).toBeFalse();
       });
     });
   });

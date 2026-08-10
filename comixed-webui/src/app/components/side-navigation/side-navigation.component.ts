@@ -24,15 +24,21 @@ import { BehaviorSubject } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { selectUserReadingLists } from '@app/lists/selectors/reading-lists.selectors';
 import { ReadingList } from '@app/lists/models/reading-list';
-import { selectLibraryState } from '@app/library/selectors/library.selectors';
+import {
+  selectLibraryChangedComicCount,
+  selectLibraryDeletedComicCount,
+  selectLibraryTotalComicCount,
+  selectLibraryUnprocessedComicCount,
+  selectLibraryUnscrapedComicCount
+} from '@app/library/selectors/library.selectors';
 import { ComicState } from '@app/comic-books/models/comic-state';
 import { LibraryState } from '@app/library/reducers/library.reducer';
-import { selectFeatureEnabledState } from '@app/admin/selectors/feature-enabled.selectors';
+import { selectFeatureList } from '@app/admin/selectors/feature-enabled.selectors';
 import { BLOCKED_PAGES_ENABLED } from '@app/admin/admin.constants';
 import { getFeatureEnabled } from '@app/admin/actions/feature-enabled.actions';
 import { hasFeature, isFeatureEnabled } from '@app/admin';
 import { selectReadComicBooksList } from '@app/user/selectors/read-comic-books.selectors';
-import { selectComicBookSelectionState } from '@app/comic-books/selectors/comic-book-selection.selectors';
+import { selectComicBookSelectionCount } from '@app/comic-books/selectors/comic-book-selection.selectors';
 import { MatButton } from '@angular/material/button';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { MatIcon } from '@angular/material/icon';
@@ -79,41 +85,47 @@ export class SideNavigationComponent {
 
   constructor() {
     this.store
-      .select(selectFeatureEnabledState)
+      .select(selectFeatureList)
       .pipe(
-        tap(state => {
-          if (
-            !state.busy &&
-            !hasFeature(state.features, BLOCKED_PAGES_ENABLED)
-          ) {
+        tap(featureList => {
+          if (!hasFeature(featureList, BLOCKED_PAGES_ENABLED)) {
             this.logger.debug('Loading feature state:', BLOCKED_PAGES_ENABLED);
             this.store.dispatch(
               getFeatureEnabled({ name: BLOCKED_PAGES_ENABLED })
             );
           } else {
             this.blockedPagesEnabled$.next(
-              isFeatureEnabled(state.features, BLOCKED_PAGES_ENABLED)
+              isFeatureEnabled(featureList, BLOCKED_PAGES_ENABLED)
             );
           }
         })
       )
       .subscribe();
     this.store
-      .select(selectLibraryState)
+      .select(selectLibraryTotalComicCount)
+      .pipe(tap(totalComics => this.totalComicBooks$.next(totalComics)))
+      .subscribe();
+    this.store
+      .select(selectLibraryUnprocessedComicCount)
       .pipe(
-        tap(state => {
-          this.totalComicBooks$.next(state.totalComics);
-          this.unprocessedComicBooks$.next(
-            this.getCountForState(state, ComicState.UNPROCESSED)
-          );
-          this.unscrapedComicBooks$.next(state.unscrapedComics);
-          this.changedComicBooks$.next(
-            this.getCountForState(state, ComicState.CHANGED)
-          );
-          this.deletedComicBooks$.next(state.deletedComics);
-          this.duplicateComicBooks$.next(state.duplicateComics);
-        })
+        tap(unprocessedCount =>
+          this.unprocessedComicBooks$.next(unprocessedCount)
+        )
       )
+      .subscribe();
+    this.store
+      .select(selectLibraryUnscrapedComicCount)
+      .pipe(
+        tap(unscrapedCount => this.unscrapedComicBooks$.next(unscrapedCount))
+      )
+      .subscribe();
+    this.store
+      .select(selectLibraryChangedComicCount)
+      .pipe(tap(changedCount => this.changedComicBooks$.next(changedCount)))
+      .subscribe();
+    this.store
+      .select(selectLibraryDeletedComicCount)
+      .pipe(tap(deletedCount => this.deletedComicBooks$.next(deletedCount)))
       .subscribe();
     this.store
       .select(selectReadComicBooksList)
@@ -122,8 +134,8 @@ export class SideNavigationComponent {
       )
       .subscribe();
     this.store
-      .select(selectComicBookSelectionState)
-      .pipe(tap(state => this.selectedComicBooks$.next(state.ids.length)))
+      .select(selectComicBookSelectionCount)
+      .pipe(tap(selectedCount => this.selectedComicBooks$.next(selectedCount)))
       .subscribe();
     this.store
       .select(selectUserReadingLists)

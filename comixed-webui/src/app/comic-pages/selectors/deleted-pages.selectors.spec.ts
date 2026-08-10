@@ -23,7 +23,7 @@ import {
 import {
   selectDeletedPage,
   selectDeletedPageList,
-  selectDeletedPagesState
+  selectDeletedPageListBusy
 } from './deleted-pages.selectors';
 import {
   DELETED_PAGE_1,
@@ -50,12 +50,10 @@ describe('DeletedPages Selectors', () => {
     };
   });
 
-  it('should select the feature state', () => {
+  it('should return the busy state', () => {
     expect(
-      selectDeletedPagesState({
-        [DELETED_PAGE_FEATURE_KEY]: state
-      })
-    ).toEqual(state);
+      selectDeletedPageListBusy({ [DELETED_PAGE_FEATURE_KEY]: state })
+    ).toEqual(state.busy);
   });
 
   it('should return the list of deleted pages', () => {

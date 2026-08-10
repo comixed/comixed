@@ -22,7 +22,8 @@ import {
 } from '../reducers/reading-list-detail.reducer';
 import {
   selectReadingList,
-  selectReadingListState
+  selectReadingListBusy,
+  selectReadingListNotFound
 } from './reading-list-detail.selectors';
 import { READING_LIST_3 } from '@app/lists/lists.fixtures';
 
@@ -40,15 +41,83 @@ describe('LoadReadingList Selectors', () => {
     };
   });
 
-  it('should select the feature state', () => {
-    expect(
-      selectReadingListState({
-        [READING_LIST_DETAIL_FEATURE_KEY]: state
-      })
-    ).toEqual(state);
+  describe('the busy state', () => {
+    it('returns true when loading', () => {
+      expect(
+        selectReadingListBusy({
+          [READING_LIST_DETAIL_FEATURE_KEY]: {
+            ...state,
+            loading: true,
+            saving: false
+          }
+        })
+      ).toEqual(true);
+    });
+
+    it('returns true when saving', () => {
+      expect(
+        selectReadingListBusy({
+          [READING_LIST_DETAIL_FEATURE_KEY]: {
+            ...state,
+            loading: false,
+            saving: true
+          }
+        })
+      ).toEqual(true);
+    });
+
+    it('returns false when neither loading nor saving', () => {
+      expect(
+        selectReadingListBusy({
+          [READING_LIST_DETAIL_FEATURE_KEY]: {
+            ...state,
+            loading: false,
+            saving: false
+          }
+        })
+      ).toEqual(false);
+    });
   });
 
-  it('should select the reading list', () => {
+  describe('when the list is not found', () => {
+    it('returns false when loading', () => {
+      expect(
+        selectReadingListNotFound({
+          [READING_LIST_DETAIL_FEATURE_KEY]: {
+            ...state,
+            loading: true,
+            notFound: false
+          }
+        })
+      ).toEqual(false);
+    });
+
+    it('returns false when found', () => {
+      expect(
+        selectReadingListNotFound({
+          [READING_LIST_DETAIL_FEATURE_KEY]: {
+            ...state,
+            loading: false,
+            notFound: false
+          }
+        })
+      ).toEqual(false);
+    });
+
+    it('returns true when not found', () => {
+      expect(
+        selectReadingListNotFound({
+          [READING_LIST_DETAIL_FEATURE_KEY]: {
+            ...state,
+            loading: false,
+            notFound: true
+          }
+        })
+      ).toEqual(true);
+    });
+  });
+
+  it('selects the reading list', () => {
     expect(
       selectReadingList({
         [READING_LIST_DETAIL_FEATURE_KEY]: state

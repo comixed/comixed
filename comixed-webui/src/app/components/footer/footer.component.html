@@ -4,39 +4,44 @@
       <span class="cx-text-nowrap cx-padding-left-15">
         <a routerLink="/library/all">
           {{
-            "app.system-status.comic-count" | translate: { count: comicCount }
+            "app.system-status.comic-count"
+              | translate: { count: comicCount$ | async }
           }}
         </a>
         |
         <a routerLink="/library/unscraped">
           {{
             "app.system-status.unscraped-count"
-              | translate: { count: unscrapedCount }
+              | translate: { count: unscrapedCount$ | async }
           }}
         </a>
         |
         <a routerLink="/library/unread">
-          {{ "app.system-status.read-count" | translate: { count: readCount } }}
+          {{
+            "app.system-status.read-count"
+              | translate: { count: readCount$ | async }
+          }}
         </a>
         |
         <a routerLink="/library/selected">
           {{
             "app.system-status.selected-count"
-              | translate: { count: selectedCount }
+              | translate: { count: selectedCount$ | async }
           }}
         </a>
         |
         <a routerLink="/library/deleted">
           {{
             "app.system-status.deleted-count"
-              | translate: { count: deletedCount }
+              | translate: { count: deletedCount$ | async }
           }}
         </a>
         @if (isAdmin) {
           |
           <a routerLink="/admin/processes">
             {{
-              "app.system-status.batch-jobs" | translate: { count: batchJobs }
+              "app.system-status.batch-jobs"
+                | translate: { count: batchJobs$ | async }
             }}
           </a>
         }

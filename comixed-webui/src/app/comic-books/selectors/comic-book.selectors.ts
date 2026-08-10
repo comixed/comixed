@@ -16,12 +16,32 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createFeatureSelector } from '@ngrx/store';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
 import {
   COMIC_BOOK_FEATURE_KEY,
   ComicBookState
 } from '../reducers/comic-book.reducer';
 
-export const selectComicBookState = createFeatureSelector<ComicBookState>(
+const selectComicBookState = createFeatureSelector<ComicBookState>(
   COMIC_BOOK_FEATURE_KEY
+);
+
+export const selectComicBookDetail = createSelector(
+  selectComicBookState,
+  state => state.detail
+);
+
+export const selectComicBookMetadataSource = createSelector(
+  selectComicBookState,
+  state => state.metadata?.metadataSource
+);
+
+export const selectComicBookPages = createSelector(
+  selectComicBookState,
+  state => state.pages
+);
+
+export const selectComicBookTags = createSelector(
+  selectComicBookState,
+  state => state.tags
 );

@@ -20,27 +20,33 @@ import { Component, inject, Input } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { User } from '@app/user/models/user';
-import { selectLibraryState } from '@app/library/selectors/library.selectors';
-import { selectComicBookSelectionState } from '@app/comic-books/selectors/comic-book-selection.selectors';
+import {
+  selectLibraryDeletedComicCount,
+  selectLibraryTotalComicCount,
+  selectLibraryUnscrapedComicCount
+} from '@app/library/selectors/library.selectors';
+import { selectComicBookSelectionCount } from '@app/comic-books/selectors/comic-book-selection.selectors';
 import { selectBatchProcessList } from '@app/admin/selectors/batch-processes.selectors';
 import { TranslateModule } from '@ngx-translate/core';
 import { isAdmin } from '@app/user/user.functions';
 import { RouterModule } from '@angular/router';
 import { tap } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'cx-footer',
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.scss'],
-  imports: [RouterModule, TranslateModule]
+  imports: [RouterModule, TranslateModule, AsyncPipe]
 })
 export class FooterComponent {
-  unscrapedCount = 0;
-  comicCount = 0;
-  readCount = 0;
-  selectedCount = 0;
-  deletedCount = 0;
-  batchJobs = 0;
+  unscrapedCount$ = new BehaviorSubject(0);
+  comicCount$ = new BehaviorSubject(0);
+  readCount$ = new BehaviorSubject(0);
+  selectedCount$ = new BehaviorSubject(0);
+  deletedCount$ = new BehaviorSubject(0);
+  batchJobs$ = new BehaviorSubject(0);
 
   logger = inject(LoggerService);
   store = inject(Store<any>);
@@ -56,28 +62,34 @@ export class FooterComponent {
 
     if (!!this._user) {
       this.store
-        .select(selectLibraryState)
+        .select(selectLibraryTotalComicCount)
+        .pipe(tap(totalComics => this.comicCount$.next(totalComics)))
+        .subscribe();
+      this.store
+        .select(selectLibraryUnscrapedComicCount)
         .pipe(
-          tap(state => {
-            this.comicCount = state.totalComics;
-            this.unscrapedCount = state.unscrapedComics;
-            this.deletedCount = state.deletedComics;
-          })
+          tap(unscrapedComics => this.unscrapedCount$.next(unscrapedComics))
         )
         .subscribe();
       this.store
-        .select(selectComicBookSelectionState)
-        .pipe(tap(state => (this.selectedCount = state.ids.length)))
+        .select(selectLibraryDeletedComicCount)
+        .pipe(tap(deletedComics => this.deletedCount$.next(deletedComics)))
+        .subscribe();
+      this.store
+        .select(selectComicBookSelectionCount)
+        .pipe(tap(count => this.selectedCount$.next(count)))
         .subscribe();
       this.store
         .select(selectBatchProcessList)
         .pipe(
-          tap(list => (this.batchJobs = list.filter(job => job.running).length))
+          tap(list =>
+            this.batchJobs$.next(list.filter(job => job.running).length)
+          )
         )
         .subscribe();
-      this.readCount = this.user.readComicBooks.length;
+      this.readCount$.next(this.user.readComicBooks.length);
     } else {
-      this.readCount = 0;
+      this.readCount$.next(0);
     }
   }
 

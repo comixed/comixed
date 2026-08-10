@@ -16,11 +16,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createFeatureSelector } from '@ngrx/store';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
 import {
   FEATURE_ENABLED_FEATURE_KEY,
   FeatureEnabledState
 } from '../reducers/feature-enabled.reducer';
 
-export const selectFeatureEnabledState =
-  createFeatureSelector<FeatureEnabledState>(FEATURE_ENABLED_FEATURE_KEY);
+const selectFeatureEnabledState = createFeatureSelector<FeatureEnabledState>(
+  FEATURE_ENABLED_FEATURE_KEY
+);
+
+export const selectFeatureList = createSelector(
+  selectFeatureEnabledState,
+  state => state.features
+);

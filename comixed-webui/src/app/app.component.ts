@@ -22,7 +22,7 @@ import { LoggerLevel, LoggerService } from '@angular-ru/cdk/logger';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { getUserPreference } from '@app/user';
 import { loadCurrentUser } from '@app/user/actions/user.actions';
-import { selectBusyState } from '@app/core/selectors/busy.selectors';
+import { selectShowAsBusy } from '@app/core/selectors/busy.selectors';
 import { TranslateService } from '@ngx-translate/core';
 import {
   APP_MESSAGING_TOPIC,
@@ -42,10 +42,9 @@ import { User } from '@app/user/models/user';
 import { toggleDarkThemeMode } from '@app/actions/dark-theme.actions';
 import { selectDarkThemeActive } from '@app/selectors/dark-theme.selectors';
 import { BusyIcon } from '@app/core/actions/busy.actions';
-import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
+import { selectMessagingStarted } from '@app/messaging/selectors/messaging.selectors';
 import { WebSocketService } from '@app/messaging';
 import { AlertService } from '@app/core/services/alert.service';
-import { filter } from 'rxjs/operators';
 import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component';
 import {
   MatSidenav,
@@ -157,7 +156,7 @@ export class AppComponent implements OnInit {
         );
       }
     });
-    this.store.select(selectBusyState).subscribe(state => {
+    this.store.select(selectShowAsBusy).subscribe(state => {
       this.busy$.next(state.enabled);
       this.busyIcon$.next(state.icon);
     });
@@ -169,17 +168,14 @@ export class AppComponent implements OnInit {
         this.currentTheme = 'lite-theme';
       }
     });
-    this.store
-      .select(selectMessagingState)
-      .pipe(filter(state => !!state))
-      .subscribe(state => {
-        if (state.started) {
-          this.webSocketService.subscribe(APP_MESSAGING_TOPIC, appEvent => {
-            this.logger.debug('Application event message received:', appEvent);
-            this.alertService.info(appEvent.message);
-          });
-        }
-      });
+    this.store.select(selectMessagingStarted).subscribe(started => {
+      if (started) {
+        this.webSocketService.subscribe(APP_MESSAGING_TOPIC, appEvent => {
+          this.logger.debug('Application event message received:', appEvent);
+          this.alertService.info(appEvent.message);
+        });
+      }
+    });
   }
 
   get busyIconURL(): string {

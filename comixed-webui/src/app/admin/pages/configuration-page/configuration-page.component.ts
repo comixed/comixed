@@ -21,7 +21,7 @@ import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { ConfigurationOption } from '@app/admin/models/configuration-option';
 import {
-  selectConfigurationOptionListState,
+  selectConfigurationOptionListBusy,
   selectConfigurationOptions
 } from '@app/admin/selectors/configuration-option-list.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
@@ -68,14 +68,8 @@ export class ConfigurationPageComponent implements OnInit {
 
   constructor() {
     this.store
-      .select(selectConfigurationOptionListState)
-      .pipe(
-        tap(state => {
-          this.store.dispatch(
-            setBusyState({ enabled: state.loading || state.saving })
-          );
-        })
-      )
+      .select(selectConfigurationOptionListBusy)
+      .pipe(tap(enabled => this.store.dispatch(setBusyState({ enabled }))))
       .subscribe();
     this.translateService.onLangChange
       .pipe(tap(() => this.loadTranslations()))

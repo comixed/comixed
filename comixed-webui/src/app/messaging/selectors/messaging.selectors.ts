@@ -22,7 +22,7 @@ import {
   MessagingState
 } from '../reducers/messaging.reducer';
 
-export const selectMessagingState = createFeatureSelector<MessagingState>(
+const selectMessagingState = createFeatureSelector<MessagingState>(
   MESSAGING_FEATURE_KEY
 );
 

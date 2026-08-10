@@ -251,4 +251,28 @@ describe('StoryScrapingComponent', () => {
       });
     });
   });
+
+  describe('clicking the skip cache button', () => {
+    describe('when enabled', () => {
+      beforeEach(() => {
+        component.skipCache$.next(true);
+        component.onToggleSkipCache();
+      });
+
+      it('turns the feature off', () => {
+        expect(component.skipCache$.value).toBeFalse();
+      });
+    });
+
+    describe('when disabled', () => {
+      beforeEach(() => {
+        component.skipCache$.next(false);
+        component.onToggleSkipCache();
+      });
+
+      it('turns the feature on', () => {
+        expect(component.skipCache$.value).toBeTrue();
+      });
+    });
+  });
 });

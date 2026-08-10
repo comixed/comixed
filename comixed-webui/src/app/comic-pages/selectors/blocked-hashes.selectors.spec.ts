@@ -24,7 +24,6 @@ import {
   selectBlockedHashDetail,
   selectBlockedHashesBusy,
   selectBlockedHashesList,
-  selectBlockedHashesState,
   selectBlockedHashNotFound
 } from './blocked-hashes.selectors';
 import {
@@ -48,14 +47,6 @@ describe('BlockedHashes Selectors', () => {
       entry: ENTRY,
       saved: Math.random() > 0.5
     };
-  });
-
-  it('selects the feature state', () => {
-    expect(
-      selectBlockedHashesState({
-        [BLOCKED_HASHES_FEATURE_KEY]: state
-      })
-    ).toEqual(state);
   });
 
   it('selects the busy state', () => {

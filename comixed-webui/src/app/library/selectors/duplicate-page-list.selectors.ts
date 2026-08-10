@@ -22,7 +22,7 @@ import {
   DuplicatePageListState
 } from '../reducers/duplicate-page-list.reducer';
 
-export const selectDuplicatePageListState =
+const selectDuplicatePageListState =
   createFeatureSelector<DuplicatePageListState>(
     DUPLICATE_PAGE_LIST_FEATURE_KEY
   );

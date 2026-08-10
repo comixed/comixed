@@ -20,7 +20,7 @@ import {
   FEATURE_ENABLED_FEATURE_KEY,
   FeatureEnabledState
 } from '../reducers/feature-enabled.reducer';
-import { selectFeatureEnabledState } from './feature-enabled.selectors';
+import { selectFeatureList } from './feature-enabled.selectors';
 
 describe('FeatureEnabled Selectors', () => {
   const FEATURE_NAME = 'feature.name';
@@ -35,11 +35,11 @@ describe('FeatureEnabled Selectors', () => {
     };
   });
 
-  it('should select the feature state', () => {
+  it('selects the feature list', () => {
     expect(
-      selectFeatureEnabledState({
+      selectFeatureList({
         [FEATURE_ENABLED_FEATURE_KEY]: state
       })
-    ).toEqual(state);
+    ).toEqual(state.features);
   });
 });

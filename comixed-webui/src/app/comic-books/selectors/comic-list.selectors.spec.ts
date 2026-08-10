@@ -33,7 +33,6 @@ import {
   selectComicFilteredCount,
   selectComicList,
   selectComicListBusy,
-  selectComicListState,
   selectComicTotalCount
 } from '@app/comic-books/selectors/comic-list.selectors';
 
@@ -61,14 +60,6 @@ describe('ComicList Selectors', () => {
       totalCount: TOTAL_COUNT,
       filteredCount: FILTERED_COUNT
     };
-  });
-
-  it('selects the feature state', () => {
-    expect(
-      selectComicListState({
-        [COMIC_LIST_FEATURE_KEY]: state
-      })
-    ).toEqual(state);
   });
 
   it('selects the comic detail list busy state', () => {

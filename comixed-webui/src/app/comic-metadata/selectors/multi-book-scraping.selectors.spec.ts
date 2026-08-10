@@ -21,9 +21,10 @@ import {
   MultiBookScrapingState
 } from '../reducers/multi-book-scraping.reducer';
 import {
+  selectMultiBookScrapingBusy,
   selectMultiBookScrapingCurrent,
   selectMultiBookScrapingList,
-  selectMultiBookScrapingState
+  selectMultiBookScrapingStatus
 } from './multi-book-scraping.selectors';
 import {
   DISPLAYABLE_COMIC_1,
@@ -60,12 +61,20 @@ describe('MultiBookScraping Selectors', () => {
     };
   });
 
-  it('should select the feature state', () => {
+  it('should select the busy state', () => {
     expect(
-      selectMultiBookScrapingState({
+      selectMultiBookScrapingBusy({
         [MULTI_BOOK_SCRAPING_FEATURE_KEY]: state
       })
-    ).toEqual(state);
+    ).toEqual(state.busy);
+  });
+
+  it('should select the status', () => {
+    expect(
+      selectMultiBookScrapingStatus({
+        [MULTI_BOOK_SCRAPING_FEATURE_KEY]: state
+      })
+    ).toEqual(state.status);
   });
 
   it('should select the comic book list', () => {

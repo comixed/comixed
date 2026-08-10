@@ -16,9 +16,44 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createFeatureSelector } from '@ngrx/store';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { LIBRARY_FEATURE_KEY, LibraryState } from '../reducers/library.reducer';
+import { ComicState } from '@app/comic-books/models/comic-state';
 
 /** Selects the feature state. */
 export const selectLibraryState =
   createFeatureSelector<LibraryState>(LIBRARY_FEATURE_KEY);
+
+export const selectLibraryTotalComicCount = createSelector(
+  selectLibraryState,
+  state => state.totalComics
+);
+
+export const selectLibraryUnscrapedComicCount = createSelector(
+  selectLibraryState,
+  state => state.unscrapedComics
+);
+
+export const selectLibraryDeletedComicCount = createSelector(
+  selectLibraryState,
+  state => state.deletedComics
+);
+
+export const selectLibraryDuplicateComicCount = createSelector(
+  selectLibraryState,
+  state => state.duplicateComics
+);
+
+export const selectLibraryUnprocessedComicCount = createSelector(
+  selectLibraryState,
+  state =>
+    state.states.find(entry => entry.name === ComicState.UNPROCESSED.toString())
+      ?.count || 0
+);
+
+export const selectLibraryChangedComicCount = createSelector(
+  selectLibraryState,
+  state =>
+    state.states.find(entry => entry.name === ComicState.CHANGED.toString())
+      ?.count || 0
+);

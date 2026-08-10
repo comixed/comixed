@@ -21,8 +21,8 @@ import {
   ScrapeStoryState
 } from '../reducers/scrape-story.reducer';
 import {
-  selectScrapedStoryCandidates,
-  selectScrapeStoryState
+  selectScrapedStoryBusy,
+  selectScrapedStoryCandidates
 } from './scrape-story.selectors';
 
 describe('ScrapeStory Selectors', () => {
@@ -32,15 +32,15 @@ describe('ScrapeStory Selectors', () => {
     state = { busy: Math.random() > 0.5, candidates: [] };
   });
 
-  it('should select the feature state', () => {
+  it('selects the busy state', () => {
     expect(
-      selectScrapeStoryState({
+      selectScrapedStoryBusy({
         [SCRAPE_STORY_FEATURE_KEY]: state
       })
-    ).toEqual(state);
+    ).toEqual(state.busy);
   });
 
-  it('should select the scraped story candidate list', () => {
+  it('selects the scraped story candidate list', () => {
     expect(
       selectScrapedStoryCandidates({
         [SCRAPE_STORY_FEATURE_KEY]: state

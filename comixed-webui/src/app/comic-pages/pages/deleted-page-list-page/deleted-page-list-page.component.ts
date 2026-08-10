@@ -46,7 +46,7 @@ import { ActivatedRoute } from '@angular/router';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import {
   selectDeletedPageList,
-  selectDeletedPagesState
+  selectDeletedPageListBusy
 } from '@app/comic-pages/selectors/deleted-pages.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { DeletedPage } from '@app/comic-pages/models/deleted-page';
@@ -103,10 +103,8 @@ export class DeletedPageListPageComponent implements OnInit, AfterViewInit {
       .pipe(tap(() => this.loadTranslations()))
       .subscribe();
     this.store
-      .select(selectDeletedPagesState)
-      .pipe(
-        tap(state => this.store.dispatch(setBusyState({ enabled: state.busy })))
-      )
+      .select(selectDeletedPageListBusy)
+      .pipe(tap(enabled => this.store.dispatch(setBusyState({ enabled }))))
       .subscribe();
     this.store
       .select(selectDeletedPageList)

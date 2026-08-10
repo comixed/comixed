@@ -43,8 +43,8 @@ import {
 import { METADATA_RECORD_LIMITS } from '@app/comic-metadata/comic-metadata.constants';
 import { StoryMetadata } from '@app/collections/models/story-metadata';
 import {
-  selectScrapedStoryCandidates,
-  selectScrapeStoryState
+  selectScrapedStoryBusy,
+  selectScrapedStoryCandidates
 } from '@app/comic-metadata/selectors/scrape-story.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import {
@@ -123,26 +123,22 @@ import { AsyncPipe } from '@angular/common';
 export class StoryScrapingComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-
-  protected readonly pageSizeOptions = PAGE_SIZE_OPTIONS;
   readonly maxRecordsOptions = METADATA_RECORD_LIMITS;
   readonly displayedColumns = ['action', 'thumbnail', 'name', 'publisher'];
-
   storyScrapingForm: FormGroup;
   dataSource = new MatTableDataSource<StoryMetadata>([]);
-
   skipCache$ = new BehaviorSubject(false);
   metadataSource$ = new BehaviorSubject<MetadataSource | null>(null);
   metadataSources$ = new BehaviorSubject<MetadataSource[]>([]);
   imageUrl$ = new BehaviorSubject('');
   imageTitle$ = new BehaviorSubject('');
-
   queryParameterService = inject(QueryParameterService);
   logger = inject(LoggerService);
   store = inject(Store);
   formBuilder = inject(FormBuilder);
   confirmationService = inject(ConfirmationService);
   translateService = inject(TranslateService);
+  protected readonly pageSizeOptions = PAGE_SIZE_OPTIONS;
 
   constructor() {
     this.storyScrapingForm = this.formBuilder.group({
@@ -156,10 +152,8 @@ export class StoryScrapingComponent implements OnInit, AfterViewInit {
       .pipe(tap(list => this.metadataSources$.next(list)))
       .subscribe();
     this.store
-      .select(selectScrapeStoryState)
-      .pipe(
-        tap(state => this.store.dispatch(setBusyState({ enabled: state.busy })))
-      )
+      .select(selectScrapedStoryBusy)
+      .pipe(tap(enabled => this.store.dispatch(setBusyState({ enabled }))))
       .subscribe();
     this.store
       .select(selectScrapedStoryCandidates)
@@ -225,7 +219,7 @@ export class StoryScrapingComponent implements OnInit, AfterViewInit {
     this.doScrapeStory(entry.referenceId);
   }
 
-  protected onToggleSkipCache() {
+  onToggleSkipCache(): void {
     this.skipCache$.next(this.skipCache$.value === false);
   }
 
