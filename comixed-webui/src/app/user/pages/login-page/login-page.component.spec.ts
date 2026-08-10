@@ -38,6 +38,7 @@ import {
   INITIAL_USER_ACCOUNT_FEATURE_KEY,
   initialState as initialUserAccountState
 } from '@app/user/reducers/initial-user-account.reducer';
+import { loadInitialUserAccount } from '@app/user/actions/initial-user-account.actions';
 
 describe('LoginPageComponent', () => {
   const USER = USER_READER;
@@ -97,6 +98,23 @@ describe('LoginPageComponent', () => {
 
     it('sets the busy flag', () => {
       expect(component.busy$.value).toBeTrue();
+    });
+  });
+
+  describe('checking for an existing account', () => {
+    beforeEach(() => {
+      store.setState({
+        ...initialState,
+        [INITIAL_USER_ACCOUNT_FEATURE_KEY]: {
+          ...initialUserAccountState,
+          busy: false,
+          checked: false
+        }
+      });
+    });
+
+    it('loads the initial account', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(loadInitialUserAccount());
     });
   });
 

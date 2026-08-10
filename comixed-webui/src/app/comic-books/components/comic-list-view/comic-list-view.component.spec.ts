@@ -84,7 +84,11 @@ import {
   initialState as initialLibraryPluginState,
   LIBRARY_PLUGIN_FEATURE_KEY
 } from '@app/library-plugins/reducers/library-plugin.reducer';
-import { LIBRARY_PLUGIN_4 } from '@app/library-plugins/library-plugins.fixtures';
+import {
+  LIBRARY_PLUGIN_1,
+  LIBRARY_PLUGIN_2,
+  LIBRARY_PLUGIN_4
+} from '@app/library-plugins/library-plugins.fixtures';
 import {
   runLibraryPluginOnOneComicBook,
   runLibraryPluginOnSelectedComicBooks
@@ -103,6 +107,7 @@ import {
   COMIC_BOOK_SELECTION_FEATURE_KEY,
   initialState as initialComicBookSelectionState
 } from '@app/comic-books/reducers/comic-book-selection.reducer';
+import { PluginType } from '@app/library-plugins/models/plugin-type';
 
 describe('ComicListViewComponent', () => {
   const COMIC_BOOKS = [
@@ -201,6 +206,40 @@ describe('ComicListViewComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('receiving the list of plugins', () => {
+    const SINGLE_TYPE_PLUGIN = {
+      ...LIBRARY_PLUGIN_1,
+      pluginType: PluginType.Single
+    };
+    const LIST_TYPE_PLUGIN = {
+      ...LIBRARY_PLUGIN_2,
+      pluginType: PluginType.List
+    };
+    const PLUGIN_LIST = [LIST_TYPE_PLUGIN, SINGLE_TYPE_PLUGIN];
+
+    beforeEach(() => {
+      component.comicListPluginList$.next([]);
+      component.comicBookPluginList$.next([]);
+      store.setState({
+        ...initialState,
+        [LIBRARY_PLUGIN_FEATURE_KEY]: {
+          ...initialLibraryPluginState,
+          list: PLUGIN_LIST
+        }
+      });
+    });
+
+    it('loads the comic book plugin list', () => {
+      expect(component.comicBookPluginList$.value).toEqual([
+        SINGLE_TYPE_PLUGIN
+      ]);
+    });
+
+    it('loads the comic list plugin list', () => {
+      expect(component.comicListPluginList$.value).toEqual([LIST_TYPE_PLUGIN]);
+    });
   });
 
   describe('receiving selected ids', () => {

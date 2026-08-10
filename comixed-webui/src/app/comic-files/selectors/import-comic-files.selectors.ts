@@ -20,8 +20,12 @@ import {
   IMPORT_COMIC_FILES_FEATURE_KEY,
   ImportComicFilesState
 } from '@app/comic-files/reducers/import-comic-files.reducer';
-import { createFeatureSelector } from '@ngrx/store';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
 
-/** Selects the comic import feature state. */
-export const selectImportComicFilesState =
+const selectImportComicFilesState =
   createFeatureSelector<ImportComicFilesState>(IMPORT_COMIC_FILES_FEATURE_KEY);
+
+export const selectImportComicFilesSending = createSelector(
+  selectImportComicFilesState,
+  state => state.sending
+);

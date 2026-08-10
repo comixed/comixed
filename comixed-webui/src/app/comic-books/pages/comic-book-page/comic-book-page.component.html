@@ -1,4 +1,4 @@
-@if (!comic) {
+@if ((comic$ | async) === null) {
   <div class="cx-overlay cx-width-100 cx-height-100">
     <div class="cx-centered cx-position-absolute">
       <img src="/assets/img/book.png" alt="Loading comic book..." />
@@ -6,7 +6,7 @@
   </div>
 }
 
-@if (!!comic) {
+@if (!!(comic$ | async)) {
   <div class="cx-fab-container-bottom-left cx-z-index-99">
     <div class="cx-horizontal-container">
       <button
@@ -16,7 +16,7 @@
         color="accent"
         [matTooltip]="'comic-book.tooltip.go-to-previous-comic' | translate"
         [disabled]="!comicBook?.previousIssueId"
-        [routerLink]="['/comics', comic?.previousIssueId]"
+        [routerLink]="['/comics', (comic$ | async)?.previousIssueId]"
       >
         <mat-icon>arrow_back</mat-icon>
       </button>
@@ -27,7 +27,7 @@
         color="accent"
         [disabled]="!comicBook?.nextIssueId"
         [matTooltip]="'comic-book.tooltip.go-to-next-comic' | translate"
-        [routerLink]="['/comics', comic?.nextIssueId]"
+        [routerLink]="['/comics', (comic$ | async)?.nextIssueId]"
       >
         <mat-icon>arrow_forward</mat-icon>
       </button>
@@ -130,63 +130,63 @@
     </div>
   </div>
 }
-@if (!!comic) {
+@if (!!(comic$ | async)) {
   <h1>
-    {{ comic | comicTitle }}
+    {{ comic$ | async | comicTitle }}
   </h1>
 }
 @if (
-  comic?.publisher?.length > 0 &&
-  comic?.series?.length > 0 &&
-  comic?.volume?.length > 0
+  (comic$ | async)?.publisher?.length > 0 &&
+  (comic$ | async)?.series?.length > 0 &&
+  (comic$ | async)?.volume?.length > 0
 ) {
   <h2>
     <a
       [routerLink]="[
         '/library/collections/publishers',
-        comic.publisher,
+        (comic$ | async).publisher,
         'issues'
       ]"
     >
-      {{ comic.publisher }}
+      {{ (comic$ | async).publisher }}
     </a>
     &nbsp;/&nbsp;
     <a
       [routerLink]="[
         '/library/collections/publishers',
-        comic.publisher,
+        (comic$ | async).publisher,
         'series',
-        comic.series,
+        (comic$ | async).series,
         'volumes',
-        comic.volume,
+        (comic$ | async).volume,
         'issues'
       ]"
     >
       {{
         "comic-book.navigation-link.series"
-          | translate: { volume: comic.volume }
+          | translate: { volume: (comic$ | async).volume }
       }}
     </a>
   </h2>
 }
-@if (!!comic) {
+@if (!!(comic$ | async)) {
   <div id="comic-detail-container">
     <div id="comic-cover-container">
       <mat-card appearance="outlined" class="cx-padding-0">
         <mat-card-title
           class="cx-text-nowrap cx-align-content-center"
-          [matTooltip]="comic.title"
+          [matTooltip]="(comic$ | async).title"
         >
-          {{ comic.title }}
+          {{ (comic$ | async).title }}
         </mat-card-title>
-        @if (!!comic?.coverDate) {
+        @if (!!(comic$ | async)?.coverDate) {
           <mat-card-subtitle class="cx-align-content-center">
-            {{ comic.coverDate | date: "MMM yyyy" }}
+            {{ (comic$ | async).coverDate | date: "MMM yyyy" }}
           </mat-card-subtitle>
         }
         <mat-card-content>
           <cx-comic-page
-            [imageUrl]="pages[pageIndex] | comicPageUrl"
+            [imageUrl]="pages$[pageIndex$ | async] | async | comicPageUrl"
           ></cx-comic-page>
         </mat-card-content>
         <mat-card-footer class="cx-align-content-center">
@@ -194,8 +194,8 @@
             <button
               id="previous-page-button"
               mat-icon-button
-              (click)="pageIndex = pageIndex - 1"
-              [disabled]="pageIndex === 0"
+              (click)="onPreviousPage()"
+              [disabled]="(pageIndex$ | async) === 0"
               [matTooltip]="
                 'comic-book.tooltip.show-previous-comic-page' | translate
               "
@@ -204,13 +204,17 @@
             </button>
             {{
               "comic-book.label.page-title"
-                | translate: { which: pageIndex + 1, count: pages.length }
+                | translate
+                  : {
+                      which: (pageIndex$ | async) + 1,
+                      count: (pages$ | async).length
+                    }
             }}
             <button
               id="next-page-button"
               mat-icon-button
-              (click)="pageIndex = pageIndex + 1"
-              [disabled]="pageIndex === pages.length - 1"
+              (click)="onNextPage()"
+              [disabled]="(pageIndex$ | async) === (pages$ | async).length - 1"
               [matTooltip]="
                 'comic-book.tooltip.show-next-comic-page' | translate
               "
@@ -230,17 +234,20 @@
       >
         <mat-tab [label]="'comic-book.label.comic-overview' | translate">
           <cx-comic-detail-edit
-            [comicBook]="comic"
+            [comicBook]="comic$ | async"
             [isAdmin]="isAdmin$ | async"
           ></cx-comic-detail-edit>
         </mat-tab>
         <mat-tab [label]="'comic-book.label.comic-story' | translate">
-          <cx-comic-story [comic]="comic" [tags]="tags"></cx-comic-story>
+          <cx-comic-story
+            [comic]="comic$ | async"
+            [tags]="tags$ | async"
+          ></cx-comic-story>
         </mat-tab>
         <mat-tab [label]="'comic-book.label.comic-pages' | translate">
           <cx-comic-pages
             class="cx-width-100"
-            [pages]="pages"
+            [pages]="pages$ | async"
             [showPagesAsGrid]="queryParameterService.pagesAsGrid$ | async"
             [isAdmin]="isAdmin$ | async"
             (pagesChanged)="onPagesChanged($event)"
@@ -248,11 +255,13 @@
         </mat-tab>
         @if (isAdmin$ | async) {
           <mat-tab [label]="'comic-book.label.comic-scraping' | translate">
-            @if (!!comic && volumes.length === 0) {
+            @if (!!(comic$ | async) && (volumes$ | async).length === 0) {
               <cx-comic-scraping
                 class="cx-width-100"
-                [comic]="comic"
-                [previousMetadataSource]="comic.metadata?.metadataSource"
+                [comic]="comic$ | async"
+                [previousMetadataSource]="
+                  (comic$ | async).metadata?.metadataSource
+                "
                 [skipCache]="skipCache$ | async"
                 [matchPublisher]="matchPublisher$ | async"
                 [maximumRecords]="maximumRecords$ | async"
@@ -270,17 +279,17 @@
                 "
               ></cx-comic-scraping>
             }
-            @if (volumes.length > 0) {
+            @if ((volumes$ | async).length > 0) {
               <cx-scraping-volume-selection
-                [comicBook]="comic"
-                [metadataSource]="metadataSource"
-                [comicSeriesName]="scrapingSeriesName"
-                [comicVolume]="scrapingVolume"
-                [comicIssueNumber]="scrapingIssueNumber"
+                [comicBook]="comic$ | async"
+                [metadataSource]="metadataSource$ | async"
+                [comicSeriesName]="scrapingSeriesName$ | async"
+                [comicVolume]="scrapingVolume$ | async"
+                [comicIssueNumber]="scrapingIssueNumber$ | async"
                 [skipCache]="skipCache$ | async"
                 [pageSize]="pageSize$ | async"
                 [pageNumber]="pageNumber$ | async"
-                [volumes]="volumes"
+                [volumes]="volumes$ | async"
               ></cx-scraping-volume-selection>
             }
           </mat-tab>

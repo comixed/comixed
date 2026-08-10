@@ -54,12 +54,13 @@ import { AsyncPipe } from '@angular/common';
   styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent implements OnInit {
+  statistics$ = new BehaviorSubject<{ name: string; value: number }[]>([]);
+  panels = AVAILABLE_DASHBOARD_PANELS;
+
   store = inject(Store);
   translateService = inject(TranslateService);
   titleService = inject(TitleService);
   logger = inject(LoggerService);
-  panels = AVAILABLE_DASHBOARD_PANELS;
-  statistics = new BehaviorSubject<{ name: string; value: number }[]>([]);
 
   constructor() {
     this.logger.debug('Subscribing to library state changes');
@@ -91,7 +92,7 @@ export class DashboardComponent implements OnInit {
 
   set libraryState(libraryState: LibraryState | null) {
     this._libraryState = libraryState;
-    this.statistics.next([
+    this.statistics$.next([
       {
         name: this.translateService.instant('dashboard.text.unscraped'),
         value: libraryState?.unscrapedComics || 0

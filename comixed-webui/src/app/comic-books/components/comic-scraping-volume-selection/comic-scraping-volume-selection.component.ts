@@ -49,8 +49,9 @@ import {
   scrapeSingleComicBook
 } from '@app/comic-metadata/actions/single-book-scraping.actions';
 import {
+  selectChosenMetadataAutoSelectExactMatch,
   selectScrapingIssueMetadata,
-  selectSingleBookScrapingState
+  selectSingleBookScrapingBusy
 } from '@app/comic-metadata/selectors/single-book-scraping.selectors';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { SortableListItem } from '@app/core/models/ui/sortable-list-item';
@@ -147,8 +148,8 @@ export class ComicScrapingVolumeSelectionComponent implements AfterViewInit {
   selectedVolume$ = new BehaviorSubject<VolumeMetadata | null>(null);
 
   dataSource = new MatTableDataSource<SortableListItem<VolumeMetadata>>();
-  confirmBeforeScraping = true;
-  autoSelectExactMatch = false;
+  confirmBeforeScraping$ = new BehaviorSubject(true);
+  autoSelectExactMatch$ = new BehaviorSubject(false);
 
   readonly displayedColumns = [
     MATCHABILITY,
@@ -170,18 +171,21 @@ export class ComicScrapingVolumeSelectionComponent implements AfterViewInit {
       .pipe(tap(issue => (this.issue = issue)))
       .subscribe();
     this.store
-      .select(selectSingleBookScrapingState)
+      .select(selectSingleBookScrapingBusy)
       .pipe(
-        tap(state => {
+        tap(enabled =>
           this.store.dispatch(
             setBusyStateWithIcon({
-              enabled: state.loadingRecords,
+              enabled,
               icon: BusyIcon.LOADING
             })
-          );
-          this.autoSelectExactMatch = state.autoSelectExactMatch;
-        })
+          )
+        )
       )
+      .subscribe();
+    this.store
+      .select(selectChosenMetadataAutoSelectExactMatch)
+      .pipe(tap(autoSelect => this.autoSelectExactMatch$.next(autoSelect)))
       .subscribe();
   }
 
@@ -195,7 +199,7 @@ export class ComicScrapingVolumeSelectionComponent implements AfterViewInit {
     this._issue = issue;
     if (
       !!issue &&
-      this.autoSelectExactMatch &&
+      this.autoSelectExactMatch$.value &&
       this.dataSource.data.filter(entry => entry.sortOrder === EXACT_MATCH)
         .length === 1
     ) {
@@ -280,7 +284,7 @@ export class ComicScrapingVolumeSelectionComponent implements AfterViewInit {
       `Scraping issue was ${decision ? 'accepted' : 'rejected'}`
     );
     if (decision) {
-      if (!this.confirmBeforeScraping) {
+      if (!this.confirmBeforeScraping$.value) {
         this.scrapeComic();
       } else {
         this.confirmationService.confirm({

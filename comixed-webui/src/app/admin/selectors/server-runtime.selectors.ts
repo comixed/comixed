@@ -22,8 +22,13 @@ import {
   ShutdownState
 } from '../reducers/server-runtime.reducer';
 
-export const selectServerRuntimeState = createFeatureSelector<ShutdownState>(
+const selectServerRuntimeState = createFeatureSelector<ShutdownState>(
   SERVER_RUNTIME_FEATURE_KEY
+);
+
+export const selectServerRuntimeShuttingDown = createSelector(
+  selectServerRuntimeState,
+  state => state.shuttingDown
 );
 
 export const selectServerRuntimeHealth = createSelector(

@@ -20,10 +20,7 @@ import {
   DARK_THEME_FEATURE_KEY,
   DarkThemeState
 } from '../reducers/dark-theme.reducer';
-import {
-  selectDarkThemeActive,
-  selectDarkThemeState
-} from './dark-theme.selectors';
+import { selectDarkThemeActive } from './dark-theme.selectors';
 
 describe('DarkTheme Selectors', () => {
   const TOGGLE = Math.random() > 0.5;
@@ -34,15 +31,7 @@ describe('DarkTheme Selectors', () => {
     state = { toggle: TOGGLE };
   });
 
-  it('should select the feature state', () => {
-    expect(
-      selectDarkThemeState({
-        [DARK_THEME_FEATURE_KEY]: state
-      })
-    ).toEqual(state);
-  });
-
-  it('should select the dark theme active flag', () => {
+  it('selects the dark theme active flag', () => {
     expect(
       selectDarkThemeActive({
         [DARK_THEME_FEATURE_KEY]: state

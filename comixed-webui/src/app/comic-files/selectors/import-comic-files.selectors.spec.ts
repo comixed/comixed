@@ -20,7 +20,7 @@ import {
   IMPORT_COMIC_FILES_FEATURE_KEY,
   ImportComicFilesState
 } from '../reducers/import-comic-files.reducer';
-import { selectImportComicFilesState } from './import-comic-files.selectors';
+import { selectImportComicFilesSending } from './import-comic-files.selectors';
 
 describe('ImportComicFiles Selectors', () => {
   let state: ImportComicFilesState;
@@ -33,9 +33,9 @@ describe('ImportComicFiles Selectors', () => {
 
   it('should select the feature state', () => {
     expect(
-      selectImportComicFilesState({
+      selectImportComicFilesSending({
         [IMPORT_COMIC_FILES_FEATURE_KEY]: state
       })
-    ).toEqual(state);
+    ).toEqual(state.sending);
   });
 });

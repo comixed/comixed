@@ -22,7 +22,7 @@ import {
   ImprintListState
 } from '../reducers/imprint-list.reducer';
 
-export const selectImprintListState = createFeatureSelector<ImprintListState>(
+const selectImprintListState = createFeatureSelector<ImprintListState>(
   IMPRINT_LIST_FEATURE_KEY
 );
 

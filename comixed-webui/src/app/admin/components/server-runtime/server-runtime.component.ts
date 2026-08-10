@@ -22,7 +22,7 @@ import { Store } from '@ngrx/store';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import {
   selectServerRuntimeHealth,
-  selectServerRuntimeState
+  selectServerRuntimeShuttingDown
 } from '@app/admin/selectors/server-runtime.selectors';
 import {
   loadServerHealth,
@@ -69,8 +69,8 @@ export class ServerRuntimeComponent implements OnInit {
       .pipe(tap(health => this.health$.next(health)))
       .subscribe();
     this.store
-      .select(selectServerRuntimeState)
-      .pipe(tap(state => this.shuttingDown$.next(state.shuttingDown)))
+      .select(selectServerRuntimeShuttingDown)
+      .pipe(tap(shuttingDown => this.shuttingDown$.next(shuttingDown)))
       .subscribe();
   }
 

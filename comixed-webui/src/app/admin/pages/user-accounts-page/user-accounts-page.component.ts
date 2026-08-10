@@ -29,9 +29,9 @@ import { BehaviorSubject } from 'rxjs';
 import { TitleService } from '@app/core/services/title.service';
 import { Store } from '@ngrx/store';
 import {
+  selectManageUsersBusy,
   selectManageUsersCurrent,
-  selectManageUsersList,
-  selectManageUsersState
+  selectManageUsersList
 } from '@app/user/selectors/manage-users.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import {
@@ -160,12 +160,8 @@ export class UserAccountsPageComponent implements OnInit, AfterViewInit {
       .pipe(tap(() => this.loadTranslations()))
       .subscribe();
     this.store
-      .select(selectManageUsersState)
-      .pipe(
-        tap(state => {
-          this.store.dispatch(setBusyState({ enabled: state.busy }));
-        })
-      )
+      .select(selectManageUsersBusy)
+      .pipe(tap(enabled => this.store.dispatch(setBusyState({ enabled }))))
       .subscribe();
     this.store
       .select(selectManageUsersList)

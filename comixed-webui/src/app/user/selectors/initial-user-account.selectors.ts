@@ -22,14 +22,19 @@ import {
   InitialUserAccountState
 } from '../reducers/initial-user-account.reducer';
 
-export const selectInitialUserAccountState =
+const selectInitialUserAccountState =
   createFeatureSelector<InitialUserAccountState>(
     INITIAL_USER_ACCOUNT_FEATURE_KEY
   );
 
+export const selectCheckedForExistingAccount = createSelector(
+  selectInitialUserAccountState,
+  state => !state.busy && state.checked
+);
+
 export const selectHasExistingAccounts = createSelector(
   selectInitialUserAccountState,
-  state => !(state.busy || state.checked)
+  state => !state.busy && state.checked && state.hasExisting
 );
 
 export const selectCreateInitialUserAccount = createSelector(

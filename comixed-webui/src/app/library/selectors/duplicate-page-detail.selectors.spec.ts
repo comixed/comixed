@@ -23,8 +23,7 @@ import {
 import {
   selectDuplicatePageDetail,
   selectDuplicatePageDetailBusy,
-  selectDuplicatePageDetailNotFound,
-  selectDuplicatePageDetailState
+  selectDuplicatePageDetailNotFound
 } from './duplicate-page-detail.selectors';
 import { DUPLICATE_PAGE_3 } from '@app/library/library.fixtures';
 
@@ -37,14 +36,6 @@ describe('DuplicatePageDetail Selectors', () => {
       notFound: Math.random() > 0.5,
       detail: DUPLICATE_PAGE_3
     };
-  });
-
-  it('selects the feature state', () => {
-    expect(
-      selectDuplicatePageDetailState({
-        [DUPLICATE_PAGE_DETAIL_FEATURE_KEY]: state
-      })
-    ).toEqual(state);
   });
 
   it('selects the duplicate page loading state', () => {

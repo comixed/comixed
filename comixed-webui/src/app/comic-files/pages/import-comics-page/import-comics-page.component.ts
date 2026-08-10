@@ -32,12 +32,13 @@ import { selectUser } from '@app/user/selectors/user.selectors';
 import { filter, tap } from 'rxjs/operators';
 import { Title } from '@angular/platform-browser';
 import {
-  selectComicFileListState,
+  selectComicFileBusy,
+  selectComicFileGroups,
   selectComicFiles,
   selectComicFilesCurrentPath,
   selectComicGroups
 } from '@app/comic-files/selectors/comic-file-list.selectors';
-import { selectImportComicFilesState } from '@app/comic-files/selectors/import-comic-files.selectors';
+import { selectImportComicFilesSending } from '@app/comic-files/selectors/import-comic-files.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { importComicFiles } from '@app/comic-files/actions/import-comic-files.actions';
 import { TitleService } from '@app/core/services/title.service';
@@ -72,7 +73,7 @@ import {
   updateCurrentPath
 } from '@app/comic-files/actions/comic-file-list.actions';
 import { Router } from '@angular/router';
-import { selectFeatureEnabledState } from '@app/admin/selectors/feature-enabled.selectors';
+import { selectFeatureList } from '@app/admin/selectors/feature-enabled.selectors';
 import { hasFeature, isFeatureEnabled } from '@app/admin';
 import { BLOCKED_PAGES_ENABLED } from '@app/admin/admin.constants';
 import { getFeatureEnabled } from '@app/admin/actions/feature-enabled.actions';
@@ -210,13 +211,16 @@ export class ImportComicsPageComponent implements OnInit, AfterViewInit {
       )
       .subscribe();
     this.store
-      .select(selectComicFileListState)
+      .select(selectComicFileBusy)
+      .pipe(tap(enabled => this.store.dispatch(setBusyState({ enabled }))))
+      .subscribe();
+    this.store
+      .select(selectComicFileGroups)
       .pipe(
-        tap(state => {
-          this.store.dispatch(setBusyState({ enabled: state.busy }));
+        tap(groups => {
           this.pathOptions$.next(
             [{ label: 'comic-files.text.all-directories', value: null }].concat(
-              state.groups.map(group => {
+              groups.map(group => {
                 return {
                   label: group.directory,
                   value: group.directory
@@ -228,28 +232,21 @@ export class ImportComicsPageComponent implements OnInit, AfterViewInit {
       )
       .subscribe();
     this.store
-      .select(selectImportComicFilesState)
-      .pipe(
-        tap(state =>
-          this.store.dispatch(setBusyState({ enabled: state.sending }))
-        )
-      )
+      .select(selectImportComicFilesSending)
+      .pipe(tap(enabled => this.store.dispatch(setBusyState({ enabled }))))
       .subscribe();
     this.store
-      .select(selectFeatureEnabledState)
+      .select(selectFeatureList)
       .pipe(
-        tap(state => {
-          if (
-            !state.busy &&
-            !hasFeature(state.features, BLOCKED_PAGES_ENABLED)
-          ) {
+        tap(featureList => {
+          if (!hasFeature(featureList, BLOCKED_PAGES_ENABLED)) {
             this.logger.debug('Loading feature state:', BLOCKED_PAGES_ENABLED);
             this.store.dispatch(
               getFeatureEnabled({ name: BLOCKED_PAGES_ENABLED })
             );
           } else {
             this.blockedPagesEnabled$.next(
-              isFeatureEnabled(state.features, BLOCKED_PAGES_ENABLED)
+              isFeatureEnabled(featureList, BLOCKED_PAGES_ENABLED)
             );
           }
         })
@@ -344,11 +341,11 @@ export class ImportComicsPageComponent implements OnInit, AfterViewInit {
     this.store.dispatch(updateCurrentPath({ path }));
   }
 
-  protected closeFinderForm() {
+  closeFinderForm(): void {
     this.showFinderForm$.next(false);
   }
 
-  protected openFinderForm() {
+  openFinderForm(): void {
     this.showFinderForm$.next(true);
   }
 

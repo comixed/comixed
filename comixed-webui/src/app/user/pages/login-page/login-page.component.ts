@@ -40,8 +40,8 @@ import {
   MIN_PASSWORD_LENGTH
 } from '@app/user/user.constants';
 import {
-  selectCreateInitialUserAccount,
-  selectHasExistingAccounts
+  selectCheckedForExistingAccount,
+  selectCreateInitialUserAccount
 } from '@app/user/selectors/initial-user-account.selectors';
 import { loadInitialUserAccount } from '@app/user/actions/initial-user-account.actions';
 import { MatCard, MatCardContent, MatCardTitle } from '@angular/material/card';
@@ -97,12 +97,13 @@ export class LoginPageComponent implements OnInit, AfterViewInit {
       ]
     });
     this.store
-      .select(selectHasExistingAccounts)
+      .select(selectCheckedForExistingAccount)
       .pipe(
-        filter(flag => flag),
-        tap(() => {
-          this.logger.info('Loading initial user accounts');
-          this.store.dispatch(loadInitialUserAccount());
+        tap(checked => {
+          if (!checked) {
+            this.logger.info('Loading initial user accounts');
+            this.store.dispatch(loadInitialUserAccount());
+          }
         })
       )
       .subscribe();

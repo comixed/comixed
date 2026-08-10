@@ -84,12 +84,12 @@ describe('FooterComponent', () => {
 
   describe('when no user is logged in', () => {
     beforeEach(() => {
-      component.readCount = 717;
+      component.readCount$.next(717);
       component.user = null;
     });
 
     it('clears the read count', () => {
-      expect(component.readCount).toEqual(0);
+      expect(component.readCount$.value).toEqual(0);
     });
   });
 
@@ -99,7 +99,7 @@ describe('FooterComponent', () => {
     });
 
     it('sets the read count', () => {
-      expect(component.readCount).toEqual(COMICS_READ_ENTRIES.length);
+      expect(component.readCount$.value).toEqual(COMICS_READ_ENTRIES.length);
     });
   });
 

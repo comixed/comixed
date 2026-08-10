@@ -233,7 +233,7 @@ export const COMIC_DETAIL_1: ComicDetail = {
   comicType: ComicType.ISSUE,
   unscraped: false,
   publisher: 'First Publisher',
-  imprint: null,
+  imprint: 'First Imprint',
   series: 'First Series',
   volume: '2017',
   issueNumber: '1',

@@ -21,8 +21,8 @@ import {
   ComicFileListState
 } from '../reducers/comic-file-list.reducer';
 import {
+  selectComicFileBusy,
   selectComicFileGroups,
-  selectComicFileListState,
   selectComicFiles,
   selectComicFilesCurrentPath,
   selectComicGroups
@@ -58,15 +58,15 @@ describe('ComicFileList Selectors', () => {
     };
   });
 
-  it('should select the feature state', () => {
+  it('selects the busy state', () => {
     expect(
-      selectComicFileListState({
+      selectComicFileBusy({
         [COMIC_FILE_LIST_FEATURE_KEY]: state
       })
-    ).toEqual(state);
+    ).toEqual(state.busy);
   });
 
-  it('should select the comic groups', () => {
+  it('selects the comic groups', () => {
     expect(
       selectComicFileGroups({
         [COMIC_FILE_LIST_FEATURE_KEY]: state
@@ -74,7 +74,7 @@ describe('ComicFileList Selectors', () => {
     ).toEqual(state.groups);
   });
 
-  it('should select the comic files', () => {
+  it('selects the comic files', () => {
     expect(
       selectComicFiles({
         [COMIC_FILE_LIST_FEATURE_KEY]: state
@@ -82,7 +82,7 @@ describe('ComicFileList Selectors', () => {
     ).toEqual(state.files);
   });
 
-  it('should select the comic groups', () => {
+  it('selects the comic groups', () => {
     expect(
       selectComicGroups({
         [COMIC_FILE_LIST_FEATURE_KEY]: state
@@ -90,7 +90,7 @@ describe('ComicFileList Selectors', () => {
     ).toEqual(state.groups);
   });
 
-  it('should select the current path filter', () => {
+  it('selects the current path filter', () => {
     expect(
       selectComicFilesCurrentPath({
         [COMIC_FILE_LIST_FEATURE_KEY]: state

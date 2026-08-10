@@ -22,8 +22,13 @@ import {
   ManagerUsersState
 } from '../reducers/manage-users.reducer';
 
-export const selectManageUsersState = createFeatureSelector<ManagerUsersState>(
+const selectManageUsersState = createFeatureSelector<ManagerUsersState>(
   MANAGER_USERS_FEATURE_KEY
+);
+
+export const selectManageUsersBusy = createSelector(
+  selectManageUsersState,
+  state => state.busy
 );
 
 export const selectManageUsersList = createSelector(

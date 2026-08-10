@@ -44,7 +44,7 @@ import { isAdmin, passwordVerifyValidator } from '@app/user/user.functions';
 import { TitleService } from '@app/core/services/title.service';
 import { RouterModule } from '@angular/router';
 
-xdescribe('UserAccountsPageComponent', () => {
+describe('UserAccountsPageComponent', () => {
   const USER_LIST = [USER_ADMIN, USER_READER];
   const initialState = {
     [MANAGER_USERS_FEATURE_KEY]: {

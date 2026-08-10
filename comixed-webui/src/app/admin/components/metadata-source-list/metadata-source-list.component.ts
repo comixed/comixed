@@ -58,7 +58,7 @@ import {
   METADATA_SCRAPING_ERROR_THRESHOLD
 } from '@app/admin/admin.constants';
 import {
-  selectConfigurationOptionListState,
+  selectConfigurationOptionListBusy,
   selectConfigurationOptions
 } from '@app/admin/selectors/configuration-option-list.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
@@ -164,14 +164,8 @@ export class MetadataSourceListComponent implements OnInit, AfterViewInit {
       .pipe(tap(sources => (this.dataSource.data = sources)))
       .subscribe();
     this.store
-      .select(selectConfigurationOptionListState)
-      .pipe(
-        tap(state => {
-          this.store.dispatch(
-            setBusyState({ enabled: state.loading || state.saving })
-          );
-        })
-      )
+      .select(selectConfigurationOptionListBusy)
+      .pipe(tap(enabled => this.store.dispatch(setBusyState({ enabled }))))
       .subscribe();
     this.store
       .select(selectConfigurationOptions)

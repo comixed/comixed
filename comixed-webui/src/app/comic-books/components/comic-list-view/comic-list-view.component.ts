@@ -90,10 +90,7 @@ import {
 } from '@app/library-plugins/actions/run-library-plugin.actions';
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import { PREFERENCE_PAGE_SIZE } from '@app/comic-files/comic-file.constants';
-import {
-  selectComicBookSelectionBusy,
-  selectComicBookSelectionState
-} from '@app/comic-books/selectors/comic-book-selection.selectors';
+import { selectComicBookSelectionBusy } from '@app/comic-books/selectors/comic-book-selection.selectors';
 import {
   markSelectedComicBooksRead,
   markSingleComicBookRead
@@ -122,7 +119,6 @@ import { MatToolbar } from '@angular/material/toolbar';
 import { QUERY_PARAM_COMICS_AS_GRID } from '@app/core';
 import { ComicGridItemComponent } from '@app/comic-books/components/comic-grid-item/comic-grid-item.component';
 import { PluginType } from '@app/library-plugins/models/plugin-type';
-import { ComicBookSelectionState } from '@app/comic-books/reducers/comic-book-selection.reducer';
 import { BehaviorSubject, tap } from 'rxjs';
 
 @Component({

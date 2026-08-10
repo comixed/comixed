@@ -22,8 +22,13 @@ import {
   DeletedPagesState
 } from '../reducers/deleted-pages.reducer';
 
-export const selectDeletedPagesState = createFeatureSelector<DeletedPagesState>(
+const selectDeletedPagesState = createFeatureSelector<DeletedPagesState>(
   DELETED_PAGE_FEATURE_KEY
+);
+
+export const selectDeletedPageListBusy = createSelector(
+  selectDeletedPagesState,
+  state => state.busy
 );
 
 export const selectDeletedPageList = createSelector(

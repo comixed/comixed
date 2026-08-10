@@ -22,7 +22,10 @@ import { Store } from '@ngrx/store';
 import { TitleService } from '@app/core/services/title.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
-import { selectInitialUserAccountState } from '@app/user/selectors/initial-user-account.selectors';
+import {
+  selectCheckedForExistingAccount,
+  selectHasExistingAccounts
+} from '@app/user/selectors/initial-user-account.selectors';
 import {
   createAdminAccount,
   loadInitialUserAccount
@@ -92,14 +95,23 @@ export class CreateAdminPageComponent implements OnInit {
       { validators: passwordVerifyValidator }
     );
     this.store
-      .select(selectInitialUserAccountState)
+      .select(selectCheckedForExistingAccount)
       .pipe(
-        tap(state => {
-          if (!state.checked && !state.busy) {
+        tap(checked => {
+          console.log('*** checked:', checked);
+          if (!checked) {
             this.logger.debug('Loading initial user accounts');
             this.store.dispatch(loadInitialUserAccount());
-          } else if (!state.busy && state.checked && state.hasExisting) {
-            this.logger.trace('Has users: redirecting to root page');
+          }
+        })
+      )
+      .subscribe();
+    this.store
+      .select(selectHasExistingAccounts)
+      .pipe(
+        tap(hasAccounts => {
+          if (hasAccounts) {
+            this.logger.trace('Has accounts: redirecting to root page');
             this.router.navigateByUrl('/login');
           }
         })

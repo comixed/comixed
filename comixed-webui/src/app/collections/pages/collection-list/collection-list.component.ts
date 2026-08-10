@@ -37,8 +37,8 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/core/services/title.service';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import {
+  selectCollectionListBusy,
   selectCollectionListEntries,
-  selectCollectionListState,
   selectCollectionListTotalEntries
 } from '@app/collections/selectors/collection-list.selectors';
 import { CollectionEntry } from '@app/collections/models/collection-entry';
@@ -131,10 +131,8 @@ export class CollectionListComponent implements OnInit {
       )
       .subscribe();
     this.store
-      .select(selectCollectionListState)
-      .pipe(
-        tap(state => this.store.dispatch(setBusyState({ enabled: state.busy })))
-      )
+      .select(selectCollectionListBusy)
+      .pipe(tap(enabled => this.store.dispatch(setBusyState({ enabled }))))
       .subscribe();
     this.store
       .select(selectCollectionListEntries)

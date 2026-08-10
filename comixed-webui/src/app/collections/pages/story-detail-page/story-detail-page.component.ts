@@ -30,7 +30,7 @@ import {
   selectComicCoverYears,
   selectComicFilteredCount,
   selectComicList,
-  selectComicListState
+  selectComicListBusy
 } from '@app/comic-books/selectors/comic-list.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { selectUser } from '@app/user/selectors/user.selectors';
@@ -105,11 +105,9 @@ export class StoryDetailPageComponent implements OnInit {
           this.loadTranslations();
           this.doLoadComicDetails();
           this.store
-            .select(selectComicListState)
+            .select(selectComicListBusy)
             .pipe(
-              tap(state =>
-                this.store.dispatch(setBusyState({ enabled: state.busy }))
-              )
+              tap(enabled => this.store.dispatch(setBusyState({ enabled })))
             )
             .subscribe();
           this.store

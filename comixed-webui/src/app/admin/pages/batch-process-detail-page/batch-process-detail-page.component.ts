@@ -29,7 +29,7 @@ import { filter, tap } from 'rxjs/operators';
 import { BATCH_PROCESS_DETAIL_UPDATE_TOPIC } from '@app/app.constants';
 import { WebSocketService } from '@app/messaging';
 import { interpolate } from '@app/core';
-import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
+import { selectMessagingStarted } from '@app/messaging/selectors/messaging.selectors';
 import {
   loadBatchProcessList,
   setBatchProcessDetail
@@ -85,10 +85,10 @@ export class BatchProcessDetailPageComponent implements OnInit {
       )
       .subscribe();
     this.store
-      .select(selectMessagingState)
+      .select(selectMessagingStarted)
       .pipe(
-        tap(state => {
-          if (state.started) {
+        tap(started => {
+          if (started) {
             const topic = interpolate(BATCH_PROCESS_DETAIL_UPDATE_TOPIC, {
               jobId: this.jobId$.value
             });

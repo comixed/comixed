@@ -22,7 +22,7 @@ import {
   DarkThemeState
 } from '../reducers/dark-theme.reducer';
 
-export const selectDarkThemeState = createFeatureSelector<DarkThemeState>(
+const selectDarkThemeState = createFeatureSelector<DarkThemeState>(
   DARK_THEME_FEATURE_KEY
 );
 

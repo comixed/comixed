@@ -19,7 +19,7 @@
 import { inject, Injectable } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { HttpClient } from '@angular/common/http';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { interpolate } from '@app/core';
 import {
   CREATE_PLUGIN_URL,
@@ -34,13 +34,13 @@ import { CreatePluginRequest } from '@app/library-plugins/models/net/create-plug
 import { LibraryPlugin } from '@app/library-plugins/models/library-plugin';
 import { UpdatePluginRequest } from '@app/library-plugins/models/net/update-plugin-request';
 import { Store } from '@ngrx/store';
-import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
+import { selectMessagingStarted } from '@app/messaging/selectors/messaging.selectors';
 import { WebSocketService } from '@app/messaging';
 import {
   loadLibraryPlugins,
   loadLibraryPluginsSuccess
 } from '@app/library-plugins/actions/library-plugin.actions';
-import { filter } from 'rxjs/operators';
+import { filter, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -51,28 +51,23 @@ export class LibraryPluginService {
   store = inject(Store);
   webSocketService = inject(WebSocketService);
 
-  messagingSubscription: Subscription | null = null;
-  pluginSubscription: Subscription | null = null;
-
   constructor() {
-    this.messagingSubscription = this.store
-      .select(selectMessagingState)
-      .pipe(filter(state => !!state))
-      .subscribe(state => {
-        if (state.started && this.pluginSubscription === null) {
-          this.pluginSubscription = this.webSocketService.subscribe<
-            LibraryPlugin[]
-          >(LIBRARY_PLUGIN_LIST_UPDATES, (plugins: LibraryPlugin[]) => {
-            this.logger.debug('Received plugin update:', plugins);
-            this.store.dispatch(loadLibraryPluginsSuccess({ plugins }));
-          });
+    this.store
+      .select(selectMessagingStarted)
+      .pipe(
+        filter(started => started),
+        tap(() => {
+          this.webSocketService.subscribe<LibraryPlugin[]>(
+            LIBRARY_PLUGIN_LIST_UPDATES,
+            (plugins: LibraryPlugin[]) => {
+              this.logger.debug('Received plugin update:', plugins);
+              this.store.dispatch(loadLibraryPluginsSuccess({ plugins }));
+            }
+          );
           this.store.dispatch(loadLibraryPlugins());
-        }
-        if (!state.started && this.pluginSubscription !== null) {
-          this.pluginSubscription.unsubscribe();
-          this.pluginSubscription = null;
-        }
-      });
+        })
+      )
+      .subscribe();
   }
 
   loadAll(): Observable<any> {

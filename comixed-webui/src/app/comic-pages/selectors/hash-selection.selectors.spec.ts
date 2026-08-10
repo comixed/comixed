@@ -21,10 +21,7 @@ import {
   HashSelectionState
 } from '../reducers/hash-selection.reducer';
 import { PAGE_1, PAGE_2, PAGE_3 } from '@app/comic-pages/comic-pages.fixtures';
-import {
-  selectHashSelectionList,
-  selectHashSelectionState
-} from '@app/comic-pages/selectors/hash-selection.selectors';
+import { selectHashSelectionList } from '@app/comic-pages/selectors/hash-selection.selectors';
 
 describe('HashSelection Selectors', () => {
   const HASHES = [PAGE_1.hash, PAGE_2.hash, PAGE_3.hash];
@@ -35,15 +32,7 @@ describe('HashSelection Selectors', () => {
     state = { ...state, entries: HASHES, busy: Math.random() > 0.5 };
   });
 
-  it('should select the feature state', () => {
-    expect(
-      selectHashSelectionState({
-        [HASH_SELECTION_FEATURE_KEY]: state
-      })
-    ).toEqual(state);
-  });
-
-  it('should select the selected hash list', () => {
+  it('selects the selected hash list', () => {
     expect(
       selectHashSelectionList({
         [HASH_SELECTION_FEATURE_KEY]: state

@@ -18,7 +18,7 @@
 
 import {
   selectServerRuntimeHealth,
-  selectServerRuntimeState
+  selectServerRuntimeShuttingDown
 } from './server-runtime.selectors';
 import {
   SERVER_RUNTIME_FEATURE_KEY,
@@ -40,15 +40,15 @@ describe('ServerRuntime Selectors', () => {
     };
   });
 
-  it('should select the feature state', () => {
+  it('selects the server shutdown status', () => {
     expect(
-      selectServerRuntimeState({
+      selectServerRuntimeShuttingDown({
         [SERVER_RUNTIME_FEATURE_KEY]: state
       })
-    ).toEqual(state);
+    ).toEqual(state.shuttingDown);
   });
 
-  it('should select the server health status', () => {
+  it('selects the server health status', () => {
     expect(
       selectServerRuntimeHealth({
         [SERVER_RUNTIME_FEATURE_KEY]: state

@@ -45,7 +45,7 @@ import { EditMultipleComics } from '@app/library/models/ui/edit-multiple-comics'
 import { EditMultipleComicsRequest } from '@app/library/models/net/edit-multiple-comics-request';
 import { Store } from '@ngrx/store';
 import { WebSocketService } from '@app/messaging';
-import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
+import { selectMessagingStarted } from '@app/messaging/selectors/messaging.selectors';
 import { User } from '@app/user/models/user';
 import { libraryStateLoaded } from '@app/library/actions/library.actions';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
@@ -62,10 +62,10 @@ export class LibraryService {
 
   constructor() {
     this.store
-      .select(selectMessagingState)
+      .select(selectMessagingStarted)
       .pipe(
-        tap(state => {
-          if (state.started) {
+        tap(started => {
+          if (started) {
             this.webSocketService.subscribe<User>(
               REMOTE_LIBRARY_STATE_TOPIC,
               state => {

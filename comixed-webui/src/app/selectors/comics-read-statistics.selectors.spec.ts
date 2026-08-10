@@ -20,10 +20,7 @@ import {
   COMICS_READ_STATISTICS_FEATURE_KEY,
   ComicsReadStatisticsState
 } from '../reducers/comics-read-statistics.reducer';
-import {
-  selectComicsReadStatisticsData,
-  selectComicsReadStatisticsState
-} from './comics-read-statistics.selectors';
+import { selectComicsReadStatisticsData } from './comics-read-statistics.selectors';
 import {
   COMICS_READ_STATISTICS_1,
   COMICS_READ_STATISTICS_2,
@@ -47,15 +44,7 @@ describe('LastReadStatistics Selectors', () => {
     state = { busy: Math.random() > 0.5, data: DATA };
   });
 
-  it('should select the feature state', () => {
-    expect(
-      selectComicsReadStatisticsState({
-        [COMICS_READ_STATISTICS_FEATURE_KEY]: state
-      })
-    ).toEqual(state);
-  });
-
-  it('should select the data', () => {
+  it('selects the data', () => {
     expect(
       selectComicsReadStatisticsData({
         [COMICS_READ_STATISTICS_FEATURE_KEY]: state

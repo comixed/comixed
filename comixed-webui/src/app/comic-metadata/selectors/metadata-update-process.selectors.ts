@@ -22,7 +22,7 @@ import {
   MetadataUpdateProcessState
 } from '../reducers/metadata-update-process.reducer';
 
-export const selectMetadataUpdateProcessState =
+const selectMetadataUpdateProcessState =
   createFeatureSelector<MetadataUpdateProcessState>(
     METADATA_UPDATE_PROCESS_FEATURE_KEY
   );

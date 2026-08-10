@@ -253,8 +253,6 @@ describe('ReadingListService', () => {
 
     beforeEach(() => {
       service.email = EMAIL;
-      service.readingListUpdateSubscription = null;
-      service.readingListRemovalSubscription = null;
       webSocketService.subscribe
         .withArgs(LISTS_UPDATE_TOPIC, jasmine.anything())
         .and.callFake((topic, callback) => {
@@ -297,33 +295,6 @@ describe('ReadingListService', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         readingListRemoved({ list: READING_LIST })
       );
-    });
-  });
-
-  describe('when messaging is stopped', () => {
-    beforeEach(() => {
-      service.readingListUpdateSubscription = updateSubscription;
-      service.readingListRemovalSubscription = removalSubscription;
-      store.setState({
-        ...initialState,
-        [MESSAGING_FEATURE_KEY]: { ...initialMessagingState, started: false }
-      });
-    });
-
-    it('unsubscribes from the reading list update queue', () => {
-      expect(updateSubscription.unsubscribe).toHaveBeenCalled();
-    });
-
-    it('clears the reading page list update subscription', () => {
-      expect(service.readingListUpdateSubscription).toBeNull();
-    });
-
-    it('unsubscribes from the reading list removal queue', () => {
-      expect(removalSubscription.unsubscribe).toHaveBeenCalled();
-    });
-
-    it('clears the reading page list removal subscription', () => {
-      expect(service.readingListRemovalSubscription).toBeNull();
     });
   });
 });

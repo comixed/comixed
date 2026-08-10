@@ -19,8 +19,13 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { SERIES_FEATURE_KEY, SeriesState } from '../reducers/series.reducer';
 
-export const selectSeriesState =
+const selectSeriesState =
   createFeatureSelector<SeriesState>(SERIES_FEATURE_KEY);
+
+export const selectSeriesBusy = createSelector(
+  selectSeriesState,
+  state => state.busy
+);
 
 export const selectSeriesTotal = createSelector(
   selectSeriesState,

@@ -22,7 +22,7 @@ import {
   ComicsReadStatisticsState
 } from '../reducers/comics-read-statistics.reducer';
 
-export const selectComicsReadStatisticsState =
+const selectComicsReadStatisticsState =
   createFeatureSelector<ComicsReadStatisticsState>(
     COMICS_READ_STATISTICS_FEATURE_KEY
   );

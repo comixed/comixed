@@ -22,8 +22,14 @@ import {
   DuplicateComicState
 } from '../reducers/duplicate-comics.reducer';
 
-export const selectDuplicateComicState =
-  createFeatureSelector<DuplicateComicState>(DUPLICATE_COMICS_FEATURE_KEY);
+const selectDuplicateComicState = createFeatureSelector<DuplicateComicState>(
+  DUPLICATE_COMICS_FEATURE_KEY
+);
+
+export const selectDuplicateComicListBusy = createSelector(
+  selectDuplicateComicState,
+  state => state.busy
+);
 
 export const selectDuplicateComicList = createSelector(
   selectDuplicateComicState,

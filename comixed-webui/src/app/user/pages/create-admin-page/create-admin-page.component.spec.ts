@@ -47,10 +47,7 @@ describe('CreateAdminPageComponent', () => {
   const EMAIL = USER_ADMIN.email;
   const PASSWORD = 'my!password';
   const initialState = {
-    [INITIAL_USER_ACCOUNT_FEATURE_KEY]: {
-      ...initialUserAccountState,
-      busy: true
-    }
+    [INITIAL_USER_ACCOUNT_FEATURE_KEY]: { ...initialUserAccountState }
   };
 
   let component: CreateAdminPageComponent;
@@ -109,59 +106,65 @@ describe('CreateAdminPageComponent', () => {
     });
   });
 
-  describe('before checking', () => {
-    describe('when not previously run', () => {
-      beforeEach(() => {
-        store.setState({
-          ...initialState,
-          [INITIAL_USER_ACCOUNT_FEATURE_KEY]: {
-            ...initialUserAccountState,
-            busy: false,
-            checked: false,
-            hasExisting: true
-          }
-        });
+  describe('not having checked for existing accounts', () => {
+    beforeEach(() => {
+      // this first call is to ensure a state change occurs
+      store.setState({
+        ...initialState,
+        [INITIAL_USER_ACCOUNT_FEATURE_KEY]: {
+          ...initialUserAccountState,
+          busy: false,
+          checked: true
+        }
       });
-
-      it('redirects the user to the root page', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(loadInitialUserAccount());
-      });
-    });
-
-    describe('finding not existing accounts', () => {
-      beforeEach(() => {
-        store.setState({
-          ...initialState,
-          [INITIAL_USER_ACCOUNT_FEATURE_KEY]: {
-            ...initialUserAccountState,
-            busy: false,
-            checked: true,
-            hasExisting: false
-          }
-        });
-      });
-
-      it('redirects the user to the root page', () => {
-        expect(router.navigateByUrl).not.toHaveBeenCalled();
+      store.setState({
+        ...initialState,
+        [INITIAL_USER_ACCOUNT_FEATURE_KEY]: {
+          ...initialUserAccountState,
+          busy: false,
+          checked: false
+        }
       });
     });
 
-    describe('finding existing accounts', () => {
-      beforeEach(() => {
-        store.setState({
-          ...initialState,
-          [INITIAL_USER_ACCOUNT_FEATURE_KEY]: {
-            ...initialUserAccountState,
-            busy: false,
-            checked: true,
-            hasExisting: true
-          }
-        });
-      });
+    it('loads the initial user account state', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(loadInitialUserAccount());
+    });
+  });
 
-      it('redirects the user to the root page', () => {
-        expect(router.navigateByUrl).toHaveBeenCalledWith('/login');
+  describe('no existing accounts found', () => {
+    beforeEach(() => {
+      store.setState({
+        ...initialState,
+        [INITIAL_USER_ACCOUNT_FEATURE_KEY]: {
+          ...initialUserAccountState,
+          busy: false,
+          checked: true,
+          hasExisting: false
+        }
       });
+    });
+
+    it('redirects the user to the root page', () => {
+      expect(router.navigateByUrl).not.toHaveBeenCalledWith('/login');
+    });
+  });
+
+  describe('having existing accounts', () => {
+    beforeEach(() => {
+      store.setState({
+        ...initialState,
+        [INITIAL_USER_ACCOUNT_FEATURE_KEY]: {
+          ...initialUserAccountState,
+          busy: false,
+          checked: true,
+          hasExisting: true
+        }
+      });
+    });
+
+    it('redirects the user to the root page', () => {
+      expect(router.navigateByUrl).toHaveBeenCalledWith('/login');
     });
   });
 

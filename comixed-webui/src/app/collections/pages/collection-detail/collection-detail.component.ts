@@ -37,7 +37,7 @@ import {
   selectComicCoverYears,
   selectComicFilteredCount,
   selectComicList,
-  selectComicListState
+  selectComicListBusy
 } from '@app/comic-books/selectors/comic-list.selectors';
 import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 import {
@@ -98,11 +98,9 @@ export class CollectionDetailComponent implements OnInit {
             this.loadTranslations();
             this.doLoadComicDetails();
             this.store
-              .select(selectComicListState)
+              .select(selectComicListBusy)
               .pipe(
-                tap(state =>
-                  this.store.dispatch(setBusyState({ enabled: state.busy }))
-                )
+                tap(enabled => this.store.dispatch(setBusyState({ enabled })))
               )
               .subscribe();
             this.store

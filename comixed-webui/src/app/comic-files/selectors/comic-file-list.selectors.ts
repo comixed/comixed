@@ -22,8 +22,14 @@ import {
   ComicFileListState
 } from '@app/comic-files/reducers/comic-file-list.reducer';
 
-export const selectComicFileListState =
-  createFeatureSelector<ComicFileListState>(COMIC_FILE_LIST_FEATURE_KEY);
+const selectComicFileListState = createFeatureSelector<ComicFileListState>(
+  COMIC_FILE_LIST_FEATURE_KEY
+);
+
+export const selectComicFileBusy = createSelector(
+  selectComicFileListState,
+  state => state.busy
+);
 
 export const selectComicFileGroups = createSelector(
   selectComicFileListState,

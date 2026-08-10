@@ -23,7 +23,6 @@ import {
 import {
   selectBatchProcessDetail,
   selectBatchProcessesBusy,
-  selectBatchProcessesState,
   selectBatchProcessList
 } from './batch-processes.selectors';
 import {
@@ -44,7 +43,7 @@ describe('BatchProcesses Selectors', () => {
     };
   });
 
-  it('should select the busy state', () => {
+  it('returns the busy state', () => {
     expect(
       selectBatchProcessesBusy({
         [BATCH_PROCESSES_FEATURE_KEY]: state

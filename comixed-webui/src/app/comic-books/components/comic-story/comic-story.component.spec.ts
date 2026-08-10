@@ -41,9 +41,14 @@ describe('ComicStoryComponent', () => {
   const COMIC_BOOK = DISPLAYABLE_COMIC_1;
   const TAGS = [
     COMIC_TAG_1,
+    COMIC_TAG_1,
+    COMIC_TAG_2,
     COMIC_TAG_2,
     COMIC_TAG_3,
+    COMIC_TAG_3,
     COMIC_TAG_4,
+    COMIC_TAG_4,
+    COMIC_TAG_5,
     COMIC_TAG_5
   ];
   const initialState = {};

@@ -17,7 +17,6 @@
  */
 
 import { TestBed } from '@angular/core/testing';
-import { LibraryPluginService } from './library-plugin.service';
 import {
   LIBRARY_PLUGIN_1,
   LIBRARY_PLUGIN_4,
@@ -54,6 +53,7 @@ import {
 import { Subscription } from 'rxjs';
 import { WebSocketService } from '@app/messaging';
 import { loadLibraryPluginsSuccess } from '@app/library-plugins/actions/library-plugin.actions';
+import { LibraryPluginService } from '@app/library-plugins/services/library-plugin.service';
 
 describe('LibraryPluginService', () => {
   const PLUGIN = LIBRARY_PLUGIN_4;
@@ -197,7 +197,6 @@ describe('LibraryPluginService', () => {
     let subscription: any;
 
     beforeEach(() => {
-      service.pluginSubscription = null;
       webSocketService.subscribe.and.callFake((topicUsed, callback) => {
         topic = topicUsed;
         subscription = callback;
@@ -226,26 +225,6 @@ describe('LibraryPluginService', () => {
           loadLibraryPluginsSuccess({ plugins: PLUGINS })
         );
       });
-    });
-  });
-
-  describe('when messaging is stopped', () => {
-    const subscription = jasmine.createSpyObj(['unsubscribe']);
-
-    beforeEach(() => {
-      service.pluginSubscription = subscription;
-      store.setState({
-        ...initialState,
-        [MESSAGING_FEATURE_KEY]: { ...initialMessagingState, started: false }
-      });
-    });
-
-    it('unsubscribes from updates', () => {
-      expect(subscription.unsubscribe).toHaveBeenCalled();
-    });
-
-    it('clears the subscription reference', () => {
-      expect(service.pluginSubscription).toBeNull();
     });
   });
 });

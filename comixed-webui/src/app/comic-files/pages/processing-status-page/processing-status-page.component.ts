@@ -25,7 +25,7 @@ import {
 } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
-import { selectProcessingComicBooksState } from '@app/selectors/import-comic-books.selectors';
+import { selectProcessingComicBooksBatches } from '@app/selectors/import-comic-books.selectors';
 import { ProcessingComicStatus } from '@app/reducers/import-comic-books.reducer';
 import {
   MatCell,
@@ -94,8 +94,8 @@ export class ProcessingStatusPageComponent implements AfterViewInit, OnInit {
       .pipe(tap(() => this.loadTranslations()))
       .subscribe();
     this.store
-      .select(selectProcessingComicBooksState)
-      .pipe(tap(state => (this.dataSource.data = state.batches)))
+      .select(selectProcessingComicBooksBatches)
+      .pipe(tap(batches => (this.dataSource.data = batches)))
       .subscribe();
   }
 

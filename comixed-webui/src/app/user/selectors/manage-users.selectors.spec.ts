@@ -21,9 +21,9 @@ import {
   ManagerUsersState
 } from '../reducers/manage-users.reducer';
 import {
+  selectManageUsersBusy,
   selectManageUsersCurrent,
-  selectManageUsersList,
-  selectManageUsersState
+  selectManageUsersList
 } from './manage-users.selectors';
 import { USER_ADMIN, USER_BLOCKED, USER_READER } from '@app/user/user.fixtures';
 
@@ -42,12 +42,12 @@ describe('ManageUsers Selectors', () => {
     };
   });
 
-  it('should select the feature state', () => {
+  it('returns the busy state', () => {
     expect(
-      selectManageUsersState({
+      selectManageUsersBusy({
         [MANAGER_USERS_FEATURE_KEY]: state
       })
-    ).toEqual(state);
+    ).toEqual(state.busy);
   });
 
   it('should select the list of users', () => {

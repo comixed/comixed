@@ -20,7 +20,7 @@ import { METRICS_FEATURE_KEY, MetricsState } from '../reducers/metrics.reducer';
 import {
   selectMetricDetail,
   selectMetricList,
-  selectMetricsState
+  selectMetricsBusy
 } from './metrics.selectors';
 import { METRIC_DETAIL, METRIC_LIST } from '@app/admin/admin.fixtures';
 
@@ -35,21 +35,19 @@ describe('Metrics Selectors', () => {
     };
   });
 
-  it('should select the feature state', () => {
-    expect(
-      selectMetricsState({
-        [METRICS_FEATURE_KEY]: state
-      })
-    ).toBe(state);
+  it('selects the metric busy state', () => {
+    expect(selectMetricsBusy({ [METRICS_FEATURE_KEY]: state })).toEqual(
+      state.busy
+    );
   });
 
-  it('should select the metric list', () => {
+  it('selects the metric list', () => {
     expect(selectMetricList({ [METRICS_FEATURE_KEY]: state })).toEqual(
       state.list
     );
   });
 
-  it('should select the metric detail', () => {
+  it('selects the metric detail', () => {
     expect(selectMetricDetail({ [METRICS_FEATURE_KEY]: state })).toEqual(
       state.detail
     );

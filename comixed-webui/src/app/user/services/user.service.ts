@@ -38,7 +38,7 @@ import {
   USER_SELF_TOPIC
 } from '@app/user/user.constants';
 import { Store } from '@ngrx/store';
-import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
+import { selectMessagingStarted } from '@app/messaging/selectors/messaging.selectors';
 import { WebSocketService } from '@app/messaging';
 import { loadCurrentUserSuccess } from '@app/user/actions/user.actions';
 import { User } from '@app/user/models/user';
@@ -64,8 +64,8 @@ export class UserService {
   http = inject(HttpClient);
 
   constructor() {
-    this.store.select(selectMessagingState).subscribe(state => {
-      if (state.started) {
+    this.store.select(selectMessagingStarted).subscribe(started => {
+      if (started) {
         this.subscribeToUserUpdates();
       }
       this.store.select(selectUser).subscribe(user => {

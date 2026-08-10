@@ -34,16 +34,13 @@ import {
 import { Series } from '@app/collections/models/series';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
-import { User } from '@app/user/models/user';
-import { selectUser } from '@app/user/selectors/user.selectors';
 import {
+  selectSeriesBusy,
   selectSeriesList,
-  selectSeriesState,
   selectSeriesTotal
 } from '@app/collections/selectors/series.selectors';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/core/services/title.service';
-import { isAdmin } from '@app/user/user.functions';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { PAGE_SIZE_OPTIONS } from '@app/core';
 import { setBusyState } from '@app/core/actions/busy.actions';
@@ -131,10 +128,8 @@ export class SeriesListPageComponent implements AfterViewInit {
       )
       .subscribe();
     this.store
-      .select(selectSeriesState)
-      .pipe(
-        tap(state => this.store.dispatch(setBusyState({ enabled: state.busy })))
-      )
+      .select(selectSeriesBusy)
+      .pipe(tap(enabled => this.store.dispatch(setBusyState({ enabled }))))
       .subscribe();
     this.store
       .select(selectSeriesList)

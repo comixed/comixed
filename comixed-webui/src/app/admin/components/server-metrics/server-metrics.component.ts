@@ -22,7 +22,7 @@ import { Store } from '@ngrx/store';
 import {
   selectMetricDetail,
   selectMetricList,
-  selectMetricsState
+  selectMetricsBusy
 } from '@app/admin/selectors/metrics.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { MetricList } from '@app/admin/models/metric-list';
@@ -64,10 +64,8 @@ export class ServerMetricsComponent implements OnInit {
 
   constructor() {
     this.store
-      .select(selectMetricsState)
-      .pipe(
-        tap(state => this.store.dispatch(setBusyState({ enabled: state.busy })))
-      )
+      .select(selectMetricsBusy)
+      .pipe(tap(enabled => this.store.dispatch(setBusyState({ enabled }))))
       .subscribe();
     this.store
       .select(selectMetricList)

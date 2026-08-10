@@ -129,6 +129,32 @@ describe('LibraryPluginsConfigurationComponent', () => {
     });
   });
 
+  describe('sorting', () => {
+    it('can sort by name', () => {
+      expect(component.dataSource.sortingDataAccessor(PLUGIN, 'name')).toEqual(
+        PLUGIN.name
+      );
+    });
+
+    it('can sort by type', () => {
+      expect(
+        component.dataSource.sortingDataAccessor(PLUGIN, 'plugin-type')
+      ).toEqual(PLUGIN.pluginType);
+    });
+
+    it('can sort by language', () => {
+      expect(
+        component.dataSource.sortingDataAccessor(PLUGIN, 'language')
+      ).toEqual(PLUGIN.language);
+    });
+
+    it('can sort by filename by default', () => {
+      expect(component.dataSource.sortingDataAccessor(PLUGIN, '')).toEqual(
+        PLUGIN.filename
+      );
+    });
+  });
+
   describe('selecting a plugin', () => {
     beforeEach(() => {
       component.onSelectPlugin(PLUGIN);
