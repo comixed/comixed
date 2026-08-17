@@ -69,7 +69,7 @@
     "css-what": "^7.0.0",
     "d3-color": "~3.1.0",
     "debug": "^4",
-    "deepmerge-ts": "^7.1.5",
+    "deepmerge-ts": "^8.0.0",
     "engine.io": "~6",
     "fast-xml-parser": "^5.7.0",
     "file-saver": "^2.0.5",
