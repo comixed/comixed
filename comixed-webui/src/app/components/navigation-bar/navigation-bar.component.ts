@@ -113,10 +113,14 @@ export class NavigationBarComponent {
   queryParameterService = inject(QueryParameterService);
 
   constructor() {
-    this.translateService.onLangChange.subscribe(language => {
-      this.logger.debug('Active language changed:', language.lang);
-      this.currentLanguage$.next(language.lang);
-    });
+    this.translateService.onLangChange
+      .pipe(
+        tap(language => {
+          this.logger.debug('Active language changed:', language.lang);
+          this.currentLanguage$.next(language.lang);
+        })
+      )
+      .subscribe();
     this.store
       .select(selectReleaseDetailsNotLoaded)
       .pipe(

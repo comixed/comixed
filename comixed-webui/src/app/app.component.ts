@@ -58,6 +58,7 @@ import { FooterComponent } from './components/footer/footer.component';
 import { AsyncPipe } from '@angular/common';
 import { loadLibraryState } from '@app/library/actions/library.actions';
 import { resetReadComicBooks } from '@app/user/actions/read-comic-books.actions';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'cx-root',
@@ -95,87 +96,110 @@ export class AppComponent implements OnInit {
     this.logger.level = LoggerLevel.INFO;
     this.translateService.use('en');
     this.logger.trace('Subscribing to user changes');
-    this.store.select(selectUser).subscribe(user => {
-      this.logger.debug('User updated:', user);
-      this.user$.next(user);
+    this.store
+      .select(selectUser)
+      .pipe(
+        tap(user => {
+          this.logger.debug('User updated:', user);
+          this.user$.next(user);
 
-      const darkMode =
-        getUserPreference(
-          this.user$.value?.preferences || [],
-          DARK_MODE_PREFERENCE,
-          'false'
-        ) === `${true}`;
-      this.store.dispatch(
-        toggleDarkThemeMode({
-          toggle: darkMode
+          const darkMode =
+            getUserPreference(
+              this.user$.value?.preferences || [],
+              DARK_MODE_PREFERENCE,
+              'false'
+            ) === `${true}`;
+          this.store.dispatch(
+            toggleDarkThemeMode({
+              toggle: darkMode
+            })
+          );
+          if (!!this.user$.value && !this.sessionActive$.value) {
+            this.logger.trace('Marking the session as active');
+            this.sessionActive$.next(true);
+            this.logger.trace('Starting messaging subsystem');
+            this.store.dispatch(startMessaging());
+            this.store.dispatch(loadLibraryState());
+          }
+          if (!this.user$.value && this.sessionActive$.value) {
+            this.logger.trace('Stopping the messaging subsystem');
+            this.store.dispatch(resetReadComicBooks());
+            this.store.dispatch(stopMessaging());
+            this.logger.trace('Marking the session as inactive');
+            this.sessionActive$.next(false);
+          }
+          if (!!this.user$.value) {
+            const preferredLevel = parseInt(
+              getUserPreference(
+                this.user$.value.preferences,
+                LOGGER_LEVEL_PREFERENCE,
+                `${LoggerLevel.INFO}`
+              ),
+              10
+            );
+            switch (preferredLevel) {
+              case 1:
+                this.logger.level = LoggerLevel.ALL;
+                break;
+              case 2:
+                this.logger.level = LoggerLevel.TRACE;
+                break;
+              case 3:
+                this.logger.level = LoggerLevel.DEBUG;
+                break;
+              case 4:
+                this.logger.level = LoggerLevel.INFO;
+                break;
+            }
+            this.translateService.use(
+              getUserPreference(
+                this.user$.value.preferences,
+                LANGUAGE_PREFERENCE,
+                'en'
+              )
+            );
+          }
         })
-      );
-      if (!!this.user$.value && !this.sessionActive$.value) {
-        this.logger.trace('Marking the session as active');
-        this.sessionActive$.next(true);
-        this.logger.trace('Starting messaging subsystem');
-        this.store.dispatch(startMessaging());
-        this.store.dispatch(loadLibraryState());
-      }
-      if (!this.user$.value && this.sessionActive$.value) {
-        this.logger.trace('Stopping the messaging subsystem');
-        this.store.dispatch(resetReadComicBooks());
-        this.store.dispatch(stopMessaging());
-        this.logger.trace('Marking the session as inactive');
-        this.sessionActive$.next(false);
-      }
-      if (!!this.user$.value) {
-        const preferredLevel = parseInt(
-          getUserPreference(
-            this.user$.value.preferences,
-            LOGGER_LEVEL_PREFERENCE,
-            `${LoggerLevel.INFO}`
-          ),
-          10
-        );
-        switch (preferredLevel) {
-          case 1:
-            this.logger.level = LoggerLevel.ALL;
-            break;
-          case 2:
-            this.logger.level = LoggerLevel.TRACE;
-            break;
-          case 3:
-            this.logger.level = LoggerLevel.DEBUG;
-            break;
-          case 4:
-            this.logger.level = LoggerLevel.INFO;
-            break;
-        }
-        this.translateService.use(
-          getUserPreference(
-            this.user$.value.preferences,
-            LANGUAGE_PREFERENCE,
-            'en'
-          )
-        );
-      }
-    });
-    this.store.select(selectShowAsBusy).subscribe(state => {
-      this.busy$.next(state.enabled);
-      this.busyIcon$.next(state.icon);
-    });
-    this.store.select(selectDarkThemeActive).subscribe(toggle => {
-      this.darkMode$.next(toggle);
-      if (this.darkMode$.value) {
-        this.currentTheme = 'dark-theme';
-      } else {
-        this.currentTheme = 'lite-theme';
-      }
-    });
-    this.store.select(selectMessagingStarted).subscribe(started => {
-      if (started) {
-        this.webSocketService.subscribe(APP_MESSAGING_TOPIC, appEvent => {
-          this.logger.debug('Application event message received:', appEvent);
-          this.alertService.info(appEvent.message);
-        });
-      }
-    });
+      )
+      .subscribe();
+    this.store
+      .select(selectShowAsBusy)
+      .pipe(
+        tap(state => {
+          this.busy$.next(state.enabled);
+          this.busyIcon$.next(state.icon);
+        })
+      )
+      .subscribe();
+    this.store
+      .select(selectDarkThemeActive)
+      .pipe(
+        tap(toggle => {
+          this.darkMode$.next(toggle);
+          if (this.darkMode$.value) {
+            this.currentTheme = 'dark-theme';
+          } else {
+            this.currentTheme = 'lite-theme';
+          }
+        })
+      )
+      .subscribe();
+    this.store
+      .select(selectMessagingStarted)
+      .pipe(
+        tap(started => {
+          if (started) {
+            this.webSocketService.subscribe(APP_MESSAGING_TOPIC, appEvent => {
+              this.logger.debug(
+                'Application event message received:',
+                appEvent
+              );
+              this.alertService.info(appEvent.message);
+            });
+          }
+        })
+      )
+      .subscribe();
   }
 
   get busyIconURL(): string {
