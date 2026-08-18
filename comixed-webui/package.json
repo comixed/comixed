@@ -2,7 +2,7 @@
   "name": "ComiXed",
   "version": "4.0-SNAPSHOT",
   "scripts": {
-    "ng": "ng",
+    "preinstall": "npx only-allow pnpm",
     "start": "ng serve",
     "build": "ng build",
     "test": "ng test --code-coverage",

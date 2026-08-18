@@ -37,7 +37,7 @@ import {
   SKIP_CACHE_PREFERENCE
 } from '@app/library/library.constants';
 
-fdescribe('User Selectors', () => {
+describe('User Selectors', () => {
   const USER = USER_READER;
 
   let state: UserState;
