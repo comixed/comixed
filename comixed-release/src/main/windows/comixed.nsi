@@ -1,5 +1,5 @@
 !define NAME "ComiXed"
-!define VERSION "4.0.0-alpha"
+!define VERSION "4.0-SNAPSHOT"
 !define SLUG "${NAME} ${VERSION}"
 
 Name "${NAME}"
@@ -18,7 +18,7 @@ Section ""
 
 SetOutPath $INSTDIR\bin
 File ..\assembly\scripts\run.bat
-File ..\..\..\..\comixed-app\target\comixed-app-4.0.0-alpha.jar
+File ..\..\..\..\comixed-app\target\comixed-app-4.0-SNAPSHOT.jar
 File ..\..\..\target\classes\org\comixedproject\modules\windows_agent_installer\comixed-service.exe
 File .\comixed-service.xml
 
