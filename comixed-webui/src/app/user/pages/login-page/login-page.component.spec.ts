@@ -132,7 +132,13 @@ describe('LoginPageComponent', () => {
     beforeEach(() => {
       store.setState({
         ...initialState,
-        [USER_FEATURE_KEY]: { ...initialUserState, authenticated: true }
+        [USER_FEATURE_KEY]: {
+          ...initialUserState,
+          initializing: false,
+          loading: false,
+          authenticating: false,
+          authenticated: true
+        }
       });
     });
 
