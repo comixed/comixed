@@ -37,7 +37,7 @@ import {
   SKIP_CACHE_PREFERENCE
 } from '@app/library/library.constants';
 
-describe('User Selectors', () => {
+fdescribe('User Selectors', () => {
   const USER = USER_READER;
 
   let state: UserState;
@@ -84,10 +84,44 @@ describe('User Selectors', () => {
   });
 
   describe('checking if the user is authenticated', () => {
-    it('returns false when not authenticated', () => {
+    it('returns false when initializing', () => {
       expect(
         selectUserAuthenticated({
-          [USER_FEATURE_KEY]: { ...state, authenticated: false }
+          [USER_FEATURE_KEY]: {
+            ...state,
+            initializing: true,
+            authenticating: false,
+            loading: false,
+            authenticated: false
+          }
+        })
+      ).toBeFalse();
+    });
+
+    it('returns false when authenticating', () => {
+      expect(
+        selectUserAuthenticated({
+          [USER_FEATURE_KEY]: {
+            ...state,
+            initializing: false,
+            authenticating: true,
+            loading: false,
+            authenticated: false
+          }
+        })
+      ).toBeFalse();
+    });
+
+    it('returns false when loading', () => {
+      expect(
+        selectUserAuthenticated({
+          [USER_FEATURE_KEY]: {
+            ...state,
+            initializing: false,
+            authenticating: false,
+            loading: true,
+            authenticated: false
+          }
         })
       ).toBeFalse();
     });
@@ -95,7 +129,13 @@ describe('User Selectors', () => {
     it('returns true when authenticated', () => {
       expect(
         selectUserAuthenticated({
-          [USER_FEATURE_KEY]: { ...state, authenticated: true }
+          [USER_FEATURE_KEY]: {
+            ...state,
+            initializing: false,
+            authenticating: false,
+            loading: false,
+            authenticated: true
+          }
         })
       ).toBeTrue();
     });

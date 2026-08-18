@@ -44,7 +44,11 @@ export const selectUserInitializingProgress = createSelector(
 
 export const selectUserAuthenticated = createSelector(
   selectUserState,
-  state => state.authenticated
+  state =>
+    !state.initializing &&
+    !state.authenticating &&
+    !state.loading &&
+    state.authenticated
 );
 
 export const selectUserSaving = createSelector(

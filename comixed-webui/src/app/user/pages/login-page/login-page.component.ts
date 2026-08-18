@@ -120,10 +120,11 @@ export class LoginPageComponent implements OnInit, AfterViewInit {
     this.store
       .select(selectUserAuthenticated)
       .pipe(
-        filter(flag => flag),
-        tap(() => {
-          this.logger.info('Already authenticated: redirecting to home');
-          this.router.navigateByUrl('/');
+        tap(authenticated => {
+          if (authenticated) {
+            this.logger.info('Already authenticated: redirecting to home');
+            this.router.navigateByUrl('/');
+          }
         })
       )
       .subscribe();
