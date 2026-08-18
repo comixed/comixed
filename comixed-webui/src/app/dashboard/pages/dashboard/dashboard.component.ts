@@ -31,7 +31,7 @@ import {
 } from '@app/dashboard/dashboard.constants';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { getUserPreference } from '@app/user';
-import { filter } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 import { PublisherYearGraphComponent } from '@app/dashboard/components/publisher-year-graph/publisher-year-graph.component';
 import { ComicStatesComponent } from '@app/dashboard/components/comic-states/comic-states.component';
 import { ArchiveTypesComponent } from '@app/dashboard/components/archive-types/archive-types.component';
@@ -66,22 +66,27 @@ export class DashboardComponent implements OnInit {
     this.logger.debug('Subscribing to library state changes');
     this.store
       .select(selectLibraryState)
-      .subscribe(state => (this.libraryState = state));
+      .pipe(tap(state => (this.libraryState = state)))
+      .subscribe();
     this.logger.debug('Subscribing to user updates');
     this.store
       .select(selectUser)
-      .pipe(filter(user => !!user))
-      .subscribe(user => {
-        this.panels = getUserPreference(
-          user.preferences,
-          DASHBOARD_PANELS_PREFERENCE,
-          AVAILABLE_DASHBOARD_PANELS
-        );
-      });
+      .pipe(
+        tap(user => {
+          if (!!user) {
+            this.panels = getUserPreference(
+              user.preferences,
+              DASHBOARD_PANELS_PREFERENCE,
+              AVAILABLE_DASHBOARD_PANELS
+            );
+          }
+        })
+      )
+      .subscribe();
     this.logger.debug('Subscribing to language changes');
-    this.translateService.onLangChange.subscribe(lang =>
-      this.loadTranslations()
-    );
+    this.translateService.onLangChange
+      .pipe(tap(lang => this.loadTranslations()))
+      .subscribe();
   }
 
   private _libraryState: LibraryState | null = null;

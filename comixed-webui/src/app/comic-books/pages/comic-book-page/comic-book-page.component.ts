@@ -92,7 +92,7 @@ import { ComicPageUrlPipe } from '@app/comic-books/pipes/comic-page-url.pipe';
 import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 import { LoadComicBookResponse } from '@app/comic-books/models/net/load-comic-book-response';
 import { ComicTag } from '@app/comic-books/models/comic-tag';
-import { filter } from 'rxjs/operators';
+import { filter, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'cx-comic-book-page',
@@ -155,13 +155,19 @@ export class ComicBookPageComponent implements OnInit, AfterViewInit {
   queryParameterService = inject(QueryParameterService);
 
   constructor() {
-    this.translateService.onLangChange.subscribe(() => this.loadTranslations());
-    this.activatedRoute.params.subscribe(params => {
-      this.comicId$.next(+params.comicId);
-      this.logger.trace('ComicBook id parameter:', params.comicBookId);
-      this.store.dispatch(loadComicBook({ id: this.comicId$.value }));
-      this.subscribeToUpdates();
-    });
+    this.translateService.onLangChange
+      .pipe(tap(() => this.loadTranslations()))
+      .subscribe();
+    this.activatedRoute.params
+      .pipe(
+        tap(params => {
+          this.comicId$.next(+params.comicId);
+          this.logger.trace('ComicBook id parameter:', params.comicBookId);
+          this.store.dispatch(loadComicBook({ id: this.comicId$.value }));
+          this.subscribeToUpdates();
+        })
+      )
+      .subscribe();
     this.store.select(selectSingleBookScrapingBusy).subscribe({
       next: busy =>
         this.store.dispatch(
@@ -221,6 +227,15 @@ export class ComicBookPageComponent implements OnInit, AfterViewInit {
     return of(
       this.readComicBookList$.value.includes(this.comic$.value?.comicDetailId)
     );
+  }
+
+  get displayPage(): ComicPage {
+    if (
+      this.pageIndex$.value >= 0 &&
+      this.pageIndex$.value < this.pages$.value?.length
+    ) {
+      return this.pages$.value[this.pageIndex$.value];
+    } else return null;
   }
 
   ngOnInit(): void {

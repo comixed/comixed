@@ -186,7 +186,7 @@
         }
         <mat-card-content>
           <cx-comic-page
-            [imageUrl]="pages$[pageIndex$ | async] | async | comicPageUrl"
+            [imageUrl]="displayPage | comicPageUrl"
           ></cx-comic-page>
         </mat-card-content>
         <mat-card-footer class="cx-align-content-center">

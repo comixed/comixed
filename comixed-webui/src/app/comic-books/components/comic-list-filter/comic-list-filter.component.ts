@@ -46,6 +46,7 @@ import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
 import { AsyncPipe } from '@angular/common';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'cx-comic-list-filter',
@@ -115,27 +116,31 @@ export class ComicListFilterComponent {
       comicType: [''],
       pageCount: ['']
     });
-    this.activatedRoute.queryParams.subscribe(params => {
-      this.filterForm.controls['filterText'].setValue(
-        params[QUERY_PARAM_FILTER_TEXT] || ''
-      );
-      this.filterForm.controls['coverYear'].setValue(
-        params[QUERY_PARAM_COVER_YEAR]
-      );
-      this.filterForm.controls['coverMonth'].setValue(
-        params[QUERY_PARAM_COVER_MONTH]
-      );
-      this.filterForm.controls['archiveType'].setValue(
-        params[QUERY_PARAM_ARCHIVE_TYPE]
-      );
-      this.filterForm.controls['comicType'].setValue(
-        params[QUERY_PARAM_COMIC_TYPE]
-      );
-      this.filterForm.controls['pageCount'].setValue(
-        params[QUERY_PARAM_PAGE_COUNT]
-      );
-      this.filterForm.markAsPristine();
-    });
+    this.activatedRoute.queryParams
+      .pipe(
+        tap(params => {
+          this.filterForm.controls['filterText'].setValue(
+            params[QUERY_PARAM_FILTER_TEXT] || ''
+          );
+          this.filterForm.controls['coverYear'].setValue(
+            params[QUERY_PARAM_COVER_YEAR]
+          );
+          this.filterForm.controls['coverMonth'].setValue(
+            params[QUERY_PARAM_COVER_MONTH]
+          );
+          this.filterForm.controls['archiveType'].setValue(
+            params[QUERY_PARAM_ARCHIVE_TYPE]
+          );
+          this.filterForm.controls['comicType'].setValue(
+            params[QUERY_PARAM_COMIC_TYPE]
+          );
+          this.filterForm.controls['pageCount'].setValue(
+            params[QUERY_PARAM_PAGE_COUNT]
+          );
+          this.filterForm.markAsPristine();
+        })
+      )
+      .subscribe();
   }
 
   @Input() set coverYears(coverYears: number[]) {
