@@ -42,7 +42,7 @@
             <phase>initialize</phase>
             <configuration>
               <nodeVersion>v22.13.0</nodeVersion>
-              <pnpmVersion>v11.22.0</pnpmVersion>
+              <pnpmVersion>v10.34.5</pnpmVersion>
             </configuration>
           </execution>
           <execution>
