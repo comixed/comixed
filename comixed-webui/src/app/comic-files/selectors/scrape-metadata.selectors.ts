@@ -16,11 +16,27 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createFeatureSelector } from '@ngrx/store';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
 import {
   SCRAPE_METADATA_FEATURE_KEY,
   ScrapeMetadataState
 } from '../reducers/scrape-metadata.reducer';
 
-export const selectScrapeMetadataState =
-  createFeatureSelector<ScrapeMetadataState>(SCRAPE_METADATA_FEATURE_KEY);
+const selectScrapeMetadataState = createFeatureSelector<ScrapeMetadataState>(
+  SCRAPE_METADATA_FEATURE_KEY
+);
+
+export const selectScrapeMetadataSeries = createSelector(
+  selectScrapeMetadataState,
+  state => state.series
+);
+
+export const selectScrapeMetadataVolume = createSelector(
+  selectScrapeMetadataState,
+  state => state.volume
+);
+
+export const selectScrapeMetadataIssueNumber = createSelector(
+  selectScrapeMetadataState,
+  state => state.issueNumber
+);

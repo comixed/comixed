@@ -24,7 +24,7 @@ import { ListItem } from '@app/core/models/ui/list-item';
 import { SelectionOption } from '@app/core/models/ui/selection-option';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ComicType } from '@app/comic-books/models/comic-type';
-import { Subscription } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import {
   QUERY_PARAM_ARCHIVE_TYPE,
@@ -45,6 +45,8 @@ import { MatOption, MatSelect } from '@angular/material/select';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
+import { AsyncPipe } from '@angular/common';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'cx-comic-list-filter',
@@ -62,16 +64,17 @@ import { TranslateModule } from '@ngx-translate/core';
     MatCardActions,
     MatButton,
     MatIcon,
-    TranslateModule
+    TranslateModule,
+    AsyncPipe
   ]
 })
 export class ComicListFilterComponent {
   @Output() closeFilter = new EventEmitter<void>();
 
   filterForm: FormGroup;
-  displayableCoverYears: ListItem<string>[] = [];
-  displayableCoverMonths: ListItem<string>[] = [];
-  queryParamSubscription: Subscription;
+
+  displayableCoverYears$ = new BehaviorSubject<ListItem<string>[]>([]);
+  displayableCoverMonths$ = new BehaviorSubject<ListItem<string>[]>([]);
 
   readonly archiveTypeOptions: SelectionOption<ArchiveType>[] = [
     { label: 'archive-type.label.all', value: null },
@@ -113,61 +116,64 @@ export class ComicListFilterComponent {
       comicType: [''],
       pageCount: ['']
     });
-    this.logger.trace('Subscribing to query param updates');
-    this.queryParamSubscription = this.activatedRoute.queryParams.subscribe(
-      params => {
-        this.filterForm.controls['filterText'].setValue(
-          params[QUERY_PARAM_FILTER_TEXT] || ''
-        );
-        this.filterForm.controls['coverYear'].setValue(
-          params[QUERY_PARAM_COVER_YEAR]
-        );
-        this.filterForm.controls['coverMonth'].setValue(
-          params[QUERY_PARAM_COVER_MONTH]
-        );
-        this.filterForm.controls['archiveType'].setValue(
-          params[QUERY_PARAM_ARCHIVE_TYPE]
-        );
-        this.filterForm.controls['comicType'].setValue(
-          params[QUERY_PARAM_COMIC_TYPE]
-        );
-        this.filterForm.controls['pageCount'].setValue(
-          params[QUERY_PARAM_PAGE_COUNT]
-        );
-        this.filterForm.markAsPristine();
-      }
-    );
+    this.activatedRoute.queryParams
+      .pipe(
+        tap(params => {
+          this.filterForm.controls['filterText'].setValue(
+            params[QUERY_PARAM_FILTER_TEXT] || ''
+          );
+          this.filterForm.controls['coverYear'].setValue(
+            params[QUERY_PARAM_COVER_YEAR]
+          );
+          this.filterForm.controls['coverMonth'].setValue(
+            params[QUERY_PARAM_COVER_MONTH]
+          );
+          this.filterForm.controls['archiveType'].setValue(
+            params[QUERY_PARAM_ARCHIVE_TYPE]
+          );
+          this.filterForm.controls['comicType'].setValue(
+            params[QUERY_PARAM_COMIC_TYPE]
+          );
+          this.filterForm.controls['pageCount'].setValue(
+            params[QUERY_PARAM_PAGE_COUNT]
+          );
+          this.filterForm.markAsPristine();
+        })
+      )
+      .subscribe();
   }
 
   @Input() set coverYears(coverYears: number[]) {
-    this.displayableCoverYears = [
-      {
-        label: 'filtering.label.all-years',
-        value: null
-      } as ListItem<string>
-    ].concat(
-      coverYears
-        .filter(year => !!year)
-        .sort((l, r) => l - r)
-        .map(year => {
-          return { value: `${year}`, label: `${year}` } as ListItem<string>;
-        })
+    this.displayableCoverYears$.next(
+      [
+        {
+          label: 'filtering.label.all-years',
+          value: null
+        } as ListItem<string>
+      ].concat(
+        coverYears
+          .filter(year => !!year)
+          .sort((l, r) => l - r)
+          .map(year => {
+            return { value: `${year}`, label: `${year}` } as ListItem<string>;
+          })
+      )
     );
   }
 
   @Input() set coverMonths(coverMonths: number[]) {
-    this.displayableCoverMonths = [
-      { label: 'filtering.label.all-months', value: null }
-    ].concat(
-      coverMonths
-        .filter(month => !!month)
-        .sort((l, r) => l - r)
-        .map(month => {
-          return {
-            value: `${month}`,
-            label: `filtering.label.month-${month}`
-          } as ListItem<string>;
-        })
+    this.displayableCoverMonths$.next(
+      [{ label: 'filtering.label.all-months', value: null }].concat(
+        coverMonths
+          .filter(month => !!month)
+          .sort((l, r) => l - r)
+          .map(month => {
+            return {
+              value: `${month}`,
+              label: `filtering.label.month-${month}`
+            } as ListItem<string>;
+          })
+      )
     );
   }
 

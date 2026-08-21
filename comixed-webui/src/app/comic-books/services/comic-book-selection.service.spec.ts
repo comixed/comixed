@@ -374,7 +374,6 @@ describe('ComicBookSelectionService', () => {
     let subscription: any;
 
     beforeEach(() => {
-      service.selectionUpdateSubscription = null;
       webSocketService.subscribe.and.callFake((topicUsed, callback) => {
         topic = topicUsed;
         subscription = callback;
@@ -406,26 +405,6 @@ describe('ComicBookSelectionService', () => {
           comicBookSelectionUpdate({ ids: [ID] })
         );
       });
-    });
-  });
-
-  describe('when messaging is stopped', () => {
-    const subscription = jasmine.createSpyObj(['unsubscribe']);
-
-    beforeEach(() => {
-      service.selectionUpdateSubscription = subscription;
-      store.setState({
-        ...initialState,
-        [MESSAGING_FEATURE_KEY]: { ...initialMessagingState, started: false }
-      });
-    });
-
-    it('unsubscribes from updates', () => {
-      expect(subscription.unsubscribe).toHaveBeenCalled();
-    });
-
-    it('clears the subscription reference', () => {
-      expect(service.selectionUpdateSubscription).toBeNull();
     });
   });
 });

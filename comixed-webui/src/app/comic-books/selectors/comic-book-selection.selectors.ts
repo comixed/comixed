@@ -22,12 +22,22 @@ import {
   ComicBookSelectionState
 } from '../reducers/comic-book-selection.reducer';
 
-export const selectComicBookSelectionState =
+const selectComicBookSelectionState =
   createFeatureSelector<ComicBookSelectionState>(
     COMIC_BOOK_SELECTION_FEATURE_KEY
   );
 
+export const selectComicBookSelectionBusy = createSelector(
+  selectComicBookSelectionState,
+  state => state.busy
+);
+
 export const selectComicBookSelectionIds = createSelector(
   selectComicBookSelectionState,
   state => state.ids
+);
+
+export const selectComicBookSelectionCount = createSelector(
+  selectComicBookSelectionState,
+  state => state.ids.length
 );

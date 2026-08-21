@@ -19,7 +19,7 @@
 import { inject, Injectable } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { HttpClient } from '@angular/common/http';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { interpolate } from '@app/core';
 import {
   ADD_SINGLE_COMIC_SELECTION_URL,
@@ -40,7 +40,7 @@ import { ComicType } from '@app/comic-books/models/comic-type';
 import { ComicState } from '@app/comic-books/models/comic-state';
 import { MultipleComicBookSelectionRequest } from '@app/comic-books/models/net/multiple-comic-book-selection-request';
 import { Store } from '@ngrx/store';
-import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
+import { selectMessagingStarted } from '@app/messaging/selectors/messaging.selectors';
 import { WebSocketService } from '@app/messaging';
 import {
   comicBookSelectionUpdate,
@@ -53,12 +53,12 @@ import { DuplicateComicBooksSelectionRequest } from '@app/comic-books/models/net
 import { UnreadComicBooksSelectionRequest } from '@app/comic-books/models/net/unread-comic-books-selection-request';
 import { ComicTagType } from '@app/comic-books/models/comic-tag-type';
 import { selectUser } from '@app/user/selectors/user.selectors';
+import { filter, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ComicBookSelectionService {
-  selectionUpdateSubscription: Subscription;
   email: string | null = null;
 
   logger = inject(LoggerService);
@@ -72,16 +72,15 @@ export class ComicBookSelectionService {
       this.doSubscribeToSelectionUpdates();
     });
 
-    this.store.select(selectMessagingState).subscribe(state => {
-      if (state.started && !this.selectionUpdateSubscription) {
-        this.doSubscribeToSelectionUpdates();
-      }
-      if (!state.started && !!this.selectionUpdateSubscription) {
-        this.logger.debug('Stopping comic book selection subscription');
-        this.selectionUpdateSubscription.unsubscribe();
-        this.selectionUpdateSubscription = null;
-      }
-    });
+    this.store
+      .select(selectMessagingStarted)
+      .pipe(
+        filter(started => started),
+        tap(() => {
+          this.doSubscribeToSelectionUpdates();
+        })
+      )
+      .subscribe();
   }
 
   loadSelections(): Observable<any> {
@@ -234,9 +233,7 @@ export class ComicBookSelectionService {
   private doSubscribeToSelectionUpdates() {
     if (!!this.email) {
       this.logger.trace('Subscribing to comic book selection updates');
-      this.selectionUpdateSubscription = this.webSocketService.subscribe<
-        number[]
-      >(
+      this.webSocketService.subscribe<number[]>(
         interpolate(COMIC_BOOK_SELECTION_UPDATE_TOPIC, { email: this.email }),
         ids => {
           this.logger.debug(

@@ -20,19 +20,18 @@ import {
   AfterViewInit,
   Component,
   inject,
-  OnDestroy,
   OnInit,
   ViewChild
 } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { TitleService } from '@app/core/services/title.service';
 import { Store } from '@ngrx/store';
 import {
+  selectManageUsersBusy,
   selectManageUsersCurrent,
-  selectManageUsersList,
-  selectManageUsersState
+  selectManageUsersList
 } from '@app/user/selectors/manage-users.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import {
@@ -86,6 +85,7 @@ import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { AsyncPipe, DatePipe } from '@angular/common';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'cx-user-accounts-page',
@@ -122,19 +122,14 @@ import { AsyncPipe, DatePipe } from '@angular/common';
     TranslateModule
   ]
 })
-export class UserAccountsPageComponent
-  implements OnInit, OnDestroy, AfterViewInit
-{
+export class UserAccountsPageComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
 
   dataSource = new MatTableDataSource<User>([]);
-
-  langChangeSubscription: Subscription;
-  manageUsersStateSubscription: Subscription;
-  userListSubscription: Subscription;
-  userSubscription: Subscription;
-  showUserForm = false;
   editUserForm: FormGroup;
+
+  user$ = new BehaviorSubject<User | null>(null);
+  showUserForm$ = new BehaviorSubject(false);
 
   readonly displayedColumns = [
     'email',
@@ -149,10 +144,8 @@ export class UserAccountsPageComponent
   titleService = inject(TitleService);
   formBuilder = inject(FormBuilder);
   confirmationService = inject(ConfirmationService);
-  user$ = new BehaviorSubject<User | null>(null);
 
   constructor() {
-    this.logger.trace('Creating the user form');
     this.editUserForm = this.formBuilder.group(
       {
         id: [],
@@ -163,38 +156,37 @@ export class UserAccountsPageComponent
       },
       { validators: passwordVerifyValidator }
     );
-    this.logger.trace('Subscribing to language change updates');
-    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
-      () => this.loadTranslations()
-    );
-    this.logger.trace('Subscribing to manage user state updates');
-    this.manageUsersStateSubscription = this.store
-      .select(selectManageUsersState)
-      .subscribe(state => {
-        this.store.dispatch(setBusyState({ enabled: state.busy }));
-      });
-    this.logger.trace('Subscribing to user list updates');
-    this.userListSubscription = this.store
+    this.translateService.onLangChange
+      .pipe(tap(() => this.loadTranslations()))
+      .subscribe();
+    this.store
+      .select(selectManageUsersBusy)
+      .pipe(tap(enabled => this.store.dispatch(setBusyState({ enabled }))))
+      .subscribe();
+    this.store
       .select(selectManageUsersList)
-      .subscribe(users => (this.users = users));
-    this.logger.trace('Subscribing to current user updates');
-    this.userSubscription = this.store
+      .pipe(tap(users => (this.users = users)))
+      .subscribe();
+    this.store
       .select(selectManageUsersCurrent)
-      .subscribe(user => {
-        this.user$.next(user);
-        if (!!user) {
-          this.editUserForm.controls.id.setValue(user.comixedUserId);
-          this.editUserForm.controls.email.setValue(user.email);
-          this.editUserForm.controls.admin.setValue(isAdmin(user));
-        } else {
-          this.editUserForm.controls.id.setValue(null);
-          this.editUserForm.controls.email.setValue('');
-          this.editUserForm.controls.admin.setValue(false);
-        }
-        this.editUserForm.controls.password.setValue('');
-        this.editUserForm.controls.passwordVerify.setValue('');
-        this.onPasswordChanged();
-      });
+      .pipe(
+        tap(user => {
+          this.user$.next(user);
+          if (!!user) {
+            this.editUserForm.controls.id.setValue(user.comixedUserId);
+            this.editUserForm.controls.email.setValue(user.email);
+            this.editUserForm.controls.admin.setValue(isAdmin(user));
+          } else {
+            this.editUserForm.controls.id.setValue(null);
+            this.editUserForm.controls.email.setValue('');
+            this.editUserForm.controls.admin.setValue(false);
+          }
+          this.editUserForm.controls.password.setValue('');
+          this.editUserForm.controls.passwordVerify.setValue('');
+          this.onPasswordChanged();
+        })
+      )
+      .subscribe();
   }
 
   get users(): User[] {
@@ -218,11 +210,6 @@ export class UserAccountsPageComponent
     this.store.dispatch(loadUserAccountList());
   }
 
-  ngOnDestroy(): void {
-    this.logger.trace('Unsubscribing from language change updates');
-    this.langChangeSubscription.unsubscribe();
-  }
-
   ngOnInit(): void {
     this.loadTranslations();
   }
@@ -230,7 +217,7 @@ export class UserAccountsPageComponent
   onShowUserForm(user: User | null): void {
     this.logger.trace('Showing user form for user:', user);
     this.store.dispatch(setCurrentUser({ user }));
-    this.showUserForm = true;
+    this.showUserForm$.next(true);
   }
 
   onSaveAccount(): void {
@@ -249,7 +236,7 @@ export class UserAccountsPageComponent
       confirm: () => {
         this.logger.debug('Saving user account:', email, password, admin);
         this.store.dispatch(saveUserAccount({ id, email, password, admin }));
-        this.showUserForm = false;
+        this.showUserForm$.next(false);
       }
     });
   }
@@ -272,7 +259,7 @@ export class UserAccountsPageComponent
       confirm: () => {
         this.logger.debug('Deleting user account:', email, id);
         this.store.dispatch(deleteUserAccount({ id, email }));
-        this.showUserForm = false;
+        this.showUserForm$.next(false);
       }
     });
   }

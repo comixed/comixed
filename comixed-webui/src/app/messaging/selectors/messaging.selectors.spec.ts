@@ -20,7 +20,7 @@ import {
   MESSAGING_FEATURE_KEY,
   MessagingState
 } from '../reducers/messaging.reducer';
-import { selectMessagingState } from './messaging.selectors';
+import { selectMessagingStarted } from './messaging.selectors';
 
 describe('Messaging Selectors', () => {
   let state: MessagingState;
@@ -32,11 +32,29 @@ describe('Messaging Selectors', () => {
     };
   });
 
-  it('should select the feature state', () => {
-    expect(
-      selectMessagingState({
-        [MESSAGING_FEATURE_KEY]: state
-      })
-    ).toEqual(state);
+  describe('checking the messaging started state', () => {
+    it('returns false when busy', () => {
+      expect(
+        selectMessagingStarted({
+          [MESSAGING_FEATURE_KEY]: { ...state, busy: true, started: false }
+        })
+      ).toBeFalse();
+    });
+
+    it('returns false when not started', () => {
+      expect(
+        selectMessagingStarted({
+          [MESSAGING_FEATURE_KEY]: { ...state, busy: false, started: false }
+        })
+      ).toBeFalse();
+    });
+
+    it('returns true when started', () => {
+      expect(
+        selectMessagingStarted({
+          [MESSAGING_FEATURE_KEY]: { ...state, busy: false, started: true }
+        })
+      ).toBeTrue();
+    });
   });
 });

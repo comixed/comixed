@@ -16,14 +16,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { Component, inject, OnInit } from '@angular/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Store } from '@ngrx/store';
 import { LoggerService } from '@angular-ru/cdk/logger';
-import { Subscription } from 'rxjs';
 import {
   selectServerRuntimeHealth,
-  selectServerRuntimeState
+  selectServerRuntimeShuttingDown
 } from '@app/admin/selectors/server-runtime.selectors';
 import {
   loadServerHealth,
@@ -34,8 +33,10 @@ import { ConfirmationService } from '@tragically-slick/confirmation';
 import { MatFabButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
-import { MatCard, MatCardTitle, MatCardContent } from '@angular/material/card';
-import { DecimalPipe } from '@angular/common';
+import { MatCard, MatCardContent, MatCardTitle } from '@angular/material/card';
+import { AsyncPipe, DecimalPipe } from '@angular/common';
+import { tap } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'cx-server-runtime',
@@ -49,14 +50,13 @@ import { DecimalPipe } from '@angular/common';
     MatCardTitle,
     MatCardContent,
     DecimalPipe,
-    TranslateModule
+    TranslateModule,
+    AsyncPipe
   ]
 })
-export class ServerRuntimeComponent implements OnInit, OnDestroy {
-  shuttingDown = false;
-  serverHealthSubscription: Subscription;
-  health: ServerHealth;
-  runtimeSubscription: Subscription;
+export class ServerRuntimeComponent implements OnInit {
+  shuttingDown$ = new BehaviorSubject(false);
+  health$ = new BehaviorSubject<ServerHealth | null>(null);
 
   logger = inject(LoggerService);
   store = inject(Store<any>);
@@ -64,22 +64,19 @@ export class ServerRuntimeComponent implements OnInit, OnDestroy {
   translateService = inject(TranslateService);
 
   constructor() {
-    this.serverHealthSubscription = this.store
+    this.store
       .select(selectServerRuntimeHealth)
-      .subscribe(health => (this.health = health));
-    this.runtimeSubscription = this.store
-      .select(selectServerRuntimeState)
-      .subscribe(state => (this.shuttingDown = state.shuttingDown));
+      .pipe(tap(health => this.health$.next(health)))
+      .subscribe();
+    this.store
+      .select(selectServerRuntimeShuttingDown)
+      .pipe(tap(shuttingDown => this.shuttingDown$.next(shuttingDown)))
+      .subscribe();
   }
 
   ngOnInit(): void {
     this.logger.trace('Loading server health');
     this.store.dispatch(loadServerHealth());
-  }
-
-  ngOnDestroy(): void {
-    this.logger.trace('Unsubscribing from runtime updates');
-    this.runtimeSubscription.unsubscribe();
   }
 
   onShutdown(): void {

@@ -16,7 +16,7 @@
 <mat-paginator
   showFirstLastButtons="true"
   class="cx-height-100"
-  [length]="totalEntries"
+  [length]="totalEntries$ | async"
   [pageIndex]="queryParameterService.pageIndex$ | async"
   [pageSize]="queryParameterService.pageSize$ | async"
   [pageSizeOptions]="queryParameterService.pageSizeOptions"

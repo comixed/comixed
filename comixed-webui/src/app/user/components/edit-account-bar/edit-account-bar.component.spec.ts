@@ -43,7 +43,6 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GravatarModule } from 'ngx-gravatar';
 
 describe('EditAccountBarComponent', () => {
@@ -61,7 +60,6 @@ describe('EditAccountBarComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
         FormsModule,
         ReactiveFormsModule,
         LoggerModule.forRoot(),

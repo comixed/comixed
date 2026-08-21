@@ -26,7 +26,6 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ComicListViewComponent } from '@app/comic-books/components/comic-list-view/comic-list-view.component';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatMenuModule } from '@angular/material/menu';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTableModule } from '@angular/material/table';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSortModule } from '@angular/material/sort';
@@ -52,8 +51,8 @@ import {
   initialState as initialComicListState
 } from '@app/comic-books/reducers/comic-list.reducer';
 import {
-  LIBRARY_PLUGIN_FEATURE_KEY,
-  initialState as initialLibraryPluginState
+  initialState as initialLibraryPluginState,
+  LIBRARY_PLUGIN_FEATURE_KEY
 } from '@app/library-plugins/reducers/library-plugin.reducer';
 
 describe('PublisherIssuesPageComponent', () => {
@@ -77,7 +76,6 @@ describe('PublisherIssuesPageComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatPaginatorModule,
@@ -177,7 +175,7 @@ describe('PublisherIssuesPageComponent', () => {
 
   describe('selecting all comics', () => {
     beforeEach(() => {
-      component.name = PUBLISHER_NAME;
+      component.name$.next(PUBLISHER_NAME);
     });
 
     describe('selecting all', () => {

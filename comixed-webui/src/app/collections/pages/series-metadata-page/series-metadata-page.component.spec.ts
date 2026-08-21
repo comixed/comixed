@@ -19,8 +19,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SeriesMetadataPageComponent } from './series-metadata-page.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
-import { RouterTestingModule } from '@angular/router/testing';
-import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
+import {
+  ActivatedRoute,
+  ActivatedRouteSnapshot,
+  provideRouter
+} from '@angular/router';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { BehaviorSubject } from 'rxjs';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -38,7 +41,6 @@ import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { TitleService } from '@app/core/services/title.service';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ISSUE_1 } from '@app/collections/collections.fixtures';
 import {
   DISPLAYABLE_COMIC_1,
@@ -94,8 +96,6 @@ describe('SeriesMetadataPageComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
-        RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatPaginatorModule,
@@ -109,6 +109,7 @@ describe('SeriesMetadataPageComponent', () => {
       ],
       providers: [
         provideMockStore({ initialState }),
+        provideRouter([]),
         {
           provide: ActivatedRoute,
           useValue: {
@@ -139,15 +140,15 @@ describe('SeriesMetadataPageComponent', () => {
 
   describe('parameters', () => {
     it('loads the publisher name', () => {
-      expect(component.publisher).toEqual(PUBLISHER);
+      expect(component.publisher$.value).toEqual(PUBLISHER);
     });
 
     it('loads the series name', () => {
-      expect(component.name).toEqual(SERIES);
+      expect(component.name$.value).toEqual(SERIES);
     });
 
     it('loads the volume', () => {
-      expect(component.volume).toEqual(VOLUME);
+      expect(component.volume$.value).toEqual(VOLUME);
     });
   });
 
@@ -196,7 +197,7 @@ describe('SeriesMetadataPageComponent', () => {
 
   describe('getting the id for an issue', () => {
     beforeEach(() => {
-      component.comics = COMIC_LIST;
+      component.comics$.next(COMIC_LIST);
     });
 
     it('returns a value when the issue is found', () => {
@@ -217,9 +218,9 @@ describe('SeriesMetadataPageComponent', () => {
 
   describe('the series percentage complete', () => {
     beforeEach(() => {
-      component.percentageComplete = 0;
-      component.inLibrary = 0;
-      component.totalIssues = 0;
+      component.percentageComplete$.next(0);
+      component.inLibrary$.next(0);
+      component.totalIssues$.next(0);
       component.dataSource.data = [ISSUE];
       store.setState({
         ...initialState,
@@ -232,16 +233,16 @@ describe('SeriesMetadataPageComponent', () => {
       });
     });
 
+    it('sets the percentage', () => {
+      expect(component.percentageComplete$.value).not.toEqual(0);
+    });
+
     it('sets the total in library', () => {
-      expect(component.inLibrary).not.toEqual(0);
+      expect(component.inLibrary$.value).not.toEqual(0);
     });
 
     it('sets the total issues', () => {
-      expect(component.inLibrary).not.toEqual(0);
-    });
-
-    it('sets the percentage', () => {
-      expect(component.percentageComplete).not.toEqual(0);
+      expect(component.totalIssues$.value).not.toEqual(0);
     });
   });
 });

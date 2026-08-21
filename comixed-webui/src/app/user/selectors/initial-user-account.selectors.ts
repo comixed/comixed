@@ -16,13 +16,28 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createFeatureSelector } from '@ngrx/store';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
 import {
   INITIAL_USER_ACCOUNT_FEATURE_KEY,
   InitialUserAccountState
 } from '../reducers/initial-user-account.reducer';
 
-export const selectInitialUserAccountState =
+const selectInitialUserAccountState =
   createFeatureSelector<InitialUserAccountState>(
     INITIAL_USER_ACCOUNT_FEATURE_KEY
   );
+
+export const selectCheckedForExistingAccount = createSelector(
+  selectInitialUserAccountState,
+  state => !state.busy && state.checked
+);
+
+export const selectHasExistingAccounts = createSelector(
+  selectInitialUserAccountState,
+  state => !state.busy && state.checked && state.hasExisting
+);
+
+export const selectCreateInitialUserAccount = createSelector(
+  selectInitialUserAccountState,
+  state => !state.busy && state.checked && !state.hasExisting
+);

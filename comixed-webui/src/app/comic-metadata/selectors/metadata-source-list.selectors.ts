@@ -22,10 +22,15 @@ import {
   MetadataSourceListState
 } from '../reducers/metadata-source-list.reducer';
 
-export const selectMetadataSourceListState =
+const selectMetadataSourceListState =
   createFeatureSelector<MetadataSourceListState>(
     METADATA_SOURCE_LIST_FEATURE_KEY
   );
+
+export const selectMetadataSourceListBusy = createSelector(
+  selectMetadataSourceListState,
+  state => state.busy
+);
 
 export const selectMetadataSourceList = createSelector(
   selectMetadataSourceListState,

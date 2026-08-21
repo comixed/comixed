@@ -16,26 +16,30 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { LoggerService } from '@angular-ru/cdk/logger';
-import { Subscription } from 'rxjs';
 import { CurrentRelease } from '@app/models/current-release';
-import { selectReleaseDetailsState } from '@app/selectors/release.selectors';
+import {
+  selectReleaseDetailsCurrentRelease,
+  selectReleaseDetailsNotLoaded
+} from '@app/selectors/release.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { loadCurrentReleaseDetails } from '@app/actions/release.actions';
 import { TitleService } from '@app/core/services/title.service';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Clipboard } from '@angular/cdk/clipboard';
 import {
   MatCard,
-  MatCardContent,
-  MatCardActions
+  MatCardActions,
+  MatCardContent
 } from '@angular/material/card';
 import { MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
-import { DatePipe } from '@angular/common';
+import { AsyncPipe, DatePipe } from '@angular/common';
+import { tap } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'cx-build-details',
@@ -49,13 +53,12 @@ import { DatePipe } from '@angular/common';
     MatTooltip,
     MatIcon,
     DatePipe,
-    TranslateModule
+    TranslateModule,
+    AsyncPipe
   ]
 })
-export class BuildDetailsPageComponent implements OnInit, OnDestroy {
-  detailsSubscription: Subscription;
-  details: CurrentRelease;
-  langChangeSubscription: Subscription;
+export class BuildDetailsPageComponent implements OnInit {
+  details$ = new BehaviorSubject<CurrentRelease | null>(null);
 
   private logger = inject(LoggerService);
   private store = inject(Store);
@@ -64,15 +67,17 @@ export class BuildDetailsPageComponent implements OnInit, OnDestroy {
   private clipboard = inject(Clipboard);
 
   constructor() {
-    this.detailsSubscription = this.store
-      .select(selectReleaseDetailsState)
-      .subscribe(state => {
-        this.store.dispatch(setBusyState({ enabled: state.currentLoading }));
-        this.details = state.current;
-      });
-    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
-      () => this.loadTranslations()
-    );
+    this.store
+      .select(selectReleaseDetailsNotLoaded)
+      .pipe(tap(enabled => this.store.dispatch(setBusyState({ enabled }))))
+      .subscribe();
+    this.store
+      .select(selectReleaseDetailsCurrentRelease)
+      .pipe(tap(current => this.details$.next(current)))
+      .subscribe();
+    this.translateService.onLangChange
+      .pipe(tap(() => this.loadTranslations()))
+      .subscribe();
   }
 
   ngOnInit(): void {
@@ -80,44 +85,39 @@ export class BuildDetailsPageComponent implements OnInit, OnDestroy {
     this.loadTranslations();
   }
 
-  ngOnDestroy(): void {
-    this.logger.trace('Unsubscribing from language changes');
-    this.langChangeSubscription.unsubscribe();
-  }
-
   copyToClipboard(): void {
     this.clipboard.copy(
       `
 ${this.translateService.instant('build-details.label.branch', {
-  name: this.details.branch
+  name: this.details$.value.branch
 })}
 ${this.translateService.instant('build-details.label.build-time', {
-  time: this.details.buildTime
+  time: this.details$.value.buildTime
 })}
 ${this.translateService.instant('build-details.label.build-host', {
-  name: this.details.buildHost
+  name: this.details$.value.buildHost
 })}
 ${this.translateService.instant('build-details.label.build-version', {
-  version: this.details.buildVersion
+  version: this.details$.value.buildVersion
 })}
 ${this.translateService.instant('build-details.label.commit-time', {
-  time: this.details.commitTime
+  time: this.details$.value.commitTime
 })}
 ${this.translateService.instant('build-details.label.dirty', {
-  name: this.details.dirty
+  name: this.details$.value.dirty
 })}
 ${this.translateService.instant('build-details.label.remote-origin-url', {
-  url: this.details.remoteOriginURL
+  url: this.details$.value.remoteOriginURL
 })}
 ${this.translateService.instant('build-details.label.jdbc-url', {
-  url: this.details.jdbcUrl
+  url: this.details$.value.jdbcUrl
 })}
 ${this.translateService.instant('build-details.label.java-runtime', {
-  version: this.details.javaVersion,
-  vendor: this.details.javaVendor,
-  osName: this.details.osName,
-  osArch: this.details.osArch,
-  osVersion: this.details.osVersion
+  version: this.details$.value.javaVersion,
+  vendor: this.details$.value.javaVendor,
+  osName: this.details$.value.osName,
+  osArch: this.details$.value.osArch,
+  osVersion: this.details$.value.osVersion
 })}`
     );
   }

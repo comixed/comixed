@@ -20,7 +20,7 @@ import {
   SCRAPE_SERIES_FEATURE_KEY,
   SeriesScrapingState
 } from '../reducers/scrape-series.reducer';
-import { selectScrapeSeriesState } from './scrape-series.selectors';
+import { selectScrapeSeriesBusy } from './scrape-series.selectors';
 
 describe('ScrapeSeries Selectors', () => {
   let state: SeriesScrapingState;
@@ -29,11 +29,9 @@ describe('ScrapeSeries Selectors', () => {
     state = { busy: Math.random() > 0.5 };
   });
 
-  it('should select the feature state', () => {
+  it('selects the scraping series busy state', () => {
     expect(
-      selectScrapeSeriesState({
-        [SCRAPE_SERIES_FEATURE_KEY]: state
-      })
-    ).toEqual(state);
+      selectScrapeSeriesBusy({ [SCRAPE_SERIES_FEATURE_KEY]: state })
+    ).toEqual(state.busy);
   });
 });

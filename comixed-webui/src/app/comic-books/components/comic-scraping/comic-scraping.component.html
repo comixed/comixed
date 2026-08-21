@@ -41,10 +41,10 @@
       [matTooltip]="'scraping.tooltip.auto-select-exact-match' | translate"
       (click)="onToggleAutoSelectExactMatch()"
     >
-      @if (autoSelectExactMatch) {
+      @if (autoSelectExactMatch$ | async) {
         <mat-icon>radio_button_checked</mat-icon>
       }
-      @if (!autoSelectExactMatch) {
+      @if ((autoSelectExactMatch$ | async) === false) {
         <mat-icon>radio_button_unchecked</mat-icon>
       }
     </button>
@@ -57,10 +57,10 @@
       [matTooltip]="'scraping.tooltip.confirm-each-scrape' | translate"
       (click)="onToggleConfirmBeforeScrape()"
     >
-      @if (confirmBeforeScraping) {
+      @if (confirmBeforeScraping$ | async) {
         <mat-icon>radio_button_checked</mat-icon>
       }
-      @if (!confirmBeforeScraping) {
+      @if ((confirmBeforeScraping$ | async) === false) {
         <mat-icon>radio_button_unchecked</mat-icon>
       }
     </button>
@@ -120,7 +120,7 @@
         (selectionChange)="onMetadataSourceChosen($event.value)"
         required
       >
-        @for (source of metadataSourceList; track source) {
+        @for (source of metadataSourceList$ | async; track source) {
           <mat-option [value]="source.value.metadataSourceId">
             {{ source.label }}
           </mat-option>

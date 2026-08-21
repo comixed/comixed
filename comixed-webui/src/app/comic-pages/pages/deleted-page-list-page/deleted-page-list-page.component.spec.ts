@@ -29,7 +29,6 @@ import {
   DELETED_PAGE_4
 } from '@app/comic-pages/comic-pages.fixtures';
 import { MatTableModule } from '@angular/material/table';
-import { RouterTestingModule } from '@angular/router/testing';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import {
@@ -37,7 +36,6 @@ import {
   USER_FEATURE_KEY
 } from '@app/user/reducers/user.reducer';
 import { USER_ADMIN } from '@app/user/user.fixtures';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSortModule } from '@angular/material/sort';
 import {
   DELETED_PAGE_FEATURE_KEY,
@@ -53,6 +51,7 @@ import {
   COMIC_DETAIL_5
 } from '@app/comic-books/comic-books.fixtures';
 import { ComicDetailListDialogComponent } from '@app/library/components/comic-detail-list-dialog/comic-detail-list-dialog.component';
+import { provideRouter } from '@angular/router';
 
 describe('DeletedPageListPageComponent', () => {
   const DELETED_PAGE_LIST = [
@@ -87,8 +86,6 @@ describe('DeletedPageListPageComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
-        RouterTestingModule.withRoutes([]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatTableModule,
@@ -99,7 +96,11 @@ describe('DeletedPageListPageComponent', () => {
         DeletedPageListPageComponent,
         PageHashUrlPipe
       ],
-      providers: [provideMockStore({ initialState }), TitleService]
+      providers: [
+        provideMockStore({ initialState }),
+        provideRouter([]),
+        TitleService
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(DeletedPageListPageComponent);

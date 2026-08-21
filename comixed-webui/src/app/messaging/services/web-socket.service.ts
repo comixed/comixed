@@ -45,6 +45,7 @@ export class WebSocketService {
   connect(): Observable<any> {
     return new Observable(() => {
       if (this.tokenService.hasAuthToken() && !this.stompService.connected()) {
+        /* istanbul ignore next */
         this.stompService.configure({
           webSocketFactory: () => new SockJS(WS_ROOT_URL),
           connectHeaders: {
@@ -84,15 +85,20 @@ export class WebSocketService {
    * @param callback the callback function
    */
   subscribe<T>(destination: string, callback: (T) => void): Subscription {
+    /* istanbul ignore next */
     this.logger.debug('Subscribing to topic:', destination);
     /* istanbul ignore next */
-    return this.stompService
-      .watch(destination)
-      .subscribe((message: Message) => {
+    return this.stompService.watch(destination).subscribe({
+      next(message: Message) {
+        // this.logger.debug('Received content:', message);
+        console.log('Received content:', message);
         const content = JSON.parse(message.body);
-        this.logger.debug('Received content:', content);
         callback(content);
-      });
+      },
+      error(error) {
+        this.logger.error('Subscription error:', error);
+      }
+    });
   }
 
   /**
@@ -109,6 +115,7 @@ export class WebSocketService {
     destination: string,
     callback: (T) => void
   ): Subscription {
+    /* istanbul ignore next */
     this.logger.trace('Subscribing to temporary queue:', destination);
     /* istanbul ignore next */
     const subscription = this.stompService
@@ -120,6 +127,7 @@ export class WebSocketService {
       });
     /* istanbul ignore next */
     this.stompService.publish({ destination: message, body });
+    /* istanbul ignore next */
     return subscription;
   }
 

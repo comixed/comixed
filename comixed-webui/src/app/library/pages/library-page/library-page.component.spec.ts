@@ -26,12 +26,10 @@ import {
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTreeModule } from '@angular/material/tree';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/core/services/title.service';
-import { RouterTestingModule } from '@angular/router/testing';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -44,6 +42,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import {
   ActivatedRoute,
   ActivatedRouteSnapshot,
+  provideRouter,
   Router
 } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
@@ -159,8 +158,6 @@ describe('LibraryPageComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
-        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatSidenavModule,
@@ -189,6 +186,7 @@ describe('LibraryPageComponent', () => {
       ],
       providers: [
         provideMockStore({ initialState }),
+        provideRouter([]),
         {
           provide: ActivatedRoute,
           useValue: {
@@ -246,11 +244,11 @@ describe('LibraryPageComponent', () => {
 
   describe('loading page data', () => {
     beforeEach(() => {
-      component.unprocessedOnly = false;
-      component.unreadOnly = false;
-      component.unscrapedOnly = false;
-      component.changedOnly = false;
-      component.deletedOnly = false;
+      component.unprocessedOnly$.next(false);
+      component.unreadOnly$.next(false);
+      component.unscrapedOnly$.next(false);
+      component.changedOnly$.next(false);
+      component.deletedOnly$.next(false);
     });
 
     describe('when showing selected comics', () => {
@@ -261,7 +259,7 @@ describe('LibraryPageComponent', () => {
       });
 
       it('sets the selected only flag', () => {
-        expect(component.selectedOnly).toBeTrue();
+        expect(component.selectedOnly$.value).toBeTrue();
       });
     });
 
@@ -273,7 +271,7 @@ describe('LibraryPageComponent', () => {
       });
 
       it('sets the unprocessed only flag', () => {
-        expect(component.unprocessedOnly).toBeTrue();
+        expect(component.unprocessedOnly$.value).toBeTrue();
       });
     });
 
@@ -283,7 +281,7 @@ describe('LibraryPageComponent', () => {
       });
 
       it('sets the unread only flag', () => {
-        expect(component.unreadOnly).toBeTrue();
+        expect(component.unreadOnly$.value).toBeTrue();
       });
     });
 
@@ -293,7 +291,7 @@ describe('LibraryPageComponent', () => {
       });
 
       it('sets the unscraped only flag', () => {
-        expect(component.unscrapedOnly).toBeTrue();
+        expect(component.unscrapedOnly$.value).toBeTrue();
       });
     });
 
@@ -303,7 +301,7 @@ describe('LibraryPageComponent', () => {
       });
 
       it('sets the unscraped only flag', () => {
-        expect(component.changedOnly).toBeTrue();
+        expect(component.changedOnly$.value).toBeTrue();
       });
     });
 
@@ -313,7 +311,7 @@ describe('LibraryPageComponent', () => {
       });
 
       it('sets the deleted only flag', () => {
-        expect(component.deletedOnly).toBeTrue();
+        expect(component.deletedOnly$.value).toBeTrue();
       });
     });
 
@@ -323,18 +321,18 @@ describe('LibraryPageComponent', () => {
       });
 
       it('sets the missing only flag', () => {
-        expect(component.missingOnly).toBeTrue();
+        expect(component.missingOnly$.value).toBeTrue();
       });
     });
   });
 
   describe('when the language changes', () => {
     beforeEach(() => {
-      component.unprocessedOnly = false;
-      component.unreadOnly = false;
-      component.unscrapedOnly = false;
-      component.changedOnly = false;
-      component.deletedOnly = false;
+      component.unprocessedOnly$.next(false);
+      component.unreadOnly$.next(false);
+      component.unscrapedOnly$.next(false);
+      component.changedOnly$.next(false);
+      component.deletedOnly$.next(false);
     });
 
     it('updates the page title for all comic', () => {
@@ -343,43 +341,43 @@ describe('LibraryPageComponent', () => {
     });
 
     it('updates the page title for selected comics', () => {
-      component.selectedOnly = true;
+      component.selectedOnly$.next(true);
       translateService.use('fr');
       expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('updates the page title for unprocessed comics', () => {
-      component.unprocessedOnly = true;
+      component.unprocessedOnly$.next(true);
       translateService.use('fr');
       expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('updates the page title for unread comics', () => {
-      component.unreadOnly = true;
+      component.unreadOnly$.next(true);
       translateService.use('fr');
       expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('updates the page title for unscraped comics', () => {
-      component.unscrapedOnly = true;
+      component.unscrapedOnly$.next(true);
       translateService.use('fr');
       expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('updates the page title for changed comics', () => {
-      component.changedOnly = true;
+      component.changedOnly$.next(true);
       translateService.use('fr');
       expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('updates the page title for deleted comics', () => {
-      component.deletedOnly = true;
+      component.deletedOnly$.next(true);
       translateService.use('fr');
       expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('updates the page title for missing comics', () => {
-      component.missingOnly = true;
+      component.missingOnly$.next(true);
       translateService.use('fr');
       expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
     });
@@ -388,7 +386,7 @@ describe('LibraryPageComponent', () => {
   describe('loading the comic details to display', () => {
     describe('for unprocessed comics', () => {
       beforeEach(() => {
-        component.unprocessedOnly = true;
+        component.unprocessedOnly$.next(true);
         (activatedRoute.queryParams as BehaviorSubject<{}>).next({
           foo: 'bar'
         });
@@ -421,7 +419,7 @@ describe('LibraryPageComponent', () => {
 
     describe('for deleted comics', () => {
       beforeEach(() => {
-        component.deletedOnly = true;
+        component.deletedOnly$.next(true);
         (activatedRoute.queryParams as BehaviorSubject<{}>).next({
           foo: 'bar'
         });
@@ -454,7 +452,7 @@ describe('LibraryPageComponent', () => {
 
     describe('for changed comics', () => {
       beforeEach(() => {
-        component.changedOnly = true;
+        component.changedOnly$.next(true);
         (activatedRoute.queryParams as BehaviorSubject<{}>).next({
           foo: 'bar'
         });
@@ -487,7 +485,7 @@ describe('LibraryPageComponent', () => {
 
     describe('for unread comics', () => {
       beforeEach(() => {
-        component.unreadOnly = true;
+        component.unreadOnly$.next(true);
         (activatedRoute.queryParams as BehaviorSubject<{}>).next({
           [QUERY_PARAM_UNREAD_ONLY]: `${false}`
         });
@@ -507,7 +505,7 @@ describe('LibraryPageComponent', () => {
 
     describe('for read comics', () => {
       beforeEach(() => {
-        component.unreadOnly = true;
+        component.unreadOnly$.next(true);
         (activatedRoute.queryParams as BehaviorSubject<{}>).next({
           [QUERY_PARAM_UNREAD_ONLY]: `${true}`
         });
@@ -563,8 +561,8 @@ describe('LibraryPageComponent', () => {
 
     describe('for read comic books', () => {
       beforeEach(() => {
-        component.unreadOnly = true;
-        component.showReadOnly = true;
+        component.unreadOnly$.next(true);
+        component.showReadOnly$.next(true);
         component.onSetAllComicsSelectedState(SELECTED);
       });
 
@@ -580,8 +578,8 @@ describe('LibraryPageComponent', () => {
 
     describe('for unread comic books', () => {
       beforeEach(() => {
-        component.unreadOnly = true;
-        component.showReadOnly = false;
+        component.unreadOnly$.next(true);
+        component.showReadOnly$.next(false);
         component.onSetAllComicsSelectedState(SELECTED);
       });
 
@@ -621,7 +619,7 @@ describe('LibraryPageComponent', () => {
     const TOGGLE = Math.random() > 0.5;
 
     beforeEach(() => {
-      component.showReadOnly = TOGGLE;
+      component.showReadOnly$.next(TOGGLE);
       component.onToggleUnreadOnly();
     });
 

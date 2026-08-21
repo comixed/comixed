@@ -27,10 +27,7 @@ import {
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import {
-  COMIC_BOOK_4,
-  DISPLAYABLE_COMIC_1
-} from '@app/comic-books/comic-books.fixtures';
+import { DISPLAYABLE_COMIC_1 } from '@app/comic-books/comic-books.fixtures';
 import {
   initialState as initialScrapingState,
   SINGLE_BOOK_SCRAPING_FEATURE_KEY
@@ -41,7 +38,6 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSortModule } from '@angular/material/sort';
 import { VolumeMetadata } from '@app/comic-metadata/models/volume-metadata';
 import {
@@ -90,7 +86,6 @@ describe('ComicScrapingVolumeSelectionComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatDialogModule,
@@ -141,7 +136,7 @@ describe('ComicScrapingVolumeSelectionComponent', () => {
       });
 
       it('does not preselect a volume', () => {
-        expect(component.selectedVolume).toBeNull();
+        expect(component.selectedVolume$.value).toBeNull();
       });
 
       it('does not contain an exact match', () => {
@@ -178,7 +173,7 @@ describe('ComicScrapingVolumeSelectionComponent', () => {
       });
 
       it('preselects a volume', () => {
-        expect(component.selectedVolume).not.toBeNull();
+        expect(component.selectedVolume$.value).not.toBeNull();
       });
 
       it('contains an exact match', () => {
@@ -216,7 +211,7 @@ describe('ComicScrapingVolumeSelectionComponent', () => {
       });
 
       it('preselects a volume', () => {
-        expect(component.selectedVolume).not.toBeNull();
+        expect(component.selectedVolume$.value).not.toBeNull();
       });
 
       it('contains an exact match', () => {
@@ -284,25 +279,25 @@ describe('ComicScrapingVolumeSelectionComponent', () => {
   describe('when a volume is selected', () => {
     describe('selecting a volume', () => {
       beforeEach(() => {
-        component.selectedVolume = null;
+        component.selectedVolume$.next(null);
         component.metadataSource = METADATA_SOURCE;
         component.onVolumeSelected(SCRAPING_VOLUME);
       });
 
       it('sets the selected volume', () => {
-        expect(component.selectedVolume).toBe(SCRAPING_VOLUME);
+        expect(component.selectedVolume$.value).toBe(SCRAPING_VOLUME);
       });
     });
 
     describe('deselecting a volume', () => {
       beforeEach(() => {
-        component.selectedVolume = SCRAPING_VOLUME;
+        component.selectedVolume$.next(SCRAPING_VOLUME);
         component.metadataSource = METADATA_SOURCE;
         component.onVolumeSelected(SCRAPING_VOLUME);
       });
 
       it('clears the selected volume', () => {
-        expect(component.selectedVolume).toBeNull();
+        expect(component.selectedVolume$.value).toBeNull();
       });
     });
   });
@@ -338,7 +333,7 @@ describe('ComicScrapingVolumeSelectionComponent', () => {
       describe('when in multi-comic scraping mode', () => {
         beforeEach(() => {
           component.multimode = true;
-          component.confirmBeforeScraping = true;
+          component.confirmBeforeScraping$.next(true);
           confirmationSpy.calls.reset();
           component.onDecision(true, SCRAPING_VOLUME);
         });
@@ -351,7 +346,7 @@ describe('ComicScrapingVolumeSelectionComponent', () => {
       describe('when in multi-comic scraping mode with confirmation', () => {
         beforeEach(() => {
           component.multimode = true;
-          component.confirmBeforeScraping = false;
+          component.confirmBeforeScraping$.next(false);
           confirmationSpy.calls.reset();
           component.onDecision(true, SCRAPING_VOLUME);
         });
@@ -429,7 +424,7 @@ describe('ComicScrapingVolumeSelectionComponent', () => {
       beforeEach(() => {
         component.comicVolume = SCRAPING_VOLUME.startYear;
         component.volumes = VOLUMES;
-        component.autoSelectExactMatch = false;
+        component.autoSelectExactMatch$.next(false);
         spyOnStoreDispatch.calls.reset();
         component.issue = SCRAPING_ISSUE;
       });
@@ -445,7 +440,7 @@ describe('ComicScrapingVolumeSelectionComponent', () => {
         component.volumes = VOLUMES;
         component.pageSize = PAGE_SIZE;
         component.pageNumber = PAGE_NUMBER;
-        component.autoSelectExactMatch = true;
+        component.autoSelectExactMatch$.next(true);
         spyOnStoreDispatch.calls.reset();
         component.issue = SCRAPING_ISSUE;
       });
@@ -468,7 +463,7 @@ describe('ComicScrapingVolumeSelectionComponent', () => {
       beforeEach(() => {
         component.volumes = VOLUMES;
         component.comicVolume = SCRAPING_VOLUME.startYear + '1';
-        component.autoSelectExactMatch = false;
+        component.autoSelectExactMatch$.next(false);
         spyOnStoreDispatch.calls.reset();
         component.issue = SCRAPING_ISSUE;
       });

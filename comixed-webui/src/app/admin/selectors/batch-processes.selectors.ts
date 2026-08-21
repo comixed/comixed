@@ -22,8 +22,14 @@ import {
   BatchProcessesState
 } from '../reducers/batch-processes.reducer';
 
-export const selectBatchProcessesState =
-  createFeatureSelector<BatchProcessesState>(BATCH_PROCESSES_FEATURE_KEY);
+const selectBatchProcessesState = createFeatureSelector<BatchProcessesState>(
+  BATCH_PROCESSES_FEATURE_KEY
+);
+
+export const selectBatchProcessesBusy = createSelector(
+  selectBatchProcessesState,
+  state => state.busy
+);
 
 export const selectBatchProcessList = createSelector(
   selectBatchProcessesState,

@@ -22,8 +22,9 @@ import {
   ReadingListsState
 } from '@app/lists/reducers/reading-lists.reducer';
 
-export const selectUserReadingListsState =
-  createFeatureSelector<ReadingListsState>(READING_LISTS_FEATURE_KEY);
+const selectUserReadingListsState = createFeatureSelector<ReadingListsState>(
+  READING_LISTS_FEATURE_KEY
+);
 
 export const selectUserReadingLists = createSelector(
   selectUserReadingListsState,

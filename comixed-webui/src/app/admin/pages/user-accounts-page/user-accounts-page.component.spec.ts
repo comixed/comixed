@@ -27,7 +27,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormField, MatInputModule } from '@angular/material/input';
 import { MatSortModule } from '@angular/material/sort';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
   initialState as initialManageUsersState,
   MANAGER_USERS_FEATURE_KEY
@@ -45,7 +44,7 @@ import { isAdmin, passwordVerifyValidator } from '@app/user/user.functions';
 import { TitleService } from '@app/core/services/title.service';
 import { RouterModule } from '@angular/router';
 
-xdescribe('UserAccountsPageComponent', () => {
+describe('UserAccountsPageComponent', () => {
   const USER_LIST = [USER_ADMIN, USER_READER];
   const initialState = {
     [MANAGER_USERS_FEATURE_KEY]: {
@@ -64,7 +63,6 @@ xdescribe('UserAccountsPageComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
         FormsModule,
         ReactiveFormsModule,
         RouterModule.forRoot([{ path: '**', redirectTo: '' }]),
@@ -108,7 +106,7 @@ xdescribe('UserAccountsPageComponent', () => {
 
   describe('creating user', () => {
     beforeEach(() => {
-      component.showUserForm = true;
+      component.showUserForm$.next(true);
       store.setState({
         ...initialState,
         [MANAGER_USERS_FEATURE_KEY]: {
@@ -141,7 +139,7 @@ xdescribe('UserAccountsPageComponent', () => {
 
   describe('editing a reader', () => {
     beforeEach(() => {
-      component.showUserForm = true;
+      component.showUserForm$.next(true);
       store.setState({
         ...initialState,
         [MANAGER_USERS_FEATURE_KEY]: {
@@ -174,7 +172,7 @@ xdescribe('UserAccountsPageComponent', () => {
 
   describe('editing an admin', () => {
     beforeEach(() => {
-      component.showUserForm = true;
+      component.showUserForm$.next(true);
       store.setState({
         ...initialState,
         [MANAGER_USERS_FEATURE_KEY]: {
@@ -207,7 +205,7 @@ xdescribe('UserAccountsPageComponent', () => {
 
   describe('showing the user form', () => {
     beforeEach(() => {
-      component.showUserForm = false;
+      component.showUserForm$.next(false);
     });
 
     describe('for a new user', () => {
@@ -222,7 +220,7 @@ xdescribe('UserAccountsPageComponent', () => {
       });
 
       it('shows the form', () => {
-        expect(component.showUserForm).toBeTrue();
+        expect(component.showUserForm$.value).toBeTrue();
       });
     });
 
@@ -238,7 +236,7 @@ xdescribe('UserAccountsPageComponent', () => {
       });
 
       it('shows the form', () => {
-        expect(component.showUserForm).toBeTrue();
+        expect(component.showUserForm$.value).toBeTrue();
       });
     });
   });

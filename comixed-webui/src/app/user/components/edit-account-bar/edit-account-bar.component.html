@@ -118,8 +118,8 @@
         mat-raised-button
         class="cx-action-button"
         color="accent"
-        [disabled]="!userForm.valid || busy"
-        [class.cx-spinner]="busy"
+        [disabled]="!userForm.valid || (busy$ | async)"
+        [class.cx-spinner]="busy$ | async"
         (click)="onSaveChanges()"
       >
         <mat-icon>save</mat-icon>

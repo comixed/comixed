@@ -16,35 +16,31 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { AfterViewInit, Component, inject, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component, inject } from '@angular/core';
 import {
-  MatTableDataSource,
-  MatTable,
-  MatColumnDef,
-  MatHeaderCellDef,
-  MatHeaderCell,
-  MatCellDef,
   MatCell,
-  MatHeaderRowDef,
+  MatCellDef,
+  MatColumnDef,
+  MatHeaderCell,
+  MatHeaderCellDef,
   MatHeaderRow,
-  MatRowDef,
+  MatHeaderRowDef,
+  MatNoDataRow,
   MatRow,
-  MatNoDataRow
+  MatRowDef,
+  MatTable,
+  MatTableDataSource
 } from '@angular/material/table';
 import { Series } from '@app/collections/models/series';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
-import { Subscription } from 'rxjs';
-import { User } from '@app/user/models/user';
-import { selectUser } from '@app/user/selectors/user.selectors';
 import {
+  selectSeriesBusy,
   selectSeriesList,
-  selectSeriesState,
   selectSeriesTotal
 } from '@app/collections/selectors/series.selectors';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/core/services/title.service';
-import { isAdmin } from '@app/user/user.functions';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { PAGE_SIZE_OPTIONS } from '@app/core';
 import { setBusyState } from '@app/core/actions/busy.actions';
@@ -58,6 +54,8 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { MatLabel } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { AsyncPipe } from '@angular/common';
+import { tap } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'cx-series-list-page',
@@ -88,14 +86,11 @@ import { AsyncPipe } from '@angular/common';
     TranslateModule
   ]
 })
-export class SeriesListPageComponent implements OnDestroy, AfterViewInit {
+export class SeriesListPageComponent implements AfterViewInit {
   dataSource = new MatTableDataSource<Series>([]);
-  seriesListSubscription: Subscription;
-  seriesStateSubscription: Subscription;
 
   readonly pageOptions = PAGE_SIZE_OPTIONS;
-
-  displayedColumns = [
+  readonly displayedColumns = [
     'publisher',
     'name',
     'volume',
@@ -103,15 +98,7 @@ export class SeriesListPageComponent implements OnDestroy, AfterViewInit {
     'in-library'
   ];
 
-  langChangeSubscription: Subscription;
-  queryParamsSubscription: Subscription;
-  userSubscription: Subscription;
-  user: User;
-  isAdmin = false;
-  totalSeriesSubscription: Subscription;
-  totalSeries = 0;
-
-  selectedSeries: Series;
+  totalSeries$ = new BehaviorSubject(0);
 
   logger = inject(LoggerService);
   store = inject(Store);
@@ -121,66 +108,47 @@ export class SeriesListPageComponent implements OnDestroy, AfterViewInit {
   queryParameterService = inject(QueryParameterService);
 
   constructor() {
-    this.logger.trace('Subscribing to language change updates');
-    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
-      () => this.loadTranslations()
-    );
-    this.logger.trace('Subscribing to query parameter updates');
-    this.queryParamsSubscription = this.activatedRoute.queryParams.subscribe(
-      params => {
-        this.logger.trace('Loading series list');
-        this.store.dispatch(
-          loadSeriesList({
-            searchText: this.queryParameterService.filterText$.value,
-            pageIndex: this.queryParameterService.pageIndex$.value,
-            pageSize: this.queryParameterService.pageSize$.value,
-            sortBy: this.queryParameterService.sortBy$.value,
-            sortDirection: this.queryParameterService.sortDirection$.value
-          })
-        );
-      }
-    );
-    this.logger.trace('Subscribing to user updates');
-    this.userSubscription = this.store.select(selectUser).subscribe(user => {
-      this.user = user;
-      this.logger.trace('Loading user page size preference');
-      this.isAdmin = isAdmin(user);
-    });
-    this.logger.trace('Subscribing to series state updates');
-    this.seriesStateSubscription = this.store
-      .select(selectSeriesState)
-      .subscribe(state =>
-        this.store.dispatch(setBusyState({ enabled: state.busy }))
-      );
-    this.logger.trace('Subscribing to series list updates');
-    this.seriesListSubscription = this.store
+    this.translateService.onLangChange
+      .pipe(tap(() => this.loadTranslations()))
+      .subscribe();
+    this.activatedRoute.queryParams
+      .pipe(
+        tap(params => {
+          this.logger.trace('Loading series list');
+          this.store.dispatch(
+            loadSeriesList({
+              searchText: this.queryParameterService.filterText$.value,
+              pageIndex: this.queryParameterService.pageIndex$.value,
+              pageSize: this.queryParameterService.pageSize$.value,
+              sortBy: this.queryParameterService.sortBy$.value,
+              sortDirection: this.queryParameterService.sortDirection$.value
+            })
+          );
+        })
+      )
+      .subscribe();
+    this.store
+      .select(selectSeriesBusy)
+      .pipe(tap(enabled => this.store.dispatch(setBusyState({ enabled }))))
+      .subscribe();
+    this.store
       .select(selectSeriesList)
-      .subscribe(series => {
-        /* istanbul ignore next */
-        const pageIndex = this.dataSource.paginator?.pageIndex;
-        this.dataSource.data = series;
-        /* istanbul ignore if */
-        if (!!pageIndex) {
-          this.dataSource.paginator.pageIndex = pageIndex;
-        }
-      });
-    this.logger.trace('Subscribing to total series updates');
-    this.totalSeriesSubscription = this.store
+      .pipe(
+        tap(series => {
+          /* istanbul ignore next */
+          const pageIndex = this.dataSource.paginator?.pageIndex;
+          this.dataSource.data = series;
+          /* istanbul ignore if */
+          if (!!pageIndex) {
+            this.dataSource.paginator.pageIndex = pageIndex;
+          }
+        })
+      )
+      .subscribe();
+    this.store
       .select(selectSeriesTotal)
-      .subscribe(total => (this.totalSeries = total));
-  }
-
-  ngOnDestroy(): void {
-    this.logger.trace('Unsubscribing from query parameter updates');
-    this.queryParamsSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from user updates');
-    this.userSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from series state updates');
-    this.seriesStateSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from series list updates');
-    this.seriesListSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from series total updates');
-    this.totalSeriesSubscription.unsubscribe();
+      .pipe(tap(total => this.totalSeries$.next(total)))
+      .subscribe();
   }
 
   ngAfterViewInit(): void {

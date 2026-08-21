@@ -22,10 +22,15 @@ import {
   ConfigurationOptionListState
 } from '../reducers/configuration-option-list.reducer';
 
-export const selectConfigurationOptionListState =
+const selectConfigurationOptionListState =
   createFeatureSelector<ConfigurationOptionListState>(
     CONFIGURATION_OPTION_LIST_FEATURE_KEY
   );
+
+export const selectConfigurationOptionListBusy = createSelector(
+  selectConfigurationOptionListState,
+  state => state.loading || state.saving
+);
 
 export const selectConfigurationOptions = createSelector(
   selectConfigurationOptionListState,

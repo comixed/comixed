@@ -25,7 +25,6 @@ import {
   READING_LIST_DETAIL_FEATURE_KEY
 } from '@app/lists/reducers/reading-list-detail.reducer';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -34,6 +33,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import {
   ActivatedRoute,
   ActivatedRouteSnapshot,
+  provideRouter,
   Router
 } from '@angular/router';
 import { BehaviorSubject, Subscription } from 'rxjs';
@@ -83,7 +83,6 @@ import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { ComicCoverUrlPipe } from '@app/comic-books/pipes/comic-cover-url.pipe';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
@@ -142,20 +141,9 @@ describe('ReadingListDetailPageComponent', () => {
   let titleService: TitleService;
   let translateService: TranslateService;
 
-  const updateSubscription = jasmine.createSpyObj(['unsubscribe']);
-  updateSubscription.unsubscribe = jasmine.createSpy(
-    'Subscription.unsubscribe(updates)'
-  );
-  const removalSubscription = jasmine.createSpyObj(['unsubscribe']);
-  removalSubscription.unsubscribe = jasmine.createSpy(
-    'Subscription.unsubscribe(removals)'
-  );
-
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
-        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
         FormsModule,
         ReactiveFormsModule,
         LoggerModule.forRoot(),
@@ -180,6 +168,7 @@ describe('ReadingListDetailPageComponent', () => {
       ],
       providers: [
         provideMockStore({ initialState }),
+        provideRouter([]),
         {
           provide: ActivatedRoute,
           useValue: {
@@ -238,12 +227,12 @@ describe('ReadingListDetailPageComponent', () => {
 
   describe('when creating a new reading list', () => {
     beforeEach(() => {
-      component.readingListId = 1;
+      component.readingListId$.next(1);
       (activatedRoute.params as BehaviorSubject<{}>).next({});
     });
 
     it('sets the reading list id', () => {
-      expect(component.readingListId).toEqual(-1);
+      expect(component.readingListId$.value).toEqual(-1);
     });
 
     it('fires an action', () => {
@@ -253,14 +242,16 @@ describe('ReadingListDetailPageComponent', () => {
 
   describe('when loading an existing reading list', () => {
     beforeEach(() => {
-      component.readingListId = -1;
+      component.readingListId$.next(-1);
       (activatedRoute.params as BehaviorSubject<{}>).next({
         id: `${READING_LIST.readingListId}`
       });
     });
 
     it('sets the reading list id', () => {
-      expect(component.readingListId).toEqual(READING_LIST.readingListId);
+      expect(component.readingListId$.value).toEqual(
+        READING_LIST.readingListId
+      );
     });
 
     it('fires an action', () => {
@@ -289,7 +280,7 @@ describe('ReadingListDetailPageComponent', () => {
   describe('receiving the reading list', () => {
     describe('after saving a new reading list', () => {
       beforeEach(() => {
-        component.readingListId = -1;
+        component.readingListId$.next(-1);
         store.setState({
           ...initialState,
           [READING_LIST_DETAIL_FEATURE_KEY]: {
@@ -311,8 +302,7 @@ describe('ReadingListDetailPageComponent', () => {
 
     describe('when loading an existing reading list', () => {
       beforeEach(() => {
-        component.dataSource.data = [];
-        component.readingListId = READING_LIST.readingListId;
+        component.readingListId$.next(READING_LIST.readingListId);
         dispatchSpy.calls.reset();
         store.setState({
           ...initialState,
@@ -350,22 +340,6 @@ describe('ReadingListDetailPageComponent', () => {
             sortDirection: undefined
           })
         );
-      });
-
-      describe('receiving the comics to display', () => {
-        beforeEach(() => {
-          store.setState({
-            ...initialState,
-            [COMIC_LIST_FEATURE_KEY]: {
-              ...initialComicListState,
-              comics: COMIC_LIST
-            }
-          });
-        });
-
-        it('loads the table data source', () => {
-          expect(component.dataSource.data).not.toEqual([]);
-        });
       });
     });
   });
@@ -426,7 +400,7 @@ describe('ReadingListDetailPageComponent', () => {
     const SELECTED_IDS = COMIC_LIST.map(entry => entry.comicDetailId);
     beforeEach(() => {
       component.readingList = READING_LIST;
-      component.selectedIds = SELECTED_IDS;
+      component.selectedIds$.next(SELECTED_IDS);
       spyOn(confirmationService, 'confirm').and.callFake(
         (confirmation: Confirmation) => confirmation.confirm()
       );
@@ -458,10 +432,8 @@ describe('ReadingListDetailPageComponent', () => {
     let readingListRemovalSubscription: any;
 
     beforeEach(() => {
-      component.readingListId = READING_LIST.readingListId;
-      component.readingListUpdateSubscription = null;
-      component.readingListRemovalSubscription = null;
-      component.email = EMAIL;
+      component.readingListId$.next(READING_LIST.readingListId);
+      component.email$.next(EMAIL);
       webSocketService.subscribe
         .withArgs(LIST_UPDATES, jasmine.anything())
         .and.callFake((topic, callback) => {
@@ -514,42 +486,6 @@ describe('ReadingListDetailPageComponent', () => {
     });
   });
 
-  describe('when messaging stops', () => {
-    let readingListUpdateSubscription: Subscription;
-    let readingListRemovalSubscription: Subscription;
-
-    beforeEach(() => {
-      readingListUpdateSubscription = jasmine.createSpyObj<Subscription>([
-        'unsubscribe'
-      ]);
-      readingListRemovalSubscription = jasmine.createSpyObj<Subscription>([
-        'unsubscribe'
-      ]);
-      component.readingListUpdateSubscription = readingListUpdateSubscription;
-      component.readingListRemovalSubscription = readingListRemovalSubscription;
-      store.setState({
-        ...initialState,
-        [MESSAGING_FEATURE_KEY]: { ...initialMessagingState, started: false }
-      });
-    });
-
-    it('unsubscribes from reading list updates', () => {
-      expect(readingListUpdateSubscription.unsubscribe).toHaveBeenCalled();
-    });
-
-    it('sets the reading list update subscription to null', () => {
-      expect(component.readingListUpdateSubscription).toBeNull();
-    });
-
-    it('unsubscribes from reading list removals', () => {
-      expect(readingListRemovalSubscription.unsubscribe).toHaveBeenCalled();
-    });
-
-    it('sets the reading list removal subscription to null', () => {
-      expect(component.readingListRemovalSubscription).toBeNull();
-    });
-  });
-
   describe('downloading the reading list', () => {
     beforeEach(() => {
       component.readingList = READING_LIST;
@@ -595,7 +531,7 @@ describe('ReadingListDetailPageComponent', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         setMultipleComicBookByIdSelectionState({
           selected: SELECT,
-          comicBookIds: component.selectedIds
+          comicBookIds: component.selectedIds$.value
         })
       );
     });

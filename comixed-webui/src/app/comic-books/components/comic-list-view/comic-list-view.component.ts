@@ -23,7 +23,6 @@ import {
   HostListener,
   inject,
   Input,
-  OnDestroy,
   OnInit,
   Output
 } from '@angular/core';
@@ -65,7 +64,6 @@ import { editMultipleComics } from '@app/library/actions/library.actions';
 import { EditMultipleComicsComponent } from '@app/library/components/edit-multiple-comics/edit-multiple-comics.component';
 import { EditMultipleComics } from '@app/library/models/ui/edit-multiple-comics';
 import { MatDialog } from '@angular/material/dialog';
-import { Subscription } from 'rxjs';
 import {
   updateSelectedComicBooksMetadata,
   updateSingleComicBookMetadata
@@ -92,8 +90,7 @@ import {
 } from '@app/library-plugins/actions/run-library-plugin.actions';
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import { PREFERENCE_PAGE_SIZE } from '@app/comic-files/comic-file.constants';
-import { selectComicBookSelectionState } from '@app/comic-books/selectors/comic-book-selection.selectors';
-import { ComicBookSelectionState } from '@app/comic-books/reducers/comic-book-selection.reducer';
+import { selectComicBookSelectionBusy } from '@app/comic-books/selectors/comic-book-selection.selectors';
 import {
   markSelectedComicBooksRead,
   markSingleComicBookRead
@@ -122,6 +119,7 @@ import { MatToolbar } from '@angular/material/toolbar';
 import { QUERY_PARAM_COMICS_AS_GRID } from '@app/core';
 import { ComicGridItemComponent } from '@app/comic-books/components/comic-grid-item/comic-grid-item.component';
 import { PluginType } from '@app/library-plugins/models/plugin-type';
+import { BehaviorSubject, tap } from 'rxjs';
 
 @Component({
   selector: 'cx-comic-list-view',
@@ -164,9 +162,7 @@ import { PluginType } from '@app/library-plugins/models/plugin-type';
     ComicGridItemComponent
   ]
 })
-export class ComicListViewComponent
-  implements OnInit, OnDestroy, AfterViewInit
-{
+export class ComicListViewComponent implements OnInit, AfterViewInit {
   @Output() selectAll = new EventEmitter<boolean>();
   @Output() filtered = new EventEmitter<boolean>();
   @Output() showing = new EventEmitter<number>();
@@ -197,16 +193,15 @@ export class ComicListViewComponent
   @Input() totalComics = 0;
   @Input() coverYears: number[] = [];
   @Input() coverMonths: number[] = [];
-  selectionStateSubscription: Subscription;
-  selectionState: ComicBookSelectionState;
-  showComicDetailPopup = false;
-  showComicFilterPopup = false;
-  selectedComic: DisplayableComic;
+
   dataSource = new MatTableDataSource<SelectableListItem<DisplayableComic>>();
-  queryParamsSubscription: Subscription;
-  libraryPluginListSubscription: Subscription;
-  comicListPluginList: LibraryPlugin[] = [];
-  comicBookPluginList: LibraryPlugin[] = [];
+  selectionBusy$ = new BehaviorSubject(false);
+  showComicDetailPopup$ = new BehaviorSubject(false);
+  showComicFilterPopup$ = new BehaviorSubject(false);
+  selectedComic$ = new BehaviorSubject<DisplayableComic | null>(null);
+  comicListPluginList$ = new BehaviorSubject<LibraryPlugin[]>([]);
+  comicBookPluginList$ = new BehaviorSubject<LibraryPlugin[]>([]);
+
   logger = inject(LoggerService);
   store = inject(Store);
   router = inject(Router);
@@ -217,29 +212,32 @@ export class ComicListViewComponent
   queryParameterService = inject(QueryParameterService);
 
   constructor() {
-    this.logger.trace('Subscribing to query parameter updates');
-    this.queryParamsSubscription = this.activatedRoute.queryParams.subscribe(
-      params => {
-        this.applyFilters();
-        this.showGridView = params[QUERY_PARAM_COMICS_AS_GRID] === `${true}`;
-      }
-    );
-    this.logger.trace('Subscribing to selection state updates');
-    this.selectionStateSubscription = this.store
-      .select(selectComicBookSelectionState)
-      .subscribe(state => (this.selectionState = state));
-    this.logger.trace('Subscribing to library plugin list updates');
-    this.libraryPluginListSubscription = this.store
+    this.activatedRoute.queryParams
+      .pipe(
+        tap(params => {
+          this.applyFilters();
+          this.showGridView = params[QUERY_PARAM_COMICS_AS_GRID] === `${true}`;
+        })
+      )
+      .subscribe();
+    this.store
+      .select(selectComicBookSelectionBusy)
+      .pipe(tap(busy => this.selectionBusy$.next(busy)))
+      .subscribe();
+    this.store
       .select(selectLibraryPluginList)
-      .subscribe(list => {
-        this.logger.debug('Library plugin update received:', list);
-        this.comicListPluginList = list.filter(
-          entry => entry.pluginType === PluginType.List
-        );
-        this.comicBookPluginList = list.filter(
-          entry => entry.pluginType === PluginType.Single
-        );
-      });
+      .pipe(
+        tap(list => {
+          this.logger.debug('Library plugin update received:', list);
+          this.comicListPluginList$.next(
+            list.filter(entry => entry.pluginType === PluginType.List)
+          );
+          this.comicBookPluginList$.next(
+            list.filter(entry => entry.pluginType === PluginType.Single)
+          );
+        })
+      )
+      .subscribe();
   }
 
   private _comicBooksRead: number[] = [];
@@ -311,15 +309,6 @@ export class ComicListViewComponent
     this.store.dispatch(loadLibraryPlugins());
   }
 
-  ngOnDestroy(): void {
-    this.logger.trace('Unsbuscribing from query param updates');
-    this.queryParamsSubscription.unsubscribe();
-    this.logger.trace('Unsbuscribing from selection state updates');
-    this.selectionStateSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from library plugin list updates');
-    this.libraryPluginListSubscription.unsubscribe();
-  }
-
   getIconForState(comicState: ComicState): string {
     switch (comicState) {
       case ComicState.ADDED:
@@ -373,8 +362,8 @@ export class ComicListViewComponent
 
   onShowPopup(show: boolean, comic: DisplayableComic): void {
     this.logger.debug('Setting show popup:', show, this.usePopups);
-    this.showComicDetailPopup = show && this.usePopups;
-    this.selectedComic = comic;
+    this.showComicDetailPopup$.next(show && this.usePopups);
+    this.selectedComic$.next(comic);
   }
 
   isRead(comic: DisplayableComic): boolean {
@@ -393,12 +382,12 @@ export class ComicListViewComponent
       confirm: () => {
         this.logger.debug(
           'Converting comic:',
-          this.selectedComic,
+          this.selectedComic$.value,
           archiveTypeString
         );
         this.store.dispatch(
           convertSingleComicBook({
-            id: this.selectedComic.comicBookId,
+            id: this.selectedComic$.value.comicBookId,
             archiveType: archiveTypeFromString(archiveTypeString)
           })
         );
@@ -450,7 +439,7 @@ export class ComicListViewComponent
   onMarkOneAsRead(read: boolean): void {
     this.store.dispatch(
       markSingleComicBookRead({
-        comicDetailId: this.selectedComic.comicDetailId,
+        comicDetailId: this.selectedComic$.value.comicDetailId,
         read
       })
     );
@@ -475,12 +464,14 @@ export class ComicListViewComponent
   onMarkOneAsDeleted(deleted: boolean): void {
     if (deleted) {
       this.store.dispatch(
-        deleteSingleComicBook({ comicBookId: this.selectedComic.comicBookId })
+        deleteSingleComicBook({
+          comicBookId: this.selectedComic$.value.comicBookId
+        })
       );
     } else {
       this.store.dispatch(
         undeleteSingleComicBook({
-          comicBookId: this.selectedComic.comicBookId
+          comicBookId: this.selectedComic$.value.comicBookId
         })
       );
     }
@@ -533,7 +524,7 @@ export class ComicListViewComponent
 
   onFilterComics(): void {
     this.logger.debug('Showing comic detail filters');
-    this.showComicFilterPopup = true;
+    this.showComicFilterPopup$.next(true);
   }
 
   onUpdateSingleComicBookMetadata(comic: DisplayableComic): void {

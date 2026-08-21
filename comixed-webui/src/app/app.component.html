@@ -1,13 +1,13 @@
 <cx-navigation-bar
   class="cx-width-100"
-  [user]="user"
+  [user]="user$ | async"
   [sidebarOpened]="sidenav.opened"
   [accountBarOpened]="accountBar.opened"
   (toggleSidebar)="sidenav.toggle($event)"
   (toggleAccountBar)="accountBar.toggle($event)"
 ></cx-navigation-bar>
 
-@if (busy) {
+@if (busy$ | async) {
   <div id="cx-busy-overlay">
     <div class="cx-centered cx-position-absolute">
       <img [src]="busyIconURL" alt="Busy, please wait..." />
@@ -26,7 +26,7 @@
     (click)="sidenav.close()"
     position="start"
   >
-    <cx-side-navigation [user]="user"></cx-side-navigation>
+    <cx-side-navigation [user]="user$ | async"></cx-side-navigation>
   </mat-sidenav>
 
   <mat-sidenav
@@ -35,9 +35,9 @@
     mode="over"
     position="end"
   >
-    @if (!!user) {
+    @if (!!(user$ | async)) {
       <cx-edit-account-bar
-        [user]="user"
+        [user]="user$ | async"
         (closeSidebar)="accountBar.close()"
       ></cx-edit-account-bar>
     }
@@ -50,4 +50,4 @@
   </mat-sidenav-content>
 </mat-sidenav-container>
 
-<cx-footer [user]="user"></cx-footer>
+<cx-footer [user]="user$ | async"></cx-footer>

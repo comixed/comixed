@@ -16,8 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Component, inject, OnInit } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { ActivatedRoute } from '@angular/router';
@@ -26,41 +25,35 @@ import { setBusyState } from '@app/core/actions/busy.actions';
 import { selectComicBookSelectionIds } from '@app/comic-books/selectors/comic-book-selection.selectors';
 import { setMultipleComicBookByPublisherSeriesAndVolumeSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
 import { TitleService } from '@app/core/services/title.service';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { isAdmin } from '@app/user/user.functions';
 import { loadComicsByFilter } from '@app/comic-books/actions/comic-list.actions';
 import {
   selectComicFilteredCount,
   selectComicList,
-  selectComicListState
+  selectComicListBusy
 } from '@app/comic-books/selectors/comic-list.selectors';
 import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 import { ComicListViewComponent } from '../../../comic-books/components/comic-list-view/comic-list-view.component';
+import { tap } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'cx-series-issue-page',
   templateUrl: './series-issue-page.component.html',
   styleUrl: './series-issue-page.component.scss',
-  imports: [ComicListViewComponent, TranslateModule]
+  imports: [ComicListViewComponent, TranslateModule, AsyncPipe]
 })
-export class SeriesIssuePageComponent implements OnInit, OnDestroy {
-  paramSubscription: Subscription;
-  langChangeSubscription: Subscription;
-  pageChangedSubscription: Subscription;
-  comicDetailslistSubscription: Subscription;
-  comicDetailslistStateSubscription: Subscription;
-  comicDetailsTotalSubscription: Subscription;
-  selectedIdsSubscription: Subscription;
-  currentUserSubscription: Subscription;
-
-  publisherName = '';
-  seriesName = '';
-  volume = '';
-  isAdmin = false;
-  comics: DisplayableComic[] = [];
-  selectedIds: number[] = [];
-  totalComics = 0;
+export class SeriesIssuePageComponent implements OnInit {
+  publisherName$ = new BehaviorSubject('');
+  seriesName$ = new BehaviorSubject('');
+  volume$ = new BehaviorSubject('');
+  isAdmin$ = new BehaviorSubject(false);
+  comics$ = new BehaviorSubject<DisplayableComic[]>([]);
+  selectedIds$ = new BehaviorSubject<number[]>([]);
+  totalComics$ = new BehaviorSubject(0);
 
   logger = inject(LoggerService);
   store = inject(Store);
@@ -70,74 +63,58 @@ export class SeriesIssuePageComponent implements OnInit, OnDestroy {
   queryParameterService = inject(QueryParameterService);
 
   constructor() {
-    this.logger.trace('Subscribing to parameter updates');
-    this.paramSubscription = this.activatedRoute.params.subscribe(params => {
-      this.publisherName = params['publisher'];
-      this.seriesName = params['name'];
-      this.volume = params['volume'];
-      this.doLoadComicDetails();
-    });
-    this.logger.trace('Subscribing to language change updates');
-    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
-      () => this.loadTranslations()
-    );
-    this.logger.trace('Subscribing to page change updates');
-    this.pageChangedSubscription = this.activatedRoute.queryParams.subscribe(
-      params => this.doLoadComicDetails()
-    );
-    this.logger.trace('Subscribing to comic detail list state updates');
-    this.comicDetailslistStateSubscription = this.store
-      .select(selectComicListState)
-      .subscribe(state => {
-        this.store.dispatch(setBusyState({ enabled: state.busy }));
-      });
-    this.logger.trace('Subscribing to comic details updates');
-    this.comicDetailslistSubscription = this.store
+    this.activatedRoute.params
+      .pipe(
+        tap(params => {
+          this.publisherName$.next(params['publisher']);
+          this.seriesName$.next(params['name']);
+          this.volume$.next(params['volume']);
+          this.doLoadComicDetails();
+        })
+      )
+      .subscribe();
+    this.translateService.onLangChange
+      .pipe(tap(() => this.loadTranslations()))
+      .subscribe();
+    this.activatedRoute.queryParams
+      .pipe(tap(params => this.doLoadComicDetails()))
+      .subscribe();
+    this.store
+      .select(selectComicListBusy)
+      .pipe(
+        tap(enabled => {
+          this.store.dispatch(setBusyState({ enabled }));
+        })
+      )
+      .subscribe();
+    this.store
       .select(selectComicList)
-      .subscribe(comics => (this.comics = comics));
-    this.logger.trace('Subscribing to comic detail totals updates');
-    this.comicDetailsTotalSubscription = this.store
+      .pipe(tap(comics => this.comics$.next(comics)))
+      .subscribe();
+    this.store
       .select(selectComicFilteredCount)
-      .subscribe(totalComics => (this.totalComics = totalComics));
-    this.logger.trace('Subscribing to comic selection updates');
-    this.selectedIdsSubscription = this.store
+      .pipe(tap(totalComics => this.totalComics$.next(totalComics)))
+      .subscribe();
+    this.store
       .select(selectComicBookSelectionIds)
-      .subscribe(selectedIds => (this.selectedIds = selectedIds));
-    this.logger.trace('Subscribing to user updates');
-    this.currentUserSubscription = this.store
+      .pipe(tap(selectedIds => this.selectedIds$.next(selectedIds)))
+      .subscribe();
+    this.store
       .select(selectUser)
-      .subscribe(user => (this.isAdmin = isAdmin(user)));
+      .pipe(tap(user => this.isAdmin$.next(isAdmin(user))))
+      .subscribe();
   }
 
   ngOnInit(): void {
     this.loadTranslations();
   }
 
-  ngOnDestroy(): void {
-    this.logger.trace('Unsubscribing from param updates');
-    this.paramSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from language updates');
-    this.langChangeSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from page change updates');
-    this.pageChangedSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from comic detail list state updates');
-    this.comicDetailslistStateSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from comic detail list updates');
-    this.comicDetailslistSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from comic detail total updates');
-    this.comicDetailsTotalSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from comic selection updates');
-    this.selectedIdsSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from user updates');
-    this.currentUserSubscription.unsubscribe();
-  }
-
   onSelectAll(selected: boolean): void {
     this.store.dispatch(
       setMultipleComicBookByPublisherSeriesAndVolumeSelectionState({
-        publisher: this.publisherName,
-        series: this.seriesName,
-        volume: this.volume,
+        publisher: this.publisherName$.value,
+        series: this.seriesName$.value,
+        volume: this.volume$.value,
         selected
       })
     );
@@ -159,9 +136,9 @@ export class SeriesIssuePageComponent implements OnInit, OnDestroy {
         missing: false,
         unscrapedState: false,
         searchText: null,
-        publisher: this.publisherName,
-        series: this.seriesName,
-        volume: this.volume,
+        publisher: this.publisherName$.value,
+        series: this.seriesName$.value,
+        volume: this.volume$.value,
         pageCount: null
       })
     );
@@ -172,9 +149,9 @@ export class SeriesIssuePageComponent implements OnInit, OnDestroy {
       this.translateService.instant(
         'collections.series.list-issues-page.tab-title',
         {
-          publisher: this.publisherName,
-          series: this.seriesName,
-          volume: this.volume
+          publisher: this.publisherName$.value,
+          series: this.seriesName$.value,
+          volume: this.volume$.value
         }
       )
     );

@@ -30,7 +30,6 @@ import {
 } from '@app/user/reducers/user.reducer';
 import { USER_READER } from '@app/user/user.fixtures';
 import { MatMenuModule } from '@angular/material/menu';
-import { RouterTestingModule } from '@angular/router/testing';
 import { PAGE_1 } from '@app/comic-pages/comic-pages.fixtures';
 import { updatePageDeletion } from '@app/comic-books/actions/comic-book.actions';
 import { TranslateModule } from '@ngx-translate/core';
@@ -43,6 +42,7 @@ import {
 } from '@tragically-slick/confirmation';
 import { MatSortModule } from '@angular/material/sort';
 import { setBlockedStateForHash } from '@app/comic-pages/actions/blocked-hashes.actions';
+import { provideRouter } from '@angular/router';
 
 describe('ComicPagesComponent', () => {
   const COMIC = COMIC_BOOK_1;
@@ -61,12 +61,6 @@ describe('ComicPagesComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule.withRoutes([
-          {
-            path: '**',
-            redirectTo: ''
-          }
-        ]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatCardModule,
@@ -79,7 +73,11 @@ describe('ComicPagesComponent', () => {
         ComicPageComponent,
         ComicPageUrlPipe
       ],
-      providers: [provideMockStore({ initialState }), ConfirmationService]
+      providers: [
+        provideMockStore({ initialState }),
+        provideRouter([]),
+        ConfirmationService
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicPagesComponent);

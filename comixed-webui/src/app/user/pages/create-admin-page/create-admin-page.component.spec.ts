@@ -27,9 +27,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { Router } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
+import { provideRouter, Router } from '@angular/router';
 import {
   INITIAL_USER_ACCOUNT_FEATURE_KEY,
   initialState as initialUserAccountState
@@ -49,10 +47,7 @@ describe('CreateAdminPageComponent', () => {
   const EMAIL = USER_ADMIN.email;
   const PASSWORD = 'my!password';
   const initialState = {
-    [INITIAL_USER_ACCOUNT_FEATURE_KEY]: {
-      ...initialUserAccountState,
-      busy: true
-    }
+    [INITIAL_USER_ACCOUNT_FEATURE_KEY]: { ...initialUserAccountState }
   };
 
   let component: CreateAdminPageComponent;
@@ -66,10 +61,8 @@ describe('CreateAdminPageComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
         FormsModule,
         ReactiveFormsModule,
-        RouterTestingModule.withRoutes([]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatDialogModule,
@@ -79,7 +72,11 @@ describe('CreateAdminPageComponent', () => {
         MatInputModule,
         CreateAdminPageComponent
       ],
-      providers: [provideMockStore({ initialState }), ConfirmationService]
+      providers: [
+        provideMockStore({ initialState }),
+        provideRouter([]),
+        ConfirmationService
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(CreateAdminPageComponent);
@@ -109,59 +106,65 @@ describe('CreateAdminPageComponent', () => {
     });
   });
 
-  describe('before checking', () => {
-    describe('when not previously run', () => {
-      beforeEach(() => {
-        store.setState({
-          ...initialState,
-          [INITIAL_USER_ACCOUNT_FEATURE_KEY]: {
-            ...initialUserAccountState,
-            busy: false,
-            checked: false,
-            hasExisting: true
-          }
-        });
+  describe('not having checked for existing accounts', () => {
+    beforeEach(() => {
+      // this first call is to ensure a state change occurs
+      store.setState({
+        ...initialState,
+        [INITIAL_USER_ACCOUNT_FEATURE_KEY]: {
+          ...initialUserAccountState,
+          busy: false,
+          checked: true
+        }
       });
-
-      it('redirects the user to the root page', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(loadInitialUserAccount());
-      });
-    });
-
-    describe('finding not existing accounts', () => {
-      beforeEach(() => {
-        store.setState({
-          ...initialState,
-          [INITIAL_USER_ACCOUNT_FEATURE_KEY]: {
-            ...initialUserAccountState,
-            busy: false,
-            checked: true,
-            hasExisting: false
-          }
-        });
-      });
-
-      it('redirects the user to the root page', () => {
-        expect(router.navigateByUrl).not.toHaveBeenCalled();
+      store.setState({
+        ...initialState,
+        [INITIAL_USER_ACCOUNT_FEATURE_KEY]: {
+          ...initialUserAccountState,
+          busy: false,
+          checked: false
+        }
       });
     });
 
-    describe('finding existing accounts', () => {
-      beforeEach(() => {
-        store.setState({
-          ...initialState,
-          [INITIAL_USER_ACCOUNT_FEATURE_KEY]: {
-            ...initialUserAccountState,
-            busy: false,
-            checked: true,
-            hasExisting: true
-          }
-        });
-      });
+    it('loads the initial user account state', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(loadInitialUserAccount());
+    });
+  });
 
-      it('redirects the user to the root page', () => {
-        expect(router.navigateByUrl).toHaveBeenCalledWith('/login');
+  describe('no existing accounts found', () => {
+    beforeEach(() => {
+      store.setState({
+        ...initialState,
+        [INITIAL_USER_ACCOUNT_FEATURE_KEY]: {
+          ...initialUserAccountState,
+          busy: false,
+          checked: true,
+          hasExisting: false
+        }
       });
+    });
+
+    it('redirects the user to the root page', () => {
+      expect(router.navigateByUrl).not.toHaveBeenCalledWith('/login');
+    });
+  });
+
+  describe('having existing accounts', () => {
+    beforeEach(() => {
+      store.setState({
+        ...initialState,
+        [INITIAL_USER_ACCOUNT_FEATURE_KEY]: {
+          ...initialUserAccountState,
+          busy: false,
+          checked: true,
+          hasExisting: true
+        }
+      });
+    });
+
+    it('redirects the user to the root page', () => {
+      expect(router.navigateByUrl).toHaveBeenCalledWith('/login');
     });
   });
 

@@ -16,14 +16,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { TitleService } from '@app/core/services/title.service';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { selectInitialUserAccountState } from '@app/user/selectors/initial-user-account.selectors';
+import {
+  selectCheckedForExistingAccount,
+  selectHasExistingAccounts
+} from '@app/user/selectors/initial-user-account.selectors';
 import {
   createAdminAccount,
   loadInitialUserAccount
@@ -32,8 +34,8 @@ import {
   AbstractControl,
   FormBuilder,
   FormGroup,
-  Validators,
-  ReactiveFormsModule
+  ReactiveFormsModule,
+  Validators
 } from '@angular/forms';
 import {
   MAX_PASSWORD_LENGTH,
@@ -42,10 +44,11 @@ import {
 import { passwordVerifyValidator } from '@app/user/user.functions';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import { MatCard, MatCardContent } from '@angular/material/card';
-import { MatFormField, MatError, MatLabel } from '@angular/material/form-field';
+import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
+import { tap } from 'rxjs';
 
 @Component({
   selector: 'cx-create-admin-page',
@@ -64,10 +67,7 @@ import { MatIcon } from '@angular/material/icon';
     TranslateModule
   ]
 })
-export class CreateAdminPageComponent implements OnInit, OnDestroy {
-  initialUserSubscription: Subscription;
-  changeLangSubscription: Subscription;
-
+export class CreateAdminPageComponent implements OnInit {
   createAdminForm: FormGroup;
 
   logger = inject(LoggerService);
@@ -79,7 +79,6 @@ export class CreateAdminPageComponent implements OnInit, OnDestroy {
   router = inject(Router);
 
   constructor() {
-    this.logger.trace('Creating admin form');
     this.createAdminForm = this.formBuilder.group(
       {
         email: ['', [Validators.required, Validators.email]],
@@ -95,32 +94,36 @@ export class CreateAdminPageComponent implements OnInit, OnDestroy {
       },
       { validators: passwordVerifyValidator }
     );
-
-    this.logger.trace('Subscribing to initial user state updates');
-    this.initialUserSubscription = this.store
-      .select(selectInitialUserAccountState)
-      .subscribe(state => {
-        if (!state.checked && !state.busy) {
-          this.logger.debug('Loading initial user accounts');
-          this.store.dispatch(loadInitialUserAccount());
-        } else if (!state.busy && state.checked && state.hasExisting) {
-          this.logger.trace('Has users: redirecting to root page');
-          this.router.navigateByUrl('/login');
-        }
-      });
-    this.logger.trace('Subscribing to language change updates');
-    this.changeLangSubscription = this.translateService.onLangChange.subscribe(
-      () => this.loadTranslations()
-    );
+    this.store
+      .select(selectCheckedForExistingAccount)
+      .pipe(
+        tap(checked => {
+          console.log('*** checked:', checked);
+          if (!checked) {
+            this.logger.debug('Loading initial user accounts');
+            this.store.dispatch(loadInitialUserAccount());
+          }
+        })
+      )
+      .subscribe();
+    this.store
+      .select(selectHasExistingAccounts)
+      .pipe(
+        tap(hasAccounts => {
+          if (hasAccounts) {
+            this.logger.trace('Has accounts: redirecting to root page');
+            this.router.navigateByUrl('/login');
+          }
+        })
+      )
+      .subscribe();
+    this.translateService.onLangChange
+      .pipe(tap(() => this.loadTranslations()))
+      .subscribe();
   }
 
   get controls(): { [p: string]: AbstractControl } {
     return this.createAdminForm.controls;
-  }
-
-  ngOnDestroy(): void {
-    this.logger.trace('Unsubscribing to initial user state updates');
-    this.initialUserSubscription.unsubscribe();
   }
 
   ngOnInit(): void {

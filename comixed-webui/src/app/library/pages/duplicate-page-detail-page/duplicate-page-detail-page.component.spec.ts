@@ -19,8 +19,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { DuplicatePageDetailPageComponent } from './duplicate-page-detail-page.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
-import { RouterTestingModule } from '@angular/router/testing';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, provideRouter, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import {
@@ -53,7 +52,6 @@ import { BLOCKED_HASH_1 } from '@app/comic-pages/comic-pages.fixtures';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { MatSortModule } from '@angular/material/sort';
 import { COMIC_DETAIL_1 } from '@app/comic-books/comic-books.fixtures';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
   BLOCKED_HASHES_FEATURE_KEY,
   initialState as initialBlockedHashesState
@@ -85,8 +83,6 @@ describe('DuplicatePageDetailPageComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
-        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatToolbarModule,
@@ -103,6 +99,7 @@ describe('DuplicatePageDetailPageComponent', () => {
       ],
       providers: [
         provideMockStore({ initialState }),
+        provideRouter([]),
         {
           provide: ActivatedRoute,
           useValue: {
@@ -200,7 +197,7 @@ describe('DuplicatePageDetailPageComponent', () => {
 
   describe('setting the blocked state for a page', () => {
     beforeEach(() => {
-      component.hash = DUPLICATE_PAGE.hash;
+      component.hash$.next(DUPLICATE_PAGE.hash);
       spyOn(confirmationService, 'confirm').and.callFake(
         (confirmation: Confirmation) => confirmation.confirm()
       );
@@ -247,7 +244,7 @@ describe('DuplicatePageDetailPageComponent', () => {
 
   describe('loading blocked hashes', () => {
     beforeEach(() => {
-      component.blockedHashes = [];
+      component.blockedHashes$.next([]);
       store.setState({
         ...initialState,
         [BLOCKED_HASHES_FEATURE_KEY]: {
@@ -258,7 +255,7 @@ describe('DuplicatePageDetailPageComponent', () => {
     });
 
     it('updates the blocked hashes', () => {
-      expect(component.blockedHashes).toEqual([BLOCKED_HASH.hash]);
+      expect(component.blockedHashes$.value).toEqual([BLOCKED_HASH.hash]);
     });
   });
 

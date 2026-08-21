@@ -22,19 +22,21 @@ import {
   SingleBookScrapingState
 } from '../reducers/single-book-scraping.reducer';
 
-/** Selects for the feature state. */
-export const selectSingleBookScrapingState =
+const selectSingleBookScrapingState =
   createFeatureSelector<SingleBookScrapingState>(
     SINGLE_BOOK_SCRAPING_FEATURE_KEY
   );
 
-/** Selects for the scraping volumes. */
+export const selectSingleBookScrapingBusy = createSelector(
+  selectSingleBookScrapingState,
+  state => state.busy || state.loadingRecords
+);
+
 export const selectScrapingVolumeMetadata = createSelector(
   selectSingleBookScrapingState,
   state => state.volumes
 );
 
-/** Selects for the scraping issue. */
 export const selectScrapingIssueMetadata = createSelector(
   selectSingleBookScrapingState,
   state => state.scrapingIssue
@@ -43,4 +45,14 @@ export const selectScrapingIssueMetadata = createSelector(
 export const selectChosenMetadataSource = createSelector(
   selectSingleBookScrapingState,
   state => state.metadataSource
+);
+
+export const selectChosenMetadataConfirmBeforeScraping = createSelector(
+  selectSingleBookScrapingState,
+  state => state.confirmBeforeScraping
+);
+
+export const selectChosenMetadataAutoSelectExactMatch = createSelector(
+  selectSingleBookScrapingState,
+  state => state.autoSelectExactMatch
 );

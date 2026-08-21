@@ -29,22 +29,26 @@ import {
   DISPLAYABLE_COMIC_1
 } from '@app/comic-books/comic-books.fixtures';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ComicDetailCardComponent } from '@app/comic-books/components/comic-detail-card/comic-detail-card.component';
 import { provideMockStore } from '@ngrx/store/testing';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
-import { RouterTestingModule } from '@angular/router/testing';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
+import { provideRouter } from '@angular/router';
 
 describe('ComicStoryComponent', () => {
   const COMIC_BOOK = DISPLAYABLE_COMIC_1;
   const TAGS = [
     COMIC_TAG_1,
+    COMIC_TAG_1,
+    COMIC_TAG_2,
     COMIC_TAG_2,
     COMIC_TAG_3,
+    COMIC_TAG_3,
     COMIC_TAG_4,
+    COMIC_TAG_4,
+    COMIC_TAG_5,
     COMIC_TAG_5
   ];
   const initialState = {};
@@ -55,8 +59,6 @@ describe('ComicStoryComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
-        RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatExpansionModule,
@@ -67,7 +69,7 @@ describe('ComicStoryComponent', () => {
         ComicStoryComponent,
         ComicDetailCardComponent
       ],
-      providers: [provideMockStore({ initialState })]
+      providers: [provideMockStore({ initialState }), provideRouter([])]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicStoryComponent);

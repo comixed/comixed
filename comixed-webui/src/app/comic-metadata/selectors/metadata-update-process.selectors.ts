@@ -16,13 +16,33 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createFeatureSelector } from '@ngrx/store';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
 import {
   METADATA_UPDATE_PROCESS_FEATURE_KEY,
   MetadataUpdateProcessState
 } from '../reducers/metadata-update-process.reducer';
 
-export const selectMetadataUpdateProcessState =
+const selectMetadataUpdateProcessState =
   createFeatureSelector<MetadataUpdateProcessState>(
     METADATA_UPDATE_PROCESS_FEATURE_KEY
   );
+
+export const selectMetadataUpdateProcessActive = createSelector(
+  selectMetadataUpdateProcessState,
+  state => state.active
+);
+
+export interface MetadataUpdateProgress {
+  completed: number;
+  total: number;
+}
+
+export const selectMetadataUpdateProgress = createSelector(
+  selectMetadataUpdateProcessState,
+  state => {
+    return {
+      completed: state.completedComics,
+      total: state.totalComics
+    } as MetadataUpdateProgress;
+  }
+);

@@ -20,10 +20,7 @@ import {
   METADATA_SOURCE_FEATURE_KEY,
   MetadataSourceState
 } from '../reducers/metadata-source.reducer';
-import {
-  selectMetadataSource,
-  selectMetadataSourceState
-} from './metadata-source.selectors';
+import { selectMetadataSource } from './metadata-source.selectors';
 import { METADATA_SOURCE_1 } from '@app/comic-metadata/comic-metadata.fixtures';
 
 describe('MetadataSource Selectors', () => {
@@ -36,15 +33,7 @@ describe('MetadataSource Selectors', () => {
     };
   });
 
-  it('should select the feature state', () => {
-    expect(
-      selectMetadataSourceState({
-        [METADATA_SOURCE_FEATURE_KEY]: state
-      })
-    ).toEqual(state);
-  });
-
-  it('should select the metadata source', () => {
+  it('selects the metadata source', () => {
     expect(
       selectMetadataSource({
         [METADATA_SOURCE_FEATURE_KEY]: state

@@ -39,14 +39,12 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialogModule } from '@angular/material/dialog';
 import {
   COMICVINE_API_KEY,
   LIBRARY_COMIC_RENAMING_RULE
 } from '@app/admin/admin.constants';
 import { LibraryConfigurationComponent } from '@app/admin/components/library-configuration/library-configuration.component';
-import { RouterTestingModule } from '@angular/router/testing';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatCardModule } from '@angular/material/card';
 import { ServerRuntimeComponent } from '@app/admin/components/server-runtime/server-runtime.component';
@@ -88,6 +86,7 @@ import {
   LIBRARY_PLUGIN_FEATURE_KEY
 } from '@app/library-plugins/reducers/library-plugin.reducer';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { provideRouter } from '@angular/router';
 
 describe('ConfigurationPageComponent', () => {
   const OPTIONS = [
@@ -120,8 +119,6 @@ describe('ConfigurationPageComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
-        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
         FormsModule,
         ReactiveFormsModule,
         LoggerModule.forRoot(),
@@ -152,7 +149,11 @@ describe('ConfigurationPageComponent', () => {
         MetadataSourceDetailComponent,
         LibraryPluginsConfigurationComponent
       ],
-      providers: [provideMockStore({ initialState }), TitleService]
+      providers: [
+        provideMockStore({ initialState }),
+        provideRouter([]),
+        TitleService
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ConfigurationPageComponent);

@@ -50,8 +50,7 @@ import {
   ConfirmationService
 } from '@tragically-slick/confirmation';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { RouterTestingModule } from '@angular/router/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { provideRouter } from '@angular/router';
 
 describe('ReadingListsPageComponent', () => {
   const READING_LISTS = [READING_LIST_1, READING_LIST_3, READING_LIST_5];
@@ -74,8 +73,6 @@ describe('ReadingListsPageComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
-        RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatToolbarModule,
@@ -89,6 +86,7 @@ describe('ReadingListsPageComponent', () => {
       ],
       providers: [
         provideMockStore({ initialState }),
+        provideRouter([]),
         ConfirmationService,
         TitleService
       ]
@@ -153,23 +151,23 @@ describe('ReadingListsPageComponent', () => {
   describe('toggling the upload input', () => {
     describe('showing the upload input', () => {
       beforeEach(() => {
-        component.showUploadRow = false;
+        component.showUploadRow$.next(false);
         component.onToggleUploadReadingLists();
       });
 
       it('shows the upload input', () => {
-        expect(component.showUploadRow).toBeTrue();
+        expect(component.showUploadRow$.value).toBeTrue();
       });
     });
 
     describe('hiding the upload input', () => {
       beforeEach(() => {
-        component.showUploadRow = true;
+        component.showUploadRow$.next(true);
         component.onToggleUploadReadingLists();
       });
 
       it('hides the upload input', () => {
-        expect(component.showUploadRow).toBeFalse();
+        expect(component.showUploadRow$.value).toBeFalse();
       });
     });
   });
@@ -181,12 +179,12 @@ describe('ReadingListsPageComponent', () => {
       spyOn(confirmationService, 'confirm').and.callFake(
         (confirmation: Confirmation) => confirmation.confirm()
       );
-      component.showUploadRow = true;
+      component.showUploadRow$.next(true);
       component.onFileSelected(FILE);
     });
 
     it('clears the show upload row flag', () => {
-      expect(component.showUploadRow).toBeFalse();
+      expect(component.showUploadRow$.value).toBeFalse();
     });
 
     it('confirms with the user', () => {
@@ -213,8 +211,8 @@ describe('ReadingListsPageComponent', () => {
 
   describe('selecting all reading lists', () => {
     beforeEach(() => {
-      component.allSelected = false;
-      component.hasSelections = false;
+      component.allSelected$.next(false);
+      component.hasSelections$.next(false);
       component.readingLists = READING_LISTS;
       component.onSelectAll(true);
     });
@@ -226,11 +224,11 @@ describe('ReadingListsPageComponent', () => {
     });
 
     it('set the all selected flag', () => {
-      expect(component.allSelected).toBeTrue();
+      expect(component.allSelected$.value).toBeTrue();
     });
 
     it('set the has selections flag', () => {
-      expect(component.hasSelections).toBeTrue();
+      expect(component.hasSelections$.value).toBeTrue();
     });
   });
 
@@ -238,8 +236,8 @@ describe('ReadingListsPageComponent', () => {
     let entry: SelectableListItem<ReadingList>;
 
     beforeEach(() => {
-      component.allSelected = false;
-      component.hasSelections = false;
+      component.allSelected$.next(false);
+      component.hasSelections$.next(false);
       component.readingLists = READING_LISTS;
       entry = component.dataSource.data[0];
       component.onSelectOne(entry, true);
@@ -250,7 +248,7 @@ describe('ReadingListsPageComponent', () => {
     });
 
     it('set the has selections flag', () => {
-      expect(component.hasSelections).toBeTrue();
+      expect(component.hasSelections$.value).toBeTrue();
     });
   });
 

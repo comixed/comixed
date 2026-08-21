@@ -19,7 +19,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ComicListFilterComponent } from './comic-list-filter.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
-import { RouterTestingModule } from '@angular/router/testing';
 import { MatCardModule } from '@angular/material/card';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSelectModule } from '@angular/material/select';
@@ -28,7 +27,6 @@ import { MatOptionModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import {
   QUERY_PARAM_ARCHIVE_TYPE,
@@ -38,6 +36,7 @@ import {
   QUERY_PARAM_FILTER_TEXT,
   QUERY_PARAM_PAGE_COUNT
 } from '@app/core';
+import { provideRouter } from '@angular/router';
 
 describe('ComicListFilterComponent', () => {
   let component: ComicListFilterComponent;
@@ -47,8 +46,6 @@ describe('ComicListFilterComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
-        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
         FormsModule,
         ReactiveFormsModule,
         LoggerModule.forRoot(),
@@ -61,7 +58,7 @@ describe('ComicListFilterComponent', () => {
         MatInputModule,
         ComicListFilterComponent
       ],
-      providers: [QueryParameterService]
+      providers: [provideRouter([]), QueryParameterService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicListFilterComponent);
@@ -87,23 +84,23 @@ describe('ComicListFilterComponent', () => {
 
   describe('setting the cover years', () => {
     beforeEach(() => {
-      component.displayableCoverYears = [];
+      component.displayableCoverYears$.next([]);
       component.coverYears = [1965, 1971];
     });
 
     it('populates the displayable cover years', () => {
-      expect(component.displayableCoverYears).not.toEqual([]);
+      expect(component.displayableCoverYears$.value).not.toEqual([]);
     });
   });
 
   describe('setting the cover months', () => {
     beforeEach(() => {
-      component.displayableCoverMonths = [];
+      component.displayableCoverMonths$.next([]);
       component.coverMonths = [1, 7];
     });
 
     it('populates the displayable cover months', () => {
-      expect(component.displayableCoverMonths).not.toEqual([]);
+      expect(component.displayableCoverMonths$.value).not.toEqual([]);
     });
   });
 

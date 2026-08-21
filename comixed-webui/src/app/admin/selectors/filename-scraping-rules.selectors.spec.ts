@@ -22,7 +22,7 @@ import {
 } from '../reducers/filename-scraping-rules.reducer';
 import {
   selectFilenameScrapingRules,
-  selectFilenameScrapingRulesState
+  selectFilenameScrapingRulesBusy
 } from './filename-scraping-rules.selectors';
 import {
   FILENAME_SCRAPING_RULE_1,
@@ -43,15 +43,15 @@ describe('FilenameScrapingRules Selectors', () => {
     state = { busy: Math.random() > 0.5, rules: RULES };
   });
 
-  it('should select the feature state', () => {
+  it('selects the filename scraping rules busy state', () => {
     expect(
-      selectFilenameScrapingRulesState({
+      selectFilenameScrapingRulesBusy({
         [FILENAME_SCRAPING_RULES_FEATURE_KEY]: state
       })
-    ).toEqual(state);
+    ).toEqual(state.busy);
   });
 
-  it('should select the filename scraping rules', () => {
+  it('selects the filename scraping rules', () => {
     expect(
       selectFilenameScrapingRules({
         [FILENAME_SCRAPING_RULES_FEATURE_KEY]: state

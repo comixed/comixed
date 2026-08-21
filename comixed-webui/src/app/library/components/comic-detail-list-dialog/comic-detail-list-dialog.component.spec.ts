@@ -25,7 +25,6 @@ import {
 } from '@angular/material/dialog';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
-import { RouterTestingModule } from '@angular/router/testing';
 import { provideMockStore } from '@ngrx/store/testing';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -34,7 +33,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatDividerModule } from '@angular/material/divider';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
   COMIC_DETAIL_1,
   COMIC_DETAIL_3,
@@ -56,12 +54,18 @@ import {
   initialState as initialLibraryPluginState,
   LIBRARY_PLUGIN_FEATURE_KEY
 } from '@app/library-plugins/reducers/library-plugin.reducer';
+import {
+  COMIC_BOOK_SELECTION_FEATURE_KEY,
+  initialState as initialComicBookSelectionState
+} from '@app/comic-books/reducers/comic-book-selection.reducer';
+import { provideRouter } from '@angular/router';
 
 describe('ComicDetailListDialogComponent', () => {
   const COMICS = [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5];
   const HASH = PAGE_1.hash;
   const initialState = {
-    [LIBRARY_PLUGIN_FEATURE_KEY]: initialLibraryPluginState
+    [LIBRARY_PLUGIN_FEATURE_KEY]: initialLibraryPluginState,
+    [COMIC_BOOK_SELECTION_FEATURE_KEY]: initialComicBookSelectionState
   };
 
   let component: ComicDetailListDialogComponent;
@@ -70,13 +74,6 @@ describe('ComicDetailListDialogComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
-        RouterTestingModule.withRoutes([
-          {
-            path: '**',
-            redirectTo: ''
-          }
-        ]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatDialogModule,
@@ -102,6 +99,7 @@ describe('ComicDetailListDialogComponent', () => {
       ],
       providers: [
         provideMockStore({ initialState }),
+        provideRouter([]),
         {
           provide: MatDialogRef,
           useValue: {}

@@ -29,13 +29,15 @@ export const LANGUAGE_PREFERENCE = 'preference.language';
 export const LOGGER_LEVEL_PREFERENCE = 'preference.logging.level';
 export const DARK_MODE_PREFERENCE = 'preference.dark-mode';
 
+// application URLS
+export const LIBRARY_ROOT_URL = '/library/all';
+
 // image
 export const LOADING_ICON_URL = '/assets/img/loading.png';
 export const SEARCHING_ICON_URL = '/assets/img/searching.png';
 export const WORKING_ICON_URL = '/assets/img/working.png';
 
 // external pages
-
 export const WIKI_PAGE_URL = 'https://github.com/comixed/comixed/wiki';
 export const WIKI_PAGE_TARGET = '_cx_wiki';
 export const ISSUE_PAGE_URL = 'https://github.com/comixed/comixed/issues';
@@ -43,7 +45,6 @@ export const ISSUE_PAGE_TARGET = '_cx_issues';
 export const LATEST_RELEASE_TARGET = '_cx_latest_release';
 
 // messaging constants
-
 export const APP_MESSAGING_TOPIC = '/topic/app-message.update';
 export const PROCESS_COMIC_BOOKS_TOPIC = '/topic/load-comic-books.status';
 export const BATCH_PROCESS_DETAIL_UPDATE_TOPIC = `/topic/batch-process-detail.update.\${jobId}`;

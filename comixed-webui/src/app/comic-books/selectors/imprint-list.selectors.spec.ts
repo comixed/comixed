@@ -20,12 +20,12 @@ import {
   IMPRINT_LIST_FEATURE_KEY,
   ImprintListState
 } from '../reducers/imprint-list.reducer';
-import { selectImprintListState } from './imprint-list.selectors';
 import {
   IMPRINT_1,
   IMPRINT_2,
   IMPRINT_3
 } from '@app/comic-books/comic-books.fixtures';
+import { selectImprints } from '@app/comic-books/selectors/imprint-list.selectors';
 
 describe('ImprintList Selectors', () => {
   const ENTRIES = [IMPRINT_1, IMPRINT_2, IMPRINT_3];
@@ -36,11 +36,9 @@ describe('ImprintList Selectors', () => {
     state = { loading: Math.random() > 0.5, entries: ENTRIES };
   });
 
-  it('should select the feature state', () => {
-    expect(
-      selectImprintListState({
-        [IMPRINT_LIST_FEATURE_KEY]: state
-      })
-    ).toEqual(state);
+  it('selects the imprint list', () => {
+    expect(selectImprints({ [IMPRINT_LIST_FEATURE_KEY]: state })).toEqual(
+      state.entries
+    );
   });
 });

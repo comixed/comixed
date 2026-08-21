@@ -22,8 +22,9 @@ import {
   MetadataSourceState
 } from '../reducers/metadata-source.reducer';
 
-export const selectMetadataSourceState =
-  createFeatureSelector<MetadataSourceState>(METADATA_SOURCE_FEATURE_KEY);
+const selectMetadataSourceState = createFeatureSelector<MetadataSourceState>(
+  METADATA_SOURCE_FEATURE_KEY
+);
 
 export const selectMetadataSource = createSelector(
   selectMetadataSourceState,

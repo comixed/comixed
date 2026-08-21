@@ -28,17 +28,13 @@ import {
   COMIC_BOOK_3,
   COMIC_BOOK_5
 } from '@app/comic-books/comic-books.fixtures';
-import { SHOW_COMIC_COVERS_PREFERENCE } from '@app/library/library.constants';
 import {
   initialState as initialUserState,
   USER_FEATURE_KEY
 } from '@app/user/reducers/user.reducer';
-import { USER_ADMIN } from '@app/user/user.fixtures';
-import { PAGE_SIZE_DEFAULT } from '@app/core';
 import { ComicListViewComponent } from '@app/comic-books/components/comic-list-view/comic-list-view.component';
 import { MetadataProcessToolbarComponent } from '@app/comic-metadata/components/metadata-process-toolbar/metadata-process-toolbar.component';
 import { MatDialogModule } from '@angular/material/dialog';
-import { RouterTestingModule } from '@angular/router/testing';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -46,7 +42,6 @@ import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ComicCoverUrlPipe } from '@app/comic-books/pipes/comic-cover-url.pipe';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
@@ -55,7 +50,6 @@ import {
   COMIC_BOOK_SELECTION_FEATURE_KEY,
   initialState as initialComicBookSelectionState
 } from '@app/comic-books/reducers/comic-book-selection.reducer';
-import { PREFERENCE_PAGE_SIZE } from '@app/comic-files/comic-file.constants';
 import {
   COMIC_LIST_FEATURE_KEY,
   initialState as initialComicListState
@@ -64,6 +58,11 @@ import {
   initialState as initialLibraryPluginInState,
   LIBRARY_PLUGIN_FEATURE_KEY
 } from '@app/library-plugins/reducers/library-plugin.reducer';
+import {
+  initialState as initialMetadataUpdateProcessState,
+  METADATA_UPDATE_PROCESS_FEATURE_KEY
+} from '@app/comic-metadata/reducers/metadata-update-process.reducer';
+import { provideRouter } from '@angular/router';
 
 describe('MetadataProcessPageComponent', () => {
   const COMIC_BOOKS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
@@ -72,7 +71,8 @@ describe('MetadataProcessPageComponent', () => {
     [COMIC_LIST_FEATURE_KEY]: initialComicListState,
     [USER_FEATURE_KEY]: initialUserState,
     [COMIC_BOOK_SELECTION_FEATURE_KEY]: initialComicBookSelectionState,
-    [LIBRARY_PLUGIN_FEATURE_KEY]: initialLibraryPluginInState
+    [LIBRARY_PLUGIN_FEATURE_KEY]: initialLibraryPluginInState,
+    [METADATA_UPDATE_PROCESS_FEATURE_KEY]: initialMetadataUpdateProcessState
   };
 
   let component: MetadataProcessPageComponent;
@@ -84,8 +84,6 @@ describe('MetadataProcessPageComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
-        RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatDialogModule,
@@ -105,7 +103,11 @@ describe('MetadataProcessPageComponent', () => {
         ComicCoverUrlPipe,
         ComicTitlePipe
       ],
-      providers: [provideMockStore({ initialState }), TitleService]
+      providers: [
+        provideMockStore({ initialState }),
+        provideRouter([]),
+        TitleService
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(MetadataProcessPageComponent);
@@ -133,7 +135,7 @@ describe('MetadataProcessPageComponent', () => {
     });
 
     it('updates the list of selected ids', () => {
-      expect(component.selectedIds).toEqual(IDS);
+      expect(component.selectedIds$.value).toEqual(IDS);
     });
   });
 
@@ -144,37 +146,6 @@ describe('MetadataProcessPageComponent', () => {
 
     it('updates the page title', () => {
       expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
-    });
-  });
-
-  describe('loading user preferences', () => {
-    const PAGE_SIZE = 50;
-    const SHOW_COVERS = Math.random() > 0.5;
-
-    beforeEach(() => {
-      component.pageSize = PAGE_SIZE_DEFAULT;
-      component.showCovers = !SHOW_COVERS;
-      store.setState({
-        ...initialState,
-        [USER_FEATURE_KEY]: {
-          ...initialUserState,
-          user: {
-            ...USER_ADMIN,
-            preferences: [
-              { name: PREFERENCE_PAGE_SIZE, value: `${PAGE_SIZE}` },
-              { name: SHOW_COMIC_COVERS_PREFERENCE, value: `${SHOW_COVERS}` }
-            ]
-          }
-        }
-      });
-    });
-
-    it('sets the page size', () => {
-      expect(component.pageSize).toEqual(PAGE_SIZE);
-    });
-
-    it('sets the show covers flag', () => {
-      expect(component.showCovers).toEqual(SHOW_COVERS);
     });
   });
 });

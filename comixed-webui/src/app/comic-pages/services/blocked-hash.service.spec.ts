@@ -88,14 +88,6 @@ describe('BlockedHashService', () => {
   let service: BlockedHashService;
   let httpMock: HttpTestingController;
   let webSocketService: jasmine.SpyObj<WebSocketService>;
-  const updateSubscription = jasmine.createSpyObj(['unsubscribe']);
-  updateSubscription.unsubscribe = jasmine.createSpy(
-    'Subscription.unsubscribe(updates)'
-  );
-  const removeSubscription = jasmine.createSpyObj(['unsubscribe']);
-  removeSubscription.unsubscribe = jasmine.createSpy(
-    'Subscription.unsubscribe(removals)'
-  );
   let store: MockStore<any>;
 
   beforeEach(() => {
@@ -133,8 +125,6 @@ describe('BlockedHashService', () => {
 
   describe('when messaging starts', () => {
     beforeEach(() => {
-      service.updateSubscription = null;
-      service.removalSubscription = null;
       webSocketService.subscribe
         .withArgs(BLOCKED_HASH_LIST_UPDATE_TOPIC, jasmine.anything())
         .and.callFake((topic, callback) => {
@@ -177,33 +167,6 @@ describe('BlockedHashService', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         blockedHashRemoved({ entry: REMOVED })
       );
-    });
-  });
-
-  describe('when messaging stops', () => {
-    beforeEach(() => {
-      service.updateSubscription = updateSubscription;
-      service.removalSubscription = removeSubscription;
-      store.setState({
-        ...initialState,
-        [MESSAGING_FEATURE_KEY]: { ...initialMessagingState, started: false }
-      });
-    });
-
-    it('unsubscribes from the blocked list update queue', () => {
-      expect(updateSubscription.unsubscribe).toHaveBeenCalled();
-    });
-
-    it('clears the blocked page list update subscription', () => {
-      expect(service.updateSubscription).toBeNull();
-    });
-
-    it('unsubscribes from the blocked list removal queue', () => {
-      expect(removeSubscription.unsubscribe).toHaveBeenCalled();
-    });
-
-    it('clears the blocked page list removal subscription', () => {
-      expect(service.removalSubscription).toBeNull();
     });
   });
 

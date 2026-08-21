@@ -51,8 +51,7 @@ import { LoginResponse } from '@app/user/models/net/login-response';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { TokenService } from '@app/core/services/token.service';
 import { AlertService } from '@app/core/services/alert.service';
-import { RouterTestingModule } from '@angular/router/testing';
-import { Router } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 import { setReadComicBooks } from '@app/user/actions/read-comic-books.actions';
 
 describe('UserEffects', () => {
@@ -77,7 +76,6 @@ describe('UserEffects', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatSnackBarModule
@@ -85,6 +83,7 @@ describe('UserEffects', () => {
       providers: [
         UserEffects,
         provideMockActions(() => actions$),
+        provideRouter([]),
         {
           provide: UserService,
           useValue: {

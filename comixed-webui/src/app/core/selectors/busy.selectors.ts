@@ -16,8 +16,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createFeatureSelector } from '@ngrx/store';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { BUSY_FEATURE_KEY, BusyState } from '../reducers/busy.reducer';
 
 export const selectBusyState =
   createFeatureSelector<BusyState>(BUSY_FEATURE_KEY);
+
+export const selectShowAsBusy = createSelector(selectBusyState, state => {
+  return {
+    enabled: state.enabled,
+    icon: state.icon
+  };
+});

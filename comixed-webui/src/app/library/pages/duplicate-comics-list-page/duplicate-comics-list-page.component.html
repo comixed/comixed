@@ -1,11 +1,14 @@
 <h2>
-  {{ "duplicate-comic-list.page-title" | translate: { total: totalEntries } }}
+  {{
+    "duplicate-comic-list.page-title"
+      | translate: { total: totalEntries$ | async }
+  }}
 </h2>
 
 <mat-paginator
   showFirstLastButtons="true"
   class="cx-height-100"
-  [length]="totalEntries"
+  [length]="totalEntries$ | async"
   [pageIndex]="queryParameterService.pageIndex$ | async"
   [pageSize]="queryParameterService.pageSize$ | async"
   [pageSizeOptions]="queryParameterService.pageSizeOptions"

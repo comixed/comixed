@@ -21,8 +21,8 @@ import {
   PluginLanguageState
 } from '../reducers/plugin-language.reducer';
 import {
-  selectPluginLanguageList,
-  selectPluginLanguageState
+  selectPluginLanguageBusy,
+  selectPluginLanguageList
 } from './plugin-language.selectors';
 import { PLUGIN_LANGUAGE_LIST } from '@app/library-plugins/library-plugins.fixtures';
 
@@ -33,15 +33,15 @@ describe('PluginLanguage Selectors', () => {
     state = { busy: Math.random() > 0.5, languages: PLUGIN_LANGUAGE_LIST };
   });
 
-  it('should select the feature state', () => {
+  it('selects the busy state', () => {
     expect(
-      selectPluginLanguageState({
+      selectPluginLanguageBusy({
         [PLUGIN_LANGUAGE_FEATURE_KEY]: state
       })
-    ).toEqual(state);
+    ).toEqual(state.busy);
   });
 
-  it('should select the list of languages', () => {
+  it('selects the list of languages', () => {
     expect(
       selectPluginLanguageList({
         [PLUGIN_LANGUAGE_FEATURE_KEY]: state

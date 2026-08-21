@@ -20,8 +20,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { BlockedHashListPageComponent } from './blocked-hash-list-page.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { RouterTestingModule } from '@angular/router/testing';
-import { Router } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 import { BlockedHash } from '@app/comic-pages/models/blocked-hash';
 import {
   BLOCKED_HASH_1,
@@ -50,7 +49,6 @@ import {
   ConfirmationService
 } from '@tragically-slick/confirmation';
 import { MatSortModule } from '@angular/material/sort';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDividerModule } from '@angular/material/divider';
 import {
   initialState as initialUserState,
@@ -81,8 +79,6 @@ describe('BlockedHashListPageComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
-        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatToolbarModule,
@@ -99,6 +95,7 @@ describe('BlockedHashListPageComponent', () => {
       ],
       providers: [
         provideMockStore({ initialState }),
+        provideRouter([]),
         ConfirmationService,
         TitleService
       ]
@@ -179,7 +176,7 @@ describe('BlockedHashListPageComponent', () => {
         }
       });
       entry = component.dataSource.data[0];
-      component.hasSelections = false;
+      component.hasSelections$.next(false);
       component.onSelectOne(entry, true);
     });
 
@@ -188,7 +185,7 @@ describe('BlockedHashListPageComponent', () => {
     });
 
     it('sets the has selections flag', () => {
-      expect(component.hasSelections).toBeTrue();
+      expect(component.hasSelections$.value).toBeTrue();
     });
   });
 
@@ -205,11 +202,11 @@ describe('BlockedHashListPageComponent', () => {
     });
 
     it('sets the all selected flag', () => {
-      expect(component.allSelected).toBeTrue();
+      expect(component.allSelected$.value).toBeTrue();
     });
 
     it('sets the some selection flag', () => {
-      expect(component.hasSelections).toBeTrue();
+      expect(component.hasSelections$.value).toBeTrue();
     });
 
     describe('unselecting one item', () => {
@@ -218,11 +215,11 @@ describe('BlockedHashListPageComponent', () => {
       });
 
       it('clears the all selected flag', () => {
-        expect(component.allSelected).toBeFalse();
+        expect(component.allSelected$.value).toBeFalse();
       });
 
       it('sets the some selection flag', () => {
-        expect(component.hasSelections).toBeTrue();
+        expect(component.hasSelections$.value).toBeTrue();
       });
     });
 
@@ -232,11 +229,11 @@ describe('BlockedHashListPageComponent', () => {
       });
 
       it('clears the all selected flag', () => {
-        expect(component.allSelected).toBeFalse();
+        expect(component.allSelected$.value).toBeFalse();
       });
 
       it('clears the some selection flag', () => {
-        expect(component.hasSelections).toBeFalse();
+        expect(component.hasSelections$.value).toBeFalse();
       });
     });
   });

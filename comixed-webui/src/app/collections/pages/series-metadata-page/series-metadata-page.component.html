@@ -4,9 +4,13 @@
     mat-fab
     [matTooltip]="
       'collections.series-detail.tooltip.show-publisher'
-        | translate: { publisher: publisher }
+        | translate: { publisher: publisher$ | async }
     "
-    [routerLink]="['/library/collections/publishers', publisher, 'series']"
+    [routerLink]="[
+      '/library/collections/publishers',
+      publisher$ | async,
+      'series'
+    ]"
   >
     <mat-icon>book_online</mat-icon>
   </button>
@@ -18,11 +22,11 @@
     "
     [routerLink]="[
       '/metadata/scraping/publishers',
-      publisher,
+      publisher$ | async,
       'series',
-      name,
+      name$ | async,
       'volumes',
-      volume,
+      volume$ | async,
       'issues'
     ]"
   >
@@ -33,7 +37,12 @@
 <h2>
   {{
     "collections.series-detail.page-title"
-      | translate: { publisher: publisher, name: name, volume: volume }
+      | translate
+        : {
+            publisher: publisher$ | async,
+            name: name$ | async,
+            volume: volume$ | async
+          }
   }}
 </h2>
 
@@ -43,9 +52,9 @@
       "collections.series-detail.page-title-percentage"
         | translate
           : {
-              percentage: percentageComplete | number: "1.0-2",
-              inLibrary: inLibrary,
-              totalIssues: totalIssues
+              percentage: percentageComplete$ | async | number: "1.0-2",
+              inLibrary: inLibrary$ | async,
+              totalIssues: totalIssues$ | async
             }
     }}
   </h3>

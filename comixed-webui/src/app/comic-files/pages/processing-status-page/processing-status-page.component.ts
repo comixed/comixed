@@ -20,37 +20,36 @@ import {
   AfterViewInit,
   Component,
   inject,
-  OnDestroy,
   OnInit,
   ViewChild
 } from '@angular/core';
-import { Subscription } from 'rxjs';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
-import { selectProcessingComicBooksState } from '@app/selectors/import-comic-books.selectors';
+import { selectProcessingComicBooksBatches } from '@app/selectors/import-comic-books.selectors';
 import { ProcessingComicStatus } from '@app/reducers/import-comic-books.reducer';
 import {
-  MatTableDataSource,
-  MatTable,
-  MatColumnDef,
-  MatHeaderCellDef,
-  MatHeaderCell,
-  MatCellDef,
   MatCell,
-  MatHeaderRowDef,
+  MatCellDef,
+  MatColumnDef,
+  MatHeaderCell,
+  MatHeaderCellDef,
   MatHeaderRow,
-  MatRowDef,
+  MatHeaderRowDef,
+  MatNoDataRow,
   MatRow,
-  MatNoDataRow
+  MatRowDef,
+  MatTable,
+  MatTableDataSource
 } from '@angular/material/table';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/core/services/title.service';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { AsyncPipe } from '@angular/common';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'cx-processing-status-page',
@@ -77,18 +76,12 @@ import { AsyncPipe } from '@angular/common';
     TranslateModule
   ]
 })
-export class ProcessingStatusPageComponent
-  implements AfterViewInit, OnInit, OnDestroy
-{
+export class ProcessingStatusPageComponent implements AfterViewInit, OnInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   dataSource = new MatTableDataSource<ProcessingComicStatus>([]);
-
   readonly displayedColumns = ['step-name', 'processed', 'total', 'progress'];
-
-  comicImportStateSubscription: Subscription;
-  landChangeSubscription: Subscription;
 
   logger = inject(LoggerService);
   store = inject(Store);
@@ -97,22 +90,17 @@ export class ProcessingStatusPageComponent
   queryParameterService = inject(QueryParameterService);
 
   constructor() {
-    this.landChangeSubscription = this.translateService.onLangChange.subscribe(
-      () => this.loadTranslations()
-    );
-    this.logger.debug('Subscribing to comic import state updates');
-    this.comicImportStateSubscription = this.store
-      .select(selectProcessingComicBooksState)
-      .subscribe(state => (this.dataSource.data = state.batches));
+    this.translateService.onLangChange
+      .pipe(tap(() => this.loadTranslations()))
+      .subscribe();
+    this.store
+      .select(selectProcessingComicBooksBatches)
+      .pipe(tap(batches => (this.dataSource.data = batches)))
+      .subscribe();
   }
 
   ngOnInit(): void {
     this.loadTranslations();
-  }
-
-  ngOnDestroy(): void {
-    this.logger.debug('Unsubscribing from comic import state updates');
-    this.comicImportStateSubscription.unsubscribe();
   }
 
   ngAfterViewInit(): void {

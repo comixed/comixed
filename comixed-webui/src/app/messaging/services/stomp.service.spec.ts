@@ -17,7 +17,7 @@
  */
 
 import { TestBed } from '@angular/core/testing';
-import { StompService } from './stomp.service';
+import { StompService, stompServiceFactory } from './stomp.service';
 
 describe('StompService', () => {
   let service: StompService;
@@ -29,5 +29,9 @@ describe('StompService', () => {
 
   it('should be created', () => {
     expect(service).toBeTruthy();
+  });
+
+  it('creates an instance on demand', () => {
+    expect(stompServiceFactory()).not.toBeNull();
   });
 });

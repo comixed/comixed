@@ -216,9 +216,10 @@ export class QueryParameterService {
 
   onFilterTextChanged(text: string): void {
     this.logger.debug('Setting filter text:', text);
-    this.updateQueryParam([
-      { name: QUERY_PARAM_FILTER_TEXT, value: text?.length > 0 ? text : null }
-    ]);
+    if (text?.length === 0) {
+      text = null;
+    }
+    this.updateQueryParam([{ name: QUERY_PARAM_FILTER_TEXT, value: text }]);
   }
 
   onComicTypeChanged(comicType: ComicType): void {

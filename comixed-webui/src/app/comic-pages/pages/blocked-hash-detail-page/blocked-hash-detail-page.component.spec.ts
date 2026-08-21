@@ -24,7 +24,6 @@ import {
   USER_FEATURE_KEY
 } from '@app/user/reducers/user.reducer';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -34,11 +33,10 @@ import {
   BLOCKED_HASH_4,
   BLOCKED_HASH_5
 } from '@app/comic-pages/comic-pages.fixtures';
-import { Router } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
   Confirmation,
   ConfirmationService
@@ -71,8 +69,6 @@ describe('BlockedHashDetailPageComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
-        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
         FormsModule,
         ReactiveFormsModule,
         LoggerModule.forRoot(),
@@ -85,7 +81,11 @@ describe('BlockedHashDetailPageComponent', () => {
         BlockedHashDetailPageComponent,
         BlockedHashThumbnailUrlPipe
       ],
-      providers: [provideMockStore({ initialState }), ConfirmationService]
+      providers: [
+        provideMockStore({ initialState }),
+        provideRouter([]),
+        ConfirmationService
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(BlockedHashDetailPageComponent);

@@ -30,9 +30,8 @@ import {
 } from '@app/comic-books/comic-books.fixtures';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { RouterTestingModule } from '@angular/router/testing';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
+import { provideRouter } from '@angular/router';
 
 describe('ComicBookListComponent', () => {
   const COMIC_BOOKS = [
@@ -50,15 +49,14 @@ describe('ComicBookListComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
-        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatTableModule,
         MatTooltipModule,
         ComicBookListComponent,
         ComicTitlePipe
-      ]
+      ],
+      providers: [provideRouter([])]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicBookListComponent);

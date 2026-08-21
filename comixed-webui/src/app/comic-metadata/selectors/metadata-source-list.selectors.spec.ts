@@ -22,7 +22,7 @@ import {
 } from '../reducers/metadata-source-list.reducer';
 import {
   selectMetadataSourceList,
-  selectMetadataSourceListState
+  selectMetadataSourceListBusy
 } from './metadata-source-list.selectors';
 import { METADATA_SOURCE_1 } from '@app/comic-metadata/comic-metadata.fixtures';
 
@@ -36,15 +36,15 @@ describe('MetadataSourceList Selectors', () => {
     };
   });
 
-  it('should select the feature state', () => {
+  it('selects the metadata source list', () => {
     expect(
-      selectMetadataSourceListState({
+      selectMetadataSourceListBusy({
         [METADATA_SOURCE_LIST_FEATURE_KEY]: state
       })
-    ).toEqual(state);
+    ).toEqual(state.busy);
   });
 
-  it('should select the metadata source list', () => {
+  it('selects the metadata source list', () => {
     expect(
       selectMetadataSourceList({
         [METADATA_SOURCE_LIST_FEATURE_KEY]: state

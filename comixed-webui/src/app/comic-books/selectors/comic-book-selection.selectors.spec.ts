@@ -21,8 +21,9 @@ import {
   ComicBookSelectionState
 } from '../reducers/comic-book-selection.reducer';
 import {
-  selectComicBookSelectionIds,
-  selectComicBookSelectionState
+  selectComicBookSelectionBusy,
+  selectComicBookSelectionCount,
+  selectComicBookSelectionIds
 } from './comic-book-selection.selectors';
 import {
   COMIC_BOOK_1,
@@ -48,19 +49,27 @@ describe('ComicBookSelection Selectors', () => {
     state = { busy: Math.random() > 0.5, ids: IDS };
   });
 
-  it('should select the feature state', () => {
+  it('selects the busy state', () => {
     expect(
-      selectComicBookSelectionState({
+      selectComicBookSelectionBusy({
         [COMIC_BOOK_SELECTION_FEATURE_KEY]: state
       })
-    ).toEqual(state);
+    ).toEqual(state.busy);
   });
 
-  it('should select the list of ids', () => {
+  it('selects the list of ids', () => {
     expect(
       selectComicBookSelectionIds({
         [COMIC_BOOK_SELECTION_FEATURE_KEY]: state
       })
     ).toEqual(state.ids);
+  });
+
+  it('selects the number of ids', () => {
+    expect(
+      selectComicBookSelectionCount({
+        [COMIC_BOOK_SELECTION_FEATURE_KEY]: state
+      })
+    ).toEqual(state.ids.length);
   });
 });

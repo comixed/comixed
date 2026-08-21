@@ -32,14 +32,13 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { TitleService } from '@app/core/services/title.service';
-import { Router } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
+import { provideRouter, Router } from '@angular/router';
 import {
   INITIAL_USER_ACCOUNT_FEATURE_KEY,
   initialState as initialUserAccountState
 } from '@app/user/reducers/initial-user-account.reducer';
+import { loadInitialUserAccount } from '@app/user/actions/initial-user-account.actions';
 
 describe('LoginPageComponent', () => {
   const USER = USER_READER;
@@ -60,8 +59,6 @@ describe('LoginPageComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
-        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
         FormsModule,
         ReactiveFormsModule,
         TranslateModule.forRoot(),
@@ -72,7 +69,7 @@ describe('LoginPageComponent', () => {
         MatIconModule,
         LoginPageComponent
       ],
-      providers: [provideMockStore({ initialState })]
+      providers: [provideMockStore({ initialState }), provideRouter([])]
     }).compileComponents();
 
     fixture = TestBed.createComponent(LoginPageComponent);
@@ -100,7 +97,24 @@ describe('LoginPageComponent', () => {
     });
 
     it('sets the busy flag', () => {
-      expect(component.busy).toBeTrue();
+      expect(component.busy$.value).toBeTrue();
+    });
+  });
+
+  describe('checking for an existing account', () => {
+    beforeEach(() => {
+      store.setState({
+        ...initialState,
+        [INITIAL_USER_ACCOUNT_FEATURE_KEY]: {
+          ...initialUserAccountState,
+          busy: false,
+          checked: false
+        }
+      });
+    });
+
+    it('loads the initial account', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(loadInitialUserAccount());
     });
   });
 
@@ -114,24 +128,17 @@ describe('LoginPageComponent', () => {
     });
   });
 
-  describe('when authenticating', () => {
-    beforeEach(() => {
-      store.setState({
-        ...initialState,
-        [USER_FEATURE_KEY]: { authenticating: true }
-      });
-    });
-
-    it('sets the busy flag', () => {
-      expect(component.busy).toBeTrue();
-    });
-  });
-
   describe('when authenticated', () => {
     beforeEach(() => {
       store.setState({
         ...initialState,
-        [USER_FEATURE_KEY]: { ...initialUserState, authenticated: true }
+        [USER_FEATURE_KEY]: {
+          ...initialUserState,
+          initializing: false,
+          loading: false,
+          authenticating: false,
+          authenticated: true
+        }
       });
     });
 

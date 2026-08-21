@@ -36,7 +36,6 @@ import { SKIP_CACHE_PREFERENCE } from '@app/library/library.constants';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { saveUserPreference } from '@app/user/actions/user.actions';
 
 describe('MetadataProcessToolbarComponent', () => {
@@ -54,7 +53,6 @@ describe('MetadataProcessToolbarComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatDialogModule,
@@ -81,7 +79,7 @@ describe('MetadataProcessToolbarComponent', () => {
   describe('setting the skip cache flag', () => {
     describe('if defined', () => {
       beforeEach(() => {
-        component.skipCache = !SKIP_CACHE;
+        component.skipCache$.next(!SKIP_CACHE);
         store.setState({
           ...initialState,
           [USER_FEATURE_KEY]: {
@@ -100,13 +98,13 @@ describe('MetadataProcessToolbarComponent', () => {
       });
 
       it('sets the flag from user preferences', () => {
-        expect(component.skipCache).toEqual(SKIP_CACHE);
+        expect(component.skipCache$.value).toEqual(SKIP_CACHE);
       });
     });
 
     describe('if not defined', () => {
       beforeEach(() => {
-        component.skipCache = SKIP_CACHE;
+        component.skipCache$.next(SKIP_CACHE);
         store.setState({
           ...initialState,
           [USER_FEATURE_KEY]: {
@@ -120,7 +118,7 @@ describe('MetadataProcessToolbarComponent', () => {
       });
 
       it('turns the flag off', () => {
-        expect(component.skipCache).toEqual(false);
+        expect(component.skipCache$.value).toEqual(false);
       });
     });
   });
@@ -130,7 +128,7 @@ describe('MetadataProcessToolbarComponent', () => {
       spyOn(confirmationService, 'confirm').and.callFake(
         (confirmation: Confirmation) => confirmation.confirm()
       );
-      component.skipCache = SKIP_CACHE;
+      component.skipCache$.next(SKIP_CACHE);
       component.onStartBatchProcess();
     });
 
@@ -147,7 +145,7 @@ describe('MetadataProcessToolbarComponent', () => {
 
   describe('toggling the skip cache preference', () => {
     beforeEach(() => {
-      component.skipCache = SKIP_CACHE;
+      component.skipCache$.next(SKIP_CACHE);
       component.onToggleSkipCache();
     });
 

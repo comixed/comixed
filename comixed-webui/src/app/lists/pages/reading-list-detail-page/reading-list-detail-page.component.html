@@ -12,7 +12,7 @@
     id="remove-selected-entries"
     mat-fab
     color="warn"
-    [disabled]="!selectedIds.length"
+    [disabled]="!selectedIds$.value.length"
     [matTooltip]="'reading-list.tooltip.remove-comics' | translate"
     (click)="onRemoveEntries()"
   >
@@ -85,10 +85,10 @@
 </div>
 
 <cx-comic-list-view
-  [comics]="comics"
+  [comics]="comics$ | async"
   [totalComics]="readingList?.entryIds?.length"
-  [selectedIds]="selectedIds"
-  [comicBooksRead]="comicBooksRead"
+  [selectedIds]="selectedIds$ | async"
+  [comicBooksRead]="comicBooksRead$ | async"
   [showAction]="false"
   [showArchiveType]="false"
   [showComicState]="false"

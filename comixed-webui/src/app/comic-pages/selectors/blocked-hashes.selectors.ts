@@ -22,8 +22,14 @@ import {
   BlockedHashesState
 } from '../reducers/blocked-hashes.reducer';
 
-export const selectBlockedHashesState =
-  createFeatureSelector<BlockedHashesState>(BLOCKED_HASHES_FEATURE_KEY);
+const selectBlockedHashesState = createFeatureSelector<BlockedHashesState>(
+  BLOCKED_HASHES_FEATURE_KEY
+);
+
+export const selectBlockedHashesBusy = createSelector(
+  selectBlockedHashesState,
+  state => state.busy
+);
 
 export const selectBlockedHashesList = createSelector(
   selectBlockedHashesState,
@@ -33,4 +39,9 @@ export const selectBlockedHashesList = createSelector(
 export const selectBlockedHashDetail = createSelector(
   selectBlockedHashesState,
   state => state.entry
+);
+
+export const selectBlockedHashNotFound = createSelector(
+  selectBlockedHashesState,
+  state => !state.busy && state.notFound
 );

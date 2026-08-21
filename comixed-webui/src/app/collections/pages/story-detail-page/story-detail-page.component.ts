@@ -16,14 +16,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
-import { Subscription } from 'rxjs';
 import { ReadingList } from '@app/lists/models/reading-list';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { ActivatedRoute } from '@angular/router';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/core/services/title.service';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import {
@@ -31,7 +30,7 @@ import {
   selectComicCoverYears,
   selectComicFilteredCount,
   selectComicList,
-  selectComicListState
+  selectComicListBusy
 } from '@app/comic-books/selectors/comic-list.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { selectUser } from '@app/user/selectors/user.selectors';
@@ -49,6 +48,10 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
 import { ComicListViewComponent } from '../../../comic-books/components/comic-list-view/comic-list-view.component';
 import { StoryScrapingComponent } from '../../components/story-scraping/story-scraping.component';
+import { tap } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
+import { AsyncPipe } from '@angular/common';
+import { selectReadComicBooksList } from '@app/user/selectors/read-comic-books.selectors';
 
 @Component({
   selector: 'cx-story-detail',
@@ -60,33 +63,22 @@ import { StoryScrapingComponent } from '../../components/story-scraping/story-sc
     MatIcon,
     ComicListViewComponent,
     StoryScrapingComponent,
-    TranslateModule
+    TranslateModule,
+    AsyncPipe
   ]
 })
-export class StoryDetailPageComponent implements OnInit, OnDestroy {
-  comics: DisplayableComic[] = [];
-  totalComics = 0;
-  coverYears: number[] = [];
-  coverMonths: number[] = [];
-
-  paramsSubscription: Subscription;
-  queryParamsSubscription: Subscription;
-  comicDetailListStateSubscription: Subscription;
-  comicDetailListSubscription: Subscription;
-  totalComicsSubscription: Subscription;
-  coverYearSubscription: Subscription;
-  coverMonthsSubscription: Subscription;
-  storyName: string;
-  selectedSubscription: Subscription;
-  selectedIds: number[] = [];
-  lastReadDates: number[] = [];
-  readingListsSubscription: Subscription;
-  readingLists: ReadingList[] = [];
-  userSubscription: Subscription;
-  isAdmin = false;
-  showStoryScraping = false;
-  langChangeSubscription: Subscription;
-  showCovers = false;
+export class StoryDetailPageComponent implements OnInit {
+  comics$ = new BehaviorSubject<DisplayableComic[]>([]);
+  totalComics$ = new BehaviorSubject(0);
+  coverYears$ = new BehaviorSubject<number[]>([]);
+  coverMonths$ = new BehaviorSubject<number[]>([]);
+  storyName$ = new BehaviorSubject('');
+  selectedIds$ = new BehaviorSubject<number[]>([]);
+  readComicBookList$ = new BehaviorSubject<number[]>([]);
+  readingLists$ = new BehaviorSubject<ReadingList[]>([]);
+  isAdmin$ = new BehaviorSubject(false);
+  showStoryScraping$ = new BehaviorSubject(false);
+  showCovers$ = new BehaviorSubject(false);
 
   logger = inject(LoggerService);
   store = inject(Store);
@@ -96,80 +88,90 @@ export class StoryDetailPageComponent implements OnInit, OnDestroy {
   queryParameterService = inject(QueryParameterService);
 
   constructor() {
-    this.queryParamsSubscription = this.activatedRoute.queryParams.subscribe(
-      params => {
-        this.doLoadComicDetails();
-        this.showStoryScraping = params[SCRAPE_STORY_PARAMETER];
-      }
-    );
-    this.paramsSubscription = this.activatedRoute.params.subscribe(params => {
-      this.storyName = params.storyName;
-      this.loadTranslations();
-      this.doLoadComicDetails();
-      this.comicDetailListStateSubscription = this.store
-        .select(selectComicListState)
-        .subscribe(state =>
-          this.store.dispatch(setBusyState({ enabled: state.busy }))
-        );
-      this.comicDetailListSubscription = this.store
-        .select(selectComicList)
-        .subscribe(entries => (this.comics = entries));
-      this.totalComicsSubscription = this.store
-        .select(selectComicFilteredCount)
-        .subscribe(totalComics => (this.totalComics = totalComics));
-      this.coverYearSubscription = this.store
-        .select(selectComicCoverYears)
-        .subscribe(coverYears => (this.coverYears = coverYears));
-      this.coverMonthsSubscription = this.store
-        .select(selectComicCoverMonths)
-        .subscribe(coverMonths => (this.coverMonths = coverMonths));
-    });
-    this.userSubscription = this.store.select(selectUser).subscribe(user => {
-      this.logger.trace('Setting isAdmin flag');
-      this.isAdmin = isAdmin(user);
-      this.showCovers =
-        getUserPreference(
-          user.preferences,
-          SHOW_COMIC_COVERS_PREFERENCE,
-          `${true}`
-        ) === `${true}`;
-    });
-    this.selectedSubscription = this.store
+    this.activatedRoute.queryParams
+      .pipe(
+        tap(params => {
+          this.doLoadComicDetails();
+          this.showStoryScraping$.next(
+            params[SCRAPE_STORY_PARAMETER] === `${true}`
+          );
+        })
+      )
+      .subscribe();
+    this.activatedRoute.params
+      .pipe(
+        tap(params => {
+          this.storyName$.next(params.storyName);
+          this.loadTranslations();
+          this.doLoadComicDetails();
+          this.store
+            .select(selectComicListBusy)
+            .pipe(
+              tap(enabled => this.store.dispatch(setBusyState({ enabled })))
+            )
+            .subscribe();
+          this.store
+            .select(selectComicList)
+            .pipe(tap(entries => this.comics$.next(entries)))
+            .subscribe();
+          this.store
+            .select(selectComicFilteredCount)
+            .pipe(tap(totalComics => this.totalComics$.next(totalComics)))
+            .subscribe();
+          this.store
+            .select(selectComicCoverYears)
+            .pipe(tap(coverYears => this.coverYears$.next(coverYears)))
+            .subscribe();
+          this.store
+            .select(selectComicCoverMonths)
+            .pipe(tap(coverMonths => this.coverMonths$.next(coverMonths)))
+            .subscribe();
+        })
+      )
+      .subscribe();
+    this.store
+      .select(selectUser)
+      .pipe(
+        tap(user => {
+          this.logger.trace('Setting isAdmin flag');
+          this.isAdmin$.next(isAdmin(user));
+          this.showCovers$.next(
+            getUserPreference(
+              user.preferences,
+              SHOW_COMIC_COVERS_PREFERENCE,
+              `${true}`
+            ) === `${true}`
+          );
+        })
+      )
+      .subscribe();
+    this.store
       .select(selectComicBookSelectionIds)
-      .subscribe(selectedIds => (this.selectedIds = selectedIds));
-    this.readingListsSubscription = this.store
+      .pipe(tap(selectedIds => this.selectedIds$.next(selectedIds)))
+      .subscribe();
+    this.store
+      .select(selectReadComicBooksList)
+      .pipe(
+        tap(readComicBookList =>
+          this.readComicBookList$.next(readComicBookList)
+        )
+      )
+      .subscribe();
+    this.store
       .select(selectUserReadingLists)
-      .subscribe(lists => (this.readingLists = lists));
-    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
-      () => this.loadTranslations()
-    );
+      .pipe(tap(lists => this.readingLists$.next(lists)))
+      .subscribe();
+    this.translateService.onLangChange
+      .pipe(tap(() => this.loadTranslations()))
+      .subscribe();
+  }
+
+  get showScrapingButton(): boolean {
+    return !this.showStoryScraping$.value && this.isAdmin$.value;
   }
 
   ngOnInit(): void {
     this.loadTranslations();
-  }
-
-  ngOnDestroy(): void {
-    this.logger.trace('Unsubscribing from query parameter events');
-    this.queryParamsSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from parameter events');
-    this.paramsSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from comic list state updates');
-    this.comicDetailListStateSubscription?.unsubscribe();
-    this.logger.trace('Unsubscribing from comic list updates');
-    this.comicDetailListSubscription?.unsubscribe();
-    this.logger.trace('Unsubscribing from total comics updates');
-    this.totalComicsSubscription?.unsubscribe();
-    this.logger.trace('Unsubscribing from cover year updates');
-    this.coverYearSubscription?.unsubscribe();
-    this.logger.trace('Unsubscribing from cover month updates');
-    this.coverMonthsSubscription?.unsubscribe();
-    this.logger.trace('Unsubscribing from user updates');
-    this.userSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from reading list updates');
-    this.readingListsSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from language change events');
-    this.langChangeSubscription.unsubscribe();
   }
 
   onSelectAll(selected: boolean): void {
@@ -180,7 +182,7 @@ export class StoryDetailPageComponent implements OnInit, OnDestroy {
     this.store.dispatch(
       setMultipleComicBooksByTagTypeAndValueSelectionState({
         tagType: ComicTagType.STORY,
-        tagValue: this.storyName,
+        tagValue: this.storyName$.value,
         selected
       })
     );
@@ -195,7 +197,7 @@ export class StoryDetailPageComponent implements OnInit, OnDestroy {
   private loadTranslations(): void {
     this.titleService.setTitle(
       this.translateService.instant('story-detail.tab-title', {
-        tagValue: this.storyName
+        tagValue: this.storyName$.value
       })
     );
   }
@@ -206,7 +208,7 @@ export class StoryDetailPageComponent implements OnInit, OnDestroy {
         pageSize: this.queryParameterService.pageSize$.value,
         pageIndex: this.queryParameterService.pageIndex$.value,
         tagType: ComicTagType.STORY,
-        tagValue: this.storyName,
+        tagValue: this.storyName$.value,
         sortBy: this.queryParameterService.sortBy$.value,
         sortDirection: this.queryParameterService.sortDirection$.value
       })

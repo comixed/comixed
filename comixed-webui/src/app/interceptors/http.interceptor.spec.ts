@@ -39,9 +39,8 @@ import {
   HTTP_XML_REQUEST
 } from '@app/app.constants';
 import { TokenService } from '@app/core/services/token.service';
-import { RouterTestingModule } from '@angular/router/testing';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { Router } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 
 describe('HttpInterceptor', () => {
@@ -56,17 +55,10 @@ describe('HttpInterceptor', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule.withRoutes([
-          {
-            path: '**',
-            redirectTo: ''
-          }
-        ]),
-        LoggerModule.forRoot()
-      ],
+      imports: [LoggerModule.forRoot()],
       providers: [
         provideMockStore({ initialState }),
+        provideRouter([]),
         { provide: HTTP_INTERCEPTORS, useClass: HttpInterceptor, multi: true },
         {
           provide: TokenService,

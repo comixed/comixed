@@ -21,7 +21,6 @@ import {
   Component,
   inject,
   Input,
-  OnDestroy,
   ViewChild
 } from '@angular/core';
 import { VolumeMetadata } from '@app/comic-metadata/models/volume-metadata';
@@ -49,10 +48,10 @@ import {
   resetMetadataState,
   scrapeSingleComicBook
 } from '@app/comic-metadata/actions/single-book-scraping.actions';
-import { Subscription } from 'rxjs';
 import {
+  selectChosenMetadataAutoSelectExactMatch,
   selectScrapingIssueMetadata,
-  selectSingleBookScrapingState
+  selectSingleBookScrapingBusy
 } from '@app/comic-metadata/selectors/single-book-scraping.selectors';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { SortableListItem } from '@app/core/models/ui/sortable-list-item';
@@ -76,10 +75,12 @@ import {
   MatCardActions,
   MatCardContent
 } from '@angular/material/card';
-import { DatePipe } from '@angular/common';
+import { AsyncPipe, DatePipe } from '@angular/common';
 import { IssueMetadataTitlePipe } from '@app/comic-books/pipes/issue-metadata-title.pipe';
 import { VolumeMetadataTitlePipe } from '../../pipes/volume-metadata-title.pipe';
 import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
+import { tap } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
 
 export const MATCHABILITY = 'matchability';
 export const EXACT_MATCH = 2;
@@ -123,12 +124,11 @@ export const NO_MATCH_TEXT = 'scraping.text.no-match';
     DatePipe,
     TranslateModule,
     IssueMetadataTitlePipe,
-    VolumeMetadataTitlePipe
+    VolumeMetadataTitlePipe,
+    AsyncPipe
   ]
 })
-export class ComicScrapingVolumeSelectionComponent
-  implements OnDestroy, AfterViewInit
-{
+export class ComicScrapingVolumeSelectionComponent implements AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
@@ -145,11 +145,13 @@ export class ComicScrapingVolumeSelectionComponent
   @Input() pageNumber: number;
   @Input() multimode = false;
 
-  issueSubscription: Subscription;
-  scrapingStateSubscription: Subscription;
-  selectedVolume: VolumeMetadata;
+  selectedVolume$ = new BehaviorSubject<VolumeMetadata | null>(null);
+
   dataSource = new MatTableDataSource<SortableListItem<VolumeMetadata>>();
-  displayedColumns = [
+  confirmBeforeScraping$ = new BehaviorSubject(true);
+  autoSelectExactMatch$ = new BehaviorSubject(false);
+
+  readonly displayedColumns = [
     MATCHABILITY,
     'thumbnail',
     'publisher',
@@ -157,9 +159,6 @@ export class ComicScrapingVolumeSelectionComponent
     'start-year',
     'issue-count'
   ];
-  confirmBeforeScraping = true;
-  autoSelectExactMatch = false;
-  currentVolume: VolumeMetadata | null;
 
   logger = inject(LoggerService);
   store = inject(Store);
@@ -167,20 +166,27 @@ export class ComicScrapingVolumeSelectionComponent
   translateService = inject(TranslateService);
 
   constructor() {
-    this.issueSubscription = this.store
+    this.store
       .select(selectScrapingIssueMetadata)
-      .subscribe(issue => (this.issue = issue));
-    this.scrapingStateSubscription = this.store
-      .select(selectSingleBookScrapingState)
-      .subscribe(state => {
-        this.store.dispatch(
-          setBusyStateWithIcon({
-            enabled: state.loadingRecords,
-            icon: BusyIcon.LOADING
-          })
-        );
-        this.autoSelectExactMatch = state.autoSelectExactMatch;
-      });
+      .pipe(tap(issue => (this.issue = issue)))
+      .subscribe();
+    this.store
+      .select(selectSingleBookScrapingBusy)
+      .pipe(
+        tap(enabled =>
+          this.store.dispatch(
+            setBusyStateWithIcon({
+              enabled,
+              icon: BusyIcon.LOADING
+            })
+          )
+        )
+      )
+      .subscribe();
+    this.store
+      .select(selectChosenMetadataAutoSelectExactMatch)
+      .pipe(tap(autoSelect => this.autoSelectExactMatch$.next(autoSelect)))
+      .subscribe();
   }
 
   private _issue: IssueMetadata;
@@ -193,7 +199,7 @@ export class ComicScrapingVolumeSelectionComponent
     this._issue = issue;
     if (
       !!issue &&
-      this.autoSelectExactMatch &&
+      this.autoSelectExactMatch$.value &&
       this.dataSource.data.filter(entry => entry.sortOrder === EXACT_MATCH)
         .length === 1
     ) {
@@ -217,7 +223,7 @@ export class ComicScrapingVolumeSelectionComponent
         sortOrder
       } as SortableListItem<VolumeMetadata>;
     });
-    this.selectedVolume = null;
+    this.selectedVolume$.next(null);
     const exactMatches = this.dataSource.data.filter(
       entry => entry.sortOrder === EXACT_MATCH
     );
@@ -225,11 +231,6 @@ export class ComicScrapingVolumeSelectionComponent
       this.logger.debug('Preselecting volume:', exactMatches[0]);
       this.onVolumeSelected(exactMatches[0].item);
     }
-  }
-
-  ngOnDestroy(): void {
-    this.issueSubscription.unsubscribe();
-    this.scrapingStateSubscription.unsubscribe();
   }
 
   ngAfterViewInit(): void {
@@ -261,16 +262,16 @@ export class ComicScrapingVolumeSelectionComponent
 
   onVolumeSelected(volume: VolumeMetadata): void {
     this.logger.trace('Volume selected:', volume);
-    if (this.selectedVolume === volume) {
-      this.selectedVolume = null;
+    if (this.selectedVolume$.value === volume) {
+      this.selectedVolume$.next(null);
     } else {
-      this.selectedVolume = volume;
+      this.selectedVolume$.next(volume);
     }
-    if (!!this.selectedVolume) {
+    if (!!this.selectedVolume$.value) {
       this.store.dispatch(
         loadIssueMetadata({
           metadataSource: this.metadataSource,
-          volumeId: this.selectedVolume.id,
+          volumeId: this.selectedVolume$.value.id,
           issueNumber: this.comicIssueNumber,
           skipCache: this.skipCache
         })
@@ -283,7 +284,7 @@ export class ComicScrapingVolumeSelectionComponent
       `Scraping issue was ${decision ? 'accepted' : 'rejected'}`
     );
     if (decision) {
-      if (!this.confirmBeforeScraping) {
+      if (!this.confirmBeforeScraping$.value) {
         this.scrapeComic();
       } else {
         this.confirmationService.confirm({

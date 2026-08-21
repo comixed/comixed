@@ -71,8 +71,8 @@
         formControlName="imprint"
         (selectionChange)="onImprintSelected($event.value)"
       >
-        @for (option of imprintOptions; track option) {
-          <mat-option [value]="option.value.name">
+        @for (option of imprintOptions$ | async; track option) {
+          <mat-option [value]="option.value">
             {{ option.label }}
           </mat-option>
         }

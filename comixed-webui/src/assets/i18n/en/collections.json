@@ -139,6 +139,9 @@
     "effect-failure": "Failed to load collection entries..."
   },
   "story-detail": {
+    "button": {
+      "scrape-story": "Scrape metadata for this store..."
+    },
     "page-title": "Story | {tagValue}",
     "tab-title": "Collection|Story|{tagValue}"
   },

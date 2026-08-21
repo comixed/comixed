@@ -20,7 +20,12 @@ import {
   COMIC_BOOK_FEATURE_KEY,
   ComicBookState
 } from '../reducers/comic-book.reducer';
-import { selectComicBookState } from './comic-book.selectors';
+import {
+  selectComicBookDetail,
+  selectComicBookMetadataSource,
+  selectComicBookPages,
+  selectComicBookTags
+} from './comic-book.selectors';
 import {
   COMIC_METADATA_SOURCE_1,
   COMIC_TAG_1,
@@ -52,11 +57,27 @@ describe('ComicBook Selectors', () => {
     };
   });
 
-  it('should select the feature state', () => {
+  it('selects the comic book', () => {
+    expect(selectComicBookDetail({ [COMIC_BOOK_FEATURE_KEY]: state })).toEqual(
+      state.detail
+    );
+  });
+
+  it('selects the metadata source', () => {
     expect(
-      selectComicBookState({
-        [COMIC_BOOK_FEATURE_KEY]: state
-      })
-    ).toEqual(state);
+      selectComicBookMetadataSource({ [COMIC_BOOK_FEATURE_KEY]: state })
+    ).toEqual(state.metadata.metadataSource);
+  });
+
+  it('selects the pages', () => {
+    expect(selectComicBookPages({ [COMIC_BOOK_FEATURE_KEY]: state })).toEqual(
+      state.pages
+    );
+  });
+
+  it('selects the tags', () => {
+    expect(selectComicBookTags({ [COMIC_BOOK_FEATURE_KEY]: state })).toEqual(
+      state.tags
+    );
   });
 });

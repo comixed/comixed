@@ -65,9 +65,6 @@ describe('FooterComponent', () => {
   let component: FooterComponent;
   let fixture: ComponentFixture<FooterComponent>;
   let store: MockStore;
-  const stateSubscription = jasmine.createSpyObj(['unsubscribe']);
-  const selectionsSubscription = jasmine.createSpyObj(['unsubscribe']);
-  const jobsSubscription = jasmine.createSpyObj(['unsubscribe']);
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -87,52 +84,22 @@ describe('FooterComponent', () => {
 
   describe('when no user is logged in', () => {
     beforeEach(() => {
-      component.libraryStateSubscription = stateSubscription;
-      component.selectionsSubscription = selectionsSubscription;
-      component.jobsSubscription = jobsSubscription;
-      component.readCount = 717;
+      component.readCount$.next(717);
       component.user = null;
     });
 
-    it('unsubscribes from library state updates', () => {
-      expect(stateSubscription.unsubscribe).toHaveBeenCalled();
-    });
-
-    it('unsubscribes from selection updates', () => {
-      expect(selectionsSubscription.unsubscribe).toHaveBeenCalled();
-    });
-
-    it('unsubscribes from jobs updates', () => {
-      expect(jobsSubscription.unsubscribe).toHaveBeenCalled();
-    });
-
     it('clears the read count', () => {
-      expect(component.readCount).toEqual(0);
+      expect(component.readCount$.value).toEqual(0);
     });
   });
 
   describe('when a user is logged in', () => {
     beforeEach(() => {
-      component.libraryStateSubscription = null;
-      component.selectionsSubscription = null;
-      component.jobsSubscription = null;
       component.user = { ...USER, readComicBooks: COMICS_READ_ENTRIES };
     });
 
-    it('subscribes to library state updates', () => {
-      expect(component.libraryStateSubscription).not.toBeNull();
-    });
-
-    it('subscribes to selection updates', () => {
-      expect(component.selectionsSubscription).not.toBeNull();
-    });
-
-    it('subscribes to jobs updates', () => {
-      expect(component.jobsSubscription).not.toBeNull();
-    });
-
     it('sets the read count', () => {
-      expect(component.readCount).toEqual(COMICS_READ_ENTRIES.length);
+      expect(component.readCount$.value).toEqual(COMICS_READ_ENTRIES.length);
     });
   });
 

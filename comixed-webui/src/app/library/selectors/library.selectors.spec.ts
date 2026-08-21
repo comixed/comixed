@@ -17,10 +17,21 @@
  */
 
 import { LIBRARY_FEATURE_KEY, LibraryState } from '../reducers/library.reducer';
-import { selectLibraryState } from './library.selectors';
+import {
+  selectLibraryChangedComicCount,
+  selectLibraryDeletedComicCount,
+  selectLibraryDuplicateComicCount,
+  selectLibraryState,
+  selectLibraryTotalComicCount,
+  selectLibraryUnprocessedComicCount,
+  selectLibraryUnscrapedComicCount
+} from './library.selectors';
 import { ComicState } from '@app/comic-books/models/comic-state';
 
 describe('Library Selectors', () => {
+  const TEST_UNPROCESSED_COUNT = Math.abs(Math.ceil(Math.random() * 1000));
+  const TEST_CHANGED_COUNT = Math.abs(Math.ceil(Math.random() * 1000));
+
   let state: LibraryState;
 
   beforeEach(() => {
@@ -37,16 +48,74 @@ describe('Library Selectors', () => {
       locations: [{ name: 'Location1', count: 1 }],
       stories: [{ name: 'Story1', count: 1 }],
       byPublisherAndYear: [],
-      states: [{ name: ComicState.CHANGED.toString(), count: 1 }],
+      states: [
+        { name: ComicState.CHANGED.toString(), count: TEST_CHANGED_COUNT },
+        {
+          name: ComicState.UNPROCESSED.toString(),
+          count: TEST_UNPROCESSED_COUNT
+        }
+      ],
       archiveTypes: [{ name: 'CBZ', count: 1 }]
     };
   });
 
-  it('selects the feature state', () => {
+  it('returns the feature state', () => {
     expect(
       selectLibraryState({
         [LIBRARY_FEATURE_KEY]: state
       })
     ).toEqual(state);
+  });
+
+  it('returns the total comic count', () => {
+    expect(
+      selectLibraryTotalComicCount({ [LIBRARY_FEATURE_KEY]: state })
+    ).toEqual(state.totalComics);
+  });
+
+  it('returns the unscraped comic count', () => {
+    expect(
+      selectLibraryUnscrapedComicCount({ [LIBRARY_FEATURE_KEY]: state })
+    ).toEqual(state.unscrapedComics);
+  });
+
+  it('returns the deleted comic count', () => {
+    expect(
+      selectLibraryDeletedComicCount({ [LIBRARY_FEATURE_KEY]: state })
+    ).toEqual(state.deletedComics);
+  });
+
+  it('returns the duplicate comic count', () => {
+    expect(
+      selectLibraryDuplicateComicCount({ [LIBRARY_FEATURE_KEY]: state })
+    ).toEqual(state.duplicateComics);
+  });
+
+  it('returns 0 if there are no unprocessed comic count', () => {
+    expect(
+      selectLibraryUnprocessedComicCount({
+        [LIBRARY_FEATURE_KEY]: { ...state, states: [] }
+      })
+    ).toEqual(0);
+  });
+
+  it('returns the unprocessed comic count', () => {
+    expect(
+      selectLibraryUnprocessedComicCount({ [LIBRARY_FEATURE_KEY]: state })
+    ).toEqual(TEST_UNPROCESSED_COUNT);
+  });
+
+  it('returns 0 if there are no changed comic count', () => {
+    expect(
+      selectLibraryChangedComicCount({
+        [LIBRARY_FEATURE_KEY]: { ...state, states: [] }
+      })
+    ).toEqual(0);
+  });
+
+  it('returns the changed comic count', () => {
+    expect(
+      selectLibraryChangedComicCount({ [LIBRARY_FEATURE_KEY]: state })
+    ).toEqual(TEST_CHANGED_COUNT);
   });
 });

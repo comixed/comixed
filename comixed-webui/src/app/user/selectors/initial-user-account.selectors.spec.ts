@@ -20,7 +20,11 @@ import {
   INITIAL_USER_ACCOUNT_FEATURE_KEY,
   InitialUserAccountState
 } from '../reducers/initial-user-account.reducer';
-import { selectInitialUserAccountState } from './initial-user-account.selectors';
+import {
+  selectCheckedForExistingAccount,
+  selectCreateInitialUserAccount,
+  selectHasExistingAccounts
+} from './initial-user-account.selectors';
 
 describe('InitialUserAccount Selectors', () => {
   let state: InitialUserAccountState;
@@ -33,11 +37,134 @@ describe('InitialUserAccount Selectors', () => {
     };
   });
 
-  it('should select the feature state', () => {
-    expect(
-      selectInitialUserAccountState({
-        [INITIAL_USER_ACCOUNT_FEATURE_KEY]: state
-      })
-    ).toEqual(state);
+  describe('having checked for existing accounts', () => {
+    it('returns false when no check has been performed', () => {
+      expect(
+        selectCheckedForExistingAccount({
+          [INITIAL_USER_ACCOUNT_FEATURE_KEY]: {
+            ...state,
+            busy: false,
+            checked: false
+          }
+        })
+      ).toBeFalse();
+    });
+
+    it('returns false while checking', () => {
+      expect(
+        selectCheckedForExistingAccount({
+          [INITIAL_USER_ACCOUNT_FEATURE_KEY]: {
+            ...state,
+            busy: true,
+            checked: false
+          }
+        })
+      ).toBeFalse();
+    });
+
+    it('returns true after checking', () => {
+      expect(
+        selectCheckedForExistingAccount({
+          [INITIAL_USER_ACCOUNT_FEATURE_KEY]: {
+            ...state,
+            busy: false,
+            checked: true
+          }
+        })
+      ).toBeTrue();
+    });
+  });
+
+  describe('checking for existing accounts', () => {
+    it('returns false when not checked', () => {
+      expect(
+        selectHasExistingAccounts({
+          [INITIAL_USER_ACCOUNT_FEATURE_KEY]: {
+            ...state,
+            checked: false,
+            busy: false,
+            hasExisting: true
+          }
+        })
+      ).toBeFalse();
+    });
+
+    it('returns false when busy', () => {
+      expect(
+        selectHasExistingAccounts({
+          [INITIAL_USER_ACCOUNT_FEATURE_KEY]: {
+            ...state,
+            busy: true,
+            checked: false,
+            hasExisting: true
+          }
+        })
+      ).toBeFalse();
+    });
+
+    it('returns true when checked and has existing accounts', () => {
+      expect(
+        selectHasExistingAccounts({
+          [INITIAL_USER_ACCOUNT_FEATURE_KEY]: {
+            ...state,
+            busy: false,
+            checked: true,
+            hasExisting: true
+          }
+        })
+      ).toBeTrue();
+    });
+
+    it('returns false when checked and no existing accounts found', () => {
+      expect(
+        selectHasExistingAccounts({
+          [INITIAL_USER_ACCOUNT_FEATURE_KEY]: {
+            ...state,
+            busy: false,
+            checked: true,
+            hasExisting: false
+          }
+        })
+      ).toBeFalse();
+    });
+  });
+
+  describe('creating the initial admina ccount', () => {
+    it('returns false when busy', () => {
+      expect(
+        selectCreateInitialUserAccount({
+          [INITIAL_USER_ACCOUNT_FEATURE_KEY]: { ...state, busy: true }
+        })
+      ).toBeFalse();
+    });
+
+    it('returns false when not checked', () => {
+      expect(
+        selectCreateInitialUserAccount({
+          [INITIAL_USER_ACCOUNT_FEATURE_KEY]: { ...state, checked: false }
+        })
+      ).toBeFalse();
+    });
+
+    it('returns false when an account exists', () => {
+      expect(
+        selectCreateInitialUserAccount({
+          [INITIAL_USER_ACCOUNT_FEATURE_KEY]: { ...state, hasExisting: true }
+        })
+      ).toBeFalse();
+    });
+
+    it('returns true when no account exists', () => {
+      expect(
+        selectCreateInitialUserAccount({
+          [INITIAL_USER_ACCOUNT_FEATURE_KEY]: {
+            ...state,
+            busy: false,
+            checked: true,
+            hasExisting: false
+          }
+        })
+      ).toBeTrue();
+    });
   });
 });

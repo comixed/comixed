@@ -23,8 +23,7 @@ import {
   USER_FEATURE_KEY
 } from '@app/user/reducers/user.reducer';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { Router } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
+import { provideRouter, Router } from '@angular/router';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { USER_ADMIN, USER_READER } from '@app/user/user.fixtures';
 import { Observable } from 'rxjs';
@@ -40,11 +39,8 @@ describe('AdminGuard', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
-        LoggerModule.forRoot()
-      ],
-      providers: [provideMockStore({ initialState })]
+      imports: [LoggerModule.forRoot()],
+      providers: [provideMockStore({ initialState }), provideRouter([])]
     });
     guard = TestBed.inject(AdminGuard);
     store = TestBed.inject(MockStore);

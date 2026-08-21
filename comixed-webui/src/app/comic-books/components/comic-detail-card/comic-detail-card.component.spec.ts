@@ -25,7 +25,6 @@ import { DISPLAYABLE_COMIC_1 } from '@app/comic-books/comic-books.fixtures';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatChipsModule } from '@angular/material/chips';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 describe('ComicDetailCardComponent', () => {
@@ -39,7 +38,6 @@ describe('ComicDetailCardComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatCardModule,

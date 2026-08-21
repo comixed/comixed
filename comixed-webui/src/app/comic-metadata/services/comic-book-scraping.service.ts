@@ -17,7 +17,7 @@
  */
 
 import { inject, Injectable } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { HttpClient } from '@angular/common/http';
 import { interpolate, PAGE_SIZE_DEFAULT } from '@app/core';
@@ -41,7 +41,7 @@ import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 import { StartMetadataUpdateProcessRequest } from '@app/comic-metadata/models/net/start-metadata-update-process-request';
 import { Store } from '@ngrx/store';
 import { WebSocketService } from '@app/messaging';
-import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
+import { selectMessagingStarted } from '@app/messaging/selectors/messaging.selectors';
 import {
   LOAD_STORY_CANDIDATES_URL,
   METADATA_UPDATE_PROCESS_UPDATE_TOPIC,
@@ -56,6 +56,7 @@ import { ScrapeMultiBookComicRequest } from '@app/comic-metadata/models/net/scra
 import { LoadMultiBookScrapingRequest } from '@app/comic-metadata/models/net/load-multi-book-scraping-request';
 import { ScrapeStoryRequest } from '@app/comic-metadata/models/net/scrape-story-request';
 import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
+import { filter, tap } from 'rxjs/operators';
 
 /**
  * Interacts with the REST APIs during scraping.
@@ -64,18 +65,18 @@ import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
   providedIn: 'root'
 })
 export class ComicBookScrapingService {
-  subscription: Subscription;
-
   logger = inject(LoggerService);
   http = inject(HttpClient);
   store = inject(Store);
   webSocketService = inject(WebSocketService);
 
   constructor() {
-    this.store.select(selectMessagingState).subscribe(state => {
-      if (state.started && !this.subscription) {
-        this.logger.trace('Subscribing to remote library state updates');
-        this.subscription =
+    this.store
+      .select(selectMessagingStarted)
+      .pipe(
+        filter(started => started),
+        tap(() => {
+          this.logger.trace('Subscribing to remote library state updates');
           this.webSocketService.subscribe<MetadataUpdateProcessUpdate>(
             METADATA_UPDATE_PROCESS_UPDATE_TOPIC,
             update => {
@@ -92,15 +93,9 @@ export class ComicBookScrapingService {
               );
             }
           );
-      }
-      if (!state.started && !!this.subscription) {
-        this.logger.debug(
-          'Stopping metadata update process update subscription'
-        );
-        this.subscription.unsubscribe();
-        this.subscription = null;
-      }
-    });
+        })
+      )
+      .subscribe();
   }
 
   /**

@@ -55,6 +55,7 @@ import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import {
   ActivatedRoute,
   ActivatedRouteSnapshot,
+  provideRouter,
   Router
 } from '@angular/router';
 import { TitleService } from '@app/core/services/title.service';
@@ -64,8 +65,6 @@ import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 import { ComicCoverUrlPipe } from '@app/comic-books/pipes/comic-cover-url.pipe';
 import { ArchiveTypePipe } from '@app/library/pipes/archive-type.pipe';
 import { CoverDateFilterPipe } from '@app/comic-books/pipes/cover-date-filter.pipe';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { RouterTestingModule } from '@angular/router/testing';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
@@ -94,6 +93,10 @@ import { setMultipleComicBooksByTagTypeAndValueSelectionState } from '@app/comic
 import { StoryScrapingComponent } from '@app/collections/components/story-scraping/story-scraping.component';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { SCRAPE_STORY_PARAMETER } from '@app/collections/collections.constants';
+import {
+  initialState as initialReadComicBooksState,
+  READ_COMIC_BOOKS_FEATURE_KEY
+} from '@app/user/reducers/read-comic-books.reducer';
 
 describe('StoryDetailPageComponent', () => {
   const PAGE_SIZE = 10;
@@ -111,6 +114,7 @@ describe('StoryDetailPageComponent', () => {
   const initialState = {
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
     [COMIC_BOOK_SELECTION_FEATURE_KEY]: initialComicBookSelectionState,
+    [READ_COMIC_BOOKS_FEATURE_KEY]: initialReadComicBooksState,
     [COMIC_LIST_FEATURE_KEY]: {
       ...initialComicListState,
       comicBooks: COMIC_LIST
@@ -133,8 +137,6 @@ describe('StoryDetailPageComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
-        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatDialogModule,
@@ -162,6 +164,7 @@ describe('StoryDetailPageComponent', () => {
       ],
       providers: [
         provideMockStore({ initialState }),
+        provideRouter([]),
         {
           provide: ActivatedRoute,
           useValue: {
@@ -218,15 +221,7 @@ describe('StoryDetailPageComponent', () => {
     });
 
     it('sets the collection name', () => {
-      expect(component.storyName).toEqual(COLLECTION_NAME);
-    });
-
-    it('subscribes to comic updates', () => {
-      expect(component.comicDetailListSubscription).not.toBeNull();
-    });
-
-    it('subscribes to selection updates', () => {
-      expect(component.selectedSubscription).not.toBeNull();
+      expect(component.storyName$.value).toEqual(COLLECTION_NAME);
     });
   });
 
@@ -247,7 +242,7 @@ describe('StoryDetailPageComponent', () => {
       ).value;
 
       beforeEach(() => {
-        component.comics = [];
+        component.comics$.next([]);
         (activatedRoute.params as BehaviorSubject<{}>).next({
           storyName: STORY_NAME,
           volume: COMIC_DETAIL_1.volume
@@ -275,7 +270,7 @@ describe('StoryDetailPageComponent', () => {
     const STORY_NAME = 'Wakanda';
 
     beforeEach(() => {
-      component.storyName = STORY_NAME;
+      component.storyName$.next(STORY_NAME);
       component.onSelectAll(SELECT);
     });
 

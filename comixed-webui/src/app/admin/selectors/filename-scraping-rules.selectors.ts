@@ -22,10 +22,15 @@ import {
   FilenameScrapingRulesState
 } from '../reducers/filename-scraping-rules.reducer';
 
-export const selectFilenameScrapingRulesState =
+const selectFilenameScrapingRulesState =
   createFeatureSelector<FilenameScrapingRulesState>(
     FILENAME_SCRAPING_RULES_FEATURE_KEY
   );
+
+export const selectFilenameScrapingRulesBusy = createSelector(
+  selectFilenameScrapingRulesState,
+  state => state.busy
+);
 
 export const selectFilenameScrapingRules = createSelector(
   selectFilenameScrapingRulesState,

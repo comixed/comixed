@@ -20,12 +20,10 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ComicListViewComponent } from './comic-list-view.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 import { TranslateModule } from '@ngx-translate/core';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
   DISPLAYABLE_COMIC_1,
   DISPLAYABLE_COMIC_2
@@ -33,7 +31,7 @@ import {
 import { ComicCoverUrlPipe } from '@app/comic-books/pipes/comic-cover-url.pipe';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 import { ComicState } from '@app/comic-books/models/comic-state';
-import { Router } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -86,7 +84,11 @@ import {
   initialState as initialLibraryPluginState,
   LIBRARY_PLUGIN_FEATURE_KEY
 } from '@app/library-plugins/reducers/library-plugin.reducer';
-import { LIBRARY_PLUGIN_4 } from '@app/library-plugins/library-plugins.fixtures';
+import {
+  LIBRARY_PLUGIN_1,
+  LIBRARY_PLUGIN_2,
+  LIBRARY_PLUGIN_4
+} from '@app/library-plugins/library-plugins.fixtures';
 import {
   runLibraryPluginOnOneComicBook,
   runLibraryPluginOnSelectedComicBooks
@@ -105,6 +107,7 @@ import {
   COMIC_BOOK_SELECTION_FEATURE_KEY,
   initialState as initialComicBookSelectionState
 } from '@app/comic-books/reducers/comic-book-selection.reducer';
+import { PluginType } from '@app/library-plugins/models/plugin-type';
 
 describe('ComicListViewComponent', () => {
   const COMIC_BOOKS = [
@@ -144,8 +147,6 @@ describe('ComicListViewComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
-        RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatSortModule,
@@ -164,6 +165,7 @@ describe('ComicListViewComponent', () => {
       ],
       providers: [
         provideMockStore({ initialState }),
+        provideRouter([]),
         ConfirmationService,
         {
           provide: QueryParameterService,
@@ -204,6 +206,40 @@ describe('ComicListViewComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('receiving the list of plugins', () => {
+    const SINGLE_TYPE_PLUGIN = {
+      ...LIBRARY_PLUGIN_1,
+      pluginType: PluginType.Single
+    };
+    const LIST_TYPE_PLUGIN = {
+      ...LIBRARY_PLUGIN_2,
+      pluginType: PluginType.List
+    };
+    const PLUGIN_LIST = [LIST_TYPE_PLUGIN, SINGLE_TYPE_PLUGIN];
+
+    beforeEach(() => {
+      component.comicListPluginList$.next([]);
+      component.comicBookPluginList$.next([]);
+      store.setState({
+        ...initialState,
+        [LIBRARY_PLUGIN_FEATURE_KEY]: {
+          ...initialLibraryPluginState,
+          list: PLUGIN_LIST
+        }
+      });
+    });
+
+    it('loads the comic book plugin list', () => {
+      expect(component.comicBookPluginList$.value).toEqual([
+        SINGLE_TYPE_PLUGIN
+      ]);
+    });
+
+    it('loads the comic list plugin list', () => {
+      expect(component.comicListPluginList$.value).toEqual([LIST_TYPE_PLUGIN]);
+    });
   });
 
   describe('receiving selected ids', () => {
@@ -268,17 +304,17 @@ describe('ComicListViewComponent', () => {
   describe('the comic cover overlay', () => {
     describe('showing the cover overlay', () => {
       beforeEach(() => {
-        component.showComicDetailPopup = false;
-        component.selectedComic = null;
+        component.showComicDetailPopup$.next(false);
+        component.selectedComic$.next(null);
         component.onShowPopup(true, COMIC_BOOK);
       });
 
       it('sets the show popup flag', () => {
-        expect(component.showComicDetailPopup).toBeTrue();
+        expect(component.showComicDetailPopup$.value).toBeTrue();
       });
 
       it('sets the current comic', () => {
-        expect(component.selectedComic).toBe(COMIC_BOOK);
+        expect(component.selectedComic$.value).toBe(COMIC_BOOK);
       });
 
       describe('hiding the cover overlay', () => {
@@ -287,11 +323,11 @@ describe('ComicListViewComponent', () => {
         });
 
         it('hides the show popup flag', () => {
-          expect(component.showComicDetailPopup).toBeFalse();
+          expect(component.showComicDetailPopup$.value).toBeFalse();
         });
 
         it('clears the current comic', () => {
-          expect(component.selectedComic).toBeNull();
+          expect(component.selectedComic$.value).toBeNull();
         });
       });
     });
@@ -408,7 +444,7 @@ describe('ComicListViewComponent', () => {
     const READING_LIST = READING_LIST_1;
 
     beforeEach(() => {
-      component.selectedComic = COMIC_BOOK;
+      component.selectedComic$.next(COMIC_BOOK);
       component.dataSource.data = COMIC_BOOKS.map(comic => {
         return {
           item: comic,
@@ -544,7 +580,7 @@ describe('ComicListViewComponent', () => {
 
     describe('marking a single comic book as deleted', () => {
       beforeEach(() => {
-        component.selectedComic = COMIC_BOOK;
+        component.selectedComic$.next(COMIC_BOOK);
         component.onMarkOneAsDeleted(true);
       });
 
@@ -557,7 +593,7 @@ describe('ComicListViewComponent', () => {
 
     describe('marking a single comic book as undeleted', () => {
       beforeEach(() => {
-        component.selectedComic = COMIC_BOOK;
+        component.selectedComic$.next(COMIC_BOOK);
         component.onMarkOneAsDeleted(false);
       });
 
@@ -736,12 +772,12 @@ describe('ComicListViewComponent', () => {
 
   describe('showing the filter popup', () => {
     beforeEach(() => {
-      component.showComicFilterPopup = false;
+      component.showComicFilterPopup$.next(false);
       component.onFilterComics();
     });
 
     it('sets the show comic filter popup flag', () => {
-      expect(component.showComicFilterPopup).toBeTrue();
+      expect(component.showComicFilterPopup$.value).toBeTrue();
     });
   });
 

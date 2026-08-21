@@ -23,10 +23,10 @@ import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import {
   ActivatedRoute,
   ActivatedRouteSnapshot,
+  provideRouter,
   Router
 } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
-import { RouterTestingModule } from '@angular/router/testing';
 import {
   initialState as initialLibraryState,
   LIBRARY_FEATURE_KEY
@@ -37,7 +37,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import {
@@ -129,8 +128,6 @@ describe('CollectionDetailComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
-        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatDialogModule,
@@ -157,6 +154,7 @@ describe('CollectionDetailComponent', () => {
       ],
       providers: [
         provideMockStore({ initialState }),
+        provideRouter([{ path: '**', redirectTo: '' }]),
         {
           provide: ActivatedRoute,
           useValue: {
@@ -233,14 +231,6 @@ describe('CollectionDetailComponent', () => {
     it('sets the collection name', () => {
       expect(component.tagValue).toEqual(COLLECTION_NAME);
     });
-
-    it('subscribes to comic updates', () => {
-      expect(component.comicDetailListSubscription).not.toBeNull();
-    });
-
-    it('subscribes to selection updates', () => {
-      expect(component.selectedSubscription).not.toBeNull();
-    });
   });
 
   describe('show collections', () => {
@@ -260,7 +250,7 @@ describe('CollectionDetailComponent', () => {
       ).value;
 
       beforeEach(() => {
-        component.comics = [];
+        component.comics$.next([]);
         (activatedRoute.params as BehaviorSubject<{}>).next({
           collectionType: 'characters',
           collectionName: TAG_VALUE,
@@ -288,7 +278,7 @@ describe('CollectionDetailComponent', () => {
       ).value;
 
       beforeEach(() => {
-        component.comics = [];
+        component.comics$.next([]);
         (activatedRoute.params as BehaviorSubject<{}>).next({
           collectionType: 'teams',
           collectionName: TAG_VALUE,
@@ -316,7 +306,7 @@ describe('CollectionDetailComponent', () => {
       ).value;
 
       beforeEach(() => {
-        component.comics = [];
+        component.comics$.next([]);
         (activatedRoute.params as BehaviorSubject<{}>).next({
           collectionType: 'locations',
           collectionName: TAG_VALUE,
@@ -344,7 +334,7 @@ describe('CollectionDetailComponent', () => {
       ).value;
 
       beforeEach(() => {
-        component.comics = [];
+        component.comics$.next([]);
         (activatedRoute.params as BehaviorSubject<{}>).next({
           collectionType: 'stories',
           collectionName: TAG_VALUE,

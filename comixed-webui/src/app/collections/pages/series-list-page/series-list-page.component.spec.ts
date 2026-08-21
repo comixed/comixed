@@ -27,13 +27,7 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSortModule } from '@angular/material/sort';
-import {
-  initialState as initialUserState,
-  USER_FEATURE_KEY
-} from '@app/user/reducers/user.reducer';
-import { USER_ADMIN } from '@app/user/user.fixtures';
 import {
   initialState as initialSeriesState,
   SERIES_FEATURE_KEY
@@ -53,7 +47,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 describe('SeriesListPageComponent', () => {
   const initialState = {
-    [USER_FEATURE_KEY]: { ...initialUserState, user: USER_ADMIN },
     [SERIES_FEATURE_KEY]: initialSeriesState,
     [METADATA_SOURCE_LIST_FEATURE_KEY]: initialMetadataSourceListState
   };
@@ -67,7 +60,6 @@ describe('SeriesListPageComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
         RouterModule.forRoot([]),
         FormsModule,
         ReactiveFormsModule,

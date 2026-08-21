@@ -48,7 +48,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { saveConfigurationOptions } from '@app/admin/actions/save-configuration-options.actions';
 import { MetadataSourceDetailComponent } from '@app/admin/components/metadata-source-detail/metadata-source-detail.component';
 import { of } from 'rxjs';
@@ -71,7 +70,6 @@ describe('MetadataSourceListComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
         FormsModule,
         ReactiveFormsModule,
         LoggerModule.forRoot(),
@@ -230,12 +228,12 @@ describe('MetadataSourceListComponent', () => {
       component.metadataForm.controls.ignoreEmptyValues.setValue(
         !IGNORE_EMPTY_VALUES
       );
-      component.showConfigPopup = true;
+      component.showConfigPopup$.next(true);
       component.onCancelConfig();
     });
 
     it('closes the popup', () => {
-      expect(component.showConfigPopup).toBeFalse();
+      expect(component.showConfigPopup$.value).toBeFalse();
     });
   });
 

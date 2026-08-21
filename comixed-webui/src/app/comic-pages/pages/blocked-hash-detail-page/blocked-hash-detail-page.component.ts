@@ -16,23 +16,20 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, inject, OnDestroy } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
-import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
+  ReactiveFormsModule,
   UntypedFormBuilder,
   UntypedFormGroup,
-  Validators,
-  ReactiveFormsModule
+  Validators
 } from '@angular/forms';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { BlockedHash } from '@app/comic-pages/models/blocked-hash';
-import { selectUser } from '@app/user/selectors/user.selectors';
-import { isAdmin } from '@app/user/user.functions';
-import { filter } from 'rxjs/operators';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { filter, tap } from 'rxjs/operators';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import {
   loadBlockedHashDetail,
@@ -40,13 +37,16 @@ import {
 } from '@app/comic-pages/actions/blocked-hashes.actions';
 import {
   selectBlockedHashDetail,
-  selectBlockedHashesState
+  selectBlockedHashesBusy,
+  selectBlockedHashNotFound
 } from '@app/comic-pages/selectors/blocked-hashes.selectors';
-import { MatFabButton, MatButton } from '@angular/material/button';
+import { MatButton, MatFabButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { BlockedHashThumbnailUrlPipe } from '../../pipes/blocked-hash-thumbnail-url.pipe';
+import { BehaviorSubject } from 'rxjs';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'cx-blocked-hash-detail-page',
@@ -61,18 +61,14 @@ import { BlockedHashThumbnailUrlPipe } from '../../pipes/blocked-hash-thumbnail-
     MatInput,
     MatButton,
     TranslateModule,
-    BlockedHashThumbnailUrlPipe
+    BlockedHashThumbnailUrlPipe,
+    AsyncPipe
   ]
 })
-export class BlockedHashDetailPageComponent implements OnDestroy {
-  paramsSubscription: Subscription;
-  blockedPageDetailStateSubscription: Subscription;
-  blockedPageSubscription: Subscription;
-  userSubscription: Subscription;
-  isAdmin = false;
-  hash = '';
-
+export class BlockedHashDetailPageComponent {
   blockedPageForm: UntypedFormGroup;
+
+  hash$ = new BehaviorSubject('');
 
   logger = inject(LoggerService);
   store = inject(Store);
@@ -83,33 +79,44 @@ export class BlockedHashDetailPageComponent implements OnDestroy {
   translateService = inject(TranslateService);
 
   constructor() {
-    this.paramsSubscription = this.activatedRoute.params.subscribe(params => {
-      this.hash = params.hash;
-      this.logger.debug('Received blocked page hash:', this.hash);
-      this.store.dispatch(loadBlockedHashDetail({ hash: this.hash }));
-    });
+    this.activatedRoute.params
+      .pipe(
+        tap(params => {
+          this.hash$.next(params.hash);
+          this.logger.debug('Received blocked page hash:', this.hash$.value);
+          this.store.dispatch(
+            loadBlockedHashDetail({ hash: this.hash$.value })
+          );
+        })
+      )
+      .subscribe();
     this.blockedPageForm = this.formBuilder.group({
       label: ['', Validators.required],
       hash: ['']
     });
-    this.blockedPageDetailStateSubscription = this.store
-      .select(selectBlockedHashesState)
-      .subscribe(state => {
-        this.store.dispatch(setBusyState({ enabled: state.busy }));
-        if (!state.busy && state.notFound) {
+    this.store
+      .select(selectBlockedHashesBusy)
+      .pipe(tap(enabled => this.store.dispatch(setBusyState({ enabled }))))
+      .subscribe();
+    this.store
+      .select(selectBlockedHashNotFound)
+      .pipe(
+        filter(notFound => notFound),
+        tap(() => {
           this.logger.debug('Blocked page not found');
           this.router.navigateByUrl('/library/pages/blocked');
-        }
-      });
-    this.blockedPageSubscription = this.store
+        })
+      )
+      .subscribe();
+    this.store
       .select(selectBlockedHashDetail)
       .pipe(filter(entry => !!entry))
-      .subscribe(entry => {
-        this.blockedPage = entry;
-      });
-    this.userSubscription = this.store
-      .select(selectUser)
-      .subscribe(user => (this.isAdmin = isAdmin(user)));
+      .pipe(
+        tap(entry => {
+          this.blockedPage = entry;
+        })
+      )
+      .subscribe();
   }
 
   private _blockedPage: BlockedHash;
@@ -125,12 +132,6 @@ export class BlockedHashDetailPageComponent implements OnDestroy {
     this.blockedPageForm.controls.hash.setValue(blockedPage.hash);
     this.blockedPageForm.updateValueAndValidity();
     this.blockedPageForm.markAsPristine();
-  }
-
-  ngOnDestroy(): void {
-    this.paramsSubscription.unsubscribe();
-    this.blockedPageSubscription.unsubscribe();
-    this.userSubscription.unsubscribe();
   }
 
   onSave(): void {

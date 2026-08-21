@@ -17,7 +17,7 @@
  */
 
 import { inject, Injectable } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { interpolate } from '@app/core';
@@ -38,7 +38,7 @@ import {
   USER_SELF_TOPIC
 } from '@app/user/user.constants';
 import { Store } from '@ngrx/store';
-import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
+import { selectMessagingStarted } from '@app/messaging/selectors/messaging.selectors';
 import { WebSocketService } from '@app/messaging';
 import { loadCurrentUserSuccess } from '@app/user/actions/user.actions';
 import { User } from '@app/user/models/user';
@@ -56,8 +56,7 @@ import { selectUser } from '@app/user/selectors/user.selectors';
   providedIn: 'root'
 })
 export class UserService {
-  userUpdateSubscriptions: Subscription;
-  email: string | null = null;
+  email$ = new BehaviorSubject<string | null>(null);
 
   logger = inject(LoggerService);
   store = inject(Store<any>);
@@ -65,19 +64,14 @@ export class UserService {
   http = inject(HttpClient);
 
   constructor() {
-    this.store.select(selectMessagingState).subscribe(state => {
-      if (state.started && !this.userUpdateSubscriptions) {
+    this.store.select(selectMessagingStarted).subscribe(started => {
+      if (started) {
         this.subscribeToUserUpdates();
       }
       this.store.select(selectUser).subscribe(user => {
-        this.email = user?.email;
+        this.email$.next(user?.email);
         this.subscribeToUserUpdates();
       });
-      if (!state.started && !!this.userUpdateSubscriptions) {
-        this.logger.debug('Stopping user subscription');
-        this.userUpdateSubscriptions.unsubscribe();
-        this.userUpdateSubscriptions = null;
-      }
     });
   }
 
@@ -207,19 +201,16 @@ export class UserService {
   }
 
   private subscribeToUserUpdates(): void {
-    if (!!this.email) {
-      const topic = interpolate(USER_SELF_TOPIC, { email: this.email });
+    if (!!this.email$.value) {
+      const topic = interpolate(USER_SELF_TOPIC, { email: this.email$.value });
       this.logger.debug('Subscribing to self updates:', topic);
-      this.userUpdateSubscriptions = this.webSocketService.subscribe<User>(
-        topic,
-        user => {
-          this.logger.debug('Received user update:', user);
-          this.store.dispatch(loadCurrentUserSuccess({ user }));
-          this.store.dispatch(
-            setReadComicBooks({ entries: user.readComicBooks })
-          );
-        }
-      );
+      this.webSocketService.subscribe<User>(topic, user => {
+        this.logger.debug('Received user update:', user);
+        this.store.dispatch(loadCurrentUserSuccess({ user }));
+        this.store.dispatch(
+          setReadComicBooks({ entries: user.readComicBooks })
+        );
+      });
     }
   }
 }

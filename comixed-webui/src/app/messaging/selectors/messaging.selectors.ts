@@ -16,12 +16,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createFeatureSelector } from '@ngrx/store';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
 import {
   MESSAGING_FEATURE_KEY,
   MessagingState
 } from '../reducers/messaging.reducer';
 
-export const selectMessagingState = createFeatureSelector<MessagingState>(
+const selectMessagingState = createFeatureSelector<MessagingState>(
   MESSAGING_FEATURE_KEY
+);
+
+export const selectMessagingStarted = createSelector(
+  selectMessagingState,
+  state => !state.busy && state.started
 );

@@ -20,25 +20,23 @@ import {
   AfterViewInit,
   Component,
   inject,
-  OnDestroy,
   OnInit,
   ViewChild
 } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { LoggerService } from '@angular-ru/cdk/logger';
-import { Subscription } from 'rxjs';
 import {
-  MatTableDataSource,
-  MatTable,
-  MatColumnDef,
-  MatHeaderCellDef,
-  MatHeaderCell,
-  MatCellDef,
   MatCell,
-  MatHeaderRowDef,
+  MatCellDef,
+  MatColumnDef,
+  MatHeaderCell,
+  MatHeaderCellDef,
   MatHeaderRow,
+  MatHeaderRowDef,
+  MatRow,
   MatRowDef,
-  MatRow
+  MatTable,
+  MatTableDataSource
 } from '@angular/material/table';
 import { Router, RouterLink } from '@angular/router';
 import {
@@ -47,22 +45,19 @@ import {
   markPagesWithHash,
   uploadBlockedHashesFile
 } from '@app/comic-pages/actions/blocked-hashes.actions';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { deleteBlockedPages } from '@app/comic-pages/actions/delete-blocked-pages.actions';
 import { BlockedHash } from '@app/comic-pages/models/blocked-hash';
 import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 import { TitleService } from '@app/core/services/title.service';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
-import { selectUser } from '@app/user/selectors/user.selectors';
-import { getUserPreference } from '@app/user';
 import { MatPaginator } from '@angular/material/paginator';
-import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@app/core';
+import { PAGE_SIZE_OPTIONS } from '@app/core';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
-import { PREFERENCE_PAGE_SIZE } from '@app/comic-files/comic-file.constants';
 import {
-  selectBlockedHashesList,
-  selectBlockedHashesState
+  selectBlockedHashesBusy,
+  selectBlockedHashesList
 } from '@app/comic-pages/selectors/blocked-hashes.selectors';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import { MatFabButton } from '@angular/material/button';
@@ -71,6 +66,8 @@ import { MatIcon } from '@angular/material/icon';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { AsyncPipe, DatePipe } from '@angular/common';
 import { BlockedHashThumbnailUrlPipe } from '../../pipes/blocked-hash-thumbnail-url.pipe';
+import { tap } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'cx-blocked-hash-list',
@@ -101,19 +98,11 @@ import { BlockedHashThumbnailUrlPipe } from '../../pipes/blocked-hash-thumbnail-
     BlockedHashThumbnailUrlPipe
   ]
 })
-export class BlockedHashListPageComponent
-  implements OnInit, AfterViewInit, OnDestroy
-{
+export class BlockedHashListPageComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  hashStateSubscription: Subscription;
-  pageSubscription: Subscription;
-  langChangeSubscription: Subscription;
-  userSubscription: Subscription;
-  pageSize = PAGE_SIZE_DEFAULT;
   readonly pageOptions = PAGE_SIZE_OPTIONS;
-  dataSource = new MatTableDataSource<SelectableListItem<BlockedHash>>([]);
   readonly displayedColumns = [
     'selected',
     'thumbnail',
@@ -122,8 +111,11 @@ export class BlockedHashListPageComponent
     'comic-count',
     'created-on'
   ];
-  hasSelections = false;
-  allSelected = false;
+
+  dataSource = new MatTableDataSource<SelectableListItem<BlockedHash>>([]);
+
+  hasSelections$ = new BehaviorSubject(false);
+  allSelected$ = new BehaviorSubject(false);
   queryParameterService = inject(QueryParameterService);
   logger = inject(LoggerService);
   store = inject(Store<any>);
@@ -134,27 +126,17 @@ export class BlockedHashListPageComponent
   private _blockedHashes: BlockedHash[] = [];
 
   constructor() {
-    this.hashStateSubscription = this.store
-      .select(selectBlockedHashesState)
-      .subscribe(state => {
-        this.store.dispatch(setBusyState({ enabled: state.busy }));
-      });
-    this.pageSubscription = this.store
+    this.store
+      .select(selectBlockedHashesBusy)
+      .pipe(tap(enabled => this.store.dispatch(setBusyState({ enabled }))))
+      .subscribe();
+    this.store
       .select(selectBlockedHashesList)
-      .subscribe(entries => (this.entries = entries));
-    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
-      () => this.loadTranslations()
-    );
-    this.userSubscription = this.store.select(selectUser).subscribe(user => {
-      this.pageSize = parseInt(
-        getUserPreference(
-          user.preferences,
-          PREFERENCE_PAGE_SIZE,
-          `${PAGE_SIZE_DEFAULT}`
-        ),
-        10
-      );
-    });
+      .pipe(tap(entries => (this.entries = entries)))
+      .subscribe();
+    this.translateService.onLangChange
+      .pipe(tap(() => this.loadTranslations()))
+      .subscribe();
   }
 
   get entries(): BlockedHash[] {
@@ -170,24 +152,15 @@ export class BlockedHashListPageComponent
           ?.selected || false;
       return { selected, item };
     });
-    this.hasSelections = this.dataSource.data.some(entry => entry.selected);
+    this.hasSelections$.next(
+      this.dataSource.data.some(entry => entry.selected)
+    );
   }
 
   get selectedHashes(): BlockedHash[] {
     return this.dataSource.data
       .filter(entry => entry.selected)
       .map(entry => entry.item);
-  }
-
-  ngOnDestroy(): void {
-    this.logger.debug('Unsubscribing from hash state updates');
-    this.hashStateSubscription.unsubscribe();
-    this.logger.debug('Unsubscribing from blocked page list updates');
-    this.pageSubscription.unsubscribe();
-    this.logger.debug('Unsubscribing from language changes');
-    this.langChangeSubscription.unsubscribe();
-    this.logger.debug('Unsubscriing from user updates');
-    this.userSubscription.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -314,10 +287,11 @@ export class BlockedHashListPageComponent
   }
 
   private updateSelections(): void {
-    this.allSelected = this.dataSource.data.every(entry => entry.selected);
-    this.hasSelections =
-      this.allSelected ||
-      this.dataSource.data.some(listEntry => listEntry.selected);
+    this.allSelected$.next(this.dataSource.data.every(entry => entry.selected));
+    this.hasSelections$.next(
+      this.allSelected$.value ||
+        this.dataSource.data.some(listEntry => listEntry.selected)
+    );
   }
 
   private loadTranslations(): void {

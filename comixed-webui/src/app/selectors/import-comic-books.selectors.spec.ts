@@ -20,7 +20,7 @@ import {
   IMPORT_COMIC_BOOKS_FEATURE_KEY,
   ImportComicBooksState
 } from '../reducers/import-comic-books.reducer';
-import { selectProcessingComicBooksState } from './import-comic-books.selectors';
+import { selectProcessingComicBooksBatches } from './import-comic-books.selectors';
 
 describe('ImportComicBooks Selectors', () => {
   let state: ImportComicBooksState;
@@ -32,11 +32,11 @@ describe('ImportComicBooks Selectors', () => {
     };
   });
 
-  it('should select the feature state', () => {
+  it('selects the batch process list', () => {
     expect(
-      selectProcessingComicBooksState({
+      selectProcessingComicBooksBatches({
         [IMPORT_COMIC_BOOKS_FEATURE_KEY]: state
       })
-    ).toEqual(state);
+    ).toEqual(state.batches);
   });
 });

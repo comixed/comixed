@@ -22,10 +22,25 @@ import {
   MultiBookScrapingState
 } from '../reducers/multi-book-scraping.reducer';
 
-export const selectMultiBookScrapingState =
+const selectMultiBookScrapingState =
   createFeatureSelector<MultiBookScrapingState>(
     MULTI_BOOK_SCRAPING_FEATURE_KEY
   );
+
+export const selectMultiBookScrapingBusy = createSelector(
+  selectMultiBookScrapingState,
+  state => state.busy
+);
+
+export const selectMultiBookScrapingStatus = createSelector(
+  selectMultiBookScrapingState,
+  state => state.status
+);
+
+export const selectMultiBookScrapingTotalCount = createSelector(
+  selectMultiBookScrapingState,
+  state => state.totalComics
+);
 
 export const selectMultiBookScrapingList = createSelector(
   selectMultiBookScrapingState,

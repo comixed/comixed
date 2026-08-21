@@ -20,7 +20,11 @@ import {
   SCRAPE_METADATA_FEATURE_KEY,
   ScrapeMetadataState
 } from '../reducers/scrape-metadata.reducer';
-import { selectScrapeMetadataState } from './scrape-metadata.selectors';
+import {
+  selectScrapeMetadataIssueNumber,
+  selectScrapeMetadataSeries,
+  selectScrapeMetadataVolume
+} from './scrape-metadata.selectors';
 import { COMIC_DETAIL_2 } from '@app/comic-books/comic-books.fixtures';
 
 describe('ScrapeMetadata Selectors', () => {
@@ -38,11 +42,21 @@ describe('ScrapeMetadata Selectors', () => {
     };
   });
 
-  it('should select the feature state', () => {
+  it('selects the series', () => {
     expect(
-      selectScrapeMetadataState({
-        [SCRAPE_METADATA_FEATURE_KEY]: state
-      })
-    ).toEqual(state);
+      selectScrapeMetadataSeries({ [SCRAPE_METADATA_FEATURE_KEY]: state })
+    ).toEqual(state.series);
+  });
+
+  it('selects the volume', () => {
+    expect(
+      selectScrapeMetadataVolume({ [SCRAPE_METADATA_FEATURE_KEY]: state })
+    ).toEqual(state.volume);
+  });
+
+  it('selects the issue number', () => {
+    expect(
+      selectScrapeMetadataIssueNumber({ [SCRAPE_METADATA_FEATURE_KEY]: state })
+    ).toEqual(state.issueNumber);
   });
 });

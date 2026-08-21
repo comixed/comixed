@@ -31,7 +31,6 @@ import {
   initialState as initialPublisherState,
   PUBLISHER_FEATURE_KEY
 } from '@app/collections/reducers/publisher.reducer';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
   initialState as initialUserState,
   USER_FEATURE_KEY
@@ -59,7 +58,6 @@ describe('PublisherListPageComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
         FormsModule,
         ReactiveFormsModule,
         RouterModule.forRoot([]),

@@ -22,8 +22,7 @@ import {
 } from '../reducers/reading-lists.reducer';
 import {
   selectUserReadingLists,
-  selectUserReadingListsBusy,
-  selectUserReadingListsState
+  selectUserReadingListsBusy
 } from './reading-lists.selectors';
 import {
   READING_LIST_1,
@@ -44,15 +43,7 @@ describe('ReadingLists Selectors', () => {
     };
   });
 
-  it('should select the feature state', () => {
-    expect(
-      selectUserReadingListsState({
-        [READING_LISTS_FEATURE_KEY]: state
-      })
-    ).toEqual(state);
-  });
-
-  it('should select the reading lists', () => {
+  it('selects the reading lists', () => {
     expect(
       selectUserReadingLists({
         [READING_LISTS_FEATURE_KEY]: state
@@ -60,11 +51,33 @@ describe('ReadingLists Selectors', () => {
     ).toEqual(state.entries);
   });
 
-  it('should select the busy state', () => {
-    expect(
-      selectUserReadingListsBusy({
-        [READING_LISTS_FEATURE_KEY]: state
-      })
-    ).toEqual(state.loading || state.deleting);
+  describe('selecting the busy state', () => {
+    it('returns true when loading', () => {
+      expect(
+        selectUserReadingListsBusy({
+          [READING_LISTS_FEATURE_KEY]: { ...state, loading: true }
+        })
+      ).toBeTrue();
+    });
+
+    it('returns true when deleting', () => {
+      expect(
+        selectUserReadingListsBusy({
+          [READING_LISTS_FEATURE_KEY]: { ...state, deleting: true }
+        })
+      ).toBeTrue();
+    });
+
+    it('returns false when idle', () => {
+      expect(
+        selectUserReadingListsBusy({
+          [READING_LISTS_FEATURE_KEY]: {
+            ...state,
+            loading: false,
+            deleting: false
+          }
+        })
+      ).toBeFalse();
+    });
   });
 });

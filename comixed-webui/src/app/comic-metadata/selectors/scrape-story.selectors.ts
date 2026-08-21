@@ -22,8 +22,13 @@ import {
   ScrapeStoryState
 } from '../reducers/scrape-story.reducer';
 
-export const selectScrapeStoryState = createFeatureSelector<ScrapeStoryState>(
+const selectScrapeStoryState = createFeatureSelector<ScrapeStoryState>(
   SCRAPE_STORY_FEATURE_KEY
+);
+
+export const selectScrapedStoryBusy = createSelector(
+  selectScrapeStoryState,
+  state => state.busy
 );
 
 export const selectScrapedStoryCandidates = createSelector(

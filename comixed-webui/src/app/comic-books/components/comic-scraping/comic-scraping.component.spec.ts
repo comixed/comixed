@@ -28,7 +28,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { saveUserPreference } from '@app/user/actions/user.actions';
@@ -89,7 +88,6 @@ describe('ComicScrapingComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         FormsModule,
@@ -491,7 +489,7 @@ describe('ComicScrapingComponent', () => {
 
   describe('selecting a metadata source', () => {
     beforeEach(() => {
-      component.metadataSourceList = [
+      component.metadataSourceList$.next([
         { label: 'first', value: OTHER_METADATA_SOURCE },
         {
           label: 'second',
@@ -499,7 +497,7 @@ describe('ComicScrapingComponent', () => {
             metadataSourceId: OTHER_METADATA_SOURCE.metadataSourceId + 100
           } as MetadataSource
         }
-      ];
+      ]);
       component.onMetadataSourceChosen(OTHER_METADATA_SOURCE.metadataSourceId);
     });
 
@@ -579,7 +577,7 @@ describe('ComicScrapingComponent', () => {
     const confirm = Math.random() > 0.5;
 
     beforeEach(() => {
-      component.confirmBeforeScraping = !confirm;
+      component.confirmBeforeScraping$.next(!confirm);
     });
 
     describe('from the button', () => {
@@ -618,7 +616,7 @@ describe('ComicScrapingComponent', () => {
     const confirm = Math.random() > 0.5;
 
     beforeEach(() => {
-      component.autoSelectExactMatch = !confirm;
+      component.autoSelectExactMatch$.next(!confirm);
     });
 
     describe('from the button', () => {
