@@ -68,7 +68,7 @@ import { PageHashUrlPipe } from '../../../comic-books/pipes/page-hash-url.pipe';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-  selector: 'cx-duplicate-page-detail-page',
+  selector: 'app-duplicate-page-detail-page',
   templateUrl: './duplicate-page-detail-page.component.html',
   styleUrls: ['./duplicate-page-detail-page.component.scss'],
   imports: [
@@ -96,7 +96,7 @@ import { BehaviorSubject } from 'rxjs';
   ]
 })
 export class DuplicatePageDetailPageComponent implements OnInit, AfterViewInit {
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatSort) sort: MatSort | null = null;
 
   readonly displayedColumns = [
     'publisher',
@@ -170,9 +170,9 @@ export class DuplicatePageDetailPageComponent implements OnInit, AfterViewInit {
       .subscribe();
   }
 
-  private _detail: DuplicatePage;
+  private _detail: DuplicatePage | null = null;
 
-  get detail(): DuplicatePage {
+  get detail(): DuplicatePage | null {
     return this._detail;
   }
 

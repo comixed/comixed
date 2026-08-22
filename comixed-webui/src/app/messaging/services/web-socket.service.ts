@@ -17,7 +17,6 @@
  */
 
 import { inject, Injectable } from '@angular/core';
-import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { WS_ROOT_URL } from '@app/core';
 import {
@@ -32,6 +31,7 @@ import { IFrame, RxStompState } from '@stomp/rx-stomp';
 import { Message } from '@stomp/stompjs';
 import { StompService } from '@app/messaging/services/stomp.service';
 import SockJS from 'sockjs-client';
+import { LoggerService } from '@angular-ru/cdk/logger';
 
 @Injectable({
   providedIn: 'root'
@@ -49,7 +49,7 @@ export class WebSocketService {
         this.stompService.configure({
           webSocketFactory: () => new SockJS(WS_ROOT_URL),
           connectHeaders: {
-            [HTTP_AUTHORIZATION_HEADER]: this.tokenService.getAuthToken()
+            [HTTP_AUTHORIZATION_HEADER]: this.tokenService.getAuthToken() || ''
           },
           reconnectDelay: 200,
           debug: (message: string): void => {
@@ -84,19 +84,18 @@ export class WebSocketService {
    * @param destination the destination
    * @param callback the callback function
    */
-  subscribe<T>(destination: string, callback: (T) => void): Subscription {
+  subscribe<T>(destination: string, callback: (arg0: T) => void): Subscription {
     /* istanbul ignore next */
     this.logger.debug('Subscribing to topic:', destination);
     /* istanbul ignore next */
     return this.stompService.watch(destination).subscribe({
       next(message: Message) {
-        // this.logger.debug('Received content:', message);
         console.log('Received content:', message);
         const content = JSON.parse(message.body);
         callback(content);
       },
       error(error) {
-        this.logger.error('Subscription error:', error);
+        console.error('Subscription error:', error);
       }
     });
   }
@@ -113,7 +112,7 @@ export class WebSocketService {
     message: string,
     body: string,
     destination: string,
-    callback: (T) => void
+    callback: (arg0: T) => void
   ): Subscription {
     /* istanbul ignore next */
     this.logger.trace('Subscribing to temporary queue:', destination);

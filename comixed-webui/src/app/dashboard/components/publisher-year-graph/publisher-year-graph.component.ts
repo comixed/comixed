@@ -30,7 +30,7 @@ import { BehaviorSubject } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 
 @Component({
-  selector: 'cx-publisher-year-graph',
+  selector: 'app-publisher-year-graph',
   imports: [
     MatCard,
     MatCardTitle,
@@ -45,13 +45,13 @@ import { AsyncPipe } from '@angular/common';
   styleUrl: './publisher-year-graph.component.scss'
 })
 export class PublisherYearGraphComponent {
-  @Input() title: string;
-  @Input() rows: number;
+  @Input() title = '';
+  @Input() rows = 0;
   @Output() closePanel = new EventEmitter();
   chartData = new BehaviorSubject<
     { name: string; series: { name: string; value: number }[] }[]
   >([]);
-  private _data: ByPublisherAndYearSegment[];
+  private _data: ByPublisherAndYearSegment[] = [];
 
   @Input() set data(segmentData: ByPublisherAndYearSegment[]) {
     const years = Array.from(

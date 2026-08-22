@@ -54,7 +54,7 @@ import { AsyncPipe } from '@angular/common';
 import { selectReadComicBooksList } from '@app/user/selectors/read-comic-books.selectors';
 
 @Component({
-  selector: 'cx-story-detail',
+  selector: 'app-story-detail',
   templateUrl: './story-detail-page.component.html',
   styleUrl: './story-detail-page.component.scss',
   imports: [
@@ -137,7 +137,7 @@ export class StoryDetailPageComponent implements OnInit {
           this.isAdmin$.next(isAdmin(user));
           this.showCovers$.next(
             getUserPreference(
-              user.preferences,
+              user?.preferences || [],
               SHOW_COMIC_COVERS_PREFERENCE,
               `${true}`
             ) === `${true}`

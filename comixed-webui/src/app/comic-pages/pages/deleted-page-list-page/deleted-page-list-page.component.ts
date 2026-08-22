@@ -60,7 +60,7 @@ import { PageHashUrlPipe } from '../../../comic-books/pipes/page-hash-url.pipe';
 import { tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'cx-deleted-page-list-page',
+  selector: 'app-deleted-page-list-page',
   templateUrl: './deleted-page-list-page.component.html',
   styleUrls: ['./deleted-page-list-page.component.scss'],
   imports: [
@@ -84,8 +84,8 @@ import { tap } from 'rxjs/operators';
   ]
 })
 export class DeletedPageListPageComponent implements OnInit, AfterViewInit {
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator | null = null;
+  @ViewChild(MatSort) sort: MatSort | null = null;
 
   readonly displayedColumns = ['thumbnail', 'hash', 'comic-count'];
   dataSource = new MatTableDataSource<DeletedPage>([]);
@@ -133,10 +133,11 @@ export class DeletedPageListPageComponent implements OnInit, AfterViewInit {
     this.dataSource.sort = this.sort;
     this.dataSource.sortingDataAccessor = (data, sortHeaderId) => {
       switch (sortHeaderId) {
-        case 'hash':
-          return data.hash;
         case 'comic-count':
           return data.comics.length;
+        case 'hash':
+        default:
+          return data.hash;
       }
     };
   }

@@ -65,7 +65,7 @@ describe('ComicScrapingVolumeSelectionComponent', () => {
   const VOLUMES = [
     { ...SCRAPING_VOLUME },
     { ...SCRAPING_VOLUME, startYear: '1900' },
-    { ...SCRAPING_VOLUME, name: SCRAPING_VOLUME.name.substr(1) }
+    { ...SCRAPING_VOLUME, name: SCRAPING_VOLUME.name.slice(1) }
   ];
   const SKIP_CACHE = Math.random() > 0.5;
   const ISSUE_NUMBER = '27';
@@ -316,7 +316,7 @@ describe('ComicScrapingVolumeSelectionComponent', () => {
         confirmationSpy = spyOn(confirmationService, 'confirm').and.callFake(
           (confirm: Confirmation) => confirm.confirm()
         );
-        component.onDecision(true, SCRAPING_VOLUME);
+        component.onDecision(true);
       });
 
       it('fires an action', () => {
@@ -335,7 +335,7 @@ describe('ComicScrapingVolumeSelectionComponent', () => {
           component.multimode = true;
           component.confirmBeforeScraping$.next(true);
           confirmationSpy.calls.reset();
-          component.onDecision(true, SCRAPING_VOLUME);
+          component.onDecision(true);
         });
 
         it('confirms with the user', () => {
@@ -348,7 +348,7 @@ describe('ComicScrapingVolumeSelectionComponent', () => {
           component.multimode = true;
           component.confirmBeforeScraping$.next(false);
           confirmationSpy.calls.reset();
-          component.onDecision(true, SCRAPING_VOLUME);
+          component.onDecision(true);
         });
 
         it('does not confirm with the user', () => {
@@ -359,7 +359,7 @@ describe('ComicScrapingVolumeSelectionComponent', () => {
 
     describe('when rejected', () => {
       beforeEach(() => {
-        component.onDecision(false, null);
+        component.onDecision(false);
       });
 
       it('clears the scraping issue', () => {

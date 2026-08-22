@@ -25,7 +25,7 @@ export const DELETED_PAGE_FEATURE_KEY = 'deleted_pages_state';
 export interface DeletedPagesState {
   busy: boolean;
   list: DeletedPage[];
-  current: DeletedPage;
+  current: DeletedPage | null;
 }
 
 export const initialState: DeletedPagesState = {

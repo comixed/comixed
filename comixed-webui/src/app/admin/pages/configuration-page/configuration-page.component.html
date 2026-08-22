@@ -5,23 +5,23 @@
   (selectedTabChange)="queryParameterService.onTabChange($event.index)"
 >
   <mat-tab [label]="'configuration.tab.server-runtime' | translate">
-    <cx-server-runtime></cx-server-runtime>
+    <app-server-runtime></app-server-runtime>
   </mat-tab>
   <mat-tab [label]="'configuration.tab.server-metrics' | translate">
-    <cx-health-metrics></cx-health-metrics>
+    <app-health-metrics></app-health-metrics>
   </mat-tab>
   <mat-tab [label]="'configuration.tab.library' | translate">
-    <cx-library-configuration
-      [options]="options$ | async"
-    ></cx-library-configuration>
+    <app-library-configuration
+      [options]="(options$ | async) || []"
+    ></app-library-configuration>
   </mat-tab>
   <mat-tab [label]="'configuration.tab.metadata-sources' | translate">
-    <cx-metadata-source-list></cx-metadata-source-list>
+    <app-metadata-source-list></app-metadata-source-list>
   </mat-tab>
   <mat-tab [label]="'configuration.tab.scraping-rules' | translate">
-    <cx-scraping-rules-configuration></cx-scraping-rules-configuration>
+    <app-scraping-rules-configuration></app-scraping-rules-configuration>
   </mat-tab>
   <mat-tab [label]="'configuration.tab.library-plugins' | translate">
-    <cx-library-plugins-configuration></cx-library-plugins-configuration>
+    <app-library-plugins-configuration></app-library-plugins-configuration>
   </mat-tab>
 </mat-tab-group>

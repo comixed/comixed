@@ -256,13 +256,13 @@ describe('ReadingListService', () => {
       webSocketService.subscribe
         .withArgs(LISTS_UPDATE_TOPIC, jasmine.anything())
         .and.callFake((topic, callback) => {
-          callback(READING_LIST);
+          callback(READING_LIST as any);
           return {} as Subscription;
         });
       webSocketService.subscribe
         .withArgs(LISTS_REMOVED_UPDATE, jasmine.anything())
         .and.callFake((topic, callback) => {
-          callback(READING_LIST);
+          callback(READING_LIST as any);
           return {} as Subscription;
         });
       store.setState({

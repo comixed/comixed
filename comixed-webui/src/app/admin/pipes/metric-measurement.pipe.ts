@@ -33,6 +33,6 @@ export class MetricMeasurementPipe implements PipeTransform {
       case 'MAX':
         return `Longest runtime: ${measurement.value} ${detail.baseUnit}`;
     }
-    return null;
+    return '';
   }
 }

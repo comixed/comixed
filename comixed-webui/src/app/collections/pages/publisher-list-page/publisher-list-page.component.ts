@@ -60,7 +60,7 @@ import { tap } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-  selector: 'cx-publisher-list-page',
+  selector: 'app-publisher-list-page',
   templateUrl: './publisher-list-page.component.html',
   styleUrls: ['./publisher-list-page.component.scss'],
   imports: [
@@ -85,7 +85,7 @@ import { BehaviorSubject } from 'rxjs';
   ]
 })
 export class PublisherListPageComponent implements OnInit, AfterViewInit {
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatSort) sort: MatSort | null = null;
 
   readonly displayedColumns = ['name', 'issue-count', 'series-count'];
   readonly pageOptions = PAGE_SIZE_OPTIONS;

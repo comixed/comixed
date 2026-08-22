@@ -37,8 +37,8 @@ export class DuplicatePageService {
   loadDuplicatePages(args: {
     page: number;
     size: number;
-    sortBy: string;
-    sortDirection: string;
+    sortBy: string | null;
+    sortDirection: string | null;
   }): Observable<any> {
     this.logger.trace('Service: Load duplicate pages');
     return this.http.post(interpolate(LOAD_COMICS_WITH_DUPLICATE_PAGES_URL), {

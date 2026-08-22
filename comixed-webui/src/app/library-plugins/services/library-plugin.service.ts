@@ -85,9 +85,9 @@ export class LibraryPluginService {
 
   updatePlugin(args: { plugin: LibraryPlugin }): Observable<any> {
     this.logger.trace('Updating plugin:', args);
-    const properties = {};
-    args.plugin.properties.forEach(
-      entry => (properties[entry.name] = entry.value)
+    const properties = new Map<string, string>();
+    args.plugin.properties.forEach(entry =>
+      properties.set(entry.name, entry.value)
     );
     return this.http.put(
       interpolate(UPDATE_PLUGIN_URL, { pluginId: args.plugin.libraryPluginId }),

@@ -43,7 +43,7 @@ import { ComicListViewComponent } from '../../../comic-books/components/comic-li
 import { AsyncPipe } from '@angular/common';
 
 @Component({
-  selector: 'cx-metadata-process-page',
+  selector: 'app-metadata-process-page',
   templateUrl: './metadata-process-page.component.html',
   styleUrls: ['./metadata-process-page.component.scss'],
   imports: [

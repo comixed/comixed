@@ -52,7 +52,7 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { MatButton } from '@angular/material/button';
 
 @Component({
-  selector: 'cx-metadata-source-detail',
+  selector: 'app-metadata-source-detail',
   templateUrl: './metadata-source-detail.component.html',
   styleUrls: ['./metadata-source-detail.component.scss'],
   imports: [
@@ -95,21 +95,21 @@ export class MetadataSourceDetailComponent {
     this.source = this.data.source;
   }
 
-  private _source: MetadataSource;
+  private _source: MetadataSource | null = null;
 
-  get source(): MetadataSource {
+  get source(): MetadataSource | null {
     return this._source;
   }
 
-  @Input() set source(source: MetadataSource) {
+  @Input() set source(source: MetadataSource | null) {
     this._source = source;
     this.logger.debug('Loading metadata source form');
     this.resetProperties();
     this.sourceForm.controls.properties.reset([]);
-    this.sourceForm.controls.name.setValue(source.name);
-    this.sourceForm.controls.preferredSource.setValue(source.preferred);
+    this.sourceForm.controls.name.setValue(source?.name);
+    this.sourceForm.controls.preferredSource.setValue(source?.preferred);
     this.logger.debug('Loading metadata source properties');
-    source.properties.forEach(property =>
+    (source?.properties || []).forEach(property =>
       this.addSourceProperty(property.name, property.value)
     );
     this.sourceForm.markAsPristine();
@@ -119,7 +119,7 @@ export class MetadataSourceDetailComponent {
     return this.sourceForm.controls.properties as UntypedFormArray;
   }
 
-  get controls(): { [p: string]: AbstractControl } {
+  get controls(): Record<string, AbstractControl> {
     return this.sourceForm.controls;
   }
 
@@ -149,7 +149,7 @@ export class MetadataSourceDetailComponent {
   encodeForm(): MetadataSource {
     this.logger.debug('Encoding metadata source form');
     return {
-      ...this.source,
+      ...this.source!!,
       name: this.sourceForm.controls.name.value,
       preferred: this.sourceForm.controls.preferredSource.value,
       properties: this.properties.controls.map(control => {
@@ -196,7 +196,7 @@ export class MetadataSourceDetailComponent {
         this.logger.debug('Saving metadata source:', source);
         this.store.dispatch(
           saveMetadataSource({
-            sourceId: source.metadataSourceId,
+            sourceId: source.metadataSourceId!!,
             sourceName: source.name,
             preferred: source.preferred,
             properties: source.properties.map(entry => {

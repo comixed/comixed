@@ -60,7 +60,7 @@ import { AsyncPipe, DatePipe } from '@angular/common';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-  selector: 'cx-navigation-bar',
+  selector: 'app-navigation-bar',
   templateUrl: './navigation-bar.component.html',
   styleUrls: ['./navigation-bar.component.scss'],
   imports: [
@@ -166,14 +166,14 @@ export class NavigationBarComponent {
     this._accountBarOpened = opened;
   }
 
-  private _user: User;
+  private _user: User | null = null;
 
-  get user(): User {
+  get user(): User | null {
     return this._user;
   }
 
   @Input()
-  set user(user: User) {
+  set user(user: User | null) {
     this.logger.trace('Setting user');
     this._user = user;
     this.isAdmin$.next(isAdmin(user));
@@ -204,7 +204,7 @@ export class NavigationBarComponent {
   onSelectLanguage(language: string): void {
     this.logger.debug('Changing selected language:', language);
     this.translateService.use(language);
-    if (!!this.user) {
+    if (this.user) {
       this.logger.trace('Saving user language preference');
       this.store.dispatch(
         saveUserPreference({ name: LANGUAGE_PREFERENCE, value: language })
@@ -215,7 +215,7 @@ export class NavigationBarComponent {
   onSetLogging(loggerLevel: LoggerLevel): void {
     this.logger.debug('Setting logger level:', loggerLevel);
     this.logger.level = loggerLevel;
-    if (!!this.user) {
+    if (this.user) {
       this.logger.trace('Saving user logging preference');
       this.store.dispatch(
         saveUserPreference({
@@ -266,7 +266,7 @@ export class NavigationBarComponent {
 
   onViewLatestRelease(): void {
     this.logger.trace('Opening latest release page');
-    window.open(this.latestRelease$.value.url, LATEST_RELEASE_TARGET);
+    window.open(this.latestRelease$.value?.url, LATEST_RELEASE_TARGET);
   }
 
   onToggleAccountBar(): void {

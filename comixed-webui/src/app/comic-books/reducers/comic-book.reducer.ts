@@ -43,8 +43,8 @@ export const COMIC_BOOK_FEATURE_KEY = 'comic_book_state';
 
 export interface ComicBookState {
   loading: boolean;
-  detail: DisplayableComic;
-  metadata: ComicMetadataSource;
+  detail: DisplayableComic | null;
+  metadata: ComicMetadataSource | null;
   pages: ComicPage[];
   tags: ComicTag[];
   saving: boolean;

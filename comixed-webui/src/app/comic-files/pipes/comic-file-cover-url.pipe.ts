@@ -22,9 +22,9 @@ import { API_ROOT_URL } from '@app/core';
 
 @Pipe({ name: 'comicFileCoverUrl' })
 export class ComicFileCoverUrlPipe implements PipeTransform {
-  transform(comicFile: ComicFile): string {
+  transform(comicFile: ComicFile | null): string {
     return `${API_ROOT_URL}/files/import/cover?filename=${encodeURIComponent(
-      comicFile.filename
+      comicFile?.filename || ''
     )}`;
   }
 }

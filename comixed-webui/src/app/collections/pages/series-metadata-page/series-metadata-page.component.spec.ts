@@ -210,9 +210,9 @@ describe('SeriesMetadataPageComponent', () => {
       expect(
         component.getComicBookIdForRow({
           ...ISSUE,
-          publisher: COMIC_BOOK.publisher.substr(1)
+          publisher: COMIC_BOOK.publisher.slice(1)
         })
-      ).toBeUndefined();
+      ).toBeNull();
     });
   });
 

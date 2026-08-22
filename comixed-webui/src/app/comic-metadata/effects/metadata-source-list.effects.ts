@@ -19,7 +19,6 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, mergeMap, switchMap, tap } from 'rxjs/operators';
-import * as MetadataSourceListActions from '../actions/metadata-source-list.actions';
 import {
   loadMetadataSources,
   loadMetadataSourcesFailed,
@@ -51,7 +50,7 @@ export class MetadataSourceListEffects {
           mergeMap((response: MetadataSource[]) => [
             metadataSourcesLoaded({ sources: response }),
             setChosenMetadataSource({
-              metadataSource: response.find(entry => entry.preferred)
+              metadataSource: response.find(entry => entry.preferred) || null
             })
           ]),
           catchError(error => {

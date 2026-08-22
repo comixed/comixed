@@ -36,6 +36,7 @@ import {
 } from '@app/admin/actions/batch-processes.actions';
 import { filter, tap } from 'rxjs/operators';
 import { DeleteSelectedJobsRequest } from '@app/admin/models/net/delete-selected-jobs-request';
+import { BatchProcessDetail } from '@app/admin/models/batch-process-detail';
 
 @Injectable({
   providedIn: 'root'
@@ -57,7 +58,7 @@ export class BatchProcessesService {
           this.logger.trace('Subscribing to batch process list updates');
           this.webSocketService.subscribe(
             BATCH_PROCESS_LIST_UPDATE_TOPIC,
-            update => {
+            (update: BatchProcessDetail) => {
               this.logger.debug('Received batch process list update:', update);
               this.store.dispatch(batchProcessUpdateReceived({ update }));
             }

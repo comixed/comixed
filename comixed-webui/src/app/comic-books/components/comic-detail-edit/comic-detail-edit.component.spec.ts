@@ -237,13 +237,13 @@ describe('ComicDetailEditComponent', () => {
     beforeEach(() => {
       component.comicBookForm.controls.comicType.setValue(ComicType.MANGA);
       component.comicBookForm.controls.publisher.setValue(
-        COMIC.publisher.substr(1)
+        COMIC.publisher.slice(1)
       );
       component.comicBookForm.controls.imprint.setValue(null);
-      component.comicBookForm.controls.series.setValue(COMIC.series.substr(1));
-      component.comicBookForm.controls.volume.setValue(COMIC.volume.substr(1));
+      component.comicBookForm.controls.series.setValue(COMIC.series.slice(1));
+      component.comicBookForm.controls.volume.setValue(COMIC.volume.slice(1));
       component.comicBookForm.controls.issueNumber.setValue(
-        COMIC.issueNumber.substr(1)
+        COMIC.issueNumber.slice(1)
       );
       component.comicBookForm.controls.coverDate.setValue(null);
       component.comicBookForm.controls.storeDate.setValue(null);

@@ -18,15 +18,15 @@
 
 import { createFeature, createReducer, on } from '@ngrx/store';
 import {
-  saveUserAccount,
-  saveUserAccountFailure,
-  saveUserAccountSuccess,
   deleteUserAccount,
   deleteUserAccountFailure,
   deleteUserAccountSuccess,
   loadUserAccountList,
   loadUserAccountListFailure,
   loadUserAccountListSuccess,
+  saveUserAccount,
+  saveUserAccountFailure,
+  saveUserAccountSuccess,
   setCurrentUser
 } from '../actions/manage-users.actions';
 import { User } from '@app/user/models/user';
@@ -37,7 +37,7 @@ export interface ManagerUsersState {
   busy: boolean;
   saved: boolean;
   entries: User[];
-  current: User;
+  current: User | null;
 }
 
 export const initialState: ManagerUsersState = {

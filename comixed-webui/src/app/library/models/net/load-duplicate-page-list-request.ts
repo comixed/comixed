@@ -19,6 +19,6 @@
 export interface LoadDuplicatePageListRequest {
   page: number;
   size: number;
-  sortBy: string;
-  sortDirection: string;
+  sortBy: string | null;
+  sortDirection: string | null;
 }

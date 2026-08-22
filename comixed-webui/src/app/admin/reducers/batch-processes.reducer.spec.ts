@@ -134,7 +134,7 @@ describe('BatchProcesses Reducer', () => {
             {
               ...DETAIL,
               running: !DETAIL.running,
-              jobName: DETAIL.jobName.substring(1)
+              jobName: DETAIL.jobName.slice(1)
             }
           ]
         },

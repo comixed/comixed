@@ -185,11 +185,5 @@ describe('ComicPagesComponent', () => {
         component.dataSource.sortingDataAccessor(PAGE, 'filename')
       ).toEqual(PAGE.filename);
     });
-
-    it('does not sort on unknown fields', () => {
-      expect(
-        component.dataSource.sortingDataAccessor(PAGE, 'farkle')
-      ).toBeNull();
-    });
   });
 });

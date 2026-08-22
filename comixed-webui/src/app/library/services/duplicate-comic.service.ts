@@ -36,10 +36,10 @@ export class DuplicateComicService {
   http = inject(HttpClient);
 
   loadDuplicateComicList(args: {
-    sortDirection: string;
+    sortDirection: string | null;
     pageIndex: number;
     pageSize: number;
-    sortBy: string;
+    sortBy: string | null;
   }): Observable<any> {
     this.logger.debug('Loading a list of duplicate comic books:', args);
     return this.http.post(interpolate(LOAD_DUPLICATE_COMIC_LIST_URL), {
@@ -58,8 +58,8 @@ export class DuplicateComicService {
     coverDate: number;
     pageIndex: number;
     pageSize: number;
-    sortBy: string;
-    sortDirection: string;
+    sortBy: string | null;
+    sortDirection: string | null;
   }): Observable<any> {
     this.logger.debug('Loading a duplicated comic book:', args);
     return this.http.post(LOAD_DUPLICATE_COMICS_URL, {

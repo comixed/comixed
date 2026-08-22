@@ -24,6 +24,6 @@ export interface LoadDuplicateComicsRequest {
   coverDate: number;
   pageIndex: number;
   pageSize: number;
-  sortBy: string;
-  sortDirection: string;
+  sortBy: string | null;
+  sortDirection: string | null;
 }

@@ -54,7 +54,7 @@ import { BehaviorSubject } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 
 @Component({
-  selector: 'cx-login',
+  selector: 'app-login',
   templateUrl: './login-page.component.html',
   styleUrls: ['./login-page.component.scss'],
   imports: [
@@ -137,7 +137,7 @@ export class LoginPageComponent implements OnInit, AfterViewInit {
       .subscribe();
   }
 
-  get controls(): { [p: string]: AbstractControl } {
+  get controls(): Record<string, AbstractControl> {
     return this.loginForm.controls;
   }
 

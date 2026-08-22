@@ -109,7 +109,7 @@ describe('BatchProcessDetailDialogComponent', () => {
     beforeEach(() => {
       component.detail$.next(DETAIL);
       webSocketService.subscribe.and.callFake((topic, callback) => {
-        callback(DETAIL);
+        callback(DETAIL as any);
         return {} as Subscription;
       });
       store.setState({

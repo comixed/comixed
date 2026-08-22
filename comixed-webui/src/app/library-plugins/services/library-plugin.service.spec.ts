@@ -129,8 +129,8 @@ describe('LibraryPluginService', () => {
       })
       .subscribe(response => expect(response).toEqual(PLUGIN));
 
-    const properties = {};
-    PLUGIN.properties.forEach(entry => (properties[entry.name] = entry.value));
+    const properties = new Map<string, string>();
+    PLUGIN.properties.forEach(entry => properties.set(entry.name, entry.value));
     const req = httpMock.expectOne(
       interpolate(UPDATE_PLUGIN_URL, { pluginId: PLUGIN.libraryPluginId })
     );

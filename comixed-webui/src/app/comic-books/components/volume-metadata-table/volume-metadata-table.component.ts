@@ -27,18 +27,18 @@ import {
 } from '@angular/core';
 import { VolumeMetadata } from '@app/comic-metadata/models/volume-metadata';
 import {
-  MatTableDataSource,
-  MatTable,
-  MatColumnDef,
-  MatHeaderCellDef,
-  MatHeaderCell,
-  MatCellDef,
   MatCell,
-  MatHeaderRowDef,
+  MatCellDef,
+  MatColumnDef,
+  MatHeaderCell,
+  MatHeaderCellDef,
   MatHeaderRow,
-  MatRowDef,
+  MatHeaderRowDef,
+  MatNoDataRow,
   MatRow,
-  MatNoDataRow
+  MatRowDef,
+  MatTable,
+  MatTableDataSource
 } from '@angular/material/table';
 import {
   EXACT_MATCH,
@@ -60,7 +60,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { IssueMetadataTitlePipe } from '@app/comic-books/pipes/issue-metadata-title.pipe';
 
 @Component({
-  selector: 'cx-volume-metadata-table',
+  selector: 'app-volume-metadata-table',
   templateUrl: './volume-metadata-table.component.html',
   styleUrls: ['./volume-metadata-table.component.scss'],
   imports: [
@@ -88,10 +88,10 @@ import { IssueMetadataTitlePipe } from '@app/comic-books/pipes/issue-metadata-ti
   ]
 })
 export class VolumeMetadataTableComponent implements AfterViewInit {
-  @ViewChild(MatSort) sort: MatSort;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort | null = null;
+  @ViewChild(MatPaginator) paginator: MatPaginator | null = null;
 
-  @Input() publisher = null;
+  @Input() publisher = '';
   @Input() series = '';
   @Input() volume = '';
   @Input() issueNumber = null;
@@ -107,7 +107,7 @@ export class VolumeMetadataTableComponent implements AfterViewInit {
   ];
   readonly pageOptions = PAGE_SIZE_OPTIONS;
   @Input() pageSize = PAGE_SIZE_DEFAULT;
-  selectedVolume: VolumeMetadata;
+  selectedVolume: VolumeMetadata | null = null;
   @Output() volumeSelected = new EventEmitter<VolumeMetadata>();
 
   logger = inject(LoggerService);
@@ -163,7 +163,7 @@ export class VolumeMetadataTableComponent implements AfterViewInit {
     this.volumeSelected.emit(volume);
   }
 
-  private isMatch(text, filter: string) {
+  private isMatch(text: string, filter: string) {
     return (
       (text || '').toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) !==
       -1

@@ -9,16 +9,16 @@
   }}
 </h2>
 
-<cx-comic-list-view
+<app-comic-list-view
   class="cx-width-100"
-  [isAdmin]="isAdmin$ | async"
-  [comics]="comics$ | async"
-  [totalComics]="totalComics$ | async"
-  [coverYears]="coverYears$ | async"
-  [coverMonths]="coverMonths$ | async"
-  [selectedIds]="selectedIds$ | async"
-  [comicBooksRead]="lastReadDates$ | async"
-  [readingLists]="readingLists$ | async"
+  [isAdmin]="(isAdmin$ | async) || false"
+  [comics]="(comics$ | async) || []"
+  [totalComics]="(totalComics$ | async) || 0"
+  [coverYears]="(coverYears$ | async) || []"
+  [coverMonths]="(coverMonths$ | async) || []"
+  [selectedIds]="(selectedIds$ | async) || []"
+  [comicBooksRead]="(lastReadDates$ | async) || []"
+  [readingLists]="(readingLists$ | async) || []"
   [showAction]="false"
   (selectAll)="onSelectAll($event)"
-></cx-comic-list-view>
+></app-comic-list-view>

@@ -33,7 +33,7 @@ import {
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-  selector: 'cx-library-stats',
+  selector: 'app-library-stats',
   imports: [
     AsyncPipe,
     MatCard,
@@ -49,7 +49,7 @@ import { BehaviorSubject } from 'rxjs';
   styleUrl: './library-stat.component.scss'
 })
 export class LibraryStatComponent {
-  @Input() title: string;
+  @Input() title = '';
   @Output() closePanel = new EventEmitter();
   chartData = new BehaviorSubject<{ name: string; value: number }[]>([]);
 

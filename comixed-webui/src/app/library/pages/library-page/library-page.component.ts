@@ -61,12 +61,12 @@ import { MatFabButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
 import { ComicListViewComponent } from '../../../comic-books/components/comic-list-view/comic-list-view.component';
-import { tap } from 'rxjs/operators';
+import { filter, tap } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 
 @Component({
-  selector: 'cx-library-page',
+  selector: 'app-library-page',
   templateUrl: './library-page.component.html',
   styleUrls: ['./library-page.component.scss'],
   imports: [
@@ -79,13 +79,13 @@ import { AsyncPipe } from '@angular/common';
   ]
 })
 export class LibraryPageComponent implements OnInit {
-  readonly archiveTypeOptions: SelectionOption<ArchiveType>[] = [
+  readonly archiveTypeOptions: SelectionOption<ArchiveType | null>[] = [
     { label: 'archive-type.label.all', value: null },
     { label: 'archive-type.label.cbz', value: ArchiveType.CBZ },
     { label: 'archive-type.label.cbr', value: ArchiveType.CBR },
     { label: 'archive-type.label.cb7', value: ArchiveType.CB7 }
   ];
-  readonly comicTypeOptions: SelectionOption<ComicType>[] = [
+  readonly comicTypeOptions: SelectionOption<ComicType | null>[] = [
     { label: 'comic-type.label.all', value: null },
     { label: 'comic-type.label.issue', value: ComicType.ISSUE },
     { label: 'comic-type.label.manga', value: ComicType.MANGA },
@@ -200,6 +200,7 @@ export class LibraryPageComponent implements OnInit {
     this.store
       .select(selectUser)
       .pipe(
+        filter(user => !!user),
         tap(user => {
           this.logger.debug('Setting admin flag');
           this.isAdmin$.next(isAdmin(user));
@@ -297,7 +298,7 @@ export class LibraryPageComponent implements OnInit {
       .subscribe();
   }
 
-  private get targetComicState(): ComicState {
+  private get targetComicState(): ComicState | null {
     if (this.unprocessedOnly$.value) {
       return ComicState.UNPROCESSED;
     }

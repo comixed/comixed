@@ -35,7 +35,7 @@ export const METADATA_SOURCE_FEATURE_KEY = 'metadata_source_state';
 
 export interface MetadataSourceState {
   busy: boolean;
-  source: MetadataSource;
+  source: MetadataSource | null;
 }
 
 export const initialState: MetadataSourceState = {

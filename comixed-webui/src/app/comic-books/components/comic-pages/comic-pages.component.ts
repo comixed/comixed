@@ -65,7 +65,7 @@ import { MatLabel } from '@angular/material/form-field';
 import { ComicPageUrlPipe } from '@app/comic-books/pipes/comic-page-url.pipe';
 
 @Component({
-  selector: 'cx-comic-pages',
+  selector: 'app-comic-pages',
   templateUrl: './comic-pages.component.html',
   styleUrls: ['./comic-pages.component.scss'],
   imports: [
@@ -95,8 +95,8 @@ import { ComicPageUrlPipe } from '@app/comic-books/pipes/comic-page-url.pipe';
   ]
 })
 export class ComicPagesComponent implements AfterViewInit {
-  @ViewChild(MatMenuTrigger) contextMenu: MatMenuTrigger;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatMenuTrigger) contextMenu: MatMenuTrigger | null = null;
+  @ViewChild(MatSort) sort: MatSort | null = null;
 
   @Input() showPagesAsGrid = true;
   @Input() isAdmin = false;
@@ -111,7 +111,7 @@ export class ComicPagesComponent implements AfterViewInit {
     'dimensions'
   ];
   dataSource = new MatTableDataSource<ComicPage>([]);
-  page: ComicPage;
+  page: ComicPage | null = null;
   contextMenuX = '';
   contextMenuY = '';
 
@@ -137,12 +137,11 @@ export class ComicPagesComponent implements AfterViewInit {
     this.dataSource.sort = this.sort;
     this.dataSource.sortingDataAccessor = (data, sortHeaderId) => {
       switch (sortHeaderId) {
-        case 'page-number':
-          return data.pageNumber;
         case 'filename':
           return data.filename;
+        case 'page-number':
         default:
-          return null;
+          return data.pageNumber;
       }
     };
   }
@@ -152,7 +151,7 @@ export class ComicPagesComponent implements AfterViewInit {
     this.page = page;
     this.contextMenuX = x;
     this.contextMenuY = y;
-    this.contextMenu.openMenu();
+    this.contextMenu?.openMenu();
   }
 
   onSetPageBlocked(page: ComicPage, blocked: boolean): void {

@@ -31,7 +31,7 @@ export const SERVER_RUNTIME_FEATURE_KEY = 'server_runtime_state';
 
 export interface ShutdownState {
   loading: boolean;
-  health: ServerHealth;
+  health: ServerHealth | null;
   busy: boolean;
   shuttingDown: boolean;
 }

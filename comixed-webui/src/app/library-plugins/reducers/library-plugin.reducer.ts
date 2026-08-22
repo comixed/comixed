@@ -40,7 +40,7 @@ export const LIBRARY_PLUGIN_FEATURE_KEY = 'plugin_list_state';
 export interface LibraryPluginState {
   busy: boolean;
   list: LibraryPlugin[];
-  current: LibraryPlugin;
+  current: LibraryPlugin | null;
 }
 
 export const initialState: LibraryPluginState = {

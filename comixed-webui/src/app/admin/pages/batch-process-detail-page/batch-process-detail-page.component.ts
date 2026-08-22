@@ -40,7 +40,7 @@ import { TitleService } from '@app/core/services/title.service';
 import { AsyncPipe, DatePipe, KeyValuePipe } from '@angular/common';
 
 @Component({
-  selector: 'cx-batch-process-detail-page',
+  selector: 'app-batch-process-detail-page',
   templateUrl: './batch-process-detail-page.component.html',
   styleUrls: ['./batch-process-detail-page.component.scss'],
   imports: [DatePipe, KeyValuePipe, TranslateModule, AsyncPipe]
@@ -48,7 +48,7 @@ import { AsyncPipe, DatePipe, KeyValuePipe } from '@angular/common';
 export class BatchProcessDetailPageComponent implements OnInit {
   jobId$ = new BehaviorSubject<number | null>(null);
   batchList$ = new BehaviorSubject<BatchProcessDetail[]>([]);
-  detail$ = new BehaviorSubject<BatchProcessDetail>(null);
+  detail$ = new BehaviorSubject<BatchProcessDetail | null>(null);
 
   logger = inject(LoggerService);
   store = inject(Store);
@@ -92,13 +92,16 @@ export class BatchProcessDetailPageComponent implements OnInit {
             const topic = interpolate(BATCH_PROCESS_DETAIL_UPDATE_TOPIC, {
               jobId: this.jobId$.value
             });
-            this.webSocketService.subscribe(topic, update => {
-              this.logger.debug(
-                'Received batch process detail update:',
-                update
-              );
-              this.store.dispatch(setBatchProcessDetail({ detail: update }));
-            });
+            this.webSocketService.subscribe(
+              topic,
+              (update: BatchProcessDetail) => {
+                this.logger.debug(
+                  'Received batch process detail update:',
+                  update
+                );
+                this.store.dispatch(setBatchProcessDetail({ detail: update }));
+              }
+            );
           }
         })
       )
@@ -111,7 +114,8 @@ export class BatchProcessDetailPageComponent implements OnInit {
 
   loadJobDetail(): void {
     this.detail$.next(
-      this.batchList$.value.find(entry => entry.jobId === this.jobId$.value)
+      this.batchList$.value.find(entry => entry.jobId === this.jobId$.value) ||
+        null
     );
     this.loadTranslations();
   }

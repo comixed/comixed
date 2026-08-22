@@ -31,7 +31,7 @@ import { PieChartModule } from '@swimlane/ngx-charts';
 import { AsyncPipe } from '@angular/common';
 
 @Component({
-  selector: 'cx-archive-types',
+  selector: 'app-archive-types',
   imports: [
     MatCard,
     MatCardActions,
@@ -45,8 +45,8 @@ import { AsyncPipe } from '@angular/common';
   styleUrl: './archive-types.component.scss'
 })
 export class ArchiveTypesComponent {
-  @Input() title: string;
-  @Input() rows: number;
+  @Input() title = '';
+  @Input() rows = 0;
 
   labels = [ArchiveType.CBR, ArchiveType.CBZ, ArchiveType.CB7];
   chartData = new BehaviorSubject<{ name: string; value: number }[]>([]);

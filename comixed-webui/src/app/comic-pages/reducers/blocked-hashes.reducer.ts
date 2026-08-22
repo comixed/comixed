@@ -51,7 +51,7 @@ export interface BlockedHashesState {
   busy: boolean;
   entries: BlockedHash[];
   notFound: boolean;
-  entry: BlockedHash;
+  entry: BlockedHash | null;
   saved: boolean;
 }
 

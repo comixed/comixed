@@ -67,10 +67,16 @@ export class ComicBookSelectionService {
   http = inject(HttpClient);
 
   constructor() {
-    this.store.select(selectUser).subscribe(user => {
-      this.email = user?.email;
-      this.doSubscribeToSelectionUpdates();
-    });
+    this.store
+      .select(selectUser)
+      .pipe(
+        filter(user => !!user),
+        tap(user => {
+          this.email = user.email;
+          this.doSubscribeToSelectionUpdates();
+        })
+      )
+      .subscribe();
 
     this.store
       .select(selectMessagingStarted)
@@ -109,13 +115,13 @@ export class ComicBookSelectionService {
   }
 
   setSelectedByFilter(args: {
-    coverYear: number;
-    coverMonth: number;
-    archiveType: ArchiveType;
-    comicType: ComicType;
-    comicState: ComicState;
+    coverYear: number | null;
+    coverMonth: number | null;
+    archiveType: ArchiveType | null;
+    comicType: ComicType | null;
+    comicState: ComicState | null;
     unscrapedState: boolean;
-    searchText: string;
+    searchText: string | null;
     selected: boolean;
   }): Observable<any> {
     this.logger.debug('Setting multiple comic book selection state:', args);
@@ -231,7 +237,7 @@ export class ComicBookSelectionService {
   }
 
   private doSubscribeToSelectionUpdates() {
-    if (!!this.email) {
+    if (this.email) {
       this.logger.trace('Subscribing to comic book selection updates');
       this.webSocketService.subscribe<number[]>(
         interpolate(COMIC_BOOK_SELECTION_UPDATE_TOPIC, { email: this.email }),

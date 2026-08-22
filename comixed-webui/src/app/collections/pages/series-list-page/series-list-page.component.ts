@@ -58,7 +58,7 @@ import { tap } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-  selector: 'cx-series-list-page',
+  selector: 'app-series-list-page',
   templateUrl: './series-list-page.component.html',
   styleUrls: ['./series-list-page.component.scss'],
   imports: [
@@ -139,8 +139,8 @@ export class SeriesListPageComponent implements AfterViewInit {
           const pageIndex = this.dataSource.paginator?.pageIndex;
           this.dataSource.data = series;
           /* istanbul ignore if */
-          if (!!pageIndex) {
-            this.dataSource.paginator.pageIndex = pageIndex;
+          if (pageIndex) {
+            this.dataSource.paginator!!.pageIndex = pageIndex;
           }
         })
       )

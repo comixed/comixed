@@ -88,7 +88,7 @@ import { AsyncPipe, DatePipe } from '@angular/common';
 import { tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'cx-user-accounts-page',
+  selector: 'app-user-accounts-page',
   templateUrl: './user-accounts-page.component.html',
   styleUrl: './user-accounts-page.component.scss',
   imports: [
@@ -123,7 +123,7 @@ import { tap } from 'rxjs/operators';
   ]
 })
 export class UserAccountsPageComponent implements OnInit, AfterViewInit {
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatSort) sort: MatSort | null = null;
 
   dataSource = new MatTableDataSource<User>([]);
   editUserForm: FormGroup;
@@ -172,7 +172,7 @@ export class UserAccountsPageComponent implements OnInit, AfterViewInit {
       .pipe(
         tap(user => {
           this.user$.next(user);
-          if (!!user) {
+          if (user) {
             this.editUserForm.controls.id.setValue(user.comixedUserId);
             this.editUserForm.controls.email.setValue(user.email);
             this.editUserForm.controls.admin.setValue(isAdmin(user));
@@ -197,7 +197,7 @@ export class UserAccountsPageComponent implements OnInit, AfterViewInit {
     this.dataSource.data = users;
   }
 
-  get controls(): { [p: string]: AbstractControl } {
+  get controls(): Record<string, AbstractControl> {
     return this.editUserForm.controls;
   }
 
@@ -246,8 +246,8 @@ export class UserAccountsPageComponent implements OnInit, AfterViewInit {
   }
 
   onDeleteUser(): void {
-    const email = this.user$.value?.email;
-    const id = this.user$.value?.comixedUserId;
+    const email = this.user$.value!!.email;
+    const id = this.user$.value!!.comixedUserId;
     this.confirmationService.confirm({
       title: this.translateService.instant(
         'user-accounts.delete-user-account.confirmation-title'
@@ -280,8 +280,6 @@ export class UserAccountsPageComponent implements OnInit, AfterViewInit {
         Validators.minLength(MIN_PASSWORD_LENGTH),
         Validators.maxLength(MAX_PASSWORD_LENGTH)
       ]);
-      this.logger.trace('Adding password comparison validator');
-      this.editUserForm.setValidators(passwordVerifyValidator);
     } else {
       this.logger.trace('Removing password validators');
       this.editUserForm.controls.password.setValidators(null);

@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, HostListener, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import {
   FormGroup,
   ReactiveFormsModule,
@@ -70,12 +70,12 @@ import {
   MatCardTitle
 } from '@angular/material/card';
 import { VolumeMetadataTitlePipe } from '../../../comic-books/pipes/volume-metadata-title.pipe';
-import { tap } from 'rxjs/operators';
+import { filter, tap } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 
 @Component({
-  selector: 'cx-scraping-series-page',
+  selector: 'app-scraping-series-page',
   templateUrl: './scraping-series-page.component.html',
   styleUrls: ['./scraping-series-page.component.scss'],
   imports: [
@@ -116,7 +116,7 @@ export class ScrapingSeriesPageComponent implements OnInit {
   scrapingVolumes$ = new BehaviorSubject<VolumeMetadata[]>([]);
   pageSize$ = new BehaviorSubject(10);
   metadataSourceList$ = new BehaviorSubject<MetadataSource[]>([]);
-  selectedVolume: VolumeMetadata;
+  selectedVolume$ = new BehaviorSubject<VolumeMetadata | null>(null);
 
   logger = inject(LoggerService);
   store = inject(Store);
@@ -149,6 +149,7 @@ export class ScrapingSeriesPageComponent implements OnInit {
     this.store
       .select(selectUser)
       .pipe(
+        filter(user => !!user),
         tap(user => {
           this.scrapeSeriesForm.controls.skipCache.setValue(
             getUserPreference(
@@ -173,9 +174,9 @@ export class ScrapingSeriesPageComponent implements OnInit {
         tap(list => {
           this.logger.trace('Setting metadata source list');
           this.metadataSourceList$.next(list);
-          this.metadataSource = this.metadataSourceList$.value.find(
-            source => source.preferred
-          );
+          this.metadataSource =
+            this.metadataSourceList$.value.find(source => source.preferred) ||
+            null;
         })
       )
       .subscribe();
@@ -251,18 +252,20 @@ export class ScrapingSeriesPageComponent implements OnInit {
     );
   }
 
-  get metadataSource(): MetadataSource {
-    return this.metadataSourceList$.value.find(
-      source =>
-        source.metadataSourceId ===
-        this.scrapeSeriesForm.controls.metadataSource.value
+  get metadataSource(): MetadataSource | null {
+    return (
+      this.metadataSourceList$.value.find(
+        source =>
+          source.metadataSourceId ===
+          this.scrapeSeriesForm.controls.metadataSource.value
+      ) || null
     );
   }
 
-  set metadataSource(metadataSource: MetadataSource) {
+  set metadataSource(metadataSource: MetadataSource | null) {
     this.logger.debug(`Selected metadata source: ${metadataSource?.name}`);
     this.scrapeSeriesForm.controls.metadataSource.setValue(
-      metadataSource?.metadataSourceId
+      metadataSource?.metadataSourceId || null
     );
   }
 
@@ -275,9 +278,10 @@ export class ScrapingSeriesPageComponent implements OnInit {
 
   onMetadataSourceSelected(id: number): void {
     this.logger.debug(`Selected metadata source: id=${id}`);
-    this.metadataSource = this.metadataSourceList$.value.find(
-      source => source.metadataSourceId === id
-    );
+    this.metadataSource =
+      this.metadataSourceList$.value.find(
+        source => source.metadataSourceId === id
+      ) || null;
   }
 
   onFetchVolumeCandidates(): void {
@@ -288,7 +292,7 @@ export class ScrapingSeriesPageComponent implements OnInit {
     );
     this.store.dispatch(
       loadVolumeMetadata({
-        metadataSource: this.metadataSource,
+        metadataSource: this.metadataSource!,
         publisher,
         series,
         maximumRecords: this.maximumRecords,
@@ -318,10 +322,11 @@ export class ScrapingSeriesPageComponent implements OnInit {
 
   onVolumeSelected(volume: VolumeMetadata): void {
     this.logger.debug('Volume selected:', volume);
-    this.selectedVolume = volume;
+    this.selectedVolume$.next(volume);
   }
 
-  onVolumeChosen(volume: VolumeMetadata): void {
+  onVolumeChosen(): void {
+    const volume = this.selectedVolume$.value!;
     this.logger.debug('Volume chosen:', volume);
     this.confirmationService.confirm({
       title: this.translateService.instant('scrape-series.confirmation-title'),
@@ -340,7 +345,7 @@ export class ScrapingSeriesPageComponent implements OnInit {
             originalPublisher: this.originalPublisher,
             originalSeries: this.originalSeries,
             originalVolume: this.originalVolume,
-            source: this.metadataSource,
+            source: this.metadataSource!,
             volume
           })
         );
@@ -362,7 +367,6 @@ export class ScrapingSeriesPageComponent implements OnInit {
     this.dialog.open(dialogTemplate, { width: '600px' });
   }
 
-  @HostListener('window:keydown.shift.control.c', ['$event'])
   onHotKeySkipCacheToggle(event: KeyboardEvent): void {
     event.preventDefault();
     this.onSkipCacheToggle();
@@ -372,7 +376,6 @@ export class ScrapingSeriesPageComponent implements OnInit {
     this.skipCache = this.skipCache === false;
   }
 
-  @HostListener('window:keydown.shift.control.p', ['$event'])
   onHotKeyMatchPublisherToggle(event: KeyboardEvent): void {
     event.preventDefault();
     this.onMatchPublisherToggle();

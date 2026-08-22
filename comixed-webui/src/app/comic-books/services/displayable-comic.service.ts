@@ -102,21 +102,21 @@ export class DisplayableComicService {
   loadComicsByFilter(args: {
     pageSize: number;
     pageIndex: number;
-    coverYear: number;
-    coverMonth: number;
-    archiveType: ArchiveType;
-    comicType: ComicType;
-    comicState: ComicState;
+    coverYear: number | null;
+    coverMonth: number | null;
+    archiveType: ArchiveType | null;
+    comicType: ComicType | null;
+    comicState: ComicState | null;
     selected: boolean;
     missing: boolean;
     unscrapedState: boolean;
-    searchText: string;
-    publisher: string;
-    series: string;
-    volume: string;
+    searchText: string | null;
+    publisher: string | null;
+    series: string | null;
+    volume: string | null;
     pageCount: number | null;
-    sortBy: string;
-    sortDirection: string;
+    sortBy: string | null;
+    sortDirection: string | null;
   }): Observable<any> {
     if (args.selected) {
       this.logger.trace('Loading selected comics:', args);
@@ -161,8 +161,8 @@ export class DisplayableComicService {
     pageIndex: number;
     tagType: ComicTagType;
     tagValue: string;
-    sortBy: string;
-    sortDirection: string;
+    sortBy: string | null;
+    sortDirection: string | null;
   }): Observable<any> {
     this.logger.debug('Loading comics for collection:', args);
     return this.http.post(
@@ -183,8 +183,8 @@ export class DisplayableComicService {
     unreadOnly: boolean;
     pageSize: number;
     pageIndex: number;
-    sortBy: string;
-    sortDirection: string;
+    sortBy: string | null;
+    sortDirection: string | null;
   }): Observable<any> {
     if (args.unreadOnly) {
       this.logger.debug('Loading unread comics:', args);
@@ -207,10 +207,10 @@ export class DisplayableComicService {
 
   loadComicsForReadingList(args: {
     readingListId: number;
-    sortDirection: string;
+    sortDirection: string | null;
     pageIndex: number;
     pageSize: number;
-    sortBy: string;
+    sortBy: string | null;
   }): Observable<any> {
     this.logger.debug('Loading comics for reading list:', args);
     return this.http.post(

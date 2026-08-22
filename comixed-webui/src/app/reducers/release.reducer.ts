@@ -32,10 +32,10 @@ export const RELEASE_DETAILS_FEATURE_KEY = 'release_details_state';
 
 export interface ReleaseDetailsState {
   currentLoading: boolean;
-  current: CurrentRelease;
+  current: CurrentRelease | null;
   latestLoading: boolean;
   loaded: boolean;
-  latest: LatestRelease;
+  latest: LatestRelease | null;
 }
 
 export const initialState: ReleaseDetailsState = {

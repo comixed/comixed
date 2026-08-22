@@ -1,11 +1,11 @@
-<cx-navigation-bar
+<app-navigation-bar
   class="cx-width-100"
   [user]="user$ | async"
   [sidebarOpened]="sidenav.opened"
   [accountBarOpened]="accountBar.opened"
   (toggleSidebar)="sidenav.toggle($event)"
   (toggleAccountBar)="accountBar.toggle($event)"
-></cx-navigation-bar>
+></app-navigation-bar>
 
 @if (busy$ | async) {
   <div id="cx-busy-overlay">
@@ -26,7 +26,7 @@
     (click)="sidenav.close()"
     position="start"
   >
-    <cx-side-navigation [user]="user$ | async"></cx-side-navigation>
+    <app-side-navigation [user]="user$ | async"></app-side-navigation>
   </mat-sidenav>
 
   <mat-sidenav
@@ -36,10 +36,10 @@
     position="end"
   >
     @if (!!(user$ | async)) {
-      <cx-edit-account-bar
+      <app-edit-account-bar
         [user]="user$ | async"
         (closeSidebar)="accountBar.close()"
-      ></cx-edit-account-bar>
+      ></app-edit-account-bar>
     }
   </mat-sidenav>
 
@@ -50,4 +50,4 @@
   </mat-sidenav-content>
 </mat-sidenav-container>
 
-<cx-footer [user]="user$ | async"></cx-footer>
+<app-footer [user]="user$ | async"></app-footer>

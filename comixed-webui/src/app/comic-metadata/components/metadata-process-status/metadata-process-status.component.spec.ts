@@ -25,8 +25,8 @@ import { MetadataUpdateProgress } from '@app/comic-metadata/selectors/metadata-u
 
 describe('MetadataProcessStatusComponent', () => {
   const progressState = {
-    completed: Math.abs(Math.floor(Math.random())),
-    total: Math.abs(Math.floor(Math.random()))
+    completed: 75,
+    total: 150
   } as MetadataUpdateProgress;
   let component: MetadataProcessStatusComponent;
   let fixture: ComponentFixture<MetadataProcessStatusComponent>;
@@ -52,8 +52,8 @@ describe('MetadataProcessStatusComponent', () => {
 
   describe('setting the processing state', () => {
     beforeEach(() => {
-      component.current = 0;
-      component.total = 0;
+      component.current = 53;
+      component.total = 100;
       component.progress = progressState;
     });
 

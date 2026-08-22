@@ -128,13 +128,13 @@ describe('BlockedHashService', () => {
       webSocketService.subscribe
         .withArgs(BLOCKED_HASH_LIST_UPDATE_TOPIC, jasmine.anything())
         .and.callFake((topic, callback) => {
-          callback(UPDATED);
+          callback(UPDATED as any);
           return {} as Subscription;
         });
       webSocketService.subscribe
         .withArgs(BLOCKED_HASH_LIST_REMOVAL_TOPIC, jasmine.anything())
         .and.callFake((topic, callback) => {
-          callback(REMOVED);
+          callback(REMOVED as any);
           return {} as Subscription;
         });
       store.setState({

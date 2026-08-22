@@ -164,7 +164,7 @@ describe('BlockedHashes Reducer', () => {
     const ORIGINAL_ENTRY = ENTRIES[1];
     const UPDATED_ENTRY = {
       ...ORIGINAL_ENTRY,
-      label: ORIGINAL_ENTRY.label.substr(1)
+      label: ORIGINAL_ENTRY.label.slice(1)
     };
 
     beforeEach(() => {

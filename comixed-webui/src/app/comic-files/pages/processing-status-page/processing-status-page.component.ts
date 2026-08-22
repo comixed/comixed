@@ -52,7 +52,7 @@ import { AsyncPipe } from '@angular/common';
 import { tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'cx-processing-status-page',
+  selector: 'app-processing-status-page',
   templateUrl: './processing-status-page.component.html',
   styleUrls: ['./processing-status-page.component.scss'],
   imports: [
@@ -77,8 +77,8 @@ import { tap } from 'rxjs/operators';
   ]
 })
 export class ProcessingStatusPageComponent implements AfterViewInit, OnInit {
-  @ViewChild(MatSort) sort: MatSort;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort | null = null;
+  @ViewChild(MatPaginator) paginator: MatPaginator | null = null;
 
   dataSource = new MatTableDataSource<ProcessingComicStatus>([]);
   readonly displayedColumns = ['step-name', 'processed', 'total', 'progress'];

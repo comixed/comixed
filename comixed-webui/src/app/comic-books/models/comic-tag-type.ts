@@ -48,8 +48,6 @@ export function comicTagTypeFromString(key: string): ComicTagType {
   switch (key) {
     case 'publishers':
       return ComicTagType.PUBLISHER;
-    case 'series':
-      return ComicTagType.SERIES;
     case 'characters':
       return ComicTagType.CHARACTER;
     case 'locations':
@@ -58,6 +56,8 @@ export function comicTagTypeFromString(key: string): ComicTagType {
       return ComicTagType.STORY;
     case 'teams':
       return ComicTagType.TEAM;
+    case 'series':
+    default:
+      return ComicTagType.SERIES;
   }
-  return null;
 }

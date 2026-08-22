@@ -19,8 +19,8 @@
 import { User } from '../../user/models/user';
 
 export interface ReadingList {
-  readingListId: number;
-  owner: User;
+  readingListId: number | null;
+  owner: User | null;
   name: string;
   summary: string;
   entryIds: number[];

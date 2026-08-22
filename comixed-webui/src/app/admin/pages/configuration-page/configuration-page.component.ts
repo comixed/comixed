@@ -41,7 +41,7 @@ import { tap } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-  selector: 'cx-configuration-page',
+  selector: 'app-configuration-page',
   templateUrl: './configuration-page.component.html',
   styleUrls: ['./configuration-page.component.scss'],
   imports: [

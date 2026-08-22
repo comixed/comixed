@@ -156,20 +156,20 @@ describe('DisplayableComicService', () => {
     beforeEach(() => {
       webSocketService.requestResponse.and.callFake(
         (message, body, destination, callback) => {
-          callback(COMIC_ADDED);
+          callback(COMIC_ADDED as any);
           return {} as Subscription;
         }
       );
       webSocketService.subscribe
         .withArgs(COMIC_LIST_UPDATE_TOPIC, jasmine.anything())
         .and.callFake((destination, callback) => {
-          callback(COMIC_ADDED);
+          callback(COMIC_ADDED as any);
           return {} as Subscription;
         });
       webSocketService.subscribe
         .withArgs(COMIC_LIST_REMOVAL_TOPIC, jasmine.anything())
         .and.callFake((destination, callback) => {
-          callback(COMIC_REMOVED);
+          callback(COMIC_REMOVED as any);
           return {} as Subscription;
         });
       store.setState({

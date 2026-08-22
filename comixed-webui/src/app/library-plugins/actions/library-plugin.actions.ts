@@ -34,7 +34,7 @@ export const loadLibraryPluginsFailure = createAction(
 
 export const setCurrentLibraryPlugin = createAction(
   '[Library Plugin] Set the current plugin',
-  props<{ plugin: LibraryPlugin }>()
+  props<{ plugin: LibraryPlugin | null }>()
 );
 
 export const clearCurrentLibraryPlugin = createAction(

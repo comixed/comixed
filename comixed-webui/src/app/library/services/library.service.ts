@@ -50,6 +50,7 @@ import { User } from '@app/user/models/user';
 import { libraryStateLoaded } from '@app/library/actions/library.actions';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { tap } from 'rxjs/operators';
+import { LibraryState } from '@app/library/reducers/library.reducer';
 
 @Injectable({
   providedIn: 'root'
@@ -66,9 +67,9 @@ export class LibraryService {
       .pipe(
         tap(started => {
           if (started) {
-            this.webSocketService.subscribe<User>(
+            this.webSocketService.subscribe<LibraryState>(
               REMOTE_LIBRARY_STATE_TOPIC,
-              state => {
+              (state: LibraryState) => {
                 this.logger.debug('Received library state update:', state);
                 console.log('Received library state update:', state);
                 this.store.dispatch(libraryStateLoaded({ state }));

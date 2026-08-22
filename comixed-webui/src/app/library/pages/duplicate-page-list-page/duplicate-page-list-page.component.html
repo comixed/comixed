@@ -50,7 +50,7 @@
       <mat-card-content class="cx-padding-5">
         <img
           loading="lazy"
-          [src]="(popupPage$ | async)?.hash | pageHashUrl"
+          [src]="(popupPage$ | async)?.hash || '' | pageHashUrl"
           width="100%"
           height="auto"
           [alt]="popupPage$ | async"
@@ -79,7 +79,7 @@
     queryParameterService.onPageChange(
       $event.pageSize,
       $event.pageIndex,
-      $event.previousPageIndex
+      $event.previousPageIndex || null
     )
   "
 ></mat-paginator>
@@ -87,8 +87,8 @@
 <mat-table
   [dataSource]="dataSource"
   matSort
-  [matSortActive]="queryParameterService.sortBy$ | async"
-  [matSortDirection]="queryParameterService.sortDirection$ | async"
+  [matSortActive]="(queryParameterService.sortBy$ | async) || ''"
+  [matSortDirection]="(queryParameterService.sortDirection$ | async) || ''"
   (matSortChange)="
     queryParameterService.onSortChange($event.active, $event.direction)
   "

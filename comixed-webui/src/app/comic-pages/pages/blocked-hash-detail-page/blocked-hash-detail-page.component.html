@@ -11,7 +11,7 @@
 <div class="cx-horizontal-container">
   <div class="cx-grow-0">
     <img
-      [src]="blockedPage.hash | blockedHashThumbnailUrl"
+      [src]="blockedPage?.hash || '' | blockedHashThumbnailUrl"
       width="400"
       alt="blocked page thumbnail"
     />

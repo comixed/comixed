@@ -23,11 +23,11 @@ import { Issue } from '@app/collections/models/issue';
 export const loadSeriesList = createAction(
   '[Series] Load a series list',
   props<{
-    searchText: string;
+    searchText: string | null;
     pageIndex: number;
     pageSize: number;
-    sortBy: string;
-    sortDirection: string;
+    sortBy: string | null;
+    sortDirection: string | null;
   }>()
 );
 

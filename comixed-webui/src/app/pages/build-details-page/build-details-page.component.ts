@@ -42,7 +42,7 @@ import { tap } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-  selector: 'cx-build-details',
+  selector: 'app-build-details',
   templateUrl: './build-details-page.component.html',
   styleUrls: ['./build-details-page.component.scss'],
   imports: [
@@ -89,35 +89,35 @@ export class BuildDetailsPageComponent implements OnInit {
     this.clipboard.copy(
       `
 ${this.translateService.instant('build-details.label.branch', {
-  name: this.details$.value.branch
+  name: this.details$.value?.branch
 })}
 ${this.translateService.instant('build-details.label.build-time', {
-  time: this.details$.value.buildTime
+  time: this.details$.value?.buildTime
 })}
 ${this.translateService.instant('build-details.label.build-host', {
-  name: this.details$.value.buildHost
+  name: this.details$.value?.buildHost
 })}
 ${this.translateService.instant('build-details.label.build-version', {
-  version: this.details$.value.buildVersion
+  version: this.details$.value?.buildVersion
 })}
 ${this.translateService.instant('build-details.label.commit-time', {
-  time: this.details$.value.commitTime
+  time: this.details$.value?.commitTime
 })}
 ${this.translateService.instant('build-details.label.dirty', {
-  name: this.details$.value.dirty
+  name: this.details$.value?.dirty
 })}
 ${this.translateService.instant('build-details.label.remote-origin-url', {
-  url: this.details$.value.remoteOriginURL
+  url: this.details$.value?.remoteOriginURL
 })}
 ${this.translateService.instant('build-details.label.jdbc-url', {
-  url: this.details$.value.jdbcUrl
+  url: this.details$.value?.jdbcUrl
 })}
 ${this.translateService.instant('build-details.label.java-runtime', {
-  version: this.details$.value.javaVersion,
-  vendor: this.details$.value.javaVendor,
-  osName: this.details$.value.osName,
-  osArch: this.details$.value.osArch,
-  osVersion: this.details$.value.osVersion
+  version: this.details$.value?.javaVersion,
+  vendor: this.details$.value?.javaVendor,
+  osName: this.details$.value?.osName,
+  osArch: this.details$.value?.osArch,
+  osVersion: this.details$.value?.osVersion
 })}`
     );
   }

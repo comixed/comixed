@@ -77,7 +77,7 @@ import { setBusyState } from '@app/core/actions/busy.actions';
 import { AsyncPipe } from '@angular/common';
 
 @Component({
-  selector: 'cx-user-reading-list-page',
+  selector: 'app-user-reading-list-page',
   templateUrl: './reading-list-detail-page.component.html',
   styleUrls: ['./reading-list-detail-page.component.scss'],
   imports: [
@@ -116,7 +116,7 @@ export class ReadingListDetailPageComponent {
     this.activatedRoute.params
       .pipe(
         tap(params => {
-          if (!!params.id) {
+          if (params.id) {
             this.readingListId$.next(+params.id);
             this.logger.trace(
               'Firing action to load reading list by id:',
@@ -205,6 +205,7 @@ export class ReadingListDetailPageComponent {
     this.store
       .select(selectUser)
       .pipe(
+        filter(user => !!user),
         tap(user => {
           this.email$.next(user?.email);
           this.doSubscribeToListUpdates();
@@ -216,16 +217,16 @@ export class ReadingListDetailPageComponent {
       .subscribe();
   }
 
-  private _readingList: ReadingList;
+  private _readingList: ReadingList | null = null;
 
-  get readingList(): ReadingList {
+  get readingList(): ReadingList | null {
     return this._readingList;
   }
 
-  set readingList(readingList: ReadingList) {
+  set readingList(readingList: ReadingList | null) {
     this._readingList = readingList;
-    this.readingListForm.controls.name.setValue(readingList.name);
-    this.readingListForm.controls.summary.setValue(readingList.summary);
+    this.readingListForm.controls.name.setValue(readingList?.name);
+    this.readingListForm.controls.summary.setValue(readingList?.summary);
     this.readingListForm.markAsPristine();
     this.loadReadingListEntries();
   }
@@ -276,7 +277,7 @@ export class ReadingListDetailPageComponent {
         this.logger.trace('Firing action: remove comics from reading list');
         this.store.dispatch(
           removeSelectedComicBooksFromReadingList({
-            list: this.readingList
+            list: this.readingList!
           })
         );
       }
@@ -285,7 +286,7 @@ export class ReadingListDetailPageComponent {
 
   onDownload(): void {
     this.logger.trace('Downloading reading list');
-    this.store.dispatch(downloadReadingList({ list: this.readingList }));
+    this.store.dispatch(downloadReadingList({ list: this.readingList! }));
   }
 
   onDeleteReadingList(): void {
@@ -299,7 +300,7 @@ export class ReadingListDetailPageComponent {
       ),
       confirm: () => {
         this.logger.trace('Firing action to delete reading list');
-        this.store.dispatch(deleteReadingLists({ lists: [this.readingList] }));
+        this.store.dispatch(deleteReadingLists({ lists: [this.readingList!] }));
       }
     });
   }
@@ -309,14 +310,14 @@ export class ReadingListDetailPageComponent {
     this.store.dispatch(
       setMultipleComicBookByIdSelectionState({
         selected,
-        comicBookIds: this.readingList.entryIds
+        comicBookIds: this.readingList?.entryIds || []
       })
     );
   }
 
   private encodeForm(): ReadingList {
     return {
-      ...this.readingList,
+      ...this.readingList!,
       name: this.readingListForm.controls.name.value,
       summary: this.readingListForm.controls.summary.value
     };
@@ -324,7 +325,7 @@ export class ReadingListDetailPageComponent {
 
   private loadTranslations(): void {
     /* istanbul ignore next */
-    if (!!this.readingList) {
+    if (this.readingList) {
       this.logger.trace('Loading tab title');
       this.titleService.setTitle(
         this.translateService.instant('reading-list.tab-title', {
@@ -354,7 +355,7 @@ export class ReadingListDetailPageComponent {
           id: this.readingListId$.value,
           email: this.email$.value
         }),
-        list => {
+        (list: ReadingList) => {
           this.logger.trace('Reading list updated received');
           this.store.dispatch(readingListLoaded({ list }));
           this.loadReadingListEntries();
@@ -363,7 +364,7 @@ export class ReadingListDetailPageComponent {
 
       this.webSocketService.subscribe(
         interpolate(READING_LIST_REMOVAL_TOPIC, { email: this.email$.value }),
-        list => {
+        (list: ReadingList) => {
           this.logger.trace('Reading list removal received');
           this.store.dispatch(readingListRemoved({ list }));
           if (list.readingListId === this.readingListId$.value) {

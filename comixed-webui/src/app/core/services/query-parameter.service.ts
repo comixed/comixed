@@ -57,17 +57,17 @@ export class QueryParameterService {
     pageSize: 10,
     pageIndex: 0
   });
-  sortBy$ = new BehaviorSubject<string>(null);
+  sortBy$ = new BehaviorSubject<string | null>(null);
   sortDirection$ = new BehaviorSubject<SortDirection>('');
   currentTab$ = new BehaviorSubject<number>(0);
   coverYear$ = new BehaviorSubject<CoverDateFilter>({
     year: null,
     month: null
   });
-  archiveType$ = new BehaviorSubject<ArchiveType>(null);
+  archiveType$ = new BehaviorSubject<ArchiveType | null>(null);
   pageCount$ = new BehaviorSubject<number | null>(null);
-  filterText$ = new BehaviorSubject<string>(null);
-  comicType$ = new BehaviorSubject<ComicType>(null);
+  filterText$ = new BehaviorSubject<string | null>(null);
+  comicType$ = new BehaviorSubject<ComicType | null>(null);
   pagesAsGrid$ = new BehaviorSubject<boolean>(false);
 
   logger = inject(LoggerService);
@@ -132,7 +132,7 @@ export class QueryParameterService {
   onPageChange(
     pageSize: number,
     pageIndex: number,
-    previousPageIndex: number
+    previousPageIndex: number | null
   ): void {
     if (this.pageSize$.getValue() !== pageSize) {
       this.logger.debug('Page size changed:', pageSize);
@@ -151,7 +151,7 @@ export class QueryParameterService {
     }
   }
 
-  onSortChange(active: string, direction: SortDirection): void {
+  onSortChange(active: string | null, direction: SortDirection | null): void {
     if (
       !direction ||
       direction.length === 0 ||
@@ -184,7 +184,7 @@ export class QueryParameterService {
     this.updateQueryParam([
       {
         name: QUERY_PARAM_COVER_MONTH,
-        value: !!month ? `${month}` : null
+        value: month ? `${month}` : null
       }
     ]);
   }
@@ -194,7 +194,7 @@ export class QueryParameterService {
     this.updateQueryParam([
       {
         name: QUERY_PARAM_COVER_YEAR,
-        value: !!year ? `${year}` : null
+        value: year ? `${year}` : null
       }
     ]);
   }
@@ -214,7 +214,7 @@ export class QueryParameterService {
     ]);
   }
 
-  onFilterTextChanged(text: string): void {
+  onFilterTextChanged(text: string | null): void {
     this.logger.debug('Setting filter text:', text);
     if (text?.length === 0) {
       text = null;
@@ -232,12 +232,12 @@ export class QueryParameterService {
     this.updateQueryParam([
       {
         name: QUERY_PARAM_PAGE_COUNT,
-        value: !!pageCount ? `${pageCount}` : null
+        value: pageCount ? `${pageCount}` : null
       }
     ]);
   }
 
-  updateQueryParam(params: { name: string; value: string }[]): void {
+  updateQueryParam(params: { name: string; value: string | null }[]): void {
     const queryParams: Params = Object.assign(
       {},
       this.activatedRoute.snapshot.queryParams

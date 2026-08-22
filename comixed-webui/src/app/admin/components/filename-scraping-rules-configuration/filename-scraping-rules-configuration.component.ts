@@ -64,7 +64,7 @@ import { MatFormField, MatPrefix } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 
 @Component({
-  selector: 'cx-scraping-rules-configuration',
+  selector: 'app-scraping-rules-configuration',
   templateUrl: './filename-scraping-rules-configuration.component.html',
   styleUrls: ['./filename-scraping-rules-configuration.component.scss'],
   imports: [
@@ -106,7 +106,7 @@ export class FilenameScrapingRulesConfigurationComponent implements OnInit {
   ];
 
   logger = inject(LoggerService);
-  store = inject(Store<any>);
+  store = inject(Store);
   translateService = inject(TranslateService);
   titleService = inject(TitleService);
   confirmationService = inject(ConfirmationService);
@@ -146,7 +146,7 @@ export class FilenameScrapingRulesConfigurationComponent implements OnInit {
       return {
         item: { ...rule, priority: index + 1 },
         edited: oldRule?.edited || false,
-        editedValue: !!oldRule
+        editedValue: oldRule
           ? { ...oldRule.editedValue, priority: index + 1 }
           : {
               ...rule,
@@ -162,7 +162,7 @@ export class FilenameScrapingRulesConfigurationComponent implements OnInit {
   }
 
   onReorderRules(
-    dragDropEvent: CdkDragDrop<EditableListItem<FilenameScrapingRule>[], any>
+    dragDropEvent: CdkDragDrop<FilenameScrapingRule[], any>
   ): void {
     this.logger.debug('Filename scraping rules reordered');
     const rules = _.cloneDeep(this.rules);

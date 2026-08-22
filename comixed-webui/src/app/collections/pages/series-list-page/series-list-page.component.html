@@ -9,7 +9,7 @@
 </h2>
 
 <div class="cx-width-100">
-  <cx-filter-text-form></cx-filter-text-form>
+  <app-filter-text-form></app-filter-text-form>
 </div>
 
 <mat-paginator
@@ -23,7 +23,7 @@
     queryParameterService.onPageChange(
       $event.pageSize,
       $event.pageIndex,
-      $event.previousPageIndex
+      $event.previousPageIndex || null
     )
   "
 ></mat-paginator>
@@ -32,8 +32,8 @@
   matSort
   class="cx-width-100"
   [dataSource]="dataSource"
-  [matSortActive]="queryParameterService.sortBy$ | async"
-  [matSortDirection]="queryParameterService.sortDirection$ | async"
+  [matSortActive]="(queryParameterService.sortBy$ | async) || ''"
+  [matSortDirection]="(queryParameterService.sortDirection$ | async) || ''"
   (matSortChange)="
     queryParameterService.onSortChange($event.active, $event.direction)
   "

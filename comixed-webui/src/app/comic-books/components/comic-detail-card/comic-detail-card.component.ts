@@ -37,7 +37,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 
 @Component({
-  selector: 'cx-comic-detail-card',
+  selector: 'app-comic-detail-card',
   templateUrl: './comic-detail-card.component.html',
   styleUrls: ['./comic-detail-card.component.scss'],
   imports: [
@@ -55,13 +55,13 @@ import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
   ]
 })
 export class ComicDetailCardComponent {
-  @Input() comic: DisplayableComic;
-  @Input() coverTooltip: string;
-  @Input() title: string;
-  @Input() subtitle: string = '';
-  @Input() imageUrl: string;
-  @Input() description: string;
-  @Input() detailLink: string;
+  @Input() comic: DisplayableComic | null = null;
+  @Input() coverTooltip = '';
+  @Input() title = '';
+  @Input() subtitle = '';
+  @Input() imageUrl = '';
+  @Input() description = '';
+  @Input() detailLink = '';
   @Input() busy = false;
   @Input() blurred = false;
   @Input() selected = false;
@@ -77,12 +77,12 @@ export class ComicDetailCardComponent {
   logger = inject(LoggerService);
 
   get deleted(): boolean {
-    return this.comic.comicState === ComicState.DELETED;
+    return this.comic?.comicState === ComicState.DELETED;
   }
 
   onCoverClicked(): void {
     // only respond to the click if the details are for a comic
-    if (!!this.comic) {
+    if (this.comic) {
       this.logger.trace('ComicBook cover clicked');
       this.selectionChanged.emit({
         comic: this.comic,
@@ -95,7 +95,7 @@ export class ComicDetailCardComponent {
     mouseEvent.preventDefault();
     this.logger.trace('Showing context menu for comic:', this.comic);
     this.showContextMenu.emit({
-      comic: this.comic,
+      comic: this.comic!,
       x: mouseEvent.clientX,
       y: mouseEvent.clientY
     });

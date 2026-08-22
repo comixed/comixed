@@ -21,8 +21,8 @@ import { LoggerService } from '@angular-ru/cdk/logger';
 import {
   FormBuilder,
   FormGroup,
-  Validators,
-  ReactiveFormsModule
+  ReactiveFormsModule,
+  Validators
 } from '@angular/forms';
 import { User } from '@app/user/models/user';
 import { getUserPreference } from '@app/user';
@@ -36,12 +36,12 @@ import { loadComicFileLists } from '@app/comic-files/actions/comic-file-list.act
 import { Store } from '@ngrx/store';
 import {
   MatCard,
-  MatCardTitle,
+  MatCardActions,
   MatCardContent,
-  MatCardActions
+  MatCardTitle
 } from '@angular/material/card';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
-import { MatSelect, MatOption } from '@angular/material/select';
+import { MatOption, MatSelect } from '@angular/material/select';
 import { MatInput } from '@angular/material/input';
 import { MatButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
@@ -49,7 +49,7 @@ import { MatIcon } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
-  selector: 'cx-comic-file-loader',
+  selector: 'app-comic-file-loader',
   templateUrl: './comic-file-loader.component.html',
   styleUrls: ['./comic-file-loader.component.scss'],
   imports: [
@@ -92,11 +92,11 @@ export class ComicFileLoaderComponent {
     });
   }
 
-  @Input() set user(user: User) {
+  @Input() set user(user: User | null) {
     this.logger.debug('Loading import toolbar from user:', user);
     this.loadFilesForm.controls.rootDirectory.setValue(
       getUserPreference(
-        user.preferences,
+        user?.preferences || [],
         IMPORT_ROOT_DIRECTORY_PREFERENCE,
         IMPORT_ROOT_DIRECTORY_DEFAULT
       )
@@ -104,7 +104,7 @@ export class ComicFileLoaderComponent {
     this.loadFilesForm.controls.maximum.setValue(
       parseInt(
         getUserPreference(
-          user.preferences,
+          user?.preferences || [],
           IMPORT_MAXIMUM_RESULTS_PREFERENCE,
           `${IMPORT_MAXIMUM_RESULTS_DEFAULT}`
         ),

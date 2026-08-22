@@ -64,17 +64,17 @@ export const selectUserAuthenticating = createSelector(
 export const selectUser = createSelector(selectUserState, state => state.user);
 
 export const selectUserIsAdmin = createSelector(selectUserState, state => {
-  return isAdmin(state?.user);
+  return isAdmin(state?.user || null);
 });
 
 export const selectUserPageSize = createSelector(selectUserState, state => {
-  return getPageSize(state?.user);
+  return getPageSize(state?.user || null);
 });
 
 export const selectUserSkipCache = createSelector(selectUserState, state => {
   return (
     getUserPreference(
-      state?.user?.preferences,
+      state?.user?.preferences || [],
       SKIP_CACHE_PREFERENCE,
       `${false}`
     ) === `${true}`
@@ -86,7 +86,7 @@ export const selectUserMatchPublisher = createSelector(
   state => {
     return (
       getUserPreference(
-        state?.user?.preferences,
+        state?.user?.preferences || [],
         MATCH_PUBLISHER_PREFERENCE,
         `${false}`
       ) === `${true}`
@@ -99,7 +99,7 @@ export const selectUserMaximumRecords = createSelector(
   state => {
     return parseInt(
       getUserPreference(
-        state?.user?.preferences,
+        state?.user?.preferences || [],
         MAXIMUM_SCRAPING_RECORDS_PREFERENCE,
         '0'
       ),

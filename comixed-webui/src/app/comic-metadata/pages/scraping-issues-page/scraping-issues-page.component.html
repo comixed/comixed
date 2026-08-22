@@ -5,10 +5,11 @@
         {{ popupComic$ | async | comicTitle }}
       </mat-card-title>
       @if (
-        !!(popupComic$ | async).title && (popupComic$ | async)?.title.length > 0
+        !!(popupComic$ | async)?.title &&
+        ((popupComic$ | async)?.title || "").length > 0
       ) {
         <mat-card-subtitle class="cx-text-nowrap">
-          {{ (popupComic$ | async).title }}
+          {{ (popupComic$ | async)?.title }}
         </mat-card-subtitle>
       }
       <mat-card-content class="cx-padding-5">
@@ -55,9 +56,9 @@
       <mat-card>
         <mat-card-title
           class="cx-text-nowrap cx-align-content-center"
-          [matTooltip]="(currentComicBook$ | async)?.detail | comicTitle"
+          [matTooltip]="currentComicBook$ | async | comicTitle"
         >
-          {{ (currentComicBook$ | async)?.detail | comicTitle }}
+          {{ currentComicBook$ | async | comicTitle }}
         </mat-card-title>
         <mat-card-subtitle
           class="cx-text-nowrap cx-align-content-center"
@@ -76,18 +77,19 @@
       </mat-card>
     </div>
     @if (
-      !!(currentComicBook$ | async) && (scrapingVolumes$ | async).length === 0
+      !!(currentComicBook$ | async) &&
+      ((scrapingVolumes$ | async) || []).length === 0
     ) {
       <div class="cx-width-75">
-        <cx-comic-scraping
-          [comic]="currentComicBook$ | async"
+        <app-comic-scraping
+          [comic]="(currentComicBook$ | async) || null"
           [metadataSource]="metadataSource$ | async"
-          [skipCache]="skipCache$ | async"
-          [matchPublisher]="matchPublisher$ | async"
-          [maximumRecords]="maximumRecords$ | async"
+          [skipCache]="(skipCache$ | async) || false"
+          [matchPublisher]="(matchPublisher$ | async) || false"
+          [maximumRecords]="(maximumRecords$ | async) || 0"
           [multiMode]="true"
           (scrape)="onScrape($event)"
-        ></cx-comic-scraping>
+        ></app-comic-scraping>
         <h4>{{ "scraping.comic-book-queue.title" | translate }}</h4>
         <mat-paginator
           showFirstLastButtons="true"
@@ -99,7 +101,7 @@
             queryParameterService.onPageChange(
               $event.pageSize,
               $event.pageIndex,
-              $event.previousPageIndex
+              $event.previousPageIndex || null
             )
           "
         ></mat-paginator>
@@ -176,20 +178,20 @@
         </mat-table>
       </div>
     }
-    @if ((scrapingVolumes$ | async).length > 0) {
+    @if (((scrapingVolumes$ | async) || []).length > 0) {
       <div class="cx-width-75">
-        <cx-scraping-volume-selection
+        <app-scraping-volume-selection
           [comicBook]="currentComicBook$ | async"
           [metadataSource]="metadataSource$ | async"
-          [comicSeriesName]="currentSeries$ | async"
-          [comicVolume]="currentVolume$ | async"
-          [comicIssueNumber]="this.currentIssueNumber$ | async"
-          [skipCache]="skipCache$ | async"
-          [pageSize]="queryParameterService.pageSize$ | async"
-          [pageNumber]="queryParameterService.pageIndex$ | async"
+          [comicSeriesName]="(currentSeries$ | async) || ''"
+          [comicVolume]="(currentVolume$ | async) || ''"
+          [comicIssueNumber]="(this.currentIssueNumber$ | async) || ''"
+          [skipCache]="(skipCache$ | async) || false"
+          [pageSize]="(queryParameterService.pageSize$ | async) || 0"
+          [pageNumber]="(queryParameterService.pageIndex$ | async) || 0"
           [multimode]="true"
-          [volumes]="scrapingVolumes$ | async"
-        ></cx-scraping-volume-selection>
+          [volumes]="(scrapingVolumes$ | async) || []"
+        ></app-scraping-volume-selection>
       </div>
     }
   </div>

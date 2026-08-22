@@ -17,6 +17,7 @@
  */
 
 export interface ProcessComicBooksStatus {
+  active: boolean;
   batchName: string;
   stepName: string;
   total: number;

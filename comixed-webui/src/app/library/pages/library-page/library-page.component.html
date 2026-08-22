@@ -24,19 +24,21 @@
   }
 </div>
 
-<cx-comic-list-view
-  [isAdmin]="isAdmin$ | async"
-  [comics]="comics$ | async"
-  [coverYears]="coverYears$ | async"
-  [coverMonths]="coverMonths$ | async"
-  [totalComics]="filteredCount$ | async"
+<app-comic-list-view
+  [isAdmin]="(isAdmin$ | async) || false"
+  [comics]="(comics$ | async) || []"
+  [coverYears]="(coverYears$ | async) || []"
+  [coverMonths]="(coverMonths$ | async) || []"
+  [totalComics]="(filteredCount$ | async) || 0"
   [showPageCount]="true"
-  [comicBooksRead]="comicBooksRead$ | async"
-  [selectedIds]="selectedIds$ | async"
-  [readingLists]="readingLists$ | async"
-  [unreadOnly]="unreadOnly$ | async"
-  [showFilter]="(unreadOnly$ | async) === false || (selectedOnly$ | async)"
+  [comicBooksRead]="(comicBooksRead$ | async) || []"
+  [selectedIds]="(selectedIds$ | async) || []"
+  [readingLists]="(readingLists$ | async) || []"
+  [unreadOnly]="(unreadOnly$ | async) || false"
+  [showFilter]="
+    (unreadOnly$ | async) === false || (selectedOnly$ | async) || false
+  "
   (selectAll)="onSetAllComicsSelectedState($event)"
   (filtered)="filtered$.next($event)"
   (showing)="showing$.next($event)"
-></cx-comic-list-view>
+></app-comic-list-view>

@@ -177,7 +177,7 @@ describe('BlockedHashDetailPageComponent', () => {
         (confirmation: Confirmation) => confirmation.confirm()
       );
       component.blockedPage = ENTRY;
-      component.blockedPageForm.controls.label.setValue(ENTRY.label.substr(1));
+      component.blockedPageForm.controls.label.setValue(ENTRY.label.slice(1));
       component.onReset();
     });
 

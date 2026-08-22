@@ -50,7 +50,7 @@ import { BehaviorSubject } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 
 @Component({
-  selector: 'cx-create-plugin-dialog',
+  selector: 'app-create-plugin-dialog',
   templateUrl: './create-plugin-dialog.component.html',
   styleUrls: ['./create-plugin-dialog.component.scss'],
   imports: [

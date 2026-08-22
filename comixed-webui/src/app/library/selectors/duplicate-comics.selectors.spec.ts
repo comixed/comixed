@@ -42,7 +42,7 @@ describe('DuplicateComics Selectors', () => {
     DUPLICATE_COMIC_5
   ];
 
-  let state = {
+  const state = {
     busy: Math.random() > 0.5,
     entries: DUPLICATE_COMIC_LIST,
     total: DUPLICATE_COMIC_LIST.length

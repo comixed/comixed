@@ -39,7 +39,7 @@ import { tap } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-  selector: 'cx-server-runtime',
+  selector: 'app-server-runtime',
   templateUrl: './server-runtime.component.html',
   styleUrls: ['./server-runtime.component.scss'],
   imports: [
@@ -59,7 +59,7 @@ export class ServerRuntimeComponent implements OnInit {
   health$ = new BehaviorSubject<ServerHealth | null>(null);
 
   logger = inject(LoggerService);
-  store = inject(Store<any>);
+  store = inject(Store);
   confirmationService = inject(ConfirmationService);
   translateService = inject(TranslateService);
 

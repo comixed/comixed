@@ -95,7 +95,7 @@ import { ComicTag } from '@app/comic-books/models/comic-tag';
 import { filter, tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'cx-comic-book-page',
+  selector: 'app-comic-book-page',
   templateUrl: './comic-book-page.component.html',
   styleUrls: ['./comic-book-page.component.scss'],
   imports: [
@@ -184,7 +184,7 @@ export class ComicBookPageComponent implements OnInit, AfterViewInit {
         next: detail => this.comic$.next(detail)
       });
     this.store.select(selectComicBookMetadataSource).subscribe({
-      next: metadataSource => this.metadataSource$.next(metadataSource)
+      next: metadataSource => this.metadataSource$.next(metadataSource || null)
     });
     this.store.select(selectComicBookPages).subscribe({
       next: pages => this.pages$.next(pages)
@@ -216,20 +216,20 @@ export class ComicBookPageComponent implements OnInit, AfterViewInit {
   }
 
   get hasChangedState(): boolean {
-    return this.comic$.value.comicState === ComicState.CHANGED;
+    return this.comic$.value!.comicState === ComicState.CHANGED;
   }
 
   get isDeleted(): boolean {
-    return this.comic$.value.comicState === ComicState.DELETED;
+    return this.comic$.value!.comicState === ComicState.DELETED;
   }
 
   get isRead$(): Observable<boolean> {
     return of(
-      this.readComicBookList$.value.includes(this.comic$.value?.comicDetailId)
+      this.readComicBookList$.value!.includes(this.comic$.value!.comicDetailId!)
     );
   }
 
-  get displayPage(): ComicPage {
+  get displayPage(): ComicPage | null {
     if (
       this.pageIndex$.value >= 0 &&
       this.pageIndex$.value < this.pages$.value?.length
@@ -277,7 +277,7 @@ export class ComicBookPageComponent implements OnInit, AfterViewInit {
     this.logger.debug('Marking comic read status:', read);
     this.store.dispatch(
       markSingleComicBookRead({
-        comicDetailId: this.comic$.value.comicDetailId,
+        comicDetailId: this.comic$.value!.comicDetailId!,
         read
       })
     );
@@ -296,7 +296,7 @@ export class ComicBookPageComponent implements OnInit, AfterViewInit {
         this.logger.debug('Updating comic file:', this.comic$.value);
         this.store.dispatch(
           updateSingleComicBookMetadata({
-            comicBookId: this.comic$.value.comicBookId
+            comicBookId: this.comic$.value!.comicBookId!
           })
         );
       }
@@ -319,13 +319,13 @@ export class ComicBookPageComponent implements OnInit, AfterViewInit {
         if (deleted) {
           this.store.dispatch(
             deleteSingleComicBook({
-              comicBookId: this.comic$.value.comicBookId
+              comicBookId: this.comic$.value!.comicBookId!
             })
           );
         } else {
           this.store.dispatch(
             undeleteSingleComicBook({
-              comicBookId: this.comic$.value.comicBookId
+              comicBookId: this.comic$.value!.comicBookId!
             })
           );
         }
@@ -349,7 +349,7 @@ export class ComicBookPageComponent implements OnInit, AfterViewInit {
         this.logger.trace('Firing event: save page order');
         this.store.dispatch(
           savePageOrder({
-            comicBookId: this.comic$.value.comicBookId,
+            comicBookId: this.comic$.value!.comicBookId!,
             entries: this.pages$.value.map((page, index) => {
               return {
                 index,
@@ -365,7 +365,7 @@ export class ComicBookPageComponent implements OnInit, AfterViewInit {
   onDownloadComicFile(): void {
     this.logger.debug('Downloading comic file');
     this.store.dispatch(
-      downloadComicBook({ comicBookId: this.comic$.value.comicBookId })
+      downloadComicBook({ comicBookId: this.comic$.value!.comicBookId! })
     );
   }
 

@@ -23,7 +23,7 @@ import { ComicDetail } from '@app/comic-books/models/comic-detail';
 
 @Pipe({ name: 'comicTitle' })
 export class ComicTitlePipe implements PipeTransform {
-  transform(comic: DisplayableComic | ComicDetail): string {
+  transform(comic: DisplayableComic | ComicDetail | null): string {
     const series = comic?.series || UNKNOWN_VALUE_PLACEHOLDER;
     const volume = comic?.volume || '????';
     const issueNumber = comic?.issueNumber || '??';

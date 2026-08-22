@@ -43,7 +43,7 @@ import { Router } from '@angular/router';
 import { LoggerService } from '@angular-ru/cdk/logger';
 
 @Component({
-  selector: 'cx-comic-grid-item',
+  selector: 'app-comic-grid-item',
   imports: [
     ComicPageComponent,
     ComicCoverUrlPipe,
@@ -63,7 +63,7 @@ import { LoggerService } from '@angular-ru/cdk/logger';
   styleUrl: './comic-grid-item.component.scss'
 })
 export class ComicGridItemComponent {
-  @Input() comic: DisplayableComic;
+  @Input() comic: DisplayableComic | null = null;
   @Input() selected = false;
 
   @Output() comicClicked = new EventEmitter<DisplayableComic>();
@@ -75,20 +75,20 @@ export class ComicGridItemComponent {
   onDeleteComic(): void {
     this.logger.info('Marking comic for deletion:', this.comic);
     this.store.dispatch(
-      deleteSingleComicBook({ comicBookId: this.comic.comicBookId })
+      deleteSingleComicBook({ comicBookId: this.comic!.comicBookId! })
     );
   }
 
   onUndeleteComic(): void {
     this.logger.info('Unmarking comic for deletion:', this.comic);
     this.store.dispatch(
-      undeleteSingleComicBook({ comicBookId: this.comic.comicBookId })
+      undeleteSingleComicBook({ comicBookId: this.comic!.comicBookId! })
     );
   }
 
   onOpenComic(): void {
     this.logger.info('Opening comic book:', this.comic);
-    this.router.navigate(['/comics', this.comic.comicBookId]);
+    this.router.navigate(['/comics', this.comic!.comicBookId!]);
   }
 
   isDeleted(comic: DisplayableComic): boolean {

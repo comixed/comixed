@@ -269,7 +269,7 @@ describe('ScrapingIssuesPageComponent', () => {
     });
 
     it('clears the current volume', () => {
-      expect(component.currentVolume$.value).toBeNull();
+      expect(component.currentVolume$.value).toEqual('');
     });
   });
 });

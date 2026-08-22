@@ -482,7 +482,7 @@ describe('ImportComicsPageComponent', () => {
 
     describe('when a current path is invalid', () => {
       beforeEach(() => {
-        component.currentPath$.next(GROUPS[0].directory.substring(1));
+        component.currentPath$.next(GROUPS[0].directory.slice(1));
         component.dataSource.data = [];
         store.setState({
           ...initialState,
@@ -501,7 +501,7 @@ describe('ImportComicsPageComponent', () => {
 
     describe('when no current path is set', () => {
       beforeEach(() => {
-        component.currentPath$.next(null);
+        component.currentPath$.next('');
         component.dataSource.data = [];
         store.setState({
           ...initialState,

@@ -37,14 +37,14 @@ export interface ComicFileListState {
   busy: boolean;
   groups: ComicFileGroup[];
   files: ComicFile[];
-  currentPath: string | null;
+  currentPath: string;
 }
 
 export const initialState: ComicFileListState = {
   busy: false,
   groups: [],
   files: [],
-  currentPath: null
+  currentPath: ''
 };
 
 export const reducer = createReducer(

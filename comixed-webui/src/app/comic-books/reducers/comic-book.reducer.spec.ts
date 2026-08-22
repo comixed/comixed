@@ -214,11 +214,11 @@ describe('ComicBook Reducer', () => {
     describe('success', () => {
       const UPDATED_DETAILS = {
         ...DETAIL,
-        filename: DETAIL.filename.substr(1)
+        filename: DETAIL.filename.slice(1)
       };
       const UPDATED_METADATA = {
         ...METADATA,
-        referenceId: METADATA.referenceId.substr(1)
+        referenceId: METADATA.referenceId.slice(1)
       };
       const UPDATED_PAGES = PAGES.reverse();
 

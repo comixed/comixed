@@ -1,8 +1,10 @@
-<img
-  ngxGravatar
-  loading="lazy"
-  [alt]="user.email"
-  [email]="user.email"
-  [size]="imageSize"
-  [round]="false"
-/>
+@if (!!user) {
+  <img
+    ngxGravatar
+    loading="lazy"
+    [alt]="user.email"
+    [email]="user.email"
+    [width]="imageSize"
+    [round]="false"
+  />
+}

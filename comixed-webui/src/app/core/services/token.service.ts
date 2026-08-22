@@ -40,7 +40,7 @@ export class TokenService {
   }
 
   /** Retrieves the authentication token. */
-  getAuthToken(): string {
+  getAuthToken(): string | null {
     this.logger.trace('Retrieving authenticatione token');
     return window.localStorage.getItem(AUTH_TOKEN_KEY);
   }

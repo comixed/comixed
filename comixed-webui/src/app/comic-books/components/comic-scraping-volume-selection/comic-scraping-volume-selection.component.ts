@@ -91,7 +91,7 @@ export const NO_MATCH = 0;
 export const NO_MATCH_TEXT = 'scraping.text.no-match';
 
 @Component({
-  selector: 'cx-scraping-volume-selection',
+  selector: 'app-scraping-volume-selection',
   templateUrl: './comic-scraping-volume-selection.html',
   styleUrls: ['./comic-scraping-volume-selection.scss'],
   imports: [
@@ -129,20 +129,20 @@ export const NO_MATCH_TEXT = 'scraping.text.no-match';
   ]
 })
 export class ComicScrapingVolumeSelectionComponent implements AfterViewInit {
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator | null = null;
+  @ViewChild(MatSort) sort: MatSort | null = null;
 
   readonly pageSizeOptions = PAGE_SIZE_OPTIONS;
 
-  @Input() comicBook: DisplayableComic = null;
-  @Input() metadataSource: MetadataSource;
-  @Input() publisherName: string;
-  @Input() comicSeriesName: string;
-  @Input() comicVolume: string;
-  @Input() comicIssueNumber: string;
+  @Input() comicBook: DisplayableComic | null = null;
+  @Input() metadataSource: MetadataSource | null = null;
+  @Input() publisherName = '';
+  @Input() comicSeriesName = '';
+  @Input() comicVolume = '';
+  @Input() comicIssueNumber = '';
   @Input() skipCache = false;
-  @Input() pageSize: number;
-  @Input() pageNumber: number;
+  @Input() pageSize = 0;
+  @Input() pageNumber = 0;
   @Input() multimode = false;
 
   selectedVolume$ = new BehaviorSubject<VolumeMetadata | null>(null);
@@ -189,13 +189,13 @@ export class ComicScrapingVolumeSelectionComponent implements AfterViewInit {
       .subscribe();
   }
 
-  private _issue: IssueMetadata;
+  private _issue: IssueMetadata | null = null;
 
-  get issue(): IssueMetadata {
+  get issue(): IssueMetadata | null {
     return this._issue;
   }
 
-  set issue(issue: IssueMetadata) {
+  set issue(issue: IssueMetadata | null) {
     this._issue = issue;
     if (
       !!issue &&
@@ -246,8 +246,11 @@ export class ComicScrapingVolumeSelectionComponent implements AfterViewInit {
           return element.item.startYear;
         case 'issue-count':
           return element.item.issueCount;
+        case 'publisher':
+          return element.item.publisher;
+        case 'name':
         default:
-          return element.item[property];
+          return element.item.name;
       }
     };
     this.logger.trace('Setting up filtering');
@@ -267,10 +270,10 @@ export class ComicScrapingVolumeSelectionComponent implements AfterViewInit {
     } else {
       this.selectedVolume$.next(volume);
     }
-    if (!!this.selectedVolume$.value) {
+    if (this.selectedVolume$.value) {
       this.store.dispatch(
         loadIssueMetadata({
-          metadataSource: this.metadataSource,
+          metadataSource: this.metadataSource!,
           volumeId: this.selectedVolume$.value.id,
           issueNumber: this.comicIssueNumber,
           skipCache: this.skipCache
@@ -279,7 +282,7 @@ export class ComicScrapingVolumeSelectionComponent implements AfterViewInit {
     }
   }
 
-  onDecision(decision: boolean, volume: VolumeMetadata): void {
+  onDecision(decision: boolean): void {
     this.logger.trace(
       `Scraping issue was ${decision ? 'accepted' : 'rejected'}`
     );
@@ -313,9 +316,9 @@ export class ComicScrapingVolumeSelectionComponent implements AfterViewInit {
       this.logger.debug('Scraping multi-book comic');
       this.store.dispatch(
         multiBookScrapeComic({
-          comicBook: this.comicBook,
-          metadataSource: this.metadataSource,
-          issueId: this.issue.id,
+          comicBook: this.comicBook!,
+          metadataSource: this.metadataSource!,
+          issueId: this.issue!.id,
           skipCache: this.skipCache,
           pageSize: this.pageSize,
           pageNumber: this.pageNumber
@@ -325,9 +328,9 @@ export class ComicScrapingVolumeSelectionComponent implements AfterViewInit {
       this.logger.debug('Scraping single comic book');
       this.store.dispatch(
         scrapeSingleComicBook({
-          metadataSource: this.metadataSource,
-          issueId: this.issue.id,
-          comic: this.comicBook,
+          metadataSource: this.metadataSource!,
+          issueId: this.issue!.id,
+          comic: this.comicBook!,
           skipCache: this.skipCache
         })
       );

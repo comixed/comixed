@@ -40,7 +40,7 @@ import { hasFeature, isFeatureEnabled } from '@app/admin';
 import { selectReadComicBooksList } from '@app/user/selectors/read-comic-books.selectors';
 import { selectComicBookSelectionCount } from '@app/comic-books/selectors/comic-book-selection.selectors';
 import { MatButton } from '@angular/material/button';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { ActivatedRoute, RouterLink, RouterLinkActive } from '@angular/router';
 import { MatIcon } from '@angular/material/icon';
 import { MatLabel } from '@angular/material/form-field';
 import { MatDivider } from '@angular/material/divider';
@@ -49,7 +49,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'cx-side-navigation',
+  selector: 'app-side-navigation',
   templateUrl: './side-navigation.component.html',
   styleUrls: ['./side-navigation.component.scss'],
   imports: [
@@ -82,6 +82,7 @@ export class SideNavigationComponent {
 
   logger = inject(LoggerService);
   store = inject(Store);
+  activatedRoute = inject(ActivatedRoute);
 
   constructor() {
     this.store
@@ -143,13 +144,13 @@ export class SideNavigationComponent {
       .subscribe();
   }
 
-  private _user = null;
+  private _user: User | null = null;
 
-  get user(): User {
+  get user(): User | null {
     return this._user;
   }
 
-  @Input() set user(user: User) {
+  @Input() set user(user: User | null) {
     this.logger.debug('Setting user:', user);
     this._user = user;
     this.isAdmin$.next(isAdmin(this.user));

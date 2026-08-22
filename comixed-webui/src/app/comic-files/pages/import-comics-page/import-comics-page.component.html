@@ -48,10 +48,10 @@
 @if (showCoverPopup$ | async) {
   <div class="cx-hover cx-centered cx-width-25 cx-border-primary-1">
     <mat-card-title class="cx-text-nowrap">
-      {{ (comicFile$ | async).baseFilename }}
+      {{ (comicFile$ | async)?.baseFilename }}
     </mat-card-title>
     <mat-card-subtitle class="cx-text-nowrap">
-      {{ (comicFile$ | async).filename }}
+      {{ (comicFile$ | async)?.filename }}
     </mat-card-subtitle>
     <mat-card appearance="outlined">
       <mat-card-content class="cx-padding-5">
@@ -60,18 +60,18 @@
           [src]="comicFile$ | async | comicFileCoverUrl"
           width="100%"
           height="auto"
-          [alt]="(comicFile$ | async).baseFilename"
+          [alt]="(comicFile$ | async)?.baseFilename"
         />
       </mat-card-content>
     </mat-card>
   </div>
 }
 @if (showFinderForm$ | async) {
-  <cx-comic-file-loader
+  <app-comic-file-loader
     class="cx-centered cx-position-absolute cx-width-50 cx-border-primary-1 cx-z-index-99"
     [user]="user$ | async"
     (closeForm)="closeFinderForm()"
-  ></cx-comic-file-loader>
+  ></app-comic-file-loader>
 }
 
 <h2>
@@ -113,7 +113,7 @@
     queryParameterService.onPageChange(
       $event.pageSize,
       $event.pageIndex,
-      $event.previousPageIndex
+      $event.previousPageIndex || null
     )
   "
 ></mat-paginator>
@@ -121,8 +121,8 @@
 <mat-table
   [dataSource]="dataSource"
   matSort
-  [matSortActive]="queryParameterService.sortBy$ | async"
-  [matSortDirection]="queryParameterService.sortDirection$ | async"
+  [matSortActive]="(queryParameterService.sortBy$ | async) || ''"
+  [matSortDirection]="(queryParameterService.sortDirection$ | async) || ''"
   (matSortChange)="
     queryParameterService.onSortChange($event.active, $event.direction)
   "
@@ -141,7 +141,6 @@
         <mat-checkbox
           [checked]="entry.selected"
           (change)="onSelectEntry(entry, $event.checked)"
-          (keyup)="onSelectEntry(entry, $event.checked)"
           (click)="$event.stopPropagation()"
         ></mat-checkbox>
       </span>
@@ -211,32 +210,3 @@
     </td>
   </tr>
 </mat-table>
-
-<mat-menu #contextMenu="matMenu">
-  <ng-template matMenuContent>
-    @if (!isFileSelected(file)) {
-      <button mat-menu-item (click)="onSetOneSelected(true)">
-        <mat-icon>add</mat-icon>
-        <mat-label>
-          {{ "comic-files.context-menu.select-one" | translate }}
-        </mat-label>
-      </button>
-    }
-    @if (isFileSelected(file)) {
-      <button mat-menu-item (click)="onSetOneSelected(false)">
-        <mat-icon>remove</mat-icon>
-        <mat-label>
-          {{ "comic-files.context-menu.deselect-one" | translate }}
-        </mat-label>
-      </button>
-    }
-    @if (anySelected$ | asyn) {
-      <button mat-menu-item (click)="onDeselectAll()">
-        <mat-icon>clear_all</mat-icon>
-        <mat-label>
-          {{ "comic-files.context-menu.deselect-all" | translate }}
-        </mat-label>
-      </button>
-    }
-  </ng-template>
-</mat-menu>

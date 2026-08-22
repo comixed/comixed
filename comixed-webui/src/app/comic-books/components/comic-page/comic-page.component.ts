@@ -27,16 +27,16 @@ import { TranslateModule } from '@ngx-translate/core';
 
 /** Displays a page from a comic. Provides events for when the page is clicked. */
 @Component({
-  selector: 'cx-comic-page',
+  selector: 'app-comic-page',
   templateUrl: './comic-page.component.html',
   styleUrls: ['./comic-page.component.scss'],
   imports: [MatCardModule, MatIconModule, MatTooltipModule, TranslateModule]
 })
 export class ComicPageComponent {
-  @Input() page: ComicPage;
-  @Input() imageUrl: string;
-  @Input() selected: boolean;
-  @Input() title: string;
+  @Input() page: ComicPage | null = null;
+  @Input() imageUrl = '';
+  @Input() selected = false;
+  @Input() title = '';
 
   @Output() showContextMenu = new EventEmitter<PageContextMenuEvent>();
 

@@ -77,13 +77,13 @@ export const singleComicBookSelectionFailed = createAction(
 export const setMultipleComicBookByFilterSelectionState = createAction(
   '[Comic Book Selection] Set the selected state for multiple comic books using a filter',
   props<{
-    coverYear: number;
-    coverMonth: number;
-    archiveType: ArchiveType;
-    comicType: ComicType;
-    comicState: ComicState;
+    coverYear: number | null;
+    coverMonth: number | null;
+    archiveType: ArchiveType | null;
+    comicType: ComicType | null;
+    comicState: ComicState | null;
     unscrapedState: boolean;
-    searchText: string;
+    searchText: string | null;
     selected: boolean;
   }>()
 );

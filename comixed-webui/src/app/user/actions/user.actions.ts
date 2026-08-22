@@ -51,7 +51,7 @@ export const logoutUserFailure = createAction(
 
 export const saveUserPreference = createAction(
   '[User] Save a user preference',
-  props<{ name: string; value: string }>()
+  props<{ name: string; value: string | null }>()
 );
 
 export const saveUserPreferenceSuccess = createAction(

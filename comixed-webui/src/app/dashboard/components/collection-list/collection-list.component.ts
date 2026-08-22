@@ -39,7 +39,7 @@ import { MatIcon } from '@angular/material/icon';
 import { RemoteLibrarySegmentState } from '@app/library/models/net/remote-library-segment-state';
 
 @Component({
-  selector: 'cx-collection-list',
+  selector: 'app-collection-list',
   imports: [
     TranslateModule,
     MatTableModule,
@@ -56,14 +56,14 @@ import { RemoteLibrarySegmentState } from '@app/library/models/net/remote-librar
   styleUrl: './collection-list.component.scss'
 })
 export class CollectionListComponent implements AfterViewInit {
-  @ViewChild(MatSort) sort: MatSort;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort | null = null;
+  @ViewChild(MatPaginator) paginator: MatPaginator | null = null;
 
   readonly displayedColumns = ['name', 'comic-count'];
   dataSource = new MatTableDataSource<RemoteLibrarySegmentState>([]);
 
-  @Input() title: string;
-  @Input() rows: number;
+  @Input() title = '';
+  @Input() rows = 0;
 
   @Output() closePanel = new EventEmitter();
 

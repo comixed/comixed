@@ -53,7 +53,7 @@ import { tap } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-  selector: 'cx-publisher-series-page',
+  selector: 'app-publisher-series-page',
   templateUrl: './publisher-series-page.component.html',
   styleUrls: ['./publisher-series-page.component.scss'],
   imports: [
@@ -77,7 +77,7 @@ import { BehaviorSubject } from 'rxjs';
   ]
 })
 export class PublisherSeriesPageComponent implements OnInit {
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatPaginator) paginator: MatPaginator | null = null;
 
   dataSource = new MatTableDataSource<Series>([]);
 

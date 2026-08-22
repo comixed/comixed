@@ -48,7 +48,7 @@ import { PluginTitlePipe } from '../../../library-plugins/pipes/plugin-title.pip
 import { LibraryPluginProperty } from '@app/library-plugins/models/library-plugin-property';
 
 @Component({
-  selector: 'cx-library-plugin-setup',
+  selector: 'app-library-plugin-setup',
   templateUrl: './library-plugin-setup.component.html',
   styleUrls: ['./library-plugin-setup.component.scss'],
   imports: [

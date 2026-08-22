@@ -19,11 +19,7 @@
 import { Preference } from '@app/user/models/preference';
 import { User } from '@app/user/models/user';
 import { ROLE_NAME_ADMIN, ROLE_NAME_READER } from '@app/user/user.constants';
-import {
-  UntypedFormGroup,
-  ValidationErrors,
-  ValidatorFn
-} from '@angular/forms';
+import { FormGroup, ValidationErrors } from '@angular/forms';
 import { PAGE_SIZE_DEFAULT } from '@app/core';
 import { PREFERENCE_PAGE_SIZE } from '@app/comic-files/comic-file.constants';
 
@@ -46,11 +42,11 @@ export function isReader(user: User): boolean {
 }
 
 /** Returns true if the user is an admin. */
-export function isAdmin(user: User): boolean {
+export function isAdmin(user: User | null): boolean {
   return !!user && user.roles.map(role => role.name).includes(ROLE_NAME_ADMIN);
 }
 
-export function getPageSize(user: User): number {
+export function getPageSize(user: User | null): number {
   /* istanbul ignore if */
   if (!user) {
     return PAGE_SIZE_DEFAULT;
@@ -58,19 +54,34 @@ export function getPageSize(user: User): number {
   const preference = user.preferences.find(
     entry => entry.name === PREFERENCE_PAGE_SIZE
   );
-  if (!!preference) {
+  if (preference) {
     return parseInt(preference.value, 10);
   } else {
     return PAGE_SIZE_DEFAULT;
   }
 }
 
-export const passwordVerifyValidator: ValidatorFn = (
-  formGroup: UntypedFormGroup
-): ValidationErrors | null => {
-  const password = formGroup.controls.password.value;
-  const passwordVerify = formGroup.controls.passwordVerify.value;
-  return (!password && !passwordVerify) || password === passwordVerify
-    ? null
-    : { passwordsDontMatch: true };
-};
+export function passwordVerifyValidator(
+  form: FormGroup
+): ValidationErrors | null {
+  const passwordControl = form.controls.password;
+  const passwordVerifyControl = form.controls.passwordVerify;
+  if (!passwordControl || !passwordVerifyControl) {
+    return null;
+  }
+
+  if (
+    passwordVerifyControl.errors &&
+    !passwordVerifyControl.errors.passwordMismatch
+  ) {
+    return null;
+  }
+
+  if (passwordControl.value !== passwordVerifyControl.value) {
+    passwordVerifyControl.setErrors({ ['passwordMismatch']: true });
+    return { ['passwordMismatch']: true };
+  } else {
+    passwordVerifyControl.setErrors(null);
+    return null;
+  }
+}

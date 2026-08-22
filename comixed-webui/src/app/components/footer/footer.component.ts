@@ -35,7 +35,7 @@ import { BehaviorSubject } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 
 @Component({
-  selector: 'cx-footer',
+  selector: 'app-footer',
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.scss'],
   imports: [RouterModule, TranslateModule, AsyncPipe]
@@ -49,15 +49,15 @@ export class FooterComponent {
   batchJobs$ = new BehaviorSubject(0);
 
   logger = inject(LoggerService);
-  store = inject(Store<any>);
+  store = inject(Store);
 
-  private _user: User = null;
+  private _user: User | null = null;
 
-  get user(): User {
+  get user(): User | null {
     return this._user;
   }
 
-  @Input() set user(user: User) {
+  @Input() set user(user: User | null) {
     this._user = user;
 
     if (!!this._user) {
@@ -87,7 +87,7 @@ export class FooterComponent {
           )
         )
         .subscribe();
-      this.readCount$.next(this.user.readComicBooks.length);
+      this.readCount$.next(this.user?.readComicBooks?.length || 0);
     } else {
       this.readCount$.next(0);
     }

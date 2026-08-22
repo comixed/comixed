@@ -20,6 +20,6 @@ export interface LoadSeriesListRequest {
   searchText: string;
   pageIndex: number;
   pageSize: number;
-  sortBy: string;
-  sortDirection: string;
+  sortBy: string | null;
+  sortDirection: string | null;
 }

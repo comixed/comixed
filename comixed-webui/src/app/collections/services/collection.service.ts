@@ -34,11 +34,11 @@ export class CollectionService {
 
   loadCollectionEntries(args: {
     tagType: ComicTagType;
-    searchText: string;
+    searchText: string | null;
     pageIndex: number;
     pageSize: number;
-    sortBy: string;
-    sortDirection: string;
+    sortBy: string | null;
+    sortDirection: string | null;
   }): Observable<any> {
     this.logger.debug('Loading collection entries:', args);
     return this.http.post(

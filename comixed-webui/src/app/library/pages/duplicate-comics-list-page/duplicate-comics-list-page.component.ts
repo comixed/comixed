@@ -56,7 +56,7 @@ import { tap } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-  selector: 'cx-duplicate-comics-page',
+  selector: 'app-duplicate-comics-page',
   imports: [
     AsyncPipe,
     DecimalPipe,

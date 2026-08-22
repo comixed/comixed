@@ -23,7 +23,9 @@
             queryParameterService.onCoverYearChanged($event.value)
           "
           formControlName="coverYear"
-          [disabled]="queryParameterService.filterText$.value?.length > 0"
+          [disabled]="
+            (queryParameterService.filterText$.value || '').length > 0
+          "
         >
           @for (option of displayableCoverYears$ | async; track option) {
             <mat-option [value]="option.value">
@@ -39,7 +41,9 @@
             queryParameterService.onCoverMonthChanged($event.value)
           "
           formControlName="coverMonth"
-          [disabled]="queryParameterService.filterText$.value?.length > 0"
+          [disabled]="
+            (queryParameterService.filterText$.value || '').length > 0
+          "
         >
           @for (option of displayableCoverMonths$ | async; track option) {
             <mat-option [value]="option.value">
@@ -55,7 +59,9 @@
             queryParameterService.onArchiveTypeChanged($event.value)
           "
           formControlName="archiveType"
-          [disabled]="queryParameterService.filterText$.value?.length > 0"
+          [disabled]="
+            (queryParameterService.filterText$.value || '').length > 0
+          "
         >
           @for (option of archiveTypeOptions; track option) {
             <mat-option [value]="option.value">
@@ -71,7 +77,9 @@
             queryParameterService.onComicTypeChanged($event.value)
           "
           formControlName="comicType"
-          [disabled]="queryParameterService.filterText$.value?.length > 0"
+          [disabled]="
+            (queryParameterService.filterText$.value || '').length > 0
+          "
         >
           @for (option of comicTypeOptions; track option) {
             <mat-option [value]="option.value">
@@ -87,7 +95,9 @@
             queryParameterService.onPageCountChange($event.value)
           "
           formControlName="pageCount"
-          [disabled]="queryParameterService.filterText$.value?.length > 0"
+          [disabled]="
+            (queryParameterService.filterText$.value || '').length > 0
+          "
         >
           @for (option of pageCountOptions; track option) {
             <mat-option [value]="option.value">

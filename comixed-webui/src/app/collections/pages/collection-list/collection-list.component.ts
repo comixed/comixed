@@ -56,7 +56,7 @@ import { AsyncPipe, DecimalPipe } from '@angular/common';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-  selector: 'cx-collection-list',
+  selector: 'app-collection-list',
   templateUrl: './collection-list.component.html',
   styleUrls: ['./collection-list.component.scss'],
   imports: [
@@ -83,8 +83,8 @@ export class CollectionListComponent implements OnInit {
   readonly displayedColumns = ['tag-value', 'comic-count'];
   readonly filter = filter;
 
-  collectionType: ComicTagType;
-  routableTypeName: string;
+  collectionType = ComicTagType.SERIES;
+  routableTypeName = '';
   totalEntries$ = new BehaviorSubject(0);
   dataSource = new MatTableDataSource<CollectionEntry>([]);
 

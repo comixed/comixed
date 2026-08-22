@@ -21,12 +21,12 @@ import { User } from '@app/user/models/user';
 import { GravatarModule } from 'ngx-gravatar';
 
 @Component({
-  selector: 'cx-user-card',
+  selector: 'app-user-card',
   templateUrl: './user-card.component.html',
   styleUrls: ['./user-card.component.scss'],
   imports: [GravatarModule]
 })
 export class UserCardComponent {
-  @Input() user: User;
+  @Input() user: User | null = null;
   @Input() imageSize = 'auto';
 }

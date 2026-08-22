@@ -19,7 +19,6 @@
 import {
   Component,
   EventEmitter,
-  HostListener,
   inject,
   Input,
   OnInit,
@@ -87,7 +86,7 @@ import { CommonModule } from '@angular/common';
 import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 
 @Component({
-  selector: 'cx-comic-scraping',
+  selector: 'app-comic-scraping',
   templateUrl: './comic-scraping.component.html',
   styleUrls: ['./comic-scraping.component.scss'],
   imports: [
@@ -212,13 +211,13 @@ export class ComicScrapingComponent implements OnInit {
     this._preferredMetadataSource = source;
   }
 
-  private _comic: DisplayableComic;
+  private _comic: DisplayableComic | null = null;
 
-  get comic(): DisplayableComic {
+  get comic(): DisplayableComic | null {
     return this._comic;
   }
 
-  @Input() set comic(comic: DisplayableComic) {
+  @Input() set comic(comic: DisplayableComic | null) {
     this.logger.debug('Loading comic form:', comic);
     this._comic = comic;
     this.logger.debug('Loading form fields');
@@ -240,7 +239,6 @@ export class ComicScrapingComponent implements OnInit {
     this.store.dispatch(loadMetadataSources());
   }
 
-  @HostListener('window:keydown.shift.control.u', ['$event'])
   onHotkeyUndoChanges(event: KeyboardEvent): void {
     this.logger.debug('Undoing changes from hotkey');
     event.preventDefault();
@@ -259,7 +257,6 @@ export class ComicScrapingComponent implements OnInit {
     });
   }
 
-  @HostListener('window:keydown.shift.control.m', ['$event'])
   onHotKeyFetchScrapingVolumes(event: KeyboardEvent): void {
     this.logger.debug('Loading scraping volumes from hotkey');
     event.preventDefault();
@@ -269,7 +266,7 @@ export class ComicScrapingComponent implements OnInit {
   onFetchScrapingVolumes(): void {
     this.logger.debug('Loading scraping volumes');
     this.scrape.emit({
-      metadataSource: this.metadataSource,
+      metadataSource: this.metadataSource!,
       publisher: this.comicForm.controls.publisher.value,
       series: this.comicForm.controls.series.value,
       volume: this.comicForm.controls.volume.value,
@@ -280,7 +277,6 @@ export class ComicScrapingComponent implements OnInit {
     });
   }
 
-  @HostListener('window:keydown.shift.control.c', ['$event'])
   onHotKeySkipCacheToggle(event: KeyboardEvent): void {
     this.logger.debug('Toggling skipping the cache from hotkey');
     event.preventDefault();
@@ -298,7 +294,6 @@ export class ComicScrapingComponent implements OnInit {
     );
   }
 
-  @HostListener('window:keydown.shift.control.p', ['$event'])
   onHotKeyMatchPublisherToggle(event: KeyboardEvent): void {
     this.logger.debug('Toggling matching publisher from hotkey');
     event.preventDefault();
@@ -326,7 +321,6 @@ export class ComicScrapingComponent implements OnInit {
     );
   }
 
-  @HostListener('window:keydown.shift.control.s', ['$event'])
   onHotKeySaveChanges(event: KeyboardEvent): void {
     this.logger.debug('Saving changes to comic from hotkey');
     event.preventDefault();
@@ -342,10 +336,10 @@ export class ComicScrapingComponent implements OnInit {
         'comic-book.save-changes.confirmation-message'
       ),
       confirm: () => {
-        this.logger.debug('Saving changes to comic:', this.comic.comicBookId);
+        this.logger.debug('Saving changes to comic:', this.comic!.comicBookId);
         this.store.dispatch(
           updateComicBook({
-            comicBookId: this.comic.comicBookId,
+            comicBookId: this.comic!.comicBookId!,
             publisher: this.comicForm.controls.publisher.value,
             series: this.comicForm.controls.series.value,
             volume: this.comicForm.controls.volume.value,
@@ -356,7 +350,6 @@ export class ComicScrapingComponent implements OnInit {
     });
   }
 
-  @HostListener('window:keydown.shift.control.f', ['$event'])
   onHotKeyScrapeFilename(event: KeyboardEvent): void {
     this.logger.debug('Scraping filename from hotkey');
     event.preventDefault();
@@ -364,17 +357,24 @@ export class ComicScrapingComponent implements OnInit {
   }
 
   onScrapeFilename(): void {
-    const filename = this.comic.baseFilename;
-    this.logger.debug('Scraping the comic filename:', filename);
-    this.store.dispatch(scrapeMetadataFromFilename({ filename }));
+    const filename = this.comic?.baseFilename || null;
+    if (filename) {
+      this.logger.debug('Scraping the comic filename:', filename);
+      this.store.dispatch(scrapeMetadataFromFilename({ filename: filename! }));
+    }
   }
 
   onMetadataSourceChosen(id: number): void {
-    const metadataSource = this.metadataSourceList$.value.find(
-      entry => entry.value.metadataSourceId === id
-    ).value;
-    this.logger.debug('Metadata source selected:', metadataSource);
-    this.store.dispatch(setChosenMetadataSource({ metadataSource }));
+    const metadataSource =
+      this.metadataSourceList$.value.find(
+        entry => entry.value.metadataSourceId === id
+      )?.value || null;
+    if (metadataSource) {
+      this.logger.debug('Metadata source selected:', metadataSource);
+      this.store.dispatch(
+        setChosenMetadataSource({ metadataSource: metadataSource! })
+      );
+    }
   }
 
   onScrapeWithReferenceId(): void {
@@ -390,8 +390,8 @@ export class ComicScrapingComponent implements OnInit {
       confirm: () => {
         this.store.dispatch(
           scrapeSingleComicBook({
-            comic: this.comic,
-            metadataSource: this.metadataSource,
+            comic: this.comic!,
+            metadataSource: this.metadataSource!,
             issueId: referenceId,
             skipCache: this.skipCache
           })
@@ -400,7 +400,6 @@ export class ComicScrapingComponent implements OnInit {
     });
   }
 
-  @HostListener('window:keydown.shift.control.o', ['$event'])
   onHotkeyToggleConfirmBeforeScrape(event: KeyboardEvent): void {
     this.logger.debug('Toggling confirm before scrape from hotkey');
     event.preventDefault();
@@ -416,7 +415,6 @@ export class ComicScrapingComponent implements OnInit {
     );
   }
 
-  @HostListener('window:keydown.shift.control.x', ['$event'])
   onHotKeyToggleAutoSelectExactMatch(event: KeyboardEvent): void {
     this.logger.debug('Toggling auto select exact match from hotkey');
     event.preventDefault();

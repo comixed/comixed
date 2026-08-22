@@ -70,7 +70,7 @@
     queryParameterService.onPageChange(
       $event.pageSize,
       $event.pageIndex,
-      $event.previousPageIndex
+      $event.previousPageIndex || null
     )
   "
 ></mat-paginator>
@@ -78,8 +78,8 @@
 <mat-table
   [dataSource]="dataSource"
   matSort
-  [matSortActive]="queryParameterService.sortBy$ | async"
-  [matSortDirection]="queryParameterService.sortDirection$ | async"
+  [matSortActive]="(queryParameterService.sortBy$ | async) || ''"
+  [matSortDirection]="(queryParameterService.sortDirection$ | async) || ''"
   (matSortChange)="
     queryParameterService.onSortChange($event.active, $event.direction)
   "
@@ -119,7 +119,7 @@
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <span class="cx-width-100 cx-text-nowrap">
-        {{ entry.coverDate | date: medium }}
+        {{ entry.coverDate | date: "medium" }}
       </span>
     </mat-cell>
   </ng-container>
@@ -130,7 +130,7 @@
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <span class="cx-width-100 cx-text-nowrap">
-        {{ entry.storeDate | date: medium }}
+        {{ entry.storeDate | date: "medium" }}
       </span>
     </mat-cell>
   </ng-container>

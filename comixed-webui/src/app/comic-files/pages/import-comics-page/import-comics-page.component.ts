@@ -46,12 +46,7 @@ import { User } from '@app/user/models/user';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
-import {
-  MatMenu,
-  MatMenuContent,
-  MatMenuItem,
-  MatMenuTrigger
-} from '@angular/material/menu';
+import { MatMenuTrigger } from '@angular/material/menu';
 import {
   MatCell,
   MatCellDef,
@@ -97,7 +92,7 @@ import { SelectionOption } from '@app/core/models/ui/selection-option';
 import { MatInput } from '@angular/material/input';
 
 @Component({
-  selector: 'cx-import-comics',
+  selector: 'app-import-comics',
   templateUrl: './import-comics-page.component.html',
   styleUrls: ['./import-comics-page.component.scss'],
   imports: [
@@ -124,9 +119,6 @@ import { MatInput } from '@angular/material/input';
     MatRowDef,
     MatRow,
     MatNoDataRow,
-    MatMenu,
-    MatMenuContent,
-    MatMenuItem,
     MatLabel,
     AsyncPipe,
     DecimalPipe,
@@ -139,9 +131,9 @@ import { MatInput } from '@angular/material/input';
   ]
 })
 export class ImportComicsPageComponent implements OnInit, AfterViewInit {
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
-  @ViewChild(MatMenuTrigger) contextMenu: MatMenuTrigger;
+  @ViewChild(MatPaginator) paginator: MatPaginator | null = null;
+  @ViewChild(MatSort) sort: MatSort | null = null;
+  @ViewChild(MatMenuTrigger) contextMenu: MatMenuTrigger | null = null;
 
   readonly displayedColumns = [
     'selection',
@@ -162,7 +154,7 @@ export class ImportComicsPageComponent implements OnInit, AfterViewInit {
   showCoverPopup$ = new BehaviorSubject(false);
   comicFile$ = new BehaviorSubject<ComicFile | null>(null);
   blockedPagesEnabled$ = new BehaviorSubject(false);
-  currentPath$ = new BehaviorSubject<string | null>(null);
+  currentPath$ = new BehaviorSubject<string>('');
   pathOptions$ = new BehaviorSubject<SelectionOption<string>[]>([]);
 
   logger = inject(LoggerService);
@@ -219,7 +211,7 @@ export class ImportComicsPageComponent implements OnInit, AfterViewInit {
       .pipe(
         tap(groups => {
           this.pathOptions$.next(
-            [{ label: 'comic-files.text.all-directories', value: null }].concat(
+            [{ label: 'comic-files.text.all-directories', value: '' }].concat(
               groups.map(group => {
                 return {
                   label: group.directory,
@@ -255,6 +247,7 @@ export class ImportComicsPageComponent implements OnInit, AfterViewInit {
     this.store
       .select(selectComicFilesCurrentPath)
       .pipe(
+        filter(path => !!path),
         tap(path => {
           this.currentPath$.next(path);
           this.updateDisplayedFilesAndSelections();
@@ -324,7 +317,7 @@ export class ImportComicsPageComponent implements OnInit, AfterViewInit {
     );
   }
 
-  onShowPopup(showPopup: boolean, comicFile: ComicFile): void {
+  onShowPopup(showPopup: boolean, comicFile: ComicFile | null): void {
     if (showPopup) {
       this.logger.debug('Showing comic file cover:', comicFile);
       this.comicFile$.next(comicFile);
@@ -336,7 +329,7 @@ export class ImportComicsPageComponent implements OnInit, AfterViewInit {
     }
   }
 
-  onChangeCurrentPath(path: string | null): void {
+  onChangeCurrentPath(path: string): void {
     this.logger.debug('Changing current path:', path);
     this.store.dispatch(updateCurrentPath({ path }));
   }
@@ -357,7 +350,7 @@ export class ImportComicsPageComponent implements OnInit, AfterViewInit {
   }
 
   private updateDisplayedFilesAndSelections(): void {
-    if (!!this.currentPath$.value) {
+    if (this.currentPath$.value) {
       this.logger.info(
         'Showing comic files from group:',
         this.currentPath$.value

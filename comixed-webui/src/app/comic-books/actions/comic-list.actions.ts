@@ -32,20 +32,20 @@ export const loadComicsByFilter = createAction(
   props<{
     pageSize: number;
     pageIndex: number;
-    sortBy: string;
-    sortDirection: string;
-    coverYear: number;
-    coverMonth: number;
-    archiveType: ArchiveType;
-    comicType: ComicType;
-    comicState: ComicState;
+    sortBy: string | null;
+    sortDirection: string | null;
+    coverYear: number | null;
+    coverMonth: number | null;
+    archiveType: ArchiveType | null;
+    comicType: ComicType | null;
+    comicState: ComicState | null;
     selected: boolean;
     unscrapedState: boolean;
     missing: boolean;
-    searchText: string;
-    publisher: string;
-    series: string;
-    volume: string;
+    searchText: string | null;
+    publisher: string | null;
+    series: string | null;
+    volume: string | null;
     pageCount: number | null;
   }>()
 );
@@ -62,8 +62,8 @@ export const loadComicsForCollection = createAction(
     pageIndex: number;
     tagType: ComicTagType;
     tagValue: string;
-    sortBy: string;
-    sortDirection: string;
+    sortBy: string | null;
+    sortDirection: string | null;
   }>()
 );
 
@@ -72,8 +72,8 @@ export const loadUnreadComics = createAction(
   props<{
     pageSize: number;
     pageIndex: number;
-    sortBy: string;
-    sortDirection: string;
+    sortBy: string | null;
+    sortDirection: string | null;
   }>()
 );
 
@@ -82,8 +82,8 @@ export const loadReadComics = createAction(
   props<{
     pageSize: number;
     pageIndex: number;
-    sortBy: string;
-    sortDirection: string;
+    sortBy: string | null;
+    sortDirection: string | null;
   }>()
 );
 
@@ -93,8 +93,8 @@ export const loadComicsForReadingList = createAction(
     readingListId: number;
     pageSize: number;
     pageIndex: number;
-    sortBy: string;
-    sortDirection: string;
+    sortBy: string | null;
+    sortDirection: string | null;
   }>()
 );
 

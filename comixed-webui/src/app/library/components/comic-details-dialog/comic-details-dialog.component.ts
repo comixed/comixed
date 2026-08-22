@@ -22,15 +22,15 @@ import {
   MatDialogContent,
   MatDialogTitle
 } from '@angular/material/dialog';
-import { ComicBook } from '@app/comic-books/models/comic-book';
 import { ComicPageComponent } from '../../../comic-books/components/comic-page/comic-page.component';
 import { DatePipe } from '@angular/common';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 import { ComicDetailCoverUrlPipe } from '@app/comic-books/pipes/comic-detail-cover-url.pipe';
 import { TranslateModule } from '@ngx-translate/core';
+import { ComicDetail } from '@app/comic-books/models/comic-detail';
 
 @Component({
-  selector: 'cx-comic-details-dialog',
+  selector: 'app-comic-details-dialog',
   templateUrl: './comic-details-dialog.component.html',
   styleUrls: ['./comic-details-dialog.component.scss'],
   imports: [
@@ -44,5 +44,5 @@ import { TranslateModule } from '@ngx-translate/core';
   ]
 })
 export class ComicDetailsDialogComponent {
-  comicBook = inject<ComicBook>(MAT_DIALOG_DATA);
+  comicDetail = inject<ComicDetail>(MAT_DIALOG_DATA);
 }

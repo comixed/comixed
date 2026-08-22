@@ -36,11 +36,11 @@ export class SeriesService {
   http = inject(HttpClient);
 
   loadSeries(args: {
-    searchText: string;
+    searchText: string | null;
     pageIndex: number;
     pageSize: number;
-    sortBy: string;
-    sortDirection: string;
+    sortBy: string | null;
+    sortDirection: string | null;
   }): Observable<any> {
     this.logger.debug('Loading series:', args);
     return this.http.post(interpolate(LOAD_SERIES_URL), {

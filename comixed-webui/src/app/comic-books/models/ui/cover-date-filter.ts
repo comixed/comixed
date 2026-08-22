@@ -17,6 +17,6 @@
  */
 
 export interface CoverDateFilter {
-  year: number;
-  month: number;
+  year: number | null;
+  month: number | null;
 }

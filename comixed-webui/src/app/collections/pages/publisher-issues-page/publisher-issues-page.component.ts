@@ -41,7 +41,7 @@ import { BehaviorSubject } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 
 @Component({
-  selector: 'cx-publisher-issues-page',
+  selector: 'app-publisher-issues-page',
   templateUrl: './publisher-issues-page.component.html',
   styleUrl: './publisher-issues-page.component.scss',
   imports: [ComicListViewComponent, TranslateModule, AsyncPipe]

@@ -54,7 +54,7 @@ import { MatFormField, MatError } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 
 @Component({
-  selector: 'cx-library-configuration',
+  selector: 'app-library-configuration',
   templateUrl: './library-configuration.component.html',
   styleUrls: ['./library-configuration.component.scss'],
   imports: [
@@ -116,7 +116,7 @@ export class LibraryConfigurationComponent {
 
   logger = inject(LoggerService);
   formBuilder = inject(UntypedFormBuilder);
-  store = inject(Store<any>);
+  store = inject(Store);
   confirmationService = inject(ConfirmationService);
   translateService = inject(TranslateService);
 

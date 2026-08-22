@@ -42,7 +42,7 @@ export const loadComicFileListFailure = createAction(
 export const updateCurrentPath = createAction(
   '[Comic File List] Set the current path to be shown',
   props<{
-    path: string | null;
+    path: string;
   }>()
 );
 

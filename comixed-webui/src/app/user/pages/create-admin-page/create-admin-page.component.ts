@@ -51,7 +51,7 @@ import { MatIcon } from '@angular/material/icon';
 import { tap } from 'rxjs';
 
 @Component({
-  selector: 'cx-create-admin-page',
+  selector: 'app-create-admin-page',
   templateUrl: './create-admin-page.component.html',
   styleUrls: ['./create-admin-page.component.scss'],
   imports: [
@@ -122,7 +122,7 @@ export class CreateAdminPageComponent implements OnInit {
       .subscribe();
   }
 
-  get controls(): { [p: string]: AbstractControl } {
+  get controls(): Record<string, AbstractControl> {
     return this.createAdminForm.controls;
   }
 

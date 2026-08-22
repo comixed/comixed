@@ -87,7 +87,7 @@
   </div>
 </div>
 
-@if ((detail$ | async)?.errors?.length > 0) {
+@if (!!(detail$ | async)?.errors) {
   <div class="cx-width-100">
     <h3>{{ "batch-processes.text.error-header" | translate }}</h3>
     <pre class="cx-padding-5 cx-width-100">

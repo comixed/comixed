@@ -63,7 +63,7 @@ import { tap } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-  selector: 'cx-series-metadata-page',
+  selector: 'app-series-metadata-page',
   templateUrl: './series-metadata-page.component.html',
   styleUrls: ['./series-metadata-page.component.scss'],
   imports: [
@@ -92,8 +92,8 @@ import { BehaviorSubject } from 'rxjs';
   ]
 })
 export class SeriesMetadataPageComponent implements OnInit, AfterViewInit {
-  @ViewChild(MatSort) sort: MatSort;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort | null = null;
+  @ViewChild(MatPaginator) paginator: MatPaginator | null = null;
 
   readonly displayedColumns = [
     'name',
@@ -225,7 +225,7 @@ export class SeriesMetadataPageComponent implements OnInit, AfterViewInit {
     this.loadTranslations();
   }
 
-  getComicBookIdForRow(issue: Issue): number {
+  getComicBookIdForRow(issue: Issue): number | null {
     const found = this.comics$.value.find(
       comicBook =>
         comicBook.publisher === issue.publisher &&
@@ -233,7 +233,7 @@ export class SeriesMetadataPageComponent implements OnInit, AfterViewInit {
         comicBook.volume === issue.volume &&
         comicBook.issueNumber === issue.issueNumber
     );
-    return found?.comicBookId;
+    return found?.comicBookId || null;
   }
 
   private loadTranslations(): void {

@@ -45,12 +45,12 @@ import {
   comicTagTypeFromString
 } from '@app/comic-books/models/comic-tag-type';
 import { ComicListViewComponent } from '../../../comic-books/components/comic-list-view/comic-list-view.component';
-import { tap } from 'rxjs/operators';
+import { filter, tap } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 
 @Component({
-  selector: 'cx-collection-detail',
+  selector: 'app-collection-detail',
   templateUrl: './collection-detail.component.html',
   styleUrls: ['./collection-detail.component.scss'],
   imports: [ComicListViewComponent, TranslateModule, AsyncPipe]
@@ -61,9 +61,9 @@ export class CollectionDetailComponent implements OnInit {
   coverYears$ = new BehaviorSubject<number[]>([]);
   coverMonths$ = new BehaviorSubject<number[]>([]);
 
-  routableTypeName: string;
-  tagType: ComicTagType;
-  tagValue: string;
+  routableTypeName = '';
+  tagType = ComicTagType.SERIES;
+  tagValue = '';
   selectedIds$ = new BehaviorSubject<number[]>([]);
   lastReadDates$ = new BehaviorSubject<number[]>([]);
   readingLists$ = new BehaviorSubject<ReadingList[]>([]);
@@ -126,6 +126,7 @@ export class CollectionDetailComponent implements OnInit {
     this.store
       .select(selectUser)
       .pipe(
+        filter(user => !!user),
         tap(user => {
           this.logger.trace('Setting isAdmin flag');
           this.isAdmin$.next(isAdmin(user));

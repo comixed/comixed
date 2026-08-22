@@ -77,7 +77,7 @@ describe('ScrapingSeriesPageComponent', () => {
   const ORIGINAL_PUBLISHER = PUBLISHER_1.name;
   const PUBLISHER = SERIES_1.publisher;
   const ORIGINAL_SERIES = SERIES_1.name;
-  const EDITED_SERIES = SERIES_1.name.substring(1);
+  const EDITED_SERIES = SERIES_1.name.slice(1);
   const ORIGINAL_VOLUME = SERIES_1.volume;
   const SCRAPING_VOLUME = SCRAPING_VOLUME_1;
   const METADATA_SOURCE = METADATA_SOURCE_2;
@@ -225,7 +225,7 @@ describe('ScrapingSeriesPageComponent', () => {
       });
 
       it('clears the source', () => {
-        expect(component.metadataSource).toBeUndefined();
+        expect(component.metadataSource).toBeNull();
       });
     });
 
@@ -274,12 +274,12 @@ describe('ScrapingSeriesPageComponent', () => {
 
   describe('selecting a volume', () => {
     beforeEach(() => {
-      component.selectedVolume = null;
+      component.selectedVolume$.next(null);
       component.onVolumeSelected(SCRAPING_VOLUME);
     });
 
     it('sets the volume', () => {
-      expect(component.selectedVolume).toEqual(SCRAPING_VOLUME);
+      expect(component.selectedVolume$.value).toEqual(SCRAPING_VOLUME);
     });
   });
 
@@ -292,7 +292,8 @@ describe('ScrapingSeriesPageComponent', () => {
       spyOn(confirmationService, 'confirm').and.callFake(
         (confirmation: Confirmation) => confirmation.confirm()
       );
-      component.onVolumeChosen(SCRAPING_VOLUME);
+      component.selectedVolume$.next(SCRAPING_VOLUME);
+      component.onVolumeChosen();
     });
 
     it('confirms with the user', () => {

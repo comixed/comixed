@@ -119,7 +119,7 @@ describe('DuplicatePageListPageComponent', () => {
   const BLOCKED_PAGE = { ...DUPLICATE_PAGES[0], hash: BLOCKED_HASH_1.hash };
   const NON_BLOCKED_PAGE = {
     ...DUPLICATE_PAGES[0],
-    hash: BLOCKED_HASH_1.hash.substring(1)
+    hash: BLOCKED_HASH_1.hash.slice(1)
   };
   const BLOCKED_HASHES = [
     BLOCKED_HASH_1,
@@ -374,7 +374,7 @@ describe('DuplicatePageListPageComponent', () => {
             page: DUPLICATE_PAGE,
             removed: false,
             total: TOTAL_PAGES
-          } as DuplicatePageUpdate);
+          } as DuplicatePageUpdate as any);
           return {} as Subscription;
         });
         store.setState({
@@ -407,7 +407,7 @@ describe('DuplicatePageListPageComponent', () => {
             page: DUPLICATE_PAGE,
             removed: true,
             total: TOTAL_PAGES
-          } as DuplicatePageUpdate);
+          } as DuplicatePageUpdate as any);
           return {} as Subscription;
         });
         store.setState({

@@ -24,11 +24,11 @@ export const loadCollectionList = createAction(
   '[Collection List] Load the list of values for the collection',
   props<{
     tagType: ComicTagType;
-    searchText: string;
+    searchText: string | null;
     pageSize: number;
     pageIndex: number;
-    sortBy: string;
-    sortDirection: string;
+    sortBy: string | null;
+    sortDirection: string | null;
   }>()
 );
 

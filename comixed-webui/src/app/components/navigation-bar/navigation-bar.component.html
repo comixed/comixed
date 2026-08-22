@@ -13,7 +13,7 @@
   @if (
     (isAdmin$ | async) &&
     (latestRelease$ | async) !== null &&
-    (latestRelease$ | async).newer
+    (latestRelease$ | async)?.newer
   ) {
     <button
       id="view-latest-release-button"
@@ -22,8 +22,8 @@
         'menu.tooltip.new-release-available'
           | translate
             : {
-                version: (latestRelease$ | async).version,
-                released: (latestRelease$ | async).updated | date: 'mediumDate'
+                version: (latestRelease$ | async)?.version,
+                released: (latestRelease$ | async)?.updated | date: 'mediumDate'
               }
       "
       [disabled]="checkingLatestVersion$ | async"

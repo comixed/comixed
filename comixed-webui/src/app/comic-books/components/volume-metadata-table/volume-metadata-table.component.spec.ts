@@ -137,17 +137,14 @@ describe('VolumeMetadataTableComponent', () => {
       expect(
         component.dataSource.filterPredicate(
           ENTRY,
-          ENTRY.item.publisher.substring(1)
+          ENTRY.item.publisher.slice(1)
         )
       ).toBeTrue();
     });
 
     it('filters by series', () => {
       expect(
-        component.dataSource.filterPredicate(
-          ENTRY,
-          ENTRY.item.name.substring(1)
-        )
+        component.dataSource.filterPredicate(ENTRY, ENTRY.item.name.slice(1))
       ).toBeTrue();
     });
 

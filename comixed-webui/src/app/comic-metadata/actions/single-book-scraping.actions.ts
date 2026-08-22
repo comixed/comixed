@@ -19,7 +19,6 @@
 import { createAction, props } from '@ngrx/store';
 import { VolumeMetadata } from '../models/volume-metadata';
 import { IssueMetadata } from '../models/issue-metadata';
-import { ComicBook } from '@app/comic-books/models/comic-book';
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 
@@ -29,7 +28,7 @@ export const resetMetadataState = createAction(
 
 export const setChosenMetadataSource = createAction(
   '[Metadata] Sets the chosen metadata source',
-  props<{ metadataSource: MetadataSource }>()
+  props<{ metadataSource: MetadataSource | null }>()
 );
 
 export const setConfirmBeforeScraping = createAction(

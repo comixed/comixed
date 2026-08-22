@@ -101,7 +101,7 @@
       </mat-card>
     </form>
 
-    @if ((imageUrl$ | async).length > 0) {
+    @if (((imageUrl$ | async) || "").length > 0) {
       <div class="cx-width-100">
         <mat-card>
           <mat-card-title class="cx-align-content-center cx-text-nowrap">

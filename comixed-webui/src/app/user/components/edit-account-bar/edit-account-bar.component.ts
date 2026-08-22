@@ -78,7 +78,7 @@ import { tap } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-  selector: 'cx-edit-account-bar',
+  selector: 'app-edit-account-bar',
   templateUrl: './edit-account-bar.component.html',
   styleUrls: ['./edit-account-bar.component.scss'],
   imports: [
@@ -113,7 +113,7 @@ import { BehaviorSubject } from 'rxjs';
   ]
 })
 export class EditAccountBarComponent implements AfterViewInit {
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatSort) sort: MatSort | null = null;
   @Output() closeSidebar = new EventEmitter<void>();
 
   readonly displayedColumns = ['name', 'value', 'actions'];
@@ -131,11 +131,14 @@ export class EditAccountBarComponent implements AfterViewInit {
   translateService = inject(TranslateService);
 
   constructor() {
-    this.userForm = this.formBuilder.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: [''],
-      passwordVerify: ['']
-    });
+    this.userForm = this.formBuilder.group(
+      {
+        email: ['', [Validators.required, Validators.email]],
+        password: [''],
+        passwordVerify: ['']
+      },
+      { validators: passwordVerifyValidator }
+    );
     this.store
       .select(selectUserSaving)
       .pipe(
@@ -147,15 +150,15 @@ export class EditAccountBarComponent implements AfterViewInit {
       .subscribe();
   }
 
-  private _user: User = null;
+  private _user: User | null = null;
 
-  get user(): User {
+  get user(): User | null {
     return this._user;
   }
 
-  @Input() set user(user: User) {
+  @Input() set user(user: User | null) {
     this._user = user;
-    if (!!user) {
+    if (user) {
       this.userForm.controls.email.setValue(user.email);
       this.userForm.controls.password.setValue('');
       this.userForm.controls.passwordVerify.setValue('');
@@ -166,7 +169,7 @@ export class EditAccountBarComponent implements AfterViewInit {
     }
   }
 
-  get controls(): { [p: string]: AbstractControl } {
+  get controls(): Record<string, AbstractControl> {
     return this.userForm.controls;
   }
 
@@ -175,10 +178,11 @@ export class EditAccountBarComponent implements AfterViewInit {
     this.dataSource.sort = this.sort;
     this.dataSource.sortingDataAccessor = (data, sortHeaderId) => {
       switch (sortHeaderId) {
-        case 'name':
-          return data.name;
         case 'value':
           return data.value;
+        case 'name':
+        default:
+          return data.name;
       }
     };
   }
@@ -199,8 +203,6 @@ export class EditAccountBarComponent implements AfterViewInit {
         Validators.minLength(MIN_PASSWORD_LENGTH),
         Validators.maxLength(MAX_PASSWORD_LENGTH)
       ]);
-      this.logger.trace('Adding password comparison validator');
-      this.userForm.setValidators(passwordVerifyValidator);
     } else {
       this.logger.trace('Removing password validators');
       this.userForm.controls.password.setValidators(null);
@@ -226,7 +228,7 @@ export class EditAccountBarComponent implements AfterViewInit {
         this.logger.debug('Saving user account changes');
         this.store.dispatch(
           saveCurrentUser({
-            user: { ...this.user, email: this.userForm.controls.email.value },
+            user: { ...this.user!, email: this.userForm.controls.email.value },
             password: this.userForm.controls.password.value
           })
         );

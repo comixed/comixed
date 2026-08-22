@@ -45,6 +45,7 @@ import {
   readingListUpdate
 } from '@app/lists/actions/reading-lists.actions';
 import { selectUser } from '@app/user/selectors/user.selectors';
+import { filter, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -58,10 +59,16 @@ export class ReadingListService {
   webSocketService = inject(WebSocketService);
 
   constructor() {
-    this.store.select(selectUser).subscribe(user => {
-      this.email = user?.email;
-      this.doSubscribeToTopics();
-    });
+    this.store
+      .select(selectUser)
+      .pipe(
+        filter(user => !!user),
+        tap(user => {
+          this.email = user.email;
+          this.doSubscribeToTopics();
+        })
+      )
+      .subscribe();
     this.store.select(selectMessagingStarted).subscribe(started => {
       if (started) {
         this.doSubscribeToTopics();
@@ -80,7 +87,7 @@ export class ReadingListService {
   }
 
   save(args: { list: ReadingList }): Observable<any> {
-    if (!!args.list.readingListId) {
+    if (args.list.readingListId) {
       this.logger.trace('Updating reading list:', args);
       return this.http.put(
         interpolate(UPDATE_READING_LIST, { id: args.list.readingListId }),
@@ -134,11 +141,11 @@ export class ReadingListService {
   }
 
   private doSubscribeToTopics(): void {
-    if (!!this.email) {
+    if (this.email) {
       this.logger.trace('Subscribing to reading list updates');
       this.webSocketService.subscribe(
         interpolate(READING_LISTS_UPDATES_TOPIC, { email: this.email }),
-        list => {
+        (list: ReadingList) => {
           this.logger.trace('Updated reading list received:', list);
           this.store.dispatch(readingListUpdate({ list }));
         }
@@ -146,7 +153,7 @@ export class ReadingListService {
       this.logger.trace('Subscribing to reading list removals');
       this.webSocketService.subscribe(
         interpolate(READING_LIST_REMOVAL_TOPIC, { email: this.email }),
-        list => {
+        (list: ReadingList) => {
           this.logger.trace('Reading list removed:', list);
           this.store.dispatch(readingListRemoved({ list }));
         }

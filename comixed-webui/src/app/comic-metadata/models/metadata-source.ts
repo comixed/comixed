@@ -19,7 +19,7 @@
 import { MetadataSourceProperty } from '@app/comic-metadata/models/metadata-source-property';
 
 export interface MetadataSource {
-  metadataSourceId: number;
+  metadataSourceId: number | null;
   name: string;
   version: string;
   homepage: string;

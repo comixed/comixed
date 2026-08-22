@@ -88,7 +88,7 @@ import { filter, tap } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-  selector: 'cx-scraping-issues-page',
+  selector: 'app-scraping-issues-page',
   templateUrl: './scraping-issues-page.component.html',
   styleUrls: ['./scraping-issues-page.component.scss'],
   imports: [
@@ -165,6 +165,7 @@ export class ScrapingIssuesPageComponent implements OnInit {
     this.store
       .select(selectUser)
       .pipe(
+        filter(user => !!user),
         tap(user => {
           this.skipCache$.next(
             getUserPreference(
@@ -196,6 +197,7 @@ export class ScrapingIssuesPageComponent implements OnInit {
     this.store
       .select(selectMultiBookScrapingStatus)
       .pipe(
+        filter(status => !!status),
         tap(status => {
           this.multiBookScrapingStatus$.next(status);
           this.doUpdateScrapingState();
@@ -235,7 +237,7 @@ export class ScrapingIssuesPageComponent implements OnInit {
         tap(currentComicBook => {
           this.currentComicBook$.next(currentComicBook);
           this.scrapingVolumes$.next([]);
-          this.currentVolume$.next(null);
+          this.currentVolume$.next('');
         })
       )
       .subscribe();
@@ -308,27 +310,22 @@ export class ScrapingIssuesPageComponent implements OnInit {
     );
   }
 
-  onShowPopup(showPopup: boolean, comic: DisplayableComic): void {
+  onShowPopup(showPopup: boolean, comic: DisplayableComic | null): void {
     this.showPopup$.next(showPopup);
     this.popupComic$.next(comic);
   }
 
-  onRemoveComicBook(comicDetail: DisplayableComic) {
+  onRemoveComicBook(comicBook: DisplayableComic) {
     this.store.dispatch(
       multiBookScrapingRemoveBook({
-        comicBook: this.comicBooks$.value.find(
-          entry => entry.comicBookId === comicDetail.comicBookId
-        ),
+        comicBook,
         pageSize: this.queryParameterService.pageSize$.value
       })
     );
   }
 
-  onSelectComicBook(comicDetail: DisplayableComic): void {
-    const comicBook = this.comicBooks$.value.find(
-      entry => entry.comicBookId === comicDetail.comicBookId
-    );
-    this.logger.debug('Selecting comic book:', comicDetail);
+  onSelectComicBook(comicBook: DisplayableComic): void {
+    this.logger.debug('Selecting comic book:', comicBook);
     this.store.dispatch(multiBookScrapingSetCurrentBook({ comicBook }));
   }
 

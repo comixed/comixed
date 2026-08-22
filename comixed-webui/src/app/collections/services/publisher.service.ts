@@ -36,11 +36,11 @@ export class PublisherService {
   http = inject(HttpClient);
 
   loadPublishers(args: {
-    searchText: string;
+    searchText: string | null;
     page: number;
     size: number;
-    sortBy: string;
-    sortDirection: string;
+    sortBy: string | null;
+    sortDirection: string | null;
   }): Observable<any> {
     this.logger.debug('Loading all publishers');
     return this.http.post(interpolate(LOAD_PUBLISHERS_URL), {
@@ -56,8 +56,8 @@ export class PublisherService {
     name: string;
     pageIndex: number;
     pageSize: number;
-    sortBy: string;
-    sortDirection: string;
+    sortBy: string | null;
+    sortDirection: string | null;
   }): Observable<any> {
     this.logger.debug('Loading one publisher:', args);
     return this.http.post(

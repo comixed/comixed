@@ -43,12 +43,12 @@ export const MULTI_BOOK_SCRAPING_FEATURE_KEY = 'multi_book_scraping_state';
 
 export interface MultiBookScrapingState {
   busy: boolean;
-  status: MultiBookScrapingProcessStatus;
+  status: MultiBookScrapingProcessStatus | null;
   comicBooks: DisplayableComic[];
   pageSize: number;
   pageNumber: number;
   totalComics: number;
-  currentComicBook: DisplayableComic;
+  currentComicBook: DisplayableComic | null;
 }
 
 export const initialState: MultiBookScrapingState = {
@@ -61,14 +61,18 @@ export const initialState: MultiBookScrapingState = {
   currentComicBook: null
 };
 
-function getCurrentComicBook(comicBooks): DisplayableComic {
+function getCurrentComicBook(
+  comicBooks: DisplayableComic[]
+): DisplayableComic | null {
   if (comicBooks?.length > 0) {
     return comicBooks[0];
   }
   return null;
 }
 
-function updateStatus(comicBooks): MultiBookScrapingProcessStatus {
+function updateStatus(
+  comicBooks: DisplayableComic[]
+): MultiBookScrapingProcessStatus {
   if (comicBooks?.length > 0) {
     return MultiBookScrapingProcessStatus.STARTED;
   } else {

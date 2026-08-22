@@ -30,7 +30,7 @@ import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
-  selector: 'cx-selected-comics',
+  selector: 'app-selected-comics',
   templateUrl: './selected-comics.component.html',
   styleUrls: ['./selected-comics.component.scss'],
   imports: [
@@ -68,7 +68,7 @@ export class SelectedComicsComponent {
     this.selectionChanged.emit(comic);
   }
 
-  onShowComicDetails(comic: ComicBook, $event: MouseEvent): void {
+  onShowComicDetails(comic: ComicDetail, $event: MouseEvent): void {
     this.logger.debug('Showing details dialog:', comic);
     this.dialog.open(ComicDetailsDialogComponent, {
       data: comic

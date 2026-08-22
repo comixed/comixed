@@ -58,7 +58,6 @@ import { ConfirmationService } from '@tragically-slick/confirmation';
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { getUserPreference } from '@app/user';
-import * as _ from 'lodash';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { PAGE_SIZE_OPTIONS } from '@app/core';
 import { selectBlockedHashesList } from '@app/comic-pages/selectors/blocked-hashes.selectors';
@@ -94,11 +93,11 @@ import { MatCheckbox } from '@angular/material/checkbox';
 import { AsyncPipe } from '@angular/common';
 import { YesNoPipe } from '../../../core/pipes/yes-no.pipe';
 import { PageHashUrlPipe } from '../../../comic-books/pipes/page-hash-url.pipe';
-import { tap } from 'rxjs/operators';
+import { filter, tap } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-  selector: 'cx-duplicate-page-list-page',
+  selector: 'app-duplicate-page-list-page',
   templateUrl: './duplicate-page-list-page.component.html',
   styleUrls: ['./duplicate-page-list-page.component.scss'],
   imports: [
@@ -178,6 +177,7 @@ export class DuplicatePageListPageComponent implements AfterViewInit {
     this.store
       .select(selectUser)
       .pipe(
+        filter(user => !!user),
         tap(user => {
           this.unblockedOnly =
             getUserPreference(
@@ -402,7 +402,7 @@ export class DuplicatePageListPageComponent implements AfterViewInit {
       .includes(item.item.hash);
   }
 
-  onShowPagePopup(showPopup: boolean, page: DuplicatePage) {
+  onShowPagePopup(showPopup: boolean, page: DuplicatePage | null) {
     this.popupPage$.next(page);
     this.showPopup$.next(showPopup);
   }

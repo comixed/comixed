@@ -32,7 +32,7 @@ import { BarChartModule } from '@swimlane/ngx-charts';
 import { AsyncPipe } from '@angular/common';
 
 @Component({
-  selector: 'cx-comic-states',
+  selector: 'app-comic-states',
   imports: [
     TranslateModule,
     MatCard,
@@ -47,8 +47,8 @@ import { AsyncPipe } from '@angular/common';
   styleUrl: './comic-states.component.scss'
 })
 export class ComicStatesComponent {
-  @Input() title: string;
-  @Input() rows: number;
+  @Input() title = '';
+  @Input() rows = 0;
 
   labels = [
     ComicState.ADDED,

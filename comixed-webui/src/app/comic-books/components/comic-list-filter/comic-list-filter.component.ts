@@ -49,7 +49,7 @@ import { AsyncPipe } from '@angular/common';
 import { tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'cx-comic-list-filter',
+  selector: 'app-comic-list-filter',
   templateUrl: './comic-list-filter.component.html',
   styleUrls: ['./comic-list-filter.component.scss'],
   imports: [
@@ -73,16 +73,16 @@ export class ComicListFilterComponent {
 
   filterForm: FormGroup;
 
-  displayableCoverYears$ = new BehaviorSubject<ListItem<string>[]>([]);
-  displayableCoverMonths$ = new BehaviorSubject<ListItem<string>[]>([]);
+  displayableCoverYears$ = new BehaviorSubject<ListItem<string | null>[]>([]);
+  displayableCoverMonths$ = new BehaviorSubject<ListItem<string | null>[]>([]);
 
-  readonly archiveTypeOptions: SelectionOption<ArchiveType>[] = [
+  readonly archiveTypeOptions: SelectionOption<ArchiveType | null>[] = [
     { label: 'archive-type.label.all', value: null },
     { label: 'archive-type.label.cbz', value: ArchiveType.CBZ },
     { label: 'archive-type.label.cbr', value: ArchiveType.CBR },
     { label: 'archive-type.label.cb7', value: ArchiveType.CB7 }
   ];
-  readonly comicTypeOptions: SelectionOption<ComicType>[] = [
+  readonly comicTypeOptions: SelectionOption<ComicType | null>[] = [
     { label: 'comic-type.label.all', value: null },
     { label: 'comic-type.label.issue', value: ComicType.ISSUE },
     {
@@ -149,7 +149,7 @@ export class ComicListFilterComponent {
         {
           label: 'filtering.label.all-years',
           value: null
-        } as ListItem<string>
+        } as ListItem<string | null>
       ].concat(
         coverYears
           .filter(year => !!year)
@@ -163,7 +163,11 @@ export class ComicListFilterComponent {
 
   @Input() set coverMonths(coverMonths: number[]) {
     this.displayableCoverMonths$.next(
-      [{ label: 'filtering.label.all-months', value: null }].concat(
+      [
+        { label: 'filtering.label.all-months', value: null } as ListItem<
+          string | null
+        >
+      ].concat(
         coverMonths
           .filter(month => !!month)
           .sort((l, r) => l - r)
@@ -171,7 +175,7 @@ export class ComicListFilterComponent {
             return {
               value: `${month}`,
               label: `filtering.label.month-${month}`
-            } as ListItem<string>;
+            } as ListItem<string | null>;
           })
       )
     );

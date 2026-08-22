@@ -59,7 +59,7 @@ export class UserService {
   email$ = new BehaviorSubject<string | null>(null);
 
   logger = inject(LoggerService);
-  store = inject(Store<any>);
+  store = inject(Store);
   webSocketService = inject(WebSocketService);
   http = inject(HttpClient);
 
@@ -69,7 +69,7 @@ export class UserService {
         this.subscribeToUserUpdates();
       }
       this.store.select(selectUser).subscribe(user => {
-        this.email$.next(user?.email);
+        this.email$.next(user?.email || null);
         this.subscribeToUserUpdates();
       });
     });
@@ -123,7 +123,10 @@ export class UserService {
    * @param args.name the preference name
    * @param args.value the preference value
    */
-  saveUserPreference(args: { name: string; value: string }): Observable<any> {
+  saveUserPreference(args: {
+    name: string;
+    value: string | null;
+  }): Observable<any> {
     if (!!args.value && args.value.length > 0) {
       this.logger.debug('Saving user preference:', args);
       return this.http.post(
@@ -173,7 +176,7 @@ export class UserService {
     password: string;
     admin: boolean;
   }): Observable<any> {
-    if (!!args.id) {
+    if (args.id) {
       this.logger.debug('Saving user account:', args);
       return this.http.put(
         interpolate(SAVE_USER_ACCOUNT_URL, { userId: args.id }),
@@ -201,7 +204,7 @@ export class UserService {
   }
 
   private subscribeToUserUpdates(): void {
-    if (!!this.email$.value) {
+    if (this.email$.value) {
       const topic = interpolate(USER_SELF_TOPIC, { email: this.email$.value });
       this.logger.debug('Subscribing to self updates:', topic);
       this.webSocketService.subscribe<User>(topic, user => {

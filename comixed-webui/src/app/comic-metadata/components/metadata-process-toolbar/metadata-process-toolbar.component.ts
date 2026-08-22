@@ -35,7 +35,7 @@ import { AsyncPipe } from '@angular/common';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-  selector: 'cx-metadata-process-toolbar',
+  selector: 'app-metadata-process-toolbar',
   templateUrl: './metadata-process-toolbar.component.html',
   styleUrls: ['./metadata-process-toolbar.component.scss'],
   imports: [

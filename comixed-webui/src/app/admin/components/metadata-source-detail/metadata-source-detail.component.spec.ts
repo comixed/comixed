@@ -103,7 +103,7 @@ describe('MetadataSourceDetailComponent', () => {
 
     describe('resetting the source', () => {
       beforeEach(() => {
-        component.sourceForm.controls.name.setValue(SOURCE.name.substr(1));
+        component.sourceForm.controls.name.setValue(SOURCE.name.slice(1));
         component.source = SOURCE;
       });
 
@@ -182,7 +182,7 @@ describe('MetadataSourceDetailComponent', () => {
 
     beforeEach(() => {
       propertyCount = component.properties.length;
-      component.sourceForm.controls.name.setValue(SOURCE.name.substring(1));
+      component.sourceForm.controls.name.setValue(SOURCE.name.slice(1));
       component.sourceForm.controls.preferredSource.setValue(!SOURCE.preferred);
       component.onAddProperty();
       component.onAddProperty();

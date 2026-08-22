@@ -19,6 +19,6 @@
 export interface LoadSelectedComicsRequest {
   pageSize: number;
   pageIndex: number;
-  sortBy: string;
-  sortDirection: string;
+  sortBy: string | null;
+  sortDirection: string | null;
 }

@@ -49,7 +49,7 @@ import { BehaviorSubject } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 
 @Component({
-  selector: 'cx-blocked-hash-detail-page',
+  selector: 'app-blocked-hash-detail-page',
   templateUrl: './blocked-hash-detail-page.component.html',
   styleUrls: ['./blocked-hash-detail-page.component.scss'],
   imports: [
@@ -119,17 +119,17 @@ export class BlockedHashDetailPageComponent {
       .subscribe();
   }
 
-  private _blockedPage: BlockedHash;
+  private _blockedPage: BlockedHash | null = null;
 
-  get blockedPage(): BlockedHash {
+  get blockedPage(): BlockedHash | null {
     return this._blockedPage;
   }
 
-  set blockedPage(blockedPage: BlockedHash) {
+  set blockedPage(blockedPage: BlockedHash | null) {
     this.logger.debug('Loading blocked page form:', blockedPage);
     this._blockedPage = blockedPage;
-    this.blockedPageForm.controls.label.setValue(blockedPage.label || '');
-    this.blockedPageForm.controls.hash.setValue(blockedPage.hash);
+    this.blockedPageForm.controls.label.setValue(blockedPage?.label || '');
+    this.blockedPageForm.controls.hash.setValue(blockedPage?.hash);
     this.blockedPageForm.updateValueAndValidity();
     this.blockedPageForm.markAsPristine();
   }
@@ -166,7 +166,7 @@ export class BlockedHashDetailPageComponent {
 
   encodeForm(): BlockedHash {
     return {
-      ...this.blockedPage,
+      ...this.blockedPage!,
       label: this.blockedPageForm.controls.label.value
     };
   }

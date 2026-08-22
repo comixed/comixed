@@ -31,7 +31,7 @@
     queryParameterService.onPageChange(
       $event.pageSize,
       $event.pageIndex,
-      $event.previousPageIndex
+      $event.previousPageIndex || null
     )
   "
 ></mat-paginator>

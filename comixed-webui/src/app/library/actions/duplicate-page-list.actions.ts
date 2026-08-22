@@ -28,8 +28,8 @@ export const loadDuplicatePageList = createAction(
   props<{
     size: number;
     page: number;
-    sortBy: string;
-    sortDirection: string;
+    sortBy: string | null;
+    sortDirection: string | null;
   }>()
 );
 

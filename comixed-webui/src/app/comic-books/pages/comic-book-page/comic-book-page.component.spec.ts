@@ -438,7 +438,7 @@ describe('ComicBookPageComponent', () => {
           metadata: METADATA,
           pages: PAGES,
           tags: TAGS
-        } as LoadComicBookResponse);
+        } as LoadComicBookResponse as any);
         return {} as Subscription;
       });
       store.setState({

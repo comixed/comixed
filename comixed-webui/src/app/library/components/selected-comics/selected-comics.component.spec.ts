@@ -24,7 +24,8 @@ import {
   COMIC_BOOK_1,
   COMIC_BOOK_2,
   COMIC_BOOK_3,
-  COMIC_BOOK_4
+  COMIC_BOOK_4,
+  COMIC_DETAIL_1
 } from '@app/comic-books/comic-books.fixtures';
 import { ComicDetailsDialogComponent } from '@app/library/components/comic-details-dialog/comic-details-dialog.component';
 
@@ -35,8 +36,7 @@ describe('SelectedComicsComponent', () => {
     COMIC_BOOK_3.detail,
     COMIC_BOOK_4.detail
   ];
-  const COMIC_BOOK = COMIC_BOOK_3;
-  const COMIC_DETAIL = COMIC_BOOK.detail;
+  const COMIC_DETAIL = COMIC_DETAIL_1;
 
   let component: SelectedComicsComponent;
   let fixture: ComponentFixture<SelectedComicsComponent>;
@@ -103,12 +103,12 @@ describe('SelectedComicsComponent', () => {
     beforeEach(() => {
       event = new MouseEvent('test');
       spyOn(event, 'stopPropagation');
-      component.onShowComicDetails(COMIC_BOOK, event);
+      component.onShowComicDetails(COMIC_DETAIL, event);
     });
 
     it('opens the comic details dialog', () => {
       expect(dialog.open).toHaveBeenCalledWith(ComicDetailsDialogComponent, {
-        data: COMIC_BOOK
+        data: COMIC_DETAIL
       });
     });
 

@@ -51,7 +51,7 @@ import { AsyncPipe } from '@angular/common';
 import { tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'cx-edit-multiple-comics',
+  selector: 'app-edit-multiple-comics',
   templateUrl: './edit-multiple-comics.component.html',
   styleUrls: ['./edit-multiple-comics.component.scss'],
   imports: [
@@ -73,12 +73,12 @@ import { tap } from 'rxjs/operators';
   ]
 })
 export class EditMultipleComicsComponent implements OnInit {
-  readonly comicTypeOptions: SelectionOption<ComicType>[] = [
+  readonly comicTypeOptions: SelectionOption<ComicType | null>[] = [
     {
       label: '---',
       value: null,
       selected: false
-    } as SelectionOption<ComicType>
+    } as SelectionOption<ComicType | null>
   ].concat(COMIC_TYPE_SELECTION_OPTIONS);
 
   detailsForm: UntypedFormGroup;

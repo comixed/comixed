@@ -89,7 +89,7 @@ import { BehaviorSubject } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 
 @Component({
-  selector: 'cx-metadata-source-list',
+  selector: 'app-metadata-source-list',
   templateUrl: './metadata-source-list.component.html',
   styleUrls: ['./metadata-source-list.component.scss'],
   imports: [
@@ -125,7 +125,7 @@ import { AsyncPipe } from '@angular/common';
   ]
 })
 export class MetadataSourceListComponent implements OnInit, AfterViewInit {
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatSort) sort: MatSort | null = null;
 
   readonly displayedColumns = [
     'actions',
@@ -188,10 +188,11 @@ export class MetadataSourceListComponent implements OnInit, AfterViewInit {
     this.dataSource.sort = this.sort;
     this.dataSource.sortingDataAccessor = (data, sortHeaderId) => {
       switch (sortHeaderId) {
-        case 'preferred':
-          return data.preferred ? 1 : 0;
         case 'name':
           return data.name;
+        case 'preferred':
+        default:
+          return data.preferred ? 1 : 0;
       }
     };
   }

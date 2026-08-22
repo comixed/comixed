@@ -34,7 +34,7 @@ export const READING_LIST_DETAIL_FEATURE_KEY = 'reading_list_detail_state';
 export interface ReadingListDetailState {
   loading: boolean;
   notFound: boolean;
-  list: ReadingList;
+  list: ReadingList | null;
   saving: boolean;
 }
 

@@ -70,7 +70,7 @@ import { tap } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-  selector: 'cx-blocked-hash-list',
+  selector: 'app-blocked-hash-list',
   templateUrl: './blocked-hash-list-page.component.html',
   styleUrls: ['./blocked-hash-list-page.component.scss'],
   imports: [
@@ -99,8 +99,8 @@ import { BehaviorSubject } from 'rxjs';
   ]
 })
 export class BlockedHashListPageComponent implements OnInit, AfterViewInit {
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator | null = null;
+  @ViewChild(MatSort) sort: MatSort | null = null;
 
   readonly pageOptions = PAGE_SIZE_OPTIONS;
   readonly displayedColumns = [
@@ -118,7 +118,7 @@ export class BlockedHashListPageComponent implements OnInit, AfterViewInit {
   allSelected$ = new BehaviorSubject(false);
   queryParameterService = inject(QueryParameterService);
   logger = inject(LoggerService);
-  store = inject(Store<any>);
+  store = inject(Store);
   router = inject(Router);
   confirmationService = inject(ConfirmationService);
   translateService = inject(TranslateService);
@@ -181,14 +181,15 @@ export class BlockedHashListPageComponent implements OnInit, AfterViewInit {
       switch (sortHeaderId) {
         case 'selected':
           return `${data.selected}`;
-        case 'label':
-          return data.item.label;
         case 'hash':
           return data.item.hash;
         case 'comic-count':
           return data.item.comicCount;
         case 'created-on':
           return data.item.createdOn;
+        case 'label':
+        default:
+          return data.item.label;
       }
     };
   }

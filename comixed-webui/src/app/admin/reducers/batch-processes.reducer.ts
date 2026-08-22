@@ -37,7 +37,7 @@ export const BATCH_PROCESSES_FEATURE_KEY = 'batch_processes_state';
 export interface BatchProcessesState {
   busy: boolean;
   entries: BatchProcessDetail[];
-  detail: BatchProcessDetail;
+  detail: BatchProcessDetail | null;
 }
 
 export const initialState: BatchProcessesState = {

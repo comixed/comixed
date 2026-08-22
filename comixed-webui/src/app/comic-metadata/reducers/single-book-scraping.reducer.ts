@@ -49,8 +49,8 @@ export interface SingleBookScrapingState {
   loadingRecords: boolean;
   clearingCache: boolean;
   volumes: VolumeMetadata[];
-  scrapingIssue: IssueMetadata;
-  metadataSource: MetadataSource;
+  scrapingIssue: IssueMetadata | null;
+  metadataSource: MetadataSource | null;
   confirmBeforeScraping: boolean;
   autoSelectExactMatch: boolean;
 }

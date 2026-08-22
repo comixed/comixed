@@ -48,7 +48,7 @@
           @if (comicChanged && isAdmin) {
             <mat-basic-chip
               [matTooltip]="'comic-book.text.comic-changed' | translate"
-              (click)="onUpdateComicInfo(comic)"
+              (click)="onUpdateComicInfo(comic!!)"
             >
               <mat-icon>sync_alt</mat-icon>
             </mat-basic-chip>

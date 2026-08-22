@@ -25,7 +25,7 @@ import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 import { ComicListViewComponent } from '../../../comic-books/components/comic-list-view/comic-list-view.component';
 
 @Component({
-  selector: 'cx-comics-with-duplicate-page',
+  selector: 'app-comics-with-duplicate-page',
   templateUrl: './comic-detail-list-dialog.component.html',
   styleUrls: ['./comic-detail-list-dialog.component.scss'],
   imports: [ComicListViewComponent]

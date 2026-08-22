@@ -29,7 +29,7 @@ export const DUPLICATE_PAGE_DETAIL_FEATURE_KEY = 'duplicate_page_detail_state';
 export interface DuplicatePageDetailState {
   loading: boolean;
   notFound: boolean;
-  detail: DuplicatePage;
+  detail: DuplicatePage | null;
 }
 
 export const initialState: DuplicatePageDetailState = {

@@ -1,29 +1,30 @@
-<img
-  id="cx-user-avatar"
-  loading="lazy"
-  class="cx-float-left cx-margin-left-5"
-  ngxGravatar
-  size="50"
-  [alt]="user?.email"
-  [email]="user?.email"
-  [round]="true"
-/>
-<div>
-  <h2>{{ user?.email }}</h2>
-  <h3>
-    {{
-      "user.edit-current-user.label.member-since"
-        | translate: { date: user?.firstLoginDate | date: "mediumDate" }
-    }}
-  </h3>
-  <h3>
-    {{
-      "user.edit-current-user.label.last-logged-in"
-        | translate: { date: user?.lastLoginDate | date: "medium" }
-    }}
-  </h3>
-</div>
-<!-- /div -->
+@if (!!user) {
+  <img
+    id="cx-user-avatar"
+    loading="lazy"
+    class="cx-float-left cx-margin-left-5"
+    ngxGravatar
+    [size]="50"
+    [alt]="user.email"
+    [email]="user.email"
+    [round]="true"
+  />
+  <div>
+    <h2>{{ user?.email }}</h2>
+    <h3>
+      {{
+        "user.edit-current-user.label.member-since"
+          | translate: { date: user?.firstLoginDate | date: "mediumDate" }
+      }}
+    </h3>
+    <h3>
+      {{
+        "user.edit-current-user.label.last-logged-in"
+          | translate: { date: user?.lastLoginDate | date: "medium" }
+      }}
+    </h3>
+  </div>
+}
 
 <form [formGroup]="userForm">
   <mat-card>

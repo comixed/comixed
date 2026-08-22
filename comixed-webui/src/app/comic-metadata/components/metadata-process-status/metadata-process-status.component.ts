@@ -23,7 +23,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MetadataUpdateProgress } from '@app/comic-metadata/selectors/metadata-update-process.selectors';
 
 @Component({
-  selector: 'cx-metadata-process-status',
+  selector: 'app-metadata-process-status',
   templateUrl: './metadata-process-status.component.html',
   styleUrls: ['./metadata-process-status.component.scss'],
   imports: [MatProgressBar, TranslateModule]
@@ -35,9 +35,9 @@ export class MetadataProcessStatusComponent {
   logger = inject(LoggerService);
 
   @Input()
-  set progress(state: MetadataUpdateProgress) {
+  set progress(state: MetadataUpdateProgress | null) {
     this.logger.trace('Calculating metadata process value');
-    this.total = state.total;
-    this.current = state.completed;
+    this.total = state?.total || 0;
+    this.current = state?.completed || 1;
   }
 }

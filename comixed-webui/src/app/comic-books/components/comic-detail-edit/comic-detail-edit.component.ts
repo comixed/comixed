@@ -57,7 +57,7 @@ import { CommonModule } from '@angular/common';
 import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 
 @Component({
-  selector: 'cx-comic-detail-edit',
+  selector: 'app-comic-detail-edit',
   templateUrl: './comic-detail-edit.component.html',
   styleUrls: ['./comic-detail-edit.component.scss'],
   imports: [
@@ -85,7 +85,7 @@ export class ComicDetailEditComponent implements OnInit {
   comicBookForm: UntypedFormGroup;
 
   imprints$ = new BehaviorSubject<Imprint[]>([]);
-  imprintOptions$ = new BehaviorSubject<SelectionOption<Imprint>[]>([]);
+  imprintOptions$ = new BehaviorSubject<SelectionOption<Imprint | null>[]>([]);
   readonly comicTypeOptions = COMIC_TYPE_SELECTION_OPTIONS;
 
   logger = inject(LoggerService);
@@ -127,13 +127,13 @@ export class ComicDetailEditComponent implements OnInit {
               {
                 label: '---',
                 value: null
-              } as SelectionOption<Imprint>
+              } as SelectionOption<Imprint | null>
             ].concat(
               imprints.map(imprint => {
                 return {
                   label: imprint.name,
                   value: imprint
-                } as SelectionOption<Imprint>;
+                } as SelectionOption<Imprint | null>;
               })
             )
           );
@@ -142,9 +142,9 @@ export class ComicDetailEditComponent implements OnInit {
       .subscribe();
   }
 
-  private _comicBook: DisplayableComic;
+  private _comicBook: DisplayableComic | null = null;
 
-  get comicBook(): DisplayableComic {
+  get comicBook(): DisplayableComic | null {
     const coverDate = this.comicBookForm.controls.coverDate.value
       ? new Date(this.comicBookForm.controls.coverDate.value).getTime()
       : null;
@@ -152,8 +152,8 @@ export class ComicDetailEditComponent implements OnInit {
       ? new Date(this.comicBookForm.controls.storeDate.value).getTime()
       : null;
     return {
-      ...this._comicBook,
-      comicDetailId: undefined,
+      ...this._comicBook!,
+      comicDetailId: null,
       comicType: this.comicBookForm.controls.comicType.value,
       publisher: this.comicBookForm.controls.publisher.value,
       series: this.comicBookForm.controls.series.value,
@@ -168,36 +168,40 @@ export class ComicDetailEditComponent implements OnInit {
     } as DisplayableComic;
   }
 
-  @Input() set comicBook(comic: DisplayableComic) {
+  @Input() set comicBook(comic: DisplayableComic | null) {
     this._comicBook = comic;
-    this.comicBookForm.controls.comicType.setValue(comic.comicType);
-    this.comicBookForm.controls.publisher.setValue(comic.publisher);
-    this.comicBookForm.controls.series.setValue(comic.series);
-    this.comicBookForm.controls.volume.setValue(comic.volume);
-    this.comicBookForm.controls.issueNumber.setValue(comic.issueNumber);
-    this.comicBookForm.controls.imprint.setValue(comic.imprint);
-    this.comicBookForm.controls.sortName.setValue(comic.sortName);
-    this.comicBookForm.controls.title.setValue(comic.title);
-    if (!!comic.coverDate) {
-      this.comicBookForm.controls.coverDate.setValue(new Date(comic.coverDate));
+    this.comicBookForm.controls.comicType.setValue(comic?.comicType);
+    this.comicBookForm.controls.publisher.setValue(comic?.publisher);
+    this.comicBookForm.controls.series.setValue(comic?.series);
+    this.comicBookForm.controls.volume.setValue(comic?.volume);
+    this.comicBookForm.controls.issueNumber.setValue(comic?.issueNumber);
+    this.comicBookForm.controls.imprint.setValue(comic?.imprint);
+    this.comicBookForm.controls.sortName.setValue(comic?.sortName);
+    this.comicBookForm.controls.title.setValue(comic?.title);
+    if (comic?.coverDate) {
+      this.comicBookForm.controls.coverDate.setValue(
+        new Date(comic!.coverDate)
+      );
     } else {
       this.comicBookForm.controls.coverDate.setValue(null);
     }
-    if (!!comic.storeDate) {
-      this.comicBookForm.controls.storeDate.setValue(new Date(comic.storeDate));
+    if (comic?.storeDate) {
+      this.comicBookForm.controls.storeDate.setValue(
+        new Date(comic!.storeDate)
+      );
     } else {
       this.comicBookForm.controls.storeDate.setValue(null);
     }
-    this.comicBookForm.controls.comicState.setValue(comic.comicState);
-    this.comicBookForm.controls.filename.setValue(comic.filename);
-    this.comicBookForm.controls.archiveType.setValue(comic.archiveType);
+    this.comicBookForm.controls.comicState.setValue(comic?.comicState);
+    this.comicBookForm.controls.filename.setValue(comic?.filename);
+    this.comicBookForm.controls.archiveType.setValue(comic?.archiveType);
     this.comicBookForm.controls.fileSize.setValue(0);
-    this.comicBookForm.controls.notes.setValue(comic.notes);
+    this.comicBookForm.controls.notes.setValue(comic?.notes);
     this.comicBookForm.markAsUntouched();
   }
 
   get deleted(): boolean {
-    return this.comicBook.comicState === ComicState.DELETED;
+    return this.comicBook!.comicState === ComicState.DELETED;
   }
 
   get comicChanged(): boolean {
@@ -221,7 +225,7 @@ export class ComicDetailEditComponent implements OnInit {
         this.logger.debug('Saving changes to comic:', this.comicBook);
         this.store.dispatch(
           updateComicBook({
-            comicBookId: this.comicBook.comicBookId,
+            comicBookId: this.comicBook!.comicBookId!,
             comicType: this.comicBookForm.controls.comicType.value,
             publisher: this.comicBookForm.controls.publisher.value,
             series: this.comicBookForm.controls.series.value,
@@ -256,10 +260,10 @@ export class ComicDetailEditComponent implements OnInit {
   }
 
   onCopyFilenameToClipboard(): void {
-    this.clipboard.copy(this.comicBook.filename);
+    this.clipboard.copy(this.comicBook!.filename);
   }
 
   private doLoadImprint() {
-    this.comicBookForm.controls.imprint.setValue(this.comicBook.imprint);
+    this.comicBookForm.controls.imprint.setValue(this.comicBook!.imprint);
   }
 }

@@ -31,7 +31,7 @@
     <input
       id="fileUpload"
       type="file"
-      (change)="onFileSelected($event.target.files[0])"
+      (change)="onFileSelected($event.target?.files!![0])"
       (click)="$event.stopPropagation()"
     />
   </mat-toolbar>
@@ -48,7 +48,7 @@
     queryParameterService.onPageChange(
       $event.pageSize,
       $event.pageIndex,
-      $event.previousPageIndex
+      $event.previousPageIndex || null
     )
   "
 ></mat-paginator>

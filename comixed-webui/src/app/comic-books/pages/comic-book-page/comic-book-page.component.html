@@ -10,28 +10,6 @@
   <div class="cx-fab-container-bottom-left cx-z-index-99">
     <div class="cx-horizontal-container">
       <button
-        id="previous-comic-button"
-        class="cx-toolbar-button"
-        mat-fab
-        color="accent"
-        [matTooltip]="'comic-book.tooltip.go-to-previous-comic' | translate"
-        [disabled]="!comicBook?.previousIssueId"
-        [routerLink]="['/comics', (comic$ | async)?.previousIssueId]"
-      >
-        <mat-icon>arrow_back</mat-icon>
-      </button>
-      <button
-        id="next-comic-button"
-        class="cx-toolbar-button"
-        mat-fab
-        color="accent"
-        [disabled]="!comicBook?.nextIssueId"
-        [matTooltip]="'comic-book.tooltip.go-to-next-comic' | translate"
-        [routerLink]="['/comics', (comic$ | async)?.nextIssueId]"
-      >
-        <mat-icon>arrow_forward</mat-icon>
-      </button>
-      <button
         id="toggle-page-view-button"
         class="cx-toolbar-button"
         mat-fab
@@ -136,35 +114,35 @@
   </h1>
 }
 @if (
-  (comic$ | async)?.publisher?.length > 0 &&
-  (comic$ | async)?.series?.length > 0 &&
-  (comic$ | async)?.volume?.length > 0
+  ((comic$ | async)?.publisher || "").length > 0 &&
+  ((comic$ | async)?.series || []).length > 0 &&
+  ((comic$ | async)?.volume || []).length > 0
 ) {
   <h2>
     <a
       [routerLink]="[
         '/library/collections/publishers',
-        (comic$ | async).publisher,
+        (comic$ | async)?.publisher,
         'issues'
       ]"
     >
-      {{ (comic$ | async).publisher }}
+      {{ (comic$ | async)?.publisher }}
     </a>
     &nbsp;/&nbsp;
     <a
       [routerLink]="[
         '/library/collections/publishers',
-        (comic$ | async).publisher,
+        (comic$ | async)?.publisher,
         'series',
-        (comic$ | async).series,
+        (comic$ | async)?.series,
         'volumes',
-        (comic$ | async).volume,
+        (comic$ | async)?.volume,
         'issues'
       ]"
     >
       {{
         "comic-book.navigation-link.series"
-          | translate: { volume: (comic$ | async).volume }
+          | translate: { volume: (comic$ | async)?.volume }
       }}
     </a>
   </h2>
@@ -175,19 +153,19 @@
       <mat-card appearance="outlined" class="cx-padding-0">
         <mat-card-title
           class="cx-text-nowrap cx-align-content-center"
-          [matTooltip]="(comic$ | async).title"
+          [matTooltip]="(comic$ | async)?.title"
         >
-          {{ (comic$ | async).title }}
+          {{ (comic$ | async)?.title }}
         </mat-card-title>
         @if (!!(comic$ | async)?.coverDate) {
           <mat-card-subtitle class="cx-align-content-center">
-            {{ (comic$ | async).coverDate | date: "MMM yyyy" }}
+            {{ (comic$ | async)?.coverDate | date: "MMM yyyy" }}
           </mat-card-subtitle>
         }
         <mat-card-content>
-          <cx-comic-page
+          <app-comic-page
             [imageUrl]="displayPage | comicPageUrl"
-          ></cx-comic-page>
+          ></app-comic-page>
         </mat-card-content>
         <mat-card-footer class="cx-align-content-center">
           <div>
@@ -206,15 +184,17 @@
               "comic-book.label.page-title"
                 | translate
                   : {
-                      which: (pageIndex$ | async) + 1,
-                      count: (pages$ | async).length
+                      which: ((pageIndex$ | async) || 0) + 1,
+                      count: ((pages$ | async) || []).length
                     }
             }}
             <button
               id="next-page-button"
               mat-icon-button
               (click)="onNextPage()"
-              [disabled]="(pageIndex$ | async) === (pages$ | async).length - 1"
+              [disabled]="
+                (pageIndex$ | async) === ((pages$ | async) || []).length - 1
+              "
               [matTooltip]="
                 'comic-book.tooltip.show-next-comic-page' | translate
               "
@@ -233,38 +213,40 @@
         (selectedTabChange)="queryParameterService.onTabChange($event.index)"
       >
         <mat-tab [label]="'comic-book.label.comic-overview' | translate">
-          <cx-comic-detail-edit
-            [comicBook]="comic$ | async"
-            [isAdmin]="isAdmin$ | async"
-          ></cx-comic-detail-edit>
+          <app-comic-detail-edit
+            [comicBook]="(comic$ | async) || null"
+            [isAdmin]="(isAdmin$ | async) || false"
+          ></app-comic-detail-edit>
         </mat-tab>
         <mat-tab [label]="'comic-book.label.comic-story' | translate">
-          <cx-comic-story
-            [comic]="comic$ | async"
-            [tags]="tags$ | async"
-          ></cx-comic-story>
+          <app-comic-story
+            [comic]="(comic$ | async) || null"
+            [tags]="(tags$ | async) || []"
+          ></app-comic-story>
         </mat-tab>
         <mat-tab [label]="'comic-book.label.comic-pages' | translate">
-          <cx-comic-pages
+          <app-comic-pages
             class="cx-width-100"
-            [pages]="pages$ | async"
-            [showPagesAsGrid]="queryParameterService.pagesAsGrid$ | async"
-            [isAdmin]="isAdmin$ | async"
+            [pages]="(pages$ | async) || []"
+            [showPagesAsGrid]="
+              (queryParameterService.pagesAsGrid$ | async) || false
+            "
+            [isAdmin]="(isAdmin$ | async) || false"
             (pagesChanged)="onPagesChanged($event)"
-          ></cx-comic-pages>
+          ></app-comic-pages>
         </mat-tab>
         @if (isAdmin$ | async) {
           <mat-tab [label]="'comic-book.label.comic-scraping' | translate">
-            @if (!!(comic$ | async) && (volumes$ | async).length === 0) {
-              <cx-comic-scraping
+            @if (
+              !!(comic$ | async) && ((volumes$ | async) || []).length === 0
+            ) {
+              <app-comic-scraping
                 class="cx-width-100"
                 [comic]="comic$ | async"
-                [previousMetadataSource]="
-                  (comic$ | async).metadata?.metadataSource
-                "
-                [skipCache]="skipCache$ | async"
-                [matchPublisher]="matchPublisher$ | async"
-                [maximumRecords]="maximumRecords$ | async"
+                [previousMetadataSource]="null"
+                [skipCache]="(skipCache$ | async) || false"
+                [matchPublisher]="(matchPublisher$ | async) || false"
+                [maximumRecords]="(maximumRecords$ | async) || 0"
                 (scrape)="
                   onLoadScrapingVolumes({
                     metadataSource: $event.metadataSource,
@@ -277,20 +259,20 @@
                     matchPublisher: $event.matchPublisher
                   })
                 "
-              ></cx-comic-scraping>
+              ></app-comic-scraping>
             }
-            @if ((volumes$ | async).length > 0) {
-              <cx-scraping-volume-selection
-                [comicBook]="comic$ | async"
+            @if (((volumes$ | async) || []).length > 0) {
+              <app-scraping-volume-selection
+                [comicBook]="(comic$ | async) || null"
                 [metadataSource]="metadataSource$ | async"
-                [comicSeriesName]="scrapingSeriesName$ | async"
-                [comicVolume]="scrapingVolume$ | async"
-                [comicIssueNumber]="scrapingIssueNumber$ | async"
-                [skipCache]="skipCache$ | async"
-                [pageSize]="pageSize$ | async"
-                [pageNumber]="pageNumber$ | async"
-                [volumes]="volumes$ | async"
-              ></cx-scraping-volume-selection>
+                [comicSeriesName]="(scrapingSeriesName$ | async) || ''"
+                [comicVolume]="(scrapingVolume$ | async) || ''"
+                [comicIssueNumber]="(scrapingIssueNumber$ | async) || ''"
+                [skipCache]="(skipCache$ | async) || false"
+                [pageSize]="(pageSize$ | async) || 0"
+                [pageNumber]="(pageNumber$ | async) || 0"
+                [volumes]="(volumes$ | async) || []"
+              ></app-scraping-volume-selection>
             }
           </mat-tab>
         }

@@ -24,8 +24,8 @@ export const loadDuplicateComicList = createAction(
   props<{
     pageSize: number;
     pageIndex: number;
-    sortBy: string;
-    sortDirection: string;
+    sortBy: string | null;
+    sortDirection: string | null;
   }>()
 );
 
@@ -51,8 +51,8 @@ export const loadDuplicateComics = createAction(
     coverDate: number;
     pageIndex: number;
     pageSize: number;
-    sortBy: string;
-    sortDirection: string;
+    sortBy: string | null;
+    sortDirection: string | null;
   }>()
 );
 

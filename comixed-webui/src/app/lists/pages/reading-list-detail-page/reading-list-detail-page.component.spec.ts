@@ -368,10 +368,10 @@ describe('ReadingListDetailPageComponent', () => {
     beforeEach(() => {
       component.readingList = READING_LIST;
       component.readingListForm.controls.name.setValue(
-        READING_LIST.name.substr(1)
+        READING_LIST.name.slice(1)
       );
       component.readingListForm.controls.summary.setValue(
-        READING_LIST.summary.substr(1)
+        READING_LIST.summary.slice(1)
       );
       spyOn(confirmationService, 'confirm').and.callFake(
         (confirmation: Confirmation) => confirmation.confirm()
@@ -437,7 +437,7 @@ describe('ReadingListDetailPageComponent', () => {
       webSocketService.subscribe
         .withArgs(LIST_UPDATES, jasmine.anything())
         .and.callFake((topic, callback) => {
-          callback(READING_LIST);
+          callback(READING_LIST as any);
           return {} as Subscription;
         });
       webSocketService.subscribe

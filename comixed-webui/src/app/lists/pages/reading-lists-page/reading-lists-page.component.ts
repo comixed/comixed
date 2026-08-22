@@ -67,7 +67,7 @@ import { AsyncPipe, DatePipe, DecimalPipe } from '@angular/common';
 import { tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'cx-reading-lists-page',
+  selector: 'app-reading-lists-page',
   templateUrl: './reading-lists-page.component.html',
   styleUrls: ['./reading-lists-page.component.scss'],
   imports: [
@@ -97,8 +97,8 @@ import { tap } from 'rxjs/operators';
   ]
 })
 export class ReadingListsPageComponent implements OnInit, AfterViewInit {
-  @ViewChild(MatSort) sort: MatSort;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort | null = null;
+  @ViewChild(MatPaginator) paginator: MatPaginator | null = null;
 
   dataSource = new MatTableDataSource<SelectableListItem<ReadingList>>([]);
 
@@ -171,12 +171,13 @@ export class ReadingListsPageComponent implements OnInit, AfterViewInit {
       switch (sortHeaderId) {
         case 'selection':
           return `${data.selected}`;
-        case 'list-name':
-          return data.item.name;
         case 'comic-count':
           return data.item.entryIds.length;
         case 'created-on':
           return data.item.createdOn;
+        case 'list-name':
+        default:
+          return data.item.name;
       }
     };
     this.logger.trace('Assigning table paginator');
@@ -188,22 +189,24 @@ export class ReadingListsPageComponent implements OnInit, AfterViewInit {
     this.showUploadRow$.next(!this.showUploadRow$.value);
   }
 
-  onFileSelected(file: File): void {
-    this.logger.trace('Confirming uploading reading list file');
-    this.confirmationService.confirm({
-      title: this.translateService.instant(
-        'reading-list.upload-file.confirmation-title'
-      ),
-      message: this.translateService.instant(
-        'reading-list.upload-file.confirmation-message'
-      ),
-      confirm: () => {
-        this.logger.trace('Firing upload reading list action');
-        this.store.dispatch(uploadReadingList({ file }));
-      }
-    });
-    this.logger.trace('Hiding upload row');
-    this.showUploadRow$.next(false);
+  onFileSelected(file: File | null): void {
+    if (file) {
+      this.logger.trace('Confirming uploading reading list file');
+      this.confirmationService.confirm({
+        title: this.translateService.instant(
+          'reading-list.upload-file.confirmation-title'
+        ),
+        message: this.translateService.instant(
+          'reading-list.upload-file.confirmation-message'
+        ),
+        confirm: () => {
+          this.logger.trace('Firing upload reading list action');
+          this.store.dispatch(uploadReadingList({ file }));
+        }
+      });
+      this.logger.trace('Hiding upload row');
+      this.showUploadRow$.next(false);
+    }
   }
 
   onSelectAll(selected: boolean): void {

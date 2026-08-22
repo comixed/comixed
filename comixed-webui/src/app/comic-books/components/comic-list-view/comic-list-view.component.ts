@@ -20,7 +20,6 @@ import {
   AfterViewInit,
   Component,
   EventEmitter,
-  HostListener,
   inject,
   Input,
   OnInit,
@@ -122,7 +121,7 @@ import { PluginType } from '@app/library-plugins/models/plugin-type';
 import { BehaviorSubject, tap } from 'rxjs';
 
 @Component({
-  selector: 'cx-comic-list-view',
+  selector: 'app-comic-list-view',
   templateUrl: './comic-list-view.component.html',
   styleUrls: ['./comic-list-view.component.scss'],
   imports: [
@@ -268,7 +267,7 @@ export class ComicListViewComponent implements OnInit, AfterViewInit {
       this.showCoverDate ? 'cover-date' : null,
       this.showStoreDate ? 'store-date' : null,
       this.showAddedDate ? 'added-date' : null
-    ].filter(entry => !!entry);
+    ].filter(entry => entry !== null);
   }
 
   private _selectedIds: number[] = [];
@@ -309,7 +308,7 @@ export class ComicListViewComponent implements OnInit, AfterViewInit {
     this.store.dispatch(loadLibraryPlugins());
   }
 
-  getIconForState(comicState: ComicState): string {
+  getIconForState(comicState: ComicState): string | null {
     switch (comicState) {
       case ComicState.ADDED:
         return 'add';
@@ -322,19 +321,18 @@ export class ComicListViewComponent implements OnInit, AfterViewInit {
       case ComicState.CHANGED:
         return 'change_circle';
       case ComicState.DELETED:
+      case ComicState.REMOVED:
         return 'delete';
     }
+    return null;
   }
 
-  @HostListener('window:keydown.control.a', ['$event']) onHotkeySelectAll(
-    event: KeyboardEvent
-  ): void {
+  onHotkeySelectAll(event: KeyboardEvent): void {
     this.logger.trace('Select all hotkey pressed');
     event.preventDefault();
     this.selectAll.emit(true);
   }
 
-  @HostListener('window:keydown.control.shift.a', ['$event'])
   onHotkeyDeselectAll(event: KeyboardEvent): void {
     this.logger.trace('Deselect all hotkey pressed');
     event.preventDefault();
@@ -348,26 +346,28 @@ export class ComicListViewComponent implements OnInit, AfterViewInit {
     if (selected) {
       this.logger.debug('Adding comic book selection:', entry.item);
       this.store.dispatch(
-        addSingleComicBookSelection({ comicDetailId: entry.item.comicDetailId })
+        addSingleComicBookSelection({
+          comicDetailId: entry.item.comicDetailId!
+        })
       );
     } else {
       this.logger.debug('Removing comic book selection:', entry.item);
       this.store.dispatch(
         removeSingleComicBookSelection({
-          comicDetailId: entry.item.comicDetailId
+          comicDetailId: entry.item.comicDetailId!
         })
       );
     }
   }
 
-  onShowPopup(show: boolean, comic: DisplayableComic): void {
+  onShowPopup(show: boolean, comic: DisplayableComic | null): void {
     this.logger.debug('Setting show popup:', show, this.usePopups);
     this.showComicDetailPopup$.next(show && this.usePopups);
     this.selectedComic$.next(comic);
   }
 
   isRead(comic: DisplayableComic): boolean {
-    return !!comic && this.comicBooksRead.includes(comic.comicDetailId);
+    return !!comic && this.comicBooksRead.includes(comic.comicDetailId!);
   }
 
   onConvertSingleComicBook(archiveTypeString: string): void {
@@ -380,17 +380,20 @@ export class ComicListViewComponent implements OnInit, AfterViewInit {
         { format: archiveTypeString }
       ),
       confirm: () => {
+        const archiveType = archiveTypeFromString(archiveTypeString);
         this.logger.debug(
           'Converting comic:',
           this.selectedComic$.value,
           archiveTypeString
         );
-        this.store.dispatch(
-          convertSingleComicBook({
-            id: this.selectedComic$.value.comicBookId,
-            archiveType: archiveTypeFromString(archiveTypeString)
-          })
-        );
+        if (archiveType) {
+          this.store.dispatch(
+            convertSingleComicBook({
+              id: this.selectedComic$.value!.comicBookId!,
+              archiveType
+            })
+          );
+        }
       }
     });
   }
@@ -412,16 +415,15 @@ export class ComicListViewComponent implements OnInit, AfterViewInit {
         }
       ),
       confirm: () => {
-        this.logger.debug(
-          'Converting comics:',
-          selectedComics,
-          archiveTypeString
-        );
-        this.store.dispatch(
-          convertSelectedComicBooks({
-            archiveType: archiveTypeFromString(archiveTypeString)
-          })
-        );
+        const archiveType = archiveTypeFromString(archiveTypeString);
+        this.logger.debug('Converting comics:', selectedComics, archiveType);
+        if (archiveType) {
+          this.store.dispatch(
+            convertSelectedComicBooks({
+              archiveType
+            })
+          );
+        }
       }
     });
   }
@@ -439,7 +441,7 @@ export class ComicListViewComponent implements OnInit, AfterViewInit {
   onMarkOneAsRead(read: boolean): void {
     this.store.dispatch(
       markSingleComicBookRead({
-        comicDetailId: this.selectedComic$.value.comicDetailId,
+        comicDetailId: this.selectedComic$.value!.comicDetailId!,
         read
       })
     );
@@ -465,13 +467,13 @@ export class ComicListViewComponent implements OnInit, AfterViewInit {
     if (deleted) {
       this.store.dispatch(
         deleteSingleComicBook({
-          comicBookId: this.selectedComic$.value.comicBookId
+          comicBookId: this.selectedComic$.value!.comicBookId!
         })
       );
     } else {
       this.store.dispatch(
         undeleteSingleComicBook({
-          comicBookId: this.selectedComic$.value.comicBookId
+          comicBookId: this.selectedComic$.value!.comicBookId!
         })
       );
     }
@@ -484,7 +486,7 @@ export class ComicListViewComponent implements OnInit, AfterViewInit {
     });
     dialog.afterClosed().subscribe((response: EditMultipleComics) => {
       this.logger.debug('Edit multiple comics response:', response);
-      if (!!response) {
+      if (response) {
         const count = this.selectedIds.length;
         this.confirmationService.confirm({
           title: this.translateService.instant(
@@ -539,7 +541,7 @@ export class ComicListViewComponent implements OnInit, AfterViewInit {
       confirm: () => {
         this.logger.debug('Updating metadata for a single comic book:', comic);
         this.store.dispatch(
-          updateSingleComicBookMetadata({ comicBookId: comic.comicBookId })
+          updateSingleComicBookMetadata({ comicBookId: comic.comicBookId! })
         );
       }
     });
@@ -604,7 +606,7 @@ export class ComicListViewComponent implements OnInit, AfterViewInit {
       confirm: () => {
         this.logger.debug('Rescanning a single comic book:', comic);
         this.store.dispatch(
-          rescanSingleComicBook({ comicBookId: comic.comicBookId })
+          rescanSingleComicBook({ comicBookId: comic.comicBookId! })
         );
       }
     });
@@ -648,7 +650,7 @@ export class ComicListViewComponent implements OnInit, AfterViewInit {
         this.store.dispatch(
           runLibraryPluginOnOneComicBook({
             plugin,
-            comicBookId: comic.comicBookId
+            comicBookId: comic.comicBookId!
           })
         );
       }
@@ -707,13 +709,13 @@ export class ComicListViewComponent implements OnInit, AfterViewInit {
       !!this.queryParameterService.archiveType$?.value ||
       !!this.queryParameterService.comicType$?.value ||
       !!this.queryParameterService.pageCount$?.value ||
-      this.queryParameterService.filterText$.value?.length > 0;
+      (this.queryParameterService.filterText$.value || '').length > 0;
     this.logger.debug('Filtered flag:', filtered);
     this.filtered.emit(filtered);
     this.dataSource.data = this.comics.map(comic => {
       return {
         item: comic,
-        selected: this.selectedIds.includes(comic.comicDetailId)
+        selected: this.selectedIds.includes(comic.comicDetailId!)
       };
     });
     this.showing.emit(this.dataSource.filteredData.length);

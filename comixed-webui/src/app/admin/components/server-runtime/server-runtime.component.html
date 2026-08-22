@@ -21,7 +21,7 @@
   </button>
 </div>
 
-@if (health$ | async) {
+@if ((health$ | async) !== null) {
   <div class="cx-detail-card-container">
     <div id="server-status-card" class="cx-grow-1">
       <mat-card appearance="outlined">
@@ -32,7 +32,7 @@
           <div>
             {{
               "server-health.text.status"
-                | translate: { status: (health$ | async).status }
+                | translate: { status: (health$ | async)?.status }
             }}
           </div>
         </mat-card-content>
@@ -47,7 +47,8 @@
           <div>
             {{
               "server-health.text.status"
-                | translate: { status: (health$ | async).components.db.status }
+                | translate
+                  : { status: (health$ | async)?.components?.db?.status }
             }}
           </div>
         </mat-card-content>
@@ -63,7 +64,7 @@
             {{
               "server-health.text.status"
                 | translate
-                  : { status: (health$ | async).components.ping.status }
+                  : { status: (health$ | async)?.components?.ping?.status }
             }}
           </div>
         </mat-card-content>
@@ -79,7 +80,7 @@
             {{
               "server-health.text.status"
                 | translate
-                  : { status: (health$ | async).components.diskSpace.status }
+                  : { status: (health$ | async)?.components?.diskSpace?.status }
             }}
           </div>
           <div>
@@ -88,7 +89,8 @@
                 | translate
                   : {
                       size:
-                        (health$ | async).components.diskSpace.details.free /
+                        ((health$ | async)?.components?.diskSpace?.details
+                          ?.free || 0) /
                           (1024 * 1024) | number: "1.0-2"
                     }
             }}
@@ -99,7 +101,8 @@
                 | translate
                   : {
                       size:
-                        (health$ | async).components.diskSpace.details.total /
+                        ((health$ | async)?.components?.diskSpace?.details
+                          ?.total || 0) /
                           (1024 * 1024) | number: "1.0-2"
                     }
             }}
@@ -110,8 +113,8 @@
                 | translate
                   : {
                       size:
-                        (health$ | async).components.diskSpace.details
-                          .threshold /
+                        ((health$ | async)?.components?.diskSpace?.details
+                          ?.threshold || 0) /
                           (1024 * 1024) | number: "1.0-2"
                     }
             }}
@@ -121,8 +124,8 @@
               "server-health.disk-status.exists"
                 | translate
                   : {
-                      exists: (health$ | async).components.diskSpace.details
-                        .exists
+                      exists: (health$ | async)?.components?.diskSpace?.details
+                        ?.exists
                     }
             }}
           </div>

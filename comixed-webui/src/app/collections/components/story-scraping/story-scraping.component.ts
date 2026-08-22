@@ -84,7 +84,7 @@ import { BehaviorSubject } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 
 @Component({
-  selector: 'cx-story-scraping',
+  selector: 'app-story-scraping',
   templateUrl: './story-scraping.component.html',
   styleUrl: './story-scraping.component.scss',
   imports: [
@@ -121,8 +121,8 @@ import { AsyncPipe } from '@angular/common';
   ]
 })
 export class StoryScrapingComponent implements OnInit, AfterViewInit {
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator | null = null;
+  @ViewChild(MatSort) sort: MatSort | null = null;
   readonly maxRecordsOptions = METADATA_RECORD_LIMITS;
   readonly displayedColumns = ['action', 'thumbnail', 'name', 'publisher'];
   storyScrapingForm: FormGroup;
@@ -210,7 +210,7 @@ export class StoryScrapingComponent implements OnInit, AfterViewInit {
     this.doScrapeStory(this.storyScrapingForm.controls.referenceId.value);
   }
 
-  onShowPopup(entry: StoryMetadata): void {
+  onShowPopup(entry: StoryMetadata | null): void {
     this.imageUrl$.next(entry?.imageUrl || '');
     this.imageTitle$.next(entry?.name || '');
   }

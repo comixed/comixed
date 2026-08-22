@@ -67,7 +67,7 @@ import { AsyncPipe, DatePipe } from '@angular/common';
 import { tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'cx-batch-process-list-page',
+  selector: 'app-batch-process-list-page',
   templateUrl: './batch-process-list-page.component.html',
   styleUrls: ['./batch-process-list-page.component.scss'],
   imports: [
@@ -96,8 +96,8 @@ import { tap } from 'rxjs/operators';
   ]
 })
 export class BatchProcessListPageComponent implements OnInit, AfterViewInit {
-  @ViewChild(MatSort) sort: MatSort;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort | null = null;
+  @ViewChild(MatPaginator) paginator: MatPaginator | null = null;
 
   dataSource = new MatTableDataSource<SelectableListItem<BatchProcessDetail>>(
     []

@@ -32,8 +32,8 @@ export const METRICS_FEATURE_KEY = 'metrics_state';
 
 export interface MetricsState {
   busy: boolean;
-  list: MetricList;
-  detail: MetricDetail;
+  list: MetricList | null;
+  detail: MetricDetail | null;
 }
 
 export const initialState: MetricsState = {

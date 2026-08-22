@@ -35,6 +35,6 @@ export interface LoadComicsByFilterRequest {
   series: string;
   volume: string;
   pageCount: number | null;
-  sortBy: string;
-  sortDirection: string;
+  sortBy: string | null;
+  sortDirection: string | null;
 }
