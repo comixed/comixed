@@ -58,7 +58,7 @@ import { tap } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-  selector: 'cx-series-list-page',
+  selector: 'app-series-list-page',
   templateUrl: './series-list-page.component.html',
   styleUrls: ['./series-list-page.component.scss'],
   imports: [
@@ -113,7 +113,7 @@ export class SeriesListPageComponent implements AfterViewInit {
       .subscribe();
     this.activatedRoute.queryParams
       .pipe(
-        tap(params => {
+        tap(() => {
           this.logger.trace('Loading series list');
           this.store.dispatch(
             loadSeriesList({
@@ -139,7 +139,7 @@ export class SeriesListPageComponent implements AfterViewInit {
           const pageIndex = this.dataSource.paginator?.pageIndex;
           this.dataSource.data = series;
           /* istanbul ignore if */
-          if (!!pageIndex) {
+          if (pageIndex) {
             this.dataSource.paginator.pageIndex = pageIndex;
           }
         })

@@ -279,9 +279,7 @@ describe('HashSelectionEffects', () => {
 
       actions$ = hot('-a', { a: action });
       hashSelectionService.clearSelections.and.returnValue(
-        throwError(() => {
-          serviceResponse;
-        })
+        throwError(() => serviceResponse)
       );
 
       const expected = hot('-b', { b: outcome });

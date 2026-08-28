@@ -84,7 +84,7 @@ import { BehaviorSubject } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 
 @Component({
-  selector: 'cx-story-scraping',
+  selector: 'app-story-scraping',
   templateUrl: './story-scraping.component.html',
   styleUrl: './story-scraping.component.scss',
   imports: [

@@ -70,7 +70,7 @@ import { tap } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-  selector: 'cx-blocked-hash-list',
+  selector: 'app-blocked-hash-list',
   templateUrl: './blocked-hash-list-page.component.html',
   styleUrls: ['./blocked-hash-list-page.component.scss'],
   imports: [

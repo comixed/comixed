@@ -18,7 +18,6 @@
 
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-
 import { catchError, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import {
@@ -44,7 +43,7 @@ export class ImportComicFilesEffects {
     return this.actions$.pipe(
       ofType(importComicFiles),
       tap(action => this.logger.debug('Effect: send comic files:', action)),
-      switchMap(action =>
+      switchMap(() =>
         this.comicImportService.sendComicFiles().pipe(
           tap(response => this.logger.debug('Response received:', response)),
           tap(() =>

@@ -39,7 +39,7 @@ import { MatIcon } from '@angular/material/icon';
 import { RemoteLibrarySegmentState } from '@app/library/models/net/remote-library-segment-state';
 
 @Component({
-  selector: 'cx-collection-list',
+  selector: 'app-collection-list',
   imports: [
     TranslateModule,
     MatTableModule,

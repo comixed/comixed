@@ -172,10 +172,10 @@ describe('ReadingListDetailPageComponent', () => {
         {
           provide: ActivatedRoute,
           useValue: {
-            params: new BehaviorSubject<{}>({
+            params: new BehaviorSubject<any>({
               id: READING_LIST.readingListId
-            }),
-            queryParams: new BehaviorSubject<{}>({}),
+            } as any),
+            queryParams: new BehaviorSubject<any>({} as any),
             snapshot: {} as ActivatedRouteSnapshot
           }
         },
@@ -228,7 +228,7 @@ describe('ReadingListDetailPageComponent', () => {
   describe('when creating a new reading list', () => {
     beforeEach(() => {
       component.readingListId$.next(1);
-      (activatedRoute.params as BehaviorSubject<{}>).next({});
+      (activatedRoute.params as BehaviorSubject<any>).next({} as any);
     });
 
     it('sets the reading list id', () => {
@@ -243,9 +243,9 @@ describe('ReadingListDetailPageComponent', () => {
   describe('when loading an existing reading list', () => {
     beforeEach(() => {
       component.readingListId$.next(-1);
-      (activatedRoute.params as BehaviorSubject<{}>).next({
+      (activatedRoute.params as BehaviorSubject<any>).next({
         id: `${READING_LIST.readingListId}`
-      });
+      } as any);
     });
 
     it('sets the reading list id', () => {
@@ -437,7 +437,7 @@ describe('ReadingListDetailPageComponent', () => {
       webSocketService.subscribe
         .withArgs(LIST_UPDATES, jasmine.anything())
         .and.callFake((topic, callback) => {
-          callback(READING_LIST);
+          callback(READING_LIST as any);
           return {} as Subscription;
         });
       webSocketService.subscribe

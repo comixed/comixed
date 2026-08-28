@@ -46,7 +46,7 @@ export class ReadingListsEffects {
     return this.actions$.pipe(
       ofType(loadReadingLists),
       tap(action => this.logger.trace('Load reading lists for user:', action)),
-      switchMap(action =>
+      switchMap(() =>
         this.readingListService.loadReadingLists().pipe(
           tap(response => this.logger.trace('Response received:', response)),
           map((response: ReadingList[]) =>

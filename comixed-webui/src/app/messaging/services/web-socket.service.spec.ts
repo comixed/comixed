@@ -27,10 +27,6 @@ import { stopMessaging } from '@app/messaging/actions/messaging.actions';
 
 describe('WebSocketService', () => {
   const initialState = {};
-  const TOPIC = '/topic/something';
-  const CALLBACK = () => {};
-  const MESSAGE = 'Some message';
-  const AUTH_TOKEN = 'This is the auth token';
 
   let service: WebSocketService;
   let store: MockStore<any>;
@@ -84,7 +80,9 @@ describe('WebSocketService', () => {
     describe('if messaging is not started', () => {
       beforeEach(() => {
         stompService.connected.and.returnValue(false);
-        service.connect().subscribe(() => {});
+        service.connect().subscribe(() => {
+          /* test */
+        });
       });
 
       it('configures the service', () => {
@@ -99,7 +97,9 @@ describe('WebSocketService', () => {
     describe('if messaging is already started', () => {
       beforeEach(() => {
         stompService.connected.and.returnValue(true);
-        service.connect().subscribe(() => {});
+        service.connect().subscribe(() => {
+          /* test */
+        });
       });
 
       it('does not configure the service', () => {
@@ -131,7 +131,9 @@ describe('WebSocketService', () => {
     describe('if messaging is started', () => {
       beforeEach(() => {
         stompService.connected.and.returnValue(true);
-        service.disconnect().subscribe(() => {});
+        service.disconnect().subscribe(() => {
+          /* test */
+        });
       });
 
       it('deactivates the service', () => {

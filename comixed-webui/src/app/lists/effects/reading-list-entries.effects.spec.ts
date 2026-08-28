@@ -22,7 +22,6 @@ import { Observable, of, throwError } from 'rxjs';
 
 import { ReadingListEntriesEffects } from './reading-list-entries.effects';
 import { READING_LIST_3 } from '@app/lists/lists.fixtures';
-import { COMIC_DETAIL_1 } from '@app/comic-books/comic-books.fixtures';
 import { ReadingListService } from '@app/lists/services/reading-list.service';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
@@ -42,7 +41,6 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 describe('ReadingListEntriesEffects', () => {
   const READING_LIST = READING_LIST_3;
-  const COMIC_DETAIL = COMIC_DETAIL_1;
 
   let actions$: Observable<any>;
   let effects: ReadingListEntriesEffects;

@@ -60,7 +60,7 @@ import { tap } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-  selector: 'cx-publisher-list-page',
+  selector: 'app-publisher-list-page',
   templateUrl: './publisher-list-page.component.html',
   styleUrls: ['./publisher-list-page.component.scss'],
   imports: [

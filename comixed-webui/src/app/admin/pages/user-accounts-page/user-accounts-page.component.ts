@@ -57,7 +57,6 @@ import {
 } from '@app/user/actions/manage-users.actions';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import {
-  AbstractControl,
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
@@ -88,7 +87,7 @@ import { AsyncPipe, DatePipe } from '@angular/common';
 import { tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'cx-user-accounts-page',
+  selector: 'app-user-accounts-page',
   templateUrl: './user-accounts-page.component.html',
   styleUrl: './user-accounts-page.component.scss',
   imports: [
@@ -172,7 +171,7 @@ export class UserAccountsPageComponent implements OnInit, AfterViewInit {
       .pipe(
         tap(user => {
           this.user$.next(user);
-          if (!!user) {
+          if (user) {
             this.editUserForm.controls.id.setValue(user.comixedUserId);
             this.editUserForm.controls.email.setValue(user.email);
             this.editUserForm.controls.admin.setValue(isAdmin(user));
@@ -195,10 +194,6 @@ export class UserAccountsPageComponent implements OnInit, AfterViewInit {
 
   set users(users: User[]) {
     this.dataSource.data = users;
-  }
-
-  get controls(): { [p: string]: AbstractControl } {
-    return this.editUserForm.controls;
   }
 
   isAdmin(user: User): boolean {

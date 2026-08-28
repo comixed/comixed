@@ -49,7 +49,7 @@ import { AsyncPipe } from '@angular/common';
 import { tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'cx-comic-list-filter',
+  selector: 'app-comic-list-filter',
   templateUrl: './comic-list-filter.component.html',
   styleUrls: ['./comic-list-filter.component.scss'],
   imports: [

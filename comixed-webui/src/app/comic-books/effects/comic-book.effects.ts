@@ -245,7 +245,7 @@ export class ComicBookEffects {
             tap(response =>
               this.fileDownloadService.saveFile({ document: response })
             ),
-            map(response => downloadComicBookSuccess()),
+            map(() => downloadComicBookSuccess()),
             catchError(error => {
               this.logger.error('Service failure:', error);
               this.alertService.error(

@@ -30,7 +30,7 @@ import { BehaviorSubject } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 
 @Component({
-  selector: 'cx-publisher-year-graph',
+  selector: 'app-publisher-year-graph',
   imports: [
     MatCard,
     MatCardTitle,

@@ -121,19 +121,19 @@ describe('UserAccountsPageComponent', () => {
     });
 
     it('clears the email address input field', () => {
-      expect(component.controls.email.value).toEqual('');
+      expect(component.editUserForm.controls.email.value).toEqual('');
     });
 
     it('clears the password input field', () => {
-      expect(component.controls.password.value).toEqual('');
+      expect(component.editUserForm.controls.password.value).toEqual('');
     });
 
     it('clears the password validator input field', () => {
-      expect(component.controls.passwordVerify.value).toEqual('');
+      expect(component.editUserForm.controls.passwordVerify.value).toEqual('');
     });
 
     it('clears the admin check box', () => {
-      expect(component.controls.admin.value).toBeFalse();
+      expect(component.editUserForm.controls.admin.value).toBeFalse();
     });
   });
 
@@ -154,19 +154,21 @@ describe('UserAccountsPageComponent', () => {
     });
 
     it('fills the email address input field', () => {
-      expect(component.controls.email.value).toEqual(USER_READER.email);
+      expect(component.editUserForm.controls.email.value).toEqual(
+        USER_READER.email
+      );
     });
 
     it('clears the password input field', () => {
-      expect(component.controls.password.value).toEqual('');
+      expect(component.editUserForm.controls.password.value).toEqual('');
     });
 
     it('clears the password validator input field', () => {
-      expect(component.controls.passwordVerify.value).toEqual('');
+      expect(component.editUserForm.controls.passwordVerify.value).toEqual('');
     });
 
     it('clears the admin check box', () => {
-      expect(component.controls.admin.value).toBeFalse();
+      expect(component.editUserForm.controls.admin.value).toBeFalse();
     });
   });
 
@@ -187,19 +189,21 @@ describe('UserAccountsPageComponent', () => {
     });
 
     it('fills the email address input field', () => {
-      expect(component.controls.email.value).toEqual(USER_ADMIN.email);
+      expect(component.editUserForm.controls.email.value).toEqual(
+        USER_ADMIN.email
+      );
     });
 
     it('clears the password input field', () => {
-      expect(component.controls.password.value).toEqual('');
+      expect(component.editUserForm.controls.password.value).toEqual('');
     });
 
     it('clears the password validator input field', () => {
-      expect(component.controls.passwordVerify.value).toEqual('');
+      expect(component.editUserForm.controls.passwordVerify.value).toEqual('');
     });
 
     it('sets the admin check box', () => {
-      expect(component.controls.admin.value).toBeTrue();
+      expect(component.editUserForm.controls.admin.value).toBeTrue();
     });
   });
 
@@ -256,7 +260,7 @@ describe('UserAccountsPageComponent', () => {
           current: USER
         }
       });
-      component.controls.password.setValue(PASSWORD);
+      component.editUserForm.controls.password.setValue(PASSWORD);
       component.onSaveAccount();
     });
 
@@ -291,7 +295,7 @@ describe('UserAccountsPageComponent', () => {
           current: USER
         }
       });
-      component.controls.password.setValue(PASSWORD);
+      component.editUserForm.controls.password.setValue(PASSWORD);
       component.onDeleteUser();
     });
 

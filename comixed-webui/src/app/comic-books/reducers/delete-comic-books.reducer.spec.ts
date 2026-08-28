@@ -33,7 +33,6 @@ import { COMIC_DETAIL_1 } from '@app/comic-books/comic-books.fixtures';
 
 describe('DeleteComicBooks Reducer', () => {
   const COMIC_DETAIL = COMIC_DETAIL_1;
-  const DELETED = Math.random() > 0.5;
 
   let state: MarkComicsDeletedState;
 

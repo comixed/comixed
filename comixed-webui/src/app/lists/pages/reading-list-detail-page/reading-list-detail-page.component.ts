@@ -77,7 +77,7 @@ import { setBusyState } from '@app/core/actions/busy.actions';
 import { AsyncPipe } from '@angular/common';
 
 @Component({
-  selector: 'cx-user-reading-list-page',
+  selector: 'app-user-reading-list-page',
   templateUrl: './reading-list-detail-page.component.html',
   styleUrls: ['./reading-list-detail-page.component.scss'],
   imports: [
@@ -116,7 +116,7 @@ export class ReadingListDetailPageComponent {
     this.activatedRoute.params
       .pipe(
         tap(params => {
-          if (!!params.id) {
+          if (params.id) {
             this.readingListId$.next(+params.id);
             this.logger.trace(
               'Firing action to load reading list by id:',
@@ -197,7 +197,7 @@ export class ReadingListDetailPageComponent {
       .select(selectMessagingStarted)
       .pipe(
         filter(started => started === true),
-        tap(started => {
+        tap(() => {
           this.doSubscribeToListUpdates();
         })
       )
@@ -324,7 +324,7 @@ export class ReadingListDetailPageComponent {
 
   private loadTranslations(): void {
     /* istanbul ignore next */
-    if (!!this.readingList) {
+    if (this.readingList) {
       this.logger.trace('Loading tab title');
       this.titleService.setTitle(
         this.translateService.instant('reading-list.tab-title', {
@@ -354,7 +354,7 @@ export class ReadingListDetailPageComponent {
           id: this.readingListId$.value,
           email: this.email$.value
         }),
-        list => {
+        (list: ReadingList) => {
           this.logger.trace('Reading list updated received');
           this.store.dispatch(readingListLoaded({ list }));
           this.loadReadingListEntries();
@@ -363,7 +363,7 @@ export class ReadingListDetailPageComponent {
 
       this.webSocketService.subscribe(
         interpolate(READING_LIST_REMOVAL_TOPIC, { email: this.email$.value }),
-        list => {
+        (list: ReadingList) => {
           this.logger.trace('Reading list removal received');
           this.store.dispatch(readingListRemoved({ list }));
           if (list.readingListId === this.readingListId$.value) {

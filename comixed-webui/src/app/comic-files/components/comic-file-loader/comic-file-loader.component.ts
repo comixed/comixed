@@ -49,7 +49,7 @@ import { MatIcon } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
-  selector: 'cx-comic-file-loader',
+  selector: 'app-comic-file-loader',
   templateUrl: './comic-file-loader.component.html',
   styleUrls: ['./comic-file-loader.component.scss'],
   imports: [

@@ -29,7 +29,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'cx-filter-text-form',
+  selector: 'app-filter-text-form',
   templateUrl: './filter-text-form.component.html',
   styleUrl: './filter-text-form.component.scss',
   imports: [

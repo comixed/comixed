@@ -184,7 +184,7 @@ export class QueryParameterService {
     this.updateQueryParam([
       {
         name: QUERY_PARAM_COVER_MONTH,
-        value: !!month ? `${month}` : null
+        value: month ? `${month}` : null
       }
     ]);
   }
@@ -194,7 +194,7 @@ export class QueryParameterService {
     this.updateQueryParam([
       {
         name: QUERY_PARAM_COVER_YEAR,
-        value: !!year ? `${year}` : null
+        value: year ? `${year}` : null
       }
     ]);
   }
@@ -232,7 +232,7 @@ export class QueryParameterService {
     this.updateQueryParam([
       {
         name: QUERY_PARAM_PAGE_COUNT,
-        value: !!pageCount ? `${pageCount}` : null
+        value: pageCount ? `${pageCount}` : null
       }
     ]);
   }

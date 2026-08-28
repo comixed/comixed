@@ -68,7 +68,7 @@ import { PluginTitlePipe } from '@app/library-plugins/pipes/plugin-title.pipe';
 import { tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'cx-library-plugins-configuration',
+  selector: 'app-library-plugins-configuration',
   templateUrl: './library-plugins-configuration.component.html',
   styleUrls: ['./library-plugins-configuration.component.scss'],
   imports: [
@@ -131,7 +131,7 @@ export class LibraryPluginsConfigurationComponent
       .select(selectLibraryPluginCurrent)
       .pipe(
         tap(libraryPlugin => {
-          if (!!libraryPlugin) {
+          if (libraryPlugin) {
             if (libraryPlugin.properties.length > 0) {
               this.dialogRef = this.dialog.open(LibraryPluginSetupComponent, {
                 data: libraryPlugin
@@ -149,7 +149,7 @@ export class LibraryPluginsConfigurationComponent
               );
             }
           } else {
-            if (!!this.dialogRef) {
+            if (this.dialogRef) {
               this.dialogRef.close();
               this.dialogRef = null;
               this.store.dispatch(setCurrentLibraryPlugin({ plugin: null }));

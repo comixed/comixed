@@ -58,7 +58,7 @@ export class MetadataSourceService {
     preferred: boolean;
     properties: UpdateMetadataSourceProperty[];
   }): Observable<any> {
-    if (!!args.sourceId) {
+    if (args.sourceId) {
       this.logger.trace('Updating metadata source:', args);
       return this.http.put(
         interpolate(UPDATE_METADATA_SOURCE_URL, {

@@ -34,25 +34,9 @@ import {
   provideHttpClientTesting
 } from '@angular/common/http/testing';
 import { COMIC_DETAIL_4 } from '@app/comic-books/comic-books.fixtures';
-import {
-  READ_COMIC_BOOK_1,
-  READ_COMIC_BOOK_2,
-  READ_COMIC_BOOK_3,
-  READ_COMIC_BOOK_4,
-  READ_COMIC_BOOK_5
-} from '@app/user/user.fixtures';
 
 describe('ReadComicBooksService', () => {
   const COMIC = COMIC_DETAIL_4;
-  const READ_COUNT = Math.floor(Math.random() * 30000);
-  const UNREAD_COUNT = Math.floor(Math.random() * 30000);
-  const ENTRIES = [
-    READ_COMIC_BOOK_1,
-    READ_COMIC_BOOK_2,
-    READ_COMIC_BOOK_3,
-    READ_COMIC_BOOK_4,
-    READ_COMIC_BOOK_5
-  ];
 
   let service: ReadComicBooksService;
   let httpMock: HttpTestingController;

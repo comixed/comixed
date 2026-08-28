@@ -56,7 +56,7 @@ import { tap } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-  selector: 'cx-duplicate-comics-page',
+  selector: 'app-duplicate-comics-page',
   imports: [
     AsyncPipe,
     DecimalPipe,
@@ -118,7 +118,7 @@ export class DuplicateComicsListPageComponent implements OnInit {
       .pipe(tap(total => this.totalEntries$.next(total)))
       .subscribe();
     this.activatedRoute.queryParams
-      .pipe(tap(params => this.doLoadComics()))
+      .pipe(tap(() => this.doLoadComics()))
       .subscribe();
   }
 

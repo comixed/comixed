@@ -54,7 +54,6 @@ import { SetComicReadRequest } from '@app/library/models/net/set-comic-read-requ
 import { OrganizeLibraryRequest } from '@app/library/models/net/organize-library-request';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ConvertComicsRequest } from '@app/library/models/net/convert-comics-request';
-import { PurgeLibraryRequest } from '@app/library/models/net/purge-library-request';
 import { EditMultipleComics } from '@app/library/models/ui/edit-multiple-comics';
 import { EditMultipleComicsRequest } from '@app/library/models/net/edit-multiple-comics-request';
 import { RemoteLibraryState } from '@app/library/models/net/remote-library-state';
@@ -276,7 +275,7 @@ describe('LibraryService', () => {
 
     const req = httpMock.expectOne(interpolate(PURGE_LIBRARY_URL));
     expect(req.request.method).toEqual('POST');
-    expect(req.request.body).toEqual({} as PurgeLibraryRequest);
+    expect(req.request.body).toEqual({});
     req.flush(new HttpResponse({ status: 200 }));
   });
 

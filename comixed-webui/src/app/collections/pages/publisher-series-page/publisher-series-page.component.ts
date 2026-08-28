@@ -53,7 +53,7 @@ import { tap } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-  selector: 'cx-publisher-series-page',
+  selector: 'app-publisher-series-page',
   templateUrl: './publisher-series-page.component.html',
   styleUrls: ['./publisher-series-page.component.scss'],
   imports: [
@@ -109,7 +109,7 @@ export class PublisherSeriesPageComponent implements OnInit {
       )
       .subscribe();
     this.activatedRoute.queryParams
-      .pipe(tap(params => this.doLoadData()))
+      .pipe(tap(() => this.doLoadData()))
       .subscribe();
     this.translateService.onLangChange
       .pipe(tap(() => this.loadTranslations()))

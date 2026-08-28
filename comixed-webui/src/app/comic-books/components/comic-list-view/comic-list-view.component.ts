@@ -122,7 +122,7 @@ import { PluginType } from '@app/library-plugins/models/plugin-type';
 import { BehaviorSubject, tap } from 'rxjs';
 
 @Component({
-  selector: 'cx-comic-list-view',
+  selector: 'app-comic-list-view',
   templateUrl: './comic-list-view.component.html',
   styleUrls: ['./comic-list-view.component.scss'],
   imports: [
@@ -484,7 +484,7 @@ export class ComicListViewComponent implements OnInit, AfterViewInit {
     });
     dialog.afterClosed().subscribe((response: EditMultipleComics) => {
       this.logger.debug('Edit multiple comics response:', response);
-      if (!!response) {
+      if (response) {
         const count = this.selectedIds.length;
         this.confirmationService.confirm({
           title: this.translateService.instant(

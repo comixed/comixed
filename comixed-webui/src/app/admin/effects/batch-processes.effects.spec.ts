@@ -46,7 +46,6 @@ import { HttpErrorResponse } from '@angular/common/http';
 describe('BatchProcessesEffects', () => {
   const ENTRIES = [BATCH_PROCESS_DETAIL_1, BATCH_PROCESS_DETAIL_2];
   const SELECTED_IDS = ENTRIES.map(entry => entry.jobId);
-  const DETAIL = ENTRIES[0];
 
   let actions$: Observable<any>;
   let effects: BatchProcessesEffects;

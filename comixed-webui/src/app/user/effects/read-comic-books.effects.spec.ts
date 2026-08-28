@@ -20,7 +20,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of, throwError } from 'rxjs';
 
-import { ReadComicBooksEffects } from './read-comic-books-effects.service';
+import { ReadComicBooksEffects } from './read-comic-books.effects';
 import {
   markSelectedComicBooksRead,
   markSelectedComicBooksReadFailed,
@@ -31,28 +31,12 @@ import { hot } from 'jasmine-marbles';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { AlertService } from '@app/core/services/alert.service';
 import { ReadComicBooksService } from '@app/user/services/read-comic-books.service';
-import {
-  READ_COMIC_BOOK_1,
-  READ_COMIC_BOOK_2,
-  READ_COMIC_BOOK_3,
-  READ_COMIC_BOOK_4,
-  READ_COMIC_BOOK_5
-} from '@app/user/user.fixtures';
 import { COMIC_DETAIL_4 } from '@app/comic-books/comic-books.fixtures';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 
 describe('ReadComicBooksEffects', () => {
   const READ = Math.random() > 0.5;
-  const READ_COUNT = 129;
-  const UNREAD_COUNT = 717;
-  const ENTRIES = [
-    READ_COMIC_BOOK_1,
-    READ_COMIC_BOOK_2,
-    READ_COMIC_BOOK_3,
-    READ_COMIC_BOOK_4,
-    READ_COMIC_BOOK_5
-  ];
   const COMIC_DETAIL = COMIC_DETAIL_4;
 
   let actions$: Observable<any>;

@@ -1,6 +1,6 @@
-<cx-metadata-process-toolbar
+<app-metadata-process-toolbar
   [selectedIds]="selectedIds$ | async"
-></cx-metadata-process-toolbar>
+></app-metadata-process-toolbar>
 
 @if (metadataUpdateActive$ | async) {
   <h2>
@@ -11,17 +11,17 @@
   </h2>
 }
 @if (metadataUpdateActive$ | async) {
-  <cx-metadata-process-status
+  <app-metadata-process-status
     class="cx-width-100 cx-height-100"
     [progress]="metadataUpdateProgress$ | async"
-  ></cx-metadata-process-status>
+  ></app-metadata-process-status>
 }
 @if ((metadataUpdateActive$ | async) === false) {
-  <cx-comic-list-view
+  <app-comic-list-view
     class="cx-width-100"
     [comics]="comics$ | async"
     [coverYears]="coverYears$ | async"
     [coverMonths]="coverMonths$ | async"
     [selectedIds]="selectedIds$ | async"
-  ></cx-comic-list-view>
+  ></app-comic-list-view>
 }

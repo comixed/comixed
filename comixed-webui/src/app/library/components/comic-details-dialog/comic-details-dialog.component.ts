@@ -30,7 +30,7 @@ import { ComicDetailCoverUrlPipe } from '@app/comic-books/pipes/comic-detail-cov
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
-  selector: 'cx-comic-details-dialog',
+  selector: 'app-comic-details-dialog',
   templateUrl: './comic-details-dialog.component.html',
   styleUrls: ['./comic-details-dialog.component.scss'],
   imports: [

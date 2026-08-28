@@ -31,7 +31,7 @@ import { PieChartModule } from '@swimlane/ngx-charts';
 import { AsyncPipe } from '@angular/common';
 
 @Component({
-  selector: 'cx-archive-types',
+  selector: 'app-archive-types',
   imports: [
     MatCard,
     MatCardActions,

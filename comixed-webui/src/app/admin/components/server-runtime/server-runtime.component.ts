@@ -39,7 +39,7 @@ import { tap } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-  selector: 'cx-server-runtime',
+  selector: 'app-server-runtime',
   templateUrl: './server-runtime.component.html',
   styleUrls: ['./server-runtime.component.scss'],
   imports: [

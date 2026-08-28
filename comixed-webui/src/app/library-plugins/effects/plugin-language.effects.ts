@@ -42,8 +42,8 @@ export class PluginLanguageEffects {
   loadPluginLanguages$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(loadPluginLanguages),
-      tap(action => this.logger.trace('Loading plugin language list')),
-      switchMap(action =>
+      tap(() => this.logger.trace('Loading plugin language list')),
+      switchMap(() =>
         this.pluginLanguageService.loadLanguageRuntimes().pipe(
           tap(response => this.logger.debug('Response received:', response)),
           map((response: PluginLanguage[]) =>

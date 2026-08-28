@@ -47,13 +47,15 @@
   }
   &nbsp;
   @if (!!user) {
-    <a
+    <button
+      mat-flat-button
       class="cx-toolbar-link cx-padding-right-5"
       routerLinkActive="cx-toolbar-link-active"
       (click)="onToggleAccountBar()"
+      (keyup)="onToggleAccountBar()"
     >
       {{ user.email }}
-    </a>
+    </button>
   }
 
   <button

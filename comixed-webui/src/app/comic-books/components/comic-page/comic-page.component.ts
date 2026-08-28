@@ -27,7 +27,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
 /** Displays a page from a comic. Provides events for when the page is clicked. */
 @Component({
-  selector: 'cx-comic-page',
+  selector: 'app-comic-page',
   templateUrl: './comic-page.component.html',
   styleUrls: ['./comic-page.component.scss'],
   imports: [MatCardModule, MatIconModule, MatTooltipModule, TranslateModule]

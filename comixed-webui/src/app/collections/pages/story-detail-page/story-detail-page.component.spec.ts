@@ -168,11 +168,11 @@ describe('StoryDetailPageComponent', () => {
         {
           provide: ActivatedRoute,
           useValue: {
-            params: new BehaviorSubject<{}>({
+            params: new BehaviorSubject<any>({
               collectionType: ComicTagType.CHARACTER,
               collectionName: 'Batman'
             }),
-            queryParams: new BehaviorSubject<{}>({}),
+            queryParams: new BehaviorSubject<any>({}),
             snapshot: {} as ActivatedRouteSnapshot
           }
         },
@@ -211,11 +211,10 @@ describe('StoryDetailPageComponent', () => {
   });
 
   describe('when the collection details are received', () => {
-    const COLLECTION_TYPE = 'stories';
     const COLLECTION_NAME = 'The Collection';
 
     beforeEach(() => {
-      (activatedRoute.params as BehaviorSubject<{}>).next({
+      (activatedRoute.params as BehaviorSubject<any>).next({
         storyName: COLLECTION_NAME
       });
     });
@@ -227,7 +226,7 @@ describe('StoryDetailPageComponent', () => {
 
   describe('show collections', () => {
     beforeEach(() => {
-      (activatedRoute.queryParams as BehaviorSubject<{}>).next({
+      (activatedRoute.queryParams as BehaviorSubject<any>).next({
         [QUERY_PARAM_PAGE_SIZE]: `${PAGE_SIZE}`,
         [QUERY_PARAM_PAGE_INDEX]: `${PAGE_INDEX}`,
         [QUERY_PARAM_SORT_BY]: SORT_BY,
@@ -243,7 +242,7 @@ describe('StoryDetailPageComponent', () => {
 
       beforeEach(() => {
         component.comics$.next([]);
-        (activatedRoute.params as BehaviorSubject<{}>).next({
+        (activatedRoute.params as BehaviorSubject<any>).next({
           storyName: STORY_NAME,
           volume: COMIC_DETAIL_1.volume
         });

@@ -95,7 +95,7 @@ import { ComicTag } from '@app/comic-books/models/comic-tag';
 import { filter, tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'cx-comic-book-page',
+  selector: 'app-comic-book-page',
   templateUrl: './comic-book-page.component.html',
   styleUrls: ['./comic-book-page.component.scss'],
   imports: [

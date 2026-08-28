@@ -17,13 +17,12 @@
  */
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ProcessingStatusPageComponent } from './processing-status-page.component';
 import {
   IMPORT_COMIC_BOOKS_FEATURE_KEY,
   initialState as initialImportComicBooksComicsState
 } from '@app/reducers/import-comic-books.reducer';
-import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { provideMockStore } from '@ngrx/store/testing';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -43,7 +42,6 @@ describe('ProcessingStatusPageComponent', () => {
 
   let component: ProcessingStatusPageComponent;
   let fixture: ComponentFixture<ProcessingStatusPageComponent>;
-  let store: MockStore;
   let translateService: TranslateService;
   let titleService: TitleService;
 
@@ -68,7 +66,6 @@ describe('ProcessingStatusPageComponent', () => {
 
     fixture = TestBed.createComponent(ProcessingStatusPageComponent);
     component = fixture.componentInstance;
-    store = TestBed.inject(MockStore);
     translateService = TestBed.inject(TranslateService);
     titleService = TestBed.inject(TitleService);
     spyOn(titleService, 'setTitle');

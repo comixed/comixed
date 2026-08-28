@@ -80,7 +80,6 @@ describe('BlockedHashService', () => {
   const DOWNLOADED_FILE = BLOCKED_PAGE_FILE;
   const UPLOADED_FILE = new File([], 'testing');
   const BLOCKED_PAGES = [BLOCKED_HASH_1, BLOCKED_HASH_2, BLOCKED_HASH_3];
-  const DELETED = Math.random() > 0.5;
   const initialState = {
     [MESSAGING_FEATURE_KEY]: { ...initialMessagingState }
   };
@@ -128,13 +127,13 @@ describe('BlockedHashService', () => {
       webSocketService.subscribe
         .withArgs(BLOCKED_HASH_LIST_UPDATE_TOPIC, jasmine.anything())
         .and.callFake((topic, callback) => {
-          callback(UPDATED);
+          callback(UPDATED as any);
           return {} as Subscription;
         });
       webSocketService.subscribe
         .withArgs(BLOCKED_HASH_LIST_REMOVAL_TOPIC, jasmine.anything())
         .and.callFake((topic, callback) => {
-          callback(REMOVED);
+          callback(REMOVED as any);
           return {} as Subscription;
         });
       store.setState({

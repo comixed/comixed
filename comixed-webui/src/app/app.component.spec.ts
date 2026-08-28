@@ -103,11 +103,6 @@ import { provideRouter } from '@angular/router';
 
 describe('AppComponent', () => {
   const USER = USER_READER;
-  const TIMESTAMP = new Date().getTime();
-  const MAXIMUM_RECORDS = 100;
-  const TIMEOUT = 300;
-  const MAX_LIBRARY_RECORDS = 1000;
-  const LAST_ID = Math.floor(Math.abs(Math.random() * 1000));
 
   const initialState = {
     [USER_FEATURE_KEY]: initialUserState,

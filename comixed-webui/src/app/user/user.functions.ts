@@ -58,7 +58,7 @@ export function getPageSize(user: User): number {
   const preference = user.preferences.find(
     entry => entry.name === PREFERENCE_PAGE_SIZE
   );
-  if (!!preference) {
+  if (preference) {
     return parseInt(preference.value, 10);
   } else {
     return PAGE_SIZE_DEFAULT;

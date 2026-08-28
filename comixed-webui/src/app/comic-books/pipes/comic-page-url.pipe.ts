@@ -27,7 +27,7 @@ import { ComicPage } from '@app/comic-books/models/comic-page';
 @Pipe({ name: 'comicPageUrl' })
 export class ComicPageUrlPipe implements PipeTransform {
   transform(page: ComicPage): string {
-    if (!!page) {
+    if (page) {
       return interpolate(GET_PAGE_CONTENT_URL, { id: page.comicPageId });
     } else {
       return MISSING_COMIC_IMAGE_URL;

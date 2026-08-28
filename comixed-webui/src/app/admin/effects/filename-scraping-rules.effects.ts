@@ -56,7 +56,7 @@ export class FilenameScrapingRulesEffects {
       tap(action =>
         this.logger.trace('Loading filename scraping rules:', action)
       ),
-      switchMap(action =>
+      switchMap(() =>
         this.filenameScrapingRuleService.load().pipe(
           tap(response => this.logger.debug('Response received:', response)),
           map((response: FilenameScrapingRule[]) =>

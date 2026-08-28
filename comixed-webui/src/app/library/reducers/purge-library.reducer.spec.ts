@@ -26,8 +26,6 @@ import {
   purgeLibrary,
   purgeLibraryFailed
 } from '@app/library/actions/purge-library.actions';
-import { Confirmation } from '@tragically-slick/confirmation';
-import { compose } from '@ngrx/store';
 
 describe('PurgeLibrary Reducer', () => {
   let state: PurgeLibraryState;

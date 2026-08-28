@@ -28,8 +28,6 @@ import {
 import { CURRENT_RELEASE, LATEST_RELEASE } from '@app/app.fixtures';
 
 describe('Release Reducer', () => {
-  const LOADED = Math.random() > 0.5;
-
   let state: ReleaseDetailsState;
 
   beforeEach(() => {

@@ -58,7 +58,6 @@ import { ConfirmationService } from '@tragically-slick/confirmation';
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { getUserPreference } from '@app/user';
-import * as _ from 'lodash';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { PAGE_SIZE_OPTIONS } from '@app/core';
 import { selectBlockedHashesList } from '@app/comic-pages/selectors/blocked-hashes.selectors';
@@ -98,7 +97,7 @@ import { tap } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-  selector: 'cx-duplicate-page-list-page',
+  selector: 'app-duplicate-page-list-page',
   templateUrl: './duplicate-page-list-page.component.html',
   styleUrls: ['./duplicate-page-list-page.component.scss'],
   imports: [
@@ -229,27 +228,29 @@ export class DuplicatePageListPageComponent implements AfterViewInit {
       .select(selectMessagingStarted)
       .pipe(
         tap(started => {
-          this.webSocketService.subscribe(
-            DUPLICATE_PAGE_LIST_UPDATE_TOPIC,
-            (response: DuplicatePageUpdate) => {
-              this.logger.trace('Duplicate page update received:', response);
-              if (response.removed) {
-                this.store.dispatch(
-                  duplicatePageRemoved({
-                    page: response.page,
-                    total: response.total
-                  })
-                );
-              } else {
-                this.store.dispatch(
-                  duplicatePageUpdated({
-                    page: response.page,
-                    total: response.total
-                  })
-                );
+          if (started) {
+            this.webSocketService.subscribe(
+              DUPLICATE_PAGE_LIST_UPDATE_TOPIC,
+              (response: DuplicatePageUpdate) => {
+                this.logger.trace('Duplicate page update received:', response);
+                if (response.removed) {
+                  this.store.dispatch(
+                    duplicatePageRemoved({
+                      page: response.page,
+                      total: response.total
+                    })
+                  );
+                } else {
+                  this.store.dispatch(
+                    duplicatePageUpdated({
+                      page: response.page,
+                      total: response.total
+                    })
+                  );
+                }
               }
-            }
-          );
+            );
+          }
         })
       )
       .subscribe();

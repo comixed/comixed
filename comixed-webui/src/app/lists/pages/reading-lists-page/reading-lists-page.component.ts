@@ -67,7 +67,7 @@ import { AsyncPipe, DatePipe, DecimalPipe } from '@angular/common';
 import { tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'cx-reading-lists-page',
+  selector: 'app-reading-lists-page',
   templateUrl: './reading-lists-page.component.html',
   styleUrls: ['./reading-lists-page.component.scss'],
   imports: [

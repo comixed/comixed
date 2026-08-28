@@ -49,7 +49,7 @@ import { selectDarkThemeActive } from '@app/selectors/dark-theme.selectors';
 import { toggleDarkThemeMode } from '@app/actions/dark-theme.actions';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { MatToolbar } from '@angular/material/toolbar';
-import { MatIconButton } from '@angular/material/button';
+import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
 import { GravatarModule } from 'ngx-gravatar';
@@ -60,7 +60,7 @@ import { AsyncPipe, DatePipe } from '@angular/common';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-  selector: 'cx-navigation-bar',
+  selector: 'app-navigation-bar',
   templateUrl: './navigation-bar.component.html',
   styleUrls: ['./navigation-bar.component.scss'],
   imports: [
@@ -77,7 +77,8 @@ import { BehaviorSubject } from 'rxjs';
     MatDivider,
     DatePipe,
     TranslateModule,
-    AsyncPipe
+    AsyncPipe,
+    MatButton
   ]
 })
 export class NavigationBarComponent {
@@ -204,7 +205,7 @@ export class NavigationBarComponent {
   onSelectLanguage(language: string): void {
     this.logger.debug('Changing selected language:', language);
     this.translateService.use(language);
-    if (!!this.user) {
+    if (this.user) {
       this.logger.trace('Saving user language preference');
       this.store.dispatch(
         saveUserPreference({ name: LANGUAGE_PREFERENCE, value: language })
@@ -215,7 +216,7 @@ export class NavigationBarComponent {
   onSetLogging(loggerLevel: LoggerLevel): void {
     this.logger.debug('Setting logger level:', loggerLevel);
     this.logger.level = loggerLevel;
-    if (!!this.user) {
+    if (this.user) {
       this.logger.trace('Saving user logging preference');
       this.store.dispatch(
         saveUserPreference({

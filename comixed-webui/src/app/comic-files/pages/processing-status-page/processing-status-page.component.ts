@@ -52,7 +52,7 @@ import { AsyncPipe } from '@angular/common';
 import { tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'cx-processing-status-page',
+  selector: 'app-processing-status-page',
   templateUrl: './processing-status-page.component.html',
   styleUrls: ['./processing-status-page.component.scss'],
   imports: [

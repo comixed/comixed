@@ -21,19 +21,8 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of, throwError } from 'rxjs';
 import { MultiBookScrapingEffects } from './multi-book-scraping.effects';
 import { ComicBookScrapingService } from '@app/comic-metadata/services/comic-book-scraping.service';
+import { METADATA_SOURCE_1 } from '@app/comic-metadata/comic-metadata.fixtures';
 import {
-  METADATA_SOURCE_1,
-  SCRAPING_ISSUE_1,
-  SCRAPING_VOLUME_1,
-  SCRAPING_VOLUME_2,
-  SCRAPING_VOLUME_3
-} from '@app/comic-metadata/comic-metadata.fixtures';
-import {
-  COMIC_BOOK_1,
-  COMIC_BOOK_2,
-  COMIC_BOOK_3,
-  COMIC_BOOK_4,
-  COMIC_BOOK_5,
   DISPLAYABLE_COMIC_1,
   DISPLAYABLE_COMIC_2,
   DISPLAYABLE_COMIC_3,
@@ -69,12 +58,7 @@ import { RemoveMultiBookComicResponse } from '@app/comic-metadata/models/net/rem
 import { LoadMultiBookScrapingResponse } from '@app/comic-metadata/models/net/load-multi-book-scraping-page-response';
 
 describe('MultiBookScrapingEffects', () => {
-  const SERIES = 'The Series';
-  const MAXIMUM_RECORDS = 100;
   const SKIP_CACHE = Math.random() > 0.5;
-  const VOLUMES = [SCRAPING_VOLUME_1, SCRAPING_VOLUME_2, SCRAPING_VOLUME_3];
-  const SCRAPING_ISSUE = SCRAPING_ISSUE_1;
-  const VOLUME_ID = SCRAPING_VOLUME_1.id;
   const ISSUE_NUMBER = '27';
   const COMIC_BOOKS = [
     DISPLAYABLE_COMIC_1,

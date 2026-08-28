@@ -20,7 +20,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { EditAccountBarComponent } from './edit-account-bar.component';
 import { PREFERENCE_1, USER_READER } from '@app/user/user.fixtures';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import {
   Confirmation,
   ConfirmationService
@@ -54,7 +54,6 @@ describe('EditAccountBarComponent', () => {
   let component: EditAccountBarComponent;
   let fixture: ComponentFixture<EditAccountBarComponent>;
   let store: MockStore<any>;
-  let translateService: TranslateService;
   let confirmationService: ConfirmationService;
 
   beforeEach(waitForAsync(() => {
@@ -81,7 +80,6 @@ describe('EditAccountBarComponent', () => {
     component = fixture.componentInstance;
     store = TestBed.inject(MockStore);
     spyOn(store, 'dispatch');
-    translateService = TestBed.inject(TranslateService);
     confirmationService = TestBed.inject(ConfirmationService);
     fixture.detectChanges();
   }));
@@ -95,10 +93,6 @@ describe('EditAccountBarComponent', () => {
       spyOn(component.userForm.controls.password, 'setValidators');
       spyOn(component.userForm.controls.passwordVerify, 'setValidators');
       spyOn(component.userForm, 'setValidators');
-    });
-
-    it('returns the form controls', () => {
-      expect(component.controls).not.toBeNull();
     });
 
     describe('when the user is null', () => {

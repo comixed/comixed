@@ -29,10 +29,8 @@ import {
   initialState as initialUserState,
   USER_FEATURE_KEY
 } from '@app/user/reducers/user.reducer';
-import { provideRouter, Router } from '@angular/router';
+import { provideRouter } from '@angular/router';
 import {
-  COMIC_BOOK_1,
-  COMIC_BOOK_2,
   COMIC_METADATA_SOURCE_1,
   COMIC_TAG_1,
   COMIC_TAG_2,
@@ -109,7 +107,6 @@ import {
 } from '@app/comic-books/reducers/imprint-list.reducer';
 
 describe('ComicBookPageComponent', () => {
-  const COMIC_BOOK = COMIC_BOOK_1;
   const DETAIL = DISPLAYABLE_COMIC_1;
   const METADATA = COMIC_METADATA_SOURCE_1;
   const PAGES = [PAGE_1, PAGE_2, PAGE_3, PAGE_4];
@@ -120,9 +117,7 @@ describe('ComicBookPageComponent', () => {
     COMIC_TAG_4,
     COMIC_TAG_5
   ];
-  const IDS = [4, 17, 6];
   const READ_COMIC_BOOK_ENTRY = READ_COMIC_BOOK_1;
-  const OTHER_COMIC = COMIC_BOOK_2;
   const USER = USER_READER;
   const PUBLISHER = 'The Publisher';
   const SERIES = 'The Series';
@@ -132,7 +127,6 @@ describe('ComicBookPageComponent', () => {
   const SKIP_CACHE = Math.random() > 0.5;
   const MATCH_PUBLISHER = Math.random() > 0.5;
   const METADATA_SOURCE = METADATA_SOURCE_1;
-  const REFERENCE_ID = `${new Date().getTime()}`;
   const initialState = {
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER },
@@ -145,13 +139,12 @@ describe('ComicBookPageComponent', () => {
 
   let component: ComicBookPageComponent;
   let fixture: ComponentFixture<ComicBookPageComponent>;
-  let router: Router;
   let store: MockStore<any>;
   let translateService: TranslateService;
   let titleService: TitleService;
   let confirmationService: ConfirmationService;
   let webSocketService: jasmine.SpyObj<WebSocketService>;
-  4;
+
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
@@ -438,7 +431,7 @@ describe('ComicBookPageComponent', () => {
           metadata: METADATA,
           pages: PAGES,
           tags: TAGS
-        } as LoadComicBookResponse);
+        } as LoadComicBookResponse as any);
         return {} as Subscription;
       });
       store.setState({

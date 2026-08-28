@@ -49,7 +49,7 @@ export class DuplicatePageDetailEffects {
         this.duplicatePageService
           .loadDuplicatePageDetail({ hash: action.hash })
           .pipe(
-            tap(response => this.logger.debug('Response received:', action)),
+            tap(response => this.logger.debug('Response received:', response)),
             map((response: DuplicatePage) =>
               duplicatePageDetailLoaded({ detail: response })
             ),

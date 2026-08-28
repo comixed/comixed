@@ -107,7 +107,7 @@ export class DeleteComicBooksEffects {
       tap(action =>
         this.logger.trace('Effect: deleting selected comic books:', action)
       ),
-      switchMap(action =>
+      switchMap(() =>
         this.comicService.deleteSelectedComicBooks().pipe(
           tap(response => this.logger.trace('Response received:', response)),
           tap(() =>
@@ -131,7 +131,7 @@ export class DeleteComicBooksEffects {
       tap(action =>
         this.logger.trace('Effect: undeleted selected comic books:', action)
       ),
-      switchMap(action =>
+      switchMap(() =>
         this.comicService.undeleteSelectedComicBooks().pipe(
           tap(response => this.logger.trace('Response received:', response)),
           tap(() =>

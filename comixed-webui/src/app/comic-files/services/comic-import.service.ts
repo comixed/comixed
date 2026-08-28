@@ -22,7 +22,6 @@ import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { interpolate } from '@app/core';
 import { LoadComicFilesRequest } from '@app/library/models/net/load-comic-files-request';
-import { ImportComicFilesRequest } from '@app/library/models/net/import-comic-files-request';
 import {
   LOAD_COMIC_FILES_FROM_SESSION_URL,
   LOAD_COMIC_FILES_URL,
@@ -82,10 +81,7 @@ export class ComicImportService {
    */
   sendComicFiles(): Observable<any> {
     this.logger.debug('Sending comic files');
-    return this.http.post(
-      interpolate(SEND_COMIC_FILES_URL),
-      {} as ImportComicFilesRequest
-    );
+    return this.http.post(interpolate(SEND_COMIC_FILES_URL), {} as any);
   }
 
   scrapeFilename(args: { filename: string }): Observable<any> {

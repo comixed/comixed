@@ -79,7 +79,6 @@ describe('SeriesMetadataPageComponent', () => {
     volume: COMIC_BOOK.volume,
     issue: COMIC_BOOK.issueNumber
   };
-  const ISSUES = [ISSUE];
   const initialState = {
     [SERIES_FEATURE_KEY]: initialSeriesState,
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
@@ -113,12 +112,12 @@ describe('SeriesMetadataPageComponent', () => {
         {
           provide: ActivatedRoute,
           useValue: {
-            params: new BehaviorSubject<{}>({
+            params: new BehaviorSubject<any>({
               publisher: PUBLISHER,
               name: SERIES,
               volume: VOLUME
             }),
-            queryParams: new BehaviorSubject<{}>({}),
+            queryParams: new BehaviorSubject<any>({}),
             snapshot: {} as ActivatedRouteSnapshot
           }
         },

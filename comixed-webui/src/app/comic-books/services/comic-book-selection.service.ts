@@ -231,7 +231,7 @@ export class ComicBookSelectionService {
   }
 
   private doSubscribeToSelectionUpdates() {
-    if (!!this.email) {
+    if (this.email) {
       this.logger.trace('Subscribing to comic book selection updates');
       this.webSocketService.subscribe<number[]>(
         interpolate(COMIC_BOOK_SELECTION_UPDATE_TOPIC, { email: this.email }),

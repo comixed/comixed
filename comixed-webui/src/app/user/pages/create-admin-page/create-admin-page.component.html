@@ -19,12 +19,12 @@
             [placeholder]="'create-admin-account.placeholder.email' | translate"
           />
           <mat-error>
-            @if (controls.email.errors?.required) {
+            @if (createAdminForm.controls.email.errors?.required) {
               <span>
                 {{ "validation.field-required" | translate }}
               </span>
             }
-            @if (controls.email.errors?.email) {
+            @if (createAdminForm.controls.email.errors?.email) {
               <span>
                 {{ "validation.email-required" | translate }}
               </span>
@@ -42,31 +42,33 @@
             "
           />
           <mat-error>
-            @if (controls.password.errors?.required) {
+            @if (createAdminForm.controls.password.errors?.required) {
               <span>
                 {{ "validation.field-required" | translate }}
               </span>
             }
-            @if (!!controls.password.errors?.minlength) {
+            @if (!!createAdminForm.controls.password.errors?.minlength) {
               <span>
                 {{
                   "validation.value-too-short"
                     | translate
                       : {
                           length:
-                            controls.password.errors.minlength.requiredLength
+                            createAdminForm.controls.password.errors.minlength
+                              .requiredLength
                         }
                 }}
               </span>
             }
-            @if (!!controls.password.errors?.maxlength) {
+            @if (!!createAdminForm.controls.password.errors?.maxlength) {
               <span>
                 {{
                   "validation.value-too-long"
                     | translate
                       : {
                           length:
-                            controls.password.errors.maxlength.requiredLength
+                            createAdminForm.controls.password.errors.maxlength
+                              .requiredLength
                         }
                 }}
               </span>
@@ -84,7 +86,7 @@
             "
           />
           <mat-error>
-            @if (controls.passwordVerify.errors?.required) {
+            @if (createAdminForm.controls.passwordVerify.errors?.required) {
               <span>
                 {{ "validation.field-required" | translate }}
               </span>

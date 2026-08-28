@@ -15,7 +15,7 @@
       }}
     </mat-card-subtitle>
     <mat-card-content>
-      <cx-comic-page [imageUrl]="comic | comicCoverUrl"></cx-comic-page>
+      <app-comic-page [imageUrl]="comic | comicCoverUrl"></app-comic-page>
     </mat-card-content>
     <mat-card-actions>
       @if (isDeleted(comic)) {

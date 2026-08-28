@@ -19,6 +19,7 @@
 export interface ProcessComicBooksStatus {
   batchName: string;
   stepName: string;
+  active: boolean;
   total: number;
   processed: number;
 }

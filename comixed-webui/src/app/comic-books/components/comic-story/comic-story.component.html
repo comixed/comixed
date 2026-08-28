@@ -18,12 +18,12 @@
     <div class="comic-story-cards cx-width-100">
       @for (credit of credits; track credit) {
         <div class="comic-story-card">
-          <cx-comic-detail-card
+          <app-comic-detail-card
             [comic]="comic"
             [title]="credit.value"
             [subtitle]="credit.type"
             imageUrl="/assets/img/credit.png"
-          ></cx-comic-detail-card>
+          ></app-comic-detail-card>
         </div>
       }
     </div>
@@ -40,7 +40,7 @@
     <div class="comic-story-cards cx-width-100">
       @for (character of characters; track character) {
         <div class="comic-story-card">
-          <cx-comic-detail-card
+          <app-comic-detail-card
             [comic]="comic"
             [title]="character.value"
             [routerLink]="[
@@ -50,7 +50,7 @@
               character.value
             ]"
             imageUrl="/assets/img/character.png"
-          ></cx-comic-detail-card>
+          ></app-comic-detail-card>
         </div>
       }
     </div>
@@ -64,12 +64,12 @@
     <div class="comic-story-cards cx-width-100">
       @for (team of teams; track team) {
         <div class="comic-story-card">
-          <cx-comic-detail-card
+          <app-comic-detail-card
             [comic]="comic"
             [title]="team.value"
             [routerLink]="['/library', 'collections', 'teams', team.value]"
             imageUrl="/assets/img/team.png"
-          ></cx-comic-detail-card>
+          ></app-comic-detail-card>
         </div>
       }
     </div>
@@ -85,7 +85,7 @@
     <div class="comic-story-cards cx-width-100">
       @for (location of locations; track location) {
         <div class="comic-story-card">
-          <cx-comic-detail-card
+          <app-comic-detail-card
             [comic]="comic"
             [title]="location.value"
             [routerLink]="[
@@ -95,7 +95,7 @@
               location.value
             ]"
             imageUrl="/assets/img/location.png"
-          ></cx-comic-detail-card>
+          ></app-comic-detail-card>
         </div>
       }
     </div>
@@ -109,12 +109,12 @@
     <div class="comic-story-cards cx-width-100">
       @for (story of stories; track story) {
         <div class="comic-story-card">
-          <cx-comic-detail-card
+          <app-comic-detail-card
             [comic]="comic"
             [title]="story.value"
             [routerLink]="['/library', 'collections', 'stories', story.value]"
             imageUrl="/assets/img/story.png"
-          ></cx-comic-detail-card>
+          ></app-comic-detail-card>
         </div>
       }
     </div>

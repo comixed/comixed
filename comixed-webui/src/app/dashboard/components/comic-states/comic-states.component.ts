@@ -32,7 +32,7 @@ import { BarChartModule } from '@swimlane/ngx-charts';
 import { AsyncPipe } from '@angular/common';
 
 @Component({
-  selector: 'cx-comic-states',
+  selector: 'app-comic-states',
   imports: [
     TranslateModule,
     MatCard,

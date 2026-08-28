@@ -85,7 +85,7 @@ export class ReadingListEntriesEffects {
           })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
-            tap((response: ReadingList) =>
+            tap(() =>
               this.alertService.info(
                 this.translateService.instant(
                   'reading-list-entries.remove-comics.effect-success',

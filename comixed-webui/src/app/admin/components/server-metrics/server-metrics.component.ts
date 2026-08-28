@@ -41,7 +41,7 @@ import { BehaviorSubject } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 
 @Component({
-  selector: 'cx-health-metrics',
+  selector: 'app-health-metrics',
   templateUrl: './server-metrics.component.html',
   styleUrls: ['./server-metrics.component.scss'],
   imports: [

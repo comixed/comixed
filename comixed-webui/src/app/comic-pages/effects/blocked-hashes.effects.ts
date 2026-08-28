@@ -65,7 +65,7 @@ export class BlockedHashesEffects {
     return this.actions$.pipe(
       ofType(loadBlockedHashList),
       tap(action => this.logger.trace('Loading blocked page list:', action)),
-      switchMap(action =>
+      switchMap(() =>
         this.blockedHashService.loadAll().pipe(
           tap(response => this.logger.debug('Response received:', response)),
           map((response: BlockedHash[]) =>
@@ -129,7 +129,7 @@ export class BlockedHashesEffects {
       switchMap(action =>
         this.blockedHashService.save({ entry: action.entry }).pipe(
           tap(response => this.logger.debug('Response received:', response)),
-          tap((response: BlockedHash) =>
+          tap(() =>
             this.alertService.info(
               this.translateService.instant(
                 'blocked-hash.editing.save-effect-success'
@@ -330,7 +330,7 @@ export class BlockedHashesEffects {
     return this.actions$.pipe(
       ofType(downloadBlockedHashesFile),
       tap(action => this.logger.debug('download blocked pages file:', action)),
-      switchMap(action =>
+      switchMap(() =>
         this.blockedHashService.downloadFile().pipe(
           tap(response => this.logger.debug('Response received:', response)),
           tap((response: DownloadDocument) =>

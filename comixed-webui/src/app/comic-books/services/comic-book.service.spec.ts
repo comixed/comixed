@@ -24,12 +24,8 @@ import {
   provideHttpClientTesting
 } from '@angular/common/http/testing';
 import {
-  COMIC_BOOK_1,
   COMIC_BOOK_2,
-  COMIC_DETAIL_1,
-  COMIC_DETAIL_2,
-  COMIC_DETAIL_3,
-  COMIC_DETAIL_5
+  COMIC_DETAIL_2
 } from '@app/comic-books/comic-books.fixtures';
 import {
   LOAD_COMIC_URL,
@@ -60,10 +56,6 @@ import { UpdateComicBookRequest } from '@app/comic-books/models/net/update-comic
 
 describe('ComicBookService', () => {
   const DETAILS = COMIC_DETAIL_2;
-  const COMIC_DETAILS = [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5];
-  const MAX_RECORDS = 1000;
-  const LAST_ID = Math.floor(Math.abs(Math.random() * 1000));
-  const LAST_PAGE = Math.random() > 0.5;
   const PAGE = PAGE_1;
   const DOWNLOAD_COMIC_BOOK = {
     filename: DETAILS.filename,

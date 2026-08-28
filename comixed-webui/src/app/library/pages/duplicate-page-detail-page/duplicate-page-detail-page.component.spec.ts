@@ -103,7 +103,7 @@ describe('DuplicatePageDetailPageComponent', () => {
         {
           provide: ActivatedRoute,
           useValue: {
-            params: new BehaviorSubject<{}>({})
+            params: new BehaviorSubject<any>({} as any)
           }
         },
         ConfirmationService,
@@ -148,7 +148,7 @@ describe('DuplicatePageDetailPageComponent', () => {
 
   describe('loading the duplicate page detail', () => {
     beforeEach(() => {
-      (activatedRoute.params as BehaviorSubject<{}>).next({
+      (activatedRoute.params as BehaviorSubject<any>).next({
         hash: DUPLICATE_PAGE.hash
       });
     });

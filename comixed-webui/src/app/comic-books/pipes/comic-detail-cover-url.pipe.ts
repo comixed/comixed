@@ -28,7 +28,7 @@ import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 @Pipe({ name: 'comicDetailCoverUrl' })
 export class ComicDetailCoverUrlPipe implements PipeTransform {
   transform(comic: ComicDetail | DisplayableComic): string {
-    if (!!comic) {
+    if (comic) {
       return interpolate(GET_COMIC_COVER_URL, { id: comic.comicBookId });
     }
     return MISSING_COMIC_IMAGE_URL;

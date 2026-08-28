@@ -16,29 +16,33 @@
           formControlName="name"
         />
         <mat-error>
-          @if (controls.name.errors?.required) {
+          @if (sourceForm.controls.name.errors?.required) {
             <span>
               {{ "validation.field-required" | translate }}
             </span>
           }
-          @if (!!controls.name.errors?.minlength) {
+          @if (!!sourceForm.controls.name.errors?.minlength) {
             <span>
               {{
                 "validation.value-too-short"
                   | translate
                     : {
-                        length: controls.name.errors.minlength.requiredLength
+                        length:
+                          sourceForm.controls.name.errors.minlength
+                            .requiredLength
                       }
               }}
             </span>
           }
-          @if (!!controls.name.errors?.maxlength) {
+          @if (!!sourceForm.controls.name.errors?.maxlength) {
             <span>
               {{
                 "validation.value-too-long"
                   | translate
                     : {
-                        length: controls.name.errors.maxlength.requiredLength
+                        length:
+                          sourceForm.controls.name.errors.maxlength
+                            .requiredLength
                       }
               }}
             </span>

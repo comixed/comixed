@@ -22,21 +22,12 @@ import {
   reducer
 } from './import-comic-files.reducer';
 import {
-  COMIC_FILE_1,
-  COMIC_FILE_2,
-  COMIC_FILE_3
-} from '@app/comic-files/comic-file.fixtures';
-import {
   importComicFiles,
   importComicFilesFailure,
   importComicFilesSuccess
 } from '@app/comic-files/actions/import-comic-files.actions';
 
 describe('ImportComicFiles Reducer', () => {
-  const FILES = [COMIC_FILE_1, COMIC_FILE_2, COMIC_FILE_3];
-  const SKIP_METADATA = Math.random() > 0.5;
-  const SKIP_BLOCKING_PAGES = Math.random() > 0.5;
-
   let state: ImportComicFilesState;
 
   beforeEach(() => {

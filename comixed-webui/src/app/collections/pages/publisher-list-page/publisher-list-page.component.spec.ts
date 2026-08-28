@@ -19,7 +19,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PublisherListPageComponent } from './publisher-list-page.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
-import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { provideMockStore } from '@ngrx/store/testing';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -50,8 +50,6 @@ describe('PublisherListPageComponent', () => {
 
   let component: PublisherListPageComponent;
   let fixture: ComponentFixture<PublisherListPageComponent>;
-  let store: MockStore<any>;
-  let storeDispatchSpy: jasmine.Spy;
   let translateService: TranslateService;
   let titleService: TitleService;
 
@@ -78,8 +76,6 @@ describe('PublisherListPageComponent', () => {
 
     fixture = TestBed.createComponent(PublisherListPageComponent);
     component = fixture.componentInstance;
-    store = TestBed.inject(MockStore);
-    storeDispatchSpy = spyOn(store, 'dispatch');
     translateService = TestBed.inject(TranslateService);
     titleService = TestBed.inject(TitleService);
     spyOn(titleService, 'setTitle');

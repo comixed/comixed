@@ -42,7 +42,6 @@ import {
   UPLOAD_READING_LIST_URL
 } from '@app/lists/lists.constants';
 import { LoggerModule } from '@angular-ru/cdk/logger';
-import { COMIC_DETAIL_1 } from '@app/comic-books/comic-books.fixtures';
 import { DownloadDocument } from '@app/core/models/download-document';
 import {
   HttpResponse,
@@ -69,7 +68,6 @@ import {
 describe('ReadingListService', () => {
   const READING_LISTS = [READING_LIST_1, READING_LIST_3, READING_LIST_5];
   const READING_LIST = READING_LISTS[0];
-  const COMIC_DETAIL = COMIC_DETAIL_1;
   const DOWNLOAD_DOCUMENT = {
     filename: 'filename',
     content: 'content',
@@ -256,13 +254,13 @@ describe('ReadingListService', () => {
       webSocketService.subscribe
         .withArgs(LISTS_UPDATE_TOPIC, jasmine.anything())
         .and.callFake((topic, callback) => {
-          callback(READING_LIST);
+          callback(READING_LIST as any);
           return {} as Subscription;
         });
       webSocketService.subscribe
         .withArgs(LISTS_REMOVED_UPDATE, jasmine.anything())
         .and.callFake((topic, callback) => {
-          callback(READING_LIST);
+          callback(READING_LIST as any);
           return {} as Subscription;
         });
       store.setState({

@@ -89,7 +89,7 @@ import { BehaviorSubject } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 
 @Component({
-  selector: 'cx-metadata-source-list',
+  selector: 'app-metadata-source-list',
   templateUrl: './metadata-source-list.component.html',
   styleUrls: ['./metadata-source-list.component.scss'],
   imports: [

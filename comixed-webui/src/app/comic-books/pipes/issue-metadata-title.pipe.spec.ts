@@ -17,10 +17,7 @@
  */
 
 import { IssueMetadataTitlePipe } from './issue-metadata-title.pipe';
-import {
-  SCRAPING_ISSUE_1,
-  SCRAPING_VOLUME_1
-} from '@app/comic-metadata/comic-metadata.fixtures';
+import { SCRAPING_ISSUE_1 } from '@app/comic-metadata/comic-metadata.fixtures';
 
 describe('IssueMetadataTitlePipe', () => {
   const ISSUE = SCRAPING_ISSUE_1;

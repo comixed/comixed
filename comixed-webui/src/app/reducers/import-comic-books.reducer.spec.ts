@@ -50,8 +50,6 @@ describe('ImportComicBooks Reducer', () => {
   });
 
   describe('receiving a processing update', () => {
-    const COUNT = Math.abs(Math.floor(Math.random() * 1000));
-
     beforeEach(() => {
       state = reducer(
         {
@@ -97,8 +95,6 @@ describe('ImportComicBooks Reducer', () => {
   });
 
   describe('receiving a completed batch processing update', () => {
-    const COUNT = Math.abs(Math.floor(Math.random() * 1000));
-
     beforeEach(() => {
       state = reducer(
         {

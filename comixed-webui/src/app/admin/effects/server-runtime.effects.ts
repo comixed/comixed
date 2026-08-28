@@ -46,7 +46,7 @@ export class ServerRuntimeEffects {
     return this.actions$.pipe(
       ofType(loadServerHealth),
       tap(action => this.logger.trace('Loading server health:', action)),
-      switchMap(action =>
+      switchMap(() =>
         this.serverRuntimeService.loadServerHealth().pipe(
           tap(response => this.logger.debug('Response received:', response)),
           map((response: ServerHealth) =>
@@ -79,7 +79,7 @@ export class ServerRuntimeEffects {
           this.translateService.instant('shutdown-server.effect-success')
         )
       ),
-      switchMap(action =>
+      switchMap(() =>
         this.serverRuntimeService.shutdownServer().pipe(
           tap(response => this.logger.debug('Response received:', response)),
           map(() => serverShutdown()),

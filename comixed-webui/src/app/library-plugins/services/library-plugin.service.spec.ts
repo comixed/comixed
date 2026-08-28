@@ -213,7 +213,6 @@ describe('LibraryPluginService', () => {
     });
 
     describe('when updates are received', () => {
-      const APP_MESSAGE = 'This is the sample message.';
       const PLUGINS = [LIBRARY_PLUGIN_1];
 
       beforeEach(() => {

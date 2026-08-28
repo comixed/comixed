@@ -49,7 +49,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'cx-side-navigation',
+  selector: 'app-side-navigation',
   templateUrl: './side-navigation.component.html',
   styleUrls: ['./side-navigation.component.scss'],
   imports: [

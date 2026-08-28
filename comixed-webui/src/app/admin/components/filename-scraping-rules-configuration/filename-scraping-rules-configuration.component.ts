@@ -64,7 +64,7 @@ import { MatFormField, MatPrefix } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 
 @Component({
-  selector: 'cx-scraping-rules-configuration',
+  selector: 'app-scraping-rules-configuration',
   templateUrl: './filename-scraping-rules-configuration.component.html',
   styleUrls: ['./filename-scraping-rules-configuration.component.scss'],
   imports: [
@@ -146,7 +146,7 @@ export class FilenameScrapingRulesConfigurationComponent implements OnInit {
       return {
         item: { ...rule, priority: index + 1 },
         edited: oldRule?.edited || false,
-        editedValue: !!oldRule
+        editedValue: oldRule
           ? { ...oldRule.editedValue, priority: index + 1 }
           : {
               ...rule,

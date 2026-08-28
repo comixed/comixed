@@ -19,7 +19,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { CollectionListComponent } from './collection-list.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
-import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { provideMockStore } from '@ngrx/store/testing';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import {
@@ -57,7 +57,6 @@ describe('CollectionListComponent', () => {
     DISPLAYABLE_COMIC_3,
     DISPLAYABLE_COMIC_5
   ];
-  const SEARCH_TEXT = 'The filtering text';
   const initialState = {
     [COLLECTION_LIST_FEATURE_KEY]: initialCollectionListState,
     [COMIC_LIST_FEATURE_KEY]: {
@@ -68,12 +67,10 @@ describe('CollectionListComponent', () => {
 
   let component: CollectionListComponent;
   let fixture: ComponentFixture<CollectionListComponent>;
-  let store: MockStore<any>;
   let activatedRoute: ActivatedRoute;
   let router: Router;
   let titleService: TitleService;
   let translateService: TranslateService;
-  let queryParameterService: jasmine.SpyObj<QueryParameterService>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -99,10 +96,10 @@ describe('CollectionListComponent', () => {
         {
           provide: ActivatedRoute,
           useValue: {
-            params: new BehaviorSubject<{}>({
+            params: new BehaviorSubject<any>({
               collectionType: 'stories'
             }),
-            queryParams: new BehaviorSubject<{}>({})
+            queryParams: new BehaviorSubject<any>({})
           }
         },
         {
@@ -127,7 +124,6 @@ describe('CollectionListComponent', () => {
 
     fixture = TestBed.createComponent(CollectionListComponent);
     component = fixture.componentInstance;
-    store = TestBed.inject(MockStore);
     activatedRoute = TestBed.inject(ActivatedRoute);
     router = TestBed.inject(Router);
     spyOn(router, 'navigate');
@@ -135,9 +131,6 @@ describe('CollectionListComponent', () => {
     titleService = TestBed.inject(TitleService);
     spyOn(titleService, 'setTitle');
     translateService = TestBed.inject(TranslateService);
-    queryParameterService = TestBed.inject(
-      QueryParameterService
-    ) as jasmine.SpyObj<QueryParameterService>;
     fixture.detectChanges();
   }));
 
@@ -157,7 +150,7 @@ describe('CollectionListComponent', () => {
 
   describe('when the collection type is invalid', () => {
     beforeEach(() => {
-      (activatedRoute.params as BehaviorSubject<{}>).next({
+      (activatedRoute.params as BehaviorSubject<any>).next({
         collectionType: 'invalid'
       });
     });
@@ -169,7 +162,7 @@ describe('CollectionListComponent', () => {
 
   describe('when the collection type is received', () => {
     beforeEach(() => {
-      (activatedRoute.params as BehaviorSubject<{}>).next({
+      (activatedRoute.params as BehaviorSubject<any>).next({
         collectionType: 'stories'
       });
     });

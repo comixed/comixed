@@ -66,7 +66,7 @@ import { BehaviorSubject } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 
 @Component({
-  selector: 'cx-library-page',
+  selector: 'app-library-page',
   templateUrl: './library-page.component.html',
   styleUrls: ['./library-page.component.scss'],
   imports: [

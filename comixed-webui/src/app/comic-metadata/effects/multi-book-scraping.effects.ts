@@ -242,7 +242,7 @@ export class MultiBookScrapingEffects {
     return this.actions$.pipe(
       ofType(batchScrapeComicBooks),
       tap(action => this.logger.debug('Batch scraping comic books:', action)),
-      switchMap(action =>
+      switchMap(() =>
         this.comicBookScrapingService.batchScrapeComicBooks().pipe(
           tap(response => this.logger.debug('Response received;', response)),
           tap(() =>

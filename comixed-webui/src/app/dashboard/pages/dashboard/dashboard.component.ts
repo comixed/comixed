@@ -40,7 +40,7 @@ import { BehaviorSubject } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 
 @Component({
-  selector: 'cx-dashboard',
+  selector: 'app-dashboard',
   imports: [
     TranslateModule,
     CollectionListComponent,
@@ -73,7 +73,7 @@ export class DashboardComponent implements OnInit {
       .select(selectUser)
       .pipe(
         tap(user => {
-          if (!!user) {
+          if (user) {
             this.panels = getUserPreference(
               user.preferences,
               DASHBOARD_PANELS_PREFERENCE,
@@ -85,7 +85,7 @@ export class DashboardComponent implements OnInit {
       .subscribe();
     this.logger.debug('Subscribing to language changes');
     this.translateService.onLangChange
-      .pipe(tap(lang => this.loadTranslations()))
+      .pipe(tap(() => this.loadTranslations()))
       .subscribe();
   }
 

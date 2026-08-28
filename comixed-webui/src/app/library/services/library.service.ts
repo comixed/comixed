@@ -40,16 +40,15 @@ import { SetComicReadRequest } from '@app/library/models/net/set-comic-read-requ
 import { OrganizeLibraryRequest } from '@app/library/models/net/organize-library-request';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ConvertComicsRequest } from '@app/library/models/net/convert-comics-request';
-import { PurgeLibraryRequest } from '@app/library/models/net/purge-library-request';
 import { EditMultipleComics } from '@app/library/models/ui/edit-multiple-comics';
 import { EditMultipleComicsRequest } from '@app/library/models/net/edit-multiple-comics-request';
 import { Store } from '@ngrx/store';
 import { WebSocketService } from '@app/messaging';
 import { selectMessagingStarted } from '@app/messaging/selectors/messaging.selectors';
-import { User } from '@app/user/models/user';
 import { libraryStateLoaded } from '@app/library/actions/library.actions';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { tap } from 'rxjs/operators';
+import { LibraryState } from '@app/library/reducers/library.reducer';
 
 @Injectable({
   providedIn: 'root'
@@ -66,9 +65,9 @@ export class LibraryService {
       .pipe(
         tap(started => {
           if (started) {
-            this.webSocketService.subscribe<User>(
+            this.webSocketService.subscribe<LibraryState>(
               REMOTE_LIBRARY_STATE_TOPIC,
-              state => {
+              (state: LibraryState) => {
                 this.logger.debug('Received library state update:', state);
                 console.log('Received library state update:', state);
                 this.store.dispatch(libraryStateLoaded({ state }));
@@ -173,10 +172,7 @@ export class LibraryService {
 
   purgeLibrary(): Observable<any> {
     this.logger.trace('Purging library');
-    return this.http.post(
-      interpolate(PURGE_LIBRARY_URL),
-      {} as PurgeLibraryRequest
-    );
+    return this.http.post(interpolate(PURGE_LIBRARY_URL), {} as any);
   }
 
   editMultipleComics(args: {

@@ -19,7 +19,6 @@
 import { AfterViewInit, Component, inject, OnInit } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import {
-  AbstractControl,
   ReactiveFormsModule,
   UntypedFormBuilder,
   UntypedFormGroup,
@@ -54,7 +53,7 @@ import { BehaviorSubject } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 
 @Component({
-  selector: 'cx-login',
+  selector: 'app-login',
   templateUrl: './login-page.component.html',
   styleUrls: ['./login-page.component.scss'],
   imports: [
@@ -137,7 +136,7 @@ export class LoginPageComponent implements OnInit, AfterViewInit {
       .subscribe();
   }
 
-  get controls(): { [p: string]: AbstractControl } {
+  get controls() {
     return this.loginForm.controls;
   }
 

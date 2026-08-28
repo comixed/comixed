@@ -732,7 +732,6 @@ describe('ComicListViewComponent', () => {
   });
 
   describe('selecting comics', () => {
-    const IDS = COMIC_BOOKS.map(entry => entry.comicBookId);
     const event = new KeyboardEvent('hotkey');
 
     beforeEach(() => {

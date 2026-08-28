@@ -51,7 +51,7 @@ import { AsyncPipe } from '@angular/common';
 import { tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'cx-edit-multiple-comics',
+  selector: 'app-edit-multiple-comics',
   templateUrl: './edit-multiple-comics.component.html',
   styleUrls: ['./edit-multiple-comics.component.scss'],
   imports: [

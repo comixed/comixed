@@ -68,7 +68,7 @@ export class AlertService {
       }
     );
 
-    if (!!routerLink) {
+    if (routerLink) {
       alert.afterOpened().subscribe(() => {
         this.router
           .navigateByUrl(routerLink)

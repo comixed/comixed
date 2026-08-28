@@ -18,7 +18,6 @@
 
 import { ComicBookState, initialState, reducer } from './comic-book.reducer';
 import {
-  COMIC_BOOK_2,
   COMIC_METADATA_SOURCE_1,
   COMIC_TAG_1,
   COMIC_TAG_2,
@@ -53,7 +52,6 @@ import {
 } from '@app/comic-pages/comic-pages.fixtures';
 
 describe('ComicBook Reducer', () => {
-  const COMIC = COMIC_BOOK_2;
   const DETAIL = DISPLAYABLE_COMIC_1;
   const METADATA = COMIC_METADATA_SOURCE_1;
   const PAGES = [PAGE_1, PAGE_2, PAGE_3, PAGE_4];

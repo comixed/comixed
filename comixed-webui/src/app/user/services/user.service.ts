@@ -173,7 +173,7 @@ export class UserService {
     password: string;
     admin: boolean;
   }): Observable<any> {
-    if (!!args.id) {
+    if (args.id) {
       this.logger.debug('Saving user account:', args);
       return this.http.put(
         interpolate(SAVE_USER_ACCOUNT_URL, { userId: args.id }),
@@ -201,7 +201,7 @@ export class UserService {
   }
 
   private subscribeToUserUpdates(): void {
-    if (!!this.email$.value) {
+    if (this.email$.value) {
       const topic = interpolate(USER_SELF_TOPIC, { email: this.email$.value });
       this.logger.debug('Subscribing to self updates:', topic);
       this.webSocketService.subscribe<User>(topic, user => {

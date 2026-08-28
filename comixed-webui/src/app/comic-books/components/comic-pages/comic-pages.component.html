@@ -2,13 +2,13 @@
   <div id="all-comic-book-pages">
     @for (page of pages; track page; let i = $index) {
       <div class="single-comic-book-page">
-        <cx-comic-page
+        <app-comic-page
           class="mat-elevation-z4"
           [page]="page"
           [imageUrl]="page | comicPageUrl"
           [title]="page.filename"
           (showContextMenu)="onShowContextMenu($event.page, $event.x, $event.y)"
-        ></cx-comic-page>
+        ></app-comic-page>
       </div>
     }
   </div>

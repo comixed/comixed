@@ -31,7 +31,6 @@ import { Subscription } from 'rxjs';
 describe('ProcessComicsService', () => {
   const ADD_COUNT = Math.abs(Math.floor(Math.random() * 1000));
   const PROCESSING_COUNT = Math.abs(Math.floor(Math.random() * 1000));
-  const IMPORT_COUNT = ADD_COUNT + PROCESSING_COUNT;
 
   const initialState = {
     [MESSAGING_FEATURE_KEY]: { ...initialMessagingState }

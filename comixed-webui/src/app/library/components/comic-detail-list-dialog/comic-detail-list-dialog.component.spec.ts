@@ -45,7 +45,6 @@ import { MatCardModule } from '@angular/material/card';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { PAGE_1 } from '@app/comic-pages/comic-pages.fixtures';
 import { MatSortModule } from '@angular/material/sort';
 import { ComicListViewComponent } from '@app/comic-books/components/comic-list-view/comic-list-view.component';
 import { MatTableModule } from '@angular/material/table';
@@ -62,7 +61,6 @@ import { provideRouter } from '@angular/router';
 
 describe('ComicDetailListDialogComponent', () => {
   const COMICS = [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5];
-  const HASH = PAGE_1.hash;
   const initialState = {
     [LIBRARY_PLUGIN_FEATURE_KEY]: initialLibraryPluginState,
     [COMIC_BOOK_SELECTION_FEATURE_KEY]: initialComicBookSelectionState

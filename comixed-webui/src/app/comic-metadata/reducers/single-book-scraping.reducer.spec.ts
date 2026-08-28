@@ -42,10 +42,7 @@ import {
   startMetadataUpdateProcessSuccess,
   volumeMetadataLoaded
 } from '@app/comic-metadata/actions/single-book-scraping.actions';
-import {
-  COMIC_DETAIL_4,
-  DISPLAYABLE_COMIC_4
-} from '@app/comic-books/comic-books.fixtures';
+import { DISPLAYABLE_COMIC_4 } from '@app/comic-books/comic-books.fixtures';
 import {
   METADATA_SOURCE_1,
   SCRAPING_ISSUE_1,
@@ -66,7 +63,6 @@ describe('SingleBookScraping Reducer', () => {
   const SCRAPING_ISSUE = SCRAPING_ISSUE_1;
   const COMIC = DISPLAYABLE_COMIC_4;
   const METADATA_SOURCE = METADATA_SOURCE_1;
-  const IDS = [7, 17, 65, 1, 29, 71];
 
   let state: SingleBookScrapingState;
 

@@ -30,7 +30,6 @@ import {
 
 describe('MetadataSourceList Reducer', () => {
   const SOURCES = [METADATA_SOURCE_1];
-  const ID = SOURCES[0].metadataSourceId;
 
   let state: MetadataSourceListState;
 

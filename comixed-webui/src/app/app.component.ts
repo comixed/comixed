@@ -59,9 +59,10 @@ import { AsyncPipe } from '@angular/common';
 import { loadLibraryState } from '@app/library/actions/library.actions';
 import { resetReadComicBooks } from '@app/user/actions/read-comic-books.actions';
 import { tap } from 'rxjs/operators';
+import { ApplicationEvent } from '@app/models/messages/application-event';
 
 @Component({
-  selector: 'cx-root',
+  selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   imports: [
@@ -128,7 +129,7 @@ export class AppComponent implements OnInit {
             this.logger.trace('Marking the session as inactive');
             this.sessionActive$.next(false);
           }
-          if (!!this.user$.value) {
+          if (this.user$.value) {
             const preferredLevel = parseInt(
               getUserPreference(
                 this.user$.value.preferences,
@@ -189,13 +190,16 @@ export class AppComponent implements OnInit {
       .pipe(
         tap(started => {
           if (started) {
-            this.webSocketService.subscribe(APP_MESSAGING_TOPIC, appEvent => {
-              this.logger.debug(
-                'Application event message received:',
-                appEvent
-              );
-              this.alertService.info(appEvent.message);
-            });
+            this.webSocketService.subscribe(
+              APP_MESSAGING_TOPIC,
+              (appEvent: ApplicationEvent) => {
+                this.logger.debug(
+                  'Application event message received:',
+                  appEvent
+                );
+                this.alertService.info(appEvent.message);
+              }
+            );
           }
         })
       )

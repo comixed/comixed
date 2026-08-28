@@ -52,7 +52,7 @@ export class LibraryPluginEffects {
     return this.actions$.pipe(
       ofType(loadLibraryPlugins),
       tap(() => this.logger.trace('Loading all library plugins')),
-      switchMap(action =>
+      switchMap(() =>
         this.pluginService.loadAll().pipe(
           tap(response => this.logger.debug('Response received:', response)),
           map((response: LibraryPlugin[]) =>
@@ -132,16 +132,16 @@ export class LibraryPluginEffects {
       switchMap(action =>
         this.pluginService.updatePlugin({ plugin: action.plugin }).pipe(
           tap(response => this.logger.debug('Response received:', response)),
-          tap((repsonse: LibraryPlugin) =>
+          tap((response: LibraryPlugin) =>
             this.alertService.info(
               this.translateService.instant(
                 'library-plugin-list.update-plugin.effect-success',
-                { name: action.plugin.name }
+                { name: response.name }
               )
             )
           ),
           mergeMap((response: LibraryPlugin) => [
-            updateLibraryPluginSuccess({ plugin: action.plugin }),
+            updateLibraryPluginSuccess({ plugin: response }),
             loadLibraryPlugins()
           ]),
           catchError(error => {

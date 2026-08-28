@@ -65,7 +65,7 @@ import { MatLabel } from '@angular/material/form-field';
 import { ComicPageUrlPipe } from '@app/comic-books/pipes/comic-page-url.pipe';
 
 @Component({
-  selector: 'cx-comic-pages',
+  selector: 'app-comic-pages',
   templateUrl: './comic-pages.component.html',
   styleUrls: ['./comic-pages.component.scss'],
   imports: [

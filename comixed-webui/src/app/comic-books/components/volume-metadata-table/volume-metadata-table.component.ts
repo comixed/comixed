@@ -60,7 +60,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { IssueMetadataTitlePipe } from '@app/comic-books/pipes/issue-metadata-title.pipe';
 
 @Component({
-  selector: 'cx-volume-metadata-table',
+  selector: 'app-volume-metadata-table',
   templateUrl: './volume-metadata-table.component.html',
   styleUrls: ['./volume-metadata-table.component.scss'],
   imports: [

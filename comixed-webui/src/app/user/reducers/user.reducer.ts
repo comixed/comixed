@@ -85,7 +85,7 @@ export const reducer = createReducer(
     authenticated: false,
     user: null
   })),
-  on(loginUserSuccess, (state, action) => ({
+  on(loginUserSuccess, state => ({
     ...state,
     authenticating: false,
     authenticated: true

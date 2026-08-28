@@ -68,14 +68,14 @@ export const reducer = createReducer(
   })),
   on(clearCurrentLibraryPlugin, state => ({ ...state, current: null })),
   on(createLibraryPlugin, state => ({ ...state, busy: true })),
-  on(createLibraryPluginSuccess, (state, action) => ({
+  on(createLibraryPluginSuccess, state => ({
     ...state,
     busy: false,
     current: null
   })),
   on(createLibraryPluginFailure, state => ({ ...state, busy: false })),
   on(updateLibraryPlugin, state => ({ ...state, busy: true })),
-  on(updateLibraryPluginSuccess, (state, action) => ({
+  on(updateLibraryPluginSuccess, state => ({
     ...state,
     busy: false,
     current: null

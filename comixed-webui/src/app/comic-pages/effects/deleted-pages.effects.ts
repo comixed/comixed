@@ -43,7 +43,7 @@ export class DeletedPagesEffects {
     return this.actions$.pipe(
       ofType(loadDeletedPages),
       tap(() => this.logger.trace('Loading deleted page list')),
-      switchMap(action =>
+      switchMap(() =>
         this.deletedPagesService.loadAll().pipe(
           tap(response => this.logger.debug('Response received:', response)),
           map((response: DeletedPage[]) =>

@@ -46,7 +46,6 @@ import { ComicType } from '@app/comic-books/models/comic-type';
 describe('QueryParameterService', () => {
   const PAGE_SIZE = 25;
   const PAGE_INDEX = 0;
-  const PREVIOUS_PAGE_INDEX = 1;
 
   let service: QueryParameterService;
   let activatedRoute: ActivatedRoute;
@@ -63,7 +62,7 @@ describe('QueryParameterService', () => {
         {
           provide: ActivatedRoute,
           useValue: {
-            queryParams: new BehaviorSubject<{}>({}),
+            queryParams: new BehaviorSubject<any>({} as any),
             snapshot: {
               queryParams: {}
             } as ActivatedRouteSnapshot

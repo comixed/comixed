@@ -25,12 +25,12 @@
               [placeholder]="'user-accounts.placeholder.email' | translate"
             />
             <mat-error>
-              @if (controls.email.errors?.required) {
+              @if (editUserForm.controls.email.errors?.required) {
                 <span>
                   {{ "validation.field-required" | translate }}
                 </span>
               }
-              @if (controls.email.errors?.email) {
+              @if (editUserForm.controls.email.errors?.email) {
                 <span>
                   {{ "validation.email-required" | translate }}
                 </span>
@@ -53,31 +53,33 @@
               (keyup)="onPasswordChanged()"
             />
             <mat-error>
-              @if (controls.password.errors?.required) {
+              @if (editUserForm.controls.password.errors?.required) {
                 <span>
                   {{ "validation.field-required" | translate }}
                 </span>
               }
-              @if (!!controls.password.errors?.minlength) {
+              @if (!!editUserForm.controls.password.errors?.minlength) {
                 <span>
                   {{
                     "validation.value-too-short"
                       | translate
                         : {
                             length:
-                              controls.password.errors.minlength.requiredLength
+                              editUserForm.controls.password.errors.minlength
+                                .requiredLength
                           }
                   }}
                 </span>
               }
-              @if (!!controls.password.errors?.maxlength) {
+              @if (!!editUserForm.controls.password.errors?.maxlength) {
                 <span>
                   {{
                     "validation.value-too-long"
                       | translate
                         : {
                             length:
-                              controls.password.errors.maxlength.requiredLength
+                              editUserForm.controls.password.errors.maxlength
+                                .requiredLength
                           }
                   }}
                 </span>
@@ -95,7 +97,7 @@
               "
             />
             <mat-error>
-              @if (controls.passwordVerify.errors?.required) {
+              @if (editUserForm.controls.passwordVerify.errors?.required) {
                 <span>
                   {{ "validation.field-required" | translate }}
                 </span>

@@ -50,7 +50,6 @@ import { HttpErrorResponse } from '@angular/common/http';
 describe('SeriesEffects', () => {
   const SEARCH_TEXT = 'some text';
   const PAGE_INDEX = 3;
-  const PAGE_SIZE = 25;
   const SORT_BY = 'publisher';
   const SORT_DIRECTION = 'desc';
   const SERIES_LIST = [SERIES_1, SERIES_2, SERIES_3, SERIES_4, SERIES_5];

@@ -26,7 +26,6 @@ import {
   provideHttpClientTesting
 } from '@angular/common/http/testing';
 import { LoadComicFilesRequest } from '@app/library/models/net/load-comic-files-request';
-import { ImportComicFilesRequest } from '@app/library/models/net/import-comic-files-request';
 import {
   HttpResponse,
   provideHttpClient,
@@ -155,7 +154,7 @@ describe('ComicImportService', () => {
 
     const req = httpMock.expectOne(interpolate(SEND_COMIC_FILES_URL));
     expect(req.request.method).toEqual('POST');
-    expect(req.request.body).toEqual({} as ImportComicFilesRequest);
+    expect(req.request.body).toEqual({} as any);
     req.flush(serviceResponse);
   });
 

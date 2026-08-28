@@ -41,7 +41,7 @@ import { BehaviorSubject } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 
 @Component({
-  selector: 'cx-publisher-issues-page',
+  selector: 'app-publisher-issues-page',
   templateUrl: './publisher-issues-page.component.html',
   styleUrl: './publisher-issues-page.component.scss',
   imports: [ComicListViewComponent, TranslateModule, AsyncPipe]
@@ -81,7 +81,7 @@ export class PublisherIssuesPageComponent implements OnInit {
       )
       .subscribe();
     this.activatedRoute.queryParams
-      .pipe(tap(params => this.doLoadComicDetails()))
+      .pipe(tap(() => this.doLoadComicDetails()))
       .subscribe();
     this.store
       .select(selectComicList)

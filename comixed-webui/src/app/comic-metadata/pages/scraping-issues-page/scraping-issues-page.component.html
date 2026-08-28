@@ -79,7 +79,7 @@
       !!(currentComicBook$ | async) && (scrapingVolumes$ | async).length === 0
     ) {
       <div class="cx-width-75">
-        <cx-comic-scraping
+        <app-comic-scraping
           [comic]="currentComicBook$ | async"
           [metadataSource]="metadataSource$ | async"
           [skipCache]="skipCache$ | async"
@@ -87,7 +87,7 @@
           [maximumRecords]="maximumRecords$ | async"
           [multiMode]="true"
           (scrape)="onScrape($event)"
-        ></cx-comic-scraping>
+        ></app-comic-scraping>
         <h4>{{ "scraping.comic-book-queue.title" | translate }}</h4>
         <mat-paginator
           showFirstLastButtons="true"
@@ -178,7 +178,7 @@
     }
     @if ((scrapingVolumes$ | async).length > 0) {
       <div class="cx-width-75">
-        <cx-scraping-volume-selection
+        <app-scraping-volume-selection
           [comicBook]="currentComicBook$ | async"
           [metadataSource]="metadataSource$ | async"
           [comicSeriesName]="currentSeries$ | async"
@@ -189,7 +189,7 @@
           [pageNumber]="queryParameterService.pageIndex$ | async"
           [multimode]="true"
           [volumes]="scrapingVolumes$ | async"
-        ></cx-scraping-volume-selection>
+        ></app-scraping-volume-selection>
       </div>
     }
   </div>

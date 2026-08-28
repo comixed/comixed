@@ -31,7 +31,6 @@ import {
   loadInitialUserAccount
 } from '@app/user/actions/initial-user-account.actions';
 import {
-  AbstractControl,
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
@@ -51,7 +50,7 @@ import { MatIcon } from '@angular/material/icon';
 import { tap } from 'rxjs';
 
 @Component({
-  selector: 'cx-create-admin-page',
+  selector: 'app-create-admin-page',
   templateUrl: './create-admin-page.component.html',
   styleUrls: ['./create-admin-page.component.scss'],
   imports: [
@@ -120,10 +119,6 @@ export class CreateAdminPageComponent implements OnInit {
     this.translateService.onLangChange
       .pipe(tap(() => this.loadTranslations()))
       .subscribe();
-  }
-
-  get controls(): { [p: string]: AbstractControl } {
-    return this.createAdminForm.controls;
   }
 
   ngOnInit(): void {

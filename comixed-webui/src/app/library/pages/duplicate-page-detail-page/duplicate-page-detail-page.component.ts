@@ -68,7 +68,7 @@ import { PageHashUrlPipe } from '../../../comic-books/pipes/page-hash-url.pipe';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-  selector: 'cx-duplicate-page-detail-page',
+  selector: 'app-duplicate-page-detail-page',
   templateUrl: './duplicate-page-detail-page.component.html',
   styleUrls: ['./duplicate-page-detail-page.component.scss'],
   imports: [

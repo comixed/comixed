@@ -40,7 +40,7 @@ import { TitleService } from '@app/core/services/title.service';
 import { AsyncPipe, DatePipe, KeyValuePipe } from '@angular/common';
 
 @Component({
-  selector: 'cx-batch-process-detail-page',
+  selector: 'app-batch-process-detail-page',
   templateUrl: './batch-process-detail-page.component.html',
   styleUrls: ['./batch-process-detail-page.component.scss'],
   imports: [DatePipe, KeyValuePipe, TranslateModule, AsyncPipe]
@@ -92,13 +92,16 @@ export class BatchProcessDetailPageComponent implements OnInit {
             const topic = interpolate(BATCH_PROCESS_DETAIL_UPDATE_TOPIC, {
               jobId: this.jobId$.value
             });
-            this.webSocketService.subscribe(topic, update => {
-              this.logger.debug(
-                'Received batch process detail update:',
-                update
-              );
-              this.store.dispatch(setBatchProcessDetail({ detail: update }));
-            });
+            this.webSocketService.subscribe(
+              topic,
+              (detail: BatchProcessDetail) => {
+                this.logger.debug(
+                  'Received batch process detail update:',
+                  detail
+                );
+                this.store.dispatch(setBatchProcessDetail({ detail }));
+              }
+            );
           }
         })
       )

@@ -55,7 +55,7 @@ export class UserEffects {
     return this.actions$.pipe(
       ofType(loadCurrentUser),
       tap(action => this.logger.debug('Effect: loading current user:', action)),
-      switchMap(action =>
+      switchMap(() =>
         this.userService.loadCurrentUser().pipe(
           tap(response => this.logger.debug('Received response:', response)),
           mergeMap((response: User) => [
@@ -150,10 +150,7 @@ export class UserEffects {
             tap((response: LoginResponse) =>
               this.tokenService.setAuthToken(response.token)
             ),
-            mergeMap((response: LoginResponse) => [
-              loginUserSuccess(),
-              loadCurrentUser()
-            ]),
+            mergeMap(() => [loginUserSuccess(), loadCurrentUser()]),
             catchError(error => {
               this.logger.error('Service failure:', error);
               this.tokenService.clearAuthToken();

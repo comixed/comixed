@@ -97,7 +97,7 @@ import { SelectionOption } from '@app/core/models/ui/selection-option';
 import { MatInput } from '@angular/material/input';
 
 @Component({
-  selector: 'cx-import-comics',
+  selector: 'app-import-comics',
   templateUrl: './import-comics-page.component.html',
   styleUrls: ['./import-comics-page.component.scss'],
   imports: [
@@ -357,7 +357,7 @@ export class ImportComicsPageComponent implements OnInit, AfterViewInit {
   }
 
   private updateDisplayedFilesAndSelections(): void {
-    if (!!this.currentPath$.value) {
+    if (this.currentPath$.value) {
       this.logger.info(
         'Showing comic files from group:',
         this.currentPath$.value

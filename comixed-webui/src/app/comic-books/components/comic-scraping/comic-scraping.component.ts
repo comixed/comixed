@@ -87,7 +87,7 @@ import { CommonModule } from '@angular/common';
 import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 
 @Component({
-  selector: 'cx-comic-scraping',
+  selector: 'app-comic-scraping',
   templateUrl: './comic-scraping.component.html',
   styleUrls: ['./comic-scraping.component.scss'],
   imports: [

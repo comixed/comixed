@@ -84,7 +84,6 @@ describe('DisplayableComicService', () => {
   const ARCHIVE_TYPE = ArchiveType.CB7;
   const COMIC_TYPE = ComicType.ISSUE;
   const COMIC_STATE = ComicState.UNPROCESSED;
-  const SELECTED_STATE = Math.random() > 0.5;
   const MISSING_STATE = Math.random() > 0.5;
   const SCRAPED_STATE = Math.random() > 0.5;
   const SEARCH_TEXT = 'This is some text';
@@ -156,20 +155,20 @@ describe('DisplayableComicService', () => {
     beforeEach(() => {
       webSocketService.requestResponse.and.callFake(
         (message, body, destination, callback) => {
-          callback(COMIC_ADDED);
+          callback(COMIC_ADDED as any);
           return {} as Subscription;
         }
       );
       webSocketService.subscribe
         .withArgs(COMIC_LIST_UPDATE_TOPIC, jasmine.anything())
         .and.callFake((destination, callback) => {
-          callback(COMIC_ADDED);
+          callback(COMIC_ADDED as any);
           return {} as Subscription;
         });
       webSocketService.subscribe
         .withArgs(COMIC_LIST_REMOVAL_TOPIC, jasmine.anything())
         .and.callFake((destination, callback) => {
-          callback(COMIC_REMOVED);
+          callback(COMIC_REMOVED as any);
           return {} as Subscription;
         });
       store.setState({

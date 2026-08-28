@@ -71,7 +71,7 @@ export class UpdateMetadataEffects {
     return this.actions$.pipe(
       ofType(updateSelectedComicBooksMetadata),
       tap(action => this.logger.debug('Effect: updating comic info:', action)),
-      switchMap(action =>
+      switchMap(() =>
         this.libraryService.updateSelectedComicBooksMetadata().pipe(
           tap(response => this.logger.debug('Response received:', response)),
           tap(() =>

@@ -79,7 +79,7 @@ export class BatchProcessesEffects {
     return this.actions$.pipe(
       ofType(deleteCompletedBatchJobs),
       tap(action => this.logger.trace('Deleting completed jobs:', action)),
-      switchMap(action =>
+      switchMap(() =>
         this.batchProcessService.deleteCompletedJobs().pipe(
           tap(response => this.logger.debug('Response received:', response)),
           tap(() =>

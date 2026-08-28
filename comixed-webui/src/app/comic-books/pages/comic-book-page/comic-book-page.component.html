@@ -185,9 +185,9 @@
           </mat-card-subtitle>
         }
         <mat-card-content>
-          <cx-comic-page
+          <app-comic-page
             [imageUrl]="displayPage | comicPageUrl"
-          ></cx-comic-page>
+          ></app-comic-page>
         </mat-card-content>
         <mat-card-footer class="cx-align-content-center">
           <div>
@@ -233,30 +233,30 @@
         (selectedTabChange)="queryParameterService.onTabChange($event.index)"
       >
         <mat-tab [label]="'comic-book.label.comic-overview' | translate">
-          <cx-comic-detail-edit
+          <app-comic-detail-edit
             [comicBook]="comic$ | async"
             [isAdmin]="isAdmin$ | async"
-          ></cx-comic-detail-edit>
+          ></app-comic-detail-edit>
         </mat-tab>
         <mat-tab [label]="'comic-book.label.comic-story' | translate">
-          <cx-comic-story
+          <app-comic-story
             [comic]="comic$ | async"
             [tags]="tags$ | async"
-          ></cx-comic-story>
+          ></app-comic-story>
         </mat-tab>
         <mat-tab [label]="'comic-book.label.comic-pages' | translate">
-          <cx-comic-pages
+          <app-comic-pages
             class="cx-width-100"
             [pages]="pages$ | async"
             [showPagesAsGrid]="queryParameterService.pagesAsGrid$ | async"
             [isAdmin]="isAdmin$ | async"
             (pagesChanged)="onPagesChanged($event)"
-          ></cx-comic-pages>
+          ></app-comic-pages>
         </mat-tab>
         @if (isAdmin$ | async) {
           <mat-tab [label]="'comic-book.label.comic-scraping' | translate">
             @if (!!(comic$ | async) && (volumes$ | async).length === 0) {
-              <cx-comic-scraping
+              <app-comic-scraping
                 class="cx-width-100"
                 [comic]="comic$ | async"
                 [previousMetadataSource]="
@@ -277,10 +277,10 @@
                     matchPublisher: $event.matchPublisher
                   })
                 "
-              ></cx-comic-scraping>
+              ></app-comic-scraping>
             }
             @if ((volumes$ | async).length > 0) {
-              <cx-scraping-volume-selection
+              <app-scraping-volume-selection
                 [comicBook]="comic$ | async"
                 [metadataSource]="metadataSource$ | async"
                 [comicSeriesName]="scrapingSeriesName$ | async"
@@ -290,7 +290,7 @@
                 [pageSize]="pageSize$ | async"
                 [pageNumber]="pageNumber$ | async"
                 [volumes]="volumes$ | async"
-              ></cx-scraping-volume-selection>
+              ></app-scraping-volume-selection>
             }
           </mat-tab>
         }

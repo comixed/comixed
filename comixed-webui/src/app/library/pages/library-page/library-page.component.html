@@ -24,7 +24,7 @@
   }
 </div>
 
-<cx-comic-list-view
+<app-comic-list-view
   [isAdmin]="isAdmin$ | async"
   [comics]="comics$ | async"
   [coverYears]="coverYears$ | async"
@@ -39,4 +39,4 @@
   (selectAll)="onSetAllComicsSelectedState($event)"
   (filtered)="filtered$.next($event)"
   (showing)="showing$.next($event)"
-></cx-comic-list-view>
+></app-comic-list-view>

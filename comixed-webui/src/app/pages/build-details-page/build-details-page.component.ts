@@ -42,7 +42,7 @@ import { tap } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-  selector: 'cx-build-details',
+  selector: 'app-build-details',
   templateUrl: './build-details-page.component.html',
   styleUrls: ['./build-details-page.component.scss'],
   imports: [

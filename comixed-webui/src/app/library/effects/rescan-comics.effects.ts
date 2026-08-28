@@ -66,7 +66,7 @@ export class RescanComicsEffects {
     return this.actions$.pipe(
       ofType(rescanSelectedComicBooks),
       tap(action => this.logger.trace('Rescan selected comic books:', action)),
-      switchMap(action =>
+      switchMap(() =>
         this.libraryService.rescanSelectedComicBooks().pipe(
           tap(response => this.logger.debug('Response received:', response)),
           tap(() =>

@@ -60,7 +60,7 @@ import { PageHashUrlPipe } from '../../../comic-books/pipes/page-hash-url.pipe';
 import { tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'cx-deleted-page-list-page',
+  selector: 'app-deleted-page-list-page',
   templateUrl: './deleted-page-list-page.component.html',
   styleUrls: ['./deleted-page-list-page.component.scss'],
   imports: [

@@ -50,7 +50,7 @@ import { BehaviorSubject } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 
 @Component({
-  selector: 'cx-collection-detail',
+  selector: 'app-collection-detail',
   templateUrl: './collection-detail.component.html',
   styleUrls: ['./collection-detail.component.scss'],
   imports: [ComicListViewComponent, TranslateModule, AsyncPipe]

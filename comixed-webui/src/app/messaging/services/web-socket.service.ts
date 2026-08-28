@@ -84,7 +84,7 @@ export class WebSocketService {
    * @param destination the destination
    * @param callback the callback function
    */
-  subscribe<T>(destination: string, callback: (T) => void): Subscription {
+  subscribe<T>(destination: string, callback: (arg: T) => void): Subscription {
     /* istanbul ignore next */
     this.logger.debug('Subscribing to topic:', destination);
     /* istanbul ignore next */
@@ -113,7 +113,7 @@ export class WebSocketService {
     message: string,
     body: string,
     destination: string,
-    callback: (T) => void
+    callback: (arg: T) => void
   ): Subscription {
     /* istanbul ignore next */
     this.logger.trace('Subscribing to temporary queue:', destination);

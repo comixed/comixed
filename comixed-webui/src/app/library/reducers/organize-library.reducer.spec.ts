@@ -31,8 +31,6 @@ import {
 } from '@app/library/actions/organize-library.actions';
 
 describe('OrganizeLibrary Reducer', () => {
-  const IDS = [1000, 1001, 1002, 1003];
-
   let state: OrganizeLibraryState;
 
   beforeEach(() => {

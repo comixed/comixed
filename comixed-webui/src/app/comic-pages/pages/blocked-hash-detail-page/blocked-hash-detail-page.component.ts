@@ -49,7 +49,7 @@ import { BehaviorSubject } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 
 @Component({
-  selector: 'cx-blocked-hash-detail-page',
+  selector: 'app-blocked-hash-detail-page',
   templateUrl: './blocked-hash-detail-page.component.html',
   styleUrls: ['./blocked-hash-detail-page.component.scss'],
   imports: [

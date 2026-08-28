@@ -34,7 +34,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 
 @Component({
-  selector: 'cx-comic-story',
+  selector: 'app-comic-story',
   templateUrl: './comic-story.component.html',
   styleUrls: ['./comic-story.component.scss'],
   imports: [

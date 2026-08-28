@@ -37,7 +37,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 
 @Component({
-  selector: 'cx-comic-detail-card',
+  selector: 'app-comic-detail-card',
   templateUrl: './comic-detail-card.component.html',
   styleUrls: ['./comic-detail-card.component.scss'],
   imports: [
@@ -58,7 +58,7 @@ export class ComicDetailCardComponent {
   @Input() comic: DisplayableComic;
   @Input() coverTooltip: string;
   @Input() title: string;
-  @Input() subtitle: string = '';
+  @Input() subtitle: string;
   @Input() imageUrl: string;
   @Input() description: string;
   @Input() detailLink: string;
@@ -82,7 +82,7 @@ export class ComicDetailCardComponent {
 
   onCoverClicked(): void {
     // only respond to the click if the details are for a comic
-    if (!!this.comic) {
+    if (this.comic) {
       this.logger.trace('ComicBook cover clicked');
       this.selectionChanged.emit({
         comic: this.comic,

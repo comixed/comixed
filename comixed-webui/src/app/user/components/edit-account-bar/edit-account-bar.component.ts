@@ -29,7 +29,6 @@ import { User } from '@app/user/models/user';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import {
-  AbstractControl,
   ReactiveFormsModule,
   UntypedFormBuilder,
   UntypedFormGroup,
@@ -78,7 +77,7 @@ import { tap } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-  selector: 'cx-edit-account-bar',
+  selector: 'app-edit-account-bar',
   templateUrl: './edit-account-bar.component.html',
   styleUrls: ['./edit-account-bar.component.scss'],
   imports: [
@@ -155,7 +154,7 @@ export class EditAccountBarComponent implements AfterViewInit {
 
   @Input() set user(user: User) {
     this._user = user;
-    if (!!user) {
+    if (user) {
       this.userForm.controls.email.setValue(user.email);
       this.userForm.controls.password.setValue('');
       this.userForm.controls.passwordVerify.setValue('');
@@ -164,10 +163,6 @@ export class EditAccountBarComponent implements AfterViewInit {
     } else {
       this.dataSource.data = [];
     }
-  }
-
-  get controls(): { [p: string]: AbstractControl } {
-    return this.userForm.controls;
   }
 
   ngAfterViewInit(): void {

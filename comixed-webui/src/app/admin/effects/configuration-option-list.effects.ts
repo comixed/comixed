@@ -45,7 +45,7 @@ export class ConfigurationOptionListEffects {
       tap(action =>
         this.logger.debug('Effect: load all configuration options:', action)
       ),
-      switchMap(action =>
+      switchMap(() =>
         this.configurationService.loadAll().pipe(
           tap(response => this.logger.debug('Response received:', response)),
           map((response: ConfigurationOption[]) =>

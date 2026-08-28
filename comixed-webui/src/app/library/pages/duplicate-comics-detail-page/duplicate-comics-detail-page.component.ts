@@ -40,7 +40,7 @@ import { BehaviorSubject } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 
 @Component({
-  selector: 'cx-duplicate-comics-detail-page',
+  selector: 'app-duplicate-comics-detail-page',
   imports: [
     ComicListViewComponent,
     TranslatePipe,
@@ -82,7 +82,7 @@ export class DuplicateComicsDetailPageComponent implements OnInit {
       .subscribe();
     this.activatedRoute.queryParams
       .pipe(
-        tap(params => {
+        tap(() => {
           this.doLoadComicDetails();
         })
       )

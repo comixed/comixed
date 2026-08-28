@@ -72,13 +72,6 @@ import {
 } from '@app/user/reducers/user.reducer';
 import { USER_ADMIN } from '@app/user/user.fixtures';
 import { saveUserPreference } from '@app/user/actions/user.actions';
-import {
-  COMIC_DETAIL_1,
-  COMIC_DETAIL_2,
-  COMIC_DETAIL_3,
-  COMIC_DETAIL_4,
-  COMIC_DETAIL_5
-} from '@app/comic-books/comic-books.fixtures';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { MatSortModule, SortDirection } from '@angular/material/sort';
 import {
@@ -104,13 +97,6 @@ import {
 import { provideRouter } from '@angular/router';
 
 describe('DuplicatePageListPageComponent', () => {
-  const COMICS = [
-    COMIC_DETAIL_1,
-    COMIC_DETAIL_2,
-    COMIC_DETAIL_3,
-    COMIC_DETAIL_4,
-    COMIC_DETAIL_5
-  ];
   const DUPLICATE_PAGES = [
     DUPLICATE_PAGE_1,
     DUPLICATE_PAGE_2,
@@ -142,10 +128,8 @@ describe('DuplicatePageListPageComponent', () => {
   let store: MockStore<any>;
   let webSocketService: jasmine.SpyObj<WebSocketService>;
   let titleService: TitleService;
-  let setTitleSpy: jasmine.Spy<any>;
   let translateService: TranslateService;
   let confirmationService: ConfirmationService;
-  let queryParameterService: QueryParameterService;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -198,10 +182,8 @@ describe('DuplicatePageListPageComponent', () => {
       WebSocketService
     ) as jasmine.SpyObj<WebSocketService>;
     titleService = TestBed.inject(TitleService);
-    setTitleSpy = spyOn(titleService, 'setTitle');
     translateService = TestBed.inject(TranslateService);
     confirmationService = TestBed.inject(ConfirmationService);
-    queryParameterService = TestBed.inject(QueryParameterService);
     fixture.detectChanges();
   }));
 
@@ -211,6 +193,7 @@ describe('DuplicatePageListPageComponent', () => {
 
   describe('language changes', () => {
     beforeEach(() => {
+      spyOn(titleService, 'setTitle');
       translateService.use('fr');
     });
 
@@ -374,7 +357,7 @@ describe('DuplicatePageListPageComponent', () => {
             page: DUPLICATE_PAGE,
             removed: false,
             total: TOTAL_PAGES
-          } as DuplicatePageUpdate);
+          } as DuplicatePageUpdate as any);
           return {} as Subscription;
         });
         store.setState({
@@ -407,7 +390,7 @@ describe('DuplicatePageListPageComponent', () => {
             page: DUPLICATE_PAGE,
             removed: true,
             total: TOTAL_PAGES
-          } as DuplicatePageUpdate);
+          } as DuplicatePageUpdate as any);
           return {} as Subscription;
         });
         store.setState({

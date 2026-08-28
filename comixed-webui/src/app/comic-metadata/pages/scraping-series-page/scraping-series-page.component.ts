@@ -75,7 +75,7 @@ import { BehaviorSubject } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 
 @Component({
-  selector: 'cx-scraping-series-page',
+  selector: 'app-scraping-series-page',
   templateUrl: './scraping-series-page.component.html',
   styleUrls: ['./scraping-series-page.component.scss'],
   imports: [

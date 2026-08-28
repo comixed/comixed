@@ -18,7 +18,7 @@
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FooterComponent } from './footer.component';
-import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { provideMockStore } from '@ngrx/store/testing';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import {
   initialState as initialLibraryState,
@@ -64,7 +64,6 @@ describe('FooterComponent', () => {
   };
   let component: FooterComponent;
   let fixture: ComponentFixture<FooterComponent>;
-  let store: MockStore;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -74,7 +73,6 @@ describe('FooterComponent', () => {
 
     fixture = TestBed.createComponent(FooterComponent);
     component = fixture.componentInstance;
-    store = TestBed.inject(MockStore);
     fixture.detectChanges();
   }));
 

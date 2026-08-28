@@ -63,7 +63,7 @@ import { tap } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-  selector: 'cx-series-metadata-page',
+  selector: 'app-series-metadata-page',
   templateUrl: './series-metadata-page.component.html',
   styleUrls: ['./series-metadata-page.component.scss'],
   imports: [

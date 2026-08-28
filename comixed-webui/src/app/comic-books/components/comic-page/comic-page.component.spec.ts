@@ -24,7 +24,6 @@ import { PAGE_2 } from '@app/comic-pages/comic-pages.fixtures';
 
 describe('ComicPageComponent', () => {
   const PAGE = PAGE_2;
-  const SOURCE = {} as any;
 
   let component: ComicPageComponent;
   let fixture: ComponentFixture<ComicPageComponent>;

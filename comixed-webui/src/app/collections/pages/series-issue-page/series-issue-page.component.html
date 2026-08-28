@@ -10,11 +10,11 @@
   }}
 </h2>
 
-<cx-comic-list-view
+<app-comic-list-view
   [isAdmin]="isAdmin$ | async"
   [comics]="comics$ | async"
   [selectedIds]="selectedIds$ | async"
   [totalComics]="totalComics$ | async"
   [showFilter]="false"
   (selectAll)="onSelectAll($event)"
-></cx-comic-list-view>
+></app-comic-list-view>

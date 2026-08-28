@@ -38,7 +38,9 @@ describe('DownloadReadingList Reducer', () => {
   });
 
   describe('the initial state', () => {
-    beforeEach(() => {});
+    beforeEach(() => {
+      /* test */
+    });
 
     it('clears the download flag', () => {
       expect(state.downloading).toBeFalse();

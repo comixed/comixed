@@ -30,7 +30,7 @@ import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
-  selector: 'cx-selected-comics',
+  selector: 'app-selected-comics',
   templateUrl: './selected-comics.component.html',
   styleUrls: ['./selected-comics.component.scss'],
   imports: [

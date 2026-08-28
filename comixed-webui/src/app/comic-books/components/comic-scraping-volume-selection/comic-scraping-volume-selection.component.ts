@@ -91,7 +91,7 @@ export const NO_MATCH = 0;
 export const NO_MATCH_TEXT = 'scraping.text.no-match';
 
 @Component({
-  selector: 'cx-scraping-volume-selection',
+  selector: 'app-scraping-volume-selection',
   templateUrl: './comic-scraping-volume-selection.html',
   styleUrls: ['./comic-scraping-volume-selection.scss'],
   imports: [
@@ -267,7 +267,7 @@ export class ComicScrapingVolumeSelectionComponent implements AfterViewInit {
     } else {
       this.selectedVolume$.next(volume);
     }
-    if (!!this.selectedVolume$.value) {
+    if (this.selectedVolume$.value) {
       this.store.dispatch(
         loadIssueMetadata({
           metadataSource: this.metadataSource,
@@ -279,7 +279,7 @@ export class ComicScrapingVolumeSelectionComponent implements AfterViewInit {
     }
   }
 
-  onDecision(decision: boolean, volume: VolumeMetadata): void {
+  onDecision(decision: boolean): void {
     this.logger.trace(
       `Scraping issue was ${decision ? 'accepted' : 'rejected'}`
     );

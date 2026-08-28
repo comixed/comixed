@@ -67,7 +67,7 @@ import { AsyncPipe, DatePipe } from '@angular/common';
 import { tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'cx-batch-process-list-page',
+  selector: 'app-batch-process-list-page',
   templateUrl: './batch-process-list-page.component.html',
   styleUrls: ['./batch-process-list-page.component.scss'],
   imports: [

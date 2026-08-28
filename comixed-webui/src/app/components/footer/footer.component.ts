@@ -35,7 +35,7 @@ import { BehaviorSubject } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 
 @Component({
-  selector: 'cx-footer',
+  selector: 'app-footer',
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.scss'],
   imports: [RouterModule, TranslateModule, AsyncPipe]
@@ -60,7 +60,7 @@ export class FooterComponent {
   @Input() set user(user: User) {
     this._user = user;
 
-    if (!!this._user) {
+    if (this._user) {
       this.store
         .select(selectLibraryTotalComicCount)
         .pipe(tap(totalComics => this.comicCount$.next(totalComics)))

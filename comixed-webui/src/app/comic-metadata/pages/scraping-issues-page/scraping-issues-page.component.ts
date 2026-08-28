@@ -88,7 +88,7 @@ import { filter, tap } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-  selector: 'cx-scraping-issues-page',
+  selector: 'app-scraping-issues-page',
   templateUrl: './scraping-issues-page.component.html',
   styleUrls: ['./scraping-issues-page.component.scss'],
   imports: [
@@ -257,7 +257,7 @@ export class ScrapingIssuesPageComponent implements OnInit {
       .subscribe();
     this.activatedRoute.queryParams
       .pipe(
-        tap(params => {
+        tap(() => {
           this.store.dispatch(
             loadMultiBookScrapingPage({
               pageSize: this.queryParameterService.pageSize$.value,

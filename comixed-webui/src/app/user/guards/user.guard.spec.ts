@@ -68,8 +68,8 @@ describe('UserGuard', () => {
     });
 
     it('defers access', () => {
-      (guard.canActivate(null, null) as Observable<boolean>).subscribe(
-        response => expect(response).toBeTrue()
+      (guard.canActivate() as Observable<boolean>).subscribe(response =>
+        expect(response).toBeTrue()
       );
     });
 
@@ -104,7 +104,7 @@ describe('UserGuard', () => {
     });
 
     it('denies access', () => {
-      expect(guard.canActivate(null, null)).toBeFalse();
+      expect(guard.canActivate()).toBeFalse();
     });
   });
 
@@ -122,7 +122,7 @@ describe('UserGuard', () => {
     });
 
     it('allows access', () => {
-      expect(guard.canActivate(null, null)).toBeTrue();
+      expect(guard.canActivate()).toBeTrue();
     });
   });
 });

@@ -65,8 +65,8 @@ describe('ReaderGuard', () => {
     });
 
     it('defers access', () => {
-      (guard.canActivate(null, null) as Observable<boolean>).subscribe(
-        response => expect(response).toBeTrue()
+      (guard.canActivate() as Observable<boolean>).subscribe(response =>
+        expect(response).toBeTrue()
       );
     });
 
@@ -99,7 +99,7 @@ describe('ReaderGuard', () => {
     });
 
     it('denies access', () => {
-      expect(guard.canActivate(null, null)).toBeFalse();
+      expect(guard.canActivate()).toBeFalse();
     });
   });
 
@@ -120,7 +120,7 @@ describe('ReaderGuard', () => {
     });
 
     it('denies access', () => {
-      expect(guard.canActivate(null, null)).toBeFalse();
+      expect(guard.canActivate()).toBeFalse();
     });
   });
 
@@ -137,7 +137,7 @@ describe('ReaderGuard', () => {
     });
 
     it('allows access', () => {
-      expect(guard.canActivate(null, null)).toBeTrue();
+      expect(guard.canActivate()).toBeTrue();
     });
   });
 
@@ -154,7 +154,7 @@ describe('ReaderGuard', () => {
     });
 
     it('allows access', () => {
-      expect(guard.canActivate(null, null)).toBeTrue();
+      expect(guard.canActivate()).toBeTrue();
     });
   });
 });

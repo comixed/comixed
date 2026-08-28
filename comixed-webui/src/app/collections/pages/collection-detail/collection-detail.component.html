@@ -9,7 +9,7 @@
   }}
 </h2>
 
-<cx-comic-list-view
+<app-comic-list-view
   class="cx-width-100"
   [isAdmin]="isAdmin$ | async"
   [comics]="comics$ | async"
@@ -21,4 +21,4 @@
   [readingLists]="readingLists$ | async"
   [showAction]="false"
   (selectAll)="onSelectAll($event)"
-></cx-comic-list-view>
+></app-comic-list-view>

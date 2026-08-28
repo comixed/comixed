@@ -43,7 +43,6 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import {
-  COMIC_BOOK_3,
   DISPLAYABLE_COMIC_1,
   DISPLAYABLE_COMIC_2,
   DISPLAYABLE_COMIC_3,
@@ -79,7 +78,6 @@ import { BehaviorSubject } from 'rxjs';
 describe('ScrapingIssuesPageComponent', () => {
   const USER = USER_READER;
   const DISPLAYABLE_COMIC = DISPLAYABLE_COMIC_3;
-  const COMIC_BOOK = COMIC_BOOK_3;
   const COMIC_BOOKS = [
     DISPLAYABLE_COMIC_1,
     DISPLAYABLE_COMIC_2,
@@ -110,7 +108,6 @@ describe('ScrapingIssuesPageComponent', () => {
   let translateService: TranslateService;
   let titleService: TitleService;
   let store: MockStore<any>;
-  let queryParameterService: jasmine.SpyObj<QueryParameterService>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -148,9 +145,6 @@ describe('ScrapingIssuesPageComponent', () => {
     spyOn(titleService, 'setTitle');
     store = TestBed.inject(MockStore);
     spyOn(store, 'dispatch');
-    queryParameterService = TestBed.inject(
-      QueryParameterService
-    ) as jasmine.SpyObj<QueryParameterService>;
     fixture.detectChanges();
   }));
 
@@ -211,7 +205,6 @@ describe('ScrapingIssuesPageComponent', () => {
   describe('showing the cover of different comic in a popup', () => {
     beforeEach(() => {
       component.showPopup$.next(false);
-      component.popupComic$.value;
       component.onShowPopup(true, DISPLAYABLE_COMIC);
     });
 

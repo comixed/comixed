@@ -23,7 +23,6 @@ import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TitleService } from '@app/core/services/title.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import {
-  PUBLISHER_3,
   SERIES_1,
   SERIES_3,
   SERIES_5
@@ -42,7 +41,6 @@ import { provideRouter } from '@angular/router';
 
 describe('PublisherSeriesPageComponent', () => {
   const initialState = { [PUBLISHER_FEATURE_KEY]: initialPublisherState };
-  const PUBLISHER = PUBLISHER_3;
   const DETAIL = [SERIES_1, SERIES_3, SERIES_5];
 
   let component: PublisherSeriesPageComponent;

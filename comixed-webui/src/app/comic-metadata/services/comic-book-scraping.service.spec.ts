@@ -19,7 +19,6 @@
 import { TestBed } from '@angular/core/testing';
 import { ComicBookScrapingService } from './comic-book-scraping.service';
 import {
-  COMIC_DETAIL_1,
   DISPLAYABLE_COMIC_1,
   DISPLAYABLE_COMIC_2,
   DISPLAYABLE_COMIC_3,
@@ -98,7 +97,6 @@ describe('ComicBookScrapingService', () => {
   const VOLUME_ID = SCRAPING_VOLUME_1.id;
   const ISSUE_NUMBER = '27';
   const COMIC_BOOK = DISPLAYABLE_COMIC_1;
-  const COMIC_DETAIL = COMIC_DETAIL_1;
   const COMIC_BOOKS = [
     DISPLAYABLE_COMIC_1,
     DISPLAYABLE_COMIC_2,

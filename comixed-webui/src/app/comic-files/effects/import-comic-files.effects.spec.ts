@@ -20,12 +20,6 @@ import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of, throwError } from 'rxjs';
 import { ImportComicFilesEffects } from './import-comic-files.effects';
-import {
-  COMIC_FILE_1,
-  COMIC_FILE_2,
-  COMIC_FILE_3,
-  COMIC_FILE_4
-} from '@app/comic-files/comic-file.fixtures';
 import { ComicImportService } from '@app/comic-files/services/comic-import.service';
 import { AlertService } from '@app/core/services/alert.service';
 import { TranslateModule } from '@ngx-translate/core';
@@ -41,10 +35,6 @@ import { hot } from 'jasmine-marbles';
 import { resetComicFileList } from '@app/comic-files/actions/comic-file-list.actions';
 
 describe('ImportComicFilesEffects', () => {
-  const FILES = [COMIC_FILE_1, COMIC_FILE_2, COMIC_FILE_3, COMIC_FILE_4];
-  const SKIP_METADATA = Math.random() > 0.5;
-  const SKIP_BLOCKING_PAGES = Math.random() > 0.5;
-
   let actions$: Observable<any>;
   let effects: ImportComicFilesEffects;
   let comicImportService: jasmine.SpyObj<ComicImportService>;

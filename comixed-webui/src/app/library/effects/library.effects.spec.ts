@@ -30,7 +30,7 @@ import {
   DISPLAYABLE_COMIC_3
 } from '@app/comic-books/comic-books.fixtures';
 import { EditMultipleComics } from '@app/library/models/ui/edit-multiple-comics';
-import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import {
   editMultipleComics,
   editMultipleComicsFailed,
@@ -118,7 +118,7 @@ describe('LibraryEffects', () => {
 
       actions$ = hot('-a', { a: action });
       libraryService.loadLibraryState.and.returnValue(
-        throwError(serviceResponse)
+        throwError(() => serviceResponse)
       );
 
       const expected = hot('-b', { b: outcome });
@@ -141,7 +141,6 @@ describe('LibraryEffects', () => {
 
   describe('editing multiple comics', () => {
     it('fires an action on success', () => {
-      const serviceResponse = new HttpResponse({ status: 200 });
       const action = editMultipleComics({
         ids: IDS,
         details: COMIC_DETAILS
@@ -162,7 +161,6 @@ describe('LibraryEffects', () => {
     });
 
     it('fires an action on service failure', () => {
-      const serviceResponse = new HttpErrorResponse({});
       const action = editMultipleComics({
         ids: IDS,
         details: COMIC_DETAILS
@@ -175,7 +173,7 @@ describe('LibraryEffects', () => {
           ids: IDS,
           details: COMIC_DETAILS
         })
-        .and.returnValue(throwError(outcome));
+        .and.returnValue(throwError(() => outcome));
 
       const expected = hot('-b', { b: outcome });
       expect(effects.editMultipleComics$).toBeObservable(expected);

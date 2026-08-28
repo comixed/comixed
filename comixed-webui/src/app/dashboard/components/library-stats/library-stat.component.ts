@@ -33,7 +33,7 @@ import {
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-  selector: 'cx-library-stats',
+  selector: 'app-library-stats',
   imports: [
     AsyncPipe,
     MatCard,

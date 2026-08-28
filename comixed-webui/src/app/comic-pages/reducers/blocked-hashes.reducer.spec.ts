@@ -58,7 +58,6 @@ import {
 } from '@app/comic-pages/comic-pages.fixtures';
 
 describe('BlockedHashes Reducer', () => {
-  const DOWNLOADED_FILE = BLOCKED_PAGE_FILE;
   const UPLOADED_FILE = {} as File;
   const ENTRIES = [BLOCKED_HASH_1, BLOCKED_HASH_3, BLOCKED_HASH_5];
   const HASHES = ENTRIES.map(entry => entry.hash);

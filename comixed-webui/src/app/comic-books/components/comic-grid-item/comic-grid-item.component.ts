@@ -43,7 +43,7 @@ import { Router } from '@angular/router';
 import { LoggerService } from '@angular-ru/cdk/logger';
 
 @Component({
-  selector: 'cx-comic-grid-item',
+  selector: 'app-comic-grid-item',
   imports: [
     ComicPageComponent,
     ComicCoverUrlPipe,

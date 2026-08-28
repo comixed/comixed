@@ -22,7 +22,7 @@ import {
   DUPLICATE_COMICS_FEATURE_KEY,
   initialState as initialDuplicateComicState
 } from '@app/library/reducers/duplicate-comics.reducer';
-import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { provideMockStore } from '@ngrx/store/testing';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { Router, RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -37,7 +37,6 @@ describe('DuplicateComicsListPageComponent', () => {
 
   let component: DuplicateComicsListPageComponent;
   let fixture: ComponentFixture<DuplicateComicsListPageComponent>;
-  let store: MockStore;
   let translateService: TranslateService;
   let titleService: TitleService;
   let router: Router;
@@ -56,7 +55,6 @@ describe('DuplicateComicsListPageComponent', () => {
     fixture = TestBed.createComponent(DuplicateComicsListPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    store = TestBed.inject(MockStore);
     translateService = TestBed.inject(TranslateService);
     titleService = TestBed.inject(TitleService);
     spyOn(titleService, 'setTitle');

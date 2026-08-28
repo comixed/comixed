@@ -49,7 +49,7 @@ export class OrganizeLibraryEffects {
       tap(action =>
         this.logger.trace('Effect: start library organization:', action)
       ),
-      switchMap(action =>
+      switchMap(() =>
         this.libraryService.startLibraryOrganization().pipe(
           tap(response => this.logger.debug('Response received:', response)),
           map(() =>
@@ -87,7 +87,7 @@ export class OrganizeLibraryEffects {
       tap(action =>
         this.logger.trace('Effect: start entire library organization:', action)
       ),
-      switchMap(action =>
+      switchMap(() =>
         this.libraryService.startEntireLibraryOrganization().pipe(
           tap(response => this.logger.debug('Response received:', response)),
           map(() =>

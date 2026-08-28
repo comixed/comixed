@@ -57,7 +57,7 @@ import { CommonModule } from '@angular/common';
 import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 
 @Component({
-  selector: 'cx-comic-detail-edit',
+  selector: 'app-comic-detail-edit',
   templateUrl: './comic-detail-edit.component.html',
   styleUrls: ['./comic-detail-edit.component.scss'],
   imports: [
@@ -178,12 +178,12 @@ export class ComicDetailEditComponent implements OnInit {
     this.comicBookForm.controls.imprint.setValue(comic.imprint);
     this.comicBookForm.controls.sortName.setValue(comic.sortName);
     this.comicBookForm.controls.title.setValue(comic.title);
-    if (!!comic.coverDate) {
+    if (comic.coverDate) {
       this.comicBookForm.controls.coverDate.setValue(new Date(comic.coverDate));
     } else {
       this.comicBookForm.controls.coverDate.setValue(null);
     }
-    if (!!comic.storeDate) {
+    if (comic.storeDate) {
       this.comicBookForm.controls.storeDate.setValue(new Date(comic.storeDate));
     } else {
       this.comicBookForm.controls.storeDate.setValue(null);

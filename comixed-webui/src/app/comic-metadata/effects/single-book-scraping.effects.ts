@@ -148,7 +148,7 @@ export class SingleBookScrapingEffects {
           })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
-            tap(response =>
+            tap(() =>
               this.alertService.info(
                 this.translateService.instant(
                   'scraping.scrape-comic.effect-success'

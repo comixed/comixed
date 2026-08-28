@@ -84,7 +84,7 @@
   </form>
 </div>
 
-<cx-comic-list-view
+<app-comic-list-view
   [comics]="comics$ | async"
   [totalComics]="readingList?.entryIds?.length"
   [selectedIds]="selectedIds$ | async"
@@ -94,4 +94,4 @@
   [showComicState]="false"
   [showAddedDate]="false"
   (selectAll)="this.onSelectAll($event)"
-></cx-comic-list-view>
+></app-comic-list-view>

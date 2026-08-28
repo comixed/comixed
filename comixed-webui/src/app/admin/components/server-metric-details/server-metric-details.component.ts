@@ -22,7 +22,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MetricMeasurementPipe } from '../../pipes/metric-measurement.pipe';
 
 @Component({
-  selector: 'cx-metric-details',
+  selector: 'app-metric-details',
   templateUrl: './server-metric-details.component.html',
   styleUrls: ['./server-metric-details.component.scss'],
   imports: [TranslateModule, MetricMeasurementPipe]

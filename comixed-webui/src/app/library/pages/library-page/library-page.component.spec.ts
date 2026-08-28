@@ -46,12 +46,6 @@ import {
   Router
 } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
-import {
-  COMIC_DETAIL_1,
-  COMIC_DETAIL_2,
-  COMIC_DETAIL_3,
-  COMIC_DETAIL_5
-} from '@app/comic-books/comic-books.fixtures';
 import { ArchiveTypePipe } from '@app/library/pipes/archive-type.pipe';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
@@ -104,37 +98,11 @@ import {
 } from '@app/comic-books/reducers/comic-list.reducer';
 
 describe('LibraryPageComponent', () => {
-  const ONE_DAY = 24 * 60 * 60 * 100;
   const PAGE_SIZE = PAGE_SIZE_DEFAULT * 2;
   const USER = {
     ...USER_READER,
     preferences: [{ name: PREFERENCE_PAGE_SIZE, value: `${PAGE_SIZE}` }]
   };
-  const PAGE_INDEX = 23;
-  const DATE = new Date();
-  const COMIC_DETAILS = [
-    {
-      ...COMIC_DETAIL_1,
-      coverDate: new Date(DATE.getTime() - 365 * ONE_DAY).getTime(), // last year
-      archiveType: ArchiveType.CB7
-    },
-    {
-      ...COMIC_DETAIL_2,
-      coverDate: new Date(DATE.getTime() - 6 * 30 * ONE_DAY).getTime(), // six months ago
-      archiveType: ArchiveType.CB7
-    },
-    {
-      ...COMIC_DETAIL_3,
-      coverDate: new Date(DATE.getTime() - (2 * 365 + 30) * ONE_DAY).getTime(), // two years and a month
-      archiveType: ArchiveType.CBR
-    },
-    {
-      ...COMIC_DETAIL_5,
-      coverDate: new Date(DATE.getTime() - 10 * 365 * ONE_DAY).getTime(),
-      archiveType: ArchiveType.CBZ
-    }
-  ];
-  const IDS = COMIC_DETAILS.map(entry => entry.comicBookId);
   const initialState = {
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER },
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
@@ -152,7 +120,6 @@ describe('LibraryPageComponent', () => {
   let titleService: TitleService;
   let activatedRoute: ActivatedRoute;
   let queryParameterService: jasmine.SpyObj<QueryParameterService>;
-  let confirmationService: ConfirmationService;
   let router: Router;
 
   beforeEach(waitForAsync(() => {
@@ -190,10 +157,10 @@ describe('LibraryPageComponent', () => {
         {
           provide: ActivatedRoute,
           useValue: {
-            data: new BehaviorSubject<{}>({}),
+            data: new BehaviorSubject<any>({} as any),
             snapshot: {} as ActivatedRouteSnapshot,
-            queryParams: new BehaviorSubject<{}>({}),
-            params: new BehaviorSubject<{}>({})
+            queryParams: new BehaviorSubject<any>({} as any),
+            params: new BehaviorSubject<any>({} as any)
           }
         },
         TitleService,
@@ -232,7 +199,6 @@ describe('LibraryPageComponent', () => {
     queryParameterService = TestBed.inject(
       QueryParameterService
     ) as jasmine.SpyObj<QueryParameterService>;
-    confirmationService = TestBed.inject(ConfirmationService);
     router = TestBed.inject(Router);
     spyOn(router, 'navigate');
     fixture.detectChanges();
@@ -253,7 +219,7 @@ describe('LibraryPageComponent', () => {
 
     describe('when showing selected comics', () => {
       beforeEach(() => {
-        (activatedRoute.data as BehaviorSubject<{}>).next({
+        (activatedRoute.data as BehaviorSubject<any>).next({
           selected: true
         });
       });
@@ -265,7 +231,7 @@ describe('LibraryPageComponent', () => {
 
     describe('when showing unprocessed comics', () => {
       beforeEach(() => {
-        (activatedRoute.data as BehaviorSubject<{}>).next({
+        (activatedRoute.data as BehaviorSubject<any>).next({
           unprocessed: true
         });
       });
@@ -277,7 +243,7 @@ describe('LibraryPageComponent', () => {
 
     describe('when showing unread comics', () => {
       beforeEach(() => {
-        (activatedRoute.data as BehaviorSubject<{}>).next({ unread: true });
+        (activatedRoute.data as BehaviorSubject<any>).next({ unread: true });
       });
 
       it('sets the unread only flag', () => {
@@ -287,7 +253,7 @@ describe('LibraryPageComponent', () => {
 
     describe('when showing unscraped comics', () => {
       beforeEach(() => {
-        (activatedRoute.data as BehaviorSubject<{}>).next({ unscraped: true });
+        (activatedRoute.data as BehaviorSubject<any>).next({ unscraped: true });
       });
 
       it('sets the unscraped only flag', () => {
@@ -297,7 +263,7 @@ describe('LibraryPageComponent', () => {
 
     describe('when changedOnly unscraped comics', () => {
       beforeEach(() => {
-        (activatedRoute.data as BehaviorSubject<{}>).next({ changed: true });
+        (activatedRoute.data as BehaviorSubject<any>).next({ changed: true });
       });
 
       it('sets the unscraped only flag', () => {
@@ -307,7 +273,7 @@ describe('LibraryPageComponent', () => {
 
     describe('when showing deleted comics', () => {
       beforeEach(() => {
-        (activatedRoute.data as BehaviorSubject<{}>).next({ deleted: true });
+        (activatedRoute.data as BehaviorSubject<any>).next({ deleted: true });
       });
 
       it('sets the deleted only flag', () => {
@@ -317,7 +283,7 @@ describe('LibraryPageComponent', () => {
 
     describe('when showing missing comics', () => {
       beforeEach(() => {
-        (activatedRoute.data as BehaviorSubject<{}>).next({ missing: true });
+        (activatedRoute.data as BehaviorSubject<any>).next({ missing: true });
       });
 
       it('sets the missing only flag', () => {
@@ -387,7 +353,7 @@ describe('LibraryPageComponent', () => {
     describe('for unprocessed comics', () => {
       beforeEach(() => {
         component.unprocessedOnly$.next(true);
-        (activatedRoute.queryParams as BehaviorSubject<{}>).next({
+        (activatedRoute.queryParams as BehaviorSubject<any>).next({
           foo: 'bar'
         });
       });
@@ -420,7 +386,7 @@ describe('LibraryPageComponent', () => {
     describe('for deleted comics', () => {
       beforeEach(() => {
         component.deletedOnly$.next(true);
-        (activatedRoute.queryParams as BehaviorSubject<{}>).next({
+        (activatedRoute.queryParams as BehaviorSubject<any>).next({
           foo: 'bar'
         });
       });
@@ -453,7 +419,7 @@ describe('LibraryPageComponent', () => {
     describe('for changed comics', () => {
       beforeEach(() => {
         component.changedOnly$.next(true);
-        (activatedRoute.queryParams as BehaviorSubject<{}>).next({
+        (activatedRoute.queryParams as BehaviorSubject<any>).next({
           foo: 'bar'
         });
       });
@@ -486,7 +452,7 @@ describe('LibraryPageComponent', () => {
     describe('for unread comics', () => {
       beforeEach(() => {
         component.unreadOnly$.next(true);
-        (activatedRoute.queryParams as BehaviorSubject<{}>).next({
+        (activatedRoute.queryParams as BehaviorSubject<any>).next({
           [QUERY_PARAM_UNREAD_ONLY]: `${false}`
         });
       });
@@ -506,7 +472,7 @@ describe('LibraryPageComponent', () => {
     describe('for read comics', () => {
       beforeEach(() => {
         component.unreadOnly$.next(true);
-        (activatedRoute.queryParams as BehaviorSubject<{}>).next({
+        (activatedRoute.queryParams as BehaviorSubject<any>).next({
           [QUERY_PARAM_UNREAD_ONLY]: `${true}`
         });
       });
@@ -525,7 +491,7 @@ describe('LibraryPageComponent', () => {
 
     describe('for all comics', () => {
       beforeEach(() => {
-        (activatedRoute.queryParams as BehaviorSubject<{}>).next({
+        (activatedRoute.queryParams as BehaviorSubject<any>).next({
           foo: 'bar'
         });
       });

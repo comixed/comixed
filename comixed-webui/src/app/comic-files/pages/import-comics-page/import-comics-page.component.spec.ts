@@ -101,7 +101,6 @@ describe('ImportComicsPageComponent', () => {
     }
   ];
   const FILE = COMIC_FILE_3;
-  const PAGE_SIZE = 400;
   const BLOCKED_PAGES_ENABLED_FEATURE_ENABLED = Math.random() > 0.5;
 
   const initialState = {

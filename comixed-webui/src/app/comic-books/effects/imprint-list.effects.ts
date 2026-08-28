@@ -43,7 +43,7 @@ export class ImprintListEffects {
     return this.actions$.pipe(
       ofType(loadImprints),
       tap(action => this.logger.trace('Loading all imports:', action)),
-      switchMap(action =>
+      switchMap(() =>
         this.imprintService.loadAll().pipe(
           tap(response => this.logger.debug('Response received:', response)),
           map((response: Imprint[]) => imprintsLoaded({ entries: response })),

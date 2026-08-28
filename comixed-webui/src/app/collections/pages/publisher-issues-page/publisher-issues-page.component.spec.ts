@@ -111,8 +111,8 @@ describe('PublisherIssuesPageComponent', () => {
         {
           provide: ActivatedRoute,
           useValue: {
-            params: new BehaviorSubject<{}>({ name: PUBLISHER_NAME }),
-            queryParams: new BehaviorSubject<{}>({})
+            params: new BehaviorSubject<any>({ name: PUBLISHER_NAME }),
+            queryParams: new BehaviorSubject<any>({})
           }
         },
         TitleService
@@ -140,10 +140,10 @@ describe('PublisherIssuesPageComponent', () => {
 
     beforeEach(() => {
       storeDispatchSpy.calls.reset();
-      (queryParameterService.pageIndex$ as BehaviorSubject<{}>).next(
+      (queryParameterService.pageIndex$ as BehaviorSubject<any>).next(
         PAGE_NUMBER
       );
-      (activatedRoute.queryParams as BehaviorSubject<{}>).next({
+      (activatedRoute.queryParams as BehaviorSubject<any>).next({
         [QUERY_PARAM_PAGE_INDEX]: PAGE_NUMBER
       });
     });

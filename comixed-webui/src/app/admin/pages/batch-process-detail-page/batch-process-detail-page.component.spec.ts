@@ -28,9 +28,8 @@ import {
 } from '@app/admin/reducers/batch-processes.reducer';
 import { BATCH_PROCESS_DETAIL_1 } from '@app/admin/admin.fixtures';
 import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { WebSocketService } from '@app/messaging';
-import { Subscription } from 'rxjs';
 import {
   initialState as initialMessagingState,
   MESSAGING_FEATURE_KEY
@@ -70,10 +69,10 @@ describe('BatchProcessDetailDialogComponent', () => {
         {
           provide: ActivatedRoute,
           useValue: {
-            params: new BehaviorSubject<{}>({
+            params: new BehaviorSubject<any>({
               jobId: `${DETAIL.jobId}`
             }),
-            queryParams: new BehaviorSubject<{}>({}),
+            queryParams: new BehaviorSubject<any>({}),
             snapshot: {} as ActivatedRouteSnapshot
           }
         },
@@ -109,7 +108,7 @@ describe('BatchProcessDetailDialogComponent', () => {
     beforeEach(() => {
       component.detail$.next(DETAIL);
       webSocketService.subscribe.and.callFake((topic, callback) => {
-        callback(DETAIL);
+        callback(DETAIL as any);
         return {} as Subscription;
       });
       store.setState({

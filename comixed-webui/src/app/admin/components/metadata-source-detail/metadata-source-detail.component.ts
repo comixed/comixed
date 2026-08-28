@@ -19,7 +19,6 @@
 import { Component, inject, Input } from '@angular/core';
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 import {
-  AbstractControl,
   ReactiveFormsModule,
   UntypedFormArray,
   UntypedFormBuilder,
@@ -52,7 +51,7 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { MatButton } from '@angular/material/button';
 
 @Component({
-  selector: 'cx-metadata-source-detail',
+  selector: 'app-metadata-source-detail',
   templateUrl: './metadata-source-detail.component.html',
   styleUrls: ['./metadata-source-detail.component.scss'],
   imports: [
@@ -117,10 +116,6 @@ export class MetadataSourceDetailComponent {
 
   get properties(): UntypedFormArray {
     return this.sourceForm.controls.properties as UntypedFormArray;
-  }
-
-  get controls(): { [p: string]: AbstractControl } {
-    return this.sourceForm.controls;
   }
 
   addSourceProperty(name: string, value: string): void {

@@ -19,7 +19,6 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, mergeMap, switchMap, tap } from 'rxjs/operators';
-import * as MetadataSourceListActions from '../actions/metadata-source-list.actions';
 import {
   loadMetadataSources,
   loadMetadataSourcesFailed,

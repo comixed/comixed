@@ -22,7 +22,7 @@
   </div>
 }
 @if ((showStoryScraping$ | async) === false) {
-  <cx-comic-list-view
+  <app-comic-list-view
     class="cx-width-100"
     [isAdmin]="isAdmin$ | async"
     [comics]="comics$ | async"
@@ -33,8 +33,8 @@
     [comicBooksRead]="readComicBookList$ | async"
     [readingLists]="readingLists$ | async"
     (selectAll)="onSelectAll($event)"
-  ></cx-comic-list-view>
+  ></app-comic-list-view>
 }
 @if (showStoryScraping$ | async) {
-  <cx-story-scraping [storyName]="storyName$ | async"></cx-story-scraping>
+  <app-story-scraping [storyName]="storyName$ | async"></app-story-scraping>
 }

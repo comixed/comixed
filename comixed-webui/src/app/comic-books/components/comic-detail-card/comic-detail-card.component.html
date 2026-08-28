@@ -17,18 +17,23 @@
       [class.cx-detail-card-selected]="selected"
     >
       @if (!!imageUrl) {
-        <img
-          loading="lazy"
-          [class.cx-detail-card-blurred]="blurred"
-          [src]="imageUrl"
-          [style.width]="'100%'"
-          [style.height]="'auto'"
-          [alt]="title"
+        <button
+          mat-icon-button
           [matTooltip]="coverTooltip"
           [matTooltipDisabled]="!coverTooltip"
           (click)="onCoverClicked()"
+          (keyup)="onCoverClicked()"
           (contextmenu)="onContextMenu($event)"
-        />
+        >
+          <img
+            loading="lazy"
+            [class.cx-detail-card-blurred]="blurred"
+            [src]="imageUrl"
+            [style.width]="'100%'"
+            [style.height]="'auto'"
+            [alt]="title"
+          />
+        </button>
       }
       @if (showActions) {
         <mat-chip-listbox>

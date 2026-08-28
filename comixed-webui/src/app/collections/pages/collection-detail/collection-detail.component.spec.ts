@@ -158,11 +158,11 @@ describe('CollectionDetailComponent', () => {
         {
           provide: ActivatedRoute,
           useValue: {
-            params: new BehaviorSubject<{}>({
+            params: new BehaviorSubject<any>({
               collectionType: ComicTagType.CHARACTER,
               collectionName: 'Batman'
             }),
-            queryParams: new BehaviorSubject<{}>({}),
+            queryParams: new BehaviorSubject<any>({}),
             snapshot: {} as ActivatedRouteSnapshot
           }
         },
@@ -199,7 +199,7 @@ describe('CollectionDetailComponent', () => {
 
   describe('when the collection type is invalid', () => {
     beforeEach(() => {
-      (activatedRoute.params as BehaviorSubject<{}>).next({
+      (activatedRoute.params as BehaviorSubject<any>).next({
         collectionType: 'invalid'
       });
     });
@@ -214,7 +214,7 @@ describe('CollectionDetailComponent', () => {
     const COLLECTION_NAME = 'The Collection';
 
     beforeEach(() => {
-      (activatedRoute.params as BehaviorSubject<{}>).next({
+      (activatedRoute.params as BehaviorSubject<any>).next({
         collectionType: COLLECTION_TYPE,
         collectionName: COLLECTION_NAME
       });
@@ -235,7 +235,7 @@ describe('CollectionDetailComponent', () => {
 
   describe('show collections', () => {
     beforeEach(() => {
-      (activatedRoute.queryParams as BehaviorSubject<{}>).next({
+      (activatedRoute.queryParams as BehaviorSubject<any>).next({
         [QUERY_PARAM_PAGE_SIZE]: `${PAGE_SIZE}`,
         [QUERY_PARAM_PAGE_INDEX]: `${PAGE_INDEX}`,
         [QUERY_PARAM_SORT_BY]: SORT_BY,
@@ -251,7 +251,7 @@ describe('CollectionDetailComponent', () => {
 
       beforeEach(() => {
         component.comics$.next([]);
-        (activatedRoute.params as BehaviorSubject<{}>).next({
+        (activatedRoute.params as BehaviorSubject<any>).next({
           collectionType: 'characters',
           collectionName: TAG_VALUE,
           volume: COMIC_DETAIL_1.volume
@@ -279,7 +279,7 @@ describe('CollectionDetailComponent', () => {
 
       beforeEach(() => {
         component.comics$.next([]);
-        (activatedRoute.params as BehaviorSubject<{}>).next({
+        (activatedRoute.params as BehaviorSubject<any>).next({
           collectionType: 'teams',
           collectionName: TAG_VALUE,
           volume: COMIC_DETAIL_1.volume
@@ -307,7 +307,7 @@ describe('CollectionDetailComponent', () => {
 
       beforeEach(() => {
         component.comics$.next([]);
-        (activatedRoute.params as BehaviorSubject<{}>).next({
+        (activatedRoute.params as BehaviorSubject<any>).next({
           collectionType: 'locations',
           collectionName: TAG_VALUE,
           volume: COMIC_DETAIL_1.volume
@@ -335,7 +335,7 @@ describe('CollectionDetailComponent', () => {
 
       beforeEach(() => {
         component.comics$.next([]);
-        (activatedRoute.params as BehaviorSubject<{}>).next({
+        (activatedRoute.params as BehaviorSubject<any>).next({
           collectionType: 'stories',
           collectionName: TAG_VALUE,
           volume: COMIC_DETAIL_1.volume

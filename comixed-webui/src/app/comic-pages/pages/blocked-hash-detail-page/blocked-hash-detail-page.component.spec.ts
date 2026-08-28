@@ -27,12 +27,7 @@ import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatDialogModule } from '@angular/material/dialog';
-import {
-  BLOCKED_HASH_1,
-  BLOCKED_HASH_3,
-  BLOCKED_HASH_4,
-  BLOCKED_HASH_5
-} from '@app/comic-pages/comic-pages.fixtures';
+import { BLOCKED_HASH_4 } from '@app/comic-pages/comic-pages.fixtures';
 import { provideRouter, Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -50,7 +45,6 @@ import {
 } from '@app/comic-pages/reducers/blocked-hashes.reducer';
 
 describe('BlockedHashDetailPageComponent', () => {
-  const ENTRIES = [BLOCKED_HASH_1, BLOCKED_HASH_3, BLOCKED_HASH_5];
   const ENTRY = BLOCKED_HASH_4;
   const initialState = {
     [BLOCKED_HASHES_FEATURE_KEY]: {

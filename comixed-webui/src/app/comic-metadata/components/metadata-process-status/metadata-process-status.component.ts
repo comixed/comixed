@@ -23,7 +23,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MetadataUpdateProgress } from '@app/comic-metadata/selectors/metadata-update-process.selectors';
 
 @Component({
-  selector: 'cx-metadata-process-status',
+  selector: 'app-metadata-process-status',
   templateUrl: './metadata-process-status.component.html',
   styleUrls: ['./metadata-process-status.component.scss'],
   imports: [MatProgressBar, TranslateModule]

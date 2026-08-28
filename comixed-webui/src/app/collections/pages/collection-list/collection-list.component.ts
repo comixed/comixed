@@ -56,7 +56,7 @@ import { AsyncPipe, DecimalPipe } from '@angular/common';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-  selector: 'cx-collection-list',
+  selector: 'app-collection-list',
   templateUrl: './collection-list.component.html',
   styleUrls: ['./collection-list.component.scss'],
   imports: [

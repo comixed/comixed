@@ -67,8 +67,6 @@ describe('DeletedPageListPageComponent', () => {
     COMIC_DETAIL_4,
     COMIC_DETAIL_5
   ];
-  const PAGE_INDEX = 11;
-  const PAGE_SIZE = 25;
   const USER = { ...USER_ADMIN };
   const initialState = {
     [DELETED_PAGE_FEATURE_KEY]: deletedPageInitiaState,

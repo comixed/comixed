@@ -20,10 +20,7 @@ import { TestBed } from '@angular/core/testing';
 import { HttpInterceptor } from './http.interceptor';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { AUTHENTICATION_TOKEN } from '@app/core/core.fixtures';
-import {
-  HttpTestingController,
-  provideHttpClientTesting
-} from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import {
   HTTP_INTERCEPTORS,
   HttpEvent,
@@ -48,7 +45,6 @@ describe('HttpInterceptor', () => {
 
   let interceptor: HttpInterceptor;
   let tokenService: jasmine.SpyObj<TokenService>;
-  let httpMock: HttpTestingController;
   let store: MockStore<any>;
   let router: Router;
   let handler: jasmine.SpyObj<HttpHandler>;
@@ -75,7 +71,6 @@ describe('HttpInterceptor', () => {
 
     interceptor = TestBed.inject(HttpInterceptor);
     tokenService = TestBed.inject(TokenService) as jasmine.SpyObj<TokenService>;
-    httpMock = TestBed.inject(HttpTestingController);
     store = TestBed.inject(MockStore);
     spyOn(store, 'dispatch');
     router = TestBed.inject(Router);

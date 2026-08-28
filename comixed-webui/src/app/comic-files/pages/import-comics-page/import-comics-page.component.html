@@ -67,11 +67,11 @@
   </div>
 }
 @if (showFinderForm$ | async) {
-  <cx-comic-file-loader
+  <app-comic-file-loader
     class="cx-centered cx-position-absolute cx-width-50 cx-border-primary-1 cx-z-index-99"
     [user]="user$ | async"
     (closeForm)="closeFinderForm()"
-  ></cx-comic-file-loader>
+  ></app-comic-file-loader>
 }
 
 <h2>
