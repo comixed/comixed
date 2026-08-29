@@ -19,6 +19,7 @@
 package org.comixedproject.model.comicbooks;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
@@ -310,6 +311,59 @@ public class ComicDetail implements PublicationDetail {
   @Getter
   @Setter
   private Date addedDate = new Date();
+
+  @Column(name = "loading_file_contents", nullable = false, updatable = true)
+  @JsonIgnore
+  @Getter
+  @Setter
+  private boolean loadingFileContents;
+
+  @Column(name = "updating_metadata", nullable = false, updatable = true)
+  @JsonIgnore
+  @Getter
+  @Setter
+  private boolean updatingMetadata;
+
+  @Column(name = "batch_updating_metadata", nullable = false, updatable = true)
+  @JsonIgnore
+  @Getter
+  @Setter
+  private boolean batchUpdatingMetadata;
+
+  @Column(name = "batch_scraping", nullable = false, updatable = true)
+  @JsonIgnore
+  @Getter
+  @Setter
+  private boolean batchScraping;
+
+  @Column(name = "organizing", nullable = false, updatable = true)
+  @JsonIgnore
+  @Getter
+  @Setter
+  private boolean organizing;
+
+  @Column(name = "purging", nullable = false, updatable = true)
+  @JsonIgnore
+  @Getter
+  @Setter
+  private boolean purging;
+
+  @Column(name = "editing_metadata", nullable = false, updatable = true)
+  @JsonIgnore
+  @Getter
+  @Setter
+  private boolean editingMetadata = false;
+
+  @Column(
+      name = "target_archive_type",
+      nullable = true,
+      updatable = true,
+      columnDefinition = "VARCHAR(4)")
+  @Enumerated(EnumType.STRING)
+  @JsonIgnore
+  @Getter
+  @Setter
+  private ArchiveType targetArchiveType;
 
   @Column(name = "last_modified_date", updatable = true, nullable = false)
   @CreatedDate

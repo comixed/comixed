@@ -35,13 +35,13 @@ public class ScrapeMetadataChunkListener<I, O> extends AbstractBatchProcessChunk
 
   @Override
   protected boolean isActive() {
-    return this.comicBookService.getBatchScrapingCount() > 0;
+    return this.comicDetailService.getBatchScrapingCount() > 0;
   }
 
   @Override
   protected long getProcessedElements() {
     return this.comicBookService.getComicBookCount()
-        - this.comicBookService.getBatchScrapingCount();
+        - this.comicDetailService.getBatchScrapingCount();
   }
 
   @Override

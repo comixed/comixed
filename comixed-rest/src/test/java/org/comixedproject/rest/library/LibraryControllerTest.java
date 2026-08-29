@@ -213,7 +213,7 @@ class LibraryControllerTest {
   void updateSingleComicBookMetadata() throws Exception {
     controller.updateSingleComicBookMetadata(TEST_COMIC_BOOK_ID);
 
-    verify(comicBookService)
+    verify(libraryService)
         .prepareForMetadataUpdate(new ArrayList<>(Arrays.asList(TEST_COMIC_BOOK_ID)));
   }
 

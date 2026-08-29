@@ -28,9 +28,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.comixedproject.adaptors.comicbooks.ComicBookMetadataAdaptor;
 import org.comixedproject.adaptors.comicbooks.ComicFileAdaptor;
 import org.comixedproject.adaptors.file.FileTypeAdaptor;
-import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.batch.OrganizingLibraryEvent;
-import org.comixedproject.model.batch.RecreateComicFilesEvent;
 import org.comixedproject.model.batch.UpdateMetadataEvent;
 import org.comixedproject.model.collections.SeriesDetail;
 import org.comixedproject.model.comicbooks.ComicBook;
@@ -113,7 +111,7 @@ public class ComicBookService {
 
   private ComicBook doGetComic(final long id, final boolean throwIfMissing)
       throws ComicBookException {
-    final ComicBook result = this.comicBookRepository.getById(id);
+    final ComicBook result = this.comicBookRepository.getReferenceById(id);
     if (result == null && throwIfMissing) throw new ComicBookException("No such comic: id=" + id);
     return result;
   }
@@ -326,7 +324,7 @@ public class ComicBookService {
   @Transactional
   public long getComicsWithoutContentCount() {
     log.trace("Getting the number of unprocessed comics without content");
-    return this.comicBookRepository.findUnprocessedComicsWithoutContentCount();
+    return this.comicDetailRepository.findUnprocessedComicsWithoutContentCount();
   }
 
   /**
@@ -337,7 +335,7 @@ public class ComicBookService {
    */
   public List<ComicBook> findComicsWithCreateMetadataFlagSet(final int chunkSize) {
     log.trace("Loading unprocessed comics that need to have their contents loaded");
-    return this.comicBookRepository.findUnprocessedComicsWithCreateMetadataFlagSet(
+    return this.comicDetailRepository.findUnprocessedComicsWithCreateMetadataFlagSet(
         PageRequest.of(0, chunkSize));
   }
 
@@ -347,7 +345,7 @@ public class ComicBookService {
    * @return the comics
    */
   public List<ComicBook> findComicsWithContentToLoad(final int batchSize) {
-    return this.comicBookRepository.findComicsWithContentToLoad(PageRequest.of(0, batchSize));
+    return this.comicDetailRepository.findComicsWithContentToLoad(PageRequest.of(0, batchSize));
   }
 
   /**
@@ -357,7 +355,7 @@ public class ComicBookService {
    */
   public List<ComicBook> findProcessedComics() {
     log.trace("Loading unprocessed comics that are fully processed");
-    return this.comicBookRepository.findProcessedComics();
+    return this.comicDetailRepository.findProcessedComics();
   }
 
   /**
@@ -387,12 +385,12 @@ public class ComicBookService {
    */
   public List<ComicBook> findComicsWithMetadataToUpdate(final int count) {
     log.trace("Getting comics that are ready to have their metadata updated");
-    return this.comicBookRepository.findComicsWithMetadataToUpdate(PageRequest.of(0, count));
+    return this.comicDetailRepository.findComicsWithMetadataToUpdate(PageRequest.of(0, count));
   }
 
   public List<ComicBook> findComicsForBatchMetadataUpdate(final int count) {
     log.trace("Getting comics that are flagged for batch metadata update");
-    return this.comicBookRepository.findComicsForBatchMetadataUpdate(PageRequest.of(0, count));
+    return this.comicDetailRepository.findComicsForBatchMetadataUpdate(PageRequest.of(0, count));
   }
 
   /**
@@ -402,7 +400,7 @@ public class ComicBookService {
    */
   public long findComicsForBatchMetadataUpdateCount() {
     log.trace("Getting number of comics that are flagged for batch metadata update");
-    return this.comicBookRepository.findComicsForBatchMetadataUpdateCount();
+    return this.comicDetailRepository.findComicsForBatchMetadataUpdateCount();
   }
 
   /**
@@ -413,14 +411,14 @@ public class ComicBookService {
    */
   @Transactional
   public List<ComicBook> findComicBooksToBePurged(final int count) {
-    return this.comicBookRepository.findComicsMarkedForPurging(PageRequest.of(0, count));
+    return this.comicDetailRepository.findComicsMarkedForPurging(PageRequest.of(0, count));
   }
 
   /** Marks all comics in the deleted state for purging. */
   @Transactional
   public void prepareComicBooksForDeleting() {
     log.trace("Marking all deleted comics for purging");
-    this.comicBookRepository.prepareComicBooksForDeleting();
+    this.comicDetailRepository.prepareComicBooksForDeleting();
   }
 
   /**
@@ -442,7 +440,7 @@ public class ComicBookService {
   @Transactional
   public long findComicsToPurgeCount() {
     log.trace("Finding the count of comics to be recreated");
-    return this.comicBookRepository.findComicsToPurgeCount();
+    return this.comicDetailRepository.findComicsToPurgeCount();
   }
 
   /**
@@ -553,7 +551,7 @@ public class ComicBookService {
    */
   public List<ComicBook> findComicsMarkedForPurging(final int count) {
     log.trace("Loading comics marked for purging");
-    return this.comicBookRepository.findComicsMarkedForPurging(PageRequest.of(0, count));
+    return this.comicDetailRepository.findComicsMarkedForPurging(PageRequest.of(0, count));
   }
 
   /**
@@ -857,38 +855,15 @@ public class ComicBookService {
   @Transactional
   public void prepareForOrganization(final List<Long> ids) {
     log.trace("Marking comics for organization");
-    this.comicBookRepository.markForOrganizationById(ids);
+    this.comicDetailRepository.markForOrganizationById(ids);
     this.applicationEventPublisher.publishEvent(OrganizingLibraryEvent.instance);
   }
 
   @Transactional
   public void prepareAllForOrganization() {
     log.trace("Marking all comics for organization");
-    this.comicBookRepository.markAllForOrganization();
+    this.comicDetailRepository.markAllForOrganization();
     this.applicationEventPublisher.publishEvent(OrganizingLibraryEvent.instance);
-  }
-
-  /**
-   * Marks the specified comics for recreation, optionally renaming pages.
-   *
-   * @param ids the comic ids
-   * @param archiveType the targe archive type
-   */
-  @Transactional
-  public void prepareForRecreation(final List<Long> ids, final ArchiveType archiveType) {
-    log.trace("Marking comics for recreation");
-    this.comicBookRepository.markForRecreationById(ids, archiveType);
-    this.applicationEventPublisher.publishEvent(RecreateComicFilesEvent.instance);
-  }
-
-  /**
-   * Marks a set of comic books for metadata updating.
-   *
-   * @param ids the comic book ids
-   */
-  @Transactional
-  public void prepareForMetadataUpdate(final List<Long> ids) {
-    this.comicBookRepository.prepareForMetadataUpdate(ids);
   }
 
   /**
@@ -899,7 +874,7 @@ public class ComicBookService {
   @Transactional
   public long getUnprocessedComicBookCount() {
     log.debug("Loading unprocessed comic books");
-    return this.comicBookRepository.getUnprocessedComicBookCount();
+    return this.comicDetailRepository.getUnprocessedComicBookCount();
   }
 
   /**
@@ -910,13 +885,7 @@ public class ComicBookService {
   @Transactional
   public long getUpdateMetadataCount() {
     log.debug("Getting the update metadata count");
-    return this.comicBookRepository.getUpdateMetadataCount();
-  }
-
-  @Transactional
-  public long getRecreatingCount() {
-    log.debug("Getting the recreating count");
-    return this.comicBookRepository.getRecreatingCount();
+    return this.comicDetailRepository.getUpdateMetadataCount();
   }
 
   /**
@@ -963,32 +932,6 @@ public class ComicBookService {
     return this.comicFileAdaptor.isCaseSensitiveFilenames()
         ? this.comicBookRepository.findByFilename(standardizedFilename)
         : this.comicBookRepository.findByFilenameCaseInsensitive(standardizedFilename);
-  }
-
-  /**
-   * Returns the number of comic books that are being batch scraped.
-   *
-   * @return the count
-   */
-  @Transactional
-  public long getBatchScrapingCount() {
-    return this.comicBookRepository.getBatchScrapingCount();
-  }
-
-  /**
-   * Returns a set of comic books marked for batch scraping.
-   *
-   * @param chunkSize the chunk size
-   * @return the comic book
-   */
-  @Transactional
-  public List<ComicBook> findBatchScrapingComics(final int chunkSize) {
-    return this.comicBookRepository.findBatchScrapingComics(PageRequest.of(0, chunkSize));
-  }
-
-  @Transactional
-  public void markComicBooksForBatchScraping(final List<Long> ids) {
-    this.comicBookRepository.prepareForBatchScraping(ids);
   }
 
   /**

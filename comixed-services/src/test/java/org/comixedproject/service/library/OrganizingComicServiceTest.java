@@ -19,6 +19,7 @@
 package org.comixedproject.service.library;
 
 import static junit.framework.TestCase.*;
+import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,11 +58,11 @@ class OrganizingComicServiceTest {
 
   @BeforeEach
   public void setUp() {
-    Mockito.when(organizingComicRepository.loadComics(pageRequestArgumentCaptor.capture()))
+    when(organizingComicRepository.loadComics(pageRequestArgumentCaptor.capture()))
         .thenReturn(organizingComicList);
-    Mockito.when(comic.getComicBookId()).thenReturn(TEST_COMIC_BOOK_ID);
-    Mockito.when(comic.getComicDetailId()).thenReturn(TEST_COMIC_DETAIL_ID);
-    Mockito.when(comic.getUpdatedFilename()).thenReturn(TEST_UPDATED_FILENAME);
+    when(comic.getComicBookId()).thenReturn(TEST_COMIC_BOOK_ID);
+    when(comic.getComicDetailId()).thenReturn(TEST_COMIC_DETAIL_ID);
+    when(comic.getUpdatedFilename()).thenReturn(TEST_UPDATED_FILENAME);
   }
 
   @Test
@@ -75,37 +76,36 @@ class OrganizingComicServiceTest {
     assertEquals(0, pageRequest.getPageNumber());
     assertEquals(TEST_MAX_COMICS, pageRequest.getPageSize());
 
-    Mockito.verify(organizingComicRepository, Mockito.times(1)).loadComics(pageRequest);
+    verify(organizingComicRepository, times(1)).loadComics(pageRequest);
   }
 
   @Test
   void saveComic() {
     service.saveComic(comic);
 
-    Mockito.verify(comicDetailRepository, Mockito.times(1))
+    verify(comicDetailRepository, times(1))
         .updateFilename(TEST_COMIC_DETAIL_ID, TEST_UPDATED_FILENAME);
-    Mockito.verify(comicBookRepository, Mockito.times(1)).clearOrganizingFlag(TEST_COMIC_BOOK_ID);
+    verify(comicDetailRepository, times(1)).clearOrganizingFlag(TEST_COMIC_BOOK_ID);
   }
 
   @Test
   void saveComic_filenameNotUpdated() {
-    Mockito.when(comic.getUpdatedFilename()).thenReturn(null);
+    when(comic.getUpdatedFilename()).thenReturn(null);
 
     service.saveComic(comic);
 
-    Mockito.verify(comicDetailRepository, Mockito.never())
-        .updateFilename(Mockito.anyLong(), Mockito.anyString());
-    Mockito.verify(comicBookRepository, Mockito.times(1)).clearOrganizingFlag(TEST_COMIC_BOOK_ID);
+    verify(comicDetailRepository, never()).updateFilename(anyLong(), anyString());
+    verify(comicDetailRepository, times(1)).clearOrganizingFlag(TEST_COMIC_BOOK_ID);
   }
 
   @Test
   void loadComicCount() {
-    Mockito.when(organizingComicRepository.count()).thenReturn(TEST_COMIC_COUNT);
+    when(organizingComicRepository.count()).thenReturn(TEST_COMIC_COUNT);
 
     final long result = service.loadComicCount();
 
     assertEquals(TEST_COMIC_COUNT, result);
 
-    Mockito.verify(organizingComicRepository, Mockito.times(1)).count();
+    verify(organizingComicRepository, times(1)).count();
   }
 }

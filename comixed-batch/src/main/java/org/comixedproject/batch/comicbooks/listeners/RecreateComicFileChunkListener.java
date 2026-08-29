@@ -40,12 +40,12 @@ public class RecreateComicFileChunkListener<I, O> extends AbstractBatchProcessCh
 
   @Override
   protected boolean isActive() {
-    return this.comicBookService.getRecreatingCount() > 0L;
+    return this.comicDetailService.getRecreatingCount() > 0L;
   }
 
   @Override
   protected long getProcessedElements() {
-    return this.comicBookService.getComicBookCount() - this.comicBookService.getRecreatingCount();
+    return this.comicBookService.getComicBookCount() - this.comicDetailService.getRecreatingCount();
   }
 
   @Override

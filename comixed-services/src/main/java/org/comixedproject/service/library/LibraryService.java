@@ -26,6 +26,7 @@ import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.batch.PurgeLibraryEvent;
 import org.comixedproject.model.batch.UpdateMetadataEvent;
 import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.comicbooks.ComicDetailService;
 import org.comixedproject.service.comicpages.PageCacheService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -42,6 +43,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Log4j2
 public class LibraryService {
   @Autowired private ComicBookService comicBookService;
+  @Autowired private ComicDetailService comicDetailService;
   @Autowired private FileAdaptor fileAdaptor;
   @Autowired private PageCacheService pageCacheService;
   @Autowired private ApplicationEventPublisher applicationEventPublisher;
@@ -70,9 +72,19 @@ public class LibraryService {
   @Async
   public void updateMetadata(final List<Long> ids) {
     log.debug("Preparing {} comic book(s) for metadata update", ids.size());
-    this.comicBookService.prepareForMetadataUpdate(ids);
+    this.comicDetailService.prepareForMetadataUpdate(ids);
     log.debug("Initiating update batch process");
     this.applicationEventPublisher.publishEvent(UpdateMetadataEvent.instance);
+  }
+
+  /**
+   * Marks a set of comic books for metadata updating.
+   *
+   * @param ids the comic book ids
+   */
+  @Transactional
+  public void prepareForMetadataUpdate(final List<Long> ids) {
+    this.comicDetailService.prepareForMetadataUpdate(ids);
   }
 
   /**
@@ -100,7 +112,7 @@ public class LibraryService {
   public void prepareToRecreate(final List<Long> ids, final ArchiveType archiveType) {
     final long started = System.currentTimeMillis();
     log.debug("Preparing to recreate {} comic book file(s)", ids.size());
-    this.comicBookService.prepareForRecreation(ids, archiveType);
+    this.comicDetailService.prepareForRecreation(ids, archiveType);
     log.debug(
         "Comic book files prepared for recreation: {}ms", System.currentTimeMillis() - started);
   }

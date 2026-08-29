@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="003_2766_add_flags_to_comic_details.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="comic_details_v4" columnName="loading_file_contents"/>
+                <columnExists tableName="comic_details_v4" columnName="updating_metadata"/>
+                <columnExists tableName="comic_details_v4" columnName="batch_updating_metadata"/>
+                <columnExists tableName="comic_details_v4" columnName="batch_scraping"/>
+                <columnExists tableName="comic_details_v4" columnName="organizing"/>
+                <columnExists tableName="comic_details_v4" columnName="purging"/>
+            </not>
+        </preConditions>
+
+        <addColumn tableName="comic_details_v4">
+            <column name="loading_file_contents" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updating_metadata" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="batch_updating_metadata" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="batch_scraping" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="organizing" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="purging" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="editing_metadata" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="target_archive_type" type="varchar(4)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+
+        <createIndex tableName="comic_details_v4" indexName="comic_details_loading_file_contents_idx">
+            <column name="loading_file_contents"/>
+        </createIndex>
+
+        <createIndex tableName="comic_details_v4" indexName="comic_details_updating_metadata_idx">
+            <column name="updating_metadata"/>
+        </createIndex>
+
+        <createIndex tableName="comic_details_v4" indexName="comic_details_batch_updating_metadata_idx">
+            <column name="batch_updating_metadata"/>
+        </createIndex>
+
+        <createIndex tableName="comic_details_v4" indexName="comic_details_batch_scraping_idx">
+            <column name="batch_scraping"/>
+        </createIndex>
+
+        <createIndex tableName="comic_details_v4" indexName="comic_details_organizing_idx">
+            <column name="organizing"/>
+        </createIndex>
+
+        <createIndex tableName="comic_details_v4" indexName="comic_details_purging_idx">
+            <column name="purging"/>
+        </createIndex>
+
+        <createIndex tableName="comic_details_v4" indexName="comic_details_target_archive_type_idx">
+            <column name="target_archive_type"/>
+        </createIndex>
+
+        <createIndex tableName="comic_details_v4" indexName="comic_details_editing_metadata_idx">
+            <column name="editing_metadata"/>
+        </createIndex>
+
+        <sql>
+            UPDATE comic_details_v4
+            SET loading_file_contents   = ((SELECT file_contents_loaded
+                                            FROM comic_books_v4
+                                            WHERE comic_books_v4.comic_book_id = comic_details_v4.comic_book_id) =
+                                           false),
+                updating_metadata       = (SELECT update_metadata
+                                           FROM comic_books_v4
+                                           WHERE comic_books_v4.comic_book_id = comic_details_v4.comic_book_id),
+                batch_updating_metadata = (SELECT batch_metadata_update
+                                           FROM comic_books_v4
+                                           WHERE comic_books_v4.comic_book_id = comic_details_v4.comic_book_id),
+                batch_scraping          = (SELECT batch_scraping
+                                           FROM comic_books_v4
+                                           WHERE comic_books_v4.comic_book_id = comic_details_v4.comic_book_id),
+                organizing              = (SELECT organizing
+                                           FROM comic_books_v4
+                                           WHERE comic_books_v4.comic_book_id = comic_details_v4.comic_book_id),
+                purging                 = (SELECT purging
+                                           FROM comic_books_v4
+                                           WHERE comic_books_v4.comic_book_id = comic_details_v4.comic_book_id),
+                editing_metadata        = (SELECT edit_details
+                                           FROM comic_books_v4
+                                           WHERE comic_books_v4.comic_book_id = comic_details_v4.comic_book_id),
+                target_archive_type     = (SELECT target_archive_type
+                                           FROM comic_books_v4
+                                           WHERE comic_books_v4.comic_book_id = comic_details_v4.comic_book_id);
+        </sql>
+
+        <dropIndex tableName="comic_books_v4" indexName="comic_books_v4_batch_metadata_update_idx"/>
+        <dropIndex tableName="comic_books_v4" indexName="comic_books_v4_batch_scraping_idx"/>
+        <dropIndex tableName="comic_books_v4" indexName="comic_books_v4_organizing_idx"/>
+        <dropIndex tableName="comic_books_v4" indexName="comic_books_v4_purging_idx"/>
+        <dropIndex tableName="comic_books_v4" indexName="comic_books_v4_target_archive_type_idx"/>
+
+        <createView replaceIfExists="true" viewName="organizing_comics_view">
+            SELECT d.comic_book_id   AS comic_book_id,
+                   d.comic_detail_id AS comic_detail_id,
+                   d.filename,
+                   d.archive_type,
+                   d.publisher,
+                   d.imprint,
+                   d.series,
+                   d.volume,
+                   d.issue_number,
+                   d.title,
+                   d.cover_date,
+                   d.store_date,
+                   CASE
+                       WHEN EXISTS (SELECT *
+                                    FROM comic_metadata_sources_v4 s
+                                    WHERE s.comic_book_id = d.comic_book_id)
+                           THEN true
+                       ELSE false
+                       END           AS is_scraped
+            FROM comic_details_v4 d
+            WHERE d.loading_file_contents IS FALSE
+              AND d.organizing IS TRUE
+              AND d.purging IS FALSE
+              AND d.updating_metadata IS FALSE
+              AND d.target_archive_type IS NULL
+              AND d.editing_metadata IS FALSE
+        </createView>
+
+        <dropColumn tableName="comic_books_v4" columnName="file_contents_loaded"/>
+        <dropColumn tableName="comic_books_v4" columnName="update_metadata"/>
+        <dropColumn tableName="comic_books_v4" columnName="batch_metadata_update"/>
+        <dropColumn tableName="comic_books_v4" columnName="batch_scraping"/>
+        <dropColumn tableName="comic_books_v4" columnName="organizing"/>
+        <dropColumn tableName="comic_books_v4" columnName="purging"/>
+        <dropColumn tableName="comic_books_v4" columnName="edit_details"/>
+        <dropColumn tableName="comic_books_v4" columnName="target_archive_type"/>
+
+    </changeSet>
+</databaseChangeLog>
