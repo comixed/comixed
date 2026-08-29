@@ -19,6 +19,8 @@
 package org.comixedproject.repositories.comicbooks;
 
 import static junit.framework.TestCase.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
@@ -58,6 +60,8 @@ public class ComicDetailRepositoryTest {
   private static final Long TEST_COMIC_DETAIL_ID = 2000L;
   private static final String TEST_UPDATED_FILENAME =
       "/Users/comixed_reader/Documents/library/comics/comicbook.cbz";
+  private static final long TEST_ORGANIZING_COMIC_BOOK = 1005L;
+  private static final long TEST_ORGANIZING_COMIC_DETAIL = 2005L;
 
   @Autowired private ComicDetailRepository repository;
 
@@ -108,5 +112,16 @@ public class ComicDetailRepositoryTest {
 
     assertEquals(TEST_COMIC_DETAIL_ID, after.getComicDetailId());
     assertEquals(TEST_UPDATED_FILENAME, after.getFilename());
+  }
+
+  @Test
+  @Transactional
+  public void testClearOrganizingFlag() {
+    repository.clearOrganizingFlag(TEST_ORGANIZING_COMIC_BOOK);
+
+    final ComicDetail after = repository.getReferenceById(TEST_ORGANIZING_COMIC_DETAIL);
+
+    assertNotNull(after);
+    assertFalse(after.isOrganizing());
   }
 }

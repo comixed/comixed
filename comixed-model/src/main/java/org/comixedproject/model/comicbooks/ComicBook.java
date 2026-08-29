@@ -101,58 +101,69 @@ public class ComicBook implements StatefulItem<ComicState> {
   @Setter
   private Long previousIssueId;
 
-  @Column(name = "file_contents_loaded", nullable = false, updatable = true)
-  @JsonIgnore
-  @Getter
-  @Setter
-  private boolean fileContentsLoaded = false;
+  public boolean isFileContentsLoaded() {
+    return !this.comicDetail.isLoadingFileContents();
+  }
 
-  @Column(name = "update_metadata", nullable = false, updatable = true)
-  @JsonIgnore
-  @Getter
-  @Setter
-  private boolean updateMetadata = false;
+  public void setFileContentsLoaded(final boolean loaded) {
+    this.comicDetail.setLoadingFileContents(!loaded);
+  }
 
-  @Column(name = "batch_metadata_update", nullable = false, updatable = true)
-  @JsonIgnore
-  @Getter
-  @Setter
-  private boolean batchMetadataUpdate = false;
+  public boolean isUpdateMetadata() {
+    return this.comicDetail.isUpdatingMetadata();
+  }
 
-  @Column(name = "batch_scraping", nullable = false, updatable = true)
-  @JsonIgnore
-  @Getter
-  @Setter
-  private boolean batchScraping = false;
+  public void setUpdateMetadata(final boolean updating) {
+    this.comicDetail.setUpdatingMetadata(updating);
+  }
 
-  @Column(name = "organizing", nullable = false, updatable = true)
-  @JsonIgnore
-  @Getter
-  @Setter
-  private boolean organizing = false;
+  public boolean isBatchMetadataUpdate() {
+    return this.comicDetail.isBatchUpdatingMetadata();
+  }
 
-  @Column(
-      name = "target_archive_type",
-      nullable = true,
-      updatable = true,
-      columnDefinition = "VARCHAR(4)")
-  @Enumerated(EnumType.STRING)
-  @JsonIgnore
-  @Getter
-  @Setter
-  private ArchiveType targetArchiveType;
+  public void setBatchMetadataUpdate(final boolean updating) {
+    this.comicDetail.setBatchUpdatingMetadata(updating);
+  }
 
-  @Column(name = "edit_details", nullable = false, updatable = true)
-  @JsonIgnore
-  @Getter
-  @Setter
-  private boolean editDetails = false;
+  public boolean isBatchScraping() {
+    return this.comicDetail.isBatchScraping();
+  }
 
-  @Column(name = "purging", nullable = false, updatable = true)
-  @JsonIgnore
-  @Getter
-  @Setter
-  private boolean purging;
+  public void setBatchScraping(final boolean scraping) {
+    this.comicDetail.setBatchScraping(scraping);
+  }
+
+  public boolean isOrganizing() {
+    return this.comicDetail.isOrganizing();
+  }
+
+  public void setOrganizing(final boolean organizing) {
+    this.comicDetail.setOrganizing(organizing);
+  }
+
+  public boolean isPurging() {
+    return this.comicDetail.isPurging();
+  }
+
+  public void setPurging(final boolean purging) {
+    this.comicDetail.setPurging(purging);
+  }
+
+  public ArchiveType getTargetArchiveType() {
+    return this.comicDetail.getTargetArchiveType();
+  }
+
+  public void setTargetArchiveType(final ArchiveType targetArchiveTYpe) {
+    this.comicDetail.setTargetArchiveType(targetArchiveTYpe);
+  }
+
+  public boolean isEditDetails() {
+    return this.comicDetail.isEditingMetadata();
+  }
+
+  public void setEditDetails(final boolean editDetails) {
+    this.comicDetail.setEditingMetadata(editDetails);
+  }
 
   @Column(name = "last_modified_on", updatable = true, nullable = false)
   @JsonProperty("lastModifiedOn")

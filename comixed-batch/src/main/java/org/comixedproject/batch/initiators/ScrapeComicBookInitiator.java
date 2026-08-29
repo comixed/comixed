@@ -25,7 +25,7 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.batch.ScrapeMetadataEvent;
 import org.comixedproject.service.admin.ConfigurationService;
 import org.comixedproject.service.batch.BatchProcessesService;
-import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.comicbooks.ComicDetailService;
 import org.springframework.batch.core.job.Job;
 import org.springframework.batch.core.job.parameters.InvalidJobParametersException;
 import org.springframework.batch.core.job.parameters.JobParametersBuilder;
@@ -51,7 +51,7 @@ public class ScrapeComicBookInitiator {
   private static final Object MUTEX = new Object();
   public static final long DEFAULT_ERROR_THRESHOLD = 10L;
 
-  @Autowired private ComicBookService comicBookService;
+  @Autowired private ComicDetailService comicDetailService;
   @Autowired private BatchProcessesService batchProcessesService;
   @Autowired private ConfigurationService configurationService;
 
@@ -77,7 +77,7 @@ public class ScrapeComicBookInitiator {
   private void doExecute() {
     synchronized (MUTEX) {
       log.trace("Checking for comic files to import");
-      if (this.comicBookService.getBatchScrapingCount() > 0L
+      if (this.comicDetailService.getBatchScrapingCount() > 0L
           && !this.batchProcessesService.hasActiveExecutions(SCRAPE_METADATA_JOB)) {
         try {
           final Long errorThreshold =

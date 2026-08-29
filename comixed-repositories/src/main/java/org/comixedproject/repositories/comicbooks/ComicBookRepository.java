@@ -21,7 +21,6 @@ package org.comixedproject.repositories.comicbooks;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
-import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.collections.SeriesDetail;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
@@ -31,7 +30,6 @@ import org.comixedproject.model.net.library.RemoteLibrarySegmentState;
 import org.springframework.data.domain.Limit;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -130,75 +128,12 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
   long findForStateCount(@Param("state") ComicState state);
 
   /**
-   * Returns unprocessed comics that have their file loaded flag turned off.
-   *
-   * @param pageable the page request
-   * @return the list of comics
-   */
-  @Query("SELECT c FROM ComicBook c WHERE c.comicDetail.comicState = 'UNPROCESSED'")
-  List<ComicBook> findUnprocessedComicsWithCreateMetadataFlagSet(Pageable pageable);
-
-  /**
-   * Returns comics that have not had their file contents loaded.
-   *
-   * @param pageable the page request
-   * @return the list of comics
-   */
-  @Query("SELECT c FROM ComicBook c WHERE c.fileContentsLoaded IS FALSE")
-  List<ComicBook> findComicsWithContentToLoad(Pageable pageable);
-
-  /**
-   * Returns the number of unprocessed comics without file contents loaded.
-   *
-   * @return the count
-   */
-  @Query(
-      "SELECT COUNT(c) FROM ComicBook c WHERE c.comicDetail.comicState = 'UNPROCESSED' OR c.fileContentsLoaded IS FALSE")
-  int findUnprocessedComicsWithoutContentCount();
-
-  /**
-   * Returns unprocessed comics that have been fully processed.
-   *
-   * @return the list of comics
-   */
-  @Query(
-      "SELECT c FROM ComicBook c WHERE c.comicDetail.comicState = 'UNPROCESSED' AND c.fileContentsLoaded = true")
-  List<ComicBook> findProcessedComics();
-
-  /**
-   * Returns comics that are waiting to have their metadata update flag set.
-   *
-   * @param pageable the page request
-   * @return the list of comics
-   */
-  @Query("SELECT c FROM ComicBook c WHERE c.updateMetadata = true")
-  List<ComicBook> findComicsWithMetadataToUpdate(Pageable pageable);
-
-  /**
-   * Returns comics that are marked to have their metadata batch processed.
-   *
-   * @param pageable the page request
-   * @return the list of comics
-   */
-  @Query("SELECT c FROM ComicBook c WHERE c.batchMetadataUpdate = true")
-  List<ComicBook> findComicsForBatchMetadataUpdate(Pageable pageable);
-
-  /**
-   * Returns the number of comics with the organizing flag set.
-   *
-   * @return the record count
-   */
-  @Query(
-      "SELECT count(c) FROM ComicBook c WHERE c.organizing = true AND c.comicDetail.comicState != 'DELETED'")
-  long findComicsToBeMovedCount();
-
-  /**
    * Returns the number of comics with the recreating flag set.
    *
    * @return the record count
    */
   @Query(
-      "SELECT count(c) FROM ComicBook c WHERE c.targetArchiveType IS NOT NULL AND c.comicDetail.comicState != 'DELETED'")
+      "SELECT count(c) FROM ComicBook c WHERE c.comicDetail.targetArchiveType IS NOT NULL AND c.comicDetail.comicState != 'DELETED'")
   long findComicsToBeRecreatedCount();
 
   /**
@@ -207,7 +142,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @param pageable the page request
    * @return the list of comics
    */
-  @Query("SELECT c FROM ComicBook c WHERE c.targetArchiveType IS NOT NULL")
+  @Query("SELECT c FROM ComicBook c WHERE c.comicDetail.targetArchiveType IS NOT NULL")
   List<ComicBook> findComicsToRecreate(Pageable pageable);
 
   /**
@@ -365,18 +300,6 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
   List<String> findDistinctPublishersForStory(@Param("name") String name);
 
   /**
-   * Returns all comics that are marked for purging.
-   *
-   * @param pageable the page request
-   * @return the comics
-   */
-  @Query("SELECT c FROM ComicBook c WHERE c.purging = true")
-  List<ComicBook> findComicsMarkedForPurging(Pageable pageable);
-
-  @Query("SELECT COUNT(c) FROM ComicBook c WHERE c.purging IS TRUE")
-  long findComicsToPurgeCount();
-
-  /**
    * Returns the individual year values for comics in the library.
    *
    * @return the list of years
@@ -525,14 +448,6 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
   List<PublisherAndYearSegment> getByPublisherAndYear();
 
   /**
-   * Returns the number of comics enqueued for metadata batch update
-   *
-   * @return the comic count
-   */
-  @Query("SELECT COUNT(c) FROM ComicBook c WHERE c.batchMetadataUpdate = true")
-  long findComicsForBatchMetadataUpdateCount();
-
-  /**
    * Performs a case-insensitive search for comics whose title or description contain the given
    * term.
    *
@@ -549,7 +464,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @param pageable the request size
    * @return the comic list
    */
-  @Query("SELECT c FROM ComicBook c WHERE c.editDetails = true")
+  @Query("SELECT c FROM ComicBook c WHERE c.comicDetail.editingMetadata = true")
   List<ComicBook> findComicsWithEditDetails(Pageable pageable);
 
   /**
@@ -572,45 +487,6 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
       "SELECT c FROM ComicBook c WHERE c.comicBookId NOT IN (SELECT d.comicBook.comicBookId FROM ComicDetail d)")
   List<ComicBook> getComicBooksWithoutDetails(int chunkSize);
 
-  @Modifying
-  @Query(
-      "UPDATE ComicBook c SET c.organizing = true WHERE c.comicDetail.comicDetailId IN (:ids) AND c.organizing IS FALSE")
-  void markForOrganizationById(@Param("ids") List<Long> ids);
-
-  @Modifying
-  @Query("UPDATE ComicBook c SET c.organizing = true")
-  void markAllForOrganization();
-
-  @Modifying
-  @Query(
-      "UPDATE ComicBook c SET c.targetArchiveType = :archiveType WHERE c.comicDetail.comicDetailId IN (:ids)")
-  void markForRecreationById(
-      @Param("ids") List<Long> ids, @Param("archiveType") final ArchiveType archiveType);
-
-  /**
-   * Returns the number of unprocessed comic books.
-   *
-   * @return the list of comic books
-   */
-  @Query("SELECT COUNT(b) FROM ComicBook b WHERE b.fileContentsLoaded IS FALSE")
-  long getUnprocessedComicBookCount();
-
-  @Modifying
-  @Query(
-      "UPDATE ComicBook c SET c.updateMetadata = true WHERE c.comicDetail.comicDetailId IN (:ids) AND c.updateMetadata IS FALSE")
-  void prepareForMetadataUpdate(@Param("ids") List<Long> ids);
-
-  @Query("SELECT COUNT(c) FROM ComicBook c WHERE c.updateMetadata IS TRUE")
-  long getUpdateMetadataCount();
-
-  @Query("SELECT COUNT(c) FROM ComicBook c WHERE c.targetArchiveType IS NOT NULL")
-  long getRecreatingCount();
-
-  @Modifying
-  @Query(
-      "UPDATE ComicBook c SET c.batchScraping = true WHERE c.comicDetail.comicDetailId IN (:ids) AND c.batchScraping IS FALSE AND c.metadata IS NOT NULL")
-  void prepareForBatchScraping(@Param("ids") List<Long> ids);
-
   /**
    * Returns a subset of comic filenames based on the previously marked missing status.
    *
@@ -619,39 +495,6 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    */
   @Query("SELECT d.filename FROM ComicDetail d WHERE d.missing = :missing")
   Set<String> getComicFilenames(@Param("missing") boolean missing);
-
-  /**
-   * Returns the number of comic books that are marked for an can be batch scraped.
-   *
-   * @return the count
-   */
-  @Query(
-      "SELECT COUNT(c) FROM ComicBook c WHERE c.batchScraping IS TRUE AND c.metadata IS NOT NULL")
-  long getBatchScrapingCount();
-
-  /**
-   * Returns a subset of comic books marked for batch scraping. Only comic books with the batch
-   * scraping flag set and which have a metadata source are returned.
-   *
-   * @param pageable the page request
-   * @return the comic books
-   */
-  @Query("SELECT c FROM ComicBook c WHERE c.batchScraping IS TRUE AND c.metadata IS NOT NULL")
-  List<ComicBook> findBatchScrapingComics(Pageable pageable);
-
-  /** Sets the purging flag for all comics int he DELETED state. */
-  @Modifying
-  @Query("UPDATE ComicBook c SET c.purging = true WHERE c.comicDetail.comicState = 'DELETED'")
-  void prepareComicBooksForDeleting();
-
-  /**
-   * Clears the organizing flag for the specified comic book.
-   *
-   * @param comicBookId the comic book id
-   */
-  @Modifying
-  @Query("UPDATE ComicBook c SET c.organizing = false WHERE c.comicBookId = :comicBookId")
-  void clearOrganizingFlag(@Param("comicBookId") Long comicBookId);
 
   /**
    * Returns a set of comic book records that have unhashed pages.

@@ -29,10 +29,6 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="blocked_pages_marked" type="boolean" defaultValueBoolean="false">
-                <constraints nullable="false"/>
-            </column>
-
             <column name="update_metadata" type="boolean" defaultValueBoolean="false">
                 <constraints nullable="false"/>
             </column>
@@ -42,10 +38,6 @@
             </column>
 
             <column name="purging" type="boolean" defaultValueBoolean="false">
-                <constraints nullable="false"/>
-            </column>
-
-            <column name="create_metadata_source" type="boolean" defaultValueBoolean="false">
                 <constraints nullable="false"/>
             </column>
 
@@ -74,10 +66,6 @@
             </column>
         </createTable>
 
-        <createIndex tableName="comic_books_v4" indexName="comic_books_v4_create_metadata_source_idx">
-            <column name="create_metadata_source"/>
-        </createIndex>
-
         <createIndex tableName="comic_books_v4" indexName="comic_books_v4_last_modified_on_idx">
             <column name="last_modified_on"/>
         </createIndex>
@@ -102,18 +90,15 @@
             <column name="target_archive_type"/>
         </createIndex>
 
-        <sql>INSERT INTO comic_books_v4(comic_book_id, last_modified_on, file_contents_loaded, blocked_pages_marked,
-                                        update_metadata, organizing, purging, create_metadata_source,
-                                        batch_metadata_update, edit_details, target_archive_Type, rename_pages,
-                                        delete_pages, batch_scraping)
+        <sql>INSERT INTO comic_books_v4(comic_book_id, last_modified_on, file_contents_loaded, update_metadata,
+                                        organizing, purging, batch_metadata_update, edit_details, target_archive_Type,
+                                        rename_pages, delete_pages, batch_scraping)
              SELECT comic_book_id,
                     last_modified_on,
                     file_contents_loaded,
-                    blocked_pages_marked,
                     update_metadata,
                     organizing,
                     purging,
-                    create_metadata_source,
                     batch_metadata_update,
                     edit_details,
                     target_archive_Type,

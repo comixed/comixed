@@ -23,6 +23,7 @@ import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
 import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration.RECREATE_COMIC_FILES_JOB;
 import static org.comixedproject.model.messaging.batch.ProcessComicBooksStatus.RECREATE_COMIC_FILE_STEP;
+import static org.mockito.Mockito.*;
 
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.batch.PublishBatchProcessDetailUpdateAction;
@@ -30,6 +31,7 @@ import org.comixedproject.messaging.comicbooks.PublishProcessComicBooksStatusAct
 import org.comixedproject.model.batch.BatchProcessDetail;
 import org.comixedproject.model.messaging.batch.ProcessComicBooksStatus;
 import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.comicbooks.ComicDetailService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -50,6 +52,7 @@ class RecreateComicFileChunkListenerTest {
 
   @InjectMocks private RecreateComicFileChunkListener listener;
   @Mock private ComicBookService comicBookService;
+  @Mock private ComicDetailService comicDetailService;
   @Mock private Chunk chunk;
   @Mock private StepExecution stepExecution;
   @Mock private JobInstance jobInstance;
@@ -63,23 +66,23 @@ class RecreateComicFileChunkListenerTest {
 
   @BeforeEach
   public void setUp() throws PublishingException {
-    Mockito.when(jobExecution.getJobParameters()).thenReturn(jobParameters);
-    Mockito.when(jobInstance.getJobName()).thenReturn(RECREATE_COMIC_FILES_JOB);
-    Mockito.when(jobExecution.getJobInstance()).thenReturn(jobInstance);
-    Mockito.when(jobExecution.getStatus()).thenReturn(BatchStatus.COMPLETED);
-    Mockito.when(jobExecution.getExitStatus()).thenReturn(ExitStatus.COMPLETED);
-    Mockito.when(comicBookService.getComicBookCount()).thenReturn(TEST_TOTAL_COMICS);
-    Mockito.when(comicBookService.getRecreatingCount()).thenReturn(TEST_PROCESSED_COMICS);
+    when(jobExecution.getJobParameters()).thenReturn(jobParameters);
+    when(jobInstance.getJobName()).thenReturn(RECREATE_COMIC_FILES_JOB);
+    when(jobExecution.getJobInstance()).thenReturn(jobInstance);
+    when(jobExecution.getStatus()).thenReturn(BatchStatus.COMPLETED);
+    when(jobExecution.getExitStatus()).thenReturn(ExitStatus.COMPLETED);
+    when(comicBookService.getComicBookCount()).thenReturn(TEST_TOTAL_COMICS);
+    when(comicDetailService.getRecreatingCount()).thenReturn(TEST_PROCESSED_COMICS);
 
-    Mockito.when(stepExecution.getJobExecution()).thenReturn(jobExecution);
-    Mockito.doNothing()
+    when(stepExecution.getJobExecution()).thenReturn(jobExecution);
+    doNothing()
         .when(publishProcessComicBooksStatusAction)
         .publish(processComicStatusArgumentCaptor.capture());
-    Mockito.doNothing()
+    doNothing()
         .when(publishBatchProcessDetailUpdateAction)
         .publish(batchProcessDetailArgumentCaptor.capture());
 
-    Mockito.when(stepExecution.getJobExecution()).thenReturn(jobExecution);
+    when(stepExecution.getJobExecution()).thenReturn(jobExecution);
     StepSynchronizationManager.register(stepExecution);
   }
 
@@ -95,7 +98,7 @@ class RecreateComicFileChunkListenerTest {
     assertEquals(TEST_TOTAL_COMICS, status.getTotal());
     assertEquals(TEST_TOTAL_COMICS - TEST_PROCESSED_COMICS, status.getProcessed());
 
-    Mockito.verify(publishProcessComicBooksStatusAction, Mockito.times(1)).publish(status);
+    verify(publishProcessComicBooksStatusAction).publish(status);
   }
 
   @Test
@@ -110,7 +113,7 @@ class RecreateComicFileChunkListenerTest {
     assertEquals(TEST_TOTAL_COMICS, status.getTotal());
     assertEquals(TEST_TOTAL_COMICS - TEST_PROCESSED_COMICS, status.getProcessed());
 
-    Mockito.verify(publishProcessComicBooksStatusAction, Mockito.times(1)).publish(status);
+    verify(publishProcessComicBooksStatusAction).publish(status);
   }
 
   @Test
@@ -125,7 +128,7 @@ class RecreateComicFileChunkListenerTest {
     assertEquals(TEST_TOTAL_COMICS, status.getTotal());
     assertEquals(TEST_TOTAL_COMICS - TEST_PROCESSED_COMICS, status.getProcessed());
 
-    Mockito.verify(publishProcessComicBooksStatusAction, Mockito.times(1)).publish(status);
+    verify(publishProcessComicBooksStatusAction).publish(status);
   }
 
   @Test
@@ -140,6 +143,6 @@ class RecreateComicFileChunkListenerTest {
     assertEquals(TEST_TOTAL_COMICS, status.getTotal());
     assertEquals(TEST_TOTAL_COMICS - TEST_PROCESSED_COMICS, status.getProcessed());
 
-    Mockito.verify(publishProcessComicBooksStatusAction, Mockito.times(1)).publish(status);
+    verify(publishProcessComicBooksStatusAction).publish(status);
   }
 }

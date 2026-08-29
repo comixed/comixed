@@ -29,10 +29,13 @@ import java.util.*;
 import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.comicbooks.ComicFileAdaptor;
+import org.comixedproject.model.archives.ArchiveType;
+import org.comixedproject.model.batch.RecreateComicFilesEvent;
 import org.comixedproject.model.collections.CollectionEntry;
 import org.comixedproject.model.comicbooks.*;
 import org.comixedproject.repositories.comicbooks.ComicDetailRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -51,6 +54,7 @@ import org.springframework.util.StringUtils;
 public class ComicDetailService {
   @Autowired private ComicDetailRepository comicDetailRepository;
   @Autowired private ComicFileAdaptor comicFileAdaptor;
+  @Autowired private ApplicationEventPublisher applicationEventPublisher;
 
   SimpleDateFormat coverDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -550,5 +554,60 @@ public class ComicDetailService {
   public List<Long> getAllIds() {
     log.debug("Getting the list of all comic detail ids");
     return this.comicDetailRepository.getAllIds();
+  }
+
+  /**
+   * Marks entries with the given ids for metadata updating.
+   *
+   * @param ids the record ids
+   */
+  @Transactional
+  public void prepareForMetadataUpdate(final List<Long> ids) {
+    this.comicDetailRepository.prepareForMetadataUpdate(ids);
+  }
+
+  /**
+   * Returns the number of comic books that are being batch scraped.
+   *
+   * @return the count
+   */
+  @Transactional
+  public long getBatchScrapingCount() {
+    return this.comicDetailRepository.getBatchScrapingCount();
+  }
+
+  /**
+   * Returns a set of comic books marked for batch scraping.
+   *
+   * @param chunkSize the chunk size
+   * @return the comic book
+   */
+  @Transactional
+  public List<ComicBook> findBatchScrapingComics(final int chunkSize) {
+    return this.comicDetailRepository.findBatchScrapingComics(PageRequest.of(0, chunkSize));
+  }
+
+  @Transactional
+  public void markComicBooksForBatchScraping(final List<Long> ids) {
+    this.comicDetailRepository.prepareForBatchScraping(ids);
+  }
+
+  /**
+   * Marks the specified comics for recreation, optionally renaming pages.
+   *
+   * @param ids the comic ids
+   * @param archiveType the targe archive type
+   */
+  @Transactional
+  public void prepareForRecreation(final List<Long> ids, final ArchiveType archiveType) {
+    log.trace("Marking comics for recreation");
+    this.comicDetailRepository.markForRecreationById(ids, archiveType);
+    this.applicationEventPublisher.publishEvent(RecreateComicFilesEvent.instance);
+  }
+
+  @Transactional
+  public long getRecreatingCount() {
+    log.debug("Getting the recreating count");
+    return this.comicDetailRepository.getRecreatingCount();
   }
 }

@@ -29,6 +29,7 @@ import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.batch.UpdateMetadataEvent;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.comicbooks.ComicDetailService;
 import org.comixedproject.service.comicpages.PageCacheService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -43,6 +44,7 @@ class LibraryServiceTest {
 
   @InjectMocks private LibraryService service;
   @Mock private ComicBookService comicBookService;
+  @Mock private ComicDetailService comicDetailService;
   @Mock private ArchiveType archiveType;
   @Mock private ComicBook comicBook;
   @Mock private FileAdaptor fileAdaptor;
@@ -77,7 +79,7 @@ class LibraryServiceTest {
 
     service.updateMetadata(comicIdList);
 
-    verify(comicBookService).prepareForMetadataUpdate(comicIdList);
+    verify(comicDetailService).prepareForMetadataUpdate(comicIdList);
     verify(applicationEventPublisher).publishEvent(UpdateMetadataEvent.instance);
   }
 
@@ -101,7 +103,7 @@ class LibraryServiceTest {
   void prepareToRecreate() {
     service.prepareToRecreate(comicIdList, archiveType);
 
-    verify(comicBookService).prepareForRecreation(comicIdList, archiveType);
+    verify(comicDetailService).prepareForRecreation(comicIdList, archiveType);
   }
 
   @Test

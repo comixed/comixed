@@ -271,7 +271,7 @@ public class LibraryController {
   public void updateSingleComicBookMetadata(@PathVariable("comicBookId") final long comicBookId)
       throws Exception {
     log.info("Updating the metadata a single comic book: id={}", comicBookId);
-    this.comicBookService.prepareForMetadataUpdate(new ArrayList<>(Arrays.asList(comicBookId)));
+    this.libraryService.prepareForMetadataUpdate(new ArrayList<>(Arrays.asList(comicBookId)));
   }
 
   /**

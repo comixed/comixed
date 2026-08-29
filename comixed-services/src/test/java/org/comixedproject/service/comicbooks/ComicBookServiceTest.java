@@ -194,7 +194,7 @@ class ComicBookServiceTest {
 
   @Test
   void getComic() throws ComicBookException {
-    when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(currentComicBook);
+    when(comicBookRepository.getReferenceById(Mockito.anyLong())).thenReturn(currentComicBook);
     when(comicBookRepository.findPreviousComicBookIdInSeries(
             Mockito.anyString(),
             Mockito.anyString(),
@@ -222,7 +222,7 @@ class ComicBookServiceTest {
     final Limit nextComicBookLimit = previousComicBookLimitArgumentCaptor.getValue();
     assertEquals(1, nextComicBookLimit.max());
 
-    verify(comicBookRepository).getById(TEST_COMIC_BOOK_ID);
+    verify(comicBookRepository).getReferenceById(TEST_COMIC_BOOK_ID);
     verify(comicBookRepository)
         .findPreviousComicBookIdInSeries(
             TEST_SERIES,
@@ -241,56 +241,56 @@ class ComicBookServiceTest {
 
   @Test
   void deleteComicBook_notFound() {
-    when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(null);
+    when(comicBookRepository.getReferenceById(Mockito.anyLong())).thenReturn(null);
 
     assertThrows(ComicBookException.class, () -> service.deleteComicBook(TEST_COMIC_BOOK_ID));
   }
 
   @Test
   void deleteComicBook() throws ComicBookException {
-    when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
-    when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBookRecord);
+    when(comicBookRepository.getReferenceById(Mockito.anyLong())).thenReturn(comicBook);
+    when(comicBookRepository.getReferenceById(Mockito.anyLong())).thenReturn(comicBookRecord);
 
     final ComicBook result = service.deleteComicBook(TEST_COMIC_BOOK_ID);
 
     assertNotNull(result);
     assertSame(comicBookRecord, result);
 
-    verify(comicBookRepository, times(2)).getById(TEST_COMIC_BOOK_ID);
+    verify(comicBookRepository, times(2)).getReferenceById(TEST_COMIC_BOOK_ID);
     verify(comicBookStateAdaptor).fireEvent(comicBookRecord, ComicEvent.markComicForRemoval);
   }
 
   @Test
   void restoreComicBook_notFound() {
-    when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(null);
+    when(comicBookRepository.getReferenceById(Mockito.anyLong())).thenReturn(null);
 
     assertThrows(ComicBookException.class, () -> service.undeleteComicBook(TEST_COMIC_BOOK_ID));
   }
 
   @Test
   void restoreComic() throws ComicBookException {
-    when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
-    when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBookRecord);
+    when(comicBookRepository.getReferenceById(Mockito.anyLong())).thenReturn(comicBook);
+    when(comicBookRepository.getReferenceById(Mockito.anyLong())).thenReturn(comicBookRecord);
 
     final ComicBook response = service.undeleteComicBook(TEST_COMIC_BOOK_ID);
 
     assertNotNull(response);
     assertSame(comicBookRecord, response);
 
-    verify(comicBookRepository, times(2)).getById(TEST_COMIC_BOOK_ID);
+    verify(comicBookRepository, times(2)).getReferenceById(TEST_COMIC_BOOK_ID);
     verify(comicBookStateAdaptor).fireEvent(comicBookRecord, ComicEvent.unmarkComicForRemoval);
   }
 
   @Test
   void GetComicContentNoSuchComicBook() {
-    when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(null);
+    when(comicBookRepository.getReferenceById(Mockito.anyLong())).thenReturn(null);
 
     assertThrows(ComicBookException.class, () -> this.service.getComicContent(TEST_COMIC_BOOK_ID));
   }
 
   @Test
   void getComicContentFileNotFound() {
-    when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
+    when(comicBookRepository.getReferenceById(Mockito.anyLong())).thenReturn(comicBook);
     when(comicDetail.getFilename()).thenReturn(TEST_COMIC_FILENAME.substring(1));
 
     assertThrows(ComicBookException.class, () -> this.service.getComicContent(TEST_COMIC_BOOK_ID));
@@ -298,7 +298,7 @@ class ComicBookServiceTest {
 
   @Test
   void getComicContent() throws ComicBookException {
-    when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
+    when(comicBookRepository.getReferenceById(Mockito.anyLong())).thenReturn(comicBook);
     when(comicDetail.getFilename()).thenReturn(TEST_COMIC_FILENAME);
 
     final DownloadDocument result = this.service.getComicContent(TEST_COMIC_BOOK_ID);
@@ -308,13 +308,13 @@ class ComicBookServiceTest {
     assertNotNull(result.getContent());
     assertTrue(result.getContent().length > 0);
 
-    verify(comicBookRepository, Mockito.atLeast(1)).getById(TEST_COMIC_BOOK_ID);
+    verify(comicBookRepository, Mockito.atLeast(1)).getReferenceById(TEST_COMIC_BOOK_ID);
     verify(fileTypeAdaptor).getMimeTypeFor(Mockito.any());
   }
 
   @Test
   void updateComicInvalidComic() {
-    when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(null);
+    when(comicBookRepository.getReferenceById(Mockito.anyLong())).thenReturn(null);
 
     assertThrows(
         ComicBookException.class,
@@ -335,7 +335,7 @@ class ComicBookServiceTest {
 
   @Test
   void updateComic() throws ComicBookException {
-    when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
+    when(comicBookRepository.getReferenceById(Mockito.anyLong())).thenReturn(comicBook);
     when(incomingComicDetail.getComicType()).thenReturn(TEST_COMIC_TYPE);
     when(incomingComicDetail.getPublisher()).thenReturn(TEST_PUBLISHER);
     when(incomingComicDetail.getImprint()).thenReturn(TEST_IMPRINT);
@@ -366,7 +366,7 @@ class ComicBookServiceTest {
     assertNotNull(result);
     assertSame(comicBook, result);
 
-    verify(comicBookRepository, times(2)).getById(TEST_COMIC_BOOK_ID);
+    verify(comicBookRepository, times(2)).getReferenceById(TEST_COMIC_BOOK_ID);
     verify(comicDetail).setComicType(TEST_COMIC_TYPE);
     verify(comicDetail).setPublisher(TEST_PUBLISHER);
     verify(comicDetail).setImprint(TEST_IMPRINT);
@@ -444,40 +444,41 @@ class ComicBookServiceTest {
 
   @Test
   void deleteMetadataInvalidComicId() {
-    when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(null);
+    when(comicBookRepository.getReferenceById(Mockito.anyLong())).thenReturn(null);
 
     assertThrows(ComicBookException.class, () -> service.deleteMetadata(TEST_COMIC_BOOK_ID));
   }
 
   @Test
   void deleteMetadata() throws ComicBookException {
-    when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook, comicBookRecord);
+    when(comicBookRepository.getReferenceById(Mockito.anyLong()))
+        .thenReturn(comicBook, comicBookRecord);
 
     final ComicBook result = service.deleteMetadata(TEST_COMIC_BOOK_ID);
 
     assertNotNull(result);
     assertSame(comicBookRecord, result);
 
-    verify(comicBookRepository, times(2)).getById(TEST_COMIC_BOOK_ID);
+    verify(comicBookRepository, times(2)).getReferenceById(TEST_COMIC_BOOK_ID);
     verify(comicBookMetadataAdaptor).clear(comicBook);
     verify(comicBookStateAdaptor).fireEvent(comicBook, ComicEvent.comicMetadataCleared);
   }
 
   @Test
   void getComicsWithoutContentCount() {
-    when(comicBookRepository.findUnprocessedComicsWithoutContentCount())
+    when(comicDetailRepository.findUnprocessedComicsWithoutContentCount())
         .thenReturn(TEST_MAXIMUM_COMICS);
 
     final long result = service.getComicsWithoutContentCount();
 
     assertEquals(TEST_MAXIMUM_COMICS, result);
 
-    verify(comicBookRepository).findUnprocessedComicsWithoutContentCount();
+    verify(comicDetailRepository).findUnprocessedComicsWithoutContentCount();
   }
 
   @Test
   void findComicsWithCreateMetadataFlagSet() {
-    when(comicBookRepository.findUnprocessedComicsWithCreateMetadataFlagSet(
+    when(comicDetailRepository.findUnprocessedComicsWithCreateMetadataFlagSet(
             pageableCaptor.capture()))
         .thenReturn(comicBookList);
 
@@ -491,12 +492,12 @@ class ComicBookServiceTest {
     assertEquals(0, pageable.getPageNumber());
     assertEquals(TEST_MAXIMUM_COMICS, pageable.getPageSize());
 
-    verify(comicBookRepository).findUnprocessedComicsWithCreateMetadataFlagSet(pageable);
+    verify(comicDetailRepository).findUnprocessedComicsWithCreateMetadataFlagSet(pageable);
   }
 
   @Test
   void findComicsWithContentToLoad() {
-    when(comicBookRepository.findComicsWithContentToLoad(pageableCaptor.capture()))
+    when(comicDetailRepository.findComicsWithContentToLoad(pageableCaptor.capture()))
         .thenReturn(comicBookList);
 
     final List<ComicBook> result = service.findComicsWithContentToLoad(TEST_MAXIMUM_COMICS);
@@ -509,30 +510,30 @@ class ComicBookServiceTest {
     assertEquals(0, pageable.getPageNumber());
     assertEquals(TEST_MAXIMUM_COMICS, pageable.getPageSize());
 
-    verify(comicBookRepository).findComicsWithContentToLoad(pageable);
+    verify(comicDetailRepository).findComicsWithContentToLoad(pageable);
   }
 
   @Test
   void findProcessedComics() {
-    when(comicBookRepository.findProcessedComics()).thenReturn(comicBookList);
+    when(comicDetailRepository.findProcessedComics()).thenReturn(comicBookList);
 
     final List<ComicBook> result = service.findProcessedComics();
 
     assertNotNull(result);
     assertSame(comicBookList, result);
 
-    verify(comicBookRepository).findProcessedComics();
+    verify(comicDetailRepository).findProcessedComics();
   }
 
   @Test
   void prepareForRescan() {
     for (long index = 0L; index < 25L; index++) idList.add(index + 100);
 
-    when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
+    when(comicBookRepository.getReferenceById(Mockito.anyLong())).thenReturn(comicBook);
 
     service.prepareForRescan(idList);
 
-    idList.forEach(id -> verify(comicBookRepository).getById(id.longValue()));
+    idList.forEach(id -> verify(comicBookRepository).getReferenceById(id));
     verify(comicBookStateAdaptor, times(idList.size()))
         .fireEvent(comicBook, ComicEvent.rescanComicBookFile);
   }
@@ -541,11 +542,11 @@ class ComicBookServiceTest {
   void prepareForRescanNoSuchComic() {
     idList.add(TEST_COMIC_BOOK_ID);
 
-    when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(null);
+    when(comicBookRepository.getReferenceById(Mockito.anyLong())).thenReturn(null);
 
     service.prepareForRescan(idList);
 
-    idList.forEach(id -> verify(comicBookRepository).getById(id.longValue()));
+    idList.forEach(id -> verify(comicBookRepository).getReferenceById(id));
     verify(comicBookStateAdaptor, never()).fireEvent(comicBook, ComicEvent.rescanComicBookFile);
   }
 
@@ -565,7 +566,7 @@ class ComicBookServiceTest {
 
   @Test
   void findComicsWithMetadataToUpdate() {
-    when(comicBookRepository.findComicsWithMetadataToUpdate(pageableCaptor.capture()))
+    when(comicDetailRepository.findComicsWithMetadataToUpdate(pageableCaptor.capture()))
         .thenReturn(comicBookList);
 
     final List<ComicBook> result = service.findComicsWithMetadataToUpdate(TEST_MAXIMUM_COMICS);
@@ -578,12 +579,12 @@ class ComicBookServiceTest {
     assertEquals(0, pageable.getPageNumber());
     assertEquals(TEST_MAXIMUM_COMICS, pageable.getPageSize());
 
-    verify(comicBookRepository).findComicsWithMetadataToUpdate(pageable);
+    verify(comicDetailRepository).findComicsWithMetadataToUpdate(pageable);
   }
 
   @Test
   void findComicsForBatchMetadataUpdate() {
-    when(comicBookRepository.findComicsForBatchMetadataUpdate(pageableCaptor.capture()))
+    when(comicDetailRepository.findComicsForBatchMetadataUpdate(pageableCaptor.capture()))
         .thenReturn(comicBookList);
 
     final List<ComicBook> result = service.findComicsForBatchMetadataUpdate(TEST_MAXIMUM_COMICS);
@@ -596,36 +597,37 @@ class ComicBookServiceTest {
     assertEquals(0, pageable.getPageNumber());
     assertEquals(TEST_MAXIMUM_COMICS, pageable.getPageSize());
 
-    verify(comicBookRepository).findComicsForBatchMetadataUpdate(pageable);
+    verify(comicDetailRepository).findComicsForBatchMetadataUpdate(pageable);
   }
 
   @Test
   void findComicsForBatchMetadataUpdateCount() {
-    when(comicBookRepository.findComicsForBatchMetadataUpdateCount()).thenReturn(TEST_COMIC_COUNT);
+    when(comicDetailRepository.findComicsForBatchMetadataUpdateCount())
+        .thenReturn(TEST_COMIC_COUNT);
 
     final long result = service.findComicsForBatchMetadataUpdateCount();
 
     assertEquals(TEST_COMIC_COUNT, result);
 
-    verify(comicBookRepository).findComicsForBatchMetadataUpdateCount();
+    verify(comicDetailRepository).findComicsForBatchMetadataUpdateCount();
   }
 
   @Test
   void getComicBooksToBePurgedCount() {
-    when(comicBookRepository.findComicsToPurgeCount()).thenReturn(TEST_COMIC_COUNT);
+    when(comicDetailRepository.findComicsToPurgeCount()).thenReturn(TEST_COMIC_COUNT);
 
     final long result = service.findComicsToPurgeCount();
 
     assertEquals(TEST_COMIC_COUNT, result);
 
-    verify(comicBookRepository).findComicsToPurgeCount();
+    verify(comicDetailRepository).findComicsToPurgeCount();
   }
 
   @Test
   void findAllComicsMarkedForDeletion() {
     service.prepareComicBooksForDeleting();
 
-    verify(comicBookRepository).prepareComicBooksForDeleting();
+    verify(comicDetailRepository).prepareComicBooksForDeleting();
   }
 
   @Test
@@ -641,13 +643,13 @@ class ComicBookServiceTest {
 
   @Test
   void FindComicsToPurgeCount() {
-    when(comicBookRepository.findComicsToPurgeCount()).thenReturn(TEST_COMIC_COUNT);
+    when(comicDetailRepository.findComicsToPurgeCount()).thenReturn(TEST_COMIC_COUNT);
 
     final long result = service.findComicsToPurgeCount();
 
     assertEquals(TEST_COMIC_COUNT, result);
 
-    verify(comicBookRepository).findComicsToPurgeCount();
+    verify(comicDetailRepository).findComicsToPurgeCount();
   }
 
   @Test
@@ -791,7 +793,7 @@ class ComicBookServiceTest {
 
   @Test
   void findComicsMarkedForPurging() {
-    when(comicBookRepository.findComicsMarkedForPurging(pageableCaptor.capture()))
+    when(comicDetailRepository.findComicsMarkedForPurging(pageableCaptor.capture()))
         .thenReturn(comicBookList);
 
     final List<ComicBook> result = service.findComicsMarkedForPurging(TEST_MAXIMUM_COMICS);
@@ -804,13 +806,13 @@ class ComicBookServiceTest {
     assertEquals(0, pageable.getPageNumber());
     assertEquals(TEST_MAXIMUM_COMICS, pageable.getPageSize());
 
-    verify(comicBookRepository).findComicsMarkedForPurging(pageable);
+    verify(comicDetailRepository).findComicsMarkedForPurging(pageable);
   }
 
   @Test
   void savePageOrder_invalidId() {
     List<PageOrderEntry> entryList = new ArrayList<>();
-    when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(null);
+    when(comicBookRepository.getReferenceById(Mockito.anyLong())).thenReturn(null);
 
     assertThrows(
         ComicBookException.class, () -> service.savePageOrder(TEST_COMIC_BOOK_ID, entryList));
@@ -830,7 +832,7 @@ class ComicBookServiceTest {
       }
     }
 
-    when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
+    when(comicBookRepository.getReferenceById(Mockito.anyLong())).thenReturn(comicBook);
     when(comicBook.getPages()).thenReturn(pageList);
 
     service.savePageOrder(TEST_COMIC_BOOK_ID, entryList);
@@ -850,7 +852,7 @@ class ComicBookServiceTest {
       pageList.add(page);
     }
 
-    when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
+    when(comicBookRepository.getReferenceById(Mockito.anyLong())).thenReturn(comicBook);
     when(comicBook.getPages()).thenReturn(pageList);
 
     assertThrows(
@@ -869,7 +871,7 @@ class ComicBookServiceTest {
       pageList.add(page);
     }
 
-    when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
+    when(comicBookRepository.getReferenceById(Mockito.anyLong())).thenReturn(comicBook);
     when(comicBook.getPages()).thenReturn(pageList);
 
     service.savePageOrder(TEST_COMIC_BOOK_ID, entryList);
@@ -885,7 +887,7 @@ class ComicBookServiceTest {
       assertEquals(pageOrderEntry.getPosition(), pageListEntry.get().getPageNumber().intValue());
     }
 
-    verify(comicBookRepository).getById(TEST_COMIC_BOOK_ID);
+    verify(comicBookRepository).getReferenceById(TEST_COMIC_BOOK_ID);
     verify(comicBookStateAdaptor).fireEvent(comicBook, ComicEvent.comicMetadataChanged);
   }
 
@@ -893,7 +895,7 @@ class ComicBookServiceTest {
   void updateMultipleComics_invalidId() {
     idList.add(TEST_COMIC_BOOK_ID);
 
-    when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(null);
+    when(comicBookRepository.getReferenceById(Mockito.anyLong())).thenReturn(null);
 
     assertThrows(ComicBookException.class, () -> service.updateMultipleComics(idList));
   }
@@ -902,7 +904,7 @@ class ComicBookServiceTest {
   void updateMultipleComics() throws ComicBookException {
     idList.add(TEST_COMIC_BOOK_ID);
 
-    when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
+    when(comicBookRepository.getReferenceById(Mockito.anyLong())).thenReturn(comicBook);
 
     service.updateMultipleComics(idList);
 
@@ -1043,7 +1045,7 @@ class ComicBookServiceTest {
   void markComicsForBatchMetadataUpdate_invalidId() {
     idList.add(TEST_COMIC_BOOK_ID);
 
-    when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(null);
+    when(comicBookRepository.getReferenceById(Mockito.anyLong())).thenReturn(null);
 
     assertThrows(
         ComicBookException.class, () -> service.markComicBooksForBatchMetadataUpdate(idList));
@@ -1053,11 +1055,11 @@ class ComicBookServiceTest {
   void markComicsForBatchMetadataUpdate() throws ComicBookException {
     idList.add(TEST_COMIC_BOOK_ID);
 
-    when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
+    when(comicBookRepository.getReferenceById(Mockito.anyLong())).thenReturn(comicBook);
 
     service.markComicBooksForBatchMetadataUpdate(idList);
 
-    verify(comicBookRepository).getById(TEST_COMIC_BOOK_ID);
+    verify(comicBookRepository).getReferenceById(TEST_COMIC_BOOK_ID);
     verify(comicBook).setBatchMetadataUpdate(true);
     verify(comicBookRepository).save(comicBook);
     verify(applicationEventPublisher).publishEvent(UpdateMetadataEvent.instance);
@@ -1236,17 +1238,10 @@ class ComicBookServiceTest {
   }
 
   @Test
-  void prepareForMetadataUpdate() {
-    service.prepareForMetadataUpdate(idList);
-
-    verify(comicBookRepository).prepareForMetadataUpdate(idList);
-  }
-
-  @Test
   void prepareForOrganization() {
     service.prepareForOrganization(idList);
 
-    verify(comicBookRepository).markForOrganizationById(idList);
+    verify(comicDetailRepository).markForOrganizationById(idList);
     verify(applicationEventPublisher).publishEvent(OrganizingLibraryEvent.instance);
   }
 
@@ -1254,48 +1249,30 @@ class ComicBookServiceTest {
   void prepareAllForOrganization() {
     service.prepareAllForOrganization();
 
-    verify(comicBookRepository).markAllForOrganization();
+    verify(comicDetailRepository).markAllForOrganization();
     verify(applicationEventPublisher).publishEvent(OrganizingLibraryEvent.instance);
   }
 
   @Test
-  void prepareForRecreation() {
-    service.prepareForRecreation(idList, targetArchiveType);
-
-    verify(comicBookRepository).markForRecreationById(idList, targetArchiveType);
-  }
-
-  @Test
   void getUnprocessedComicBookCount() {
-    when(comicBookRepository.getUnprocessedComicBookCount()).thenReturn(TEST_COMIC_COUNT);
+    when(comicDetailRepository.getUnprocessedComicBookCount()).thenReturn(TEST_COMIC_COUNT);
 
     final long result = service.getUnprocessedComicBookCount();
 
     assertEquals(TEST_COMIC_COUNT, result);
 
-    verify(comicBookRepository).getUnprocessedComicBookCount();
+    verify(comicDetailRepository).getUnprocessedComicBookCount();
   }
 
   @Test
   void getUpdateMetatdataCount() {
-    when(comicBookRepository.getUpdateMetadataCount()).thenReturn(TEST_COMIC_COUNT);
+    when(comicDetailRepository.getUpdateMetadataCount()).thenReturn(TEST_COMIC_COUNT);
 
     final long result = service.getUpdateMetadataCount();
 
     assertEquals(TEST_COMIC_COUNT, result);
 
-    verify(comicBookRepository).getUpdateMetadataCount();
-  }
-
-  @Test
-  void getRecreatingCount() {
-    when(comicBookRepository.getRecreatingCount()).thenReturn(TEST_COMIC_COUNT);
-
-    final long result = service.getRecreatingCount();
-
-    assertEquals(TEST_COMIC_COUNT, result);
-
-    verify(comicBookRepository).getRecreatingCount();
+    verify(comicDetailRepository).getUpdateMetadataCount();
   }
 
   @Test
@@ -1465,42 +1442,6 @@ class ComicBookServiceTest {
     verify(comicFileAdaptor).standardizeFilename(TEST_COMIC_FILENAME);
     verify(comicBookRepository).findByFilename(TEST_STANDARDIZED_FILENAME);
     verify(comicBookStateAdaptor).fireEvent(comicBook, ComicEvent.comicFileFound);
-  }
-
-  @Test
-  void getBatchScrapingCount() {
-    when(comicBookRepository.getBatchScrapingCount()).thenReturn(TEST_COMIC_COUNT);
-
-    final long result = service.getBatchScrapingCount();
-
-    assertEquals(TEST_COMIC_COUNT, result);
-
-    verify(comicBookRepository).getBatchScrapingCount();
-  }
-
-  @Test
-  void findBatchScrapingComics() {
-    when(comicBookRepository.findBatchScrapingComics(pageableCaptor.capture()))
-        .thenReturn(comicBookList);
-
-    final List<ComicBook> result = service.findBatchScrapingComics(TEST_MAXIMUM_COMICS);
-
-    assertNotNull(result);
-    assertSame(comicBookList, result);
-
-    final Pageable pageable = pageableCaptor.getValue();
-    assertNotNull(pageable);
-    assertEquals(0, pageable.getPageNumber());
-    assertEquals(TEST_MAXIMUM_COMICS, pageable.getPageSize());
-
-    verify(comicBookRepository).findBatchScrapingComics(pageable);
-  }
-
-  @Test
-  void markComicBooksForBatchScraping() {
-    service.markComicBooksForBatchScraping(idList);
-
-    verify(comicBookRepository).prepareForBatchScraping(idList);
   }
 
   @Test

@@ -23,11 +23,12 @@ import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertNull;
 import static junit.framework.TestCase.assertSame;
+import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.comicbooks.ComicDetailService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -40,7 +41,7 @@ class ScrapeMetadataReaderTest {
   private static final int MAX_RECORDS = 25;
 
   @InjectMocks private ScrapeMetadataReader reader;
-  @Mock private ComicBookService comicBookService;
+  @Mock private ComicDetailService comicDetailService;
   @Mock private ComicBook comicBook;
 
   private List<ComicBook> comicBookList = new ArrayList<>();
@@ -49,8 +50,7 @@ class ScrapeMetadataReaderTest {
   void read_noneLoaded_manyFound() {
     for (int index = 0; index < MAX_RECORDS; index++) comicBookList.add(comicBook);
 
-    Mockito.when(comicBookService.findBatchScrapingComics(Mockito.anyInt()))
-        .thenReturn(comicBookList);
+    when(comicDetailService.findBatchScrapingComics(Mockito.anyInt())).thenReturn(comicBookList);
 
     final ComicBook result = reader.read();
 
@@ -59,14 +59,12 @@ class ScrapeMetadataReaderTest {
     assertFalse(comicBookList.isEmpty());
     assertEquals(MAX_RECORDS - 1, comicBookList.size());
 
-    Mockito.verify(comicBookService, Mockito.times(1))
-        .findBatchScrapingComics(reader.getChunkSize());
+    verify(comicDetailService).findBatchScrapingComics(reader.getChunkSize());
   }
 
   @Test
   void read_noneRemaining() {
-    Mockito.when(comicBookService.findBatchScrapingComics(Mockito.anyInt()))
-        .thenReturn(comicBookList);
+    when(comicDetailService.findBatchScrapingComics(Mockito.anyInt())).thenReturn(comicBookList);
 
     reader.comicBookList = comicBookList;
 
@@ -75,21 +73,18 @@ class ScrapeMetadataReaderTest {
     assertNull(result);
     assertNull(reader.comicBookList);
 
-    Mockito.verify(comicBookService, Mockito.times(1))
-        .findBatchScrapingComics(reader.getChunkSize());
+    verify(comicDetailService).findBatchScrapingComics(reader.getChunkSize());
   }
 
   @Test
   void read_noneLoaded_noneFound() {
-    Mockito.when(comicBookService.findBatchScrapingComics(Mockito.anyInt()))
-        .thenReturn(comicBookList);
+    when(comicDetailService.findBatchScrapingComics(Mockito.anyInt())).thenReturn(comicBookList);
 
     final ComicBook result = reader.read();
 
     assertNull(result);
     assertNull(reader.comicBookList);
 
-    Mockito.verify(comicBookService, Mockito.times(1))
-        .findBatchScrapingComics(reader.getChunkSize());
+    verify(comicDetailService).findBatchScrapingComics(reader.getChunkSize());
   }
 }

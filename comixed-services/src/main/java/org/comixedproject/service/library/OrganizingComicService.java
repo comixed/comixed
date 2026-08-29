@@ -69,7 +69,7 @@ public class OrganizingComicService {
           comic.getComicDetailId(), comic.getUpdatedFilename());
     }
     log.trace("Clearing organizing flag: id={}", comic.getComicBookId());
-    this.comicBookRepository.clearOrganizingFlag(comic.getComicBookId());
+    this.comicDetailRepository.clearOrganizingFlag(comic.getComicBookId());
   }
 
   /**

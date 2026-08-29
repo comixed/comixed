@@ -84,7 +84,6 @@ public class ComicBookRepositoryTest {
   private static final String TEST_COMICBOOK_FILENAME = "src/test/resources/comicbook.cbz";
   private static final long TEST_NEXT_ISSUE_ID = 1001L;
   private static final long TEST_PREVIOUS_ISSUE_ID = 1006L;
-  private static final long TEST_ORGANIZING_COMIC = 1005L;
 
   @Autowired private ComicBookRepository repository;
 
@@ -336,17 +335,6 @@ public class ComicBookRepositoryTest {
     assertNull(updated.get().getComicDetail().getIssueNumber());
     assertNull(updated.get().getComicDetail().getTitle());
     assertNull(updated.get().getComicDetail().getDescription());
-  }
-
-  @Test
-  @Transactional
-  public void testClearOrganizingFlag() {
-    repository.clearOrganizingFlag(TEST_ORGANIZING_COMIC);
-
-    final ComicBook after = repository.getById(TEST_ORGANIZING_COMIC);
-
-    assertNotNull(after);
-    assertFalse(after.isOrganizing());
   }
 
   @Test

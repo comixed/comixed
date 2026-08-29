@@ -38,6 +38,6 @@ public class ScrapeMetadataReader extends AbstractComicReader {
   private int chunkSize;
 
   protected List<ComicBook> doLoadComics() {
-    return this.comicBookService.findBatchScrapingComics(this.chunkSize);
+    return this.comicDetailService.findBatchScrapingComics(this.chunkSize);
   }
 }

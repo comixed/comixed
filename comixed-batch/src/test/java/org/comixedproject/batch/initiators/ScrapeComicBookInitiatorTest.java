@@ -21,11 +21,15 @@ package org.comixedproject.batch.initiators;
 import static org.comixedproject.batch.comicbooks.ScrapeMetadataConfiguration.*;
 import static org.comixedproject.batch.initiators.ScrapeComicBookInitiator.DEFAULT_ERROR_THRESHOLD;
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import org.comixedproject.model.batch.ScrapeMetadataEvent;
 import org.comixedproject.service.admin.ConfigurationService;
 import org.comixedproject.service.batch.BatchProcessesService;
-import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.comicbooks.ComicDetailService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -50,7 +54,7 @@ class ScrapeComicBookInitiatorTest {
   private static final long TEST_CONFIGURED_ERROR_THRESHOLD = 100L;
 
   @InjectMocks private ScrapeComicBookInitiator initiator;
-  @Mock private ComicBookService comicBookService;
+  @Mock private ComicDetailService comicDetailService;
   @Mock private BatchProcessesService batchProcessesService;
   @Mock private ConfigurationService configurationService;
 
@@ -72,14 +76,13 @@ class ScrapeComicBookInitiatorTest {
           JobExecutionAlreadyRunningException,
           InvalidJobParametersException,
           JobRestartException {
-    Mockito.when(comicBookService.getBatchScrapingCount()).thenReturn(TEST_BATCH_SCRAPING_COUNT);
-    Mockito.when(batchProcessesService.hasActiveExecutions(Mockito.anyString())).thenReturn(false);
-    Mockito.when(jobOperator.start(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
+    when(comicDetailService.getBatchScrapingCount()).thenReturn(TEST_BATCH_SCRAPING_COUNT);
+    when(batchProcessesService.hasActiveExecutions(anyString())).thenReturn(false);
+    when(jobOperator.start(any(Job.class), jobParametersArgumentCaptor.capture()))
         .thenReturn(jobExecution);
-    Mockito.when(
-            configurationService.getOptionValue(
-                ConfigurationService.CFG_METADATA_SCRAPING_ERROR_THRESHOLD,
-                String.valueOf(DEFAULT_ERROR_THRESHOLD)))
+    when(configurationService.getOptionValue(
+            ConfigurationService.CFG_METADATA_SCRAPING_ERROR_THRESHOLD,
+            String.valueOf(DEFAULT_ERROR_THRESHOLD)))
         .thenReturn(String.valueOf(TEST_CONFIGURED_ERROR_THRESHOLD));
   }
 
@@ -98,7 +101,7 @@ class ScrapeComicBookInitiatorTest {
         TEST_CONFIGURED_ERROR_THRESHOLD,
         jobParameters.getLong(SCRAPE_METADATA_JOB_ERROR_THRESHOLD).longValue());
 
-    Mockito.verify(jobOperator, Mockito.times(1)).start(scrapeMetadataJob, jobParameters);
+    verify(jobOperator).start(scrapeMetadataJob, jobParameters);
   }
 
   @Test
@@ -107,10 +110,9 @@ class ScrapeComicBookInitiatorTest {
           JobExecutionAlreadyRunningException,
           InvalidJobParametersException,
           JobRestartException {
-    Mockito.when(
-            configurationService.getOptionValue(
-                ConfigurationService.CFG_METADATA_SCRAPING_ERROR_THRESHOLD,
-                String.valueOf(DEFAULT_ERROR_THRESHOLD)))
+    when(configurationService.getOptionValue(
+            ConfigurationService.CFG_METADATA_SCRAPING_ERROR_THRESHOLD,
+            String.valueOf(DEFAULT_ERROR_THRESHOLD)))
         .thenReturn(String.valueOf(DEFAULT_ERROR_THRESHOLD));
 
     initiator.execute(ScrapeMetadataEvent.instance);
@@ -120,7 +122,7 @@ class ScrapeComicBookInitiatorTest {
     assertNotNull(jobParameters.getLong(SCRAPE_METADATA_JOB_TIME_STARTED));
     assertEquals(10L, jobParameters.getLong(SCRAPE_METADATA_JOB_ERROR_THRESHOLD).longValue());
 
-    Mockito.verify(jobOperator, Mockito.times(1)).start(scrapeMetadataJob, jobParameters);
+    verify(jobOperator).start(scrapeMetadataJob, jobParameters);
   }
 
   @Test
@@ -129,7 +131,7 @@ class ScrapeComicBookInitiatorTest {
           JobExecutionAlreadyRunningException,
           InvalidJobParametersException,
           JobRestartException {
-    Mockito.when(jobOperator.start(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
+    when(jobOperator.start(any(Job.class), jobParametersArgumentCaptor.capture()))
         .thenThrow(InvalidJobParametersException.class);
 
     initiator.execute(ScrapeMetadataEvent.instance);
@@ -141,6 +143,6 @@ class ScrapeComicBookInitiatorTest {
         TEST_CONFIGURED_ERROR_THRESHOLD,
         jobParameters.getLong(SCRAPE_METADATA_JOB_ERROR_THRESHOLD).longValue());
 
-    Mockito.verify(jobOperator, Mockito.times(1)).start(scrapeMetadataJob, jobParameters);
+    verify(jobOperator).start(scrapeMetadataJob, jobParameters);
   }
 }

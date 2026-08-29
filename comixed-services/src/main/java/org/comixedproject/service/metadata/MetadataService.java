@@ -47,6 +47,7 @@ import org.comixedproject.service.collections.IssueService;
 import org.comixedproject.service.collections.ScrapedStoryService;
 import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.comicbooks.ComicDetailService;
 import org.comixedproject.service.comicbooks.ImprintService;
 import org.comixedproject.service.metadata.action.ProcessComicDescriptionAction;
 import org.comixedproject.state.comicbooks.ComicBookStateAdaptor;
@@ -74,6 +75,7 @@ public class MetadataService {
   @Autowired private ObjectMapper objectMapper;
   @Autowired private MetadataCacheService metadataCacheService;
   @Autowired private ComicBookService comicBookService;
+  @Autowired private ComicDetailService comicDetailService;
   @Autowired private ComicBookStateAdaptor comicBookStateAdaptor;
   @Autowired private ImprintService imprintService;
   @Autowired private IssueService issueService;
@@ -586,7 +588,7 @@ public class MetadataService {
   @Async
   public void batchScrapeComicBooks(final List<Long> ids) {
     log.debug("Marking comics for batch scraping");
-    this.comicBookService.markComicBooksForBatchScraping(ids);
+    this.comicDetailService.markComicBooksForBatchScraping(ids);
     log.debug("Starting batch scraping process");
     this.applicationEventPublisher.publishEvent(ScrapeMetadataEvent.instance);
   }
