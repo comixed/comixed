@@ -194,12 +194,8 @@
           {{ "comic-detail-list-view.label.comic-state" | translate }}
         </mat-header-cell>
         <mat-cell *matCellDef="let entry">
-          <mat-icon
-            [matTooltip]="
-              'comic-book.text.state-' + entry.item.comicState | translate
-            "
-          >
-            {{ getIconForState(entry.item.comicState) }}
+          <mat-icon [matTooltip]="getTooltipForState(entry.item) | translate">
+            {{ getIconForState(entry.item) }}
           </mat-icon>
         </mat-cell>
       </ng-container>

@@ -106,13 +106,14 @@
       "comicvine-issue-link": "ComicVine Details Page",
       "filesize": "{size, plural, =1{One byte} other{# bytes}}",
       "no-matching-volumes": "No matching volumes were found...",
-      "state-ADDED": "Unchanged",
-      "state-CHANGED": "Changed",
-      "state-DELETED": "Marked For Deletion",
-      "state-DISCOVERED": "Discovered",
-      "state-REMOVED": "Removed",
-      "state-STABLE": "Unchanged",
-      "state-UNPROCESSED": "Unprocessed"
+      "state-ADDED": "The comic data is not yet loaded",
+      "state-CHANGED": "The comic metadata is changed",
+      "state-DELETED": "The comic is marked For deletion",
+      "state-DISCOVERED": "The comic file was discovered",
+      "state-MISSING": "The comic file is missing..",
+      "state-REMOVED": "The comic file was removed",
+      "state-STABLE": "The comic metadata is unchanged",
+      "state-UNPROCESSED": "The comic contents are unprocessed"
     },
     "tooltip": {
       "blocked-hash": "Pages like this are blocked.",

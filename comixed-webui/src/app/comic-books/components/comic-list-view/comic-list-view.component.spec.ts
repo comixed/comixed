@@ -129,6 +129,7 @@ describe('ComicListViewComponent', () => {
   };
   const READ_COMIC_BOOKS = [READ_COMIC_BOOK_1];
   const COMIC_BOOK = COMIC_BOOKS[0];
+  const DISPLAYABLE_COMIC = DISPLAYABLE_COMIC_1;
   const PLUGIN = LIBRARY_PLUGIN_4;
   const initialState = {
     [LIBRARY_PLUGIN_FEATURE_KEY]: initialLibraryPluginState,
@@ -259,10 +260,30 @@ describe('ComicListViewComponent', () => {
   });
 
   describe('getting icons for comic states', () => {
-    it('always returns a value', () => {
-      for (const state in ComicState) {
-        expect(component.getIconForState(state as ComicState)).not.toBeNull();
-      }
+    describe('when missing', () => {
+      it('shows the correct icon', () => {
+        expect(
+          component.getIconForState({
+            ...DISPLAYABLE_COMIC,
+            comicState: ComicState.ADDED,
+            missing: true
+          })
+        ).not.toBeNull();
+      });
+    });
+
+    describe('when not missing', () => {
+      it('always returns a value', () => {
+        for (const state in ComicState) {
+          expect(
+            component.getIconForState({
+              ...DISPLAYABLE_COMIC,
+              missing: false,
+              comicState: ComicState[state]
+            })
+          ).not.toBeNull();
+        }
+      });
     });
   });
 

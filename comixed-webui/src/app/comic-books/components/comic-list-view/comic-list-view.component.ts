@@ -309,20 +309,24 @@ export class ComicListViewComponent implements OnInit, AfterViewInit {
     this.store.dispatch(loadLibraryPlugins());
   }
 
-  getIconForState(comicState: ComicState): string {
-    switch (comicState) {
-      case ComicState.ADDED:
-        return 'add';
-      case ComicState.DISCOVERED:
-        return 'file_present';
-      case ComicState.UNPROCESSED:
-        return 'bolt';
-      case ComicState.STABLE:
-        return 'check_circle';
-      case ComicState.CHANGED:
-        return 'change_circle';
-      case ComicState.DELETED:
-        return 'delete';
+  getIconForState(comic: DisplayableComic): string {
+    if (comic.missing) {
+      return 'fmd_bad';
+    } else {
+      switch (comic.comicState) {
+        case ComicState.ADDED:
+          return 'add';
+        case ComicState.DISCOVERED:
+          return 'file_present';
+        case ComicState.UNPROCESSED:
+          return 'bolt';
+        case ComicState.STABLE:
+          return 'check_circle';
+        case ComicState.CHANGED:
+          return 'change_circle';
+        case ComicState.DELETED:
+          return 'delete';
+      }
     }
   }
 
@@ -697,6 +701,14 @@ export class ComicListViewComponent implements OnInit, AfterViewInit {
     this.store.dispatch(
       saveUserPreference({ name: PREFERENCE_PAGE_SIZE, value: `${pageSize}` })
     );
+  }
+
+  protected getTooltipForState(item: DisplayableComic) {
+    if (item.missing) {
+      return 'comic-book.text.state-MISSING';
+    } else {
+      return `comic-book.text.state-${item.comicState}`;
+    }
   }
 
   private applyFilters(): void {

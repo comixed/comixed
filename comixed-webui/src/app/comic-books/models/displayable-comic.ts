@@ -28,6 +28,7 @@ export interface DisplayableComic {
   baseFilename: string;
   archiveType: ArchiveType;
   comicState: ComicState;
+  missing: boolean;
   unscraped: boolean;
   comicType: ComicType;
   sortName?: string;
