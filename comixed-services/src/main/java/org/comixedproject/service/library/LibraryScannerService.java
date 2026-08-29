@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -57,7 +58,7 @@ public class LibraryScannerService implements InitializingBean, ConfigurationCha
 
   boolean active = false;
   WatchService watchService;
-  Map<WatchKey, Path> keyMap = new HashMap<>();
+  Map<String, WatchKey> keyMap = new HashMap<>();
 
   String rootDirectory = "";
 
@@ -97,7 +98,7 @@ public class LibraryScannerService implements InitializingBean, ConfigurationCha
     this.rootDirectory = null;
 
     if (!StringUtils.hasLength(directory)) {
-      log.error("No directory set");
+      log.warn("No library root directory configured");
       return;
     }
 
@@ -138,24 +139,39 @@ public class LibraryScannerService implements InitializingBean, ConfigurationCha
         });
   }
 
-  private void registerDirectory(Path dir) throws IOException {
-    log.trace("Monitoring directory: {}", dir);
-    WatchKey key = dir.register(watchService, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY, OVERFLOW);
-    this.keyMap.put(key, dir);
+  private void registerDirectory(Path dir) {
+    try {
+      final File path = new File(dir.toAbsolutePath().toString());
+      log.trace("Monitoring directory: {}", path.getAbsolutePath());
+      final WatchKey key =
+          dir.register(watchService, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY, OVERFLOW);
+      this.keyMap.put(path.getAbsolutePath(), key);
+      if (!FileUtils.isEmptyDirectory(path)) {
+        Arrays.stream(path.listFiles())
+            .filter(File::isDirectory)
+            .forEach(directory -> this.registerDirectory(Path.of(directory.getAbsolutePath())));
+      }
+    } catch (IOException error) {
+      log.error(
+          String.format("Failed to register directory: %s", dir.toAbsolutePath().toString()),
+          error);
+    }
   }
 
   public void processEvents() {
     this.active = true;
     while (this.active) {
-      final WatchKey key;
-      key = this.watchService.poll();
+      final WatchKey key = this.watchService.poll();
 
       if (Objects.nonNull(key)) {
         for (WatchEvent<?> event : key.pollEvents()) {
-          this.processWatchEvent(key, event);
+          try {
+            this.processWatchEvent(key, event);
+          } catch (IOException error) {
+            log.error("Failed to process library event", error);
+          }
           final boolean valid = key.reset();
           if (!valid) {
-            this.keyMap.remove(key);
             if (this.keyMap.isEmpty()) {
               break;
             }
@@ -165,7 +181,7 @@ public class LibraryScannerService implements InitializingBean, ConfigurationCha
     }
   }
 
-  void processWatchEvent(final WatchKey key, final WatchEvent<?> event) {
+  void processWatchEvent(final WatchKey key, final WatchEvent<?> event) throws IOException {
     final Path dir = (Path) key.watchable();
     final Path name = Path.of(((WatchEvent<Path>) event).context().toString());
     final String filename = dir.resolve(name).toString();
@@ -173,24 +189,32 @@ public class LibraryScannerService implements InitializingBean, ConfigurationCha
       this.doFileFound(filename);
     } else if (event.kind() == ENTRY_DELETE) {
       this.doFileDeleted(filename);
-    } else {
-      log.debug("Unhandled watch event: {}", event.kind());
     }
   }
 
-  private void doFileFound(final String filename) {
-    if (this.comicDetailService.filenameFound(filename)) {
-      log.debug("Missing file found: {}", filename);
-      this.comicBookService.markComicAsFound(filename);
+  private void doFileFound(final String filename) throws IOException {
+    if (FileUtils.isDirectory(new File(filename), LinkOption.NOFOLLOW_LINKS)) {
+      this.registerDirectory(Path.of(filename));
     } else {
-      log.debug("Comic book discovered: {}", filename);
-      this.comicFileService.discoverComicFile(filename);
+      if (this.comicDetailService.filenameFound(filename)) {
+        log.debug("Missing file found: {}", filename);
+        this.comicBookService.markComicAsFound(filename);
+      } else {
+        log.debug("Comic book discovered: {}", filename);
+        this.comicFileService.discoverComicFile(filename);
+      }
     }
   }
 
   private void doFileDeleted(final String filename) {
-    log.debug("File deleted: {}", filename);
-    this.comicBookService.markComicAsMissing(filename);
+    final String path = Path.of(filename).toAbsolutePath().toString();
+    if (this.keyMap.containsKey(path)) {
+      log.debug("Removing watched directory: {}", path);
+      this.keyMap.remove(path);
+    } else {
+      log.debug("File deleted: {}", filename);
+      this.comicBookService.markComicAsMissing(filename);
+    }
   }
 
   private void scanLibrary() {

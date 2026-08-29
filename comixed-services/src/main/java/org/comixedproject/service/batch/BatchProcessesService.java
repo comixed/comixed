@@ -113,7 +113,7 @@ public class BatchProcessesService {
               .count()
           > 0L;
     } catch (NoSuchJobException error) {
-      log.error("Failed to get active job count for " + jobName, error);
+      log.debug("Failed to get active job count for " + jobName, error);
       return false;
     }
   }

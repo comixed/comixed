@@ -20,7 +20,9 @@ package org.comixedproject.service.library;
 
 import static java.nio.file.StandardWatchEventKinds.*;
 import static org.comixedproject.service.admin.ConfigurationService.CFG_LIBRARY_ROOT_DIRECTORY;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,7 +39,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
@@ -51,6 +52,7 @@ class LibraryScannerServiceTest {
       new File("target/test-classes/example.cbz").getAbsolutePath();
   private static final String TEST_MISSING_COMIC_FILENAME = TEST_COMIC_FILENAME + "-not-found";
   private static final String TEST_RELATIVE_FILENAME = "example.cbz";
+  private static final String TEST_LIBRARY_DIRECTORY = "target/test-class";
 
   @InjectMocks private LibraryScannerService scanner;
   @Mock private ConfigurationService configurationService;
@@ -69,20 +71,19 @@ class LibraryScannerServiceTest {
 
   @BeforeEach
   void setUp() {
-    Mockito.when(configurationService.getOptionValue(Mockito.anyString()))
-        .thenReturn(TEST_ROOT_DIRECTORY);
+    when(configurationService.getOptionValue(anyString())).thenReturn(TEST_ROOT_DIRECTORY);
     missingComicDetailSet.add(TEST_COMIC_FILENAME);
     missingComicDetailSet.add(TEST_MISSING_COMIC_FILENAME);
-    Mockito.when(comicBookService.getAllComicDetails(true)).thenReturn(missingComicDetailSet);
+    when(comicBookService.getAllComicDetails(true)).thenReturn(missingComicDetailSet);
     notMissingComicDetailSet.add(TEST_COMIC_FILENAME);
     notMissingComicDetailSet.add(TEST_MISSING_COMIC_FILENAME);
-    Mockito.when(comicBookService.getAllComicDetails(false)).thenReturn(notMissingComicDetailSet);
-    Mockito.when(resolvedPath.toString()).thenReturn(TEST_COMIC_FILENAME);
-    Mockito.when(keyWatchablePath.resolve(Mockito.any(Path.class))).thenReturn(resolvedPath);
-    Mockito.when(key.watchable()).thenReturn(keyWatchablePath);
-    Mockito.when(watchEventPath.toString()).thenReturn(TEST_RELATIVE_FILENAME);
-    Mockito.when(watchEvent.context()).thenReturn(watchEventPath);
-    Mockito.when(comicDetailService.filenameFound(Mockito.anyString())).thenReturn(true);
+    when(comicBookService.getAllComicDetails(false)).thenReturn(notMissingComicDetailSet);
+    when(resolvedPath.toString()).thenReturn(TEST_COMIC_FILENAME);
+    when(keyWatchablePath.resolve(any(Path.class))).thenReturn(resolvedPath);
+    when(key.watchable()).thenReturn(keyWatchablePath);
+    when(watchEventPath.toString()).thenReturn(TEST_RELATIVE_FILENAME);
+    when(watchEvent.context()).thenReturn(watchEventPath);
+    when(comicDetailService.filenameFound(anyString())).thenReturn(true);
   }
 
   @AfterEach
@@ -98,7 +99,7 @@ class LibraryScannerServiceTest {
 
     assertNotNull(scanner.watchService);
 
-    Mockito.verify(configurationService, Mockito.times(1)).addConfigurationChangedListener(scanner);
+    verify(configurationService).addConfigurationChangedListener(scanner);
   }
 
   @Test
@@ -110,8 +111,8 @@ class LibraryScannerServiceTest {
     assertNull(scanner.rootDirectory);
     assertNull(scanner.watchService);
 
-    Mockito.verify(comicBookService, Mockito.never()).markComicAsFound(Mockito.anyString());
-    Mockito.verify(comicBookService, Mockito.never()).markComicAsMissing(Mockito.anyString());
+    verify(comicBookService, never()).markComicAsFound(anyString());
+    verify(comicBookService, never()).markComicAsMissing(anyString());
   }
 
   @Test
@@ -123,8 +124,8 @@ class LibraryScannerServiceTest {
     assertNull(scanner.rootDirectory);
     assertNull(scanner.watchService);
 
-    Mockito.verify(comicBookService, Mockito.never()).markComicAsFound(Mockito.anyString());
-    Mockito.verify(comicBookService, Mockito.never()).markComicAsMissing(Mockito.anyString());
+    verify(comicBookService, never()).markComicAsFound(anyString());
+    verify(comicBookService, never()).markComicAsMissing(anyString());
   }
 
   @Test
@@ -136,9 +137,8 @@ class LibraryScannerServiceTest {
     assertEquals(TEST_ROOT_DIRECTORY, scanner.rootDirectory);
     assertNotNull(scanner.watchService);
 
-    Mockito.verify(comicBookService, Mockito.times(1)).markComicAsFound(TEST_COMIC_FILENAME);
-    Mockito.verify(comicBookService, Mockito.times(1))
-        .markComicAsMissing(TEST_MISSING_COMIC_FILENAME);
+    verify(comicBookService).markComicAsFound(TEST_COMIC_FILENAME);
+    verify(comicBookService).markComicAsMissing(TEST_MISSING_COMIC_FILENAME);
   }
 
   @Test
@@ -149,57 +149,57 @@ class LibraryScannerServiceTest {
 
     assertNull(scanner.watchService);
 
-    Mockito.verify(watchService, Mockito.times(1)).close();
+    verify(watchService).close();
   }
 
   @Test
-  void processWatchEvent_entrycreate_notInLibrary() {
-    Mockito.when(watchEvent.kind()).thenReturn(ENTRY_CREATE);
-    Mockito.when(comicDetailService.filenameFound(Mockito.anyString())).thenReturn(false);
+  void processWatchEvent_entrycreate_notInLibrary() throws IOException {
+    when(watchEvent.kind()).thenReturn(ENTRY_CREATE);
+    when(comicDetailService.filenameFound(anyString())).thenReturn(false);
 
     scanner.processWatchEvent(key, watchEvent);
 
-    Mockito.verify(comicDetailService, Mockito.times(1)).filenameFound(TEST_COMIC_FILENAME);
-    Mockito.verify(comicFileService, Mockito.times(1)).discoverComicFile(TEST_COMIC_FILENAME);
+    verify(comicDetailService).filenameFound(TEST_COMIC_FILENAME);
+    verify(comicFileService).discoverComicFile(TEST_COMIC_FILENAME);
   }
 
   @Test
-  void processWatchEvent_entrycreate_inLibrary() {
-    Mockito.when(watchEvent.kind()).thenReturn(ENTRY_CREATE);
-    Mockito.when(comicDetailService.filenameFound(Mockito.anyString())).thenReturn(true);
+  void processWatchEvent_entrycreate_inLibrary() throws IOException {
+    when(watchEvent.kind()).thenReturn(ENTRY_CREATE);
+    when(comicDetailService.filenameFound(anyString())).thenReturn(true);
 
     scanner.processWatchEvent(key, watchEvent);
 
-    Mockito.verify(comicDetailService, Mockito.times(1)).filenameFound(TEST_COMIC_FILENAME);
-    Mockito.verify(comicBookService, Mockito.times(1)).markComicAsFound(TEST_COMIC_FILENAME);
+    verify(comicDetailService).filenameFound(TEST_COMIC_FILENAME);
+    verify(comicBookService).markComicAsFound(TEST_COMIC_FILENAME);
   }
 
   @Test
-  void processWatchEvent_fileDeleted() {
-    Mockito.when(watchEvent.kind()).thenReturn(ENTRY_DELETE);
+  void processWatchEvent_fileDeleted() throws IOException {
+    when(watchEvent.kind()).thenReturn(ENTRY_DELETE);
 
     scanner.processWatchEvent(key, watchEvent);
 
-    Mockito.verify(comicBookService, Mockito.times(1)).markComicAsMissing(TEST_COMIC_FILENAME);
+    verify(comicBookService).markComicAsMissing(TEST_COMIC_FILENAME);
   }
 
   @Test
-  void processWatchEvent_fileModified() {
-    Mockito.when(watchEvent.kind()).thenReturn(ENTRY_MODIFY);
+  void processWatchEvent_fileModified() throws IOException {
+    when(watchEvent.kind()).thenReturn(ENTRY_MODIFY);
 
     scanner.processWatchEvent(key, watchEvent);
 
-    Mockito.verify(comicDetailService, Mockito.times(1)).filenameFound(TEST_COMIC_FILENAME);
-    Mockito.verify(comicBookService, Mockito.times(1)).markComicAsFound(TEST_COMIC_FILENAME);
+    verify(comicDetailService).filenameFound(TEST_COMIC_FILENAME);
+    verify(comicBookService).markComicAsFound(TEST_COMIC_FILENAME);
   }
 
   @Test
-  void processWatchEvent_fileCreated() {
-    Mockito.when(watchEvent.kind()).thenReturn(ENTRY_CREATE);
+  void processWatchEvent_fileCreated() throws IOException {
+    when(watchEvent.kind()).thenReturn(ENTRY_CREATE);
 
     scanner.processWatchEvent(key, watchEvent);
 
-    Mockito.verify(comicDetailService, Mockito.times(1)).filenameFound(TEST_COMIC_FILENAME);
-    Mockito.verify(comicBookService, Mockito.times(1)).markComicAsFound(TEST_COMIC_FILENAME);
+    verify(comicDetailService).filenameFound(TEST_COMIC_FILENAME);
+    verify(comicBookService).markComicAsFound(TEST_COMIC_FILENAME);
   }
 }

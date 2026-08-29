@@ -74,6 +74,11 @@ public class ComicBookStateMachineConfiguration {
         .withAction(this.prepareComicForProcessingAction)
         .and()
         // unprocessed comics
+        .startingState(ComicState.DISCOVERED)
+        .onEvent(ComicEvent.comicFileContentsLoaded)
+        .endingState(ComicState.STABLE)
+        .withAction(this.fileContentsLoadedAction)
+        .and()
         .startingState(ComicState.UNPROCESSED)
         .onEvent(ComicEvent.comicFileContentsLoaded)
         .endingState(ComicState.STABLE)

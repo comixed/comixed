@@ -592,8 +592,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    *
    * @return the list of comic books
    */
-  @Query(
-      "SELECT COUNT(b) FROM ComicBook b WHERE b.comicBookId IN (select d.comicBook.comicBookId FROM ComicDetail d WHERE d.comicState = 'UNPROCESSED')")
+  @Query("SELECT COUNT(b) FROM ComicBook b WHERE b.fileContentsLoaded IS FALSE")
   long getUnprocessedComicBookCount();
 
   @Modifying
