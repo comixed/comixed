@@ -19,15 +19,17 @@
 package org.comixedproject.batch.comicpages.processors;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.model.comicpages.ComicPageType;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
@@ -35,16 +37,17 @@ class MarkBlockedPageProcessorTest {
   @InjectMocks private MarkBlockedPageProcessor processor;
   @Mock private ComicPage page;
   @Mock private ComicBook comicBook;
+  @Mock private ComicDetail comicDetail;
 
   @Test
   void process() {
-    Mockito.when(page.getComicBook()).thenReturn(comicBook);
+    when(page.getComicDetail()).thenReturn(comicDetail);
 
     final ComicPage result = processor.process(page);
 
     assertNotNull(result);
     assertSame(page, result);
 
-    Mockito.verify(page).setPageType(ComicPageType.DELETED);
+    verify(page).setPageType(ComicPageType.DELETED);
   }
 }

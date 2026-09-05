@@ -168,7 +168,8 @@ public class BlockedHashService {
         final String hash = hashes.get(index);
         final ComicPage page = this.comicPageService.getOneForHash(hash);
         final byte[] pageContent =
-            this.comicBookAdaptor.loadPageContent(page.getComicBook(), page.getPageNumber());
+            this.comicBookAdaptor.loadPageContent(
+                page.getComicDetail().getComicBook(), page.getPageNumber());
         final String encodedPageContent = this.dataEncoder.encode(pageContent);
 
         final BlockedHash blockedHashRecord = this.doBlockPageHash(hash, null, encodedPageContent);

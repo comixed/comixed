@@ -76,7 +76,7 @@ public class BlockedHash {
   private Date createdOn = new Date();
 
   @Formula(
-      "(SELECT COUNT(*) FROM comic_books_v4 c WHERE c.comic_book_id IN (SELECT p.comic_book_id FROM comic_pages_v4 p WHERE p.file_hash = hash_value))")
+      "(SELECT COUNT(*) FROM comic_details_v4 c WHERE c.comic_detail_id IN (SELECT p.comic_detail_id FROM comic_pages_v4 p WHERE p.file_hash = hash_value))")
   @JsonProperty("comicCount")
   @JsonView(View.BlockedHashList.class)
   @Getter

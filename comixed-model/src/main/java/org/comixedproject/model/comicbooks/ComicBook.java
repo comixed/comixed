@@ -29,7 +29,6 @@ import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.model.state.StatefulItem;
 import org.comixedproject.views.View;
-import org.hibernate.annotations.Formula;
 
 /**
  * <code>ComicBook</code> represents a single digital comic issue.
@@ -64,28 +63,6 @@ public class ComicBook implements StatefulItem<ComicState> {
   @Getter
   @Setter
   private ComicMetadataSource metadata;
-
-  @OneToMany(mappedBy = "comicBook", cascade = CascadeType.ALL, orphanRemoval = true)
-  @OrderColumn(name = "page_number")
-  @JsonProperty("pages")
-  @JsonView({View.ComicListView.class, View.ReadingListDetail.class})
-  @Getter
-  List<ComicPage> pages = new ArrayList<>();
-
-  @Formula(
-      "(SELECT COUNT(*) FROM comic_pages_v4 p WHERE p.comic_book_id = comic_book_id AND p.file_hash IN (SELECT d.file_hash FROM comic_pages_v4 d GROUP BY d.file_hash HAVING COUNT(*) > 1))")
-  @JsonProperty("duplicatePageCount")
-  @JsonView({View.ComicListView.class})
-  @Getter
-  private int duplicatePageCount;
-
-  @Formula(
-      value =
-          "(SELECT COUNT(*) FROM comic_pages_v4 p WHERE p.comic_book_id = comic_book_id AND p.file_hash in (SELECT b.hash_value FROM blocked_hashes_v4 b))")
-  @JsonProperty("blockedPageCount")
-  @JsonView({View.ComicListView.class})
-  @Getter
-  private int blockedPageCount;
 
   @Transient
   @JsonProperty("nextIssueId")
@@ -165,6 +142,26 @@ public class ComicBook implements StatefulItem<ComicState> {
     this.comicDetail.setEditingMetadata(editDetails);
   }
 
+  public int getPageCount() {
+    return this.comicDetail.getPageCount();
+  }
+
+  public List<ComicPage> getPages() {
+    return this.comicDetail.getPages();
+  }
+
+  public boolean hasPageWithFilename(final String filename) {
+    return this.comicDetail.hasPageWithFilename(filename);
+  }
+
+  public void updatePageNumbers() {
+    this.comicDetail.updatePageNumbers();
+  }
+
+  public int getBlockedPageCount() {
+    return this.comicDetail.getBlockedPageCount();
+  }
+
   @Column(name = "last_modified_on", updatable = true, nullable = false)
   @JsonProperty("lastModifiedOn")
   @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
@@ -177,58 +174,6 @@ public class ComicBook implements StatefulItem<ComicState> {
   @Transient @Getter @Setter private String metadataSourceName;
   @Transient @Getter @Setter private String metadataReferenceId;
   @Transient @Getter @Setter private Date lastScrapedDate;
-
-  public int getIndexFor(ComicPage page) {
-    if (this.pages.contains(page)) return this.pages.indexOf(page);
-
-    return -1;
-  }
-
-  /**
-   * Returns the number of pages associated with this comic.
-   *
-   * @return the offset count
-   */
-  @Transient
-  @JsonProperty("pageCount")
-  @JsonView({View.ComicListView.class})
-  public int getPageCount() {
-    if (!this.pages.isEmpty()) return this.pages.size();
-    return 0;
-  }
-
-  /**
-   * Returns whether a offset with the given filename is present.
-   *
-   * @param filename the filename
-   * @return true if such a offset exists
-   */
-  public boolean hasPageWithFilename(String filename) {
-    return this.getPageWithFilename(filename) != null;
-  }
-
-  /**
-   * Returns the offset for the given filename.
-   *
-   * @param filename the filename
-   * @return the {@link ComicPage} or null
-   */
-  public ComicPage getPageWithFilename(String filename) {
-    if (this.pages.isEmpty()) return null;
-    for (ComicPage page : this.pages) {
-      if (page.getFilename().equals(filename)) return page;
-    }
-
-    return null;
-  }
-
-  public void updatePageNumbers() {
-    Collections.sort(
-        this.pages, (left, right) -> left.getPageNumber().compareTo(right.getPageNumber()));
-    for (int index = 0; index < this.pages.size(); index++) {
-      this.pages.get(index).setPageNumber(index);
-    }
-  }
 
   @Override
   public boolean equals(Object o) {

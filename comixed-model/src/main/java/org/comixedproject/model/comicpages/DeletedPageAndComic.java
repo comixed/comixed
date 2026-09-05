@@ -22,7 +22,7 @@ import java.util.Objects;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 
 /**
  * <code>DeletedPageAndComic</code> combines a deleted page hash and a comic containing that hash.
@@ -33,18 +33,18 @@ import org.comixedproject.model.comicbooks.ComicBook;
 public class DeletedPageAndComic {
   @Getter @NonNull private String hash;
 
-  @Getter @NonNull private ComicBook comicBook;
+  @Getter @NonNull private ComicDetail comicDetail;
 
   @Override
   public boolean equals(final Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     final DeletedPageAndComic that = (DeletedPageAndComic) o;
-    return hash.equals(that.hash) && comicBook.equals(that.comicBook);
+    return hash.equals(that.hash) && comicDetail.equals(that.comicDetail);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(hash, comicBook);
+    return Objects.hash(hash, comicDetail);
   }
 }

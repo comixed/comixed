@@ -28,6 +28,8 @@ import static org.comixedproject.service.comicpages.BlockedHashService.PAGE_LABE
 import static org.comixedproject.service.comicpages.BlockedHashService.PAGE_SNAPSHOT_HEADER;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertThrows;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -46,6 +48,7 @@ import org.comixedproject.messaging.comicpages.PublishBlockedPageRemovalAction;
 import org.comixedproject.messaging.comicpages.PublishBlockedPageUpdateAction;
 import org.comixedproject.messaging.library.PublishDuplicatePageListUpdateAction;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicpages.BlockedHash;
 import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.model.library.DuplicatePage;
@@ -62,7 +65,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
@@ -98,6 +100,7 @@ class BlockedHashServiceTest {
   @Mock private List<DuplicatePage> duplicatePageList;
   @Mock private ComicPage page;
   @Mock private ComicBook comicBook;
+  @Mock private ComicDetail comicDetail;
   @Mock private DataEncoder dataEncoder;
   @Mock private LoadDuplicatePageListResponse loadDuplicatePageListResponse;
   @Mock private DuplicatePageUpdate duplicatePageUpdate;
@@ -112,116 +115,112 @@ class BlockedHashServiceTest {
 
   @BeforeEach
   public void setUp() throws AdaptorException, DuplicatePageException, PublishingException {
-    Mockito.when(blockedHash.getLabel()).thenReturn(TEST_PAGE_LABEL);
-    Mockito.when(blockedHash.getHash()).thenReturn(TEST_PAGE_HASH);
-    Mockito.when(blockedHash.getThumbnail()).thenReturn(TEST_PAGE_THUMBNAIL);
+    when(blockedHash.getLabel()).thenReturn(TEST_PAGE_LABEL);
+    when(blockedHash.getHash()).thenReturn(TEST_PAGE_HASH);
+    when(blockedHash.getThumbnail()).thenReturn(TEST_PAGE_THUMBNAIL);
     TEST_DECODED_ROW.add(TEST_PAGE_LABEL);
     TEST_DECODED_ROW.add(TEST_PAGE_HASH);
     TEST_DECODED_ROW.add(TEST_PAGE_THUMBNAIL);
-    Mockito.when(page.getComicBook()).thenReturn(comicBook);
-    Mockito.when(page.getPageNumber()).thenReturn(TEST_PAGE_NUMBER);
-    Mockito.when(comicPageService.getOneForHash(Mockito.anyString())).thenReturn(page);
-    Mockito.when(comicBookAdaptor.loadPageContent(Mockito.any(ComicBook.class), Mockito.anyInt()))
+    when(page.getComicDetail()).thenReturn(comicDetail);
+    when(comicDetail.getComicBook()).thenReturn(comicBook);
+    when(page.getPageNumber()).thenReturn(TEST_PAGE_NUMBER);
+    when(comicPageService.getOneForHash(anyString())).thenReturn(page);
+    when(comicBookAdaptor.loadPageContent(any(ComicBook.class), anyInt()))
         .thenReturn(TEST_PAGE_CONTENT);
-    Mockito.when(dataEncoder.encode(Mockito.any(byte[].class))).thenReturn(TEST_ENCODED_PAGE);
-    Mockito.when(dataEncoder.decode(Mockito.anyString())).thenReturn(TEST_DECODED_PAGE);
-    Mockito.when(duplicatePageService.getForHash(Mockito.anyString()))
-        .thenReturn(savedDuplicatePage);
-    Mockito.when(duplicatePageService.getDuplicatePageCount())
-        .thenReturn(TEST_TOTAL_DUPLICATE_PAGES);
-    Mockito.doNothing()
+    when(dataEncoder.encode(any(byte[].class))).thenReturn(TEST_ENCODED_PAGE);
+    when(dataEncoder.decode(anyString())).thenReturn(TEST_DECODED_PAGE);
+    when(duplicatePageService.getForHash(anyString())).thenReturn(savedDuplicatePage);
+    when(duplicatePageService.getDuplicatePageCount()).thenReturn(TEST_TOTAL_DUPLICATE_PAGES);
+    doNothing()
         .when(publishDuplicatePageListUpdateAction)
         .publish(duplicatePageUpdateArgumentCaptor.capture());
   }
 
   @Test
   void getAll() {
-    Mockito.when(blockedHashRepository.getAll()).thenReturn(blockedHashList);
+    when(blockedHashRepository.getAll()).thenReturn(blockedHashList);
 
     final List<BlockedHash> result = service.getAll();
 
     assertNotNull(result);
     assertSame(blockedHashList, result);
 
-    Mockito.verify(blockedHashRepository, Mockito.times(1)).getAll();
+    verify(blockedHashRepository).getAll();
   }
 
   @Test
   void getByHash_noSuchHash() {
-    Mockito.when(blockedHashRepository.findByHash(Mockito.anyString())).thenReturn(null);
+    when(blockedHashRepository.findByHash(anyString())).thenReturn(null);
 
     assertThrows(BlockedHashException.class, () -> service.getByHash(TEST_PAGE_HASH));
   }
 
   @Test
   void getByHash() throws BlockedHashException {
-    Mockito.when(blockedHashRepository.findByHash(Mockito.anyString()))
-        .thenReturn(blockedHashRecord);
+    when(blockedHashRepository.findByHash(anyString())).thenReturn(blockedHashRecord);
 
     final BlockedHash result = service.getByHash(TEST_PAGE_HASH);
 
     assertNotNull(result);
     assertSame(blockedHashRecord, result);
 
-    Mockito.verify(blockedHashRepository, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
+    verify(blockedHashRepository).findByHash(TEST_PAGE_HASH);
   }
 
   @Test
   void getHashes() {
-    Mockito.when(blockedHashRepository.getHashes()).thenReturn(blockedPageHashList);
+    when(blockedHashRepository.getHashes()).thenReturn(blockedPageHashList);
 
     final List<String> result = service.getHashes();
 
     assertNotNull(result);
     assertSame(blockedPageHashList, result);
 
-    Mockito.verify(blockedHashRepository, Mockito.times(1)).getHashes();
+    verify(blockedHashRepository).getHashes();
   }
 
   @Test
   void blockPages_entryAlreadyExists() {
     blockedPageHashList.add(TEST_PAGE_HASH);
 
-    Mockito.when(blockedHashRepository.findByHash(Mockito.anyString()))
-        .thenReturn(blockedHashRecord);
+    when(blockedHashRepository.findByHash(anyString())).thenReturn(blockedHashRecord);
 
     service.blockPages(blockedPageHashList);
 
-    Mockito.verify(blockedHashRepository, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
-    Mockito.verify(blockedHashRepository, Mockito.times(1)).save(Mockito.any(BlockedHash.class));
+    verify(blockedHashRepository).findByHash(TEST_PAGE_HASH);
+    verify(blockedHashRepository).save(any(BlockedHash.class));
   }
 
   @Test
   void blockPages_publishingException() throws PublishingException {
     blockedPageHashList.add(TEST_PAGE_HASH);
 
-    Mockito.when(blockedHashRepository.findByHash(Mockito.anyString())).thenReturn(null);
-    Mockito.when(blockedHashRepository.save(blockedPageArgumentCaptor.capture()))
+    when(blockedHashRepository.findByHash(anyString())).thenReturn(null);
+    when(blockedHashRepository.save(blockedPageArgumentCaptor.capture()))
         .thenReturn(blockedHashRecord);
-    Mockito.doThrow(PublishingException.class)
+    doThrow(PublishingException.class)
         .when(publishBlockedPageUpdateAction)
-        .publish(Mockito.any(BlockedHash.class));
+        .publish(any(BlockedHash.class));
 
     service.blockPages(blockedPageHashList);
 
     assertNotNull(blockedPageArgumentCaptor.getValue());
     assertEquals(TEST_PAGE_HASH, blockedPageArgumentCaptor.getValue().getHash());
 
-    Mockito.verify(blockedHashRepository, Mockito.times(blockedPageHashList.size()))
-        .findByHash(TEST_PAGE_HASH);
-    Mockito.verify(blockedHashRepository, Mockito.times(blockedPageHashList.size()))
+    verify(blockedHashRepository, times(blockedPageHashList.size())).findByHash(TEST_PAGE_HASH);
+    verify(blockedHashRepository, times(blockedPageHashList.size()))
         .save(blockedPageArgumentCaptor.getValue());
-    Mockito.verify(publishBlockedPageUpdateAction, Mockito.times(blockedPageHashList.size()))
+    verify(publishBlockedPageUpdateAction, times(blockedPageHashList.size()))
         .publish(blockedHashRecord);
-    Mockito.verify(publishDuplicatePageListUpdateAction, Mockito.never()).publish(Mockito.any());
+    verify(publishDuplicatePageListUpdateAction, never()).publish(any());
   }
 
   @Test
   void blockPages() throws PublishingException {
     blockedPageHashList.add(TEST_PAGE_HASH);
 
-    Mockito.when(blockedHashRepository.findByHash(Mockito.anyString())).thenReturn(null);
-    Mockito.when(blockedHashRepository.save(blockedPageArgumentCaptor.capture()))
+    when(blockedHashRepository.findByHash(anyString())).thenReturn(null);
+    when(blockedHashRepository.save(blockedPageArgumentCaptor.capture()))
         .thenReturn(blockedHashRecord);
 
     service.blockPages(blockedPageHashList);
@@ -235,18 +234,17 @@ class BlockedHashServiceTest {
     assertEquals(false, publishedDuplicatePageUpdate.isRemoved());
     assertEquals(TEST_TOTAL_DUPLICATE_PAGES, publishedDuplicatePageUpdate.getTotal());
 
-    Mockito.verify(blockedHashRepository, Mockito.times(blockedPageHashList.size()))
-        .findByHash(TEST_PAGE_HASH);
-    Mockito.verify(blockedHashRepository, Mockito.times(blockedPageHashList.size()))
+    verify(blockedHashRepository, times(blockedPageHashList.size())).findByHash(TEST_PAGE_HASH);
+    verify(blockedHashRepository, times(blockedPageHashList.size()))
         .save(blockedPageArgumentCaptor.getValue());
-    Mockito.verify(publishDuplicatePageListUpdateAction, Mockito.times(blockedPageHashList.size()))
+    verify(publishDuplicatePageListUpdateAction, times(blockedPageHashList.size()))
         .publish(publishedDuplicatePageUpdate);
   }
 
   @Test
   void updateBlockedPage_notBlocked() throws DuplicatePageException {
-    Mockito.when(blockedHashRepository.findByHash(Mockito.anyString())).thenReturn(null);
-    Mockito.when(blockedHashRepository.save(blockedPageArgumentCaptor.capture()))
+    when(blockedHashRepository.findByHash(anyString())).thenReturn(null);
+    when(blockedHashRepository.save(blockedPageArgumentCaptor.capture()))
         .thenReturn(savedBlockedHash);
 
     final BlockedHash result = service.updateBlockedPage(TEST_PAGE_HASH, blockedHash);
@@ -258,19 +256,17 @@ class BlockedHashServiceTest {
 
     assertEquals(TEST_PAGE_HASH, blockedPage.getHash());
 
-    Mockito.verify(blockedHashRepository, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
-    Mockito.verify(blockedHashRepository, Mockito.times(1)).save(blockedPage);
+    verify(blockedHashRepository).findByHash(TEST_PAGE_HASH);
+    verify(blockedHashRepository).save(blockedPage);
   }
 
   @Test
   void updateBlockedPage_publishingException() throws DuplicatePageException, PublishingException {
-    Mockito.when(blockedHashRepository.findByHash(Mockito.anyString()))
-        .thenReturn(blockedHashRecord);
-    Mockito.doThrow(PublishingException.class)
+    when(blockedHashRepository.findByHash(anyString())).thenReturn(blockedHashRecord);
+    doThrow(PublishingException.class)
         .when(publishBlockedPageUpdateAction)
-        .publish(Mockito.any(BlockedHash.class));
-    Mockito.when(blockedHashRepository.save(Mockito.any(BlockedHash.class)))
-        .thenReturn(savedBlockedHash);
+        .publish(any(BlockedHash.class));
+    when(blockedHashRepository.save(any(BlockedHash.class))).thenReturn(savedBlockedHash);
 
     final BlockedHash result = service.updateBlockedPage(TEST_PAGE_HASH, blockedHash);
 
@@ -283,19 +279,16 @@ class BlockedHashServiceTest {
     assertEquals(false, publishedDuplicatePageUpdate.isRemoved());
     assertEquals(TEST_TOTAL_DUPLICATE_PAGES, publishedDuplicatePageUpdate.getTotal());
 
-    Mockito.verify(blockedHashRepository, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
-    Mockito.verify(blockedHashRepository, Mockito.times(1)).save(blockedHashRecord);
-    Mockito.verify(publishBlockedPageUpdateAction, Mockito.times(1)).publish(savedBlockedHash);
-    Mockito.verify(publishDuplicatePageListUpdateAction, Mockito.times(1))
-        .publish(publishedDuplicatePageUpdate);
+    verify(blockedHashRepository).findByHash(TEST_PAGE_HASH);
+    verify(blockedHashRepository).save(blockedHashRecord);
+    verify(publishBlockedPageUpdateAction).publish(savedBlockedHash);
+    verify(publishDuplicatePageListUpdateAction).publish(publishedDuplicatePageUpdate);
   }
 
   @Test
   void updateBlockedPage() throws DuplicatePageException, PublishingException {
-    Mockito.when(blockedHashRepository.findByHash(Mockito.anyString()))
-        .thenReturn(blockedHashRecord);
-    Mockito.when(blockedHashRepository.save(Mockito.any(BlockedHash.class)))
-        .thenReturn(savedBlockedHash);
+    when(blockedHashRepository.findByHash(anyString())).thenReturn(blockedHashRecord);
+    when(blockedHashRepository.save(any(BlockedHash.class))).thenReturn(savedBlockedHash);
 
     final BlockedHash result = service.updateBlockedPage(TEST_PAGE_HASH, blockedHash);
 
@@ -308,50 +301,47 @@ class BlockedHashServiceTest {
     assertEquals(false, publishedDuplicatePageUpdate.isRemoved());
     assertEquals(TEST_TOTAL_DUPLICATE_PAGES, publishedDuplicatePageUpdate.getTotal());
 
-    Mockito.verify(blockedHashRepository, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
-    Mockito.verify(blockedHashRecord, Mockito.times(1)).setLabel(TEST_PAGE_LABEL);
-    Mockito.verify(blockedHashRepository, Mockito.times(1)).save(blockedHashRecord);
-    Mockito.verify(publishBlockedPageUpdateAction, Mockito.times(1)).publish(savedBlockedHash);
-    Mockito.verify(publishDuplicatePageListUpdateAction, Mockito.times(1))
-        .publish(publishedDuplicatePageUpdate);
+    verify(blockedHashRepository).findByHash(TEST_PAGE_HASH);
+    verify(blockedHashRecord).setLabel(TEST_PAGE_LABEL);
+    verify(blockedHashRepository).save(blockedHashRecord);
+    verify(publishBlockedPageUpdateAction).publish(savedBlockedHash);
+    verify(publishDuplicatePageListUpdateAction).publish(publishedDuplicatePageUpdate);
   }
 
   @Test
   void unblockedPage_notBlocked() {
     blockedPageHashList.add(TEST_PAGE_HASH);
 
-    Mockito.when(blockedHashRepository.findByHash(Mockito.anyString())).thenReturn(null);
+    when(blockedHashRepository.findByHash(anyString())).thenReturn(null);
 
     service.unblockPages(blockedPageHashList);
 
-    Mockito.verify(blockedHashRepository, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
-    Mockito.verify(blockedHashRepository, Mockito.never()).save(Mockito.any());
+    verify(blockedHashRepository).findByHash(TEST_PAGE_HASH);
+    verify(blockedHashRepository, never()).save(any());
   }
 
   @Test
   void unblockedPages_publishingException() throws PublishingException {
     blockedPageHashList.add(TEST_PAGE_HASH);
 
-    Mockito.when(blockedHashRepository.findByHash(Mockito.anyString()))
-        .thenReturn(blockedHashRecord);
-    Mockito.doThrow(PublishingException.class)
+    when(blockedHashRepository.findByHash(anyString())).thenReturn(blockedHashRecord);
+    doThrow(PublishingException.class)
         .when(publishBlockedPageRemovalAction)
-        .publish(Mockito.any(BlockedHash.class));
+        .publish(any(BlockedHash.class));
 
     service.unblockPages(blockedPageHashList);
 
-    Mockito.verify(blockedHashRepository, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
-    Mockito.verify(publishBlockedPageRemovalAction, Mockito.times(1)).publish(blockedHashRecord);
-    Mockito.verify(publishDuplicatePageListUpdateAction, Mockito.never()).publish(Mockito.any());
+    verify(blockedHashRepository).findByHash(TEST_PAGE_HASH);
+    verify(publishBlockedPageRemovalAction).publish(blockedHashRecord);
+    verify(publishDuplicatePageListUpdateAction, never()).publish(any());
   }
 
   @Test
   void unblockPages() throws PublishingException {
     blockedPageHashList.add(TEST_PAGE_HASH);
 
-    Mockito.when(blockedHashRepository.findByHash(Mockito.anyString()))
-        .thenReturn(blockedHashRecord);
-    Mockito.doNothing().when(blockedHashRepository).delete(Mockito.any(BlockedHash.class));
+    when(blockedHashRepository.findByHash(anyString())).thenReturn(blockedHashRecord);
+    doNothing().when(blockedHashRepository).delete(any(BlockedHash.class));
 
     service.unblockPages(blockedPageHashList);
 
@@ -361,17 +351,16 @@ class BlockedHashServiceTest {
     assertEquals(true, publishedDuplicatePageUpdate.isRemoved());
     assertEquals(TEST_TOTAL_DUPLICATE_PAGES, publishedDuplicatePageUpdate.getTotal());
 
-    Mockito.verify(blockedHashRepository, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
-    Mockito.verify(blockedHashRepository, Mockito.times(1)).delete(blockedHashRecord);
-    Mockito.verify(publishBlockedPageRemovalAction, Mockito.times(1)).publish(blockedHashRecord);
-    Mockito.verify(publishDuplicatePageListUpdateAction, Mockito.times(1))
-        .publish(publishedDuplicatePageUpdate);
+    verify(blockedHashRepository).findByHash(TEST_PAGE_HASH);
+    verify(blockedHashRepository).delete(blockedHashRecord);
+    verify(publishBlockedPageRemovalAction).publish(blockedHashRecord);
+    verify(publishDuplicatePageListUpdateAction).publish(publishedDuplicatePageUpdate);
   }
 
   @Test
   void createFile() throws IOException {
-    Mockito.when(blockedHashRepository.findAll()).thenReturn(blockedHashList);
-    Mockito.when(csvAdaptor.encodeRecords(Mockito.anyList(), csvRowHandlerArgumentCaptor.capture()))
+    when(blockedHashRepository.findAll()).thenReturn(blockedHashList);
+    when(csvAdaptor.encodeRecords(anyList(), csvRowHandlerArgumentCaptor.capture()))
         .thenReturn(TEST_CSV_ROW);
 
     final DownloadDocument result = service.createFile();
@@ -394,17 +383,16 @@ class BlockedHashServiceTest {
 
     assertEquals(blockedHashList.size() + 1, csvRowHandlerArgumentCaptor.getAllValues().size());
 
-    Mockito.verify(blockedHashRepository, Mockito.times(1)).findAll();
+    verify(blockedHashRepository).findAll();
   }
 
   @Test
   void uploadFile() throws IOException {
-    Mockito.when(blockedHashRepository.findAll()).thenReturn(blockedHashList);
-    Mockito.doNothing()
+    when(blockedHashRepository.findAll()).thenReturn(blockedHashList);
+    doNothing()
         .when(csvAdaptor)
-        .decodeRecords(
-            Mockito.any(InputStream.class), Mockito.any(), csvRowDecoderArgumentCaptor.capture());
-    Mockito.when(blockedHashRepository.save(blockedPageArgumentCaptor.capture()))
+        .decodeRecords(any(InputStream.class), any(), csvRowDecoderArgumentCaptor.capture());
+    when(blockedHashRepository.save(blockedPageArgumentCaptor.capture()))
         .thenReturn(blockedHashRecord);
 
     final List<BlockedHash> result = service.uploadFile(inputStream);
@@ -419,14 +407,13 @@ class BlockedHashServiceTest {
     assertEquals(TEST_PAGE_HASH, blockedPageArgumentCaptor.getValue().getHash());
     assertEquals(TEST_PAGE_THUMBNAIL, blockedPageArgumentCaptor.getValue().getThumbnail());
 
-    Mockito.verify(blockedHashRepository, Mockito.times(1)).findAll();
-    Mockito.verify(csvAdaptor, Mockito.times(1))
+    verify(blockedHashRepository).findAll();
+    verify(csvAdaptor)
         .decodeRecords(
             inputStream,
             new String[] {PAGE_LABEL_HEADER, PAGE_HASH_HEADER, PAGE_SNAPSHOT_HEADER},
             csvRowDecoderArgumentCaptor.getValue());
-    Mockito.verify(blockedHashRepository, Mockito.times(1))
-        .save(blockedPageArgumentCaptor.getValue());
+    verify(blockedHashRepository).save(blockedPageArgumentCaptor.getValue());
   }
 
   @Test
@@ -436,10 +423,9 @@ class BlockedHashServiceTest {
       blockedPageHashes.add(RandomStringUtils.random(32, true, true));
     }
 
-    Mockito.when(blockedHashRepository.findByHash(Mockito.anyString()))
-        .thenReturn(blockedHashRecord);
-    Mockito.when(blockedHashRecord.getHash()).thenReturn(TEST_PAGE_HASH);
-    Mockito.doNothing().when(blockedHashRepository).delete(Mockito.any(BlockedHash.class));
+    when(blockedHashRepository.findByHash(anyString())).thenReturn(blockedHashRecord);
+    when(blockedHashRecord.getHash()).thenReturn(TEST_PAGE_HASH);
+    doNothing().when(blockedHashRepository).delete(any(BlockedHash.class));
 
     final List<String> result = service.deleteBlockedPages(blockedPageHashes);
 
@@ -447,11 +433,9 @@ class BlockedHashServiceTest {
     assertEquals(blockedPageHashes.size(), result.size());
     result.forEach(hash -> assertEquals(TEST_PAGE_HASH, hash));
 
-    blockedPageHashes.forEach(
-        hash -> Mockito.verify(blockedHashRepository, Mockito.times(1)).findByHash(hash));
-    Mockito.verify(blockedHashRepository, Mockito.times(blockedPageHashes.size()))
-        .delete(blockedHashRecord);
-    Mockito.verify(publishBlockedPageRemovalAction, Mockito.times(blockedPageHashes.size()))
+    blockedPageHashes.forEach(hash -> verify(blockedHashRepository).findByHash(hash));
+    verify(blockedHashRepository, times(blockedPageHashes.size())).delete(blockedHashRecord);
+    verify(publishBlockedPageRemovalAction, times(blockedPageHashes.size()))
         .publish(blockedHashRecord);
   }
 
@@ -462,13 +446,12 @@ class BlockedHashServiceTest {
       blockedPageHashes.add(RandomStringUtils.random(32, true, true));
     }
 
-    Mockito.when(blockedHashRepository.findByHash(Mockito.anyString()))
-        .thenReturn(blockedHashRecord);
-    Mockito.when(blockedHashRecord.getHash()).thenReturn(TEST_PAGE_HASH);
-    Mockito.doNothing().when(blockedHashRepository).delete(Mockito.any(BlockedHash.class));
-    Mockito.doThrow(PublishingException.class)
+    when(blockedHashRepository.findByHash(anyString())).thenReturn(blockedHashRecord);
+    when(blockedHashRecord.getHash()).thenReturn(TEST_PAGE_HASH);
+    doNothing().when(blockedHashRepository).delete(any(BlockedHash.class));
+    doThrow(PublishingException.class)
         .when(publishBlockedPageRemovalAction)
-        .publish(Mockito.any(BlockedHash.class));
+        .publish(any(BlockedHash.class));
 
     final List<String> result = service.deleteBlockedPages(blockedPageHashes);
 
@@ -476,53 +459,50 @@ class BlockedHashServiceTest {
     assertEquals(blockedPageHashes.size(), result.size());
     result.forEach(hash -> assertEquals(TEST_PAGE_HASH, hash));
 
-    blockedPageHashes.forEach(
-        hash -> Mockito.verify(blockedHashRepository, Mockito.times(1)).findByHash(hash));
-    Mockito.verify(blockedHashRepository, Mockito.times(blockedPageHashes.size()))
-        .delete(blockedHashRecord);
-    Mockito.verify(publishBlockedPageRemovalAction, Mockito.times(blockedPageHashes.size()))
+    blockedPageHashes.forEach(hash -> verify(blockedHashRepository).findByHash(hash));
+    verify(blockedHashRepository, times(blockedPageHashes.size())).delete(blockedHashRecord);
+    verify(publishBlockedPageRemovalAction, times(blockedPageHashes.size()))
         .publish(blockedHashRecord);
   }
 
   @Test
   void isHashBlocked_whenFound() {
-    Mockito.when(blockedHashRepository.findByHash(Mockito.anyString()))
-        .thenReturn(blockedHashRecord);
+    when(blockedHashRepository.findByHash(anyString())).thenReturn(blockedHashRecord);
 
     final boolean result = service.isHashBlocked(TEST_PAGE_HASH);
 
     assertTrue(result);
 
-    Mockito.verify(blockedHashRepository, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
+    verify(blockedHashRepository).findByHash(TEST_PAGE_HASH);
   }
 
   @Test
   void isHashBlocked_whenNotFound() {
-    Mockito.when(blockedHashRepository.findByHash(Mockito.anyString())).thenReturn(null);
+    when(blockedHashRepository.findByHash(anyString())).thenReturn(null);
 
     final boolean result = service.isHashBlocked(TEST_PAGE_HASH);
 
     assertFalse(result);
 
-    Mockito.verify(blockedHashRepository, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
+    verify(blockedHashRepository).findByHash(TEST_PAGE_HASH);
   }
 
   @Test
   void GetThumbnail_notFound() {
-    Mockito.when(blockedHashRepository.findByHash(Mockito.anyString())).thenReturn(null);
+    when(blockedHashRepository.findByHash(anyString())).thenReturn(null);
 
     assertThrows(BlockedHashException.class, () -> service.getThumbnail(TEST_PAGE_HASH));
   }
 
   @Test
   void getThumbnail() throws BlockedHashException {
-    Mockito.when(blockedHashRepository.findByHash(Mockito.anyString())).thenReturn(blockedHash);
+    when(blockedHashRepository.findByHash(anyString())).thenReturn(blockedHash);
 
     final byte[] result = service.getThumbnail(TEST_PAGE_HASH);
 
     assertNotNull(result);
     assertArrayEquals(TEST_DECODED_PAGE, result);
 
-    Mockito.verify(blockedHashRepository, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
+    verify(blockedHashRepository).findByHash(TEST_PAGE_HASH);
   }
 }
