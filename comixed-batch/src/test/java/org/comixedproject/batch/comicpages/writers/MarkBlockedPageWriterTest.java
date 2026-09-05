@@ -18,8 +18,11 @@
 
 package org.comixedproject.batch.comicpages.writers;
 
+import static org.mockito.Mockito.*;
+
 import java.util.ArrayList;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.state.comicbooks.ComicBookStateAdaptor;
 import org.comixedproject.state.comicbooks.ComicEvent;
@@ -27,7 +30,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.batch.infrastructure.item.Chunk;
 
@@ -38,17 +40,19 @@ class MarkBlockedPageWriterTest {
 
   @Mock private ComicPage page;
   @Mock private ComicBook comicBook;
+  @Mock private ComicDetail comicDetail;
 
   private Chunk<ComicPage> pageList = new Chunk<>(new ArrayList<>());
 
   @Test
   void write() throws Exception {
-    Mockito.when(page.getComicBook()).thenReturn(comicBook);
+    when(page.getComicDetail()).thenReturn(comicDetail);
+    when(comicDetail.getComicBook()).thenReturn(comicBook);
     pageList.add(page);
 
     writer.write(pageList);
 
-    Mockito.verify(comicBookStateAdaptor, Mockito.times(pageList.size()))
+    verify(comicBookStateAdaptor, times(pageList.size()))
         .fireEvent(comicBook, ComicEvent.comicPageMarkedForRemoval);
   }
 }

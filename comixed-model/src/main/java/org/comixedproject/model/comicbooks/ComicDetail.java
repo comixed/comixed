@@ -24,14 +24,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import java.io.File;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FilenameUtils;
 import org.comixedproject.model.archives.ArchiveType;
+import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.model.library.PublicationDetail;
 import org.comixedproject.views.View;
 import org.hibernate.annotations.Formula;
@@ -60,6 +58,28 @@ public class ComicDetail implements PublicationDetail {
   })
   @Getter
   private Long comicDetailId;
+
+  @OneToMany(mappedBy = "comicDetail", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OrderColumn(name = "page_number")
+  @JsonProperty("pages")
+  @JsonView({View.ComicListView.class, View.ReadingListDetail.class})
+  @Getter
+  List<ComicPage> pages = new ArrayList<>();
+
+  @Formula(
+      "(SELECT COUNT(*) FROM comic_pages_v4 p WHERE p.comic_detail_id = comic_detail_id AND p.file_hash IN (SELECT d.file_hash FROM comic_pages_v4 d GROUP BY d.file_hash HAVING COUNT(*) > 1))")
+  @JsonProperty("duplicatePageCount")
+  @JsonView({View.ComicListView.class})
+  @Getter
+  private int duplicatePageCount;
+
+  @Formula(
+      value =
+          "(SELECT COUNT(*) FROM comic_pages_v4 p WHERE p.comic_detail_id = comic_detail_id AND p.file_hash in (SELECT b.hash_value FROM blocked_hashes_v4 b))")
+  @JsonProperty("blockedPageCount")
+  @JsonView({View.ComicListView.class})
+  @Getter
+  private int blockedPageCount;
 
   @OneToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "comic_book_id", nullable = false, updatable = false)
@@ -208,9 +228,9 @@ public class ComicDetail implements PublicationDetail {
   @JsonView({
     View.ComicListView.class,
   })
-  @Formula("(SELECT COUNT(*) FROM comic_pages_v4 p WHERE p.comic_book_id = comic_book_id)")
+  @Formula("(SELECT COUNT(*) FROM comic_pages_v4 p WHERE p.comic_detail_id = comic_detail_id)")
   @Getter
-  private Integer pageCount;
+  private Integer pageCount = 0;
 
   @Column(name = "sort_name", length = 128)
   @JsonProperty("sortName")
@@ -450,6 +470,58 @@ public class ComicDetail implements PublicationDetail {
 
   public boolean isMarkedMissing() {
     return this.missing;
+  }
+
+  public int getIndexFor(ComicPage page) {
+    if (this.pages.contains(page)) return this.pages.indexOf(page);
+
+    return -1;
+  }
+
+  /**
+   * Returns the number of pages associated with this comic.
+   *
+   * @return the offset count
+   */
+  @Transient
+  @JsonProperty("pageCount")
+  @JsonView({View.ComicListView.class})
+  public int getPageCount() {
+    if (!this.pages.isEmpty()) return this.pages.size();
+    return 0;
+  }
+
+  /**
+   * Returns whether a offset with the given filename is present.
+   *
+   * @param filename the filename
+   * @return true if such a offset exists
+   */
+  public boolean hasPageWithFilename(String filename) {
+    return this.getPageWithFilename(filename) != null;
+  }
+
+  /**
+   * Returns the offset for the given filename.
+   *
+   * @param filename the filename
+   * @return the {@link ComicPage} or null
+   */
+  public ComicPage getPageWithFilename(String filename) {
+    if (this.pages.isEmpty()) return null;
+    for (ComicPage page : this.pages) {
+      if (page.getFilename().equals(filename)) return page;
+    }
+
+    return null;
+  }
+
+  public void updatePageNumbers() {
+    Collections.sort(
+        this.pages, (left, right) -> left.getPageNumber().compareTo(right.getPageNumber()));
+    for (int index = 0; index < this.pages.size(); index++) {
+      this.pages.get(index).setPageNumber(index);
+    }
   }
 
   @Override

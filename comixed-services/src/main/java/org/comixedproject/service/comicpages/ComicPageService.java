@@ -164,11 +164,11 @@ public class ComicPageService {
       if (deleted) {
         page.setPageType(ComicPageType.DELETED);
         this.comicBookStateAdaptor.fireEvent(
-            page.getComicBook(), ComicEvent.comicPageMarkedForRemoval);
+            page.getComicDetail().getComicBook(), ComicEvent.comicPageMarkedForRemoval);
       } else {
         page.setPageType(ComicPageType.STORY);
         this.comicBookStateAdaptor.fireEvent(
-            page.getComicBook(), ComicEvent.comicPageUnmarkedForRemoval);
+            page.getComicDetail().getComicBook(), ComicEvent.comicPageUnmarkedForRemoval);
       }
     }
   }

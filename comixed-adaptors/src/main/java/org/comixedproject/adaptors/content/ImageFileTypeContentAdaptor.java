@@ -51,7 +51,7 @@ public class ImageFileTypeContentAdaptor implements FileTypeContentAdaptor {
     } else {
       var page = new ComicPage();
       page.setFilename(filename);
-      page.setComicBook(comicBook);
+      page.setComicDetail(comicBook.getComicDetail());
       if (comicBook.getPages().isEmpty()) {
         page.setPageType(ComicPageType.FRONT_COVER);
       }

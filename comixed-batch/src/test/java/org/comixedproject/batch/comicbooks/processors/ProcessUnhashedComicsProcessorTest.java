@@ -20,6 +20,9 @@ package org.comixedproject.batch.comicbooks.processors;
 
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,7 +40,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
@@ -64,35 +66,34 @@ class ProcessUnhashedComicsProcessorTest {
   @BeforeEach
   public void setUp() throws AdaptorException, IOException {
     imageContent = FileUtils.readFileToByteArray(new File(TEST_IMAGE_PATH));
-    Mockito.when(genericUtilitiesAdaptor.createHash(Mockito.any(byte[].class)))
-        .thenReturn(TEST_PAGE_HASH);
-    Mockito.when(comicBookAdaptor.loadPageContent(Mockito.any(ComicBook.class), Mockito.anyInt()))
-        .thenReturn(imageContent);
-    Mockito.when(comicBook.getPages()).thenReturn(pageList);
-    Mockito.when(comicDetail.getBaseFilename()).thenReturn(TEST_BASE_FILENAME);
-    Mockito.when(comicDetail.isMissing()).thenReturn(false);
-    Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
-    Mockito.when(page.getComicBook()).thenReturn(comicBook);
-    Mockito.when(page.getPageNumber()).thenReturn(TEST_PAGE_NUMBER);
+    when(genericUtilitiesAdaptor.createHash(any(byte[].class))).thenReturn(TEST_PAGE_HASH);
+    when(comicBookAdaptor.loadPageContent(any(ComicBook.class), anyInt())).thenReturn(imageContent);
+    when(comicBook.getPages()).thenReturn(pageList);
+    when(comicDetail.getBaseFilename()).thenReturn(TEST_BASE_FILENAME);
+    when(comicDetail.isMissing()).thenReturn(false);
+    when(comicBook.getComicDetail()).thenReturn(comicDetail);
+    when(comicDetail.getComicBook()).thenReturn(comicBook);
+    when(page.getComicDetail()).thenReturn(comicDetail);
+    when(page.getPageNumber()).thenReturn(TEST_PAGE_NUMBER);
     pageList.add(null);
     pageList.add(page);
   }
 
   @Test
   void process_missing() {
-    Mockito.when(comicDetail.isMissing()).thenReturn(true);
+    when(comicDetail.isMissing()).thenReturn(true);
     assertNull(processor.process(comicBook));
   }
 
   @Test
   void process_createHashException() throws Exception {
-    Mockito.when(comicBookAdaptor.loadPageContent(Mockito.any(ComicBook.class), Mockito.anyInt()))
+    when(comicBookAdaptor.loadPageContent(any(ComicBook.class), anyInt()))
         .thenThrow(AdaptorException.class);
 
     processor.process(comicBook);
 
-    Mockito.verify(genericUtilitiesAdaptor, Mockito.never()).createHash(Mockito.any(byte[].class));
-    Mockito.verify(page, Mockito.never()).setHash(TEST_PAGE_HASH);
+    verify(genericUtilitiesAdaptor, never()).createHash(any(byte[].class));
+    verify(page, never()).setHash(TEST_PAGE_HASH);
   }
 
   @Test
@@ -102,7 +103,7 @@ class ProcessUnhashedComicsProcessorTest {
     assertNotEquals(-1, page.getWidth().intValue());
     assertNotEquals(-1, page.getHeight().intValue());
 
-    Mockito.verify(genericUtilitiesAdaptor, Mockito.times(1)).createHash(imageContent);
-    Mockito.verify(page, Mockito.times(1)).setHash(TEST_PAGE_HASH);
+    verify(genericUtilitiesAdaptor).createHash(imageContent);
+    verify(page).setHash(TEST_PAGE_HASH);
   }
 }

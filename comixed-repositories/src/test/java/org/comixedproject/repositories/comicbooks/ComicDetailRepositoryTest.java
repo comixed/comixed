@@ -96,6 +96,7 @@ public class ComicDetailRepositoryTest {
   }
 
   @Test
+  @Transactional
   public void testUnscrapedComicDetails() {
     List<ComicDetail> result = repository.findAll();
 

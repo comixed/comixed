@@ -74,7 +74,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
   List<ComicBook> findBySeries(@Param("series") String series);
 
   @Query(
-      "SELECT c FROM ComicBook c LEFT JOIN FETCH c.comicDetail LEFT JOIN FETCH c.metadata mds LEFT JOIN FETCH c.pages WHERE c.comicBookId = :id")
+      "SELECT c FROM ComicBook c LEFT JOIN FETCH c.comicDetail LEFT JOIN FETCH c.metadata mds LEFT JOIN FETCH c.comicDetail.pages WHERE c.comicBookId = :id")
   ComicBook getById(@Param("id") long id);
 
   @Query(
@@ -105,7 +105,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the comic list
    */
   @Query(
-      "SELECT c FROM ComicBook c WHERE c IN (SELECT p.comicBook FROM ComicPage p WHERE p.hash = :hash)")
+      "SELECT c FROM ComicBook c WHERE c.comicDetail IN (SELECT p.comicDetail FROM ComicPage p WHERE p.hash = :hash)")
   List<ComicBook> findComicsForPageHash(@Param("hash") String hash);
 
   /**
@@ -503,7 +503,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the comic books
    */
   @Query(
-      "SELECT c FROM ComicBook c WHERE c.comicBookId IN (SELECT p.comicBook.comicBookId FROM ComicPage p WHERE p.hash IS NULL OR LENGTH(p.hash) = 0)")
+      "SELECT c FROM ComicBook c WHERE c.comicDetail.comicDetailId IN (SELECT p.comicDetail.comicDetailId FROM ComicPage p WHERE p.hash IS NULL OR LENGTH(p.hash) = 0)")
   List<ComicBook> findComicsWithUnhashedPages(Pageable pageable);
 
   /**
@@ -512,7 +512,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the number of comics
    */
   @Query(
-      "SELECT COUNT(c) FROM ComicBook c WHERE c.comicBookId IN (SELECT p.comicBook.comicBookId FROM ComicPage p WHERE p.hash IS NULL OR LENGTH(p.hash) = 0)")
+      "SELECT COUNT(c) FROM ComicBook c WHERE c.comicDetail.comicDetailId IN (SELECT p.comicDetail.comicDetailId FROM ComicPage p WHERE p.hash IS NULL OR LENGTH(p.hash) = 0)")
   long findComicsWithUnhashedPagesCount();
 
   /**
