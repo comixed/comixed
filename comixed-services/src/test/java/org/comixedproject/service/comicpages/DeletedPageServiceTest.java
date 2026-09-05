@@ -20,11 +20,10 @@ package org.comixedproject.service.comicpages;
 
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertNotNull;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicpages.DeletedPage;
 import org.comixedproject.model.comicpages.DeletedPageAndComic;
@@ -34,7 +33,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
@@ -48,19 +46,16 @@ class DeletedPageServiceTest {
   public void setUp() {
     for (int index = 0; index < 100; index++) {
       final DeletedPageAndComic deletedPageAndComic = mock(DeletedPageAndComic.class);
-      Mockito.when(deletedPageAndComic.getHash()).thenReturn(String.valueOf(index % 7));
-      final ComicBook comicBook = mock(ComicBook.class);
-      Mockito.when(comicBook.getComicBookId()).thenReturn((long) index);
+      when(deletedPageAndComic.getHash()).thenReturn(String.valueOf(index % 7));
       final ComicDetail comicDetail = mock(ComicDetail.class);
-      Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
-      Mockito.when(deletedPageAndComic.getComicBook()).thenReturn(comicBook);
+      when(deletedPageAndComic.getComicDetail()).thenReturn(comicDetail);
       deletedPageList.add(deletedPageAndComic);
     }
   }
 
   @Test
   void loadAll() {
-    Mockito.when(comicPageRepository.loadAllDeletedPages()).thenReturn(deletedPageList);
+    when(comicPageRepository.loadAllDeletedPages()).thenReturn(deletedPageList);
 
     final List<DeletedPage> result = service.loadAll();
 
@@ -68,6 +63,6 @@ class DeletedPageServiceTest {
     assertFalse(result.isEmpty());
     assertFalse(result.stream().anyMatch(deletedPage -> deletedPage.getComics().isEmpty()));
 
-    Mockito.verify(comicPageRepository, Mockito.times(1)).loadAllDeletedPages();
+    verify(comicPageRepository).loadAllDeletedPages();
   }
 }

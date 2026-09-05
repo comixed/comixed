@@ -91,7 +91,7 @@ public interface ComicPageRepository extends JpaRepository<ComicPage, Long> {
    * @return the page list
    */
   @Query(
-      "SELECT new org.comixedproject.model.comicpages.DeletedPageAndComic(p.hash, p.comicBook) FROM ComicPage p WHERE p.pageType = 'DELETED'")
+      "SELECT new org.comixedproject.model.comicpages.DeletedPageAndComic(p.hash, p.comicDetail) FROM ComicPage p WHERE p.pageType = 'DELETED'")
   List<DeletedPageAndComic> loadAllDeletedPages();
 
   /**
@@ -164,10 +164,10 @@ public interface ComicPageRepository extends JpaRepository<ComicPage, Long> {
    * @return the page id
    */
   @Query(
-      "SELECT p.comicPageId FROM ComicPage p WHERE p.comicBook.comicBookId = :comicBookId AND p.pageNumber = 0")
+      "SELECT p.comicPageId FROM ComicPage p WHERE p.comicDetail.comicBook.comicBookId = :comicBookId AND p.pageNumber = 0")
   Long getPageIdForComicBookCover(@Param("comicBookId") long comicBookId);
 
-  @Query("SELECT p.comicBook.comicDetail.filename FROM ComicPage p WHERE p.comicPageId = :pageId")
+  @Query("SELECT p.comicDetail.filename FROM ComicPage p WHERE p.comicPageId = :pageId")
   String getComicFilenameForPage(@Param("pageId") Long pageId);
 
   @Query("SELECT p.filename FROM ComicPage p WHERE p.comicPageId = :pageId")
@@ -187,6 +187,6 @@ public interface ComicPageRepository extends JpaRepository<ComicPage, Long> {
    * @return the pages
    */
   @Query(
-      "SELECT p FROM ComicPage p WHERE p.comicBook.comicBookId = :comicBookId ORDER BY p.pageNumber")
+      "SELECT p FROM ComicPage p WHERE p.comicDetail.comicBook.comicBookId = :comicBookId ORDER BY p.pageNumber")
   List<ComicPage> getAllPagesForComicBook(@Param("comicBookId") long id);
 }

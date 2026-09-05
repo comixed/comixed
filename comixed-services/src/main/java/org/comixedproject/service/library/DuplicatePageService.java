@@ -102,7 +102,7 @@ public class DuplicatePageService {
     }
     log.trace("Converting to duplicate page object");
     final DuplicatePage result = new DuplicatePage(hash);
-    pages.forEach(page -> result.getComics().add(page.getComicBook().getComicDetail()));
+    pages.forEach(page -> result.getComics().add(page.getComicDetail()));
     log.trace("Returning duplicate page detail");
     return result;
   }

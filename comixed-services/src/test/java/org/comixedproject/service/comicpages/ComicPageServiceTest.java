@@ -28,6 +28,7 @@ import java.util.*;
 import org.apache.commons.io.FileUtils;
 import org.comixedproject.adaptors.GenericUtilitiesAdaptor;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.model.comicpages.ComicPageType;
 import org.comixedproject.repositories.comicpages.ComicPageRepository;
@@ -66,6 +67,7 @@ class ComicPageServiceTest {
   @Mock private ComicPage savedPage;
   @Mock private ComicPage pageRecord;
   @Mock private ComicBook comicBook;
+  @Mock private ComicDetail comicDetail;
   @Mock private List<String> duplicateHashList;
 
   @Captor private ArgumentCaptor<Pageable> argumentCaptorPageable;
@@ -78,7 +80,8 @@ class ComicPageServiceTest {
 
   @BeforeEach
   void setUp() throws IOException {
-    when(page.getComicBook()).thenReturn(comicBook);
+    when(page.getComicDetail()).thenReturn(comicDetail);
+    when(comicDetail.getComicBook()).thenReturn(comicBook);
     pageContent = FileUtils.readFileToByteArray(new File(TEST_PAGE_FILENAME));
   }
 

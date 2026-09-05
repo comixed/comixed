@@ -16,12 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { ComicBook } from '@app/comic-books/models/comic-book';
 import { PageType } from '@app/comic-books/models/page-type';
 
 export interface ComicPage {
   comicPageId: number;
-  comic?: ComicBook;
   filename: string;
   hash: string;
   pageNumber: number;

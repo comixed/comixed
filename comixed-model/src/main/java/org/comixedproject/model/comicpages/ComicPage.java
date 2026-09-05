@@ -22,7 +22,7 @@ import jakarta.persistence.*;
 import java.util.Objects;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.views.View;
 import org.hibernate.annotations.Formula;
 
@@ -47,12 +47,12 @@ public class ComicPage {
   private Long comicPageId;
 
   @ManyToOne
-  @JoinColumn(name = "comic_book_id")
-  @JsonProperty("comicBook")
+  @JoinColumn(name = "comic_detail_id")
+  @JsonProperty("comicDetail")
   @Getter
   @Setter
   @NonNull
-  private ComicBook comicBook;
+  private ComicDetail comicDetail;
 
   @Column(name = "page_type", nullable = false, updatable = true, columnDefinition = "VARCHAR(32)")
   @Enumerated(EnumType.STRING)
@@ -124,7 +124,7 @@ public class ComicPage {
   @JsonProperty("index")
   @JsonView({View.ComicDetailsView.class})
   public int getIndex() {
-    return this.comicBook.getIndexFor(this);
+    return this.comicDetail.getIndexFor(this);
   }
 
   @Transient
@@ -140,7 +140,7 @@ public class ComicPage {
     if (o == null || getClass() != o.getClass()) return false;
     final ComicPage page = (ComicPage) o;
     return isBlocked() == page.isBlocked()
-        && Objects.equals(getComicBook(), page.getComicBook())
+        && Objects.equals(getComicDetail(), page.getComicDetail())
         && getPageType() == page.getPageType()
         && Objects.equals(getFilename(), page.getFilename())
         && Objects.equals(getHash(), page.getHash())
@@ -154,7 +154,7 @@ public class ComicPage {
   public int hashCode() {
     return Objects.hash(
         getComicPageId(),
-        getComicBook(),
+        getComicDetail(),
         getPageType(),
         getFilename(),
         getHash(),

@@ -43,7 +43,7 @@ public class MarkBlockedPageWriter implements ItemWriter<ComicPage> {
     pages.forEach(
         page -> {
           this.comicBookStateAdaptor.fireEvent(
-              page.getComicBook(), ComicEvent.comicPageMarkedForRemoval);
+              page.getComicDetail().getComicBook(), ComicEvent.comicPageMarkedForRemoval);
         });
   }
 }

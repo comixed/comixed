@@ -46,7 +46,7 @@ class DuplicatePageServiceTest {
   @BeforeEach
   public void setUp() {
     Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
-    Mockito.when(comicPage.getComicBook()).thenReturn(comicBook);
+    Mockito.when(comicPage.getComicDetail()).thenReturn(comicDetail);
   }
 
   @Test

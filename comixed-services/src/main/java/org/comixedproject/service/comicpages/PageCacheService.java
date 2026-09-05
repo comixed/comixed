@@ -144,7 +144,8 @@ public class PageCacheService {
     try {
       this.saveByHash(
           page.getHash(),
-          this.comicBookAdaptor.loadPageContent(page.getComicBook(), page.getPageNumber()));
+          this.comicBookAdaptor.loadPageContent(
+              page.getComicDetail().getComicBook(), page.getPageNumber()));
     } catch (AdaptorException error) {
       log.error("Failed to add page to image cache", error);
     }
@@ -236,7 +237,9 @@ public class PageCacheService {
     if (content == null) {
       try {
         log.debug("Fetching content for page");
-        content = this.comicBookAdaptor.loadPageContent(page.getComicBook(), page.getPageNumber());
+        content =
+            this.comicBookAdaptor.loadPageContent(
+                page.getComicDetail().getComicBook(), page.getPageNumber());
         if (!Objects.isNull(content) && Objects.isNull(page.getHash())) {
           log.debug("Updating page content: id={}", page.getComicPageId());
           page = this.comicPageService.updatePageContent(page, content);
