@@ -57,13 +57,6 @@ public class ComicBook implements StatefulItem<ComicState> {
   @Setter
   private ComicDetail comicDetail;
 
-  @OneToOne(mappedBy = "comicBook", cascade = CascadeType.ALL, orphanRemoval = true)
-  @JsonProperty("metadata")
-  @JsonView({View.ComicListView.class})
-  @Getter
-  @Setter
-  private ComicMetadataSource metadata;
-
   @Transient
   @JsonProperty("nextIssueId")
   @JsonView({View.ComicDetailsView.class})
@@ -160,6 +153,14 @@ public class ComicBook implements StatefulItem<ComicState> {
 
   public int getBlockedPageCount() {
     return this.comicDetail.getBlockedPageCount();
+  }
+
+  public ComicMetadataSource getMetadata() {
+    return this.comicDetail.getMetadata();
+  }
+
+  public void setMetadata(final ComicMetadataSource metadata) {
+    this.comicDetail.setMetadata(metadata);
   }
 
   @Column(name = "last_modified_on", updatable = true, nullable = false)

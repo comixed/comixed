@@ -45,10 +45,10 @@ public class ComicMetadataSource {
   private Long comicMetadataSourceId;
 
   @OneToOne
-  @JoinColumn(name = "comic_book_id", nullable = false, updatable = false, unique = true)
+  @JoinColumn(name = "comic_detail_id", nullable = false, updatable = false, unique = true)
   @Getter
   @NonNull
-  private ComicBook comicBook;
+  private ComicDetail comicDetail;
 
   @ManyToOne
   @JoinColumn(name = "metadata_source_id", nullable = false, updatable = true)
@@ -80,13 +80,13 @@ public class ComicMetadataSource {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     final ComicMetadataSource that = (ComicMetadataSource) o;
-    return comicBook.equals(that.comicBook)
+    return comicDetail.equals(that.comicDetail)
         && metadataSource.equals(that.metadataSource)
         && referenceId.equals(that.referenceId);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(comicBook, metadataSource, referenceId);
+    return Objects.hash(comicDetail, metadataSource, referenceId);
   }
 }

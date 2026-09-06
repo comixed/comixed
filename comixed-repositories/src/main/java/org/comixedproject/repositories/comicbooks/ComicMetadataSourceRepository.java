@@ -38,6 +38,7 @@ public interface ComicMetadataSourceRepository extends JpaRepository<ComicMetada
    * @param id the comic book id
    * @return the source
    */
-  @Query("SELECT s FROM ComicMetadataSource s WHERE s.comicBook.comicBookId = :comicBookId")
+  @Query(
+      "SELECT s FROM ComicMetadataSource s WHERE s.comicDetail.comicBook.comicBookId = :comicBookId")
   ComicMetadataSource findByComicBookId(@Param("comicBookId") long id);
 }

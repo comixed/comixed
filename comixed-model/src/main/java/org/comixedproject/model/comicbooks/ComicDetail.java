@@ -66,6 +66,13 @@ public class ComicDetail implements PublicationDetail {
   @Getter
   List<ComicPage> pages = new ArrayList<>();
 
+  @OneToOne(mappedBy = "comicDetail", cascade = CascadeType.ALL, orphanRemoval = true)
+  @JsonProperty("metadata")
+  @JsonView({View.ComicListView.class})
+  @Getter
+  @Setter
+  private ComicMetadataSource metadata;
+
   @Formula(
       "(SELECT COUNT(*) FROM comic_pages_v4 p WHERE p.comic_detail_id = comic_detail_id AND p.file_hash IN (SELECT d.file_hash FROM comic_pages_v4 d GROUP BY d.file_hash HAVING COUNT(*) > 1))")
   @JsonProperty("duplicatePageCount")
@@ -89,7 +96,7 @@ public class ComicDetail implements PublicationDetail {
   private ComicBook comicBook;
 
   @Formula(
-      "(SELECT CASE WHEN (comic_book_id IN (SELECT m.comic_book_id FROM comic_metadata_sources_v4 m)) THEN false ELSE true END)")
+      "(SELECT CASE WHEN (comic_detail_id IN (SELECT m.comic_detail_id FROM comic_metadata_sources_v4 m)) THEN false ELSE true END)")
   @JsonProperty("unscraped")
   @JsonView({View.ComicListView.class})
   @Getter

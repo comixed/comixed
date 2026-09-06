@@ -20,57 +20,11 @@
                                  WHERE comic_details_v4.comic_book_id = comic_pages_v4.comic_book_id);
         </sql>
 
-        <createView replaceIfExists="true" viewName="displayable_comics_view">
-            SELECT DISTINCT d.comic_book_id                           as comic_book_id,
-                            d.comic_detail_id                         as comic_detail_id,
-                            (SELECT reference_id
-                             FROM comic_metadata_sources_v4 m
-                             WHERE m.comic_book_id = d.comic_book_id) AS reference_id,
-                            d.filename                                as filename,
-                            d.archive_type                            as archive_type,
-                            d.comic_state                             as comic_state,
-                            d.missing                                 as is_missing,
-                            CASE
-                                WHEN EXISTS(SELECT *
-                                            FROM comic_metadata_sources_v4 s
-                                            WHERE s.comic_book_id = d.comic_book_id)
-                                    THEN false
-                                ELSE true END                         AS is_unscraped,
-                            d.comic_type                              as comic_type,
-                            d.sort_name                               as sort_name,
-                            d.publisher                               as publisher,
-                            d.imprint                                 as imprint,
-                            d.series                                  as series,
-                            d.volume                                  as volume,
-                            d.issue_number                            as issue_number,
-                            d.description                             as description,
-                            d.notes                                   as notes,
-                            (SELECT RIGHT (CONCAT('0000000000', d.issue_number), 10)) as sortable_issue_number, d.title as title,(
-            SELECT COUNT(*)
-            FROM comic_pages_v4 cp
-            WHERE cp.comic_detail_id = d.comic_detail_id) as page_count
-                , d.cover_date as cover_date
-                , CASE WHEN d.cover_date IS NULL THEN 0 ELSE (
-            SELECT EXTRACT(MONTH FROM cover_date))
-            END
-            as month_published
-                    , CASE WHEN d.cover_date IS NULL THEN 0 ELSE (SELECT EXTRACT(YEAR FROM cover_date))
-            END
-            as year_published,
-                            d.store_date as store_date,
-                            d.added_date as added_date,
-                            d.last_modified_date as last_modified_date
-            FROM comic_details_v4 d
-        </createView>
+        <addNotNullConstraint tableName="comic_pages_v4" columnName="comic_detail_id" columnDataType="bigint"/>
 
-        <createView replaceIfExists="true" viewName="duplicate_pages_view">
-            SELECT DISTINCT p.file_hash,
-                            (SELECT COUNT(DISTINCT cp.comic_detail_id)
-                             FROM comic_pages_v4 cp
-                             WHERE cp.file_hash = p.file_hash) as comic_count
-            FROM comic_pages_v4 p
-            WHERE p.file_hash IN (SELECT file_hash FROM comic_pages_v4 GROUP BY file_hash HAVING COUNT(*) > 1);
-        </createView>
+        <dropView viewName="duplicate_pages_view"/>
+
+        <dropView viewName="displayable_comics_view"/>
 
         <dropForeignKeyConstraint baseTableName="comic_pages_v4" constraintName="comic_pages_v4_comic_book_fk"/>
 
@@ -83,10 +37,9 @@
                                  referencedTableName="comic_details_v4"
                                  referencedColumnNames="comic_detail_id"/>
 
-        <createIndex tableName="comic_pages_v4" indexName="comic_pages_v4_comic_detail_and_page_number_idx">
-            <column name="comic_detail_id"/>
-            <column name="page_number"/>
-        </createIndex>
+        <addUniqueConstraint tableName="comic_pages_v4"
+                             constraintName="comic_pages_v4_unique_comic_detail_and_page_number"
+                             columnNames="comic_detail_id,page_number"/>
 
     </changeSet>
 </databaseChangeLog>

@@ -441,7 +441,7 @@ public interface ComicDetailRepository extends JpaRepository<ComicDetail, Long> 
    */
   @Modifying
   @Query(
-      "UPDATE ComicDetail c SET c.batchScraping = TRUE WHERE c.comicDetailId IN (:ids) AND c.batchScraping IS FALSE AND c.comicBook.metadata IS NOT NULL")
+      "UPDATE ComicDetail c SET c.batchScraping = TRUE WHERE c.comicDetailId IN (:ids) AND c.batchScraping IS FALSE AND c.metadata IS NOT NULL")
   void prepareForBatchScraping(@Param("ids") List<Long> ids);
 
   /**
@@ -450,7 +450,7 @@ public interface ComicDetailRepository extends JpaRepository<ComicDetail, Long> 
    * @return the count
    */
   @Query(
-      "SELECT COUNT(c) FROM ComicDetail c WHERE c.batchScraping IS TRUE AND c.comicBook.metadata IS NOT NULL")
+      "SELECT COUNT(c) FROM ComicDetail c WHERE c.batchScraping IS TRUE AND c.metadata IS NOT NULL")
   long getBatchScrapingCount();
 
   /**
@@ -461,7 +461,7 @@ public interface ComicDetailRepository extends JpaRepository<ComicDetail, Long> 
    * @return the comic books
    */
   @Query(
-      "SELECT c.comicBook FROM ComicDetail c WHERE c.batchScraping IS TRUE AND c.comicBook.metadata IS NOT NULL")
+      "SELECT c.comicBook FROM ComicDetail c WHERE c.batchScraping IS TRUE AND c.metadata IS NOT NULL")
   List<ComicBook> findBatchScrapingComics(Pageable pageable);
 
   /**

@@ -83,7 +83,7 @@ class ComicInfoXmlFilenameContentAdaptorTest extends BaseContentAdaptorTest {
         new ComicDetail(comicBook, TEST_COMICINFO_FILE_COMPLETE, ArchiveType.CBZ));
     comicBook.setMetadata(
         new ComicMetadataSource(
-            comicBook, metadataSource, TEST_REFERENCE_ID, TEST_LAST_SCRAPED_DATE));
+            comicBook.getComicDetail(), metadataSource, TEST_REFERENCE_ID, TEST_LAST_SCRAPED_DATE));
     for (int index = 0; index < 31; index++) {
       final ComicPage page = mock(ComicPage.class);
       comicBook.getPages().add(page);
