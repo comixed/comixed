@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="007_2775_recreate_views.xml" author="mcpierce">
+
+        <createView replaceIfExists="true" viewName="displayable_comics_view">
+            SELECT DISTINCT d.comic_book_id                               as comic_book_id,
+                            d.comic_detail_id                             as comic_detail_id,
+                            (SELECT reference_id
+                             FROM comic_metadata_sources_v4 m
+                             WHERE m.comic_detail_id = d.comic_detail_id) AS reference_id,
+                            d.filename                                    as filename,
+                            d.archive_type                                as archive_type,
+                            d.comic_state                                 as comic_state,
+                            d.missing                                     as is_missing,
+                            CASE
+                                WHEN EXISTS(SELECT s.comic_detail_id
+                                            FROM comic_metadata_sources_v4 s
+                                            WHERE s.comic_detail_id = d.comic_detail_id)
+                                    THEN false
+                                ELSE true END                             AS is_unscraped,
+                            d.comic_type                                  as comic_type,
+                            d.sort_name                                   as sort_name,
+                            d.publisher                                   as publisher,
+                            d.imprint                                     as imprint,
+                            d.series                                      as series,
+                            d.volume                                      as volume,
+                            d.issue_number                                as issue_number,
+                            d.description                                 as description,
+                            d.notes                                       as notes,
+                            (SELECT RIGHT (CONCAT('0000000000', d.issue_number), 10)) as sortable_issue_number, d.title as title, (
+            SELECT COUNT(*)
+            FROM comic_pages_v4 cp
+            WHERE cp.comic_detail_id = d.comic_detail_id) as page_count
+                , d.cover_date as cover_date
+                , CASE WHEN d.cover_date IS NULL THEN 0 ELSE (
+            SELECT EXTRACT(MONTH FROM cover_date))
+            END
+            as month_published
+                    , CASE WHEN d.cover_date IS NULL THEN 0 ELSE (SELECT EXTRACT(YEAR FROM cover_date))
+            END
+            as year_published,
+                            d.store_date as store_date,
+                            d.added_date as added_date,
+                            d.last_modified_date as last_modified_date
+            FROM comic_details_v4 d
+        </createView>
+
+        <createView replaceIfExists="true" viewName="organizing_comics_view">
+            SELECT d.comic_book_id   AS comic_book_id,
+                   d.comic_detail_id AS comic_detail_id,
+                   d.filename,
+                   d.archive_type,
+                   d.publisher,
+                   d.imprint,
+                   d.series,
+                   d.volume,
+                   d.issue_number,
+                   d.title,
+                   d.cover_date,
+                   d.store_date,
+                   CASE
+                       WHEN EXISTS (SELECT *
+                                    FROM comic_metadata_sources_v4
+                                    WHERE comic_metadata_sources_v4.comic_detail_id = d.comic_detail_id)
+                           THEN true
+                       ELSE false
+                       END           AS is_scraped
+            FROM comic_details_v4 d
+            WHERE d.loading_file_contents IS FALSE
+              AND d.organizing IS TRUE
+              AND d.purging IS FALSE
+              AND d.updating_metadata IS FALSE
+              AND d.target_archive_type IS NULL
+              AND d.editing_metadata IS FALSE
+        </createView>
+
+    </changeSet>
+</databaseChangeLog>

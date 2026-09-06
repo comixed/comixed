@@ -411,7 +411,10 @@ public class MetadataService {
       if (Objects.isNull(comicBook.getMetadata())) {
         comicBook.setMetadata(
             new ComicMetadataSource(
-                comicBook, metadataSource, trim(issueDetails.getSourceId()), new Date()));
+                comicBook.getComicDetail(),
+                metadataSource,
+                trim(issueDetails.getSourceId()),
+                new Date()));
       } else {
         comicBook.getMetadata().setMetadataSource(metadataSource);
         comicBook.getMetadata().setReferenceId(trim(issueDetails.getSourceId()));
@@ -523,7 +526,10 @@ public class MetadataService {
                 log.trace("Creating comic metadata source", comicBook.getComicBookId());
                 comicBook.setMetadata(
                     new ComicMetadataSource(
-                        comicBook, metadataSource, trim(issue.getSourceId()), new Date()));
+                        comicBook.getComicDetail(),
+                        metadataSource,
+                        trim(issue.getSourceId()),
+                        new Date()));
               }
               log.debug("Firing comic book event: id={}", comicBook.getComicBookId());
               this.comicBookStateAdaptor.fireEvent(comicBook, ComicEvent.comicMetadataSaved);

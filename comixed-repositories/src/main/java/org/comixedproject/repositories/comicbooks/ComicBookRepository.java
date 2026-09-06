@@ -74,7 +74,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
   List<ComicBook> findBySeries(@Param("series") String series);
 
   @Query(
-      "SELECT c FROM ComicBook c LEFT JOIN FETCH c.comicDetail LEFT JOIN FETCH c.metadata mds LEFT JOIN FETCH c.comicDetail.pages WHERE c.comicBookId = :id")
+      "SELECT c FROM ComicBook c LEFT JOIN FETCH c.comicDetail LEFT JOIN FETCH c.comicDetail.metadata mds LEFT JOIN FETCH c.comicDetail.pages WHERE c.comicBookId = :id")
   ComicBook getById(@Param("id") long id);
 
   @Query(
@@ -474,7 +474,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the record count
    */
   @Query(
-      "SELECT COUNT(c) FROM ComicBook c WHERE c.comicBookId NOT IN (SELECT s.comicBook.comicBookId FROM ComicMetadataSource s)")
+      "SELECT COUNT(c) FROM ComicBook c WHERE c.comicBookId NOT IN (SELECT s.comicDetail.comicDetailId FROM ComicMetadataSource s)")
   long getUnscrapedComicCount();
 
   /**

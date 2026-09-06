@@ -19,5 +19,8 @@
     <include file="/db/migrations/4.0/002_2718_remove_comic_books_rename_pages_column.xml"/>
     <include file="/db/migrations/4.0/003_2766_add_flags_to_comic_details.xml"/>
     <include file="/db/migrations/4.0/004_2767_change_pages_to_be_child_of_comic_details.xml"/>
+    <include file="/db/migrations/4.0/005_2767_recreate_views.xml"/>
+    <include file="/db/migrations/4.0/006_2775_change_comic_metadata_sources_to_be_child_of_comic_detail.xml"/>
+    <include file="/db/migrations/4.0/007_2775_recreate_views.xml"/>
 
 </databaseChangeLog>

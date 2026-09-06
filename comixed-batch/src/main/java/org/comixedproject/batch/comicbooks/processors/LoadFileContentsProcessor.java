@@ -108,7 +108,8 @@ public class LoadFileContentsProcessor implements ItemProcessor<ComicBook, Comic
               referenceId);
           if (Objects.isNull(comicBook.getMetadata())) {
             comicBook.setMetadata(
-                new ComicMetadataSource(comicBook, source, referenceId, lastScrapedDate));
+                new ComicMetadataSource(
+                    comicBook.getComicDetail(), source, referenceId, lastScrapedDate));
           } else {
             comicBook.getMetadata().setMetadataSource(source);
             comicBook.getMetadata().setReferenceId(referenceId);

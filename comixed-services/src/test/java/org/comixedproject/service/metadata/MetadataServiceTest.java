@@ -1122,7 +1122,7 @@ class MetadataServiceTest {
 
     final ComicMetadataSource metadata = comicMetadataSourceArgumentCaptor.getValue();
     assertNotNull(metadata);
-    assertSame(comicBook, metadata.getComicBook());
+    assertSame(comicDetail, metadata.getComicDetail());
     assertSame(metadataSource, metadata.getMetadataSource());
     assertEquals(TEST_SOURCE_ID, metadata.getReferenceId());
 

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="006_2775_change_comic_metadata_sources_to_be_child_of_comic_detail.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="comic_metadata_sources_v4" columnName="comic_book_id"/>
+        </preConditions>
+
+        <addColumn tableName="comic_metadata_sources_v4">
+            <column name="comic_detail_id" type="bigint"/>
+        </addColumn>
+
+        <sql>
+            UPDATE comic_metadata_sources_v4
+            SET comic_detail_id=(SELECT comic_detail_id
+                                 FROM comic_details_v4
+                                 WHERE comic_details_v4.comic_book_id = comic_metadata_sources_v4.comic_book_id);
+        </sql>
+
+        <addNotNullConstraint tableName="comic_metadata_sources_v4" columnName="comic_detail_id"
+                              columnDataType="bigint"/>
+
+        <dropView viewName="organizing_comics_view"/>
+
+        <dropView viewName="displayable_comics_view"/>
+
+        <dropUniqueConstraint tableName="comic_metadata_sources_v4"
+                              constraintName="comic_metadata_sources_v4_unique_comic_book"/>
+
+        <dropForeignKeyConstraint baseTableName="comic_metadata_sources_v4"
+                                  constraintName="comic_metadata_sources_v4_comic_book_fk"/>
+
+        <dropIndex tableName="comic_metadata_sources_v4" indexName="comic_metadata_sources_v4_comic_book_idx"/>
+
+        <dropColumn tableName="comic_metadata_sources_v4" columnName="comic_book_id"/>
+
+        <addForeignKeyConstraint baseTableName="comic_metadata_sources_v4" baseColumnNames="comic_detail_id"
+                                 constraintName="comic_metadata_sources_v4_comic_detail_fk"
+                                 referencedTableName="comic_details_v4"
+                                 referencedColumnNames="comic_detail_id"/>
+
+        <createIndex tableName="comic_metadata_sources_v4" indexName="comic_metadata_sources_v4_comic_detail_idx">
+            <column name="comic_detail_id"/>
+        </createIndex>
+
+        <addUniqueConstraint tableName="comic_metadata_sources_v4"
+                             constraintName="comic_metadata_sources_v4_unique_comic_detail"
+                             columnNames="comic_detail_id"/>
+
+    </changeSet>
+</databaseChangeLog>
