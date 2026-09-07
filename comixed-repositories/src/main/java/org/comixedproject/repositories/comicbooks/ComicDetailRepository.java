@@ -480,7 +480,7 @@ public interface ComicDetailRepository extends JpaRepository<ComicDetail, Long> 
    * @param pageable the page request
    * @return the list of comics
    */
-  @Query("SELECT c FROM ComicBook c WHERE c.comicDetail.comicState = 'UNPROCESSED'")
+  @Query("SELECT c FROM ComicBook c WHERE c.comicDetail.state = 'UNPROCESSED'")
   List<ComicBook> findUnprocessedComicsWithCreateMetadataFlagSet(Pageable pageable);
 
   /**
@@ -498,7 +498,7 @@ public interface ComicDetailRepository extends JpaRepository<ComicDetail, Long> 
    * @return the count
    */
   @Query(
-      "SELECT COUNT(c) FROM ComicBook c WHERE c.comicDetail.comicState = 'UNPROCESSED' OR c.comicDetail.loadingFileContents IS TRUE")
+      "SELECT COUNT(c) FROM ComicBook c WHERE c.comicDetail.state = 'UNPROCESSED' OR c.comicDetail.loadingFileContents IS TRUE")
   int findUnprocessedComicsWithoutContentCount();
 
   /**
@@ -507,7 +507,7 @@ public interface ComicDetailRepository extends JpaRepository<ComicDetail, Long> 
    * @return the list of comics
    */
   @Query(
-      "SELECT c FROM ComicBook c WHERE c.comicDetail.comicState = 'UNPROCESSED' AND c.comicDetail.loadingFileContents = FALSE")
+      "SELECT c FROM ComicBook c WHERE c.comicDetail.state = 'UNPROCESSED' AND c.comicDetail.loadingFileContents = FALSE")
   List<ComicBook> findProcessedComics();
 
   /**
@@ -534,7 +534,7 @@ public interface ComicDetailRepository extends JpaRepository<ComicDetail, Long> 
    * @return the record count
    */
   @Query(
-      "SELECT count(c) FROM ComicBook c WHERE c.comicDetail.organizing = true AND c.comicDetail.comicState != 'DELETED'")
+      "SELECT count(c) FROM ComicBook c WHERE c.comicDetail.organizing = true AND c.comicDetail.state != 'DELETED'")
   long findComicsToBeMovedCount();
 
   /**
@@ -579,7 +579,7 @@ public interface ComicDetailRepository extends JpaRepository<ComicDetail, Long> 
 
   /** Sets the purging flag for all comics int he DELETED state. */
   @Modifying
-  @Query("UPDATE ComicDetail c SET c.purging = true WHERE c.comicState = 'DELETED'")
+  @Query("UPDATE ComicDetail c SET c.purging = true WHERE c.state = 'DELETED'")
   void prepareComicBooksForDeleting();
 
   /**
@@ -600,4 +600,22 @@ public interface ComicDetailRepository extends JpaRepository<ComicDetail, Long> 
 
   @Query("SELECT COUNT(c) FROM ComicDetail c WHERE c.targetArchiveType IS NOT NULL")
   long getRecreatingCount();
+
+  /**
+   * Returns the record that has the given filename.
+   *
+   * @param filename the filename
+   * @return the record
+   */
+  @Query("SELECT c FROM ComicDetail c WHERE c.filename = :filename")
+  ComicDetail findByFilename(@Param("filename") String filename);
+
+  /**
+   * Returns the record that has the given filename, ignoring the case.
+   *
+   * @param filename the filename
+   * @return the record
+   */
+  @Query("SELECT c FROM ComicDetail c WHERE c.filename ILIKE :filename")
+  ComicDetail findByFilenameCaseInsensitive(@Param("filename") String filename);
 }

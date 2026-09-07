@@ -18,7 +18,7 @@
 
 package org.comixedproject.state.comicbooks.guards;
 
-import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.state.StateTransitionGuard;
 
 /**
@@ -27,4 +27,4 @@ import org.comixedproject.state.StateTransitionGuard;
  *
  * @author Darryl L. Pierce
  */
-public abstract class AbstractComicBookGuard implements StateTransitionGuard<ComicBook> {}
+public abstract class AbstractComicBookGuard implements StateTransitionGuard<ComicDetail> {}

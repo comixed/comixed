@@ -97,6 +97,7 @@ public class ComicBookRepositoryTest {
   }
 
   @Test
+  @Transactional
   public void testDelete() {
     repository.delete(deletableComicBook);
 
@@ -316,13 +317,12 @@ public class ComicBookRepositoryTest {
   }
 
   @Test
+  @Transactional
   public void testSaveWithNullFields() {
     final ComicBook incoming = new ComicBook();
     incoming.setComicDetail(new ComicDetail(incoming, TEST_COMICBOOK_FILENAME, ArchiveType.CBZ));
 
-    final ComicBook saved = this.repository.save(incoming);
-
-    this.repository.flush();
+    final ComicBook saved = this.repository.saveAndFlush(incoming);
 
     assertNotNull(saved.getComicBookId());
 

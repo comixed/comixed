@@ -18,23 +18,24 @@
 
 package org.comixedproject.state.comicbooks.actions;
 
-import org.comixedproject.model.comicbooks.ComicBook;
+import static org.mockito.Mockito.verify;
+
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class FileContentsLoadedActionTest {
   @InjectMocks private FileContentsLoadedAction action;
-  @Mock private ComicBook comicBook;
+  @Mock private ComicDetail comic;
 
   @Test
   void execute() {
-    action.execute(comicBook);
+    action.execute(comic);
 
-    Mockito.verify(comicBook, Mockito.times(1)).setFileContentsLoaded(true);
+    verify(comic).setLoadingFileContents(false);
   }
 }

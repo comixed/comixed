@@ -18,9 +18,8 @@
 
 package org.comixedproject.state.comicbooks.actions;
 
-import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.springframework.stereotype.Component;
 
 /**
@@ -32,8 +31,8 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class FileContentsLoadedAction extends AbstractComicAction {
   @Override
-  public void execute(@NonNull final ComicBook comicBook) {
+  public void execute(final ComicDetail comic) {
     log.trace("Turning on file contents loaded flag");
-    comicBook.setFileContentsLoaded(true);
+    comic.setLoadingFileContents(false);
   }
 }

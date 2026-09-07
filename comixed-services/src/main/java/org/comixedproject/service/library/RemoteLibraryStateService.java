@@ -18,15 +18,14 @@
 
 package org.comixedproject.service.library;
 
-import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.library.PublishRemoteLibraryUpdateAction;
-import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.net.library.RemoteLibraryState;
 import org.comixedproject.service.comicbooks.ComicBookService;
-import org.comixedproject.state.comicbooks.ComicBookStateAdaptor;
-import org.comixedproject.state.comicbooks.ComicStateChangeListener;
+import org.comixedproject.state.comicbooks.ComicStateAdaptor;
+import org.comixedproject.state.comicbooks.ComicStateListener;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,8 +38,8 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @Log4j2
-public class RemoteLibraryStateService implements InitializingBean, ComicStateChangeListener {
-  @Autowired private ComicBookStateAdaptor comicBookStateAdaptor;
+public class RemoteLibraryStateService implements InitializingBean, ComicStateListener {
+  @Autowired private ComicStateAdaptor comicStateAdaptor;
   @Autowired private ComicBookService comicBookService;
   @Autowired private DuplicateComicService duplicateComicService;
   @Autowired private PublishRemoteLibraryUpdateAction publishRemoteLibraryUpdateAction;
@@ -48,11 +47,11 @@ public class RemoteLibraryStateService implements InitializingBean, ComicStateCh
   @Override
   public void afterPropertiesSet() throws Exception {
     log.debug("Subscribing to comic book state changes");
-    this.comicBookStateAdaptor.addListener(this);
+    this.comicStateAdaptor.addListener(this);
   }
 
   @Override
-  public void onComicStateChanged(final @NonNull ComicBook comicBook) {
+  public void onComicStateChanged(final ComicDetail comic) {
     log.debug("Publishing library state update");
     try {
       this.publishRemoteLibraryUpdateAction.publish(this.getLibraryState());

@@ -20,8 +20,8 @@ package org.comixedproject.batch.comicpages.writers;
 
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicpages.ComicPage;
-import org.comixedproject.state.comicbooks.ComicBookStateAdaptor;
 import org.comixedproject.state.comicbooks.ComicEvent;
+import org.comixedproject.state.comicbooks.ComicStateAdaptor;
 import org.springframework.batch.infrastructure.item.Chunk;
 import org.springframework.batch.infrastructure.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,14 +36,14 @@ import org.springframework.stereotype.Component;
 @Component
 @Log4j2
 public class MarkBlockedPageWriter implements ItemWriter<ComicPage> {
-  @Autowired private ComicBookStateAdaptor comicBookStateAdaptor;
+  @Autowired private ComicStateAdaptor comicStateAdaptor;
 
   @Override
   public void write(final Chunk<? extends ComicPage> pages) throws Exception {
     pages.forEach(
         page -> {
-          this.comicBookStateAdaptor.fireEvent(
-              page.getComicDetail().getComicBook(), ComicEvent.comicPageMarkedForRemoval);
+          this.comicStateAdaptor.fireEvent(
+              page.getComicDetail(), ComicEvent.comicPageMarkedForRemoval);
         });
   }
 }

@@ -89,7 +89,7 @@ public class ComicBookMetadataAdaptor {
             volume,
             issueNumber,
             coverDate,
-            comicBook.getComicState() == ComicState.CHANGED ? CHANGED_COMIC_MARKER : "")
+            comicBook.getState() == ComicState.CHANGED ? CHANGED_COMIC_MARKER : "")
         .trim();
   }
 }

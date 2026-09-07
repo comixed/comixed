@@ -18,19 +18,19 @@
 
 package org.comixedproject.state.comicbooks;
 
-import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 
 /**
- * <code>ComicStateChangeListener</code> defines a type that receives notification when a comic's
- * state has changed.
+ * <code>ComicStateListener</code> defines a type that receives notification when a comic's state
+ * has changed.
  *
  * @author Darryl L. Pierce
  */
-public interface ComicStateChangeListener {
+public interface ComicStateListener {
   /**
    * Invoked when a comic's state has changed.
    *
-   * @param comicBook the comic book
+   * @param comic the comic book
    */
-  void onComicStateChanged(final ComicBook comicBook);
+  void onComicStateChanged(final ComicDetail comic);
 }

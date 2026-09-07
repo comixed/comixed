@@ -18,29 +18,31 @@
 
 package org.comixedproject.state.comicbooks.actions;
 
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import java.util.List;
-import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicpages.ComicPage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class UnmarkComicForRemovalActionTest {
   @InjectMocks private UnmarkComicForRemovalAction action;
-  @Mock private ComicBook comicBook;
+  @Mock private ComicDetail comic;
   @Mock private List<ComicPage> pages;
 
   @Test
   void execute() {
-    Mockito.when(comicBook.getPages()).thenReturn(pages);
-    action.execute(comicBook);
+    when(comic.getPages()).thenReturn(pages);
+    action.execute(comic);
 
-    Mockito.verify(comicBook).setPurging(false);
-    Mockito.verify(pages).clear();
-    Mockito.verify(comicBook).setFileContentsLoaded(false);
+    verify(comic).setPurging(false);
+    verify(pages).clear();
+    verify(comic).setLoadingFileContents(true);
   }
 }

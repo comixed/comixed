@@ -164,7 +164,7 @@ class ComicBookMetadataAdaptorTest {
 
   @Test
   void getDisplayableTitle_metadataIsChanged() {
-    Mockito.when(comicDetail.getComicState()).thenReturn(ComicState.CHANGED);
+    Mockito.when(comicDetail.getState()).thenReturn(ComicState.CHANGED);
 
     final String result = adaptor.getDisplayableTitle(comicDetail);
 

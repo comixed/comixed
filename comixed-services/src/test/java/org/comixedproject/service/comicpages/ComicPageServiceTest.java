@@ -34,8 +34,8 @@ import org.comixedproject.model.comicpages.ComicPageType;
 import org.comixedproject.repositories.comicpages.ComicPageRepository;
 import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
-import org.comixedproject.state.comicbooks.ComicBookStateAdaptor;
 import org.comixedproject.state.comicbooks.ComicEvent;
+import org.comixedproject.state.comicbooks.ComicStateAdaptor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -61,13 +61,13 @@ class ComicPageServiceTest {
   @InjectMocks private ComicPageService service;
   @Mock private ComicPageRepository comicPageRepository;
   @Mock private ComicBookService comicBookService;
-  @Mock private ComicBookStateAdaptor comicBookStateAdaptor;
+  @Mock private ComicStateAdaptor comicStateAdaptor;
   @Mock private GenericUtilitiesAdaptor genericUtilitiesAdaptor;
   @Mock private ComicPage page;
   @Mock private ComicPage savedPage;
   @Mock private ComicPage pageRecord;
   @Mock private ComicBook comicBook;
-  @Mock private ComicDetail comicDetail;
+  @Mock private ComicDetail comic;
   @Mock private List<String> duplicateHashList;
 
   @Captor private ArgumentCaptor<Pageable> argumentCaptorPageable;
@@ -80,8 +80,8 @@ class ComicPageServiceTest {
 
   @BeforeEach
   void setUp() throws IOException {
-    when(page.getComicDetail()).thenReturn(comicDetail);
-    when(comicDetail.getComicBook()).thenReturn(comicBook);
+    when(page.getComicDetail()).thenReturn(comic);
+    when(comic.getComicBook()).thenReturn(comicBook);
     pageContent = FileUtils.readFileToByteArray(new File(TEST_PAGE_FILENAME));
   }
 
@@ -218,7 +218,7 @@ class ComicPageServiceTest {
     service.updatePageDeletion(idList, true);
 
     verify(page).setPageType(ComicPageType.DELETED);
-    verify(comicBookStateAdaptor).fireEvent(comicBook, ComicEvent.comicPageMarkedForRemoval);
+    verify(comicStateAdaptor).fireEvent(comic, ComicEvent.comicPageMarkedForRemoval);
   }
 
   @Test
@@ -230,7 +230,7 @@ class ComicPageServiceTest {
     service.updatePageDeletion(idList, false);
 
     verify(page).setPageType(ComicPageType.STORY);
-    verify(comicBookStateAdaptor).fireEvent(comicBook, ComicEvent.comicPageUnmarkedForRemoval);
+    verify(comicStateAdaptor).fireEvent(comic, ComicEvent.comicPageUnmarkedForRemoval);
   }
 
   @Test

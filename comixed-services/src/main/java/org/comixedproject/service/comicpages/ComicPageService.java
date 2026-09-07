@@ -33,8 +33,8 @@ import org.comixedproject.model.comicpages.ComicPageType;
 import org.comixedproject.repositories.comicpages.ComicPageRepository;
 import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
-import org.comixedproject.state.comicbooks.ComicBookStateAdaptor;
 import org.comixedproject.state.comicbooks.ComicEvent;
+import org.comixedproject.state.comicbooks.ComicStateAdaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -50,7 +50,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ComicPageService {
   @Autowired private ComicPageRepository comicPageRepository;
   @Autowired private ComicBookService comicBookService;
-  @Autowired private ComicBookStateAdaptor comicBookStateAdaptor;
+  @Autowired private ComicStateAdaptor comicStateAdaptor;
   @Autowired private GenericUtilitiesAdaptor genericUtilitiesAdaptor;
 
   /**
@@ -163,12 +163,12 @@ public class ComicPageService {
       final ComicPage page = this.comicPageRepository.getById(id);
       if (deleted) {
         page.setPageType(ComicPageType.DELETED);
-        this.comicBookStateAdaptor.fireEvent(
-            page.getComicDetail().getComicBook(), ComicEvent.comicPageMarkedForRemoval);
+        this.comicStateAdaptor.fireEvent(
+            page.getComicDetail(), ComicEvent.comicPageMarkedForRemoval);
       } else {
         page.setPageType(ComicPageType.STORY);
-        this.comicBookStateAdaptor.fireEvent(
-            page.getComicDetail().getComicBook(), ComicEvent.comicPageUnmarkedForRemoval);
+        this.comicStateAdaptor.fireEvent(
+            page.getComicDetail(), ComicEvent.comicPageUnmarkedForRemoval);
       }
     }
   }

@@ -32,8 +32,7 @@ import org.comixedproject.model.net.library.RemoteLibrarySegmentState;
 import org.comixedproject.repositories.comicbooks.ComicBookRepository;
 import org.comixedproject.repositories.comicbooks.ComicDetailRepository;
 import org.comixedproject.repositories.comicbooks.ComicTagRepository;
-import org.comixedproject.state.comicbooks.ComicBookStateAdaptor;
-import org.comixedproject.state.comicbooks.ComicEvent;
+import org.comixedproject.state.comicbooks.ComicStateAdaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Limit;
@@ -52,7 +51,7 @@ import org.springframework.util.StringUtils;
 @Service
 @Log4j2
 public class ComicBookService {
-  @Autowired private ComicBookStateAdaptor comicBookStateAdaptor;
+  @Autowired private ComicStateAdaptor comicStateAdaptor;
   @Autowired private ComicBookRepository comicBookRepository;
   @Autowired private ComicDetailRepository comicDetailRepository;
   @Autowired private ComicFileAdaptor comicFileAdaptor;
@@ -390,21 +389,6 @@ public class ComicBookService {
   }
 
   /**
-   * Prepares to update the details for a set of comics.
-   *
-   * @param comicIds the comics' ids
-   * @throws ComicBookException if comic id is invalid
-   */
-  public void updateMultipleComics(final List<Long> comicIds) throws ComicBookException {
-    log.debug("Updating details for {} comic{}", comicIds.size(), comicIds.size() == 1 ? "" : "s");
-    for (long id : comicIds) {
-      log.trace("Loading comicBook: id={}", id);
-      final ComicBook comicBook = this.doGetComic(id);
-      this.comicBookStateAdaptor.fireEvent(comicBook, ComicEvent.prepareComicsForBatchEditing);
-    }
-  }
-
-  /**
    * Marks comics for batch metadata update processing.
    *
    * @param ids the comic book ids
@@ -439,25 +423,6 @@ public class ComicBookService {
     log.trace("Marking all comics for organization");
     this.comicDetailRepository.markAllForOrganization();
     this.applicationEventPublisher.publishEvent(OrganizingLibraryEvent.instance);
-  }
-
-  /**
-   * Prepares a set of comic books for rescanning.
-   *
-   * @param ids the comic ids
-   */
-  public void prepareForRescan(final List<Long> ids) {
-    ids.forEach(
-        id -> {
-          try {
-            log.trace("Loading comicBook: id={}", id);
-            final ComicBook comicBook = this.doGetComic(id);
-            log.trace("Firing event: rescan comicBook");
-            this.comicBookStateAdaptor.fireEvent(comicBook, ComicEvent.rescanComicBookFile);
-          } catch (ComicBookException error) {
-            log.error("Error preparing comic for rescan", error);
-          }
-        });
   }
 
   /** Marks all comics in the deleted state for purging. */
@@ -611,41 +576,6 @@ public class ComicBookService {
   @Transactional
   public Set<String> getAllComicDetails(final boolean missing) {
     return this.comicBookRepository.getComicFilenames(missing);
-  }
-
-  /**
-   * Marks a comic book as found.
-   *
-   * @param filename the comic filename
-   */
-  @Transactional
-  public void markComicAsFound(final String filename) {
-    final var comicBook = doFindComicByFilename(filename);
-    if (Objects.nonNull(comicBook)) {
-      log.debug("Marking comic book as found: id={}", comicBook.getComicBookId());
-      this.comicBookStateAdaptor.fireEvent(comicBook, ComicEvent.comicFileFound);
-    }
-  }
-
-  /**
-   * Marks a comic book as missing.
-   *
-   * @param filename the filename
-   */
-  @Transactional
-  public void markComicAsMissing(final String filename) {
-    final var comicBook = doFindComicByFilename(filename);
-    if (Objects.nonNull(comicBook) && Objects.isNull(comicBook.getTargetArchiveType())) {
-      log.debug("Marking comic as missing: {} [{}]", filename, comicBook.getComicBookId());
-      this.comicBookStateAdaptor.fireEvent(comicBook, ComicEvent.comicFileMissing);
-    }
-  }
-
-  private ComicBook doFindComicByFilename(final String filename) {
-    final String standardizedFilename = this.comicFileAdaptor.standardizeFilename(filename);
-    return this.comicFileAdaptor.isCaseSensitiveFilenames()
-        ? this.comicBookRepository.findByFilename(standardizedFilename)
-        : this.comicBookRepository.findByFilenameCaseInsensitive(standardizedFilename);
   }
 
   /**

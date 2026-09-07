@@ -19,7 +19,7 @@
 package org.comixedproject.state.comicbooks.actions;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.state.StateTransitionAction;
 
 /**
@@ -29,4 +29,4 @@ import org.comixedproject.state.StateTransitionAction;
  * @author Darryl L. Pierce
  */
 @Log4j2
-public abstract class AbstractComicAction implements StateTransitionAction<ComicBook> {}
+public abstract class AbstractComicAction implements StateTransitionAction<ComicDetail> {}

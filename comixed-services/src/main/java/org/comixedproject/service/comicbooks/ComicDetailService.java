@@ -34,6 +34,8 @@ import org.comixedproject.model.batch.RecreateComicFilesEvent;
 import org.comixedproject.model.collections.CollectionEntry;
 import org.comixedproject.model.comicbooks.*;
 import org.comixedproject.repositories.comicbooks.ComicDetailRepository;
+import org.comixedproject.state.comicbooks.ComicEvent;
+import org.comixedproject.state.comicbooks.ComicStateAdaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Example;
@@ -53,10 +55,25 @@ import org.springframework.util.StringUtils;
 @Log4j2
 public class ComicDetailService {
   @Autowired private ComicDetailRepository comicDetailRepository;
+  @Autowired private ComicStateAdaptor comicStateAdaptor;
   @Autowired private ComicFileAdaptor comicFileAdaptor;
   @Autowired private ApplicationEventPublisher applicationEventPublisher;
 
   SimpleDateFormat coverDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+  // create
+
+  @Transactional
+  public ComicDetail save(final ComicDetail comic) {
+    if (Objects.nonNull(comic.getComicDetailId())) {
+      log.debug("Saving comic: filename={}", comic.getFilename());
+    } else {
+      log.debug("Updating comic: id={}", comic.getComicDetailId());
+    }
+    return this.comicDetailRepository.saveAndFlush(comic);
+  }
+
+  // read
 
   @Transactional
   public boolean filenameFound(final String filename) {
@@ -587,6 +604,8 @@ public class ComicDetailService {
     return this.comicDetailRepository.findBatchScrapingComics(PageRequest.of(0, chunkSize));
   }
 
+  // update
+
   @Transactional
   public void markComicBooksForBatchScraping(final List<Long> ids) {
     this.comicDetailRepository.prepareForBatchScraping(ids);
@@ -610,4 +629,74 @@ public class ComicDetailService {
     log.debug("Getting the recreating count");
     return this.comicDetailRepository.getRecreatingCount();
   }
+
+  /**
+   * Prepares to update the details for a set of comics.
+   *
+   * @param comicIds the comics' ids
+   * @throws ComicBookException if comic id is invalid
+   */
+  public void updateMultipleComics(final List<Long> comicIds) throws ComicBookException {
+    log.debug("Updating details for {} comic{}", comicIds.size(), comicIds.size() == 1 ? "" : "s");
+    for (long comicId : comicIds) {
+      log.trace("Loading comicBook: id={}", comicId);
+      final ComicDetail comic = this.comicDetailRepository.findByComicBookId(comicId);
+      if (Objects.isNull(comic))
+        throw new ComicBookException(String.format("No such comic book to update: id=%d", comicId));
+      this.comicStateAdaptor.fireEvent(comic, ComicEvent.prepareComicsForBatchEditing);
+    }
+  }
+
+  /**
+   * Prepares a set of comic books for rescanning.
+   *
+   * @param comicIdList the comic ids
+   */
+  public void prepareForRescan(final List<Long> comicIdList) {
+    comicIdList.forEach(
+        comicId -> {
+          log.trace("Loading comic: id={}", comicId);
+          final ComicDetail comic = this.comicDetailRepository.findByComicBookId(comicId);
+          log.trace("Firing event: rescan comicBook");
+          this.comicStateAdaptor.fireEvent(comic, ComicEvent.rescanComicBookFile);
+        });
+  }
+
+  /**
+   * Marks a comic book as found.
+   *
+   * @param filename the comic filename
+   */
+  @Transactional
+  public void markComicAsFound(final String filename) {
+    final String standardizeFilename = this.comicFileAdaptor.standardizeFilename(filename);
+    final var comic =
+        this.comicFileAdaptor.isCaseSensitiveFilenames()
+            ? this.comicDetailRepository.findByFilename(standardizeFilename)
+            : this.comicDetailRepository.findByFilenameCaseInsensitive(standardizeFilename);
+    if (Objects.nonNull(comic)) {
+      log.debug("Marking comic book as found: id={}", comic.getComicId());
+      this.comicStateAdaptor.fireEvent(comic, ComicEvent.comicFileFound);
+    }
+  }
+
+  /**
+   * Marks a comic book as missing.
+   *
+   * @param filename the filename
+   */
+  @Transactional
+  public void markComicAsMissing(String filename) {
+    final String standardizeFilename = this.comicFileAdaptor.standardizeFilename(filename);
+    final var comic =
+        this.comicFileAdaptor.isCaseSensitiveFilenames()
+            ? this.comicDetailRepository.findByFilename(standardizeFilename)
+            : this.comicDetailRepository.findByFilenameCaseInsensitive(standardizeFilename);
+    if (Objects.nonNull(comic)) {
+      log.debug("Marking comic book as found: id={}", comic.getComicId());
+      this.comicStateAdaptor.fireEvent(comic, ComicEvent.comicFileMissing);
+    }
+  }
+
+  // delete
 }

@@ -198,7 +198,7 @@ public class LibraryScannerService implements InitializingBean, ConfigurationCha
     } else {
       if (this.comicDetailService.filenameFound(filename)) {
         log.debug("Missing file found: {}", filename);
-        this.comicBookService.markComicAsFound(filename);
+        this.comicDetailService.markComicAsFound(filename);
       } else {
         log.debug("Comic book discovered: {}", filename);
         this.comicFileService.discoverComicFile(filename);
@@ -213,7 +213,7 @@ public class LibraryScannerService implements InitializingBean, ConfigurationCha
       this.keyMap.remove(path);
     } else {
       log.debug("File deleted: {}", filename);
-      this.comicBookService.markComicAsMissing(filename);
+      this.comicDetailService.markComicAsMissing(filename);
     }
   }
 
@@ -229,7 +229,7 @@ public class LibraryScannerService implements InitializingBean, ConfigurationCha
                   final File file = new File(filename);
                   if (file.exists()) {
                     log.trace("Missing comic file was found: {}", filename);
-                    this.comicBookService.markComicAsFound(filename);
+                    this.comicDetailService.markComicAsFound(filename);
                   }
                 });
         log.info("Scanning remaining comics");
@@ -240,7 +240,7 @@ public class LibraryScannerService implements InitializingBean, ConfigurationCha
                   final File file = new File(filename);
                   if (!file.exists()) {
                     log.trace("Comic file is missing: {}", filename);
-                    this.comicBookService.markComicAsMissing(filename);
+                    this.comicDetailService.markComicAsMissing(filename);
                   }
                 });
         this.active = false;

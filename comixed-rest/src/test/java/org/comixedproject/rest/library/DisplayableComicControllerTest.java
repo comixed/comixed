@@ -30,10 +30,7 @@ import java.util.List;
 import java.util.Set;
 import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.model.archives.ArchiveType;
-import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.comicbooks.ComicState;
-import org.comixedproject.model.comicbooks.ComicTagType;
-import org.comixedproject.model.comicbooks.ComicType;
+import org.comixedproject.model.comicbooks.*;
 import org.comixedproject.model.library.DisplayableComic;
 import org.comixedproject.model.net.library.*;
 import org.comixedproject.model.user.ComiXedUser;
@@ -46,7 +43,7 @@ import org.comixedproject.service.lists.ReadingListException;
 import org.comixedproject.service.lists.ReadingListService;
 import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.service.user.UserService;
-import org.comixedproject.state.comicbooks.ComicBookStateAdaptor;
+import org.comixedproject.state.comicbooks.ComicStateAdaptor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -100,7 +97,7 @@ class DisplayableComicControllerTest {
   @Mock private ComicSelectionService comicSelectionService;
   @Mock private UserService userService;
   @Mock private ReadingListService readingListService;
-  @Mock private ComicBookStateAdaptor comicBookStateAdaptor;
+  @Mock private ComicStateAdaptor comicStateAdaptor;
 
   @Mock private LoadComicsByFilterRequest filteredRequest;
   @Mock private List<DisplayableComic> comicList;
@@ -114,6 +111,7 @@ class DisplayableComicControllerTest {
   @Mock private Set<Long> comicBooksRead;
   @Mock private LoadComicsResponse loadComicsResponse;
   @Mock private ComicBook comicBook;
+  @Mock private ComicDetail comic;
 
   @BeforeEach
   void setUp() throws ComicBookSelectionException, ComiXedUserException {
@@ -155,15 +153,16 @@ class DisplayableComicControllerTest {
   void afterPropertiesSet() {
     controller.afterPropertiesSet();
 
-    verify(comicBookStateAdaptor).addListener(controller);
+    verify(comicStateAdaptor).addListener(controller);
   }
 
   @Test
   void onComicStateChanged() {
     controller.filterCache.put(filteredRequest, loadComicsResponse);
     controller.tagAndValueCache.put(TEST_TAG_VALUE_AND_TYPE_KEY, loadComicsResponse);
+    when(comicBook.getComicDetail()).thenReturn(comic);
 
-    controller.onComicStateChanged(comicBook);
+    controller.onComicStateChanged(comic);
 
     assertTrue(controller.filterCache.isEmpty());
     assertTrue(controller.tagAndValueCache.isEmpty());

@@ -26,11 +26,6 @@
                                    property_value="0192837465FAEBDC"/>
     <comic_books_v4 comic_book_id="1000"
                     last_modified_on="2020-01-09 06:25:00"/>
-    <comic_metadata_sources_v4 comic_metadata_source_id="1000"
-                               comic_book_id="1000"
-                               metadata_source_id="1000"
-                               reference_id="1000"
-                               last_scraped_date="[now]"/>
     <comic_books_v4 comic_book_id="1001"
                     last_modified_on="2020-01-09 06:27:00"/>
     <comic_books_v4 comic_book_id="1002"
@@ -290,6 +285,11 @@
                       purging="false"
                       editing_metadata="false"
                       last_modified_date="2019-04-24 09:36:00"/>
+    <comic_metadata_sources_v4 comic_metadata_source_id="1000"
+                               comic_detail_id="2000"
+                               metadata_source_id="1000"
+                               reference_id="1000"
+                               last_scraped_date="[now]"/>
     <comic_tags_v4 comic_detail_id="2000"
                    tag_type="CHARACTER"
                    tag_value="Captain America"/>

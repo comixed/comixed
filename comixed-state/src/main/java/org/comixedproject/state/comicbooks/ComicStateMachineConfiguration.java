@@ -20,6 +20,7 @@ package org.comixedproject.state.comicbooks;
 
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.state.StateMachine;
 import org.comixedproject.state.comicbooks.actions.*;
@@ -30,14 +31,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * <code>ComicBookStateMachineConfiguration</code> defines a state machine for instances of {@link
+ * <code>ComicStateMachineConfiguration</code> defines a state machine for instances of {@link
  * ComicBook}.
  *
  * @author Darryl L. Pierce
  */
 @Configuration
 @Log4j2
-public class ComicBookStateMachineConfiguration {
+public class ComicStateMachineConfiguration {
   public static final String COMIC_STATE_MACHINE = "comicStateMachine";
 
   @Autowired private PrepareComicForProcessingAction prepareComicForProcessingAction;
@@ -52,8 +53,8 @@ public class ComicBookStateMachineConfiguration {
   @Autowired private UnmarkComicForRemovalAction unmarkComicForRemovalAction;
 
   @Bean(name = COMIC_STATE_MACHINE)
-  public StateMachine<ComicBook, ComicState, ComicEvent> comicStateMachine() {
-    final StateMachine<ComicBook, ComicState, ComicEvent> stateMachine =
+  public StateMachine<ComicDetail, ComicState, ComicEvent> comicStateMachine() {
+    final StateMachine<ComicDetail, ComicState, ComicEvent> stateMachine =
         new StateMachine<>(ComicState.class, ComicEvent.class);
 
     return stateMachine

@@ -55,8 +55,8 @@ import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.comicbooks.ComicDetailService;
 import org.comixedproject.service.comicbooks.ImprintService;
 import org.comixedproject.service.metadata.action.ProcessComicDescriptionAction;
-import org.comixedproject.state.comicbooks.ComicBookStateAdaptor;
 import org.comixedproject.state.comicbooks.ComicEvent;
+import org.comixedproject.state.comicbooks.ComicStateAdaptor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -116,7 +116,7 @@ class MetadataServiceTest {
   @Mock private IssueMetadata issueMetadata;
   @Mock private ComicBookService comicBookService;
   @Mock private ComicDetailService comicDetailService;
-  @Mock private ComicBookStateAdaptor comicBookStateAdaptor;
+  @Mock private ComicStateAdaptor comicStateAdaptor;
   @Mock private ComicBook loadedComicBook;
   @Mock private ComicDetail loadedComicDetail;
   @Mock private ComicBook savedComicBook;
@@ -126,7 +126,7 @@ class MetadataServiceTest {
   @Mock private List<Issue> issueList;
   @Mock private ComicMetadataSource comicMetadataSource;
   @Mock private MetadataAdaptorProvider metadataAdaptorProvider;
-  @Mock private ComicDetail comicDetail;
+  @Mock private ComicDetail comic;
   @Mock private ComicBook comicBook;
   @Mock private List<Long> comicBookIdList;
   @Mock private ApplicationEventPublisher applicationEventPublisher;
@@ -198,7 +198,7 @@ class MetadataServiceTest {
 
     doNothing().when(comicBook).setMetadata(comicMetadataSourceArgumentCaptor.capture());
     when(comicBook.getMetadata()).thenReturn(comicMetadataSource);
-    when(comicBook.getComicDetail()).thenReturn(comicDetail);
+    when(comicBook.getComicDetail()).thenReturn(comic);
 
     when(processComicDescriptionAction.execute(anyString()))
         .thenAnswer(input -> input.getArguments()[0]);
@@ -767,7 +767,7 @@ class MetadataServiceTest {
     verify(metadataCacheService)
         .saveToCache(TEST_CACHE_SOURCE, TEST_ISSUE_DETAILS_KEY, cacheEntryList.getValue());
     verify(metadataCacheService, never()).getFromCache(anyString(), anyString());
-    verify(comicBookStateAdaptor).fireEvent(loadedComicBook, ComicEvent.comicMetadataChanged);
+    verify(comicStateAdaptor).fireEvent(loadedComicDetail, ComicEvent.comicMetadataChanged);
 
     verifyComicScraping(loadedComicBook);
   }
@@ -793,7 +793,7 @@ class MetadataServiceTest {
     verify(metadataCacheService)
         .saveToCache(TEST_CACHE_SOURCE, TEST_ISSUE_DETAILS_KEY, cacheEntryList.getValue());
     verify(metadataCacheService, never()).getFromCache(anyString(), anyString());
-    verify(comicBookStateAdaptor).fireEvent(loadedComicBook, ComicEvent.comicMetadataChanged);
+    verify(comicStateAdaptor).fireEvent(loadedComicDetail, ComicEvent.comicMetadataChanged);
 
     verifyComicScraping(loadedComicBook);
   }
@@ -825,7 +825,7 @@ class MetadataServiceTest {
     verify(metadataCacheService)
         .saveToCache(TEST_CACHE_SOURCE, TEST_ISSUE_DETAILS_KEY, cacheEntryList.getValue());
     verify(metadataCacheService, never()).getFromCache(anyString(), anyString());
-    verify(comicBookStateAdaptor).fireEvent(loadedComicBook, ComicEvent.comicMetadataChanged);
+    verify(comicStateAdaptor).fireEvent(loadedComicDetail, ComicEvent.comicMetadataChanged);
     verify(comicMetadataSource).setMetadataSource(metadataSource);
     verify(comicMetadataSource).setReferenceId(TEST_SOURCE_ID);
 
@@ -856,7 +856,7 @@ class MetadataServiceTest {
     verify(comicBookService, times(2)).getComic(TEST_COMIC_ID);
     verify(metadataCacheService).getFromCache(TEST_CACHE_SOURCE, TEST_ISSUE_DETAILS_KEY);
     verify(metadataAdaptor).getIssueDetails(TEST_ISSUE_ID, metadataSource);
-    verify(comicBookStateAdaptor).fireEvent(loadedComicBook, ComicEvent.comicMetadataChanged);
+    verify(comicStateAdaptor).fireEvent(loadedComicDetail, ComicEvent.comicMetadataChanged);
     verify(metadataCacheService).saveToCache(anyString(), anyString(), anyList());
 
     verifyComicScraping(loadedComicBook);
@@ -880,7 +880,7 @@ class MetadataServiceTest {
     verify(comicBookService, times(2)).getComic(TEST_COMIC_ID);
     verify(metadataCacheService).getFromCache(TEST_CACHE_SOURCE, TEST_ISSUE_DETAILS_KEY);
     verify(metadataAdaptor).getIssueDetails(TEST_ISSUE_ID, metadataSource);
-    verify(comicBookStateAdaptor).fireEvent(loadedComicBook, ComicEvent.comicMetadataChanged);
+    verify(comicStateAdaptor).fireEvent(loadedComicDetail, ComicEvent.comicMetadataChanged);
     verify(metadataCacheService, never()).saveToCache(anyString(), anyString(), anyList());
 
     verifyComicScraping(loadedComicBook);
@@ -903,7 +903,7 @@ class MetadataServiceTest {
     verify(comicBookService, times(2)).getComic(TEST_COMIC_ID);
     verify(metadataCacheService).getFromCache(TEST_CACHE_SOURCE, TEST_ISSUE_DETAILS_KEY);
     verify(metadataAdaptor, never()).getIssueDetails(anyString(), any(MetadataSource.class));
-    verify(comicBookStateAdaptor).fireEvent(loadedComicBook, ComicEvent.comicMetadataChanged);
+    verify(comicStateAdaptor).fireEvent(loadedComicDetail, ComicEvent.comicMetadataChanged);
     verify(metadataCacheService, never()).saveToCache(anyString(), anyString(), anyList());
 
     verifyComicScraping(loadedComicBook);
@@ -1047,7 +1047,7 @@ class MetadataServiceTest {
     verify(issueService).saveAll(issues);
     verify(comicBookService)
         .findComic(TEST_PUBLISHER, TEST_SERIES_NAME, TEST_VOLUME, TEST_ISSUE_NUMBER);
-    verify(comicBookStateAdaptor, never()).fireEvent(any(), any());
+    verify(comicStateAdaptor, never()).fireEvent(any(), any());
   }
 
   @Test
@@ -1082,12 +1082,12 @@ class MetadataServiceTest {
     verify(issueService).saveAll(issues);
     verify(comicBookService)
         .findComic(TEST_PUBLISHER, TEST_SERIES_NAME, TEST_VOLUME, TEST_ISSUE_NUMBER);
-    verify(comicDetail).setPublisher(TEST_ISSUE_PUBLISHER);
-    verify(comicDetail).setSeries(TEST_ISSUE_SERIES_NAME);
-    verify(comicDetail).setVolume(TEST_ISSUE_VOLUME);
+    verify(comic).setPublisher(TEST_ISSUE_PUBLISHER);
+    verify(comic).setSeries(TEST_ISSUE_SERIES_NAME);
+    verify(comic).setVolume(TEST_ISSUE_VOLUME);
     verify(comicMetadataSource).setMetadataSource(metadataSource);
     verify(comicMetadataSource).setReferenceId(TEST_SOURCE_ID);
-    verify(comicBookStateAdaptor).fireEvent(comicBook, ComicEvent.comicMetadataSaved);
+    verify(comicStateAdaptor).fireEvent(comic, ComicEvent.comicMetadataSaved);
   }
 
   @Test
@@ -1122,17 +1122,17 @@ class MetadataServiceTest {
 
     final ComicMetadataSource metadata = comicMetadataSourceArgumentCaptor.getValue();
     assertNotNull(metadata);
-    assertSame(comicDetail, metadata.getComicDetail());
+    assertSame(comic, metadata.getComicDetail());
     assertSame(metadataSource, metadata.getMetadataSource());
     assertEquals(TEST_SOURCE_ID, metadata.getReferenceId());
 
     verify(issueService).saveAll(issues);
     verify(comicBookService)
         .findComic(TEST_PUBLISHER, TEST_SERIES_NAME, TEST_VOLUME, TEST_ISSUE_NUMBER);
-    verify(comicDetail).setPublisher(TEST_ISSUE_PUBLISHER);
-    verify(comicDetail).setSeries(TEST_ISSUE_SERIES_NAME);
-    verify(comicDetail).setVolume(TEST_ISSUE_VOLUME);
-    verify(comicBookStateAdaptor).fireEvent(comicBook, ComicEvent.comicMetadataSaved);
+    verify(comic).setPublisher(TEST_ISSUE_PUBLISHER);
+    verify(comic).setSeries(TEST_ISSUE_SERIES_NAME);
+    verify(comic).setVolume(TEST_ISSUE_VOLUME);
+    verify(comicStateAdaptor).fireEvent(comic, ComicEvent.comicMetadataSaved);
   }
 
   @Test
