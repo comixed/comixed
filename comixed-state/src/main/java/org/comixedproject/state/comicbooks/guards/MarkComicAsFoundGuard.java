@@ -19,9 +19,8 @@
 package org.comixedproject.state.comicbooks.guards;
 
 import java.io.File;
-import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.springframework.stereotype.Component;
 
 /**
@@ -33,18 +32,18 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class MarkComicAsFoundGuard extends AbstractComicBookGuard {
   @Override
-  public boolean evaluate(@NonNull final ComicBook comicBook) {
-    if (!comicBook.getComicDetail().isMissing()) {
-      log.trace("Comic book not marked as missing: id={}", comicBook.getComicBookId());
+  public boolean evaluate(final ComicDetail comic) {
+    if (!comic.isMissing()) {
+      log.trace("Comic book not marked as missing: id={}", comic.getComicId());
       return false;
     }
-    final File file = comicBook.getComicDetail().getFile();
+    final File file = comic.getFile();
     if (!file.exists()) {
       log.trace("Physical file not found: {}", file.getAbsolutePath());
       return false;
     }
 
-    log.debug("Comic book can be marked as missing: id={}", comicBook.getComicBookId());
+    log.debug("Comic book can be marked as missing: id={}", comic.getComicId());
     return true;
   }
 }

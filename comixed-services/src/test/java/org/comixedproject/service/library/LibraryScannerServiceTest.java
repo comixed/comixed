@@ -111,8 +111,8 @@ class LibraryScannerServiceTest {
     assertNull(scanner.rootDirectory);
     assertNull(scanner.watchService);
 
-    verify(comicBookService, never()).markComicAsFound(anyString());
-    verify(comicBookService, never()).markComicAsMissing(anyString());
+    verify(comicDetailService, never()).markComicAsFound(anyString());
+    verify(comicDetailService, never()).markComicAsMissing(anyString());
   }
 
   @Test
@@ -124,8 +124,8 @@ class LibraryScannerServiceTest {
     assertNull(scanner.rootDirectory);
     assertNull(scanner.watchService);
 
-    verify(comicBookService, never()).markComicAsFound(anyString());
-    verify(comicBookService, never()).markComicAsMissing(anyString());
+    verify(comicDetailService, never()).markComicAsFound(anyString());
+    verify(comicDetailService, never()).markComicAsMissing(anyString());
   }
 
   @Test
@@ -137,8 +137,8 @@ class LibraryScannerServiceTest {
     assertEquals(TEST_ROOT_DIRECTORY, scanner.rootDirectory);
     assertNotNull(scanner.watchService);
 
-    verify(comicBookService).markComicAsFound(TEST_COMIC_FILENAME);
-    verify(comicBookService).markComicAsMissing(TEST_MISSING_COMIC_FILENAME);
+    verify(comicDetailService).markComicAsFound(TEST_COMIC_FILENAME);
+    verify(comicDetailService).markComicAsMissing(TEST_MISSING_COMIC_FILENAME);
   }
 
   @Test
@@ -171,7 +171,7 @@ class LibraryScannerServiceTest {
     scanner.processWatchEvent(key, watchEvent);
 
     verify(comicDetailService).filenameFound(TEST_COMIC_FILENAME);
-    verify(comicBookService).markComicAsFound(TEST_COMIC_FILENAME);
+    verify(comicDetailService).markComicAsFound(TEST_COMIC_FILENAME);
   }
 
   @Test
@@ -180,7 +180,7 @@ class LibraryScannerServiceTest {
 
     scanner.processWatchEvent(key, watchEvent);
 
-    verify(comicBookService).markComicAsMissing(TEST_COMIC_FILENAME);
+    verify(comicDetailService).markComicAsMissing(TEST_COMIC_FILENAME);
   }
 
   @Test
@@ -190,7 +190,7 @@ class LibraryScannerServiceTest {
     scanner.processWatchEvent(key, watchEvent);
 
     verify(comicDetailService).filenameFound(TEST_COMIC_FILENAME);
-    verify(comicBookService).markComicAsFound(TEST_COMIC_FILENAME);
+    verify(comicDetailService).markComicAsFound(TEST_COMIC_FILENAME);
   }
 
   @Test
@@ -200,6 +200,6 @@ class LibraryScannerServiceTest {
     scanner.processWatchEvent(key, watchEvent);
 
     verify(comicDetailService).filenameFound(TEST_COMIC_FILENAME);
-    verify(comicBookService).markComicAsFound(TEST_COMIC_FILENAME);
+    verify(comicDetailService).markComicAsFound(TEST_COMIC_FILENAME);
   }
 }

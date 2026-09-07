@@ -18,31 +18,24 @@
 
 package org.comixedproject.state.comicbooks.actions;
 
-import org.comixedproject.model.comicbooks.ComicBook;
+import static org.mockito.Mockito.verify;
+
 import org.comixedproject.model.comicbooks.ComicDetail;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class MarkComicAsFoundActionTest {
   @InjectMocks private MarkComicAsFoundAction action;
-  @Mock private ComicDetail comicDetail;
-  @Mock private ComicBook comicBook;
-
-  @BeforeEach
-  void setUp() {
-    Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
-  }
+  @Mock private ComicDetail comic;
 
   @Test
   void execute() {
-    action.execute(comicBook);
+    action.execute(comic);
 
-    Mockito.verify(comicDetail, Mockito.times(1)).setMissing(false);
+    verify(comic).setMissing(false);
   }
 }

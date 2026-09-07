@@ -29,23 +29,23 @@ import org.comixedproject.model.comicbooks.*;
 import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.model.library.DisplayableComic;
 import org.comixedproject.service.library.DisplayableComicService;
-import org.comixedproject.state.comicbooks.ComicBookStateAdaptor;
-import org.comixedproject.state.comicbooks.ComicStateChangeListener;
+import org.comixedproject.state.comicbooks.ComicStateAdaptor;
+import org.comixedproject.state.comicbooks.ComicStateListener;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>ComicStateChangeAdaptor</code> provides an implementation of {@link
- * ComicStateChangeListener} to response to state change vents.
+ * <code>ComicStateAdaptor</code> provides an implementation of {@link ComicStateListener} to
+ * response to state change vents.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public class ComicStateChangeAdaptor implements InitializingBean, ComicStateChangeListener {
-  @Autowired private ComicBookService comicBookService;
-  @Autowired private ComicBookStateAdaptor comicBookStateAdaptor;
+public class ComicStateChangeAdaptor implements InitializingBean, ComicStateListener {
+  @Autowired private ComicDetailService comicDetailService;
+  @Autowired private ComicStateAdaptor comicStateAdaptor;
   @Autowired private PublishComicBookUpdateAction publishComicBookUpdateAction;
   @Autowired private PublishComicBookRemovalAction publishComicBookRemovalAction;
   @Autowired private DisplayableComicService displayableComicService;
@@ -53,25 +53,25 @@ public class ComicStateChangeAdaptor implements InitializingBean, ComicStateChan
   @Override
   public void afterPropertiesSet() throws Exception {
     log.trace("Subscribing to comic state changes");
-    this.comicBookStateAdaptor.addListener(this);
+    this.comicStateAdaptor.addListener(this);
   }
 
   @Override
-  public void onComicStateChanged(final ComicBook comicBook) {
+  public void onComicStateChanged(final ComicDetail comic) {
     try {
-      if (comicBook.getState().equals(ComicState.REMOVED)) {
+      if (comic.getState().equals(ComicState.REMOVED)) {
         log.debug("Comic book deleted");
         this.publishComicBookRemovalAction.publish(
-            this.displayableComicService.getForComicBookId(comicBook.getComicBookId()));
+            this.displayableComicService.getForComicBookId(comic.getComicId()));
       } else {
         log.debug("Saving updated comic book");
-        comicBook.setLastModifiedOn(new Date());
-        final ComicBook updated = this.comicBookService.save(comicBook);
+        comic.setLastModifiedDate(new Date());
+        final ComicDetail updated = this.comicDetailService.save(comic);
         final DisplayableComic details =
-            this.displayableComicService.getForComicBookId(updated.getComicBookId());
+            this.displayableComicService.getForComicBookId(updated.getComicId());
         final List<ComicPage> pages = updated.getPages();
         final ComicMetadataSource metadata = updated.getMetadata();
-        final Set<ComicTag> tags = updated.getComicDetail().getTags();
+        final Set<ComicTag> tags = updated.getTags();
 
         this.publishComicBookUpdateAction.publish(
             new ComicBookData(details, pages, metadata, tags.stream().toList()));

@@ -19,17 +19,19 @@
 package org.comixedproject.service.library;
 
 import static junit.framework.TestCase.*;
+import static org.mockito.Mockito.*;
 
 import java.util.List;
 import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.library.PublishRemoteLibraryUpdateAction;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.net.library.PublisherAndYearSegment;
 import org.comixedproject.model.net.library.RemoteLibrarySegmentState;
 import org.comixedproject.model.net.library.RemoteLibraryState;
 import org.comixedproject.service.comicbooks.ComicBookService;
-import org.comixedproject.state.comicbooks.ComicBookStateAdaptor;
+import org.comixedproject.state.comicbooks.ComicStateAdaptor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -46,7 +48,7 @@ class RemoteLibraryStateServiceTest {
   private static final long TEST_DUPLICATE_COMIC_COUNT = Math.abs(RandomUtils.nextLong());
 
   @InjectMocks private RemoteLibraryStateService service;
-  @Mock private ComicBookStateAdaptor comicBookStateAdaptor;
+  @Mock private ComicStateAdaptor comicStateAdaptor;
   @Mock private ComicBookService comicBookService;
   @Mock private DuplicateComicService duplicateComicService;
   @Mock private List<RemoteLibrarySegmentState> publisherState;
@@ -60,40 +62,40 @@ class RemoteLibraryStateServiceTest {
   @Mock private List<PublisherAndYearSegment> byPublisherAndYear;
   @Mock private PublishRemoteLibraryUpdateAction publishRemoteLibraryUpdateAction;
   @Mock private ComicBook comicBook;
+  @Mock private ComicDetail comic;
 
   @Captor private ArgumentCaptor<RemoteLibraryState> libraryStateArgumentCaptor;
 
   @BeforeEach
   public void setUp() {
-    Mockito.when(comicBookService.getComicBookCount()).thenReturn(TEST_COMIC_COUNT);
-    Mockito.when(comicBookService.getDeletedComicCount()).thenReturn(TEST_DELETED_COMIC_COUNT);
-    Mockito.when(duplicateComicService.getDuplicateComicBookCount())
-        .thenReturn(TEST_DUPLICATE_COMIC_COUNT);
-    Mockito.when(comicBookService.getPublishersState()).thenReturn(publisherState);
-    Mockito.when(comicBookService.getSeriesState()).thenReturn(seriesState);
-    Mockito.when(comicBookService.getCharactersState()).thenReturn(charactersState);
-    Mockito.when(comicBookService.getTeamsState()).thenReturn(teamsState);
-    Mockito.when(comicBookService.getLocationsState()).thenReturn(locationsState);
-    Mockito.when(comicBookService.getStoriesState()).thenReturn(storiesState);
-    Mockito.when(comicBookService.getComicBooksState()).thenReturn(comicsState);
-    Mockito.when(comicBookService.getComicBookArchiveTypes()).thenReturn(archiveTypeState);
-    Mockito.when(comicBookService.getByPublisherAndYear()).thenReturn(byPublisherAndYear);
+    when(comicBookService.getComicBookCount()).thenReturn(TEST_COMIC_COUNT);
+    when(comicBookService.getDeletedComicCount()).thenReturn(TEST_DELETED_COMIC_COUNT);
+    when(duplicateComicService.getDuplicateComicBookCount()).thenReturn(TEST_DUPLICATE_COMIC_COUNT);
+    when(comicBookService.getPublishersState()).thenReturn(publisherState);
+    when(comicBookService.getSeriesState()).thenReturn(seriesState);
+    when(comicBookService.getCharactersState()).thenReturn(charactersState);
+    when(comicBookService.getTeamsState()).thenReturn(teamsState);
+    when(comicBookService.getLocationsState()).thenReturn(locationsState);
+    when(comicBookService.getStoriesState()).thenReturn(storiesState);
+    when(comicBookService.getComicBooksState()).thenReturn(comicsState);
+    when(comicBookService.getComicBookArchiveTypes()).thenReturn(archiveTypeState);
+    when(comicBookService.getByPublisherAndYear()).thenReturn(byPublisherAndYear);
   }
 
   @Test
   void afterPropertiesSet() throws Exception {
     service.afterPropertiesSet();
 
-    Mockito.verify(comicBookStateAdaptor).addListener(service);
+    verify(comicStateAdaptor).addListener(service);
   }
 
   @Test
   void comicStateChanged() throws PublishingException {
-    Mockito.doNothing()
+    doNothing()
         .when(publishRemoteLibraryUpdateAction)
         .publish(libraryStateArgumentCaptor.capture());
 
-    service.onComicStateChanged(comicBook);
+    service.onComicStateChanged(comic);
 
     final RemoteLibraryState libraryState = libraryStateArgumentCaptor.getValue();
     assertNotNull(libraryState);
@@ -108,21 +110,21 @@ class RemoteLibraryStateServiceTest {
     assertSame(comicsState, libraryState.getStates());
     assertSame(byPublisherAndYear, libraryState.getByPublisherAndYear());
 
-    Mockito.verify(publishRemoteLibraryUpdateAction).publish(libraryState);
+    verify(publishRemoteLibraryUpdateAction).publish(libraryState);
   }
 
   @Test
   void comicStateChangedPublishException() throws PublishingException {
-    Mockito.doThrow(PublishingException.class)
+    doThrow(PublishingException.class)
         .when(publishRemoteLibraryUpdateAction)
         .publish(libraryStateArgumentCaptor.capture());
 
-    service.onComicStateChanged(comicBook);
+    service.onComicStateChanged(comic);
 
     final RemoteLibraryState libraryState = libraryStateArgumentCaptor.getValue();
     assertNotNull(libraryState);
 
-    Mockito.verify(publishRemoteLibraryUpdateAction).publish(libraryState);
+    verify(publishRemoteLibraryUpdateAction).publish(libraryState);
   }
 
   @Test
@@ -143,16 +145,16 @@ class RemoteLibraryStateServiceTest {
     assertSame(archiveTypeState, result.getArchiveTypes());
     assertSame(byPublisherAndYear, result.getByPublisherAndYear());
 
-    Mockito.verify(comicBookService).getComicBookCount();
-    Mockito.verify(comicBookService).getDeletedComicCount();
-    Mockito.verify(comicBookService).getPublishersState();
-    Mockito.verify(comicBookService).getSeriesState();
-    Mockito.verify(comicBookService).getCharactersState();
-    Mockito.verify(comicBookService).getTeamsState();
-    Mockito.verify(comicBookService).getLocationsState();
-    Mockito.verify(comicBookService).getStoriesState();
-    Mockito.verify(comicBookService).getComicBooksState();
-    Mockito.verify(comicBookService).getComicBookArchiveTypes();
-    Mockito.verify(comicBookService).getByPublisherAndYear();
+    verify(comicBookService).getComicBookCount();
+    verify(comicBookService).getDeletedComicCount();
+    verify(comicBookService).getPublishersState();
+    verify(comicBookService).getSeriesState();
+    verify(comicBookService).getCharactersState();
+    verify(comicBookService).getTeamsState();
+    verify(comicBookService).getLocationsState();
+    verify(comicBookService).getStoriesState();
+    verify(comicBookService).getComicBooksState();
+    verify(comicBookService).getComicBookArchiveTypes();
+    verify(comicBookService).getByPublisherAndYear();
   }
 }

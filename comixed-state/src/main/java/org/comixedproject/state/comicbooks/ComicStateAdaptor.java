@@ -18,13 +18,13 @@
 
 package org.comixedproject.state.comicbooks;
 
-import static org.comixedproject.state.comicbooks.ComicBookStateMachineConfiguration.COMIC_STATE_MACHINE;
+import static org.comixedproject.state.comicbooks.ComicStateMachineConfiguration.COMIC_STATE_MACHINE;
 
 import java.util.ArrayList;
 import java.util.List;
-import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.state.StateMachine;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,31 +32,31 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>ComicBookStateAdaptor</code> provides methods for initiating state transitions in {@link
+ * <code>ComicStateAdaptor</code> provides methods for initiating state transitions in {@link
  * ComicBook} objects, and for subscribing to state changes.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public class ComicBookStateAdaptor {
+public class ComicStateAdaptor {
   @Autowired
   @Qualifier(COMIC_STATE_MACHINE)
-  private StateMachine<ComicBook, ComicState, ComicEvent> stateMachine =
+  private StateMachine<ComicDetail, ComicState, ComicEvent> stateMachine =
       new StateMachine<>(ComicState.class, ComicEvent.class);
 
-  private final List<ComicStateChangeListener> listeners = new ArrayList<>();
+  private final List<ComicStateListener> listeners = new ArrayList<>();
 
-  public void addListener(@NonNull final ComicStateChangeListener listener) {
+  public void addListener(final ComicStateListener listener) {
     this.listeners.add(listener);
   }
 
-  public void fireEvent(@NonNull final ComicBook comicBook, @NonNull final ComicEvent event) {
-    log.debug("Firing comic book event: {}:{}", comicBook.getState(), event);
-    this.stateMachine.processEvent(comicBook, event);
+  public void fireEvent(final ComicDetail comic, final ComicEvent event) {
+    log.debug("Firing comic book event: {}:{}", comic.getState(), event);
+    this.stateMachine.processEvent(comic, event);
     for (int index = 0; index < this.listeners.size(); index++) {
-      final ComicStateChangeListener listener = this.listeners.get(index);
-      listener.onComicStateChanged(comicBook);
+      final ComicStateListener listener = this.listeners.get(index);
+      listener.onComicStateChanged(comic);
     }
   }
 }

@@ -27,7 +27,6 @@ import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicpages.ComicPage;
-import org.comixedproject.model.state.StatefulItem;
 import org.comixedproject.views.View;
 
 /**
@@ -40,7 +39,7 @@ import org.comixedproject.views.View;
 @Log4j2
 @NoArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "comicBookId")
-public class ComicBook implements StatefulItem<ComicState> {
+public class ComicBook {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "comic_book_id")
@@ -187,16 +186,5 @@ public class ComicBook implements StatefulItem<ComicState> {
   @Override
   public int hashCode() {
     return Objects.hash(comicDetail);
-  }
-
-  @Override
-  @Transient
-  public ComicState getState() {
-    return this.comicDetail.getComicState();
-  }
-
-  @Override
-  public void setState(final ComicState state) {
-    this.comicDetail.setComicState(state);
   }
 }

@@ -50,8 +50,8 @@ import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.comicbooks.ComicDetailService;
 import org.comixedproject.service.comicbooks.ImprintService;
 import org.comixedproject.service.metadata.action.ProcessComicDescriptionAction;
-import org.comixedproject.state.comicbooks.ComicBookStateAdaptor;
 import org.comixedproject.state.comicbooks.ComicEvent;
+import org.comixedproject.state.comicbooks.ComicStateAdaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Async;
@@ -76,7 +76,7 @@ public class MetadataService {
   @Autowired private MetadataCacheService metadataCacheService;
   @Autowired private ComicBookService comicBookService;
   @Autowired private ComicDetailService comicDetailService;
-  @Autowired private ComicBookStateAdaptor comicBookStateAdaptor;
+  @Autowired private ComicStateAdaptor comicStateAdaptor;
   @Autowired private ImprintService imprintService;
   @Autowired private IssueService issueService;
   @Autowired private ConfigurationService configurationService;
@@ -429,7 +429,7 @@ public class MetadataService {
       log.trace("Setting the comic metadata source last modified date");
       comicBook.getMetadata().setLastScrapedDate(new Date());
       log.trace("Updating comicBook state: scraped");
-      this.comicBookStateAdaptor.fireEvent(comicBook, ComicEvent.comicMetadataChanged);
+      this.comicStateAdaptor.fireEvent(detail, ComicEvent.comicMetadataChanged);
     }
   }
 
@@ -515,9 +515,10 @@ public class MetadataService {
         comicBooks.forEach(
             comicBook -> {
               log.trace("Updating comic details");
-              comicBook.getComicDetail().setPublisher(trim(issue.getPublisher()));
-              comicBook.getComicDetail().setSeries(trim(issue.getSeries()));
-              comicBook.getComicDetail().setVolume(trim(issue.getVolume()));
+              final ComicDetail comic = comicBook.getComicDetail();
+              comic.setPublisher(trim(issue.getPublisher()));
+              comic.setSeries(trim(issue.getSeries()));
+              comic.setVolume(trim(issue.getVolume()));
               if (comicBook.getMetadata() != null) {
                 log.trace("Updating existing comic metadata source");
                 comicBook.getMetadata().setMetadataSource(metadataSource);
@@ -526,13 +527,10 @@ public class MetadataService {
                 log.trace("Creating comic metadata source", comicBook.getComicBookId());
                 comicBook.setMetadata(
                     new ComicMetadataSource(
-                        comicBook.getComicDetail(),
-                        metadataSource,
-                        trim(issue.getSourceId()),
-                        new Date()));
+                        comic, metadataSource, trim(issue.getSourceId()), new Date()));
               }
               log.debug("Firing comic book event: id={}", comicBook.getComicBookId());
-              this.comicBookStateAdaptor.fireEvent(comicBook, ComicEvent.comicMetadataSaved);
+              this.comicStateAdaptor.fireEvent(comic, ComicEvent.comicMetadataSaved);
             });
       } else {
         log.trace("No comic books found");

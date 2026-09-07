@@ -115,7 +115,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @param pageable the page request
    * @return the comics
    */
-  @Query("SELECT c FROM ComicBook c WHERE c.comicDetail.comicState = :state")
+  @Query("SELECT c FROM ComicBook c WHERE c.comicDetail.state = :state")
   List<ComicBook> findForState(@Param("state") ComicState state, Pageable pageable);
 
   /**
@@ -124,7 +124,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @param state the state
    * @return the count
    */
-  @Query("SELECT COUNT(c) FROM ComicBook c WHERE c.comicDetail.comicState = :state")
+  @Query("SELECT COUNT(c) FROM ComicBook c WHERE c.comicDetail.state = :state")
   long findForStateCount(@Param("state") ComicState state);
 
   /**
@@ -133,7 +133,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the record count
    */
   @Query(
-      "SELECT count(c) FROM ComicBook c WHERE c.comicDetail.targetArchiveType IS NOT NULL AND c.comicDetail.comicState != 'DELETED'")
+      "SELECT count(c) FROM ComicBook c WHERE c.comicDetail.targetArchiveType IS NOT NULL AND c.comicDetail.state != 'DELETED'")
   long findComicsToBeRecreatedCount();
 
   /**
@@ -426,7 +426,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the publishers state
    */
   @Query(
-      "SELECT new org.comixedproject.model.net.library.RemoteLibrarySegmentState(TRIM(CAST(d.comicState AS string)), COUNT(d)) FROM ComicDetail d GROUP BY d.comicState")
+      "SELECT new org.comixedproject.model.net.library.RemoteLibrarySegmentState(TRIM(CAST(d.state AS string)), COUNT(d)) FROM ComicDetail d GROUP BY d.state")
   List<RemoteLibrarySegmentState> getComicBooksState();
 
   /**

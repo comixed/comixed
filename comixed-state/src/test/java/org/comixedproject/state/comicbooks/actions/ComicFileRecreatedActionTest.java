@@ -18,30 +18,32 @@
 
 package org.comixedproject.state.comicbooks.actions;
 
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import java.util.List;
-import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicpages.ComicPage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class ComicFileRecreatedActionTest {
   @InjectMocks private ComicFileRecreatedAction action;
-  @Mock private ComicBook comicBook;
+  @Mock private ComicDetail comic;
   @Mock private List<ComicPage> pageList;
 
   @Test
   void execute() {
-    Mockito.when(comicBook.getPages()).thenReturn(pageList);
+    when(comic.getPages()).thenReturn(pageList);
 
-    action.execute(comicBook);
+    action.execute(comic);
 
-    Mockito.verify(comicBook, Mockito.times(1)).setTargetArchiveType(null);
-    Mockito.verify(pageList, Mockito.times(1)).clear();
-    Mockito.verify(comicBook, Mockito.times(1)).setFileContentsLoaded(false);
+    verify(comic).setTargetArchiveType(null);
+    verify(pageList).clear();
+    verify(comic).setLoadingFileContents(true);
   }
 }

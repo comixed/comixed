@@ -35,10 +35,7 @@ import org.comixedproject.model.net.comicbooks.EditMultipleComicsRequest;
 import org.comixedproject.model.net.library.PurgeLibraryRequest;
 import org.comixedproject.model.net.library.RemoteLibraryState;
 import org.comixedproject.service.admin.ConfigurationService;
-import org.comixedproject.service.comicbooks.ComicBookException;
-import org.comixedproject.service.comicbooks.ComicBookSelectionException;
-import org.comixedproject.service.comicbooks.ComicBookService;
-import org.comixedproject.service.comicbooks.ComicSelectionService;
+import org.comixedproject.service.comicbooks.*;
 import org.comixedproject.service.library.LibraryException;
 import org.comixedproject.service.library.LibraryService;
 import org.comixedproject.service.library.RemoteLibraryStateService;
@@ -74,6 +71,7 @@ class LibraryControllerTest {
   @Mock private LibraryService libraryService;
   @Mock private RemoteLibraryStateService remoteLibraryStateService;
   @Mock private ComicBookService comicBookService;
+  @Mock private ComicDetailService comicDetailService;
   @Mock private ComicSelectionService comicSelectionService;
   @Mock private ConfigurationService configurationService;
   @Mock private List<Long> idList;
@@ -206,7 +204,7 @@ class LibraryControllerTest {
   void rescanComicBooks() throws Exception {
     controller.rescanSelectedComicBooks(httpSession, principal);
 
-    verify(comicBookService).prepareForRescan(selectedIds);
+    verify(comicDetailService).prepareForRescan(selectedIds);
   }
 
   @Test
@@ -236,7 +234,7 @@ class LibraryControllerTest {
     when(editMultipleComicsRequest.getIds()).thenReturn(idList);
 
     doThrow(ComicBookException.class)
-        .when(comicBookService)
+        .when(comicDetailService)
         .updateMultipleComics(Mockito.anyList());
 
     assertThrows(
@@ -256,7 +254,7 @@ class LibraryControllerTest {
 
     controller.editMultipleComics(editMultipleComicsRequest);
 
-    verify(comicBookService).updateMultipleComics(idList);
+    verify(comicDetailService).updateMultipleComics(idList);
 
     final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
 
@@ -273,7 +271,7 @@ class LibraryControllerTest {
                     EDIT_COMIC_METADATA_JOB_ISSUE_NUMBER,
                     EDIT_COMIC_METADATA_JOB_IMPRINT)));
 
-    verify(comicBookService).updateMultipleComics(idList);
+    verify(comicDetailService).updateMultipleComics(idList);
     verify(jobOperator).start(editComicMetadataJob, jobParameters);
   }
 }

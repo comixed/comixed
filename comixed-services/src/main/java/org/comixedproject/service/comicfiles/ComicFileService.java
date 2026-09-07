@@ -31,13 +31,14 @@ import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.adaptors.comicbooks.ComicFileAdaptor;
 import org.comixedproject.model.batch.LoadComicBooksEvent;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicfiles.ComicFile;
 import org.comixedproject.model.comicfiles.ComicFileGroup;
 import org.comixedproject.model.metadata.FilenameMetadata;
 import org.comixedproject.service.comicbooks.ComicDetailService;
 import org.comixedproject.service.metadata.FilenameScrapingRuleService;
-import org.comixedproject.state.comicbooks.ComicBookStateAdaptor;
 import org.comixedproject.state.comicbooks.ComicEvent;
+import org.comixedproject.state.comicbooks.ComicStateAdaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Async;
@@ -55,7 +56,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ComicFileService {
   @Autowired private ComicBookAdaptor comicBookAdaptor;
   @Autowired private ComicDetailService comicDetailService;
-  @Autowired private ComicBookStateAdaptor comicBookStateAdaptor;
+  @Autowired private ComicStateAdaptor comicStateAdaptor;
   @Autowired private ComicFileAdaptor comicFileAdaptor;
   @Autowired private FilenameScrapingRuleService filenameScrapingRuleService;
   @Autowired private ApplicationEventPublisher applicationEventPublisher;
@@ -179,19 +180,19 @@ public class ComicFileService {
     try {
       log.debug("Creating comicBook: filename={}", filename);
       final ComicBook comicBook = this.comicBookAdaptor.createComic(filename);
+      final ComicDetail comic = comicBook.getComicDetail();
       log.trace("Scraping comicBook filename");
       final FilenameMetadata metadata =
-          this.filenameScrapingRuleService.loadFilenameMetadata(
-              comicBook.getComicDetail().getBaseFilename());
+          this.filenameScrapingRuleService.loadFilenameMetadata(comic.getBaseFilename());
       if (metadata.isFound()) {
         log.trace("Scraping rule applied");
-        comicBook.getComicDetail().setSeries(metadata.getSeries());
-        comicBook.getComicDetail().setVolume(metadata.getVolume());
-        comicBook.getComicDetail().setIssueNumber(metadata.getIssueNumber());
-        comicBook.getComicDetail().setCoverDate(metadata.getCoverDate());
+        comic.setSeries(metadata.getSeries());
+        comic.setVolume(metadata.getVolume());
+        comic.setIssueNumber(metadata.getIssueNumber());
+        comic.setCoverDate(metadata.getCoverDate());
       }
       log.debug("Firing new comic book event: {}:{}", event, filename);
-      this.comicBookStateAdaptor.fireEvent(comicBook, event);
+      this.comicStateAdaptor.fireEvent(comic, event);
     } catch (AdaptorException error) {
       log.error("Failed to create comic for file: " + filename, error);
     }

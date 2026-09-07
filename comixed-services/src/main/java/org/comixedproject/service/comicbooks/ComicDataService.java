@@ -18,8 +18,6 @@
 
 package org.comixedproject.service.comicbooks;
 
-import static reactor.netty.http.HttpConnectionLiveness.log;
-
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -38,8 +36,8 @@ import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.model.net.comicbooks.PageOrderEntry;
 import org.comixedproject.service.comicpages.ComicPageService;
 import org.comixedproject.service.library.DisplayableComicService;
-import org.comixedproject.state.comicbooks.ComicBookStateAdaptor;
 import org.comixedproject.state.comicbooks.ComicEvent;
+import org.comixedproject.state.comicbooks.ComicStateAdaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,7 +59,7 @@ public class ComicDataService {
   @Autowired private ComicMetadataSourceService comicMetadataSourceService;
   @Autowired private ComicTagService comicTagService;
   @Autowired private ImprintService imprintService;
-  @Autowired private ComicBookStateAdaptor comicBookStateAdaptor;
+  @Autowired private ComicStateAdaptor comicStateAdaptor;
   @Autowired private FileTypeAdaptor fileTypeAdaptor;
 
   /**
@@ -112,6 +110,7 @@ public class ComicDataService {
       throws ComicBookException {
     log.trace("Loading comicBook: id={}", comicId);
     final ComicBook comicBook = this.comicBookService.getComic(comicId);
+    final ComicDetail comic = comicBook.getComicDetail();
     log.trace("Sorting new page list");
     pageOrderEntryList.sort(Comparator.comparingInt(PageOrderEntry::getPosition));
     log.trace("Checking for holes in order");
@@ -139,7 +138,7 @@ public class ComicDataService {
     }
 
     log.trace("Firing event: details updated");
-    this.comicBookStateAdaptor.fireEvent(comicBook, ComicEvent.comicMetadataChanged);
+    this.comicStateAdaptor.fireEvent(comic, ComicEvent.comicMetadataChanged);
   }
 
   public ComicBookData updateComic(
@@ -186,7 +185,7 @@ public class ComicDataService {
 
       this.imprintService.update(comic.getComicBook());
 
-      this.comicBookStateAdaptor.fireEvent(comic.getComicBook(), ComicEvent.comicMetadataChanged);
+      this.comicStateAdaptor.fireEvent(comic, ComicEvent.comicMetadataChanged);
       return this.doLoadComicBookData(comicBookId);
     } catch (ComicDetailException error) {
       throw new ComicBookException("Failed to update comic metadata", error);
@@ -242,8 +241,13 @@ public class ComicDataService {
 
   private void doFireEvent(final long comicId, final ComicEvent event) throws ComicBookException {
     log.debug("Firing comic event: id={} event={}", comicId, event);
-    final ComicBook comic = this.comicBookService.getComic(comicId);
-    this.comicBookStateAdaptor.fireEvent(comic, event);
+    try {
+      final ComicDetail comic = this.comicDetailService.getByComicBookId(comicId);
+      this.comicStateAdaptor.fireEvent(comic, event);
+    } catch (ComicDetailException error) {
+      throw new ComicBookException(
+          String.format("Failed to fire comic event: id=%d event=%s", comicId, event), error);
+    }
   }
 
   private ComicBookData doLoadComicBookData(final long comicId) throws ComicBookException {

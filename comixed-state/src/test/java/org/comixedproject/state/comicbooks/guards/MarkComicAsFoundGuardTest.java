@@ -20,16 +20,15 @@ package org.comixedproject.state.comicbooks.guards;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
-import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
@@ -37,33 +36,31 @@ class MarkComicAsFoundGuardTest {
   private static final String TEST_EXISTING_FILE = "src/test/resources/example.cbz";
 
   @InjectMocks private MarkComicAsFoundGuard guard;
-  @Mock private ComicDetail comicDetail;
-  @Mock private ComicBook comicBook;
+  @Mock private ComicDetail comic;
 
   @BeforeEach
   void setUp() {
-    Mockito.when(comicDetail.isMissing()).thenReturn(true);
-    Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
+    when(comic.isMissing()).thenReturn(true);
   }
 
   @Test
   void evaluate_comicNotMarkedAsMissing() {
-    Mockito.when(comicDetail.isMissing()).thenReturn(false);
+    when(comic.isMissing()).thenReturn(false);
 
-    assertFalse(guard.evaluate(comicBook));
+    assertFalse(guard.evaluate(comic));
   }
 
   @Test
   void evaluate_fileWasNotFound() {
-    Mockito.when(comicDetail.getFile()).thenReturn(new File(TEST_EXISTING_FILE.substring(1)));
+    when(comic.getFile()).thenReturn(new File(TEST_EXISTING_FILE.substring(1)));
 
-    assertFalse(guard.evaluate(comicBook));
+    assertFalse(guard.evaluate(comic));
   }
 
   @Test
   void evaluate() {
-    Mockito.when(comicDetail.getFile()).thenReturn(new File(TEST_EXISTING_FILE));
+    when(comic.getFile()).thenReturn(new File(TEST_EXISTING_FILE));
 
-    assertTrue(guard.evaluate(comicBook));
+    assertTrue(guard.evaluate(comic));
   }
 }

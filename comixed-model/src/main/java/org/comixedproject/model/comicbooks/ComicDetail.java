@@ -31,6 +31,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.model.library.PublicationDetail;
+import org.comixedproject.model.state.StatefulItem;
 import org.comixedproject.views.View;
 import org.hibernate.annotations.Formula;
 import org.springframework.data.annotation.CreatedDate;
@@ -45,7 +46,7 @@ import org.springframework.data.annotation.CreatedDate;
 @NoArgsConstructor
 @RequiredArgsConstructor
 @Log4j2
-public class ComicDetail implements PublicationDetail {
+public class ComicDetail implements StatefulItem<ComicState>, PublicationDetail {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "comic_detail_id")
@@ -88,7 +89,7 @@ public class ComicDetail implements PublicationDetail {
   @Getter
   private int blockedPageCount;
 
-  @OneToOne(fetch = FetchType.LAZY)
+  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JoinColumn(name = "comic_book_id", nullable = false, updatable = false)
   @NonNull
   @Getter
@@ -152,7 +153,7 @@ public class ComicDetail implements PublicationDetail {
   })
   @Getter
   @Setter
-  private ComicState comicState = ComicState.CREATED;
+  private ComicState state = ComicState.CREATED;
 
   @Column(name = "comic_type", nullable = false, updatable = true, columnDefinition = "VARCHAR(32)")
   @Enumerated(EnumType.STRING)
@@ -538,7 +539,7 @@ public class ComicDetail implements PublicationDetail {
     final ComicDetail that = (ComicDetail) o;
     return filename.equals(that.filename)
         && archiveType == that.archiveType
-        && comicState == that.comicState
+        && state == that.state
         && comicType == that.comicType
         && Objects.equals(publisher, that.publisher)
         && Objects.equals(imprint, that.imprint)
@@ -559,7 +560,7 @@ public class ComicDetail implements PublicationDetail {
     return Objects.hash(
         filename,
         archiveType,
-        comicState,
+        state,
         comicType,
         publisher,
         imprint,

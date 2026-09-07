@@ -18,33 +18,37 @@
 
 package org.comixedproject.batch.comicbooks.writers;
 
+import static org.mockito.Mockito.*;
+
 import java.util.ArrayList;
 import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.state.comicbooks.ComicBookStateAdaptor;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.state.comicbooks.ComicEvent;
+import org.comixedproject.state.comicbooks.ComicStateAdaptor;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.batch.infrastructure.item.Chunk;
 
 @ExtendWith(MockitoExtension.class)
 class LoadFileContentsWriterTest {
   @InjectMocks private LoadFileContentsWriter writer;
-  @Mock private ComicBookStateAdaptor comicBookStateAdaptor;
+  @Mock private ComicStateAdaptor comicStateAdaptor;
   @Mock private ComicBook comicBook;
+  @Mock private ComicDetail comic;
 
   private Chunk<ComicBook> comicBookList = new Chunk<>(new ArrayList<>());
 
   @Test
   void write() {
     for (int index = 0; index < 25; index++) comicBookList.add(comicBook);
+    when(comicBook.getComicDetail()).thenReturn(comic);
 
     writer.write(comicBookList);
 
-    Mockito.verify(comicBookStateAdaptor, Mockito.times(comicBookList.size()))
-        .fireEvent(comicBook, ComicEvent.comicFileContentsLoaded);
+    verify(comicStateAdaptor, times(comicBookList.size()))
+        .fireEvent(comic, ComicEvent.comicFileContentsLoaded);
   }
 }
