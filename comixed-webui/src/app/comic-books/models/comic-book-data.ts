@@ -21,7 +21,7 @@ import { ComicMetadataSource } from '@app/comic-books/models/comic-metadata-sour
 import { ComicPage } from '@app/comic-books/models/comic-page';
 
 export interface ComicBookData {
-  details: DisplayableComic;
+  detail: DisplayableComic;
   metadata?: ComicMetadataSource;
   pages: ComicPage[];
 }

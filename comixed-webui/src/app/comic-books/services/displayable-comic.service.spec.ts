@@ -34,8 +34,6 @@ import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ComicType } from '@app/comic-books/models/comic-type';
 import { ComicState } from '@app/comic-books/models/comic-state';
 import {
-  COMIC_BOOK_1,
-  COMIC_BOOK_2,
   DISPLAYABLE_COMIC_1,
   DISPLAYABLE_COMIC_2,
   DISPLAYABLE_COMIC_3,
@@ -69,12 +67,12 @@ import {
   comicRemoved,
   comicUpdated
 } from '@app/comic-books/actions/comic-list.actions';
-import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 import {
   provideHttpClient,
   withInterceptorsFromDi
 } from '@angular/common/http';
 import { ComicTagType } from '@app/comic-books/models/comic-tag-type';
+import { ComicBookData } from '@app/comic-books/models/comic-book-data';
 
 describe('DisplayableComicService', () => {
   const PAGE_SIZE = 25;
@@ -149,8 +147,8 @@ describe('DisplayableComicService', () => {
   });
 
   describe('when messaging starts', () => {
-    const COMIC_ADDED = COMIC_BOOK_1;
-    const COMIC_REMOVED = COMIC_BOOK_2;
+    const COMIC_ADDED = DISPLAYABLE_COMIC_1;
+    const COMIC_REMOVED = DISPLAYABLE_COMIC_2;
 
     beforeEach(() => {
       webSocketService.requestResponse.and.callFake(
@@ -162,7 +160,11 @@ describe('DisplayableComicService', () => {
       webSocketService.subscribe
         .withArgs(COMIC_LIST_UPDATE_TOPIC, jasmine.anything())
         .and.callFake((destination, callback) => {
-          callback(COMIC_ADDED as any);
+          callback({
+            detail: COMIC_ADDED,
+            pages: [],
+            metadata: null
+          } as ComicBookData as any);
           return {} as Subscription;
         });
       webSocketService.subscribe
@@ -194,26 +196,7 @@ describe('DisplayableComicService', () => {
     it('processes comic updates', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         comicUpdated({
-          comic: {
-            comicBookId: COMIC_ADDED.detail.comicBookId,
-            comicDetailId: COMIC_ADDED.detail.comicDetailId,
-            archiveType: COMIC_ADDED.detail.archiveType,
-            comicState: COMIC_ADDED.detail.comicState,
-            unscraped: COMIC_ADDED.detail.unscraped,
-            comicType: COMIC_ADDED.detail.comicType,
-            publisher: COMIC_ADDED.detail.publisher,
-            series: COMIC_ADDED.detail.series,
-            volume: COMIC_ADDED.detail.volume,
-            issueNumber: COMIC_ADDED.detail.issueNumber,
-            sortableIssueNumber: COMIC_ADDED.detail.sortableIssueNumber,
-            title: COMIC_ADDED.detail.title,
-            pageCount: COMIC_ADDED.detail.pageCount,
-            coverDate: COMIC_ADDED.detail.coverDate,
-            yearPublished: COMIC_ADDED.detail.publishedYear,
-            monthPublished: COMIC_ADDED.detail.publishedMonth,
-            storeDate: COMIC_ADDED.detail.storeDate,
-            addedDate: COMIC_ADDED.detail.addedDate
-          } as DisplayableComic
+          comic: COMIC_ADDED
         })
       );
     });
@@ -221,26 +204,7 @@ describe('DisplayableComicService', () => {
     it('processes comic removals', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         comicRemoved({
-          comic: {
-            comicBookId: COMIC_REMOVED.detail.comicBookId,
-            comicDetailId: COMIC_REMOVED.detail.comicDetailId,
-            archiveType: COMIC_REMOVED.detail.archiveType,
-            comicState: COMIC_REMOVED.detail.comicState,
-            unscraped: COMIC_REMOVED.detail.unscraped,
-            comicType: COMIC_REMOVED.detail.comicType,
-            publisher: COMIC_REMOVED.detail.publisher,
-            series: COMIC_REMOVED.detail.series,
-            volume: COMIC_REMOVED.detail.volume,
-            issueNumber: COMIC_REMOVED.detail.issueNumber,
-            sortableIssueNumber: COMIC_REMOVED.detail.sortableIssueNumber,
-            title: COMIC_REMOVED.detail.title,
-            pageCount: COMIC_REMOVED.detail.pageCount,
-            coverDate: COMIC_REMOVED.detail.coverDate,
-            yearPublished: COMIC_REMOVED.detail.publishedYear,
-            monthPublished: COMIC_REMOVED.detail.publishedMonth,
-            storeDate: COMIC_REMOVED.detail.storeDate,
-            addedDate: COMIC_REMOVED.detail.addedDate
-          } as DisplayableComic
+          comic: COMIC_REMOVED
         })
       );
     });

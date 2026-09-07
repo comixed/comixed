@@ -19,16 +19,16 @@
 package org.comixedproject.messaging.comicbooks;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
 
 import org.comixedproject.messaging.PublishingException;
-import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.library.DisplayableComic;
 import org.comixedproject.views.View;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
@@ -47,33 +47,33 @@ class PublishComicBookRemovalActionTest {
   @Mock private SimpMessagingTemplate messagingTemplate;
   @Mock private ObjectMapper objectMapper;
   @Mock private ObjectWriter objectWriter;
-  @Mock private ComicBook comicBook;
+  @Mock private DisplayableComic comic;
 
   @BeforeEach
-  public void setUp() throws JacksonException {
-    Mockito.when(objectMapper.writerWithView(Mockito.any())).thenReturn(objectWriter);
-    Mockito.when(objectWriter.writeValueAsString(Mockito.any())).thenReturn(TEST_COMIC_AS_JSON);
-    Mockito.when(comicBook.getComicBookId()).thenReturn(TEST_COMIC_ID);
+  void setUp() throws JacksonException {
+    when(objectMapper.writerWithView(any())).thenReturn(objectWriter);
+    when(objectWriter.writeValueAsString(any())).thenReturn(TEST_COMIC_AS_JSON);
+    when(comic.getComicBookId()).thenReturn(TEST_COMIC_ID);
   }
 
   @Test
   void publish_JacksonException() throws JacksonException {
-    Mockito.when(objectWriter.writeValueAsString(Mockito.any())).thenThrow(JacksonException.class);
+    when(objectWriter.writeValueAsString(any())).thenThrow(JacksonException.class);
 
-    assertThrows(PublishingException.class, () -> action.publish(comicBook));
+    assertThrows(PublishingException.class, () -> action.publish(comic));
   }
 
   @Test
   void publish() throws JacksonException, PublishingException {
-    Mockito.when(objectWriter.writeValueAsString(Mockito.any())).thenReturn(TEST_COMIC_AS_JSON);
+    when(objectWriter.writeValueAsString(any())).thenReturn(TEST_COMIC_AS_JSON);
 
-    action.publish(comicBook);
+    action.publish(comic);
 
-    Mockito.verify(objectMapper, Mockito.times(2)).writerWithView(View.ComicDetailsView.class);
-    Mockito.verify(objectWriter, Mockito.times(2)).writeValueAsString(comicBook);
-    Mockito.verify(messagingTemplate, Mockito.times(1))
+    verify(objectMapper, times(2)).writerWithView(View.ComicDetailsView.class);
+    verify(objectWriter, times(2)).writeValueAsString(comic);
+    verify(messagingTemplate)
         .convertAndSend(PublishComicBookRemovalAction.COMIC_LIST_REMOVAL_TOPIC, TEST_COMIC_AS_JSON);
-    Mockito.verify(messagingTemplate, Mockito.times(1))
+    verify(messagingTemplate)
         .convertAndSend(
             String.format(PublishComicBookRemovalAction.COMIC_BOOK_REMOVAL_TOPIC, TEST_COMIC_ID),
             TEST_COMIC_AS_JSON);
