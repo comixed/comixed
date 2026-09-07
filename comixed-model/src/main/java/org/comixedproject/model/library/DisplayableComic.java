@@ -95,7 +95,7 @@ public class DisplayableComic {
   @JsonView({View.ComicDetailsView.class})
   @Getter
   @Setter
-  private ComicType sortName;
+  private String sortName;
 
   @Column(name = "publisher")
   @JsonView({View.ComicListView.class})

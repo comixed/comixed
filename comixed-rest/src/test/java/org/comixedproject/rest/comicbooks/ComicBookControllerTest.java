@@ -20,33 +20,26 @@ package org.comixedproject.rest.comicbooks;
 
 import static org.comixedproject.rest.comicbooks.ComicBookController.MISSING_COMIC_COVER_FILENAME;
 import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LIBRARY_SELECTIONS;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 import jakarta.servlet.http.HttpSession;
 import java.security.Principal;
 import java.util.*;
 import org.comixedproject.model.comicbooks.*;
-import org.comixedproject.model.comicpages.ComicPage;
-import org.comixedproject.model.library.DisplayableComic;
 import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.model.net.comicbooks.*;
-import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.service.comicbooks.*;
 import org.comixedproject.service.comicpages.ComicPageException;
-import org.comixedproject.service.comicpages.ComicPageService;
 import org.comixedproject.service.comicpages.PageCacheService;
-import org.comixedproject.service.library.DisplayableComicService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
 import org.springframework.http.ResponseEntity;
 
 @ExtendWith(MockitoExtension.class)
-@MockitoSettings(strictness = Strictness.LENIENT)
 class ComicBookControllerTest {
   private static final long TEST_COMIC_ID = 129;
   private static final Object TEST_ENCODED_SELECTIONS = "The encoded selection ids";
@@ -64,95 +57,109 @@ class ComicBookControllerTest {
   private static final Date TEST_STORE_DATE = new Date();
 
   @InjectMocks private ComicBookController controller;
+  @Mock private ComicDataService comicDataService;
   @Mock private ComicBookService comicBookService;
-  @Mock private DisplayableComicService displayableComicService;
   @Mock private PageCacheService pageCacheService;
   @Mock private ComicSelectionService comicSelectionService;
-  @Mock private ComicPageService comicPageService;
-  @Mock private ComicMetadataSourceService comicMetadataSourceService;
-  @Mock private ComicTagService comicTagService;
-  @Mock private ComicBook comicBook;
-  @Mock private DisplayableComic displayableComicBook;
-  @Mock private List<PageOrderEntry> pageOrderEntrylist;
+  @Mock private List<PageOrderEntry> pageOrderEntryList;
   @Mock private HttpSession httpSession;
   @Mock private Principal principal;
   @Mock private DownloadDocument comicBookContent;
   @Mock private ResponseEntity<byte[]> responseEntity;
-  @Mock private ComiXedUser user;
-  @Mock private ComicMetadataSource comicMetadataSource;
+  @Mock private ComicBookData comicData;
 
-  private final Set<Long> comicBookIdSet = new HashSet<>();
   private List<Long> selectedIdList = new ArrayList<>();
-  private List<ComicPage> comicPageList = new ArrayList<>();
-  private List<ComicTag> comicTagList = new ArrayList<>();
 
-  @BeforeEach
-  void setUp() throws ComicBookSelectionException, ComicBookException {
-    Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
-    comicBookIdSet.add(TEST_COMIC_ID);
-    Mockito.when(httpSession.getAttribute(LIBRARY_SELECTIONS)).thenReturn(TEST_ENCODED_SELECTIONS);
-    Mockito.when(principal.getName()).thenReturn(TEST_EMAIL);
-    Mockito.when(comicSelectionService.decodeSelections(Mockito.any())).thenReturn(selectedIdList);
-    Mockito.when(comicSelectionService.encodeSelections(selectedIdList))
-        .thenReturn(TEST_REENCODED_SELECTIONS);
-    for (long index = 0L; index < 100L; index++) {
-      selectedIdList.add(index);
-    }
-    Mockito.when(comicPageService.getPagesForComicBook(Mockito.anyLong()))
-        .thenReturn(comicPageList);
-    Mockito.when(comicMetadataSourceService.getMetadataForComicBook(Mockito.anyLong()))
-        .thenReturn(comicMetadataSource);
-    Mockito.when(comicTagService.getTagsForComicBook(Mockito.anyLong())).thenReturn(comicTagList);
+  @Test
+  void getComic_exceptionThrown() throws ComicBookException {
+    when(comicDataService.getComic(anyLong())).thenThrow(ComicBookException.class);
+
+    assertThrows(ComicBookException.class, () -> controller.getComic(TEST_COMIC_ID));
+
+    verify(comicDataService).getComic(TEST_COMIC_ID);
   }
 
   @Test
-  void getComicForNonexistentComic() throws ComicBookException, ComicDetailException {
-    Mockito.when(displayableComicService.getForComicBookId(Mockito.anyLong())).thenReturn(null);
-    Mockito.when(comicMetadataSourceService.getMetadataForComicBook(Mockito.anyLong()))
-        .thenReturn(null);
+  void getComic() throws ComicBookException {
+    when(comicDataService.getComic(anyLong())).thenReturn(comicData);
 
     ComicBookData result = controller.getComic(TEST_COMIC_ID);
 
     assertNotNull(result);
-    assertNull(result.getDetail());
-    assertNull(result.getMetadata());
-    assertNotNull(result.getPages());
-    assertNotNull(result.getTags());
+    assertSame(comicData, result);
 
-    Mockito.verify(displayableComicService, Mockito.times(1)).getForComicBookId(TEST_COMIC_ID);
+    verify(comicDataService).getComic(TEST_COMIC_ID);
   }
 
   @Test
-  void getComic() throws ComicBookException, ComicDetailException {
-    Mockito.when(displayableComicService.getForComicBookId(Mockito.anyLong()))
-        .thenReturn(displayableComicBook);
+  void downloadComic_fileServiceException() throws ComicBookException {
+    when(comicDataService.getComicContent(anyLong())).thenThrow(ComicBookException.class);
 
-    ComicBookData result = controller.getComic(TEST_COMIC_ID);
+    assertThrows(ComicBookException.class, () -> controller.downloadComic(TEST_COMIC_ID));
+
+    verify(comicDataService).getComicContent(TEST_COMIC_ID);
+  }
+
+  @Test
+  void downloadComic() throws ComicBookException {
+    when(comicDataService.getComicContent(anyLong())).thenReturn(comicBookContent);
+
+    final DownloadDocument result = controller.downloadComic(TEST_COMIC_ID);
 
     assertNotNull(result);
-    assertSame(displayableComicBook, result.getDetail());
+    assertSame(comicBookContent, result);
 
-    Mockito.verify(displayableComicService, Mockito.times(1)).getForComicBookId(TEST_COMIC_ID);
+    verify(comicDataService).getComicContent(TEST_COMIC_ID);
+  }
+
+  @Test
+  void getCachedCoverImage() throws ComicPageException {
+    when(pageCacheService.getCoverPageContent(anyLong(), anyString())).thenReturn(responseEntity);
+
+    final ResponseEntity<byte[]> result = controller.getCoverImage(TEST_COMIC_ID);
+
+    assertNotNull(result);
+    assertSame(responseEntity, result);
+
+    verify(pageCacheService).getCoverPageContent(TEST_COMIC_ID, MISSING_COMIC_COVER_FILENAME);
+  }
+
+  @Test
+  void savePageOrder_exceptionThrown() throws ComicBookException {
+    doThrow(ComicBookException.class).when(comicDataService).savePageOrder(anyLong(), anyList());
+
+    assertThrows(
+        ComicBookException.class,
+        () ->
+            controller.savePageOrder(TEST_COMIC_ID, new SavePageOrderRequest(pageOrderEntryList)));
+
+    verify(comicDataService).savePageOrder(TEST_COMIC_ID, pageOrderEntryList);
+  }
+
+  @Test
+  void savePageOrder() throws ComicBookException {
+    controller.savePageOrder(TEST_COMIC_ID, new SavePageOrderRequest(pageOrderEntryList));
+
+    verify(comicDataService).savePageOrder(TEST_COMIC_ID, pageOrderEntryList);
   }
 
   @Test
   void updateComic() throws ComicBookException {
-    Mockito.when(
-            comicBookService.updateComic(
-                Mockito.anyLong(),
-                Mockito.any(ComicType.class),
-                Mockito.anyString(),
-                Mockito.anyString(),
-                Mockito.anyString(),
-                Mockito.anyString(),
-                Mockito.anyString(),
-                Mockito.anyString(),
-                Mockito.anyString(),
-                Mockito.any(Date.class),
-                Mockito.any(Date.class)))
-        .thenReturn(comicBook);
+    when(comicDataService.updateComic(
+            anyLong(),
+            any(ComicType.class),
+            anyString(),
+            anyString(),
+            anyString(),
+            anyString(),
+            anyString(),
+            anyString(),
+            anyString(),
+            any(Date.class),
+            any(Date.class)))
+        .thenReturn(comicData);
 
-    final ComicBook result =
+    final ComicBookData result =
         controller.updateComic(
             TEST_COMIC_ID,
             new UpdateComicBookRequest(
@@ -168,9 +175,9 @@ class ComicBookControllerTest {
                 TEST_STORE_DATE));
 
     assertNotNull(result);
-    assertSame(comicBook, result);
+    assertSame(comicData, result);
 
-    Mockito.verify(comicBookService, Mockito.times(1))
+    verify(comicDataService)
         .updateComic(
             TEST_COMIC_ID,
             TEST_COMIC_TYPE,
@@ -186,131 +193,143 @@ class ComicBookControllerTest {
   }
 
   @Test
-  void deleteComicBook() throws ComicBookException {
-    Mockito.when(comicBookService.deleteComicBook(Mockito.anyLong())).thenReturn(comicBook);
+  void deleteComic_exceptionThrown() throws ComicBookException {
+    doThrow(ComicBookException.class).when(comicDataService).deleteComicBook(anyLong());
 
-    final ComicBook result = controller.deleteComicBook(TEST_COMIC_ID);
+    assertThrows(ComicBookException.class, () -> controller.deleteComicBook(TEST_COMIC_ID));
 
-    assertNotNull(result);
-    assertSame(comicBook, result);
-
-    Mockito.verify(comicBookService, Mockito.times(1)).deleteComicBook(TEST_COMIC_ID);
+    verify(comicDataService).deleteComicBook(TEST_COMIC_ID);
   }
 
   @Test
-  void deleteComicBookFails() throws ComicBookException {
-    Mockito.when(comicBookService.deleteComicBook(Mockito.anyLong()))
-        .thenThrow(ComicBookException.class);
+  void deleteComicBook() throws ComicBookException {
+    doNothing().when(comicDataService).deleteComicBook(anyLong());
 
-    assertThrows(ComicBookException.class, () -> controller.deleteComicBook(TEST_COMIC_ID));
+    controller.deleteComicBook(TEST_COMIC_ID);
+
+    verify(comicDataService).deleteComicBook(TEST_COMIC_ID);
   }
 
   @Test
   void undeleteComicBook() throws ComicBookException {
-    Mockito.when(comicBookService.undeleteComicBook(Mockito.anyLong())).thenReturn(comicBook);
+    doNothing().when(comicDataService).undeleteComicBook(anyLong());
 
-    final ComicBook result = controller.undeleteComicBook(TEST_COMIC_ID);
+    controller.undeleteComicBook(TEST_COMIC_ID);
 
-    assertNotNull(result);
-    assertSame(comicBook, result);
-
-    Mockito.verify(comicBookService, Mockito.times(1)).undeleteComicBook(TEST_COMIC_ID);
+    verify(comicDataService).undeleteComicBook(TEST_COMIC_ID);
   }
 
   @Test
-  void undeleteComicBookFails() throws ComicBookException {
-    Mockito.when(comicBookService.undeleteComicBook(Mockito.anyLong()))
-        .thenThrow(ComicBookException.class);
+  void undeleteComicBook_exceptionThrown() throws ComicBookException {
+    doThrow(ComicBookException.class).when(comicDataService).undeleteComicBook(anyLong());
 
     assertThrows(ComicBookException.class, () -> controller.undeleteComicBook(TEST_COMIC_ID));
+
+    verify(comicDataService).undeleteComicBook(TEST_COMIC_ID);
   }
 
   @Test
-  void deleteSelectedComicBooks() throws ComicBookException {
-    Mockito.doNothing().when(comicBookService).deleteComicBooksById(selectedIdList);
+  void deleteSelectedComicBooks_exceptionOnDecode()
+      throws ComicBookException, ComicBookSelectionException {
+    when(principal.getName()).thenReturn(TEST_EMAIL);
+    when(httpSession.getAttribute(LIBRARY_SELECTIONS)).thenReturn(TEST_ENCODED_SELECTIONS);
+    when(comicSelectionService.decodeSelections(any()))
+        .thenThrow(ComicBookSelectionException.class);
+
+    assertThrows(
+        ComicBookException.class,
+        () -> controller.deleteSelectedComicBooks(httpSession, principal));
+
+    verify(comicSelectionService).decodeSelections(TEST_ENCODED_SELECTIONS);
+    verify(comicDataService, never()).deleteComicBooksById(selectedIdList);
+  }
+
+  @Test
+  void deleteSelectedComicBooks_exceptionOnEncode()
+      throws ComicBookException, ComicBookSelectionException {
+    when(principal.getName()).thenReturn(TEST_EMAIL);
+    when(httpSession.getAttribute(LIBRARY_SELECTIONS)).thenReturn(TEST_ENCODED_SELECTIONS);
+    when(comicSelectionService.decodeSelections(any())).thenReturn(selectedIdList);
+    when(comicSelectionService.encodeSelections(anyList()))
+        .thenThrow(ComicBookSelectionException.class);
+    doNothing().when(comicDataService).deleteComicBooksById(anyList());
+
+    assertThrows(
+        ComicBookException.class,
+        () -> controller.deleteSelectedComicBooks(httpSession, principal));
+
+    verify(comicSelectionService).decodeSelections(TEST_ENCODED_SELECTIONS);
+    verify(comicDataService).deleteComicBooksById(selectedIdList);
+    verify(comicSelectionService).clearSelectedComicBooks(TEST_EMAIL, selectedIdList);
+    verify(comicSelectionService).encodeSelections(selectedIdList);
+    verify(httpSession, never()).setAttribute(anyString(), anyString());
+  }
+
+  @Test
+  void deleteSelectedComicBooks() throws ComicBookException, ComicBookSelectionException {
+    when(principal.getName()).thenReturn(TEST_EMAIL);
+    when(httpSession.getAttribute(LIBRARY_SELECTIONS)).thenReturn(TEST_ENCODED_SELECTIONS);
+    when(comicSelectionService.decodeSelections(any())).thenReturn(selectedIdList);
+    when(comicSelectionService.encodeSelections(anyList())).thenReturn(TEST_REENCODED_SELECTIONS);
+    doNothing().when(comicDataService).deleteComicBooksById(anyList());
 
     controller.deleteSelectedComicBooks(httpSession, principal);
 
-    Mockito.verify(comicBookService, Mockito.times(1)).deleteComicBooksById(this.selectedIdList);
+    verify(comicSelectionService).decodeSelections(TEST_ENCODED_SELECTIONS);
+    verify(comicDataService).deleteComicBooksById(selectedIdList);
+    verify(comicSelectionService).clearSelectedComicBooks(TEST_EMAIL, selectedIdList);
+    verify(comicSelectionService).encodeSelections(selectedIdList);
+    verify(httpSession).setAttribute(LIBRARY_SELECTIONS, TEST_REENCODED_SELECTIONS);
+  }
+
+  @Test
+  void undeleteSelectedComicBooks_exceptionOnDecode() throws Exception {
+    when(principal.getName()).thenReturn(TEST_EMAIL);
+    when(httpSession.getAttribute(LIBRARY_SELECTIONS)).thenReturn(TEST_ENCODED_SELECTIONS);
+    when(comicSelectionService.decodeSelections(any()))
+        .thenThrow(ComicBookSelectionException.class);
+
+    assertThrows(
+        ComicBookException.class,
+        () -> controller.undeleteSelectedComicBooks(httpSession, principal));
+
+    verify(comicSelectionService).decodeSelections(TEST_ENCODED_SELECTIONS);
+    verify(comicDataService, never()).undeleteComicBooksById(selectedIdList);
+  }
+
+  @Test
+  void undeleteSelectedComicBooks_exceptionOnEncode() throws Exception {
+    when(principal.getName()).thenReturn(TEST_EMAIL);
+    when(httpSession.getAttribute(LIBRARY_SELECTIONS)).thenReturn(TEST_ENCODED_SELECTIONS);
+    when(comicSelectionService.decodeSelections(any())).thenReturn(selectedIdList);
+    when(comicSelectionService.encodeSelections(anyList()))
+        .thenThrow(ComicBookSelectionException.class);
+
+    assertThrows(
+        ComicBookException.class,
+        () -> controller.undeleteSelectedComicBooks(httpSession, principal));
+
+    verify(comicSelectionService).decodeSelections(TEST_ENCODED_SELECTIONS);
+    verify(comicDataService).undeleteComicBooksById(selectedIdList);
+    verify(comicSelectionService).clearSelectedComicBooks(TEST_EMAIL, selectedIdList);
+    verify(comicSelectionService).encodeSelections(selectedIdList);
+    verify(httpSession, never()).setAttribute(LIBRARY_SELECTIONS, TEST_REENCODED_SELECTIONS);
   }
 
   @Test
   void undeleteSelectedComicBooks() throws Exception {
-    Mockito.doNothing().when(comicBookService).undeleteComicBooksById(selectedIdList);
+    when(principal.getName()).thenReturn(TEST_EMAIL);
+    when(httpSession.getAttribute(LIBRARY_SELECTIONS)).thenReturn(TEST_ENCODED_SELECTIONS);
+    when(comicSelectionService.decodeSelections(any())).thenReturn(selectedIdList);
+    when(comicSelectionService.encodeSelections(anyList())).thenReturn(TEST_REENCODED_SELECTIONS);
+    doNothing().when(comicDataService).undeleteComicBooksById(anyList());
 
     controller.undeleteSelectedComicBooks(httpSession, principal);
 
-    Mockito.verify(comicSelectionService, Mockito.times(1))
-        .decodeSelections(TEST_ENCODED_SELECTIONS);
-    Mockito.verify(comicBookService, Mockito.times(1)).undeleteComicBooksById(selectedIdList);
-    Mockito.verify(comicSelectionService, Mockito.times(1)).encodeSelections(selectedIdList);
-    Mockito.verify(httpSession, Mockito.times(1))
-        .setAttribute(LIBRARY_SELECTIONS, TEST_REENCODED_SELECTIONS);
-  }
-
-  @Test
-  void downloadComicFileServiceException() throws ComicBookException {
-    Mockito.when(comicBookService.getComicContent(Mockito.anyLong()))
-        .thenThrow(ComicBookException.class);
-
-    assertThrows(ComicBookException.class, () -> controller.downloadComic(TEST_COMIC_ID));
-  }
-
-  @Test
-  void downloadComic() throws ComicBookException {
-    Mockito.when(comicBookService.getComicContent(Mockito.anyLong())).thenReturn(comicBookContent);
-
-    final DownloadDocument result = controller.downloadComic(TEST_COMIC_ID);
-
-    assertNotNull(result);
-    assertSame(comicBookContent, result);
-
-    Mockito.verify(comicBookService, Mockito.times(1)).getComicContent(TEST_COMIC_ID);
-  }
-
-  @Test
-  void getCachedCoverImage() throws ComicPageException {
-    Mockito.when(pageCacheService.getCoverPageContent(Mockito.anyLong(), Mockito.anyString()))
-        .thenReturn(responseEntity);
-
-    final ResponseEntity<byte[]> result = controller.getCoverImage(TEST_COMIC_ID);
-
-    assertNotNull(result);
-    assertSame(responseEntity, result);
-
-    Mockito.verify(pageCacheService, Mockito.times(1))
-        .getCoverPageContent(TEST_COMIC_ID, MISSING_COMIC_COVER_FILENAME);
-  }
-
-  @Test
-  void deleteMetadata() throws ComicBookException {
-    Mockito.when(comicBookService.deleteMetadata(Mockito.anyLong())).thenReturn(comicBook);
-
-    final ComicBook result = controller.deleteMetadata(TEST_COMIC_ID);
-
-    assertNotNull(result);
-    assertSame(comicBook, result);
-
-    Mockito.verify(comicBookService, Mockito.times(1)).deleteMetadata(TEST_COMIC_ID);
-  }
-
-  @Test
-  void savePageOrderServiceException() throws ComicBookException {
-    Mockito.doThrow(ComicBookException.class)
-        .when(comicBookService)
-        .savePageOrder(Mockito.anyLong(), Mockito.anyList());
-
-    assertThrows(
-        ComicBookException.class,
-        () ->
-            controller.savePageOrder(TEST_COMIC_ID, new SavePageOrderRequest(pageOrderEntrylist)));
-  }
-
-  @Test
-  void savePageOrder() throws ComicBookException {
-    controller.savePageOrder(TEST_COMIC_ID, new SavePageOrderRequest(pageOrderEntrylist));
-
-    Mockito.verify(comicBookService, Mockito.times(1))
-        .savePageOrder(TEST_COMIC_ID, pageOrderEntrylist);
+    verify(comicSelectionService).decodeSelections(TEST_ENCODED_SELECTIONS);
+    verify(comicDataService).undeleteComicBooksById(selectedIdList);
+    verify(comicSelectionService).clearSelectedComicBooks(TEST_EMAIL, selectedIdList);
+    verify(comicSelectionService).encodeSelections(selectedIdList);
+    verify(httpSession).setAttribute(LIBRARY_SELECTIONS, TEST_REENCODED_SELECTIONS);
   }
 }

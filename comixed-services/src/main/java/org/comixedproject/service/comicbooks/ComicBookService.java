@@ -18,26 +18,15 @@
 
 package org.comixedproject.service.comicbooks;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
 import java.util.*;
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
-import org.comixedproject.adaptors.comicbooks.ComicBookMetadataAdaptor;
 import org.comixedproject.adaptors.comicbooks.ComicFileAdaptor;
-import org.comixedproject.adaptors.file.FileTypeAdaptor;
 import org.comixedproject.model.batch.OrganizingLibraryEvent;
 import org.comixedproject.model.batch.UpdateMetadataEvent;
 import org.comixedproject.model.collections.SeriesDetail;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.ComicState;
-import org.comixedproject.model.comicbooks.ComicType;
-import org.comixedproject.model.comicpages.ComicPage;
-import org.comixedproject.model.net.DownloadDocument;
-import org.comixedproject.model.net.comicbooks.PageOrderEntry;
 import org.comixedproject.model.net.library.PublisherAndYearSegment;
 import org.comixedproject.model.net.library.RemoteLibrarySegmentState;
 import org.comixedproject.repositories.comicbooks.ComicBookRepository;
@@ -50,7 +39,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Limit;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -67,12 +55,58 @@ public class ComicBookService {
   @Autowired private ComicBookStateAdaptor comicBookStateAdaptor;
   @Autowired private ComicBookRepository comicBookRepository;
   @Autowired private ComicDetailRepository comicDetailRepository;
-  @Autowired private ComicBookMetadataAdaptor comicBookMetadataAdaptor;
   @Autowired private ComicFileAdaptor comicFileAdaptor;
   @Autowired private ImprintService imprintService;
-  @Autowired private FileTypeAdaptor fileTypeAdaptor;
   @Autowired private ApplicationEventPublisher applicationEventPublisher;
   @Autowired private ComicTagRepository comicTagRepository;
+
+  /**
+   * Looks for the all comics that matches the given criteria.
+   *
+   * @param publisher the publisher
+   * @param series the series
+   * @param volume the volume
+   * @param issueNumber the issue number
+   * @return the list of comics
+   */
+  @Transactional
+  public List<ComicBook> findComic(
+      final String publisher, final String series, final String volume, final String issueNumber) {
+    log.trace(
+        "Finding comic: publisher={} series={} volume={} issue #={}",
+        publisher,
+        series,
+        volume,
+        issueNumber);
+    return this.comicBookRepository.findComic(publisher, series, volume, issueNumber);
+  }
+
+  /**
+   * Saves a new comicBook.
+   *
+   * @param comicBook the comicBook
+   * @return the saved comicBook
+   */
+  @Transactional
+  public ComicBook save(final ComicBook comicBook) {
+    log.debug("Saving comicBook: filename={}", comicBook.getComicDetail().getFilename());
+
+    log.trace("Updating the imprint");
+    this.imprintService.update(comicBook);
+
+    final ComicDetail detail = comicBook.getComicDetail();
+
+    log.trace("Standardizing the comic filename");
+    detail.setFilename(comicFileAdaptor.standardizeFilename(detail.getFilename()));
+
+    log.trace("Updating the page numbers");
+    comicBook.updatePageNumbers();
+
+    log.trace("Setting last modified date");
+    detail.setLastModifiedDate(new Date());
+
+    return this.comicBookRepository.saveAndFlush(comicBook);
+  }
 
   /**
    * Retrieves a single comic by id. It is expected that this comic exists.
@@ -105,217 +139,6 @@ public class ComicBookService {
     return result;
   }
 
-  private ComicBook doGetComic(final long comicBookId) throws ComicBookException {
-    return this.doGetComic(comicBookId, true);
-  }
-
-  private ComicBook doGetComic(final long id, final boolean throwIfMissing)
-      throws ComicBookException {
-    final ComicBook result = this.comicBookRepository.getReferenceById(id);
-    if (result == null && throwIfMissing) throw new ComicBookException("No such comic: id=" + id);
-    return result;
-  }
-
-  /**
-   * Marks a comic for deletion but does not actually delete the comic.
-   *
-   * @param id the comic id
-   * @return the updated comic
-   * @throws ComicBookException if the comic id is invalid
-   */
-  @Transactional
-  public ComicBook deleteComicBook(final long id) throws ComicBookException {
-    log.debug("Marking comic for deletion: id={}", id);
-    final var comic = this.doGetComic(id);
-    this.comicBookStateAdaptor.fireEvent(comic, ComicEvent.markComicForRemoval);
-    return this.doGetComic(id);
-  }
-
-  /**
-   * Updates a comic record. If optional fields are null then they are not updated.
-   *
-   * @param id the comic id
-   * @param comicType the optional comic type
-   * @param publisher the publisher
-   * @param series the series
-   * @param volume the volume
-   * @param issueNumber the issue number
-   * @param imprint the optional imprint
-   * @param sortName the optional sort name
-   * @param title the optional title
-   * @param coverDate the optional cover date
-   * @param storeDate the optional store date
-   * @return the updated comic
-   * @throws ComicBookException if the id is invalid
-   */
-  @Transactional
-  public ComicBook updateComic(
-      final long id,
-      final ComicType comicType,
-      final String publisher,
-      final String series,
-      final String volume,
-      final String issueNumber,
-      final String imprint,
-      final String sortName,
-      final String title,
-      final Date coverDate,
-      final Date storeDate)
-      throws ComicBookException {
-    log.debug("Updating comic: id={}", id);
-    final var comic = this.doGetComic(id);
-
-    log.trace("Updating the comic fields");
-
-    if (Objects.nonNull(comicType)) {
-      comic.getComicDetail().setComicType(comicType);
-    }
-    comic.getComicDetail().setPublisher(publisher);
-    comic.getComicDetail().setSeries(series);
-    comic.getComicDetail().setVolume(volume);
-    comic.getComicDetail().setIssueNumber(issueNumber);
-    if (Objects.nonNull(imprint)) {
-      comic.getComicDetail().setImprint(imprint);
-    }
-    if (Objects.nonNull(sortName)) {
-      comic.getComicDetail().setSortName(sortName);
-    }
-    if (Objects.nonNull(title)) {
-      comic.getComicDetail().setTitle(title);
-    }
-    if (Objects.nonNull(coverDate)) {
-      comic.getComicDetail().setCoverDate(coverDate);
-    }
-    if (Objects.nonNull(storeDate)) {
-      comic.getComicDetail().setStoreDate(storeDate);
-    }
-
-    this.imprintService.update(comic);
-
-    this.comicBookStateAdaptor.fireEvent(comic, ComicEvent.comicMetadataChanged);
-    return this.doGetComic(id);
-  }
-
-  /**
-   * Saves a new comicBook.
-   *
-   * @param comicBook the comicBook
-   * @return the saved comicBook
-   */
-  @Transactional
-  public ComicBook save(final ComicBook comicBook) {
-    log.debug("Saving comicBook: filename={}", comicBook.getComicDetail().getFilename());
-
-    log.trace("Updating the imprint");
-    this.imprintService.update(comicBook);
-
-    final ComicDetail detail = comicBook.getComicDetail();
-
-    log.trace("Standardizing the comic filename");
-    detail.setFilename(comicFileAdaptor.standardizeFilename(detail.getFilename()));
-
-    log.trace("Updating the page numbers");
-    comicBook.updatePageNumbers();
-
-    log.trace("Setting last modified date");
-    detail.setLastModifiedDate(new Date());
-
-    return this.comicBookRepository.saveAndFlush(comicBook);
-  }
-
-  /**
-   * Retrieves the full content of the comicBook file.
-   *
-   * @param comicBookId the comicBook
-   * @return the comicBook content
-   */
-  @Transactional
-  public DownloadDocument getComicContent(final long comicBookId) throws ComicBookException {
-    final ComicBook comicBook = this.doGetComic(comicBookId);
-    final String filename = comicBook.getComicDetail().getFilename();
-    final String baseFilename = FilenameUtils.getName(filename);
-
-    try {
-      final byte[] content = FileUtils.readFileToByteArray(new File(filename));
-      return new DownloadDocument(
-          baseFilename,
-          this.fileTypeAdaptor.getMimeTypeFor(new ByteArrayInputStream(content)),
-          content);
-    } catch (IOException error) {
-      throw new ComicBookException("Failed to load comic book file", error);
-    }
-  }
-
-  /**
-   * Unmarks a comic for deletion.
-   *
-   * @param id the comic id
-   * @return the updated comic
-   * @throws ComicBookException if the comic id is invalid
-   */
-  @Transactional
-  public ComicBook undeleteComicBook(final long id) throws ComicBookException {
-    log.debug("Restoring comic: id={}", id);
-    final var comic = this.doGetComic(id);
-    this.comicBookStateAdaptor.fireEvent(comic, ComicEvent.unmarkComicForRemoval);
-    return this.doGetComic(id);
-  }
-
-  /**
-   * Deletes the specified comicBook from the library.
-   *
-   * @param comicBook the comicBook
-   */
-  @Transactional
-  public void deleteComicBook(final ComicBook comicBook) {
-    log.trace("Removing read references");
-    comicBook.getComicDetail().getReadByUserIds().clear();
-    this.comicTagRepository.deleteAllByComicDetail(comicBook.getComicDetail());
-    log.debug("Deleting comicBook: id={}", comicBook.getComicBookId());
-    this.comicBookRepository.delete(comicBook);
-  }
-
-  /**
-   * Retrieves a page of comics to be moved.
-   *
-   * @param page the page
-   * @param max the maximum number of comics to return
-   * @return the list of comics
-   */
-  public List<ComicBook> findComicsToMove(final int page, final int max) {
-    return this.comicBookRepository.findComicsToMove(PageRequest.of(page, max));
-  }
-
-  /**
-   * Returns a comic with the given absolute filename.
-   *
-   * @param filename the filename
-   * @return the comic
-   */
-  @Transactional
-  public ComicBook findByFilename(final String filename) {
-    return this.comicBookRepository.findByFilename(filename);
-  }
-
-  /**
-   * Clears all metadata from the given comic.
-   *
-   * @param comicId the comic id
-   * @return the updated comic
-   * @throws ComicBookException if the comic id is invalid
-   */
-  @Transactional
-  public ComicBook deleteMetadata(final long comicId) throws ComicBookException {
-    log.debug("Loading comic: id={}", comicId);
-    final var comic = this.doGetComic(comicId);
-    log.trace("Clearing comic metadata");
-    this.comicBookMetadataAdaptor.clear(comic);
-    log.trace("Firing comic state event");
-    this.comicBookStateAdaptor.fireEvent(comic, ComicEvent.comicMetadataCleared);
-    log.trace("Retrieving updated comic");
-    return this.doGetComic(comicId);
-  }
-
   /**
    * Retrieves the number of unprocessed comics that are waiting to have their contents loaded.
    *
@@ -346,35 +169,6 @@ public class ComicBookService {
    */
   public List<ComicBook> findComicsWithContentToLoad(final int batchSize) {
     return this.comicDetailRepository.findComicsWithContentToLoad(PageRequest.of(0, batchSize));
-  }
-
-  /**
-   * Retrieves unprocessed comics that have had their contents processed.
-   *
-   * @return the comics
-   */
-  public List<ComicBook> findProcessedComics() {
-    log.trace("Loading unprocessed comics that are fully processed");
-    return this.comicDetailRepository.findProcessedComics();
-  }
-
-  /**
-   * Prepares a set of comic books for rescanning.
-   *
-   * @param ids the comic ids
-   */
-  public void prepareForRescan(final List<Long> ids) {
-    ids.forEach(
-        id -> {
-          try {
-            log.trace("Loading comicBook: id={}", id);
-            final ComicBook comicBook = this.doGetComic(id);
-            log.trace("Firing event: rescan comicBook");
-            this.comicBookStateAdaptor.fireEvent(comicBook, ComicEvent.rescanComicBookFile);
-          } catch (ComicBookException error) {
-            log.error("Error preparing comic for rescan", error);
-          }
-        });
   }
 
   /**
@@ -414,13 +208,6 @@ public class ComicBookService {
     return this.comicDetailRepository.findComicsMarkedForPurging(PageRequest.of(0, count));
   }
 
-  /** Marks all comics in the deleted state for purging. */
-  @Transactional
-  public void prepareComicBooksForDeleting() {
-    log.trace("Marking all deleted comics for purging");
-    this.comicDetailRepository.prepareComicBooksForDeleting();
-  }
-
   /**
    * Returns the number of comics that are marked for recreation.
    *
@@ -444,54 +231,6 @@ public class ComicBookService {
   }
 
   /**
-   * Returns all comics.
-   *
-   * @return the list of comics
-   */
-  public List<ComicBook> findAll() {
-    log.trace("Finding all comics");
-    return this.comicBookRepository.findAll();
-  }
-
-  /**
-   * Marks comics for deletion.
-   *
-   * @param comicDetailIdList the comic ids
-   */
-  @Async
-  public void deleteComicBooksById(final List<Long> comicDetailIdList) {
-    comicDetailIdList.forEach(
-        comicDetailId -> {
-          final ComicBook comicBook = this.comicBookRepository.getByComicDetailId(comicDetailId);
-          if (Objects.nonNull(comicBook)) {
-            log.trace("Marking comicBook for deletion: id={}", comicBook.getComicBookId());
-            this.comicBookStateAdaptor.fireEvent(comicBook, ComicEvent.markComicForRemoval);
-          } else {
-            log.warn("No such comic book: comic detail id={}", comicDetailId);
-          }
-        });
-  }
-
-  /**
-   * Unmarks comics for deletion.
-   *
-   * @param comicDetailIdList the comic ids
-   */
-  @Async
-  public void undeleteComicBooksById(final List<Long> comicDetailIdList) {
-    comicDetailIdList.forEach(
-        comicDetailId -> {
-          final ComicBook comicBook = this.comicBookRepository.getByComicDetailId(comicDetailId);
-          if (Objects.nonNull(comicBook)) {
-            log.trace("Unmarking comicBook for deletion: id={}", comicBook.getComicBookId());
-            this.comicBookStateAdaptor.fireEvent(comicBook, ComicEvent.unmarkComicForRemoval);
-          } else {
-            log.warn("No such comic book: comic detail id={}", comicDetailId);
-          }
-        });
-  }
-
-  /**
    * Finds all comics to be recreated.
    *
    * @param count the number of comics to return
@@ -500,47 +239,6 @@ public class ComicBookService {
   public List<ComicBook> findComicsToRecreate(final int count) {
     log.trace("Finding all comics to be recreated");
     return this.comicBookRepository.findComicsToRecreate(PageRequest.of(0, count));
-  }
-
-  /**
-   * Looks for the all comics that matches the given criteria.
-   *
-   * @param publisher the publisher
-   * @param series the series
-   * @param volume the volume
-   * @param issueNumber the issue number
-   * @return the list of comics
-   */
-  @Transactional
-  public List<ComicBook> findComic(
-      final String publisher, final String series, final String volume, final String issueNumber) {
-    log.trace(
-        "Finding comic: publisher={} series={} volume={} issue #={}",
-        publisher,
-        series,
-        volume,
-        issueNumber);
-    return this.comicBookRepository.findComic(publisher, series, volume, issueNumber);
-  }
-
-  /**
-   * Returns the list of all series names.
-   *
-   * @return the list of names.
-   */
-  public List<String> getAllSeries() {
-    log.trace("Loading all series names");
-    return this.comicBookRepository.findDistinctSeries();
-  }
-
-  public List<SeriesDetail> getAllSeriesAndVolumes() {
-    log.trace("Loading all series and volumes");
-    return this.comicBookRepository.getAllSeriesAndVolumes();
-  }
-
-  public List<String> getAllPublishersForStory(final String name) {
-    log.trace("Returning all publishers for a given story");
-    return this.comicBookRepository.findDistinctPublishersForStory(name);
   }
 
   /**
@@ -554,60 +252,9 @@ public class ComicBookService {
     return this.comicDetailRepository.findComicsMarkedForPurging(PageRequest.of(0, count));
   }
 
-  /**
-   * Saves the new order for the pages of a comic. If the unread flag is set to true, then only
-   * comics unread by the given user are returned.
-   *
-   * @param comicId the comic id
-   * @param entryList the page order entries
-   * @throws ComicBookException if the id is invalid, or there is a problem with the entry list
-   */
-  public void savePageOrder(final long comicId, final List<PageOrderEntry> entryList)
-      throws ComicBookException {
-    log.trace("Loading comicBook");
-    final ComicBook comicBook = this.doGetComic(comicId);
-    log.trace("Sorting new page list");
-    entryList.sort(Comparator.comparingInt(PageOrderEntry::getPosition));
-    log.trace("Checking for holes in order");
-    for (int index = 0; index < entryList.size(); index++) {
-      final PageOrderEntry entry = entryList.get(index);
-      if (entry.getPosition() != index)
-        throw new ComicBookException(
-            "Invalid page order list: " + index + " != " + entry.getPosition());
-    }
-
-    log.trace("Applying order");
-    for (int index = 0; index < comicBook.getPages().size(); index++) {
-      final ComicPage page = comicBook.getPages().get(index);
-      if (Objects.nonNull(page)) {
-        final Optional<PageOrderEntry> position =
-            entryList.stream()
-                .filter(pageOrderEntry -> pageOrderEntry.getFilename().equals(page.getFilename()))
-                .findFirst();
-        if (position.isEmpty())
-          throw new ComicBookException("No such order entry: filename=" + page.getFilename());
-        log.trace("Applying position");
-        page.setPageNumber(position.get().getPosition());
-      }
-    }
-
-    log.trace("Firing event: details updated");
-    this.comicBookStateAdaptor.fireEvent(comicBook, ComicEvent.comicMetadataChanged);
-  }
-
-  /**
-   * Prepares to update the details for a set of comics.
-   *
-   * @param comicIds the comics' ids
-   * @throws ComicBookException if comic id is invalid
-   */
-  public void updateMultipleComics(final List<Long> comicIds) throws ComicBookException {
-    log.debug("Updating details for {} comic{}", comicIds.size(), comicIds.size() == 1 ? "" : "s");
-    for (long id : comicIds) {
-      log.trace("Loading comicBook: id={}", id);
-      final ComicBook comicBook = this.doGetComic(id);
-      this.comicBookStateAdaptor.fireEvent(comicBook, ComicEvent.prepareComicsForBatchEditing);
-    }
+  public List<String> getAllPublishersForStory(final String name) {
+    log.trace("Returning all publishers for a given story");
+    return this.comicBookRepository.findDistinctPublishersForStory(name);
   }
 
   /**
@@ -743,6 +390,21 @@ public class ComicBookService {
   }
 
   /**
+   * Prepares to update the details for a set of comics.
+   *
+   * @param comicIds the comics' ids
+   * @throws ComicBookException if comic id is invalid
+   */
+  public void updateMultipleComics(final List<Long> comicIds) throws ComicBookException {
+    log.debug("Updating details for {} comic{}", comicIds.size(), comicIds.size() == 1 ? "" : "s");
+    for (long id : comicIds) {
+      log.trace("Loading comicBook: id={}", id);
+      final ComicBook comicBook = this.doGetComic(id);
+      this.comicBookStateAdaptor.fireEvent(comicBook, ComicEvent.prepareComicsForBatchEditing);
+    }
+  }
+
+  /**
    * Marks comics for batch metadata update processing.
    *
    * @param ids the comic book ids
@@ -758,6 +420,77 @@ public class ComicBookService {
       this.comicBookRepository.save(comicBook);
     }
     this.applicationEventPublisher.publishEvent(UpdateMetadataEvent.instance);
+  }
+
+  /**
+   * Marks comics for organization. Uses a set of ids to determine which comics to mark.
+   *
+   * @param ids the comic ids
+   */
+  @Transactional
+  public void prepareForOrganization(final List<Long> ids) {
+    log.trace("Marking comics for organization");
+    this.comicDetailRepository.markForOrganizationById(ids);
+    this.applicationEventPublisher.publishEvent(OrganizingLibraryEvent.instance);
+  }
+
+  @Transactional
+  public void prepareAllForOrganization() {
+    log.trace("Marking all comics for organization");
+    this.comicDetailRepository.markAllForOrganization();
+    this.applicationEventPublisher.publishEvent(OrganizingLibraryEvent.instance);
+  }
+
+  /**
+   * Prepares a set of comic books for rescanning.
+   *
+   * @param ids the comic ids
+   */
+  public void prepareForRescan(final List<Long> ids) {
+    ids.forEach(
+        id -> {
+          try {
+            log.trace("Loading comicBook: id={}", id);
+            final ComicBook comicBook = this.doGetComic(id);
+            log.trace("Firing event: rescan comicBook");
+            this.comicBookStateAdaptor.fireEvent(comicBook, ComicEvent.rescanComicBookFile);
+          } catch (ComicBookException error) {
+            log.error("Error preparing comic for rescan", error);
+          }
+        });
+  }
+
+  /** Marks all comics in the deleted state for purging. */
+  @Transactional
+  public void prepareComicBooksForDeleting() {
+    log.trace("Marking all deleted comics for purging");
+    this.comicDetailRepository.prepareComicBooksForDeleting();
+  }
+
+  /**
+   * Deletes the specified comicBook from the library.
+   *
+   * @param comicBook the comicBook
+   */
+  @Transactional
+  public void deleteComicBook(final ComicBook comicBook) {
+    log.trace("Removing read references");
+    comicBook.getComicDetail().getReadByUserIds().clear();
+    this.comicTagRepository.deleteAllByComicDetail(comicBook.getComicDetail());
+    log.debug("Deleting comicBook: id={}", comicBook.getComicBookId());
+    this.comicBookRepository.delete(comicBook);
+  }
+
+  private ComicBook doGetComic(final long comicBookId) throws ComicBookException {
+    return this.doGetComic(comicBookId, true);
+  }
+
+  private ComicBook doGetComic(final long id, final boolean throwIfMissing)
+      throws ComicBookException {
+    final ComicBook result = this.comicBookRepository.getReferenceById(id);
+    if (Objects.isNull(result) && throwIfMissing)
+      throw new ComicBookException("No such comic: id=" + id);
+    return result;
   }
 
   /**
@@ -845,25 +578,6 @@ public class ComicBookService {
   public List<ComicBook> getComicBooksWithoutDetails(final int chunkSize) {
     log.debug("Loading ComicBook records without a ComicDetail: chunk size={}", chunkSize);
     return this.comicBookRepository.getComicBooksWithoutDetails(chunkSize);
-  }
-
-  /**
-   * Marks comics for organization. Uses a set of ids to determine which comics to mark.
-   *
-   * @param ids the comic ids
-   */
-  @Transactional
-  public void prepareForOrganization(final List<Long> ids) {
-    log.trace("Marking comics for organization");
-    this.comicDetailRepository.markForOrganizationById(ids);
-    this.applicationEventPublisher.publishEvent(OrganizingLibraryEvent.instance);
-  }
-
-  @Transactional
-  public void prepareAllForOrganization() {
-    log.trace("Marking all comics for organization");
-    this.comicDetailRepository.markAllForOrganization();
-    this.applicationEventPublisher.publishEvent(OrganizingLibraryEvent.instance);
   }
 
   /**
@@ -968,7 +682,7 @@ public class ComicBookService {
     return this.comicBookRepository.findComicsWithUnhashedPagesCount();
   }
 
-  /*
+  /**
    * Returns if there are any comic books with unhashed pages.
    *
    * @return true if there are comic books with unhashed pages

@@ -33,7 +33,6 @@ import org.comixedproject.metadata.MetadataException;
 import org.comixedproject.metadata.model.IssueMetadata;
 import org.comixedproject.metadata.model.StoryMetadata;
 import org.comixedproject.metadata.model.VolumeMetadata;
-import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.library.DisplayableComic;
 import org.comixedproject.model.net.metadata.*;
 import org.comixedproject.service.comicbooks.ComicBookSelectionException;
@@ -143,7 +142,7 @@ public class ComicBookScrapingController {
   }
 
   /**
-   * Scrapes a single {@link ComicBook} using the specified source issue.
+   * Scrapes a single comic using the specified source issue.
    *
    * @param sourceId the metadata source id
    * @param comicId the comic id
