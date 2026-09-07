@@ -24,8 +24,8 @@ import {
   provideHttpClientTesting
 } from '@angular/common/http/testing';
 import {
-  COMIC_BOOK_2,
-  COMIC_DETAIL_2
+  COMIC_DETAIL_2,
+  DISPLAYABLE_COMIC_1
 } from '@app/comic-books/comic-books.fixtures';
 import {
   LOAD_COMIC_URL,
@@ -55,6 +55,7 @@ import { DownloadDocument } from '@app/core/models/download-document';
 import { UpdateComicBookRequest } from '@app/comic-books/models/net/update-comic-book-request';
 
 describe('ComicBookService', () => {
+  const COMIC = DISPLAYABLE_COMIC_1;
   const DETAILS = COMIC_DETAIL_2;
   const PAGE = PAGE_1;
   const DOWNLOAD_COMIC_BOOK = {
@@ -110,7 +111,7 @@ describe('ComicBookService', () => {
         coverDate: DETAILS.coverDate,
         storeDate: DETAILS.storeDate
       })
-      .subscribe(response => expect(response).toEqual(COMIC_BOOK_2));
+      .subscribe(response => expect(response).toEqual(COMIC));
 
     const req = httpMock.expectOne(
       interpolate(UPDATE_COMIC_URL, { id: DETAILS.comicBookId })
@@ -128,7 +129,7 @@ describe('ComicBookService', () => {
       coverDate: DETAILS.coverDate,
       storeDate: DETAILS.storeDate
     } as UpdateComicBookRequest);
-    req.flush(COMIC_BOOK_2);
+    req.flush(COMIC);
   });
 
   it('can delete a single comic book', () => {

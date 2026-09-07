@@ -30,7 +30,6 @@ import java.util.Arrays;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.archives.ArchiveType;
-import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.net.admin.ClearImageCacheResponse;
 import org.comixedproject.model.net.comicbooks.ConvertComicsRequest;
 import org.comixedproject.model.net.comicbooks.EditMultipleComicsRequest;
@@ -55,8 +54,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * <code>LibraryReaderController</code> provides REST APIs for working with groups of {@link
- * ComicBook} objects.
+ * <code>LibraryReaderController</code> provides REST APIs for working with groups of comic books.
  *
  * @author Darryl L. Pierce
  */
