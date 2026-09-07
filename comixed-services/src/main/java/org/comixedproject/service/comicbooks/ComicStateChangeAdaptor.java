@@ -21,7 +21,6 @@ package org.comixedproject.service.comicbooks;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
-import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.comicbooks.PublishComicBookRemovalAction;
@@ -58,11 +57,12 @@ public class ComicStateChangeAdaptor implements InitializingBean, ComicStateChan
   }
 
   @Override
-  public void onComicStateChanged(final @NonNull ComicBook comicBook) {
+  public void onComicStateChanged(final ComicBook comicBook) {
     try {
       if (comicBook.getState().equals(ComicState.REMOVED)) {
         log.debug("Comic book deleted");
-        this.publishComicBookRemovalAction.publish(comicBook);
+        this.publishComicBookRemovalAction.publish(
+            this.displayableComicService.getForComicBookId(comicBook.getComicBookId()));
       } else {
         log.debug("Saving updated comic book");
         comicBook.setLastModifiedOn(new Date());

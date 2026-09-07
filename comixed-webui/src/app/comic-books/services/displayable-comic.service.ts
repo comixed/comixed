@@ -26,7 +26,6 @@ import { ComicState } from '@app/comic-books/models/comic-state';
 import { Store } from '@ngrx/store';
 import { WebSocketService } from '@app/messaging';
 import { selectMessagingStarted } from '@app/messaging/selectors/messaging.selectors';
-import { ComicBook } from '@app/comic-books/models/comic-book';
 import {
   COMIC_LIST_REMOVAL_TOPIC,
   COMIC_LIST_UPDATE_TOPIC
@@ -47,7 +46,6 @@ import { LoadComicsByIdRequest } from '@app/comic-books/models/net/load-comics-b
 import { LoadComicsForCollectionRequest } from '@app/comic-books/models/net/load-comics-for-collection-request';
 import { LoadComicsByReadStateRequest } from '@app/comic-books/models/net/load-comics-by-read-state-request';
 import { LoadComicsForListRequest } from '@app/comic-books/models/net/load-comics-for-list-request';
-import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 import {
   comicRemoved,
@@ -55,6 +53,7 @@ import {
 } from '@app/comic-books/actions/comic-list.actions';
 import { ComicTagType } from '@app/comic-books/models/comic-tag-type';
 import { filter, tap } from 'rxjs/operators';
+import { ComicBookData } from '@app/comic-books/models/comic-book-data';
 
 @Injectable({
   providedIn: 'root'
@@ -72,26 +71,18 @@ export class DisplayableComicService {
         filter(started => started),
         tap(() => {
           this.logger.trace('Subscribing to comic list updates');
-          this.webSocketService.subscribe<ComicBook>(
+          this.webSocketService.subscribe<ComicBookData>(
             COMIC_LIST_UPDATE_TOPIC,
             comic => {
               this.logger.debug('Received comic list update:', comic);
-              this.store.dispatch(
-                comicUpdated({
-                  comic: this.doConvertToDisplayableComic(comic.detail)
-                })
-              );
+              this.store.dispatch(comicUpdated({ comic: comic.detail }));
             }
           );
-          this.webSocketService.subscribe<ComicBook>(
+          this.webSocketService.subscribe<DisplayableComic>(
             COMIC_LIST_REMOVAL_TOPIC,
             comic => {
               this.logger.debug('Received comic removal update:', comic);
-              this.store.dispatch(
-                comicRemoved({
-                  comic: this.doConvertToDisplayableComic(comic.detail)
-                })
-              );
+              this.store.dispatch(comicRemoved({ comic }));
             }
           );
         })
@@ -224,28 +215,5 @@ export class DisplayableComicService {
         sortDirection: args.sortDirection
       } as LoadComicsForListRequest
     );
-  }
-
-  private doConvertToDisplayableComic(detail: ComicDetail): DisplayableComic {
-    return {
-      comicBookId: detail.comicBookId,
-      comicDetailId: detail.comicDetailId,
-      archiveType: detail.archiveType,
-      comicState: detail.comicState,
-      unscraped: detail.unscraped,
-      comicType: detail.comicType,
-      publisher: detail.publisher,
-      series: detail.series,
-      volume: detail.volume,
-      issueNumber: detail.issueNumber,
-      sortableIssueNumber: detail.sortableIssueNumber,
-      title: detail.title,
-      pageCount: detail.pageCount,
-      coverDate: detail.coverDate,
-      yearPublished: detail.publishedYear,
-      monthPublished: detail.publishedMonth,
-      storeDate: detail.storeDate,
-      addedDate: detail.addedDate
-    } as DisplayableComic;
   }
 }

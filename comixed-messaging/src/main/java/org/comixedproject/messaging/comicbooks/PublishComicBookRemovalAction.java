@@ -21,7 +21,7 @@ package org.comixedproject.messaging.comicbooks;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.messaging.AbstractPublishAction;
 import org.comixedproject.messaging.PublishingException;
-import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.library.DisplayableComic;
 import org.comixedproject.views.View;
 import org.springframework.stereotype.Component;
 
@@ -33,7 +33,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Log4j2
-public class PublishComicBookRemovalAction extends AbstractPublishAction<ComicBook> {
+public class PublishComicBookRemovalAction extends AbstractPublishAction<DisplayableComic> {
   /** Topic which receives comic list removals in real time. */
   public static final String COMIC_LIST_REMOVAL_TOPIC = "/topic/comic-list.removal";
 
@@ -41,13 +41,13 @@ public class PublishComicBookRemovalAction extends AbstractPublishAction<ComicBo
   public static final String COMIC_BOOK_REMOVAL_TOPIC = "/topic/comic-book.%d.removal";
 
   @Override
-  public void publish(final ComicBook comicBook) throws PublishingException {
+  public void publish(final DisplayableComic comic) throws PublishingException {
     log.trace("Publishing comicBook list removal");
-    this.doPublish(COMIC_LIST_REMOVAL_TOPIC, comicBook, View.ComicDetailsView.class);
+    this.doPublish(COMIC_LIST_REMOVAL_TOPIC, comic, View.ComicDetailsView.class);
     log.trace("Publishing comicBook book removal");
     this.doPublish(
-        String.format(COMIC_BOOK_REMOVAL_TOPIC, comicBook.getComicBookId()),
-        comicBook,
+        String.format(COMIC_BOOK_REMOVAL_TOPIC, comic.getComicBookId()),
+        comic,
         View.ComicDetailsView.class);
   }
 }

@@ -1,6 +1,7 @@
 package org.comixedproject.service.comicbooks;
 
 import static junit.framework.TestCase.assertNotNull;
+import static org.mockito.Mockito.*;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -12,18 +13,15 @@ import org.comixedproject.model.comicbooks.*;
 import org.comixedproject.model.library.DisplayableComic;
 import org.comixedproject.service.library.DisplayableComicService;
 import org.comixedproject.state.comicbooks.ComicBookStateAdaptor;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
 
 @ExtendWith(MockitoExtension.class)
-@MockitoSettings(strictness = Strictness.LENIENT)
 class ComicStateChangeAdaptorTest {
   private static final ComicState TEST_STATE = ComicState.CHANGED;
+  private static final long TEST_COMIC_BOOK_ID = 710129L;
 
   @InjectMocks private ComicStateChangeAdaptor adaptor;
   @Mock private ComicBookStateAdaptor comicBookStateAdaptor;
@@ -40,69 +38,66 @@ class ComicStateChangeAdaptorTest {
 
   private Set<ComicTag> comicTagList = new HashSet<>();
 
-  @BeforeEach
-  void setUp() throws ComicBookException {
-    Mockito.when(comicDetail.getTags()).thenReturn(comicTagList);
-    Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
-    Mockito.when(comicBookRecord.getComicDetail()).thenReturn(comicDetail);
-    Mockito.when(displayableComicService.getForComicBookId(Mockito.anyLong()))
-        .thenReturn(displayableComicBook);
-  }
-
   @Test
   void afterPropertiesSet() throws Exception {
     adaptor.afterPropertiesSet();
 
-    Mockito.verify(comicBookStateAdaptor, Mockito.times(1)).addListener(adaptor);
+    verify(comicBookStateAdaptor).addListener(adaptor);
   }
 
   @Test
-  void onComicStateChange_purgeEvent() throws PublishingException {
-    Mockito.when(comicBook.getState()).thenReturn(ComicState.REMOVED);
+  void onComicStateChange_comicDeleted() throws PublishingException, ComicBookException {
+    when(comicBook.getState()).thenReturn(ComicState.REMOVED);
+    when(comicBook.getComicBookId()).thenReturn(TEST_COMIC_BOOK_ID);
+    when(displayableComicService.getForComicBookId(anyLong())).thenReturn(displayableComicBook);
 
     adaptor.onComicStateChanged(comicBook);
 
-    Mockito.verify(comicRemovalPublishAction, Mockito.times(1)).publish(comicBook);
+    verify(displayableComicService).getForComicBookId(TEST_COMIC_BOOK_ID);
+    verify(comicRemovalPublishAction).publish(displayableComicBook);
   }
 
   @Test
-  void onComicStateChange_purgeEventPublishingException() throws PublishingException {
-    Mockito.when(comicBook.getState()).thenReturn(ComicState.REMOVED);
-    Mockito.doThrow(PublishingException.class)
+  void onComicStateChange_comicDeleted_publishingException()
+      throws PublishingException, ComicBookException {
+    when(comicBook.getState()).thenReturn(ComicState.REMOVED);
+    when(comicBook.getComicBookId()).thenReturn(TEST_COMIC_BOOK_ID);
+    when(displayableComicService.getForComicBookId(anyLong())).thenReturn(displayableComicBook);
+    doThrow(PublishingException.class)
         .when(comicRemovalPublishAction)
-        .publish(Mockito.any(ComicBook.class));
-    Mockito.doNothing()
-        .when(comicUpdatePublishAction)
-        .publish(comicBookDataArgumentCaptor.capture());
+        .publish(any(DisplayableComic.class));
 
     adaptor.onComicStateChanged(comicBook);
 
-    Mockito.verify(comicRemovalPublishAction, Mockito.times(1)).publish(comicBook);
+    verify(displayableComicService).getForComicBookId(TEST_COMIC_BOOK_ID);
+    verify(comicRemovalPublishAction).publish(displayableComicBook);
   }
 
   @Test
   void onComicStateChange() throws PublishingException {
-    Mockito.when(comicBook.getState()).thenReturn(TEST_STATE);
-    Mockito.when(comicBookService.save(Mockito.any(ComicBook.class))).thenReturn(comicBookRecord);
-    Mockito.doNothing()
-        .when(comicUpdatePublishAction)
-        .publish(comicBookDataArgumentCaptor.capture());
+    when(comicBook.getState()).thenReturn(TEST_STATE);
+    when(comicBookService.save(any(ComicBook.class))).thenReturn(comicBookRecord);
+    when(comicBookRecord.getComicDetail()).thenReturn(comicDetail);
+    when(comicDetail.getTags()).thenReturn(comicTagList);
+    doNothing().when(comicUpdatePublishAction).publish(comicBookDataArgumentCaptor.capture());
 
     adaptor.onComicStateChanged(comicBook);
 
     final ComicBookData comicBookData = comicBookDataArgumentCaptor.getValue();
     assertNotNull(comicBookData);
 
-    Mockito.verify(comicBook, Mockito.times(1)).setLastModifiedOn(Mockito.any(Date.class));
-    Mockito.verify(comicBookService, Mockito.times(1)).save(comicBook);
-    Mockito.verify(comicUpdatePublishAction, Mockito.times(1)).publish(comicBookData);
+    verify(comicBook).setLastModifiedOn(any(Date.class));
+    verify(comicBookService).save(comicBook);
+    verify(comicUpdatePublishAction).publish(comicBookData);
   }
 
   @Test
   void onComicStateChange_publishingError() throws PublishingException {
-    Mockito.when(comicBook.getState()).thenReturn(TEST_STATE);
-    Mockito.when(comicBookService.save(Mockito.any(ComicBook.class))).thenReturn(comicBookRecord);
-    Mockito.doThrow(PublishingException.class)
+    when(comicBook.getState()).thenReturn(TEST_STATE);
+    when(comicBookService.save(any(ComicBook.class))).thenReturn(comicBookRecord);
+    when(comicBookRecord.getComicDetail()).thenReturn(comicDetail);
+    when(comicDetail.getTags()).thenReturn(comicTagList);
+    doThrow(PublishingException.class)
         .when(comicUpdatePublishAction)
         .publish(comicBookDataArgumentCaptor.capture());
 
@@ -111,8 +106,8 @@ class ComicStateChangeAdaptorTest {
     final ComicBookData comicBookData = comicBookDataArgumentCaptor.getValue();
     assertNotNull(comicBookData);
 
-    Mockito.verify(comicBook, Mockito.times(1)).setLastModifiedOn(Mockito.any(Date.class));
-    Mockito.verify(comicBookService, Mockito.times(1)).save(comicBook);
-    Mockito.verify(comicUpdatePublishAction, Mockito.times(1)).publish(comicBookData);
+    verify(comicBook).setLastModifiedOn(any(Date.class));
+    verify(comicBookService).save(comicBook);
+    verify(comicUpdatePublishAction).publish(comicBookData);
   }
 }
