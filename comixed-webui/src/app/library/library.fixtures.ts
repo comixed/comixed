@@ -18,9 +18,9 @@
 
 import { DuplicatePage } from './models/duplicate-page';
 import {
-  COMIC_DETAIL_1,
-  COMIC_DETAIL_2,
-  COMIC_DETAIL_3
+  DISPLAYABLE_COMIC_1,
+  DISPLAYABLE_COMIC_2,
+  DISPLAYABLE_COMIC_3
 } from '../comic-books/comic-books.fixtures';
 import { PAGE_1, PAGE_2, PAGE_3 } from '@app/comic-pages/comic-pages.fixtures';
 import { DuplicateComic } from '@app/library/models/duplicate-comic';
@@ -28,19 +28,19 @@ import { DuplicateComic } from '@app/library/models/duplicate-comic';
 export const DUPLICATE_PAGE_1: DuplicatePage = {
   hash: PAGE_1.hash,
   comicCount: 5,
-  comics: [COMIC_DETAIL_1]
+  comics: [DISPLAYABLE_COMIC_1]
 };
 
 export const DUPLICATE_PAGE_2: DuplicatePage = {
   hash: PAGE_2.hash,
   comicCount: 5,
-  comics: [COMIC_DETAIL_2]
+  comics: [DISPLAYABLE_COMIC_2]
 };
 
 export const DUPLICATE_PAGE_3: DuplicatePage = {
   hash: PAGE_3.hash,
   comicCount: 5,
-  comics: [COMIC_DETAIL_3]
+  comics: [DISPLAYABLE_COMIC_3]
 };
 
 export const DUPLICATE_COMIC_1: DuplicateComic = {

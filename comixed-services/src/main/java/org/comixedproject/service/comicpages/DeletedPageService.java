@@ -23,7 +23,10 @@ import java.util.List;
 import java.util.Map;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicpages.DeletedPage;
+import org.comixedproject.model.comicpages.DeletedPageAndComic;
 import org.comixedproject.repositories.comicpages.ComicPageRepository;
+import org.comixedproject.service.comicbooks.ComicBookException;
+import org.comixedproject.service.library.DisplayableComicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,35 +41,39 @@ import org.springframework.transaction.annotation.Transactional;
 @Log4j2
 public class DeletedPageService {
   @Autowired private ComicPageRepository comicPageRepository;
+  @Autowired private DisplayableComicService displayableComicService;
 
   /**
    * Returns the list of all pages marked for deletion.
    *
    * @return the deleted page list
+   * @throws ComicPageException if a parent comic failed to load
    */
   @Transactional
-  public List<DeletedPage> loadAll() {
+  public List<DeletedPage> loadAll() throws ComicPageException {
     log.debug("Loading all deleted pages");
     final Map<String, DeletedPage> result = new HashMap<>();
-    this.comicPageRepository
-        .loadAllDeletedPages()
-        .forEach(
-            deletedPageAndComic -> {
-              log.trace(
-                  "Processing deleted page: hash={} id={}",
-                  deletedPageAndComic.getHash(),
-                  deletedPageAndComic.getComicDetail().getComicId());
-              if (!result.containsKey(deletedPageAndComic.getHash())) {
-                log.trace("Creating new hash entry");
-                result.put(
-                    deletedPageAndComic.getHash(), new DeletedPage(deletedPageAndComic.getHash()));
-              }
-              log.trace("Adding comic to hash entry");
-              result
-                  .get(deletedPageAndComic.getHash())
-                  .getComics()
-                  .add(deletedPageAndComic.getComicDetail());
-            });
+    final List<DeletedPageAndComic> deletedPages = this.comicPageRepository.loadAllDeletedPages();
+    for (int index = 0; index < deletedPages.size(); index++) {
+      final DeletedPageAndComic deletedPageAndComic = deletedPages.get(index);
+      log.trace(
+          "Processing deleted page: hash={} id={}",
+          deletedPageAndComic.getHash(),
+          deletedPageAndComic.getComicId());
+      if (!result.containsKey(deletedPageAndComic.getHash())) {
+        log.trace("Creating new hash entry");
+        result.put(deletedPageAndComic.getHash(), new DeletedPage(deletedPageAndComic.getHash()));
+      }
+      try {
+        log.trace("Adding comic to hash entry");
+        result
+            .get(deletedPageAndComic.getHash())
+            .getComics()
+            .add(this.displayableComicService.getForComicBookId(deletedPageAndComic.getComicId()));
+      } catch (ComicBookException error) {
+        throw new ComicPageException("Failed to load parent comic", error);
+      }
+    }
     return result.values().stream().toList();
   }
 }

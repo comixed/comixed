@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicpages.DeletedPage;
+import org.comixedproject.service.comicpages.ComicPageException;
 import org.comixedproject.service.comicpages.DeletedPageService;
 import org.comixedproject.views.View;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,10 +44,11 @@ public class DeletedPageController {
    * Loads the list of all pages marked for deletion.
    *
    * @return the pages list
+   * @throws ComicPageException if an error occurs
    */
   @GetMapping(value = "/api/pages/deleted", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView({View.DeletedPageList.class})
-  public List<DeletedPage> loadAll() {
+  public List<DeletedPage> loadAll() throws ComicPageException {
     log.info("Loading all deleted pages");
     return this.deletedPageService.loadAll();
   }

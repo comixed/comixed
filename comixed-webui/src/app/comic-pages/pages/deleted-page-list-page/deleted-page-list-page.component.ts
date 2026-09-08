@@ -51,13 +51,13 @@ import {
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { DeletedPage } from '@app/comic-pages/models/deleted-page';
 import { loadDeletedPages } from '@app/comic-pages/actions/deleted-pages.actions';
-import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { ComicDetailListDialogComponent } from '@app/library/components/comic-detail-list-dialog/comic-detail-list-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MatToolbar } from '@angular/material/toolbar';
 import { AsyncPipe } from '@angular/common';
 import { PageHashUrlPipe } from '../../../comic-books/pipes/page-hash-url.pipe';
 import { tap } from 'rxjs/operators';
+import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 
 @Component({
   selector: 'app-deleted-page-list-page',
@@ -147,7 +147,7 @@ export class DeletedPageListPageComponent implements OnInit, AfterViewInit {
     this.loadTranslations();
   }
 
-  onShowComics(comics: ComicDetail[]): void {
+  onShowComics(comics: DisplayableComic[]): void {
     this.dialog.open(ComicDetailListDialogComponent, { data: comics });
   }
 

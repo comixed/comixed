@@ -44,14 +44,6 @@ import {
   saveReadingList
 } from '@app/lists/actions/reading-list-detail.actions';
 import { READING_LIST_3 } from '@app/lists/lists.fixtures';
-import {
-  COMIC_DETAIL_1,
-  COMIC_DETAIL_3,
-  COMIC_DETAIL_5,
-  DISPLAYABLE_COMIC_1,
-  DISPLAYABLE_COMIC_3,
-  DISPLAYABLE_COMIC_5
-} from '@app/comic-books/comic-books.fixtures';
 import { removeSelectedComicBooksFromReadingList } from '@app/lists/actions/reading-list-entries.actions';
 import {
   initialState as initialMessagingState,
@@ -108,17 +100,25 @@ import {
   initialState as initialComicListState
 } from '@app/comic-books/reducers/comic-list.reducer';
 import { loadComicsForReadingList } from '@app/comic-books/actions/comic-list.actions';
+import {
+  DISPLAYABLE_COMIC_1,
+  DISPLAYABLE_COMIC_2,
+  DISPLAYABLE_COMIC_3,
+  DISPLAYABLE_COMIC_4,
+  DISPLAYABLE_COMIC_5
+} from '@app/comic-books/comic-books.fixtures';
 
 describe('ReadingListDetailPageComponent', () => {
   const READING_LIST = {
     ...READING_LIST_3,
-    entries: [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5]
+    entries: [
+      DISPLAYABLE_COMIC_1,
+      DISPLAYABLE_COMIC_2,
+      DISPLAYABLE_COMIC_3,
+      DISPLAYABLE_COMIC_4,
+      DISPLAYABLE_COMIC_5
+    ]
   };
-  const COMIC_LIST = [
-    DISPLAYABLE_COMIC_1,
-    DISPLAYABLE_COMIC_3,
-    DISPLAYABLE_COMIC_5
-  ];
   const initialState = {
     [READING_LIST_DETAIL_FEATURE_KEY]: initialReadingListDetailsState,
     [MESSAGING_FEATURE_KEY]: initialMessagingState,
@@ -397,7 +397,7 @@ describe('ReadingListDetailPageComponent', () => {
   });
 
   describe('removing selected entries', () => {
-    const SELECTED_IDS = COMIC_LIST.map(entry => entry.comicDetailId);
+    const SELECTED_IDS = [1000, 1001, 1002, 1003, 1004];
     beforeEach(() => {
       component.readingList = READING_LIST;
       component.selectedIds$.next(SELECTED_IDS);

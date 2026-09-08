@@ -17,17 +17,16 @@
  */
 
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
-import { ComicBook } from '@app/comic-books/models/comic-book';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { MatDialog } from '@angular/material/dialog';
 import { ComicDetailsDialogComponent } from '@app/library/components/comic-details-dialog/comic-details-dialog.component';
-import { ComicDetail } from '@app/comic-books/models/comic-detail';
-import { MatCard, MatCardTitle, MatCardSubtitle } from '@angular/material/card';
+import { MatCard, MatCardSubtitle, MatCardTitle } from '@angular/material/card';
 import { MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 import { TranslateModule } from '@ngx-translate/core';
+import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 
 @Component({
   selector: 'app-selected-comics',
@@ -45,30 +44,30 @@ import { TranslateModule } from '@ngx-translate/core';
   ]
 })
 export class SelectedComicsComponent {
-  @Output() selectionChanged = new EventEmitter<ComicDetail>();
+  @Output() selectionChanged = new EventEmitter<DisplayableComic>();
 
   logger = inject(LoggerService);
   dialog = inject(MatDialog);
 
-  private _comics: ComicDetail[] = [];
+  private _comics: DisplayableComic[] = [];
 
-  get comics(): ComicDetail[] {
+  get comics(): DisplayableComic[] {
     return this._comics;
   }
 
-  @Input() set comics(comics: ComicDetail[]) {
+  @Input() set comics(comics: DisplayableComic[]) {
     this._comics = comics;
     if (comics.length > 0) {
       this.selectionChanged.emit(this._comics[0]);
     }
   }
 
-  onSelectionChanged(comic: ComicDetail): void {
+  onSelectionChanged(comic: DisplayableComic): void {
     this.logger.debug('Selected comic change:', comic);
     this.selectionChanged.emit(comic);
   }
 
-  onShowComicDetails(comic: ComicBook, $event: MouseEvent): void {
+  onShowComicDetails(comic: DisplayableComic, $event: MouseEvent): void {
     this.logger.debug('Showing details dialog:', comic);
     this.dialog.open(ComicDetailsDialogComponent, {
       data: comic

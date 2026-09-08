@@ -18,7 +18,6 @@
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ComicPagesComponent } from './comic-pages.component';
-import { COMIC_BOOK_1 } from '@app/comic-books/comic-books.fixtures';
 import { ComicPageUrlPipe } from '@app/comic-books/pipes/comic-page-url.pipe';
 import { ComicPageComponent } from '@app/comic-books/components/comic-page/comic-page.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
@@ -30,7 +29,12 @@ import {
 } from '@app/user/reducers/user.reducer';
 import { USER_READER } from '@app/user/user.fixtures';
 import { MatMenuModule } from '@angular/material/menu';
-import { PAGE_1 } from '@app/comic-pages/comic-pages.fixtures';
+import {
+  PAGE_1,
+  PAGE_2,
+  PAGE_3,
+  PAGE_4
+} from '@app/comic-pages/comic-pages.fixtures';
 import { updatePageDeletion } from '@app/comic-books/actions/comic-book.actions';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -45,7 +49,7 @@ import { setBlockedStateForHash } from '@app/comic-pages/actions/blocked-hashes.
 import { provideRouter } from '@angular/router';
 
 describe('ComicPagesComponent', () => {
-  const COMIC = COMIC_BOOK_1;
+  const PAGES = [PAGE_1, PAGE_2, PAGE_3, PAGE_4];
   const USER = USER_READER;
   const PAGE = PAGE_1;
   const DELETED = Math.random() > 0.5;
@@ -82,7 +86,7 @@ describe('ComicPagesComponent', () => {
 
     fixture = TestBed.createComponent(ComicPagesComponent);
     component = fixture.componentInstance;
-    component.pages = COMIC.pages;
+    component.pages = PAGES;
     store = TestBed.inject(MockStore);
     spyOn(store, 'dispatch');
     confirmationService = TestBed.inject(ConfirmationService);
@@ -154,8 +158,7 @@ describe('ComicPagesComponent', () => {
   });
 
   describe('reordering the pages', () => {
-    const PAGES = COMIC.pages;
-    const COPY = [].concat(COMIC.pages);
+    const COPY = [].concat(PAGES);
 
     beforeEach(() => {
       component.pages = COPY;

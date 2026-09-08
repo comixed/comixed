@@ -19,10 +19,11 @@
 import { TestBed } from '@angular/core/testing';
 import { LibraryService } from './library.service';
 import {
-  COMIC_DETAIL_1,
-  COMIC_DETAIL_2,
-  COMIC_DETAIL_3,
-  COMIC_DETAIL_4
+  DISPLAYABLE_COMIC_1,
+  DISPLAYABLE_COMIC_2,
+  DISPLAYABLE_COMIC_3,
+  DISPLAYABLE_COMIC_4,
+  DISPLAYABLE_COMIC_5
 } from '@app/comic-books/comic-books.fixtures';
 import {
   HttpTestingController,
@@ -39,7 +40,6 @@ import {
   REMOTE_LIBRARY_STATE_TOPIC,
   RESCAN_SELECTED_COMIC_BOOKS_URL,
   RESCAN_SINGLE_COMIC_BOOK_URL,
-  SET_READ_STATE_URL,
   START_ENTIRE_LIBRARY_ORGANIZATION_URL,
   START_LIBRARY_ORGANIZATION_URL,
   UPDATE_SELECTED_COMIC_BOOKS_METADATA_URL,
@@ -50,7 +50,6 @@ import {
   provideHttpClient,
   withInterceptorsFromDi
 } from '@angular/common/http';
-import { SetComicReadRequest } from '@app/library/models/net/set-comic-read-request';
 import { OrganizeLibraryRequest } from '@app/library/models/net/organize-library-request';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ConvertComicsRequest } from '@app/library/models/net/convert-comics-request';
@@ -68,15 +67,15 @@ import { libraryStateLoaded } from '@app/library/actions/library.actions';
 import { ComicType } from '@app/comic-books/models/comic-type';
 
 describe('LibraryService', () => {
-  const COMIC_DETAIL = COMIC_DETAIL_1;
-  const COMIC_DETAILS = [
-    COMIC_DETAIL_1,
-    COMIC_DETAIL_2,
-    COMIC_DETAIL_3,
-    COMIC_DETAIL_4
+  const COMIC = DISPLAYABLE_COMIC_1;
+  const COMIC_LIST = [
+    DISPLAYABLE_COMIC_1,
+    DISPLAYABLE_COMIC_2,
+    DISPLAYABLE_COMIC_3,
+    DISPLAYABLE_COMIC_4,
+    DISPLAYABLE_COMIC_5
   ];
-  const IDS = COMIC_DETAILS.map(entry => entry.comicBookId);
-  const READ = Math.random() > 0.5;
+  const IDS = COMIC_LIST.map(entry => entry.comicBookId);
   const ARCHIVE_TYPE = ArchiveType.CBZ;
   const EDIT_MULTIPLE_COMICS: EditMultipleComics = {
     publisher: 'The Publisher',
@@ -134,37 +133,23 @@ describe('LibraryService', () => {
     req.flush(LIBRARY_STATE);
   });
 
-  it('can set the read state for comics', () => {
-    const serviceResponse = new HttpResponse({ status: 200 });
-    service
-      .setRead({ comicBooks: COMIC_DETAILS, read: READ })
-      .subscribe(response => expect(response).toEqual(serviceResponse));
-
-    const req = httpMock.expectOne(interpolate(SET_READ_STATE_URL));
-    expect(req.request.method).toEqual('PUT');
-    expect(req.request.body).toEqual({
-      ids: COMIC_DETAILS.map(comic => comic.comicBookId),
-      read: READ
-    } as SetComicReadRequest);
-    req.flush(serviceResponse);
-  });
-
   it('can start library organization', () => {
     service
       .startLibraryOrganization()
-      .subscribe(response => expect(response).toEqual(COMIC_DETAILS));
+      .subscribe(response => expect(response.status).toEqual(200));
 
     const req = httpMock.expectOne(interpolate(START_LIBRARY_ORGANIZATION_URL));
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
       deletePhysicalFiles: false
     } as OrganizeLibraryRequest);
+    req.flush(new HttpResponse({ status: 200 }));
   });
 
   it('can start library organization', () => {
     service
       .startEntireLibraryOrganization()
-      .subscribe(response => expect(response).toEqual(COMIC_DETAILS));
+      .subscribe(response => expect(response.status).toEqual(200));
 
     const req = httpMock.expectOne(
       interpolate(START_ENTIRE_LIBRARY_ORGANIZATION_URL)
@@ -173,16 +158,17 @@ describe('LibraryService', () => {
     expect(req.request.body).toEqual({
       deletePhysicalFiles: false
     } as OrganizeLibraryRequest);
+    req.flush(new HttpResponse({ status: 200 }));
   });
 
   it('can start rescanning a single comic book', () => {
     service
-      .rescanSingleComicBook({ comicBookId: COMIC_DETAIL.comicBookId })
+      .rescanSingleComicBook({ comicBookId: COMIC.comicBookId })
       .subscribe(response => expect(response.status).toEqual(200));
 
     const req = httpMock.expectOne(
       interpolate(RESCAN_SINGLE_COMIC_BOOK_URL, {
-        comicBookId: COMIC_DETAIL.comicBookId
+        comicBookId: COMIC.comicBookId
       })
     );
     expect(req.request.method).toEqual('PUT');
@@ -205,12 +191,12 @@ describe('LibraryService', () => {
 
   it('can start updating metadata for a single comic book', () => {
     service
-      .updateSingleComicBookMetadata({ comicBookId: COMIC_DETAIL.comicBookId })
+      .updateSingleComicBookMetadata({ comicBookId: COMIC.comicBookId })
       .subscribe(response => expect(response.status).toEqual(200));
 
     const req = httpMock.expectOne(
       interpolate(UPDATE_SINGLE_COMIC_BOOK_METADATA_URL, {
-        comicBookId: COMIC_DETAIL.comicBookId
+        comicBookId: COMIC.comicBookId
       })
     );
     expect(req.request.method).toEqual('PUT');
@@ -234,14 +220,14 @@ describe('LibraryService', () => {
   it('can convert a single comic book', () => {
     service
       .convertSingleComicBook({
-        id: COMIC_DETAIL.comicBookId,
+        id: COMIC.comicBookId,
         archiveType: ARCHIVE_TYPE
       })
       .subscribe(response => expect(response.status).toEqual(200));
 
     const req = httpMock.expectOne(
       interpolate(CONVERT_SINGLE_COMIC_BOOK_URL, {
-        comicBookId: COMIC_DETAIL.comicBookId
+        comicBookId: COMIC.comicBookId
       })
     );
     expect(req.request.method).toEqual('PUT');
@@ -290,7 +276,7 @@ describe('LibraryService', () => {
     const req = httpMock.expectOne(interpolate(EDIT_MULTIPLE_COMICS_URL));
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
-      ids: COMIC_DETAILS.map(comic => comic.comicBookId),
+      ids: COMIC_LIST.map(comic => comic.comicBookId),
       publisher: EDIT_MULTIPLE_COMICS.publisher,
       series: EDIT_MULTIPLE_COMICS.series,
       volume: EDIT_MULTIPLE_COMICS.volume,

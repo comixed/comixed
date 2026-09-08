@@ -61,7 +61,6 @@ import { MatDividerModule } from '@angular/material/divider';
 import { imprintListFeature } from '@app/comic-books/reducers/imprint-list.reducer';
 import { ImprintListEffects } from '@app/comic-books/effects/imprint-list.effects';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { CoverDateFilterPipe } from './pipes/cover-date-filter.pipe';
 import { VolumeMetadataTableComponent } from '@app/comic-books/components/volume-metadata-table/volume-metadata-table.component';
 import { IssueMetadataTitlePipe } from '@app/comic-books/pipes/issue-metadata-title.pipe';
 import { ComicListViewComponent } from '@app/comic-books/components/comic-list-view/comic-list-view.component';
@@ -132,7 +131,6 @@ import { ComicDetailCoverUrlPipe } from '@app/comic-books/pipes/comic-detail-cov
     ComicPageUrlPipe,
     ComicTitlePipe,
     PageHashUrlPipe,
-    CoverDateFilterPipe,
     VolumeMetadataTableComponent,
     IssueMetadataTitlePipe,
     ComicListViewComponent,
@@ -148,7 +146,6 @@ import { ComicDetailCoverUrlPipe } from '@app/comic-books/pipes/comic-detail-cov
     ComicTitlePipe,
     ComicCoverUrlPipe,
     PageHashUrlPipe,
-    CoverDateFilterPipe,
     VolumeMetadataTableComponent,
     ComicListViewComponent,
     IssueMetadataTitlePipe,

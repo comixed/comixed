@@ -44,7 +44,6 @@ import {
   provideHttpClient,
   withInterceptorsFromDi
 } from '@angular/common/http';
-import { COMIC_BOOK_2 } from '@app/comic-books/comic-books.fixtures';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import {
   initialState as initialMessagingState,
@@ -57,7 +56,7 @@ import { LibraryPluginService } from '@app/library-plugins/services/library-plug
 
 describe('LibraryPluginService', () => {
   const PLUGIN = LIBRARY_PLUGIN_4;
-  const COMIC_BOOK = COMIC_BOOK_2;
+  const COMIC_ID = 1000;
   const initialState = { [MESSAGING_FEATURE_KEY]: initialMessagingState };
 
   let service: LibraryPluginService;
@@ -160,14 +159,14 @@ describe('LibraryPluginService', () => {
     service
       .runLibraryPluginOnOneComicBook({
         plugin: PLUGIN,
-        comicBookId: COMIC_BOOK.comicBookId
+        comicBookId: COMIC_ID
       })
       .subscribe(response => expect(response.status).toEqual(200));
 
     const req = httpMock.expectOne(
       interpolate(RUN_LIBRARY_PLUGIN_ON_ONE_COMIC_BOOK_URL, {
         pluginId: PLUGIN.libraryPluginId,
-        comicBookId: COMIC_BOOK.comicBookId
+        comicBookId: COMIC_ID
       })
     );
     expect(req.request.method).toEqual('POST');

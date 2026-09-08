@@ -19,11 +19,10 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { UNKNOWN_VALUE_PLACEHOLDER } from '@app/library/library.constants';
 import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
-import { ComicDetail } from '@app/comic-books/models/comic-detail';
 
 @Pipe({ name: 'comicTitle' })
 export class ComicTitlePipe implements PipeTransform {
-  transform(comic: DisplayableComic | ComicDetail): string {
+  transform(comic: DisplayableComic): string {
     const series = comic?.series || UNKNOWN_VALUE_PLACEHOLDER;
     const volume = comic?.volume || '????';
     const issueNumber = comic?.issueNumber || '??';

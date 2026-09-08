@@ -25,23 +25,9 @@ import {
   selectComicBookSelectionCount,
   selectComicBookSelectionIds
 } from './comic-book-selection.selectors';
-import {
-  COMIC_BOOK_1,
-  COMIC_BOOK_2,
-  COMIC_BOOK_3,
-  COMIC_BOOK_4,
-  COMIC_BOOK_5
-} from '@app/comic-books/comic-books.fixtures';
 
 describe('ComicBookSelection Selectors', () => {
-  const COMIC_BOOKS = [
-    COMIC_BOOK_1,
-    COMIC_BOOK_2,
-    COMIC_BOOK_3,
-    COMIC_BOOK_4,
-    COMIC_BOOK_5
-  ];
-  const IDS = COMIC_BOOKS.map(comicBook => comicBook.comicBookId);
+  const IDS = [1000, 1001, 1002, 1003, 1004];
 
   let state: ComicBookSelectionState;
 

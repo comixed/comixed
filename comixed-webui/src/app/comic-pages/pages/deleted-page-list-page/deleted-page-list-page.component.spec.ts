@@ -44,11 +44,11 @@ import {
 import { PageHashUrlPipe } from '@app/comic-books/pipes/page-hash-url.pipe';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import {
-  COMIC_DETAIL_1,
-  COMIC_DETAIL_2,
-  COMIC_DETAIL_3,
-  COMIC_DETAIL_4,
-  COMIC_DETAIL_5
+  DISPLAYABLE_COMIC_1,
+  DISPLAYABLE_COMIC_2,
+  DISPLAYABLE_COMIC_3,
+  DISPLAYABLE_COMIC_4,
+  DISPLAYABLE_COMIC_5
 } from '@app/comic-books/comic-books.fixtures';
 import { ComicDetailListDialogComponent } from '@app/library/components/comic-detail-list-dialog/comic-detail-list-dialog.component';
 import { provideRouter } from '@angular/router';
@@ -61,11 +61,11 @@ describe('DeletedPageListPageComponent', () => {
     DELETED_PAGE_4
   ];
   const COMICS = [
-    COMIC_DETAIL_1,
-    COMIC_DETAIL_2,
-    COMIC_DETAIL_3,
-    COMIC_DETAIL_4,
-    COMIC_DETAIL_5
+    DISPLAYABLE_COMIC_1,
+    DISPLAYABLE_COMIC_2,
+    DISPLAYABLE_COMIC_3,
+    DISPLAYABLE_COMIC_4,
+    DISPLAYABLE_COMIC_5
   ];
   const USER = { ...USER_ADMIN };
   const initialState = {

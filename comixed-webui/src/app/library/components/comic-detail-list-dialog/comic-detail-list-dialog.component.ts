@@ -19,10 +19,10 @@
 import { Component, inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { LoggerService } from '@angular-ru/cdk/logger';
-import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { MatTableDataSource } from '@angular/material/table';
 import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 import { ComicListViewComponent } from '../../../comic-books/components/comic-list-view/comic-list-view.component';
+import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 
 @Component({
   selector: 'app-comics-with-duplicate-page',
@@ -31,7 +31,7 @@ import { ComicListViewComponent } from '../../../comic-books/components/comic-li
   imports: [ComicListViewComponent]
 })
 export class ComicDetailListDialogComponent {
-  dataSource = new MatTableDataSource<SelectableListItem<ComicDetail>>([]);
+  dataSource = new MatTableDataSource<SelectableListItem<DisplayableComic>>([]);
 
   logger = inject(LoggerService);
 
@@ -39,13 +39,13 @@ export class ComicDetailListDialogComponent {
     this.comics = this._comics;
   }
 
-  private _comics = inject<ComicDetail[]>(MAT_DIALOG_DATA);
+  private _comics = inject<DisplayableComic[]>(MAT_DIALOG_DATA);
 
-  get comics(): ComicDetail[] {
+  get comics(): DisplayableComic[] {
     return this.dataSource.data.map(entry => entry.item);
   }
 
-  set comics(comics: ComicDetail[]) {
+  set comics(comics: DisplayableComic[]) {
     this.logger.debug('comics updated');
     this.dataSource.data = comics.map(comic => {
       return { item: comic, selected: false };

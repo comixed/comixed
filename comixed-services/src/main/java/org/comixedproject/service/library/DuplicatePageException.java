@@ -27,4 +27,8 @@ public class DuplicatePageException extends Exception {
   public DuplicatePageException(final String message) {
     super(message);
   }
+
+  public DuplicatePageException(final String message, final Exception cause) {
+    super(message, cause);
+  }
 }
