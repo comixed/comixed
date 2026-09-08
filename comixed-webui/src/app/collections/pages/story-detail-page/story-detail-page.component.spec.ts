@@ -19,7 +19,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { StoryDetailPageComponent } from './story-detail-page.component';
 import {
-  COMIC_DETAIL_1,
+  COMIC_TAG_2,
   DISPLAYABLE_COMIC_1,
   DISPLAYABLE_COMIC_2,
   DISPLAYABLE_COMIC_3,
@@ -63,8 +63,6 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ComicListViewComponent } from '@app/comic-books/components/comic-list-view/comic-list-view.component';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 import { ComicCoverUrlPipe } from '@app/comic-books/pipes/comic-cover-url.pipe';
-import { ArchiveTypePipe } from '@app/library/pipes/archive-type.pipe';
-import { CoverDateFilterPipe } from '@app/comic-books/pipes/cover-date-filter.pipe';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
@@ -158,9 +156,7 @@ describe('StoryDetailPageComponent', () => {
         StoryScrapingComponent,
         ComicListViewComponent,
         ComicTitlePipe,
-        ComicCoverUrlPipe,
-        ArchiveTypePipe,
-        CoverDateFilterPipe
+        ComicCoverUrlPipe
       ],
       providers: [
         provideMockStore({ initialState }),
@@ -236,15 +232,13 @@ describe('StoryDetailPageComponent', () => {
     });
 
     describe('selecting all comics', () => {
-      const STORY_NAME = COMIC_DETAIL_1.tags.find(
-        entry => entry.type === ComicTagType.STORY
-      ).value;
+      const STORY_NAME = COMIC_TAG_2.value;
 
       beforeEach(() => {
         component.comics$.next([]);
         (activatedRoute.params as BehaviorSubject<any>).next({
           storyName: STORY_NAME,
-          volume: COMIC_DETAIL_1.volume
+          volume: DISPLAYABLE_COMIC_1.volume
         });
       });
 

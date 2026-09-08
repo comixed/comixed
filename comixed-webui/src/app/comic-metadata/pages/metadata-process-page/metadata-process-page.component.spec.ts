@@ -24,11 +24,6 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/core/services/title.service';
 import { MetadataProcessStatusComponent } from '@app/comic-metadata/components/metadata-process-status/metadata-process-status.component';
 import {
-  COMIC_BOOK_1,
-  COMIC_BOOK_3,
-  COMIC_BOOK_5
-} from '@app/comic-books/comic-books.fixtures';
-import {
   initialState as initialUserState,
   USER_FEATURE_KEY
 } from '@app/user/reducers/user.reducer';
@@ -65,8 +60,7 @@ import {
 import { provideRouter } from '@angular/router';
 
 describe('MetadataProcessPageComponent', () => {
-  const COMIC_BOOKS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
-  const IDS = COMIC_BOOKS.map(comic => comic.comicBookId);
+  const IDS = [1000, 1001, 1002, 1003, 1004, 1005];
   const initialState = {
     [COMIC_LIST_FEATURE_KEY]: initialComicListState,
     [USER_FEATURE_KEY]: initialUserState,

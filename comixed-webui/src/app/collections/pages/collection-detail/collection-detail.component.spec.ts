@@ -40,7 +40,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import {
-  COMIC_DETAIL_1,
+  COMIC_TAG_1,
+  COMIC_TAG_2,
+  COMIC_TAG_3,
+  COMIC_TAG_5,
   DISPLAYABLE_COMIC_1,
   DISPLAYABLE_COMIC_2,
   DISPLAYABLE_COMIC_3,
@@ -60,9 +63,7 @@ import {
 } from '@app/user/reducers/user.reducer';
 import { TitleService } from '@app/core/services/title.service';
 import { MatSortModule } from '@angular/material/sort';
-import { ArchiveTypePipe } from '@app/library/pipes/archive-type.pipe';
 import { USER_READER } from '@app/user/user.fixtures';
-import { CoverDateFilterPipe } from '@app/comic-books/pipes/cover-date-filter.pipe';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 import { ComicCoverUrlPipe } from '@app/comic-books/pipes/comic-cover-url.pipe';
 import { ComicTagType } from '@app/comic-books/models/comic-tag-type';
@@ -148,9 +149,7 @@ describe('CollectionDetailComponent', () => {
         CollectionDetailComponent,
         ComicListViewComponent,
         ComicTitlePipe,
-        ComicCoverUrlPipe,
-        ArchiveTypePipe,
-        CoverDateFilterPipe
+        ComicCoverUrlPipe
       ],
       providers: [
         provideMockStore({ initialState }),
@@ -245,16 +244,14 @@ describe('CollectionDetailComponent', () => {
     });
 
     describe('when the collection type is characters', () => {
-      const TAG_VALUE = COMIC_DETAIL_1.tags.find(
-        entry => entry.type === ComicTagType.CHARACTER
-      ).value;
+      const TAG_VALUE = COMIC_TAG_3.value;
 
       beforeEach(() => {
         component.comics$.next([]);
         (activatedRoute.params as BehaviorSubject<any>).next({
           collectionType: 'characters',
           collectionName: TAG_VALUE,
-          volume: COMIC_DETAIL_1.volume
+          volume: COMIC_TAG_3.value
         });
       });
 
@@ -273,16 +270,14 @@ describe('CollectionDetailComponent', () => {
     });
 
     describe('when the collection type is teams', () => {
-      const TAG_VALUE = COMIC_DETAIL_1.tags.find(
-        entry => entry.type === ComicTagType.TEAM
-      ).value;
+      const TAG_VALUE = COMIC_TAG_5.value;
 
       beforeEach(() => {
         component.comics$.next([]);
         (activatedRoute.params as BehaviorSubject<any>).next({
           collectionType: 'teams',
           collectionName: TAG_VALUE,
-          volume: COMIC_DETAIL_1.volume
+          volume: COMIC_TAG_3.value
         });
       });
 
@@ -301,16 +296,14 @@ describe('CollectionDetailComponent', () => {
     });
 
     describe('when the collection type is locations', () => {
-      const TAG_VALUE = COMIC_DETAIL_1.tags.find(
-        entry => entry.type === ComicTagType.LOCATION
-      ).value;
+      const TAG_VALUE = COMIC_TAG_1.value;
 
       beforeEach(() => {
         component.comics$.next([]);
         (activatedRoute.params as BehaviorSubject<any>).next({
           collectionType: 'locations',
           collectionName: TAG_VALUE,
-          volume: COMIC_DETAIL_1.volume
+          volume: COMIC_TAG_3.value
         });
       });
 
@@ -329,16 +322,14 @@ describe('CollectionDetailComponent', () => {
     });
 
     describe('when the collection type is stories', () => {
-      const TAG_VALUE = COMIC_DETAIL_1.tags.find(
-        entry => entry.type === ComicTagType.STORY
-      ).value;
+      const TAG_VALUE = COMIC_TAG_2.value;
 
       beforeEach(() => {
         component.comics$.next([]);
         (activatedRoute.params as BehaviorSubject<any>).next({
           collectionType: 'stories',
           collectionName: TAG_VALUE,
-          volume: COMIC_DETAIL_1.volume
+          volume: COMIC_TAG_3.value
         });
       });
 

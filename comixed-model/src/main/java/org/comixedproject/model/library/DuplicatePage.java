@@ -24,7 +24,6 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import lombok.*;
-import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.views.View;
 
 /**
@@ -55,7 +54,7 @@ public class DuplicatePage {
   @JsonView(View.DuplicatePageList.class)
   @Getter
   @Setter
-  private Set<ComicDetail> comics = new HashSet<>();
+  private Set<DisplayableComic> comics = new HashSet<>();
 
   @Override
   public boolean equals(final Object o) {

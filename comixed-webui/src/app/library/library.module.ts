@@ -48,7 +48,6 @@ import { ComicDetailsDialogComponent } from './components/comic-details-dialog/c
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ComicBooksModule } from '@app/comic-books/comic-books.module';
-import { ArchiveTypePipe } from './pipes/archive-type.pipe';
 import { duplicatePageListFeature } from '@app/library/reducers/duplicate-page-list.reducer';
 import { DuplicatePageListEffects } from '@app/library/effects/duplicate-page-list.effects';
 import { DuplicatePageListPageComponent } from './pages/duplicate-page-list-page/duplicate-page-list-page.component';
@@ -128,13 +127,12 @@ import { DuplicateComicsEffects } from '@app/library/effects/duplicate-comics.ef
     LibraryPageComponent,
     SelectedComicsComponent,
     ComicDetailsDialogComponent,
-    ArchiveTypePipe,
     DuplicatePageListPageComponent,
     ComicDetailListDialogComponent,
     DuplicatePageDetailPageComponent,
     EditMultipleComicsComponent,
     ComicBookListComponent
   ],
-  exports: [CommonModule, CoreModule, ArchiveTypePipe]
+  exports: [CommonModule, CoreModule]
 })
 export class LibraryModule {}

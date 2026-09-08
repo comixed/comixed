@@ -51,7 +51,6 @@ import {
 import { DuplicatePage } from '@app/library/models/duplicate-page';
 import { filter, tap } from 'rxjs/operators';
 import { ConfirmationService } from '@tragically-slick/confirmation';
-import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import {
@@ -66,6 +65,7 @@ import { ComicPageComponent } from '../../../comic-books/components/comic-page/c
 import { AsyncPipe, DatePipe } from '@angular/common';
 import { PageHashUrlPipe } from '../../../comic-books/pipes/page-hash-url.pipe';
 import { BehaviorSubject } from 'rxjs';
+import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 
 @Component({
   selector: 'app-duplicate-page-detail-page',
@@ -107,7 +107,7 @@ export class DuplicatePageDetailPageComponent implements OnInit, AfterViewInit {
     'added-date'
   ];
 
-  dataSource = new MatTableDataSource<ComicDetail>([]);
+  dataSource = new MatTableDataSource<DisplayableComic>([]);
   blockedHashes$ = new BehaviorSubject<string[]>([]);
   hash$ = new BehaviorSubject('');
 

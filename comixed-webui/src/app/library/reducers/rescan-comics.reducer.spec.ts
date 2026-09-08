@@ -27,10 +27,9 @@ import {
   rescanSelectedComicBooks,
   rescanSingleComicBook
 } from '@app/library/actions/rescan-comics.actions';
-import { COMIC_DETAIL_4 } from '@app/comic-books/comic-books.fixtures';
 
 describe('RescanComics Reducer', () => {
-  const COMIC_DETAIL = COMIC_DETAIL_4;
+  const COMIC_ID = 1000;
 
   let state: RescanComicsState;
 
@@ -52,7 +51,7 @@ describe('RescanComics Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, working: false },
-        rescanSingleComicBook({ comicBookId: COMIC_DETAIL.comicBookId })
+        rescanSingleComicBook({ comicBookId: COMIC_ID })
       );
     });
 
