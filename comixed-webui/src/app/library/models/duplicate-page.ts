@@ -16,10 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { ComicDetail } from '@app/comic-books/models/comic-detail';
+import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 
 export interface DuplicatePage {
   hash: string;
   comicCount: number;
-  comics: ComicDetail[];
+  comics: DisplayableComic[];
 }

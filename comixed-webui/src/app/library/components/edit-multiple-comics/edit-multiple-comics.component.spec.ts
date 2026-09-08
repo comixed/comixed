@@ -27,7 +27,11 @@ import {
   MatDialogRef
 } from '@angular/material/dialog';
 import {
-  COMIC_DETAIL_1,
+  DISPLAYABLE_COMIC_1,
+  DISPLAYABLE_COMIC_2,
+  DISPLAYABLE_COMIC_3,
+  DISPLAYABLE_COMIC_4,
+  DISPLAYABLE_COMIC_5,
   IMPRINT_1,
   IMPRINT_2,
   IMPRINT_3
@@ -46,11 +50,11 @@ import { ComicType } from '@app/comic-books/models/comic-type';
 
 describe('EditMultipleComicsComponent', () => {
   const COMICS = [
-    COMIC_DETAIL_1,
-    COMIC_DETAIL_1,
-    COMIC_DETAIL_1,
-    COMIC_DETAIL_1,
-    COMIC_DETAIL_1
+    DISPLAYABLE_COMIC_1,
+    DISPLAYABLE_COMIC_2,
+    DISPLAYABLE_COMIC_3,
+    DISPLAYABLE_COMIC_4,
+    DISPLAYABLE_COMIC_5
   ];
   const IMPRINTS = [IMPRINT_1, IMPRINT_2, IMPRINT_3];
   const initialState = {
@@ -171,7 +175,7 @@ describe('EditMultipleComicsComponent', () => {
 
     it('sets the imprint input', () => {
       expect(component.detailsForm.controls['imprint'].value).toEqual(
-        COMICS[0].imprint
+        'First Imprint'
       );
     });
 

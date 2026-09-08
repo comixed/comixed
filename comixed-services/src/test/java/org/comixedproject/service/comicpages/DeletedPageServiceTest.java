@@ -20,15 +20,17 @@ package org.comixedproject.service.comicpages;
 
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicpages.DeletedPage;
 import org.comixedproject.model.comicpages.DeletedPageAndComic;
+import org.comixedproject.model.library.DisplayableComic;
 import org.comixedproject.repositories.comicpages.ComicPageRepository;
-import org.junit.jupiter.api.BeforeEach;
+import org.comixedproject.service.comicbooks.ComicBookException;
+import org.comixedproject.service.library.DisplayableComicService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -37,32 +39,46 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class DeletedPageServiceTest {
+  private static final String TEST_PAGE_HASH = "OICU812";
+  private static final Long TEST_COMIC_ID = 41706L;
+
   @InjectMocks private DeletedPageService service;
   @Mock private ComicPageRepository comicPageRepository;
+  @Mock private DeletedPageAndComic deletedPage;
+  @Mock private DisplayableComicService displayableComicService;
+  @Mock private DisplayableComic comic;
 
   private List<DeletedPageAndComic> deletedPageList = new ArrayList<>();
 
-  @BeforeEach
-  public void setUp() {
-    for (int index = 0; index < 100; index++) {
-      final DeletedPageAndComic deletedPageAndComic = mock(DeletedPageAndComic.class);
-      when(deletedPageAndComic.getHash()).thenReturn(String.valueOf(index % 7));
-      final ComicDetail comicDetail = mock(ComicDetail.class);
-      when(deletedPageAndComic.getComicDetail()).thenReturn(comicDetail);
-      deletedPageList.add(deletedPageAndComic);
-    }
+  @Test
+  void loadAll_comicPageException() throws ComicBookException {
+    deletedPageList.add(deletedPage);
+    when(comicPageRepository.loadAllDeletedPages()).thenReturn(deletedPageList);
+    when(deletedPage.getHash()).thenReturn(TEST_PAGE_HASH);
+    when(deletedPage.getComicId()).thenReturn(TEST_COMIC_ID);
+    when(displayableComicService.getForComicBookId(anyLong())).thenThrow(ComicBookException.class);
+
+    assertThrows(ComicPageException.class, () -> service.loadAll());
+
+    verify(comicPageRepository).loadAllDeletedPages();
+    verify(displayableComicService).getForComicBookId(TEST_COMIC_ID);
   }
 
   @Test
-  void loadAll() {
+  void loadAll() throws ComicPageException, ComicBookException {
+    deletedPageList.add(deletedPage);
     when(comicPageRepository.loadAllDeletedPages()).thenReturn(deletedPageList);
+    when(deletedPage.getHash()).thenReturn(TEST_PAGE_HASH);
+    when(deletedPage.getComicId()).thenReturn(TEST_COMIC_ID);
+    when(displayableComicService.getForComicBookId(anyLong())).thenReturn(comic);
 
     final List<DeletedPage> result = service.loadAll();
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
-    assertFalse(result.stream().anyMatch(deletedPage -> deletedPage.getComics().isEmpty()));
+    assertTrue(result.get(0).getComics().contains(comic));
 
     verify(comicPageRepository).loadAllDeletedPages();
+    verify(displayableComicService, times(deletedPageList.size())).getForComicBookId(TEST_COMIC_ID);
   }
 }

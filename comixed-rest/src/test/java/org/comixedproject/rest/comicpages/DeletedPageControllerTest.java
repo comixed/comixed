@@ -20,15 +20,17 @@ package org.comixedproject.rest.comicpages;
 
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertSame;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.List;
 import org.comixedproject.model.comicpages.DeletedPage;
+import org.comixedproject.service.comicpages.ComicPageException;
 import org.comixedproject.service.comicpages.DeletedPageService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
@@ -38,14 +40,14 @@ class DeletedPageControllerTest {
   @Mock private List<DeletedPage> deletedPageList;
 
   @Test
-  void loadAll() {
-    Mockito.when(deletedPageService.loadAll()).thenReturn(deletedPageList);
+  void loadAll() throws ComicPageException {
+    when(deletedPageService.loadAll()).thenReturn(deletedPageList);
 
     final List<DeletedPage> result = controller.loadAll();
 
     assertNotNull(result);
     assertSame(deletedPageList, result);
 
-    Mockito.verify(deletedPageService, Mockito.times(1)).loadAll();
+    verify(deletedPageService).loadAll();
   }
 }

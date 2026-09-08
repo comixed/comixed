@@ -29,10 +29,9 @@ import {
   undeleteSelectedComicBooks,
   undeleteSingleComicBook
 } from '@app/comic-books/actions/delete-comic-books.actions';
-import { COMIC_DETAIL_1 } from '@app/comic-books/comic-books.fixtures';
 
 describe('DeleteComicBooks Reducer', () => {
-  const COMIC_DETAIL = COMIC_DETAIL_1;
+  const COMIC_ID = 710129;
 
   let state: MarkComicsDeletedState;
 
@@ -54,7 +53,7 @@ describe('DeleteComicBooks Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, updating: false },
-        deleteSingleComicBook({ comicBookId: COMIC_DETAIL.comicBookId })
+        deleteSingleComicBook({ comicBookId: COMIC_ID })
       );
     });
 
@@ -67,7 +66,7 @@ describe('DeleteComicBooks Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, updating: false },
-        undeleteSingleComicBook({ comicBookId: COMIC_DETAIL.comicBookId })
+        undeleteSingleComicBook({ comicBookId: COMIC_ID })
       );
     });
 

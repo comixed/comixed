@@ -51,7 +51,7 @@ import {
 import { BLOCKED_HASH_1 } from '@app/comic-pages/comic-pages.fixtures';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { MatSortModule } from '@angular/material/sort';
-import { COMIC_DETAIL_1 } from '@app/comic-books/comic-books.fixtures';
+import { DISPLAYABLE_COMIC_1 } from '@app/comic-books/comic-books.fixtures';
 import {
   BLOCKED_HASHES_FEATURE_KEY,
   initialState as initialBlockedHashesState
@@ -60,7 +60,7 @@ import { setBlockedStateForHash } from '@app/comic-pages/actions/blocked-hashes.
 
 describe('DuplicatePageDetailPageComponent', () => {
   const DUPLICATE_PAGE = DUPLICATE_PAGE_1;
-  const COMIC_DETAIL = COMIC_DETAIL_1;
+  const COMIC = DISPLAYABLE_COMIC_1;
   const BLOCKED_HASH = BLOCKED_HASH_1;
   const initialState = {
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER_ADMIN },
@@ -262,26 +262,26 @@ describe('DuplicatePageDetailPageComponent', () => {
   describe('sorting', () => {
     it('can sort by publisher', () => {
       expect(
-        component.dataSource.sortingDataAccessor(COMIC_DETAIL, 'publisher')
-      ).toEqual(COMIC_DETAIL.publisher);
+        component.dataSource.sortingDataAccessor(COMIC, 'publisher')
+      ).toEqual(COMIC.publisher);
     });
 
     it('can sort by series', () => {
-      expect(
-        component.dataSource.sortingDataAccessor(COMIC_DETAIL, 'series')
-      ).toEqual(COMIC_DETAIL.series);
+      expect(component.dataSource.sortingDataAccessor(COMIC, 'series')).toEqual(
+        COMIC.series
+      );
     });
 
     it('can sort by issue number', () => {
       expect(
-        component.dataSource.sortingDataAccessor(COMIC_DETAIL, 'issue-number')
-      ).toEqual(COMIC_DETAIL.issueNumber);
+        component.dataSource.sortingDataAccessor(COMIC, 'issue-number')
+      ).toEqual(COMIC.issueNumber);
     });
 
     it('can sort by cover date', () => {
       expect(
-        component.dataSource.sortingDataAccessor(COMIC_DETAIL, 'cover-date')
-      ).toEqual(COMIC_DETAIL.coverDate);
+        component.dataSource.sortingDataAccessor(COMIC, 'cover-date')
+      ).toEqual(COMIC.coverDate);
     });
   });
 });

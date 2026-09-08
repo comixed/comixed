@@ -26,11 +26,6 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import {
-  COMIC_BOOK_1,
-  COMIC_BOOK_3,
-  COMIC_BOOK_5
-} from '@app/comic-books/comic-books.fixtures';
-import {
   startEntireLibraryOrganization,
   startEntireLibraryOrganizationFailure,
   startEntireLibraryOrganizationSuccess,
@@ -39,12 +34,10 @@ import {
   startLibraryOrganizationSuccess
 } from '@app/library/actions/organize-library.actions';
 import { hot } from 'jasmine-marbles';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { LIBRARY_ORGANIZATION_CONFIG_URL } from '@app/library/library.constants';
 
 describe('OrganizeLibraryEffects', () => {
-  const COMIC_BOOKS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
-
   let actions$: Observable<any>;
   let effects: OrganizeLibraryEffects;
   let libraryService: jasmine.SpyObj<LibraryService>;
@@ -89,7 +82,7 @@ describe('OrganizeLibraryEffects', () => {
 
   describe('starting library organization', () => {
     it('fires an action on success', () => {
-      const serviceResponse = COMIC_BOOKS;
+      const serviceResponse = new HttpResponse({ status: 200 });
       const action = startLibraryOrganization();
       const outcome = startLibraryOrganizationSuccess();
 
@@ -136,7 +129,7 @@ describe('OrganizeLibraryEffects', () => {
 
   describe('starting entire library organization', () => {
     it('fires an action on success', () => {
-      const serviceResponse = COMIC_BOOKS;
+      const serviceResponse = new HttpResponse({ status: 200 });
       const action = startEntireLibraryOrganization();
       const outcome = startEntireLibraryOrganizationSuccess();
 

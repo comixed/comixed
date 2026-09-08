@@ -23,6 +23,7 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.model.library.DuplicatePage;
 import org.comixedproject.repositories.comicpages.ComicPageRepository;
+import org.comixedproject.service.comicbooks.ComicBookException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -41,6 +42,7 @@ import org.springframework.util.StringUtils;
 @Log4j2
 public class DuplicatePageService {
   @Autowired private ComicPageRepository comicPageRepository;
+  @Autowired private DisplayableComicService displayableComicService;
 
   /**
    * Retrieves the list of all duplicate pages in the library.
@@ -66,21 +68,20 @@ public class DuplicatePageService {
     return this.comicPageRepository.getDuplicatePageCount();
   }
 
-  private Sort doCreateSort(final String sortBy, final String sortDirection) {
-    if (!StringUtils.hasLength(sortBy) || !StringUtils.hasLength(sortDirection)) {
-      return Sort.unsorted();
+  Sort doCreateSort(final String sortBy, final String sortDirection) {
+    String fieldName = "hash";
+
+    if (StringUtils.hasLength(sortBy)) {
+      switch (sortBy) {
+        case "hash" -> fieldName = "hash";
+        case "comic-count" -> fieldName = "comicCount";
+        default -> fieldName = "hash";
+      }
     }
 
-    String fieldName;
-    switch (sortBy) {
-      case "hash" -> fieldName = "hash";
-      case "comic-count" -> fieldName = "comicCount";
-      default -> fieldName = "hash";
-    }
-
-    Sort.Direction direction = Sort.Direction.DESC;
-    if (sortDirection.equals("asc")) {
-      direction = Sort.Direction.ASC;
+    Sort.Direction direction = Sort.Direction.ASC;
+    if (sortDirection.equals("desc")) {
+      direction = Sort.Direction.DESC;
     }
     return Sort.by(direction, fieldName);
   }
@@ -102,7 +103,17 @@ public class DuplicatePageService {
     }
     log.trace("Converting to duplicate page object");
     final DuplicatePage result = new DuplicatePage(hash);
-    pages.forEach(page -> result.getComics().add(page.getComicDetail()));
+    for (int index = 0; index < pages.size(); index++) {
+      final ComicPage page = pages.get(index);
+      try {
+        result
+            .getComics()
+            .add(
+                this.displayableComicService.getForComicBookId(page.getComicDetail().getComicId()));
+      } catch (ComicBookException error) {
+        throw new DuplicatePageException("Failed to load comic for page", error);
+      }
+    }
     log.trace("Returning duplicate page detail");
     return result;
   }

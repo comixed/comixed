@@ -17,15 +17,12 @@
  */
 
 import { ComicTitlePipe } from './comic-title.pipe';
-import {
-  COMIC_DETAIL_1,
-  DISPLAYABLE_COMIC_1
-} from '@app/comic-books/comic-books.fixtures';
+import { DISPLAYABLE_COMIC_1 } from '@app/comic-books/comic-books.fixtures';
 import { UNKNOWN_VALUE_PLACEHOLDER } from '@app/library/library.constants';
 
 describe('ComicTitlePipe', () => {
   const DISPLAYABLE_COMIC = DISPLAYABLE_COMIC_1;
-  const COMIC_DETAIL = COMIC_DETAIL_1;
+  const COMIC = DISPLAYABLE_COMIC_1;
 
   let pipe: ComicTitlePipe;
 
@@ -75,8 +72,8 @@ describe('ComicTitlePipe', () => {
   });
 
   it('can handle a well-formed comic detail', () => {
-    expect(pipe.transform(COMIC_DETAIL)).toEqual(
-      `${COMIC_DETAIL.series} (${COMIC_DETAIL.volume}) #${COMIC_DETAIL.issueNumber}`
+    expect(pipe.transform(COMIC)).toEqual(
+      `${COMIC.series} (${COMIC.volume}) #${COMIC.issueNumber}`
     );
   });
 });

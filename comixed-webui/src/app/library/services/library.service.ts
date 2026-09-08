@@ -30,13 +30,11 @@ import {
   REMOTE_LIBRARY_STATE_TOPIC,
   RESCAN_SELECTED_COMIC_BOOKS_URL,
   RESCAN_SINGLE_COMIC_BOOK_URL,
-  SET_READ_STATE_URL,
   START_ENTIRE_LIBRARY_ORGANIZATION_URL,
   START_LIBRARY_ORGANIZATION_URL,
   UPDATE_SELECTED_COMIC_BOOKS_METADATA_URL,
   UPDATE_SINGLE_COMIC_BOOK_METADATA_URL
 } from '@app/library/library.constants';
-import { SetComicReadRequest } from '@app/library/models/net/set-comic-read-request';
 import { OrganizeLibraryRequest } from '@app/library/models/net/organize-library-request';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ConvertComicsRequest } from '@app/library/models/net/convert-comics-request';
@@ -46,7 +44,6 @@ import { Store } from '@ngrx/store';
 import { WebSocketService } from '@app/messaging';
 import { selectMessagingStarted } from '@app/messaging/selectors/messaging.selectors';
 import { libraryStateLoaded } from '@app/library/actions/library.actions';
-import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { tap } from 'rxjs/operators';
 import { LibraryState } from '@app/library/reducers/library.reducer';
 
@@ -82,19 +79,6 @@ export class LibraryService {
   loadLibraryState(): Observable<any> {
     this.logger.trace('Loading library state');
     return this.http.get(interpolate(LOAD_LIBRARY_STATE_URL));
-  }
-
-  /**
-   * Sets the read state for a set of comics.
-   * @param args.comics the comics to be updated
-   * @param args.read the read state
-   */
-  setRead(args: { comicBooks: ComicDetail[]; read: boolean }): Observable<any> {
-    this.logger.trace('Setting comic read state:', args);
-    return this.http.put(interpolate(SET_READ_STATE_URL), {
-      ids: args.comicBooks.map(comic => comic.comicBookId),
-      read: args.read
-    } as SetComicReadRequest);
   }
 
   startLibraryOrganization(): Observable<any> {

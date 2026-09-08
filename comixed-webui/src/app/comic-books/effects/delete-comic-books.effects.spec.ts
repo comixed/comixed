@@ -24,7 +24,6 @@ import { AlertService } from '@app/core/services/alert.service';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { COMIC_DETAIL_1 } from '@app/comic-books/comic-books.fixtures';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import {
   deleteComicBooksFailure,
@@ -38,7 +37,7 @@ import { hot } from 'jasmine-marbles';
 import { DeleteComicBooksEffects } from '@app/comic-books/effects/delete-comic-books.effects';
 
 describe('DeleteComicBooksEffects', () => {
-  const COMIC_DETAIL = COMIC_DETAIL_1;
+  const COMIC_ID = 960320;
 
   let actions$: Observable<any>;
   let effects: DeleteComicBooksEffects;
@@ -93,7 +92,7 @@ describe('DeleteComicBooksEffects', () => {
     it('fires an action on success', () => {
       const serviceResponse = new HttpResponse({ status: 200 });
       const action = deleteSingleComicBook({
-        comicBookId: COMIC_DETAIL.comicBookId
+        comicBookId: COMIC_ID
       });
       const outcome = deleteComicBooksSuccess();
 
@@ -108,7 +107,7 @@ describe('DeleteComicBooksEffects', () => {
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
       const action = deleteSingleComicBook({
-        comicBookId: COMIC_DETAIL.comicBookId
+        comicBookId: COMIC_ID
       });
       const outcome = deleteComicBooksFailure();
 
@@ -124,7 +123,7 @@ describe('DeleteComicBooksEffects', () => {
 
     it('fires an action on general failure', () => {
       const action = deleteSingleComicBook({
-        comicBookId: COMIC_DETAIL.comicBookId
+        comicBookId: COMIC_ID
       });
       const outcome = deleteComicBooksFailure();
 
@@ -141,13 +140,13 @@ describe('DeleteComicBooksEffects', () => {
     it('fires an action on success', () => {
       const serviceResponse = new HttpResponse({ status: 200 });
       const action = undeleteSingleComicBook({
-        comicBookId: COMIC_DETAIL.comicBookId
+        comicBookId: COMIC_ID
       });
       const outcome = deleteComicBooksSuccess();
 
       actions$ = hot('-a', { a: action });
       comicService.undeleteSingleComicBook
-        .withArgs({ comicBookId: COMIC_DETAIL.comicBookId })
+        .withArgs({ comicBookId: COMIC_ID })
         .and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
@@ -158,13 +157,13 @@ describe('DeleteComicBooksEffects', () => {
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
       const action = undeleteSingleComicBook({
-        comicBookId: COMIC_DETAIL.comicBookId
+        comicBookId: COMIC_ID
       });
       const outcome = deleteComicBooksFailure();
 
       actions$ = hot('-a', { a: action });
       comicService.undeleteSingleComicBook
-        .withArgs({ comicBookId: COMIC_DETAIL.comicBookId })
+        .withArgs({ comicBookId: COMIC_ID })
         .and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
@@ -174,13 +173,13 @@ describe('DeleteComicBooksEffects', () => {
 
     it('fires an action on general failure', () => {
       const action = undeleteSingleComicBook({
-        comicBookId: COMIC_DETAIL.comicBookId
+        comicBookId: COMIC_ID
       });
       const outcome = deleteComicBooksFailure();
 
       actions$ = hot('-a', { a: action });
       comicService.undeleteSingleComicBook
-        .withArgs({ comicBookId: COMIC_DETAIL.comicBookId })
+        .withArgs({ comicBookId: COMIC_ID })
         .and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
