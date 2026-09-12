@@ -18,11 +18,8 @@
 
 package org.comixedproject.state.comicbooks;
 
-import org.comixedproject.model.comicbooks.ComicBook;
-
 /**
- * <code>ComicEvent</code> represents the events that can occur to a {@link ComicBook} that affect
- * its state.
+ * <code>ComicEvent</code> represents the events that can occur to a comic that affect its state.
  *
  * @author Darryl L. Pierce
  */

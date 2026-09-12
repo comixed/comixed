@@ -19,7 +19,7 @@
 package org.comixedproject.rest.comicpages;
 
 import static junit.framework.TestCase.assertSame;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;

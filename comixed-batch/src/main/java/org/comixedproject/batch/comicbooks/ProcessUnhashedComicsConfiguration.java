@@ -24,7 +24,7 @@ import org.comixedproject.batch.comicbooks.listeners.ProcessUnhashedComicsJobLis
 import org.comixedproject.batch.comicbooks.processors.ProcessUnhashedComicsProcessor;
 import org.comixedproject.batch.comicbooks.readers.ProcessUnhashedComicsReader;
 import org.comixedproject.batch.comicbooks.writers.ProcessUnhashedComicsWriter;
-import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.Comic;
 import org.springframework.batch.core.job.Job;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.job.parameters.RunIdIncrementer;
@@ -82,9 +82,9 @@ public class ProcessUnhashedComicsConfiguration {
       final ProcessUnhashedComicsReader reader,
       final ProcessUnhashedComicsProcessor processor,
       final ProcessUnhashedComicsWriter writer,
-      final ProcessUnhashedComicsChunkListener<ComicBook, ComicBook> chunkListener) {
+      final ProcessUnhashedComicsChunkListener chunkListener) {
     return new StepBuilder(PROCESS_UNHASHED_COMICS_STEP, jobRepository)
-        .<ComicBook, ComicBook>chunk(this.chunkSize)
+        .<Comic, Comic>chunk(this.chunkSize)
         .transactionManager(platformTransactionManager)
         .reader(reader)
         .processor(processor)

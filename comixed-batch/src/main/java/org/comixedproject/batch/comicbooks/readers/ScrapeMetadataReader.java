@@ -21,7 +21,7 @@ package org.comixedproject.batch.comicbooks.readers;
 import java.util.List;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.Comic;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -37,7 +37,7 @@ public class ScrapeMetadataReader extends AbstractComicReader {
   @Getter
   private int chunkSize;
 
-  protected List<ComicBook> doLoadComics() {
-    return this.comicDetailService.findBatchScrapingComics(this.chunkSize);
+  protected List<Comic> doLoadComics() {
+    return this.comicService.findBatchScrapingComics(this.chunkSize);
   }
 }

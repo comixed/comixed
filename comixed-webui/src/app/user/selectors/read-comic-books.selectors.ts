@@ -19,10 +19,10 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import {
   READ_COMIC_BOOKS_FEATURE_KEY,
-  ReadComicBooksState
-} from '../reducers/read-comic-books.reducer';
+  ReadComicsState
+} from '../reducers/read-comics.reducer';
 
-const selectReadComicBooksState = createFeatureSelector<ReadComicBooksState>(
+const selectReadComicBooksState = createFeatureSelector<ReadComicsState>(
   READ_COMIC_BOOKS_FEATURE_KEY
 );
 

@@ -46,7 +46,7 @@ class PublishRemoteLibraryUpdateActionTest {
   @Mock private RemoteLibraryState libraryState;
 
   @BeforeEach
-  public void setUp() throws JacksonException {
+  void setUp() throws JacksonException {
     Mockito.when(objectMapper.writerWithView(Mockito.any())).thenReturn(objectWriter);
     Mockito.when(objectWriter.writeValueAsString(Mockito.any()))
         .thenReturn(TEST_LIBRARY_STATE_AS_JSON);

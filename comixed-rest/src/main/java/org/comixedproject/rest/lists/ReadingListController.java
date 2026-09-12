@@ -18,7 +18,7 @@
 
 package org.comixedproject.rest.lists;
 
-import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LIBRARY_SELECTIONS;
+import static org.comixedproject.rest.comicbooks.ComicSelectionController.LIBRARY_SELECTIONS;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import io.micrometer.core.annotation.Timed;
@@ -35,7 +35,7 @@ import org.comixedproject.model.net.lists.DeleteReadingListsRequest;
 import org.comixedproject.model.net.lists.SaveReadingListRequest;
 import org.comixedproject.model.net.lists.UpdateReadingListRequest;
 import org.comixedproject.repositories.lists.ReadingListRepository;
-import org.comixedproject.service.comicbooks.ComicBookSelectionException;
+import org.comixedproject.service.comicbooks.ComicSelectionException;
 import org.comixedproject.service.comicbooks.ComicSelectionService;
 import org.comixedproject.service.lists.ReadingListException;
 import org.comixedproject.service.lists.ReadingListService;
@@ -192,7 +192,7 @@ public class ReadingListController {
       this.comicSelectionService.clearSelectedComicBooks(email, selectedComicBookIds);
       session.setAttribute(
           LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selectedComicBookIds));
-    } catch (ComicBookSelectionException error) {
+    } catch (ComicSelectionException error) {
       throw new ReadingListException("Failed to add selected comic books to reading list", error);
     }
   }
@@ -228,7 +228,7 @@ public class ReadingListController {
       this.comicSelectionService.clearSelectedComicBooks(email, selectedComicBookIds);
       session.setAttribute(
           LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selectedComicBookIds));
-    } catch (ReadingListException | ComicBookSelectionException error) {
+    } catch (ReadingListException | ComicSelectionException error) {
       throw new ReadingListException("Failed to remove selected comics from reading list", error);
     }
   }

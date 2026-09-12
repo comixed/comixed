@@ -18,7 +18,7 @@
 
 package org.comixedproject.rest.library;
 
-import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LIBRARY_SELECTIONS;
+import static org.comixedproject.rest.comicbooks.ComicSelectionController.LIBRARY_SELECTIONS;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import io.micrometer.core.annotation.Timed;
@@ -30,14 +30,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicbooks.ComicTagType;
 import org.comixedproject.model.library.DisplayableComic;
 import org.comixedproject.model.net.library.*;
 import org.comixedproject.model.user.ComiXedUser;
-import org.comixedproject.service.comicbooks.ComicBookSelectionException;
-import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.comicbooks.ComicSelectionException;
 import org.comixedproject.service.comicbooks.ComicSelectionService;
+import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.service.library.DisplayableComicService;
 import org.comixedproject.service.library.LibraryException;
 import org.comixedproject.service.lists.ReadingListException;
@@ -66,7 +66,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Log4j2
 public class DisplayableComicController implements InitializingBean, ComicStateListener {
   @Autowired private DisplayableComicService displayableComicService;
-  @Autowired private ComicBookService comicBookService;
+  @Autowired private ComicService comicService;
   @Autowired private ComicSelectionService comicSelectionService;
   @Autowired private UserService userService;
   @Autowired private ReadingListService readingListService;
@@ -82,7 +82,7 @@ public class DisplayableComicController implements InitializingBean, ComicStateL
   }
 
   @Override
-  public void onComicStateChanged(final @NonNull ComicDetail comic) {
+  public void onComicStateChanged(final @NonNull Comic comic) {
     log.debug("Clearing comic caches");
     this.filterCache.clear();
     this.tagAndValueCache.clear();
@@ -164,7 +164,7 @@ public class DisplayableComicController implements InitializingBean, ComicStateL
             request.getSeries(),
             request.getVolume(),
             request.getPageCount());
-    final long totalCount = this.comicBookService.getComicBookCount();
+    final long totalCount = this.comicService.getComicCount();
     final LoadComicsResponse response =
         new LoadComicsResponse(comics, coverYears, coverMonths, totalCount, filterCount);
     this.filterCache.put(request, response);
@@ -177,7 +177,7 @@ public class DisplayableComicController implements InitializingBean, ComicStateL
    * @param session the http session
    * @param request the request body
    * @return the response body
-   * @throws ComicBookSelectionException if an error occurs
+   * @throws ComicSelectionException if an error occurs
    */
   @PostMapping(
       value = "/api/comics/selected",
@@ -188,7 +188,7 @@ public class DisplayableComicController implements InitializingBean, ComicStateL
   @JsonView(View.ComicDetailsView.class)
   public LoadComicsResponse loadComicsBySelectedState(
       final HttpSession session, @RequestBody() final LoadSelectedComicsRequest request)
-      throws ComicBookSelectionException {
+      throws ComicSelectionException {
     log.info("Loading selected comics: {}", request);
     final List<Long> selectedIds =
         this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
@@ -278,7 +278,7 @@ public class DisplayableComicController implements InitializingBean, ComicStateL
     final List<DisplayableComic> comics =
         this.displayableComicService.loadUnreadComics(
             user, pageSize, pageIndex, sortBy, sortDirection);
-    final long comicBookCount = this.comicBookService.getComicBookCount();
+    final long comicBookCount = this.comicService.getComicCount();
     final long filteredCount = comicBookCount - user.getReadComicBooks().size();
     return new LoadComicsResponse(
         comics, Collections.emptyList(), Collections.emptyList(), filteredCount, filteredCount);

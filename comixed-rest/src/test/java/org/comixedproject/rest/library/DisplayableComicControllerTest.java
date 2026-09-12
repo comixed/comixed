@@ -18,7 +18,7 @@
 
 package org.comixedproject.rest.library;
 
-import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LIBRARY_SELECTIONS;
+import static org.comixedproject.rest.comicbooks.ComicSelectionController.LIBRARY_SELECTIONS;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
@@ -34,9 +34,9 @@ import org.comixedproject.model.comicbooks.*;
 import org.comixedproject.model.library.DisplayableComic;
 import org.comixedproject.model.net.library.*;
 import org.comixedproject.model.user.ComiXedUser;
-import org.comixedproject.service.comicbooks.ComicBookSelectionException;
-import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.comicbooks.ComicSelectionException;
 import org.comixedproject.service.comicbooks.ComicSelectionService;
+import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.service.library.DisplayableComicService;
 import org.comixedproject.service.library.LibraryException;
 import org.comixedproject.service.lists.ReadingListException;
@@ -93,7 +93,7 @@ class DisplayableComicControllerTest {
 
   @InjectMocks private DisplayableComicController controller;
   @Mock private DisplayableComicService displayableComicService;
-  @Mock private ComicBookService comicBookService;
+  @Mock private ComicService comicService;
   @Mock private ComicSelectionService comicSelectionService;
   @Mock private UserService userService;
   @Mock private ReadingListService readingListService;
@@ -110,11 +110,10 @@ class DisplayableComicControllerTest {
   @Mock private ComiXedUser user;
   @Mock private Set<Long> comicBooksRead;
   @Mock private LoadComicsResponse loadComicsResponse;
-  @Mock private ComicBook comicBook;
-  @Mock private ComicDetail comic;
+  @Mock private Comic comic;
 
   @BeforeEach
-  void setUp() throws ComicBookSelectionException, ComiXedUserException {
+  void setUp() throws ComicSelectionException, ComiXedUserException {
     when(filteredRequest.getPageSize()).thenReturn(TEST_PAGE_SIZE);
     when(filteredRequest.getPageIndex()).thenReturn(TEST_PAGE_INDEX);
     when(filteredRequest.getCoverYear()).thenReturn(TEST_COVER_YEAR);
@@ -142,7 +141,7 @@ class DisplayableComicControllerTest {
 
     when(selectedIdList.size()).thenReturn(TEST_SELECTED_SIZE);
 
-    when(comicBookService.getComicBookCount()).thenReturn(TEST_COMIC_COUNT);
+    when(comicService.getComicCount()).thenReturn(TEST_COMIC_COUNT);
     when(principal.getName()).thenReturn(TEST_EMAIL);
     when(comicBooksRead.size()).thenReturn(TEST_READ_COMIC_COUNT);
     when(user.getReadComicBooks()).thenReturn(comicBooksRead);
@@ -160,7 +159,6 @@ class DisplayableComicControllerTest {
   void onComicStateChanged() {
     controller.filterCache.put(filteredRequest, loadComicsResponse);
     controller.tagAndValueCache.put(TEST_TAG_VALUE_AND_TYPE_KEY, loadComicsResponse);
-    when(comicBook.getComicDetail()).thenReturn(comic);
 
     controller.onComicStateChanged(comic);
 
@@ -226,7 +224,7 @@ class DisplayableComicControllerTest {
             anyString(),
             anyInt()))
         .thenReturn(TEST_FILTERED_COUNT);
-    when(comicBookService.getComicBookCount()).thenReturn(TEST_COMIC_COUNT);
+    when(comicService.getComicCount()).thenReturn(TEST_COMIC_COUNT);
 
     final LoadComicsResponse result = controller.loadComicsByFilter(filteredRequest);
 
@@ -273,7 +271,7 @@ class DisplayableComicControllerTest {
   }
 
   @Test
-  void loadComicsBySelectedState() throws ComicBookSelectionException {
+  void loadComicsBySelectedState() throws ComicSelectionException {
     when(displayableComicService.loadComicsById(
             anyInt(), anyInt(), anyString(), anyString(), anyList()))
         .thenReturn(comicList);

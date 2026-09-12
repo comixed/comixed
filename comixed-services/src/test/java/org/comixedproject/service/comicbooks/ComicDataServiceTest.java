@@ -46,7 +46,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class ComicDataServiceTest {
-  private static final long TEST_COMIC_BOOK_ID = 717L;
+  private static final long TEST_COMIC_ID = 717L;
   private static final String TEST_COMIC_FILENAME = "src/test/resources/example.cbz";
   private static final ComicType TEST_COMIC_TYPE =
       ComicType.values()[RandomUtils.nextInt(ComicType.values().length)];
@@ -63,8 +63,7 @@ class ComicDataServiceTest {
 
   @InjectMocks private ComicDataService service;
   @Mock private DisplayableComicService displayableComicService;
-  @Mock private ComicBookService comicBookService;
-  @Mock private ComicDetailService comicDetailService;
+  @Mock private ComicService comicService;
   @Mock private ComicPageService comicPageService;
   @Mock private ComicMetadataSourceService comicMetadataSourceService;
   @Mock private ComicTagService comicTagService;
@@ -73,32 +72,30 @@ class ComicDataServiceTest {
   @Mock private FileTypeAdaptor fileTypeAdaptor;
 
   @Mock private DisplayableComic displayableComic;
-  @Mock private ComicDetail comic;
+  @Mock private Comic comic;
   @Mock private ComicMetadataSource comicMetadataSource;
   @Mock private List<ComicTag> tagList;
-  @Mock private ComicBook comicBook;
-  @Mock private ComicDetail comicDetail;
 
   private List<ComicPage> pageList = new ArrayList<>();
 
   @Test
-  void getComic_noSuchComic() throws ComicBookException {
-    when(displayableComicService.getForComicBookId(anyLong())).thenThrow(ComicBookException.class);
+  void getComic_noSuchComic() throws ComicException {
+    when(displayableComicService.getForComicBookId(anyLong())).thenThrow(ComicException.class);
 
-    assertThrows(ComicBookException.class, () -> service.getComic(TEST_COMIC_BOOK_ID));
+    assertThrows(ComicException.class, () -> service.getComic(TEST_COMIC_ID));
 
-    verify(displayableComicService).getForComicBookId(TEST_COMIC_BOOK_ID);
+    verify(displayableComicService).getForComicBookId(TEST_COMIC_ID);
   }
 
   @Test
-  void getComic() throws ComicBookException {
+  void getComic() throws ComicException {
     when(displayableComicService.getForComicBookId(anyLong())).thenReturn(displayableComic);
     when(comicPageService.getPagesForComicBook(anyLong())).thenReturn(pageList);
     when(comicMetadataSourceService.getMetadataForComicBook(anyLong()))
         .thenReturn(comicMetadataSource);
     when(comicTagService.getTagsForComicBook(anyLong())).thenReturn(tagList);
 
-    final ComicBookData result = service.getComic(TEST_COMIC_BOOK_ID);
+    final ComicDataSet result = service.getComic(TEST_COMIC_ID);
 
     assertNotNull(result);
     assertSame(displayableComic, result.getDetail());
@@ -106,58 +103,56 @@ class ComicDataServiceTest {
     assertSame(comicMetadataSource, result.getMetadata());
     assertSame(tagList, result.getTags());
 
-    verify(displayableComicService).getForComicBookId(TEST_COMIC_BOOK_ID);
-    verify(comicPageService).getPagesForComicBook(TEST_COMIC_BOOK_ID);
-    verify(comicMetadataSourceService).getMetadataForComicBook(TEST_COMIC_BOOK_ID);
-    verify(comicTagService).getTagsForComicBook(TEST_COMIC_BOOK_ID);
+    verify(displayableComicService).getForComicBookId(TEST_COMIC_ID);
+    verify(comicPageService).getPagesForComicBook(TEST_COMIC_ID);
+    verify(comicMetadataSourceService).getMetadataForComicBook(TEST_COMIC_ID);
+    verify(comicTagService).getTagsForComicBook(TEST_COMIC_ID);
   }
 
   @Test
-  void getComicContent_noSuchComic() throws ComicBookException {
-    when(comicBookService.getComic(anyLong())).thenThrow(ComicBookException.class);
+  void getComicContent_noSuchComic() throws ComicException {
+    when(comicService.getComic(anyLong())).thenThrow(ComicException.class);
 
-    assertThrows(ComicBookException.class, () -> this.service.getComicContent(TEST_COMIC_BOOK_ID));
+    assertThrows(ComicException.class, () -> this.service.getComicContent(TEST_COMIC_ID));
 
-    verify(comicBookService).getComic(TEST_COMIC_BOOK_ID);
+    verify(comicService).getComic(TEST_COMIC_ID);
   }
 
   @Test
-  void getComicContent_filenameNotFound() throws ComicBookException {
-    when(comicBookService.getComic(anyLong())).thenReturn(comicBook);
-    when(comicBook.getComicDetail()).thenReturn(comicDetail);
-    when(comicDetail.getFilename()).thenReturn(TEST_COMIC_FILENAME.substring(1));
+  void getComicContent_filenameNotFound() throws ComicException {
+    when(comicService.getComic(anyLong())).thenReturn(comic);
+    when(comic.getFilename()).thenReturn(TEST_COMIC_FILENAME.substring(1));
 
-    assertThrows(ComicBookException.class, () -> this.service.getComicContent(TEST_COMIC_BOOK_ID));
+    assertThrows(ComicException.class, () -> this.service.getComicContent(TEST_COMIC_ID));
 
-    verify(comicBookService).getComic(TEST_COMIC_BOOK_ID);
+    verify(comicService).getComic(TEST_COMIC_ID);
   }
 
   @Test
-  void getComicContent() throws ComicBookException {
-    when(comicBookService.getComic(anyLong())).thenReturn(comicBook);
-    when(comicBook.getComicDetail()).thenReturn(comicDetail);
-    when(comicDetail.getFilename()).thenReturn(TEST_COMIC_FILENAME);
+  void getComicContent() throws ComicException {
+    when(comicService.getComic(anyLong())).thenReturn(comic);
+    when(comic.getFilename()).thenReturn(TEST_COMIC_FILENAME);
 
-    final DownloadDocument result = this.service.getComicContent(TEST_COMIC_BOOK_ID);
+    final DownloadDocument result = this.service.getComicContent(TEST_COMIC_ID);
 
     assertNotNull(result);
     assertEquals(FilenameUtils.getName(TEST_COMIC_FILENAME), result.getFilename());
     assertNotNull(result.getContent());
     assertTrue(result.getContent().length > 0);
 
-    verify(comicBookService).getComic(TEST_COMIC_BOOK_ID);
+    verify(comicService).getComic(TEST_COMIC_ID);
     verify(fileTypeAdaptor).getMimeTypeFor(any());
   }
 
   @Test
-  void updateComic_invalidComicId() throws ComicDetailException {
-    when(comicDetailService.getByComicBookId(anyLong())).thenThrow(ComicDetailException.class);
+  void updateComic_invalidComicId() throws ComicException {
+    when(comicService.getByComicBookId(anyLong())).thenThrow(ComicException.class);
 
     assertThrows(
-        ComicBookException.class,
+        ComicException.class,
         () ->
             service.updateComic(
-                TEST_COMIC_BOOK_ID,
+                TEST_COMIC_ID,
                 TEST_COMIC_TYPE,
                 TEST_PUBLISHER,
                 TEST_SERIES,
@@ -169,22 +164,21 @@ class ComicDataServiceTest {
                 TEST_COVER_DATE,
                 TEST_STORE_DATE));
 
-    verify(comicDetailService).getByComicBookId(TEST_COMIC_BOOK_ID);
+    verify(comicService).getByComicBookId(TEST_COMIC_ID);
   }
 
   @Test
-  void updateComic_partial() throws ComicBookException, ComicDetailException {
-    when(comicDetailService.getByComicBookId(anyLong())).thenReturn(comicDetail);
-    when(comicDetail.getComicBook()).thenReturn(comicBook);
+  void updateComic_partial() throws ComicException {
+    when(comicService.getByComicBookId(anyLong())).thenReturn(comic);
     when(displayableComicService.getForComicBookId(anyLong())).thenReturn(displayableComic);
     when(comicPageService.getPagesForComicBook(anyLong())).thenReturn(pageList);
     when(comicMetadataSourceService.getMetadataForComicBook(anyLong()))
         .thenReturn(comicMetadataSource);
     when(comicTagService.getTagsForComicBook(anyLong())).thenReturn(tagList);
 
-    final ComicBookData result =
+    final ComicDataSet result =
         service.updateComic(
-            TEST_COMIC_BOOK_ID,
+            TEST_COMIC_ID,
             null,
             TEST_PUBLISHER,
             TEST_SERIES,
@@ -202,35 +196,34 @@ class ComicDataServiceTest {
     assertSame(comicMetadataSource, result.getMetadata());
     assertSame(tagList, result.getTags());
 
-    verify(comicDetailService).getByComicBookId(TEST_COMIC_BOOK_ID);
-    verify(comicDetail).setPublisher(TEST_PUBLISHER);
-    verify(comicDetail).setSeries(TEST_SERIES);
-    verify(comicDetail).setVolume(TEST_VOLUME);
-    verify(comicDetail).setIssueNumber(TEST_ISSUE_NUMBER);
-    verify(comicStateAdaptor).fireEvent(comicDetail, ComicEvent.comicMetadataChanged);
-    verify(imprintService).update(comicBook);
+    verify(comicService).getByComicBookId(TEST_COMIC_ID);
+    verify(comic).setPublisher(TEST_PUBLISHER);
+    verify(comic).setSeries(TEST_SERIES);
+    verify(comic).setVolume(TEST_VOLUME);
+    verify(comic).setIssueNumber(TEST_ISSUE_NUMBER);
+    verify(comicStateAdaptor).fireEvent(comic, ComicEvent.comicMetadataChanged);
+    verify(imprintService).update(comic);
 
-    verify(comicStateAdaptor).fireEvent(comicDetail, ComicEvent.comicMetadataChanged);
-    verify(displayableComicService).getForComicBookId(TEST_COMIC_BOOK_ID);
-    verify(comicDetailService).getByComicBookId(TEST_COMIC_BOOK_ID);
-    verify(comicPageService).getPagesForComicBook(TEST_COMIC_BOOK_ID);
-    verify(comicMetadataSourceService).getMetadataForComicBook(TEST_COMIC_BOOK_ID);
-    verify(comicTagService).getTagsForComicBook(TEST_COMIC_BOOK_ID);
+    verify(comicStateAdaptor).fireEvent(comic, ComicEvent.comicMetadataChanged);
+    verify(displayableComicService).getForComicBookId(TEST_COMIC_ID);
+    verify(comicService).getByComicBookId(TEST_COMIC_ID);
+    verify(comicPageService).getPagesForComicBook(TEST_COMIC_ID);
+    verify(comicMetadataSourceService).getMetadataForComicBook(TEST_COMIC_ID);
+    verify(comicTagService).getTagsForComicBook(TEST_COMIC_ID);
   }
 
   @Test
-  void updateComic() throws ComicBookException, ComicDetailException {
-    when(comicDetailService.getByComicBookId(anyLong())).thenReturn(comicDetail);
-    when(comicDetail.getComicBook()).thenReturn(comicBook);
+  void updateComic() throws ComicException {
+    when(comicService.getByComicBookId(anyLong())).thenReturn(comic);
     when(displayableComicService.getForComicBookId(anyLong())).thenReturn(displayableComic);
     when(comicPageService.getPagesForComicBook(anyLong())).thenReturn(pageList);
     when(comicMetadataSourceService.getMetadataForComicBook(anyLong()))
         .thenReturn(comicMetadataSource);
     when(comicTagService.getTagsForComicBook(anyLong())).thenReturn(tagList);
 
-    final ComicBookData result =
+    final ComicDataSet result =
         service.updateComic(
-            TEST_COMIC_BOOK_ID,
+            TEST_COMIC_ID,
             TEST_COMIC_TYPE,
             TEST_PUBLISHER,
             TEST_SERIES,
@@ -248,39 +241,38 @@ class ComicDataServiceTest {
     assertSame(comicMetadataSource, result.getMetadata());
     assertSame(tagList, result.getTags());
 
-    verify(comicDetailService).getByComicBookId(TEST_COMIC_BOOK_ID);
-    verify(comicDetail).setComicType(TEST_COMIC_TYPE);
-    verify(comicDetail).setPublisher(TEST_PUBLISHER);
-    verify(comicDetail).setImprint(TEST_IMPRINT);
-    verify(comicDetail).setSeries(TEST_SERIES);
-    verify(comicDetail).setVolume(TEST_VOLUME);
-    verify(comicDetail).setIssueNumber(TEST_ISSUE_NUMBER);
-    verify(comicDetail).setSortName(TEST_SORTABLE_NAME);
-    verify(comicDetail).setTitle(TEST_TITLE);
-    verify(comicDetail).setCoverDate(TEST_COVER_DATE);
-    verify(comicDetail).setStoreDate(TEST_STORE_DATE);
-    verify(imprintService).update(comicBook);
-    verify(comicStateAdaptor).fireEvent(comicDetail, ComicEvent.comicMetadataChanged);
-    verify(displayableComicService).getForComicBookId(TEST_COMIC_BOOK_ID);
-    verify(comicDetailService).getByComicBookId(TEST_COMIC_BOOK_ID);
-    verify(comicPageService).getPagesForComicBook(TEST_COMIC_BOOK_ID);
-    verify(comicMetadataSourceService).getMetadataForComicBook(TEST_COMIC_BOOK_ID);
-    verify(comicTagService).getTagsForComicBook(TEST_COMIC_BOOK_ID);
+    verify(comicService).getByComicBookId(TEST_COMIC_ID);
+    verify(comic).setComicType(TEST_COMIC_TYPE);
+    verify(comic).setPublisher(TEST_PUBLISHER);
+    verify(comic).setImprint(TEST_IMPRINT);
+    verify(comic).setSeries(TEST_SERIES);
+    verify(comic).setVolume(TEST_VOLUME);
+    verify(comic).setIssueNumber(TEST_ISSUE_NUMBER);
+    verify(comic).setSortName(TEST_SORTABLE_NAME);
+    verify(comic).setTitle(TEST_TITLE);
+    verify(comic).setCoverDate(TEST_COVER_DATE);
+    verify(comic).setStoreDate(TEST_STORE_DATE);
+    verify(imprintService).update(comic);
+    verify(comicStateAdaptor).fireEvent(comic, ComicEvent.comicMetadataChanged);
+    verify(displayableComicService).getForComicBookId(TEST_COMIC_ID);
+    verify(comicService).getByComicBookId(TEST_COMIC_ID);
+    verify(comicPageService).getPagesForComicBook(TEST_COMIC_ID);
+    verify(comicMetadataSourceService).getMetadataForComicBook(TEST_COMIC_ID);
+    verify(comicTagService).getTagsForComicBook(TEST_COMIC_ID);
   }
 
   @Test
-  void savePageOrder_invalidId() throws ComicBookException {
+  void savePageOrder_invalidId() throws ComicException {
     List<PageOrderEntry> entryList = new ArrayList<>();
-    when(comicBookService.getComic(anyLong())).thenThrow(ComicBookException.class);
+    when(comicService.getComic(anyLong())).thenThrow(ComicException.class);
 
-    assertThrows(
-        ComicBookException.class, () -> service.savePageOrder(TEST_COMIC_BOOK_ID, entryList));
+    assertThrows(ComicException.class, () -> service.savePageOrder(TEST_COMIC_ID, entryList));
 
-    verify(comicBookService).getComic(TEST_COMIC_BOOK_ID);
+    verify(comicService).getComic(TEST_COMIC_ID);
   }
 
   @Test
-  void savePageOrder_containsGap() throws ComicBookException {
+  void savePageOrder_containsGap() throws ComicException {
     List<PageOrderEntry> entryList = new ArrayList<>();
     for (int index = 0; index < 25; index++) {
       entryList.add(new PageOrderEntry(String.format("filename-%d", index), index * 2));
@@ -290,17 +282,16 @@ class ComicDataServiceTest {
       pageList.add(page);
     }
 
-    when(comicBookService.getComic(anyLong())).thenReturn(comicBook);
+    when(comicService.getComic(anyLong())).thenReturn(comic);
 
-    assertThrows(
-        ComicBookException.class, () -> service.savePageOrder(TEST_COMIC_BOOK_ID, entryList));
+    assertThrows(ComicException.class, () -> service.savePageOrder(TEST_COMIC_ID, entryList));
 
-    verify(comicBookService).getComic(TEST_COMIC_BOOK_ID);
+    verify(comicService).getComic(TEST_COMIC_ID);
     verify(comicStateAdaptor, never()).fireEvent(any(), any());
   }
 
   @Test
-  void savePageOrder_missingFilename() throws ComicBookException {
+  void savePageOrder_missingFilename() throws ComicException {
     List<PageOrderEntry> entryList = new ArrayList<>();
     for (int index = 0; index < 25; index++) {
       final String filename = String.format("filename-%d", index);
@@ -310,17 +301,16 @@ class ComicDataServiceTest {
       pageList.add(page);
     }
 
-    when(comicBookService.getComic(anyLong())).thenReturn(comicBook);
-    when(comicBook.getPages()).thenReturn(pageList);
+    when(comicService.getComic(anyLong())).thenReturn(comic);
+    when(comic.getPages()).thenReturn(pageList);
 
-    assertThrows(
-        ComicBookException.class, () -> service.savePageOrder(TEST_COMIC_BOOK_ID, entryList));
+    assertThrows(ComicException.class, () -> service.savePageOrder(TEST_COMIC_ID, entryList));
 
-    verify(comicBookService).getComic(TEST_COMIC_BOOK_ID);
+    verify(comicService).getComic(TEST_COMIC_ID);
   }
 
   @Test
-  void savePageOrder() throws ComicBookException {
+  void savePageOrder() throws ComicException {
     List<PageOrderEntry> entryList = new ArrayList<>();
     for (int index = 0; index < 25; index++) {
       final String filename = String.format("filename-%d", index);
@@ -330,11 +320,10 @@ class ComicDataServiceTest {
       pageList.add(page);
     }
 
-    when(comicBookService.getComic(anyLong())).thenReturn(comicBook);
-    when(comicBook.getPages()).thenReturn(pageList);
-    when(comicBook.getComicDetail()).thenReturn(comic);
+    when(comicService.getComic(anyLong())).thenReturn(comic);
+    when(comic.getPages()).thenReturn(pageList);
 
-    service.savePageOrder(TEST_COMIC_BOOK_ID, entryList);
+    service.savePageOrder(TEST_COMIC_ID, entryList);
 
     for (int index = 0; index < entryList.size(); index++) {
       final PageOrderEntry pageOrderEntry = entryList.get(index);
@@ -347,95 +336,95 @@ class ComicDataServiceTest {
       assertEquals(pageOrderEntry.getPosition(), pageListEntry.get().getPageNumber().intValue());
     }
 
-    verify(comicBookService).getComic(TEST_COMIC_BOOK_ID);
+    verify(comicService).getComic(TEST_COMIC_ID);
     verify(comicStateAdaptor).fireEvent(comic, ComicEvent.comicMetadataChanged);
   }
 
   @Test
-  void deleteComicBook_noSuchComic() throws ComicDetailException {
-    when(comicDetailService.getByComicBookId(anyLong())).thenThrow(ComicDetailException.class);
+  void deleteComicBook_noSuchComic() throws ComicException {
+    when(comicService.getByComicBookId(anyLong())).thenThrow(ComicException.class);
 
-    assertThrows(ComicBookException.class, () -> service.deleteComicBook(TEST_COMIC_BOOK_ID));
+    assertThrows(ComicException.class, () -> service.deleteComicBook(TEST_COMIC_ID));
 
-    verify(comicDetailService).getByComicBookId(TEST_COMIC_BOOK_ID);
+    verify(comicService).getByComicBookId(TEST_COMIC_ID);
     verify(comicStateAdaptor, never()).fireEvent(any(), any());
   }
 
   @Test
-  void deleteComicBook() throws ComicDetailException, ComicBookException {
-    when(comicDetailService.getByComicBookId(anyLong())).thenReturn(comic);
+  void deleteComicBook() throws ComicException {
+    when(comicService.getByComicBookId(anyLong())).thenReturn(comic);
 
-    service.deleteComicBook(TEST_COMIC_BOOK_ID);
+    service.deleteComicBook(TEST_COMIC_ID);
 
-    verify(comicDetailService).getByComicBookId(TEST_COMIC_BOOK_ID);
+    verify(comicService).getByComicBookId(TEST_COMIC_ID);
     verify(comicStateAdaptor).fireEvent(comic, ComicEvent.markComicForRemoval);
   }
 
   @Test
-  void undeleteComicBook_noSuchComic() throws ComicDetailException {
-    when(comicDetailService.getByComicBookId(anyLong())).thenThrow(ComicDetailException.class);
+  void undeleteComicBook_noSuchComic() throws ComicException {
+    when(comicService.getByComicBookId(anyLong())).thenThrow(ComicException.class);
 
-    assertThrows(ComicBookException.class, () -> service.undeleteComicBook(TEST_COMIC_BOOK_ID));
+    assertThrows(ComicException.class, () -> service.undeleteComicBook(TEST_COMIC_ID));
 
-    verify(comicDetailService).getByComicBookId(TEST_COMIC_BOOK_ID);
+    verify(comicService).getByComicBookId(TEST_COMIC_ID);
     verify(comicStateAdaptor, never()).fireEvent(any(), any());
   }
 
   @Test
-  void deleteComicBooksById_invalidId() throws ComicDetailException {
-    when(comicDetailService.getByComicBookId(anyLong())).thenThrow(ComicDetailException.class);
+  void deleteComicBooksById_invalidId() throws ComicException {
+    when(comicService.getByComicBookId(anyLong())).thenThrow(ComicException.class);
 
-    final List<Long> comicIdList = new ArrayList<>(Arrays.asList(TEST_COMIC_BOOK_ID));
+    final List<Long> comicIdList = new ArrayList<>(Arrays.asList(TEST_COMIC_ID));
 
-    assertThrows(ComicBookException.class, () -> service.deleteComicBooksById(comicIdList));
+    assertThrows(ComicException.class, () -> service.deleteComicBooksById(comicIdList));
 
-    verify(comicDetailService).getByComicBookId(TEST_COMIC_BOOK_ID);
+    verify(comicService).getByComicBookId(TEST_COMIC_ID);
     verify(comicStateAdaptor, never()).fireEvent(any(), any());
   }
 
   @Test
-  void deleteComicBooksById() throws ComicBookException, ComicDetailException {
-    when(comicDetailService.getByComicBookId(anyLong())).thenReturn(comic);
+  void deleteComicBooksById() throws ComicException {
+    when(comicService.getByComicBookId(anyLong())).thenReturn(comic);
 
-    final List<Long> comicIdList = new ArrayList<>(Arrays.asList(TEST_COMIC_BOOK_ID));
+    final List<Long> comicIdList = new ArrayList<>(Arrays.asList(TEST_COMIC_ID));
 
     service.deleteComicBooksById(comicIdList);
 
-    verify(comicDetailService).getByComicBookId(TEST_COMIC_BOOK_ID);
+    verify(comicService).getByComicBookId(TEST_COMIC_ID);
     verify(comicStateAdaptor).fireEvent(comic, ComicEvent.markComicForRemoval);
   }
 
   @Test
-  void undeleteComicBooksById_invalidId() throws ComicDetailException {
-    when(comicDetailService.getByComicBookId(anyLong())).thenThrow(ComicDetailException.class);
+  void undeleteComicBooksById_invalidId() throws ComicException {
+    when(comicService.getByComicBookId(anyLong())).thenThrow(ComicException.class);
 
-    final List<Long> comicIdList = new ArrayList<>(Arrays.asList(TEST_COMIC_BOOK_ID));
+    final List<Long> comicIdList = new ArrayList<>(Arrays.asList(TEST_COMIC_ID));
 
-    assertThrows(ComicBookException.class, () -> service.undeleteComicBooksById(comicIdList));
+    assertThrows(ComicException.class, () -> service.undeleteComicBooksById(comicIdList));
 
-    verify(comicDetailService).getByComicBookId(TEST_COMIC_BOOK_ID);
+    verify(comicService).getByComicBookId(TEST_COMIC_ID);
     verify(comicStateAdaptor, never()).fireEvent(any(), any());
   }
 
   @Test
-  void undeleteComicBooksById() throws ComicDetailException, ComicBookException {
-    when(comicDetailService.getByComicBookId(anyLong())).thenReturn(comic);
+  void undeleteComicBooksById() throws ComicException {
+    when(comicService.getByComicBookId(anyLong())).thenReturn(comic);
 
-    final List<Long> comicIdList = new ArrayList<>(Arrays.asList(TEST_COMIC_BOOK_ID));
+    final List<Long> comicIdList = new ArrayList<>(Arrays.asList(TEST_COMIC_ID));
 
     service.undeleteComicBooksById(comicIdList);
 
-    verify(comicDetailService).getByComicBookId(TEST_COMIC_BOOK_ID);
+    verify(comicService).getByComicBookId(TEST_COMIC_ID);
     verify(comicStateAdaptor).fireEvent(comic, ComicEvent.unmarkComicForRemoval);
   }
 
   @Test
-  void undeleteComicBook() throws ComicBookException, ComicDetailException {
-    when(comicDetailService.getByComicBookId(anyLong())).thenReturn(comic);
+  void undeleteComicBook() throws ComicException {
+    when(comicService.getByComicBookId(anyLong())).thenReturn(comic);
 
-    service.undeleteComicBook(TEST_COMIC_BOOK_ID);
+    service.undeleteComicBook(TEST_COMIC_ID);
 
-    verify(comicDetailService).getByComicBookId(TEST_COMIC_BOOK_ID);
+    verify(comicService).getByComicBookId(TEST_COMIC_ID);
     verify(comicStateAdaptor).fireEvent(comic, ComicEvent.unmarkComicForRemoval);
   }
 }

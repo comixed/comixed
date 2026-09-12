@@ -19,7 +19,6 @@
 package org.comixedproject.repositories.lists;
 
 import java.util.List;
-import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.model.user.ComiXedUser;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -59,11 +58,6 @@ public interface ReadingListRepository extends JpaRepository<ReadingList, Long> 
    */
   @Query("SELECT l FROM ReadingList l WHERE l.readingListId = :id AND l.owner = :owner")
   ReadingList getReadingListForUserAndId(@Param("owner") ComiXedUser owner, @Param("id") long id);
-
-  @Query(
-      "SELECT l FROM ReadingList l JOIN FETCH l.entryIds WHERE l.owner.email = :email AND :comicBook MEMBER OF l.entryIds")
-  List<ReadingList> findByOwnerAndComic(
-      @Param("email") String email, @Param("comicBook") ComicBook comicBook);
 
   /**
    * Returns the reading list with the given record id. Also included are any comics.

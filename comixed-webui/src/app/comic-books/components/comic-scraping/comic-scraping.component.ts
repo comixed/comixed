@@ -342,10 +342,10 @@ export class ComicScrapingComponent implements OnInit {
         'comic-book.save-changes.confirmation-message'
       ),
       confirm: () => {
-        this.logger.debug('Saving changes to comic:', this.comic.comicBookId);
+        this.logger.debug('Saving changes to comic:', this.comic.comicDetailId);
         this.store.dispatch(
           updateComicBook({
-            comicBookId: this.comic.comicBookId,
+            comicBookId: this.comic.comicDetailId,
             publisher: this.comicForm.controls.publisher.value,
             series: this.comicForm.controls.series.value,
             volume: this.comicForm.controls.volume.value,

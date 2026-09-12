@@ -24,7 +24,7 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.ComicTagType;
 import org.comixedproject.model.net.collections.LoadComicsForCollectionRequest;
 import org.comixedproject.model.net.collections.LoadComicsForCollectionResponse;
-import org.comixedproject.service.comicbooks.ComicDetailService;
+import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.views.View;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -42,7 +42,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Log4j2
 public class TagController {
-  @Autowired private ComicDetailService comicDetailService;
+  @Autowired private ComicService comicService;
 
   /**
    * Returns comics for the provided tag type.
@@ -63,13 +63,13 @@ public class TagController {
       @PathVariable("tagType") final ComicTagType tagType) {
     log.info("Loading collection list entries: type={}", tagType);
     return new LoadComicsForCollectionResponse(
-        this.comicDetailService.loadCollectionEntries(
+        this.comicService.loadCollectionEntries(
             tagType,
             request.getSearchText(),
             request.getPageSize(),
             request.getPageIndex(),
             request.getSortBy(),
             request.getSortDirection()),
-        this.comicDetailService.loadCollectionTotalEntries(tagType, request.getSearchText()));
+        this.comicService.loadCollectionTotalEntries(tagType, request.getSearchText()));
   }
 }

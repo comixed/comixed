@@ -22,17 +22,17 @@ import java.io.File;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.batch.comicbooks.listeners.OrganizeLibraryJobListener;
 import org.comixedproject.batch.library.listeners.MoveComicFilesChunkListener;
-import org.comixedproject.batch.library.listeners.RemoveDeletedComicBooksChunkListener;
+import org.comixedproject.batch.library.listeners.RemoveDeletedComicsChunkListener;
 import org.comixedproject.batch.library.processors.DeleteEmptyDirectoriesProcessor;
 import org.comixedproject.batch.library.processors.MoveComicFilesProcessor;
-import org.comixedproject.batch.library.processors.RemoveDeletedComicBooksProcessor;
+import org.comixedproject.batch.library.processors.RemoveDeletedComicsProcessor;
 import org.comixedproject.batch.library.readers.DeleteEmptyDirectoriesReader;
 import org.comixedproject.batch.library.readers.MoveComicFilesReader;
-import org.comixedproject.batch.library.readers.RemoveDeletedComicBooksReader;
+import org.comixedproject.batch.library.readers.RemoveDeletedComicsReader;
 import org.comixedproject.batch.library.writers.MoveComicFilesWriter;
-import org.comixedproject.batch.library.writers.RemoveDeletedComicBooksWriter;
+import org.comixedproject.batch.library.writers.RemoveDeletedComicsWriter;
 import org.comixedproject.batch.writers.NoopWriter;
-import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.library.OrganizingComic;
 import org.springframework.batch.core.job.Job;
 import org.springframework.batch.core.job.builder.JobBuilder;
@@ -102,12 +102,12 @@ public class OrganizeLibraryConfiguration {
   public Step removeDeletedComicBooksStep(
       final JobRepository jobRepository,
       final PlatformTransactionManager platformTransactionManager,
-      final RemoveDeletedComicBooksReader reader,
-      final RemoveDeletedComicBooksProcessor processor,
-      final RemoveDeletedComicBooksWriter writer,
-      final RemoveDeletedComicBooksChunkListener<ComicBook, ComicBook> listener) {
+      final RemoveDeletedComicsReader reader,
+      final RemoveDeletedComicsProcessor processor,
+      final RemoveDeletedComicsWriter writer,
+      final RemoveDeletedComicsChunkListener listener) {
     return new StepBuilder("removeDeletedComicBooksStep", jobRepository)
-        .<ComicBook, ComicBook>chunk(this.chunkSize)
+        .<Comic, Comic>chunk(this.chunkSize)
         .transactionManager(platformTransactionManager)
         .reader(reader)
         .processor(processor)
@@ -133,7 +133,7 @@ public class OrganizeLibraryConfiguration {
       final MoveComicFilesReader reader,
       final MoveComicFilesProcessor processor,
       final MoveComicFilesWriter writer,
-      final MoveComicFilesChunkListener<OrganizingComic, OrganizingComic> listener) {
+      final MoveComicFilesChunkListener listener) {
     return new StepBuilder("moveComicFilesStep", jobRepository)
         .<OrganizingComic, OrganizingComic>chunk(this.chunkSize)
         .transactionManager(platformTransactionManager)

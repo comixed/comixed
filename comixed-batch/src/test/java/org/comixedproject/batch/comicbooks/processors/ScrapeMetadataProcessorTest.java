@@ -19,20 +19,21 @@
 package org.comixedproject.batch.comicbooks.processors;
 
 import static org.comixedproject.batch.comicbooks.ScrapeMetadataConfiguration.SCRAPE_METADATA_JOB_ERROR_THRESHOLD;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 import org.comixedproject.metadata.MetadataException;
-import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicbooks.ComicMetadataSource;
 import org.comixedproject.model.metadata.MetadataSource;
-import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.service.metadata.MetadataService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
@@ -40,104 +41,98 @@ import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.job.JobExecution;
 import org.springframework.batch.core.job.parameters.JobParameters;
 import org.springframework.batch.core.step.StepExecution;
-import org.springframework.batch.infrastructure.item.ExecutionContext;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class ScrapeMetadataProcessorTest {
   private static final long TEST_METADATA_SOURCE_ID = 4L;
-  private static final long TEST_COMIC_BOOK_ID = 717L;
+  private static final long TEST_COMIC_ID = 717L;
   private static final String TEST_REFERENCE_NUMBER = "91732";
   private static final long TEST_ERROR_COUNT = 25;
   private static final long TEST_ERROR_THRESHOLD = TEST_ERROR_COUNT * 2;
 
   @InjectMocks private ScrapeMetadataProcessor processor;
   @Mock private MetadataService metadataService;
-  @Mock private ComicBookService comicBookService;
+  @Mock private ComicService comicService;
   @Mock private MetadataSource metadataSource;
   @Mock private ComicMetadataSource metadata;
-  @Mock private ComicBook comicBook;
-  @Mock private ExecutionContext executionContext;
   @Mock private JobExecution jobExecutionContext;
   @Mock private JobParameters jobParameters;
   @Mock private StepExecution stepExecution;
-  @Mock private ComicBook savedComicBook;
+  @Mock private Comic comic;
+  @Mock private Comic savedComic;
 
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     processor.errorThreshold = TEST_ERROR_THRESHOLD;
 
-    Mockito.when(stepExecution.getSkipCount()).thenReturn(TEST_ERROR_COUNT - 1);
-    Mockito.when(metadataSource.getMetadataSourceId()).thenReturn(TEST_METADATA_SOURCE_ID);
-    Mockito.when(metadata.getMetadataSource()).thenReturn(metadataSource);
-    Mockito.when(metadata.getReferenceId()).thenReturn(TEST_REFERENCE_NUMBER);
-    Mockito.when(comicBook.getMetadata()).thenReturn(metadata);
-    Mockito.when(comicBook.getComicBookId()).thenReturn(TEST_COMIC_BOOK_ID);
-    Mockito.when(comicBook.isFileContentsLoaded()).thenReturn(true);
-    Mockito.when(comicBook.isPurging()).thenReturn(false);
-    Mockito.when(jobExecutionContext.getJobParameters()).thenReturn(jobParameters);
-    Mockito.when(stepExecution.getJobExecution()).thenReturn(jobExecutionContext);
-    Mockito.when(comicBookService.save(Mockito.any(ComicBook.class))).thenReturn(savedComicBook);
+    when(stepExecution.getSkipCount()).thenReturn(TEST_ERROR_COUNT - 1);
+    when(metadataSource.getMetadataSourceId()).thenReturn(TEST_METADATA_SOURCE_ID);
+    when(metadata.getMetadataSource()).thenReturn(metadataSource);
+    when(metadata.getReferenceId()).thenReturn(TEST_REFERENCE_NUMBER);
+    when(comic.getMetadata()).thenReturn(metadata);
+    when(comic.getComicDetailId()).thenReturn(TEST_COMIC_ID);
+    when(comic.isLoadingFileContents()).thenReturn(false);
+    when(comic.isPurging()).thenReturn(false);
+    when(jobExecutionContext.getJobParameters()).thenReturn(jobParameters);
+    when(stepExecution.getJobExecution()).thenReturn(jobExecutionContext);
+    when(comicService.save(any(Comic.class))).thenReturn(savedComic);
   }
 
   @Test
   void process() throws MetadataException {
-    final ComicBook result = processor.process(comicBook);
+    final Comic result = processor.process(comic);
 
     assertNotNull(result);
-    assertSame(comicBook, result);
+    assertSame(comic, result);
 
-    Mockito.verify(metadataService, Mockito.times(1))
-        .scrapeComic(TEST_METADATA_SOURCE_ID, TEST_COMIC_BOOK_ID, TEST_REFERENCE_NUMBER, false);
+    verify(metadataService)
+        .scrapeComic(TEST_METADATA_SOURCE_ID, TEST_COMIC_ID, TEST_REFERENCE_NUMBER, false);
   }
 
   @Test
   void process_fileContentsNotLoaded() {
-    Mockito.when(comicBook.isFileContentsLoaded()).thenReturn(false);
+    when(comic.isLoadingFileContents()).thenReturn(true);
 
-    assertNull(processor.process(comicBook));
+    assertNull(processor.process(comic));
   }
 
   @Test
   void process_isPurging() {
-    Mockito.when(comicBook.isPurging()).thenReturn(true);
+    when(comic.isPurging()).thenReturn(true);
 
-    assertNull(processor.process(comicBook));
+    assertNull(processor.process(comic));
   }
 
   @Test
   void process_errorThresholdExceeded() throws MetadataException {
-    Mockito.when(stepExecution.getSkipCount()).thenReturn(TEST_ERROR_COUNT + 1);
+    when(stepExecution.getSkipCount()).thenReturn(TEST_ERROR_COUNT + 1);
     processor.errorThreshold = TEST_ERROR_COUNT;
 
-    final ComicBook result = processor.process(comicBook);
+    final Comic result = processor.process(comic);
 
     assertNotNull(result);
-    assertSame(comicBook, result);
+    assertSame(comic, result);
 
-    Mockito.verify(metadataService, Mockito.never())
-        .scrapeComic(
-            Mockito.anyLong(), Mockito.anyLong(), Mockito.anyString(), Mockito.anyBoolean());
+    verify(metadataService, never()).scrapeComic(anyLong(), anyLong(), anyString(), anyBoolean());
   }
 
   @Test
   void process_errorOccurs() throws MetadataException {
-    Mockito.when(
-            metadataService.scrapeComic(
-                Mockito.anyLong(), Mockito.anyLong(), Mockito.anyString(), Mockito.anyBoolean()))
+    when(metadataService.scrapeComic(anyLong(), anyLong(), anyString(), anyBoolean()))
         .thenThrow(MetadataException.class);
-    final ComicBook result = processor.process(comicBook);
+    final Comic result = processor.process(comic);
 
     assertNotNull(result);
-    assertSame(comicBook, result);
+    assertSame(comic, result);
 
-    Mockito.verify(metadataService, Mockito.times(1))
-        .scrapeComic(TEST_METADATA_SOURCE_ID, TEST_COMIC_BOOK_ID, TEST_REFERENCE_NUMBER, false);
+    verify(metadataService)
+        .scrapeComic(TEST_METADATA_SOURCE_ID, TEST_COMIC_ID, TEST_REFERENCE_NUMBER, false);
   }
 
   @Test
   void beforeStep() {
-    Mockito.when(jobParameters.getLong(SCRAPE_METADATA_JOB_ERROR_THRESHOLD))
+    when(jobParameters.getLong(SCRAPE_METADATA_JOB_ERROR_THRESHOLD))
         .thenReturn(TEST_ERROR_THRESHOLD);
 
     processor.beforeStep(stepExecution);
@@ -152,41 +147,41 @@ class ScrapeMetadataProcessorTest {
 
     assertNull(result);
 
-    Mockito.verify(stepExecution, Mockito.times(1)).getSkipCount();
+    verify(stepExecution).getSkipCount();
   }
 
   @Test
   void afterStep_belowThreshold() {
-    Mockito.when(stepExecution.getSkipCount()).thenReturn(TEST_ERROR_THRESHOLD - 1);
+    when(stepExecution.getSkipCount()).thenReturn(TEST_ERROR_THRESHOLD - 1);
 
     final ExitStatus result = processor.afterStep(stepExecution);
 
     assertNull(result);
 
-    Mockito.verify(stepExecution, Mockito.times(1)).getSkipCount();
+    verify(stepExecution).getSkipCount();
   }
 
   @Test
   void afterStep_processSkipCountMeetsThreshold() {
-    Mockito.when(stepExecution.getSkipCount()).thenReturn(TEST_ERROR_THRESHOLD);
+    when(stepExecution.getSkipCount()).thenReturn(TEST_ERROR_THRESHOLD);
 
     final ExitStatus result = processor.afterStep(stepExecution);
 
     assertNotNull(result);
     assertEquals(ExitStatus.FAILED, result);
 
-    Mockito.verify(stepExecution, Mockito.times(1)).getSkipCount();
+    verify(stepExecution).getSkipCount();
   }
 
   @Test
   void afterStep_processSkipCountExceedsThreshold() {
-    Mockito.when(stepExecution.getSkipCount()).thenReturn(TEST_ERROR_THRESHOLD + 1);
+    when(stepExecution.getSkipCount()).thenReturn(TEST_ERROR_THRESHOLD + 1);
 
     final ExitStatus result = processor.afterStep(stepExecution);
 
     assertNotNull(result);
     assertEquals(ExitStatus.FAILED, result);
 
-    Mockito.verify(stepExecution, Mockito.times(1)).getSkipCount();
+    verify(stepExecution).getSkipCount();
   }
 }

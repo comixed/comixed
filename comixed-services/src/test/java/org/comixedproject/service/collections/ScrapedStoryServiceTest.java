@@ -19,15 +19,19 @@
 package org.comixedproject.service.collections;
 
 import static junit.framework.TestCase.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.lists.PublishStoryListUpdateAction;
 import org.comixedproject.model.collections.ScrapedStory;
 import org.comixedproject.repositories.collections.ScrapedStoryRepository;
-import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.service.lists.StoryException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,7 +49,7 @@ class ScrapedStoryServiceTest {
 
   @InjectMocks private ScrapedStoryService service;
   @Mock private ScrapedStoryRepository scrapedStoryRepository;
-  @Mock private ComicBookService comicBookService;
+  @Mock private ComicService comicService;
   @Mock private PublishStoryListUpdateAction publishStoryListUpdateAction;
   @Mock private ScrapedStory story;
 
@@ -53,8 +57,8 @@ class ScrapedStoryServiceTest {
 
   @BeforeEach
   void setUp() {
-    Mockito.when(story.getName()).thenReturn(TEST_STORY_NAME);
-    Mockito.when(story.getPublisher()).thenReturn(TEST_PUBLISHER);
+    when(story.getName()).thenReturn(TEST_STORY_NAME);
+    when(story.getPublisher()).thenReturn(TEST_PUBLISHER);
   }
 
   @Test
@@ -62,26 +66,25 @@ class ScrapedStoryServiceTest {
     final List<ScrapedStory> stories = new ArrayList<>();
     stories.add(story);
 
-    Mockito.when(scrapedStoryRepository.findAll()).thenReturn(stories);
+    when(scrapedStoryRepository.findAll()).thenReturn(stories);
 
     final Set<String> result = service.loadAll();
 
     assertNotNull(result);
     assertTrue(result.contains(TEST_STORY_NAME));
 
-    Mockito.verify(scrapedStoryRepository, Mockito.times(1)).findAll();
+    verify(scrapedStoryRepository).findAll();
   }
 
   @Test
   void findByName() {
     final List<ScrapedStory> stories = new ArrayList<>();
     stories.add(story);
-    Mockito.when(scrapedStoryRepository.findByName(Mockito.anyString())).thenReturn(stories);
+    when(scrapedStoryRepository.findByName(anyString())).thenReturn(stories);
 
-    final List<String> publishers = new ArrayList<>();
+    final Set<String> publishers = new HashSet<>();
     publishers.add(TEST_PUBLISHER);
-    Mockito.when(comicBookService.getAllPublishersForStory(Mockito.anyString()))
-        .thenReturn(publishers);
+    when(comicService.getAllPublishersForStory(anyString())).thenReturn(publishers);
 
     final Set<ScrapedStory> result = service.findByName(TEST_STORY_NAME);
 
@@ -90,12 +93,12 @@ class ScrapedStoryServiceTest {
     assertTrue(result.contains(story));
     assertTrue(result.contains(new ScrapedStory(TEST_STORY_NAME, TEST_PUBLISHER)));
 
-    Mockito.verify(scrapedStoryRepository, Mockito.times(1)).findByName(TEST_STORY_NAME);
+    verify(scrapedStoryRepository).findByName(TEST_STORY_NAME);
   }
 
   @Test
   void createStory() throws StoryException, PublishingException {
-    Mockito.when(scrapedStoryRepository.save(storyArgumentCaptor.capture())).thenReturn(story);
+    when(scrapedStoryRepository.save(storyArgumentCaptor.capture())).thenReturn(story);
 
     final ScrapedStory result = service.createStory(story);
 
@@ -107,16 +110,14 @@ class ScrapedStoryServiceTest {
     assertEquals(TEST_STORY_NAME, model.getName());
     assertEquals(TEST_PUBLISHER, model.getPublisher());
 
-    Mockito.verify(scrapedStoryRepository, Mockito.times(1)).save(model);
-    Mockito.verify(publishStoryListUpdateAction, Mockito.times(1)).publish(result);
+    verify(scrapedStoryRepository).save(model);
+    verify(publishStoryListUpdateAction).publish(result);
   }
 
   @Test
   void createStory_publishingException() throws StoryException, PublishingException {
-    Mockito.when(scrapedStoryRepository.save(storyArgumentCaptor.capture())).thenReturn(story);
-    Mockito.doThrow(PublishingException.class)
-        .when(publishStoryListUpdateAction)
-        .publish(Mockito.any());
+    when(scrapedStoryRepository.save(storyArgumentCaptor.capture())).thenReturn(story);
+    doThrow(PublishingException.class).when(publishStoryListUpdateAction).publish(any());
 
     final ScrapedStory result = service.createStory(story);
 
@@ -128,25 +129,25 @@ class ScrapedStoryServiceTest {
     assertEquals(TEST_STORY_NAME, model.getName());
     assertEquals(TEST_PUBLISHER, model.getPublisher());
 
-    Mockito.verify(scrapedStoryRepository, Mockito.times(1)).save(model);
-    Mockito.verify(publishStoryListUpdateAction, Mockito.times(1)).publish(result);
+    verify(scrapedStoryRepository).save(model);
+    verify(publishStoryListUpdateAction).publish(result);
   }
 
   @Test
   void getForName() {
-    Mockito.when(scrapedStoryRepository.getByName(Mockito.anyString())).thenReturn(story);
+    when(scrapedStoryRepository.getByName(anyString())).thenReturn(story);
 
     final ScrapedStory result = service.getForName(TEST_STORY_NAME);
 
     assertNotNull(result);
     assertSame(story, result);
 
-    Mockito.verify(scrapedStoryRepository, Mockito.times(1)).getByName(TEST_STORY_NAME);
+    verify(scrapedStoryRepository).getByName(TEST_STORY_NAME);
   }
 
   @Test
   void saveStory() throws PublishingException {
-    Mockito.when(scrapedStoryRepository.save(storyArgumentCaptor.capture())).thenReturn(story);
+    when(scrapedStoryRepository.save(storyArgumentCaptor.capture())).thenReturn(story);
 
     final ScrapedStory result = service.saveStory(story);
 
@@ -158,16 +159,14 @@ class ScrapedStoryServiceTest {
     assertEquals(TEST_STORY_NAME, model.getName());
     assertEquals(TEST_PUBLISHER, model.getPublisher());
 
-    Mockito.verify(scrapedStoryRepository, Mockito.times(1)).save(model);
-    Mockito.verify(publishStoryListUpdateAction, Mockito.times(1)).publish(result);
+    verify(scrapedStoryRepository).save(model);
+    verify(publishStoryListUpdateAction).publish(result);
   }
 
   @Test
   void saveStory_pulishingException() throws PublishingException {
-    Mockito.when(scrapedStoryRepository.save(storyArgumentCaptor.capture())).thenReturn(story);
-    Mockito.doThrow(PublishingException.class)
-        .when(publishStoryListUpdateAction)
-        .publish(Mockito.any());
+    when(scrapedStoryRepository.save(storyArgumentCaptor.capture())).thenReturn(story);
+    doThrow(PublishingException.class).when(publishStoryListUpdateAction).publish(any());
 
     final ScrapedStory result = service.saveStory(story);
 
@@ -179,7 +178,7 @@ class ScrapedStoryServiceTest {
     assertEquals(TEST_STORY_NAME, model.getName());
     assertEquals(TEST_PUBLISHER, model.getPublisher());
 
-    Mockito.verify(scrapedStoryRepository, Mockito.times(1)).save(model);
-    Mockito.verify(publishStoryListUpdateAction, Mockito.times(1)).publish(result);
+    verify(scrapedStoryRepository).save(model);
+    verify(publishStoryListUpdateAction).publish(result);
   }
 }

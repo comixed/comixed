@@ -21,7 +21,7 @@ package org.comixedproject.batch.initiators;
 import static org.comixedproject.batch.comicpages.MarkBlockedPagesConfiguration.JOB_MARK_BLOCKED_PAGES_STARTED;
 import static org.comixedproject.batch.comicpages.MarkBlockedPagesConfiguration.MARK_BLOCKED_PAGES_JOB;
 import static org.comixedproject.service.admin.ConfigurationService.CFG_MANAGE_BLOCKED_PAGES;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.comixedproject.service.admin.ConfigurationService;
 import org.comixedproject.service.batch.BatchProcessesService;
@@ -64,7 +64,7 @@ class MarkBlockedPagesInitiatorTest {
   @Captor private ArgumentCaptor<JobParameters> jobParametersArgumentCaptor;
 
   @BeforeEach
-  public void setUp()
+  void setUp()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
           InvalidJobParametersException,

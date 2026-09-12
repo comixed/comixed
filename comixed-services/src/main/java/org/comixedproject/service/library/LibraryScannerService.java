@@ -33,8 +33,7 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
 import org.comixedproject.service.admin.ConfigurationChangedListener;
 import org.comixedproject.service.admin.ConfigurationService;
-import org.comixedproject.service.comicbooks.ComicBookService;
-import org.comixedproject.service.comicbooks.ComicDetailService;
+import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.service.comicfiles.ComicFileService;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,8 +49,7 @@ import org.springframework.util.StringUtils;
 @Log4j2
 public class LibraryScannerService implements InitializingBean, ConfigurationChangedListener {
   @Autowired private ConfigurationService configurationService;
-  @Autowired private ComicBookService comicBookService;
-  @Autowired private ComicDetailService comicDetailService;
+  @Autowired private ComicService comicService;
   @Autowired private ComicFileService comicFileService;
 
   private static final Object SEMAPHORE = new Object();
@@ -196,9 +194,9 @@ public class LibraryScannerService implements InitializingBean, ConfigurationCha
     if (FileUtils.isDirectory(new File(filename), LinkOption.NOFOLLOW_LINKS)) {
       this.registerDirectory(Path.of(filename));
     } else {
-      if (this.comicDetailService.filenameFound(filename)) {
+      if (this.comicService.filenameFound(filename)) {
         log.debug("Missing file found: {}", filename);
-        this.comicDetailService.markComicAsFound(filename);
+        this.comicService.markComicAsFound(filename);
       } else {
         log.debug("Comic book discovered: {}", filename);
         this.comicFileService.discoverComicFile(filename);
@@ -213,7 +211,7 @@ public class LibraryScannerService implements InitializingBean, ConfigurationCha
       this.keyMap.remove(path);
     } else {
       log.debug("File deleted: {}", filename);
-      this.comicDetailService.markComicAsMissing(filename);
+      this.comicService.markComicAsMissing(filename);
     }
   }
 
@@ -222,25 +220,25 @@ public class LibraryScannerService implements InitializingBean, ConfigurationCha
       if (!this.active) {
         this.active = true;
         log.info("Updating currently missing comics");
-        this.comicBookService
-            .getAllComicDetails(true)
+        this.comicService
+            .getAllComicDetailsByMissingFlag(true)
             .forEach(
                 filename -> {
                   final File file = new File(filename);
                   if (file.exists()) {
                     log.trace("Missing comic file was found: {}", filename);
-                    this.comicDetailService.markComicAsFound(filename);
+                    this.comicService.markComicAsFound(filename);
                   }
                 });
         log.info("Scanning remaining comics");
-        this.comicBookService
-            .getAllComicDetails(false)
+        this.comicService
+            .getAllComicDetailsByMissingFlag(false)
             .forEach(
                 filename -> {
                   final File file = new File(filename);
                   if (!file.exists()) {
                     log.trace("Comic file is missing: {}", filename);
-                    this.comicDetailService.markComicAsMissing(filename);
+                    this.comicService.markComicAsMissing(filename);
                   }
                 });
         this.active = false;

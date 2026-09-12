@@ -20,12 +20,9 @@ package org.comixedproject.batch.comicbooks;
 
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.batch.comicbooks.processors.PurgeMarkedComicsProcessor;
-import org.comixedproject.batch.comicbooks.processors.RemoveComicBooksWithoutDetailsProcessor;
 import org.comixedproject.batch.comicbooks.readers.PurgeMarkedComicsReader;
-import org.comixedproject.batch.comicbooks.readers.RemoveComicBooksWithoutDetailsReader;
-import org.comixedproject.batch.library.writers.RemoveDeletedComicBooksWriter;
-import org.comixedproject.batch.writers.NoopWriter;
-import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.batch.library.writers.RemoveDeletedComicsWriter;
+import org.comixedproject.model.comicbooks.Comic;
 import org.springframework.batch.core.job.Job;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
@@ -62,38 +59,8 @@ public class PurgeLibraryConfiguration {
   @Bean(name = PURGE_LIBRARY_JOB)
   public Job purgeLibraryJob(
       final JobRepository jobRepository,
-      @Qualifier("purgeMarkedComicsStep") final Step purgeMarkedComicsStep,
-      @Qualifier("removeComicBooksWithoutDetailsStep") final Step removeMalformedComicBooksStep) {
-    return new JobBuilder(PURGE_LIBRARY_JOB, jobRepository)
-        .start(removeMalformedComicBooksStep)
-        .next(purgeMarkedComicsStep)
-        .build();
-  }
-
-  /**
-   * Returns the remove malformed comics step.
-   *
-   * @param jobRepository the job repository
-   * @param platformTransactionManager the transaction manager
-   * @param reader the reader
-   * @param processor the processor
-   * @param writer the writer
-   * @return the step
-   */
-  @Bean(name = "removeComicBooksWithoutDetailsStep")
-  public Step removeComicBooksWithoutDetailsStep(
-      final JobRepository jobRepository,
-      final PlatformTransactionManager platformTransactionManager,
-      final RemoveComicBooksWithoutDetailsReader reader,
-      final RemoveComicBooksWithoutDetailsProcessor processor,
-      final NoopWriter<ComicBook> writer) {
-    return new StepBuilder("removeComicBooksWithoutDetailsStep", jobRepository)
-        .<ComicBook, ComicBook>chunk(this.chunkSize)
-        .transactionManager(platformTransactionManager)
-        .reader(reader)
-        .processor(processor)
-        .writer(writer)
-        .build();
+      @Qualifier("purgeMarkedComicsStep") final Step purgeMarkedComicsStep) {
+    return new JobBuilder(PURGE_LIBRARY_JOB, jobRepository).start(purgeMarkedComicsStep).build();
   }
 
   /**
@@ -112,9 +79,9 @@ public class PurgeLibraryConfiguration {
       final PlatformTransactionManager platformTransactionManager,
       final PurgeMarkedComicsReader reader,
       final PurgeMarkedComicsProcessor processor,
-      final RemoveDeletedComicBooksWriter writer) {
+      final RemoveDeletedComicsWriter writer) {
     return new StepBuilder("purgeMarkedComicsStep", jobRepository)
-        .<ComicBook, ComicBook>chunk(this.chunkSize)
+        .<Comic, Comic>chunk(this.chunkSize)
         .transactionManager(platformTransactionManager)
         .reader(reader)
         .processor(processor)

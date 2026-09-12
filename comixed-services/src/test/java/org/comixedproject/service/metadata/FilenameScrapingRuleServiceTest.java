@@ -73,7 +73,7 @@ class FilenameScrapingRuleServiceTest {
   private List<String> decodedRow = new ArrayList<>();
 
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     filenameScrapingRuleList.add(filenameScrapingRule);
 
     Mockito.when(filenameScrapingRule.getPriority()).thenReturn(TEST_PRIORITY);

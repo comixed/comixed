@@ -33,7 +33,7 @@ import {
 import {
   COMIC_BOOK_SELECTION_FEATURE_KEY,
   initialState as initialComicBookSelectionState
-} from '@app/comic-books/reducers/comic-book-selection.reducer';
+} from '@app/comic-books/reducers/comic-selection.reducer';
 import { DUPLICATE_COMIC_1 } from '@app/library/library.fixtures';
 import {
   initialState as initialLibraryPluginState,

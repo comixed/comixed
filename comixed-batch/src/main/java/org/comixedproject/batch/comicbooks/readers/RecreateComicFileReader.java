@@ -21,7 +21,7 @@ package org.comixedproject.batch.comicbooks.readers;
 import java.util.List;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.Comic;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -40,8 +40,8 @@ public class RecreateComicFileReader extends AbstractComicReader {
   private int chunkSize;
 
   @Override
-  protected List<ComicBook> doLoadComics() {
+  protected List<Comic> doLoadComics() {
     log.trace("Fetching comics to be recreated");
-    return this.comicBookService.findComicsToRecreate(this.chunkSize);
+    return this.comicService.getComicsToBeRecreated(this.chunkSize);
   }
 }

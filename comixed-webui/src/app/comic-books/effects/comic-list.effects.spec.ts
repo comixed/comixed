@@ -92,7 +92,7 @@ describe('ComicListEffects', () => {
   const SERIES = COMIC_LIST[0].series;
   const VOLUME = COMIC_LIST[0].volume;
   const PAGE_COUNT = 0;
-  const IDS = COMIC_LIST.map(entry => entry.comicBookId);
+  const IDS = COMIC_LIST.map(entry => entry.comicDetailId);
   const COVER_YEARS = [1965, 1971, 1996, 1998, 2006];
   const COVER_MONTHS = [1, 3, 4, 7, 9];
   const TOTAL_COUNT = COMIC_LIST.length * 2;

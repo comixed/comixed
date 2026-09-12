@@ -23,9 +23,9 @@ import static junit.framework.TestCase.*;
 import java.util.ArrayList;
 import java.util.List;
 import org.comixedproject.model.collections.Issue;
-import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.repositories.collections.IssueRepository;
-import org.comixedproject.service.comicbooks.ComicDetailService;
+import org.comixedproject.service.comicbooks.ComicService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -47,25 +47,25 @@ class IssueServiceTest {
 
   @InjectMocks private IssueService service;
   @Mock private IssueRepository issueRepository;
-  @Mock private ComicDetailService comicDetailService;
+  @Mock private ComicService comicService;
   @Mock private List<Issue> savedIssueList;
-  @Mock private ComicDetail comicDetail;
+  @Mock private Comic comic;
 
   private List<Issue> issueList = new ArrayList<>();
-  private List<ComicDetail> comicDetailList = new ArrayList<>();
+  private List<Comic> comicList = new ArrayList<>();
 
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     final Issue issue = new Issue();
     issue.setSeries(TEST_SERIES);
     issue.setVolume(TEST_VOLUME);
     issueList.add(issue);
 
-    Mockito.when(comicDetail.getPublisher()).thenReturn(TEST_PUBLISHER);
-    Mockito.when(comicDetail.getSeries()).thenReturn(TEST_SERIES);
-    Mockito.when(comicDetail.getVolume()).thenReturn(TEST_VOLUME);
-    Mockito.when(comicDetail.getIssueNumber()).thenReturn(TEST_ISSUE_NUMBER);
-    comicDetailList.add(comicDetail);
+    Mockito.when(comic.getPublisher()).thenReturn(TEST_PUBLISHER);
+    Mockito.when(comic.getSeries()).thenReturn(TEST_SERIES);
+    Mockito.when(comic.getVolume()).thenReturn(TEST_VOLUME);
+    Mockito.when(comic.getIssueNumber()).thenReturn(TEST_ISSUE_NUMBER);
+    comicList.add(comic);
   }
 
   @Test
@@ -103,13 +103,13 @@ class IssueServiceTest {
             issueRepository.getAll(Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
         .thenReturn(new ArrayList<>());
     Mockito.when(
-            comicDetailService.getAllComicBooksForPublisherAndSeriesAndVolume(
+            comicService.getAllComicBooksForPublisherAndSeriesAndVolume(
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.anyBoolean()))
-        .thenReturn(comicDetailList);
+        .thenReturn(comicList);
 
     final List<Issue> result = service.getAll(TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME);
 
@@ -122,7 +122,7 @@ class IssueServiceTest {
 
     Mockito.verify(issueRepository, Mockito.times(1))
         .getAll(TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME);
-    Mockito.verify(comicDetailService, Mockito.times(1))
+    Mockito.verify(comicService, Mockito.times(1))
         .getAllComicBooksForPublisherAndSeriesAndVolume(
             TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME, "", false);
   }

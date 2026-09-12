@@ -25,8 +25,7 @@ import org.comixedproject.adaptors.file.FileAdaptor;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.batch.PurgeLibraryEvent;
 import org.comixedproject.model.batch.UpdateMetadataEvent;
-import org.comixedproject.service.comicbooks.ComicBookService;
-import org.comixedproject.service.comicbooks.ComicDetailService;
+import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.service.comicpages.PageCacheService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -42,8 +41,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Log4j2
 public class LibraryService {
-  @Autowired private ComicBookService comicBookService;
-  @Autowired private ComicDetailService comicDetailService;
+  @Autowired private ComicService comicService;
   @Autowired private FileAdaptor fileAdaptor;
   @Autowired private PageCacheService pageCacheService;
   @Autowired private ApplicationEventPublisher applicationEventPublisher;
@@ -72,7 +70,7 @@ public class LibraryService {
   @Async
   public void updateMetadata(final List<Long> ids) {
     log.debug("Preparing {} comic book(s) for metadata update", ids.size());
-    this.comicDetailService.prepareForMetadataUpdate(ids);
+    this.comicService.prepareForMetadataUpdate(ids);
     log.debug("Initiating update batch process");
     this.applicationEventPublisher.publishEvent(UpdateMetadataEvent.instance);
   }
@@ -84,7 +82,7 @@ public class LibraryService {
    */
   @Transactional
   public void prepareForMetadataUpdate(final List<Long> ids) {
-    this.comicDetailService.prepareForMetadataUpdate(ids);
+    this.comicService.prepareForMetadataUpdate(ids);
   }
 
   /**
@@ -94,13 +92,13 @@ public class LibraryService {
    */
   public void prepareForOrganization(final List<Long> ids) {
     log.trace("Marking comics to be organized");
-    this.comicBookService.prepareForOrganization(ids);
+    this.comicService.prepareForOrganization(ids);
   }
 
   /** Marks the entire library for organization. */
   /** Updates the entire library for organization. */
   public void prepareAllForOrganization() {
-    this.comicBookService.prepareAllForOrganization();
+    this.comicService.prepareAllForOrganization();
   }
 
   /**
@@ -112,7 +110,7 @@ public class LibraryService {
   public void prepareToRecreate(final List<Long> ids, final ArchiveType archiveType) {
     final long started = System.currentTimeMillis();
     log.debug("Preparing to recreate {} comic book file(s)", ids.size());
-    this.comicDetailService.prepareForRecreation(ids, archiveType);
+    this.comicService.prepareForRecreation(ids, archiveType);
     log.debug(
         "Comic book files prepared for recreation: {}ms", System.currentTimeMillis() - started);
   }
@@ -120,7 +118,7 @@ public class LibraryService {
   /** Begins the process of purging comics from the library. */
   @Transactional
   public void prepareForPurging() {
-    this.comicBookService.prepareComicBooksForDeleting();
+    this.comicService.prepareComicBooksForDeleting();
     this.applicationEventPublisher.publishEvent(PurgeLibraryEvent.instance);
   }
 }

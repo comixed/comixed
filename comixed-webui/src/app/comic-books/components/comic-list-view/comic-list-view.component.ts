@@ -391,7 +391,7 @@ export class ComicListViewComponent implements OnInit, AfterViewInit {
         );
         this.store.dispatch(
           convertSingleComicBook({
-            id: this.selectedComic$.value.comicBookId,
+            id: this.selectedComic$.value.comicDetailId,
             archiveType: archiveTypeFromString(archiveTypeString)
           })
         );
@@ -469,13 +469,13 @@ export class ComicListViewComponent implements OnInit, AfterViewInit {
     if (deleted) {
       this.store.dispatch(
         deleteSingleComicBook({
-          comicBookId: this.selectedComic$.value.comicBookId
+          comicBookId: this.selectedComic$.value.comicDetailId
         })
       );
     } else {
       this.store.dispatch(
         undeleteSingleComicBook({
-          comicBookId: this.selectedComic$.value.comicBookId
+          comicBookId: this.selectedComic$.value.comicDetailId
         })
       );
     }
@@ -543,7 +543,7 @@ export class ComicListViewComponent implements OnInit, AfterViewInit {
       confirm: () => {
         this.logger.debug('Updating metadata for a single comic book:', comic);
         this.store.dispatch(
-          updateSingleComicBookMetadata({ comicBookId: comic.comicBookId })
+          updateSingleComicBookMetadata({ comicBookId: comic.comicDetailId })
         );
       }
     });
@@ -608,7 +608,7 @@ export class ComicListViewComponent implements OnInit, AfterViewInit {
       confirm: () => {
         this.logger.debug('Rescanning a single comic book:', comic);
         this.store.dispatch(
-          rescanSingleComicBook({ comicBookId: comic.comicBookId })
+          rescanSingleComicBook({ comicBookId: comic.comicDetailId })
         );
       }
     });
@@ -647,12 +647,12 @@ export class ComicListViewComponent implements OnInit, AfterViewInit {
         this.logger.debug(
           'Running plugin on current comic book:',
           plugin,
-          comic.comicBookId
+          comic.comicDetailId
         );
         this.store.dispatch(
           runLibraryPluginOnOneComicBook({
             plugin,
-            comicBookId: comic.comicBookId
+            comicBookId: comic.comicDetailId
           })
         );
       }

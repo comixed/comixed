@@ -50,8 +50,8 @@ import { InitialUserAccountEffects } from '@app/user/effects/initial-user-accoun
 import { CreateAdminPageComponent } from './pages/create-admin-page/create-admin-page.component';
 import { manageUsersFeature } from '@app/user/reducers/manage-users.reducer';
 import { ManageUsersEffects } from '@app/user/effects/manage-users.effects';
-import { readComicBooksFeature } from '@app/user/reducers/read-comic-books.reducer';
-import { ReadComicBooksEffects } from '@app/user/effects/read-comic-books.effects';
+import { readComicBooksFeature } from '@app/user/reducers/read-comics.reducer';
+import { ReadComicsEffects } from '@app/user/effects/read-comics.effects';
 
 @NgModule({
   exports: [EditAccountBarComponent],
@@ -68,7 +68,7 @@ import { ReadComicBooksEffects } from '@app/user/effects/read-comic-books.effect
       InitialUserAccountEffects,
       UserEffects,
       ManageUsersEffects,
-      ReadComicBooksEffects
+      ReadComicsEffects
     ]),
     GravatarModule,
     MatCardModule,

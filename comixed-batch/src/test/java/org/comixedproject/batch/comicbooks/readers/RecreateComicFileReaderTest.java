@@ -19,16 +19,18 @@
 package org.comixedproject.batch.comicbooks.readers;
 
 import static junit.framework.TestCase.*;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.service.comicbooks.ComicService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
@@ -36,50 +38,50 @@ class RecreateComicFileReaderTest {
   private static final int MAX_RECORDS = 25;
 
   @InjectMocks private RecreateComicFileReader reader;
-  @Mock private ComicBookService comicBookService;
-  @Mock private ComicBook comicBook;
+  @Mock private ComicService comicService;
+  @Mock private Comic comic;
 
-  private List<ComicBook> comicBookList = new ArrayList<>();
+  private List<Comic> comicBookList = new ArrayList<>();
 
   @Test
   void read_noneLoaded_manyFound() {
-    for (int index = 0; index < MAX_RECORDS; index++) comicBookList.add(comicBook);
+    for (int index = 0; index < MAX_RECORDS; index++) comicBookList.add(comic);
 
-    Mockito.when(comicBookService.findComicsToRecreate(Mockito.anyInt())).thenReturn(comicBookList);
+    when(comicService.getComicsToBeRecreated(anyInt())).thenReturn(comicBookList);
 
-    final ComicBook result = reader.read();
+    final Comic result = reader.read();
 
     assertNotNull(result);
-    assertSame(comicBook, result);
+    assertSame(comic, result);
     assertFalse(comicBookList.isEmpty());
     assertEquals(MAX_RECORDS - 1, comicBookList.size());
 
-    Mockito.verify(comicBookService, Mockito.times(1)).findComicsToRecreate(reader.getChunkSize());
+    verify(comicService).getComicsToBeRecreated(reader.getChunkSize());
   }
 
   @Test
   void read_noneRemaining() {
-    Mockito.when(comicBookService.findComicsToRecreate(Mockito.anyInt())).thenReturn(comicBookList);
+    when(comicService.getComicsToBeRecreated(anyInt())).thenReturn(comicBookList);
 
     reader.comicBookList = comicBookList;
 
-    final ComicBook result = reader.read();
+    final Comic result = reader.read();
 
     assertNull(result);
     assertNull(reader.comicBookList);
 
-    Mockito.verify(comicBookService, Mockito.times(1)).findComicsToRecreate(reader.getChunkSize());
+    verify(comicService).getComicsToBeRecreated(reader.getChunkSize());
   }
 
   @Test
   void read_noneLoaded_noneFound() {
-    Mockito.when(comicBookService.findComicsToRecreate(Mockito.anyInt())).thenReturn(comicBookList);
+    when(comicService.getComicsToBeRecreated(anyInt())).thenReturn(comicBookList);
 
-    final ComicBook result = reader.read();
+    final Comic result = reader.read();
 
     assertNull(result);
     assertNull(reader.comicBookList);
 
-    Mockito.verify(comicBookService, Mockito.times(1)).findComicsToRecreate(reader.getChunkSize());
+    verify(comicService).getComicsToBeRecreated(reader.getChunkSize());
   }
 }

@@ -20,7 +20,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of, throwError } from 'rxjs';
 import { SingleBookScrapingEffects } from './single-book-scraping.effects';
-import { ComicBookScrapingService } from '@app/comic-metadata/services/comic-book-scraping.service';
+import { ComicScrapingService } from '@app/comic-metadata/services/comic-scraping.service';
 import { DISPLAYABLE_COMIC_4 } from '@app/comic-books/comic-books.fixtures';
 import {
   clearMetadataCache,
@@ -72,7 +72,7 @@ describe('SingleBookScrapingEffects', () => {
 
   let actions$: Observable<any>;
   let effects: SingleBookScrapingEffects;
-  let scrapingService: jasmine.SpyObj<ComicBookScrapingService>;
+  let scrapingService: jasmine.SpyObj<ComicScrapingService>;
   let alertService: AlertService;
 
   beforeEach(() => {
@@ -86,22 +86,20 @@ describe('SingleBookScrapingEffects', () => {
         SingleBookScrapingEffects,
         provideMockActions(() => actions$),
         {
-          provide: ComicBookScrapingService,
+          provide: ComicScrapingService,
           useValue: {
             loadScrapingVolumes: jasmine.createSpy(
-              'ComicBookScrapingService.loadScrapingVolumes()'
+              'ComicScrapingService.loadScrapingVolumes()'
             ),
             loadScrapingIssue: jasmine.createSpy(
-              'ComicBookScrapingService.loadScrapingIssue()'
+              'ComicScrapingService.loadScrapingIssue()'
             ),
             scrapeSingleBookComic: jasmine.createSpy(
-              'ComicBookScrapingService.scrapeSingleBookComic()'
+              'ComicScrapingService.scrapeSingleBookComic()'
             ),
-            clearCache: jasmine.createSpy(
-              'ComicBookScrapingService.clearCache()'
-            ),
+            clearCache: jasmine.createSpy('ComicScrapingService.clearCache()'),
             startMetadataUpdateProcess: jasmine.createSpy(
-              'ComicBookScrapingService.startMetadataUpdateProcess()'
+              'ComicScrapingService.startMetadataUpdateProcess()'
             )
           }
         },
@@ -111,8 +109,8 @@ describe('SingleBookScrapingEffects', () => {
 
     effects = TestBed.inject(SingleBookScrapingEffects);
     scrapingService = TestBed.inject(
-      ComicBookScrapingService
-    ) as jasmine.SpyObj<ComicBookScrapingService>;
+      ComicScrapingService
+    ) as jasmine.SpyObj<ComicScrapingService>;
     alertService = TestBed.inject(AlertService);
     spyOn(alertService, 'info');
     spyOn(alertService, 'error');

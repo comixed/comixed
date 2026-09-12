@@ -23,14 +23,16 @@ import static junit.framework.TestCase.assertFalse;
 import static org.comixedproject.opds.OPDSUtils.*;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.HashSet;
 import java.util.Set;
-import org.comixedproject.adaptors.comicbooks.ComicBookMetadataAdaptor;
+import org.comixedproject.adaptors.comicbooks.ComicMetadataAdaptor;
 import org.comixedproject.adaptors.file.FileTypeAdaptor;
 import org.comixedproject.model.archives.ArchiveType;
-import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicbooks.ComicTag;
 import org.comixedproject.model.comicbooks.ComicTagType;
 import org.comixedproject.opds.model.OPDSAcquisitionFeedEntry;
@@ -54,63 +56,62 @@ class OPDSUtilsTest {
   private static final String TEST_SERIES = "The Series Name";
 
   @InjectMocks private OPDSUtils utils;
-  @Mock private ComicBook comicBook;
-  @Mock private ComicDetail comicDetail;
+  @Mock private Comic comic;
   @Mock private FileTypeAdaptor fileTypeAdaptor;
-  @Mock private ComicBookMetadataAdaptor comicBookMetadataAdaptor;
+  @Mock private ComicMetadataAdaptor comicMetadataAdaptor;
 
   private Set<ComicTag> comicTags = new HashSet<>();
 
   @BeforeEach
   void setUp() {
-    Mockito.when(comicDetail.getArchiveType()).thenReturn(TEST_ARCHIVE_TYPE);
-    Mockito.when(comicDetail.getBaseFilename()).thenReturn(TEST_BASE_FILENAME);
-    comicTags.add(new ComicTag(comicDetail, ComicTagType.WRITER, TEST_CREDIT_NAME));
+    when(comic.getArchiveType()).thenReturn(TEST_ARCHIVE_TYPE);
+    when(comic.getBaseFilename()).thenReturn(TEST_BASE_FILENAME);
+    comicTags.add(new ComicTag(comic, ComicTagType.WRITER, TEST_CREDIT_NAME));
   }
 
   @Test
   void createComicLink() {
-    final OPDSLink result = utils.createComicLink(comicDetail);
+    final OPDSLink result = utils.createComicLink(comic);
 
     assertNotNull(result);
     assertEquals(TEST_ARCHIVE_TYPE.getMimeType(), result.getMimeType());
     assertEquals(
         String.format(
-            COMIC_LINK_URL, comicBook.getComicBookId(), utils.urlEncodeString(TEST_BASE_FILENAME)),
+            COMIC_LINK_URL, comic.getComicDetailId(), utils.urlEncodeString(TEST_BASE_FILENAME)),
         result.getReference());
   }
 
   @Test
   void createComicCoverLink_comicBookAdaptorException() {
-    final OPDSLink result = utils.createComicCoverLink(comicDetail);
+    final OPDSLink result = utils.createComicCoverLink(comic);
 
     assertNotNull(result);
     assertEquals(MIME_TYPE_IMAGE, result.getMimeType());
     assertEquals(OPDS_IMAGE_RELATION, result.getRelation());
     assertEquals(
-        String.format(COMIC_COVER_URL, comicBook.getComicBookId(), 0, 160), result.getReference());
+        String.format(COMIC_COVER_URL, comic.getComicDetailId(), 0, 160), result.getReference());
   }
 
   @Test
   void createComicCoverLink() {
-    final OPDSLink result = utils.createComicCoverLink(comicDetail);
+    final OPDSLink result = utils.createComicCoverLink(comic);
 
     assertNotNull(result);
     assertEquals(TEST_MIME_TYPE_IMAGE, result.getMimeType());
     assertEquals(OPDS_IMAGE_RELATION, result.getRelation());
     assertEquals(
-        String.format(COMIC_COVER_URL, comicBook.getComicBookId(), 0, 160), result.getReference());
+        String.format(COMIC_COVER_URL, comic.getComicDetailId(), 0, 160), result.getReference());
   }
 
   @Test
   void createComicThumbnailLink() {
-    final OPDSLink result = utils.createComicThumbnailLink(comicDetail);
+    final OPDSLink result = utils.createComicThumbnailLink(comic);
 
     assertNotNull(result);
     assertEquals(TEST_MIME_TYPE_IMAGE, result.getMimeType());
     assertEquals(OPDS_IMAGE_THUMBNAIL, result.getRelation());
     assertEquals(
-        String.format(COMIC_COVER_URL, comicBook.getComicBookId(), 0, 160), result.getReference());
+        String.format(COMIC_COVER_URL, comic.getComicDetailId(), 0, 160), result.getReference());
   }
 
   @Test
@@ -121,16 +122,16 @@ class OPDSUtilsTest {
 
   @Test
   void createComicEntry() {
-    Mockito.when(comicBookMetadataAdaptor.getDisplayableTitle(Mockito.any(ComicDetail.class)))
+    when(comicMetadataAdaptor.getDisplayableTitle(any(Comic.class)))
         .thenReturn(TEST_DISPLAYABLE_TITLE);
 
-    final OPDSAcquisitionFeedEntry result = utils.createComicEntry(comicDetail);
+    final OPDSAcquisitionFeedEntry result = utils.createComicEntry(comic);
 
     assertNotNull(result);
     assertEquals(TEST_DISPLAYABLE_TITLE, result.getTitle());
     assertFalse(result.getLinks().isEmpty());
 
-    Mockito.verify(comicBookMetadataAdaptor, Mockito.times(1)).getDisplayableTitle(comicDetail);
+    verify(comicMetadataAdaptor).getDisplayableTitle(comic);
   }
 
   @Test

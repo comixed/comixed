@@ -23,7 +23,7 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.model.library.DuplicatePage;
 import org.comixedproject.repositories.comicpages.ComicPageRepository;
-import org.comixedproject.service.comicbooks.ComicBookException;
+import org.comixedproject.service.comicbooks.ComicException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -109,8 +109,8 @@ public class DuplicatePageService {
         result
             .getComics()
             .add(
-                this.displayableComicService.getForComicBookId(page.getComicDetail().getComicId()));
-      } catch (ComicBookException error) {
+                this.displayableComicService.getForComicBookId(page.getComic().getComicDetailId()));
+      } catch (ComicException error) {
         throw new DuplicatePageException("Failed to load comic for page", error);
       }
     }

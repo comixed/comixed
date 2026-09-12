@@ -85,8 +85,8 @@ export const reducer = createReducer(
   on(comicUpdated, (state, action) => {
     const comics = deepClone(state.comics);
     const index = comics
-      .map(entry => entry.comicBookId)
-      .indexOf(action.comic.comicBookId);
+      .map(entry => entry.comicDetailId)
+      .indexOf(action.comic.comicDetailId);
     if (index !== -1) {
       comics[index] = { ...action.comic };
     }
@@ -94,7 +94,7 @@ export const reducer = createReducer(
   }),
   on(comicRemoved, (state, action) => {
     const comics = state.comics.filter(
-      entry => entry.comicBookId !== action.comic.comicBookId
+      entry => entry.comicDetailId !== action.comic.comicDetailId
     );
     return { ...state, comics };
   })

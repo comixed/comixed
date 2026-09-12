@@ -18,9 +18,10 @@
 
 package org.comixedproject.batch.comicbooks.listeners;
 
-import static org.comixedproject.model.messaging.batch.ProcessComicBooksStatus.RECREATE_COMIC_FILE_STEP;
+import static org.comixedproject.model.messaging.batch.ProcessComicsStatus.RECREATE_COMIC_FILE_STEP;
 
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.model.comicbooks.Comic;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.stereotype.Component;
 
@@ -32,7 +33,8 @@ import org.springframework.stereotype.Component;
 @Component
 @StepScope
 @Log4j2
-public class RecreateComicFileChunkListener<I, O> extends AbstractBatchProcessChunkListener<I, O> {
+public class RecreateComicFileChunkListener
+    extends AbstractBatchProcessChunkListener<Comic, Comic> {
   @Override
   protected String getStepName() {
     return RECREATE_COMIC_FILE_STEP;
@@ -40,16 +42,16 @@ public class RecreateComicFileChunkListener<I, O> extends AbstractBatchProcessCh
 
   @Override
   protected boolean isActive() {
-    return this.comicDetailService.getRecreatingCount() > 0L;
+    return this.comicService.getRecreatingCount() > 0L;
   }
 
   @Override
   protected long getProcessedElements() {
-    return this.comicBookService.getComicBookCount() - this.comicDetailService.getRecreatingCount();
+    return this.comicService.getComicCount() - this.comicService.getRecreatingCount();
   }
 
   @Override
   protected long getTotalElements() {
-    return this.comicBookService.getComicBookCount();
+    return this.comicService.getComicCount();
   }
 }

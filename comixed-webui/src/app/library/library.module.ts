@@ -63,12 +63,11 @@ import { UpdateMetadataEffects } from '@app/library/effects/update-metadata.effe
 import { organizeLibraryFeature } from '@app/library/reducers/organize-library.reducer';
 import { OrganizeLibraryEffects } from '@app/library/effects/organize-library.effects';
 import { convertComicBooksFeature } from '@app/library/reducers/convert-comic-books.reducer';
-import { ConvertComicBooksEffects } from '@app/library/effects/convert-comic-books.effects';
+import { ConvertComicsEffects } from '@app/library/effects/convert-comics.effects';
 import { purgeLibraryFeature } from '@app/library/reducers/purge-library.reducer';
 import { PurgeLibraryEffects } from '@app/library/effects/purge-library.effects';
 import { EditMultipleComicsComponent } from './components/edit-multiple-comics/edit-multiple-comics.component';
 import { LibraryEffects } from '@app/library/effects/library.effects';
-import { ComicBookListComponent } from './components/comic-book-list/comic-book-list.component';
 import { FlexLayoutModule } from '@angular-ru/cdk/flex-layout';
 import { duplicateComicsFeature } from '@app/library/reducers/duplicate-comics.reducer';
 import { DuplicateComicsEffects } from '@app/library/effects/duplicate-comics.effects';
@@ -99,7 +98,7 @@ import { DuplicateComicsEffects } from '@app/library/effects/duplicate-comics.ef
       RescanComicsEffects,
       UpdateMetadataEffects,
       OrganizeLibraryEffects,
-      ConvertComicBooksEffects,
+      ConvertComicsEffects,
       PurgeLibraryEffects
     ]),
     MatInputModule,
@@ -130,8 +129,7 @@ import { DuplicateComicsEffects } from '@app/library/effects/duplicate-comics.ef
     DuplicatePageListPageComponent,
     ComicDetailListDialogComponent,
     DuplicatePageDetailPageComponent,
-    EditMultipleComicsComponent,
-    ComicBookListComponent
+    EditMultipleComicsComponent
   ],
   exports: [CommonModule, CoreModule]
 })

@@ -25,7 +25,7 @@ import static org.comixedproject.service.admin.ConfigurationService.CFG_DONT_MOV
 import java.io.File;
 import java.util.Objects;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
+import org.comixedproject.adaptors.comicbooks.ComicAdaptor;
 import org.comixedproject.adaptors.comicbooks.ComicFileAdaptor;
 import org.comixedproject.adaptors.file.FileAdaptor;
 import org.comixedproject.model.library.OrganizingComic;
@@ -52,7 +52,7 @@ public class MoveComicFilesProcessor
   @Autowired private ConfigurationService configurationService;
   @Autowired private FileAdaptor fileAdaptor;
   @Autowired private ComicFileAdaptor comicFileAdaptor;
-  @Autowired private ComicBookAdaptor comicBookAdaptor;
+  @Autowired private ComicAdaptor comicAdaptor;
 
   JobParameters jobParameters;
 
@@ -65,11 +65,11 @@ public class MoveComicFilesProcessor
 
     if (this.configurationService.isFeatureEnabled(CFG_DONT_MOVE_UNSCRAPED_COMICS)
         && Objects.isNull(comic.isScraped())) {
-      log.error("Comic book is not scraped: id={}", comic.getComicBookId());
+      log.error("Comic book is not scraped: id={}", comic.getComicDetailId());
       return comic;
     }
 
-    log.debug("Getting target directory: id={}", comic.getComicBookId());
+    log.debug("Getting target directory: id={}", comic.getComicDetailId());
     final File targetDirectory =
         new File(this.jobParameters.getString(ORGANIZE_LIBRARY_JOB_TARGET_DIRECTORY));
     log.trace("Getting renaming rule");
@@ -85,7 +85,7 @@ public class MoveComicFilesProcessor
           this.comicFileAdaptor.createFilenameFromRule(
               comic, comic.getFilename(), renamingRule, targetDirectory.getAbsolutePath());
       final File metadataSourceFile =
-          new File(this.comicBookAdaptor.getMetadataFilename(comic.getFilename()));
+          new File(this.comicAdaptor.getMetadataFilename(comic.getFilename()));
       log.trace("Finding available filename");
       File comicDetailFile = comic.getFile();
       rebuiltFilename =
@@ -107,7 +107,7 @@ public class MoveComicFilesProcessor
 
       if (metadataSourceFile.exists()) {
         File metadataTargetFile =
-            new File(this.comicBookAdaptor.getMetadataFilename(comic.getUpdatedFilename()));
+            new File(this.comicAdaptor.getMetadataFilename(comic.getUpdatedFilename()));
         if (!this.fileAdaptor.sameFile(metadataSourceFile, metadataTargetFile)) {
           log.trace(
               "Moving comic metadata file: {} => {}",

@@ -24,7 +24,7 @@ import org.comixedproject.batch.comicbooks.listeners.UpdateMetadataJobListener;
 import org.comixedproject.batch.comicbooks.processors.UpdateMetadataProcessor;
 import org.comixedproject.batch.comicbooks.readers.UpdateMetadataReader;
 import org.comixedproject.batch.comicbooks.writers.UpdateMetadataWriter;
-import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.Comic;
 import org.springframework.batch.core.job.Job;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
@@ -86,9 +86,9 @@ public class UpdateMetadataConfiguration {
       final UpdateMetadataReader reader,
       final UpdateMetadataProcessor processor,
       final UpdateMetadataWriter writer,
-      final UpdateMetadataChunkListener<ComicBook, ComicBook> listener) {
+      final UpdateMetadataChunkListener listener) {
     return new StepBuilder(UPDATE_METADATA_JOB, jobRepository)
-        .<ComicBook, ComicBook>chunk(this.chunkSize)
+        .<Comic, Comic>chunk(this.chunkSize)
         .transactionManager(platformTransactionManager)
         .reader(reader)
         .processor(processor)

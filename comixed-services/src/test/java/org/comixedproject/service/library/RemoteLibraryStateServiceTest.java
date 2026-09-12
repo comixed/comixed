@@ -25,12 +25,11 @@ import java.util.List;
 import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.library.PublishRemoteLibraryUpdateAction;
-import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.net.library.PublisherAndYearSegment;
 import org.comixedproject.model.net.library.RemoteLibrarySegmentState;
 import org.comixedproject.model.net.library.RemoteLibraryState;
-import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.state.comicbooks.ComicStateAdaptor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -49,7 +48,7 @@ class RemoteLibraryStateServiceTest {
 
   @InjectMocks private RemoteLibraryStateService service;
   @Mock private ComicStateAdaptor comicStateAdaptor;
-  @Mock private ComicBookService comicBookService;
+  @Mock private ComicService comicService;
   @Mock private DuplicateComicService duplicateComicService;
   @Mock private List<RemoteLibrarySegmentState> publisherState;
   @Mock private List<RemoteLibrarySegmentState> seriesState;
@@ -61,25 +60,24 @@ class RemoteLibraryStateServiceTest {
   @Mock private List<RemoteLibrarySegmentState> archiveTypeState;
   @Mock private List<PublisherAndYearSegment> byPublisherAndYear;
   @Mock private PublishRemoteLibraryUpdateAction publishRemoteLibraryUpdateAction;
-  @Mock private ComicBook comicBook;
-  @Mock private ComicDetail comic;
+  @Mock private Comic comic;
 
   @Captor private ArgumentCaptor<RemoteLibraryState> libraryStateArgumentCaptor;
 
   @BeforeEach
-  public void setUp() {
-    when(comicBookService.getComicBookCount()).thenReturn(TEST_COMIC_COUNT);
-    when(comicBookService.getDeletedComicCount()).thenReturn(TEST_DELETED_COMIC_COUNT);
+  void setUp() {
+    when(comicService.getComicCount()).thenReturn(TEST_COMIC_COUNT);
+    when(comicService.getDeletedComicCount()).thenReturn(TEST_DELETED_COMIC_COUNT);
     when(duplicateComicService.getDuplicateComicBookCount()).thenReturn(TEST_DUPLICATE_COMIC_COUNT);
-    when(comicBookService.getPublishersState()).thenReturn(publisherState);
-    when(comicBookService.getSeriesState()).thenReturn(seriesState);
-    when(comicBookService.getCharactersState()).thenReturn(charactersState);
-    when(comicBookService.getTeamsState()).thenReturn(teamsState);
-    when(comicBookService.getLocationsState()).thenReturn(locationsState);
-    when(comicBookService.getStoriesState()).thenReturn(storiesState);
-    when(comicBookService.getComicBooksState()).thenReturn(comicsState);
-    when(comicBookService.getComicBookArchiveTypes()).thenReturn(archiveTypeState);
-    when(comicBookService.getByPublisherAndYear()).thenReturn(byPublisherAndYear);
+    when(comicService.getPublishersState()).thenReturn(publisherState);
+    when(comicService.getSeriesState()).thenReturn(seriesState);
+    when(comicService.getCharactersState()).thenReturn(charactersState);
+    when(comicService.getTeamsState()).thenReturn(teamsState);
+    when(comicService.getLocationsState()).thenReturn(locationsState);
+    when(comicService.getStoriesState()).thenReturn(storiesState);
+    when(comicService.getComicBooksState()).thenReturn(comicsState);
+    when(comicService.getComicBookArchiveTypes()).thenReturn(archiveTypeState);
+    when(comicService.getByPublisherAndYear()).thenReturn(byPublisherAndYear);
   }
 
   @Test
@@ -145,16 +143,16 @@ class RemoteLibraryStateServiceTest {
     assertSame(archiveTypeState, result.getArchiveTypes());
     assertSame(byPublisherAndYear, result.getByPublisherAndYear());
 
-    verify(comicBookService).getComicBookCount();
-    verify(comicBookService).getDeletedComicCount();
-    verify(comicBookService).getPublishersState();
-    verify(comicBookService).getSeriesState();
-    verify(comicBookService).getCharactersState();
-    verify(comicBookService).getTeamsState();
-    verify(comicBookService).getLocationsState();
-    verify(comicBookService).getStoriesState();
-    verify(comicBookService).getComicBooksState();
-    verify(comicBookService).getComicBookArchiveTypes();
-    verify(comicBookService).getByPublisherAndYear();
+    verify(comicService).getComicCount();
+    verify(comicService).getDeletedComicCount();
+    verify(comicService).getPublishersState();
+    verify(comicService).getSeriesState();
+    verify(comicService).getCharactersState();
+    verify(comicService).getTeamsState();
+    verify(comicService).getLocationsState();
+    verify(comicService).getStoriesState();
+    verify(comicService).getComicBooksState();
+    verify(comicService).getComicBookArchiveTypes();
+    verify(comicService).getByPublisherAndYear();
   }
 }

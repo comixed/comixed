@@ -18,7 +18,6 @@
 
 package org.comixedproject.adaptors.content;
 
-import static java.util.Calendar.*;
 import static org.apache.commons.lang3.StringUtils.trim;
 import static org.apache.commons.lang3.StringUtils.truncate;
 
@@ -29,8 +28,7 @@ import java.util.*;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.archive.model.ArchiveEntryType;
-import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicbooks.ComicTag;
 import org.comixedproject.model.comicbooks.ComicTagType;
 import org.comixedproject.model.comicpages.ComicPage;
@@ -64,7 +62,7 @@ public class ComicInfoXmlFilenameContentAdaptor implements FilenameContentAdapto
   }
 
   @Override
-  public void loadContent(final ComicBook comicBook, final String filename, final byte[] content)
+  public void loadContent(final Comic comic, final String filename, final byte[] content)
       throws ContentAdaptorException {
     log.trace("Reading ComicInfo.xml content");
     final ComicInfo comicInfo;
@@ -74,78 +72,75 @@ public class ComicInfoXmlFilenameContentAdaptor implements FilenameContentAdapto
               .getMapper()
               .readValue(new ByteArrayInputStream(content), ComicInfo.class);
       log.trace("Setting comic metadata");
-      comicBook.getComicDetail().setPublisher(trim(comicInfo.getPublisher()));
-      comicBook.getComicDetail().setSeries(trim(comicInfo.getSeries()));
-      comicBook.getComicDetail().setVolume(truncate(trim(comicInfo.getVolume()), 0, 4));
-      comicBook.getComicDetail().setIssueNumber(trim(comicInfo.getIssueNumber()));
+      comic.setPublisher(trim(comicInfo.getPublisher()));
+      comic.setSeries(trim(comicInfo.getSeries()));
+      comic.setVolume(truncate(trim(comicInfo.getVolume()), 0, 4));
+      comic.setIssueNumber(trim(comicInfo.getIssueNumber()));
       if (comicInfo.getYear() != null && comicInfo.getMonth() != null) {
         GregorianCalendar gc =
             new GregorianCalendar(comicInfo.getYear(), comicInfo.getMonth() - 1, 1);
-        comicBook.getComicDetail().setCoverDate(gc.getTime());
+        comic.setCoverDate(gc.getTime());
       }
-      comicBook.getComicDetail().setTitle(trim(comicInfo.getTitle()));
-      comicBook.getComicDetail().setDescription(trim(comicInfo.getSummary()));
-      comicBook.getComicDetail().setNotes(trim(comicInfo.getNotes()));
+      comic.setTitle(trim(comicInfo.getTitle()));
+      comic.setDescription(trim(comicInfo.getSummary()));
+      comic.setNotes(trim(comicInfo.getNotes()));
       if (comicInfo.getMetadata() != null
           && StringUtils.hasLength(comicInfo.getMetadata().getName())
           && StringUtils.hasLength(comicInfo.getMetadata().getReferenceId())) {
         log.debug("Loading comic metadata source details");
-        comicBook.setMetadataSourceName(comicInfo.getMetadata().getName());
-        comicBook.setMetadataReferenceId(trim(comicInfo.getMetadata().getReferenceId()));
+        comic.setMetadataSourceName(comicInfo.getMetadata().getName());
+        comic.setMetadataReferenceId(trim(comicInfo.getMetadata().getReferenceId()));
         if (StringUtils.hasLength(comicInfo.getMetadata().getLastScrapedDate())) {
-          comicBook.setLastScrapedDate(
-              this.dateFormat.parse(comicInfo.getMetadata().getLastScrapedDate()));
+          try {
+            comic.setLastScrapedDate(
+                this.dateFormat.parse(comicInfo.getMetadata().getLastScrapedDate()));
+          } catch (ParseException error) {
+            throw new ContentAdaptorException("Failed to last scraped data from metadata", error);
+          }
         }
       }
-      final ComicDetail detail = comicBook.getComicDetail();
-      detail.setWebAddress(comicInfo.getWeb());
+      comic.setWebAddress(comicInfo.getWeb());
       log.debug("Clearing comic tags");
-      detail.getTags().clear();
+      comic.getTags().clear();
       this.commandSeparatedList(comicInfo.getCharacters())
           .forEach(
-              name ->
-                  detail.getTags().add(new ComicTag(detail, ComicTagType.CHARACTER, trim(name))));
+              name -> comic.getTags().add(new ComicTag(comic, ComicTagType.CHARACTER, trim(name))));
       this.commandSeparatedList(comicInfo.getTeams())
-          .forEach(
-              name -> detail.getTags().add(new ComicTag(detail, ComicTagType.TEAM, trim(name))));
+          .forEach(name -> comic.getTags().add(new ComicTag(comic, ComicTagType.TEAM, trim(name))));
       this.commandSeparatedList(comicInfo.getLocations())
           .forEach(
-              name ->
-                  detail.getTags().add(new ComicTag(detail, ComicTagType.LOCATION, trim(name))));
+              name -> comic.getTags().add(new ComicTag(comic, ComicTagType.LOCATION, trim(name))));
       this.commandSeparatedList(comicInfo.getAlternateSeries())
           .forEach(
-              name -> detail.getTags().add(new ComicTag(detail, ComicTagType.STORY, trim(name))));
+              name -> comic.getTags().add(new ComicTag(comic, ComicTagType.STORY, trim(name))));
       this.commandSeparatedList(comicInfo.getWriter())
           .forEach(
-              name -> detail.getTags().add(new ComicTag(detail, ComicTagType.WRITER, trim(name))));
+              name -> comic.getTags().add(new ComicTag(comic, ComicTagType.WRITER, trim(name))));
       this.commandSeparatedList(comicInfo.getEditor())
           .forEach(
-              name -> detail.getTags().add(new ComicTag(detail, ComicTagType.EDITOR, trim(name))));
+              name -> comic.getTags().add(new ComicTag(comic, ComicTagType.EDITOR, trim(name))));
       this.commandSeparatedList(comicInfo.getPenciller())
           .forEach(
-              name ->
-                  detail.getTags().add(new ComicTag(detail, ComicTagType.PENCILLER, trim(name))));
+              name -> comic.getTags().add(new ComicTag(comic, ComicTagType.PENCILLER, trim(name))));
       this.commandSeparatedList(comicInfo.getInker())
           .forEach(
-              name -> detail.getTags().add(new ComicTag(detail, ComicTagType.INKER, trim(name))));
+              name -> comic.getTags().add(new ComicTag(comic, ComicTagType.INKER, trim(name))));
       this.commandSeparatedList(comicInfo.getColorist())
           .forEach(
-              name ->
-                  detail.getTags().add(new ComicTag(detail, ComicTagType.COLORIST, trim(name))));
+              name -> comic.getTags().add(new ComicTag(comic, ComicTagType.COLORIST, trim(name))));
       this.commandSeparatedList(comicInfo.getLetterer())
           .forEach(
-              name ->
-                  detail.getTags().add(new ComicTag(detail, ComicTagType.LETTERER, trim(name))));
+              name -> comic.getTags().add(new ComicTag(comic, ComicTagType.LETTERER, trim(name))));
       this.commandSeparatedList(comicInfo.getCoverArtist())
           .forEach(
-              name -> detail.getTags().add(new ComicTag(detail, ComicTagType.COVER, trim(name))));
+              name -> comic.getTags().add(new ComicTag(comic, ComicTagType.COVER, trim(name))));
       log.debug("Loading page metadata");
       for (int index = 0; index < comicInfo.getPages().size(); index++) {
         final PageInfo pageInfo = comicInfo.getPages().get(index);
         // only extract data if we can match the filename to the entry
         if (Objects.nonNull(pageInfo) && StringUtils.hasLength(pageInfo.getFilename())) {
           final Optional<ComicPage> optionalPage =
-              comicBook.getPages().stream()
+              comic.getPages().stream()
                   .filter(
                       comicPage ->
                           Objects.nonNull(comicPage)
@@ -165,7 +160,7 @@ public class ComicInfoXmlFilenameContentAdaptor implements FilenameContentAdapto
           }
         }
       }
-    } catch (StreamReadException | ParseException error) {
+    } catch (StreamReadException error) {
       throw new ContentAdaptorException("Failed to load ComicInfo.xml", error);
     }
   }

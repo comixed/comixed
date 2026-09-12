@@ -28,8 +28,8 @@ import org.comixedproject.model.metadata.MetadataSource;
 import org.comixedproject.views.View;
 
 /**
- * <code>ComicMetadataSource</code> connects a {@link ComicBook} to the record containing its
- * metadata at a {@link ComicMetadataSource}.
+ * <code>ComicMetadataSource</code> connects a {@link Comic} to the record containing its metadata
+ * at a {@link ComicMetadataSource}.
  *
  * @author Darryl L. Pierce
  */
@@ -48,7 +48,7 @@ public class ComicMetadataSource {
   @JoinColumn(name = "comic_detail_id", nullable = false, updatable = false, unique = true)
   @Getter
   @NonNull
-  private ComicDetail comicDetail;
+  private Comic comic;
 
   @ManyToOne
   @JoinColumn(name = "metadata_source_id", nullable = false, updatable = true)
@@ -80,13 +80,13 @@ public class ComicMetadataSource {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     final ComicMetadataSource that = (ComicMetadataSource) o;
-    return comicDetail.equals(that.comicDetail)
+    return comic.equals(that.comic)
         && metadataSource.equals(that.metadataSource)
         && referenceId.equals(that.referenceId);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(comicDetail, metadataSource, referenceId);
+    return Objects.hash(comic, metadataSource, referenceId);
   }
 }

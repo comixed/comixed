@@ -25,12 +25,12 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.IOUtils;
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.GenericUtilitiesAdaptor;
-import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
+import org.comixedproject.adaptors.comicbooks.ComicAdaptor;
 import org.comixedproject.adaptors.file.FileTypeAdaptor;
-import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicpages.ComicPage;
-import org.comixedproject.service.comicbooks.ComicBookException;
-import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.comicbooks.ComicException;
+import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.service.comicfiles.ComicFileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -50,9 +50,9 @@ import org.springframework.util.StringUtils;
 @Log4j2
 public class PageCacheService {
   @Autowired private ComicPageService comicPageService;
-  @Autowired private ComicBookService comicBookService;
+  @Autowired private ComicService comicService;
   @Autowired private ComicFileService comicFileService;
-  @Autowired private ComicBookAdaptor comicBookAdaptor;
+  @Autowired private ComicAdaptor comicAdaptor;
   @Autowired private FileTypeAdaptor fileTypeAdaptor;
   @Autowired private GenericUtilitiesAdaptor genericUtilitiesAdaptor;
 
@@ -143,9 +143,7 @@ public class PageCacheService {
     log.debug("Adding page to cache: id={}", page.getComicPageId());
     try {
       this.saveByHash(
-          page.getHash(),
-          this.comicBookAdaptor.loadPageContent(
-              page.getComicDetail().getComicBook(), page.getPageNumber()));
+          page.getHash(), this.comicAdaptor.loadPageContent(page.getComic(), page.getPageNumber()));
     } catch (AdaptorException error) {
       log.error("Failed to add page to image cache", error);
     }
@@ -176,18 +174,16 @@ public class PageCacheService {
     }
 
     log.debug("Loading cover content from comic archive");
-    final ComicBook comicBook;
     try {
-      comicBook = this.comicBookService.getComic(comicBookId);
-      final byte[] content =
-          this.comicFileService.getImportFileCover(comicBook.getComicDetail().getFilename());
+      final Comic comic = this.comicService.getComic(comicBookId);
+      final byte[] content = this.comicFileService.getImportFileCover(comic.getFilename());
       if (content != null) {
         return this.doProcessContent(content, "cover", missingFilename);
       }
 
       log.debug("Loading missing page for cover content: {}", missingFilename);
       return this.doProcessContent(null, "", missingFilename);
-    } catch (ComicBookException | AdaptorException error) {
+    } catch (ComicException | AdaptorException error) {
       log.error("Failed to load comic cover content", error);
       return this.doProcessContent(null, "", missingFilename);
     }
@@ -237,9 +233,7 @@ public class PageCacheService {
     if (content == null) {
       try {
         log.debug("Fetching content for page");
-        content =
-            this.comicBookAdaptor.loadPageContent(
-                page.getComicDetail().getComicBook(), page.getPageNumber());
+        content = this.comicAdaptor.loadPageContent(page.getComic(), page.getPageNumber());
         if (!Objects.isNull(content) && Objects.isNull(page.getHash())) {
           log.debug("Updating page content: id={}", page.getComicPageId());
           page = this.comicPageService.updatePageContent(page, content);
@@ -266,7 +260,7 @@ public class PageCacheService {
     if (content == null) {
       try {
         log.debug("Fetching content for page");
-        content = this.comicBookAdaptor.loadPageContent(comicFilename, pageFilename);
+        content = this.comicAdaptor.loadPageContent(comicFilename, pageFilename);
         if (!Objects.isNull(content) && !Objects.isNull(pageHash)) {
           log.debug("Caching image for hash: {} bytes hash={}", content.length, pageHash);
           this.saveByHash(pageHash, content);

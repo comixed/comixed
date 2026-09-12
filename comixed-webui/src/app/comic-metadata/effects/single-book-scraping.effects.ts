@@ -37,7 +37,7 @@ import {
 } from '@app/comic-metadata/actions/single-book-scraping.actions';
 import { catchError, map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { LoggerService } from '@angular-ru/cdk/logger';
-import { ComicBookScrapingService } from '@app/comic-metadata/services/comic-book-scraping.service';
+import { ComicScrapingService } from '@app/comic-metadata/services/comic-scraping.service';
 import { VolumeMetadata } from '@app/comic-metadata/models/volume-metadata';
 import { TranslateService } from '@ngx-translate/core';
 import { AlertService } from '@app/core/services/alert.service';
@@ -52,7 +52,7 @@ import {
 export class SingleBookScrapingEffects {
   logger = inject(LoggerService);
   actions$ = inject(Actions);
-  metadataService = inject(ComicBookScrapingService);
+  metadataService = inject(ComicScrapingService);
   alertService = inject(AlertService);
   translateService = inject(TranslateService);
 

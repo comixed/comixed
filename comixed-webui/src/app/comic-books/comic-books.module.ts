@@ -21,7 +21,6 @@ import { CommonModule } from '@angular/common';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { ComicBooksRouting } from './comic-books.routing';
-import { ComicBookPageComponent } from './pages/comic-book-page/comic-book-page.component';
 import { ComicScrapingComponent } from './components/comic-scraping/comic-scraping.component';
 import { ComicDetailEditComponent } from './components/comic-detail-edit/comic-detail-edit.component';
 import { ComicPagesComponent } from './components/comic-pages/comic-pages.component';
@@ -45,8 +44,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import { ComicCoverUrlPipe } from '@app/comic-books/pipes/comic-cover-url.pipe';
 import { ComicPageUrlPipe } from '@app/comic-books/pipes/comic-page-url.pipe';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
-import { comicBookFeature } from '@app/comic-books/reducers/comic-book.reducer';
-import { ComicBookEffects } from '@app/comic-books/effects/comic-book.effects';
+import { comicBookFeature } from '@app/comic-books/reducers/comic.reducer';
+import { ComicEffects } from '@app/comic-books/effects/comic.effects';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -55,8 +54,8 @@ import { MatSortModule } from '@angular/material/sort';
 import { CoreModule } from '@app/core/core.module';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { PageHashUrlPipe } from './pipes/page-hash-url.pipe';
-import { DeleteComicBooksEffects } from '@app/comic-books/effects/delete-comic-books.effects';
-import { markComicsDeletedFeature } from '@app/comic-books/reducers/delete-comic-books.reducer';
+import { DeleteComicsEffects } from '@app/comic-books/effects/delete-comics.effects';
+import { markComicsDeletedFeature } from '@app/comic-books/reducers/delete-comics.reducer';
 import { MatDividerModule } from '@angular/material/divider';
 import { imprintListFeature } from '@app/comic-books/reducers/imprint-list.reducer';
 import { ImprintListEffects } from '@app/comic-books/effects/imprint-list.effects';
@@ -69,8 +68,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { FlexLayoutModule } from '@angular-ru/cdk/flex-layout';
 import { ComicListFilterComponent } from '@app/comic-books/components/comic-list-filter/comic-list-filter.component';
-import { comicBookSelectionFeature } from '@app/comic-books/reducers/comic-book-selection.reducer';
-import { ComicBookSelectionEffects } from '@app/comic-books/effects/comic-book-selection.effects';
+import { comicBookSelectionFeature } from '@app/comic-books/reducers/comic-selection.reducer';
+import { ComicSelectionEffects } from '@app/comic-books/effects/comic-selection.effects';
 import { VolumeMetadataTitlePipe } from './pipes/volume-metadata-title.pipe';
 import { comicListFeature } from '@app/comic-books/reducers/comic-list.reducer';
 import { ComicListEffects } from '@app/comic-books/effects/comic-list.effects';
@@ -86,11 +85,11 @@ import { ComicDetailCoverUrlPipe } from '@app/comic-books/pipes/comic-detail-cov
     StoreModule.forFeature(comicListFeature),
     StoreModule.forFeature(comicBookSelectionFeature),
     EffectsModule.forFeature([
-      ComicBookEffects,
+      ComicEffects,
       ImprintListEffects,
-      DeleteComicBooksEffects,
+      DeleteComicsEffects,
       ComicListEffects,
-      ComicBookSelectionEffects
+      ComicSelectionEffects
     ]),
     TranslateModule.forRoot(),
     MatCardModule,
@@ -118,11 +117,9 @@ import { ComicDetailCoverUrlPipe } from '@app/comic-books/pipes/comic-detail-cov
     MatCheckboxModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    ComicBookPageComponent,
     ComicScrapingComponent,
     ComicDetailEditComponent,
     ComicPagesComponent,
-    ComicPageComponent,
     ComicScrapingVolumeSelectionComponent,
     ComicStoryComponent,
     ComicDetailCardComponent,
@@ -135,7 +132,8 @@ import { ComicDetailCoverUrlPipe } from '@app/comic-books/pipes/comic-detail-cov
     IssueMetadataTitlePipe,
     ComicListViewComponent,
     ComicListFilterComponent,
-    VolumeMetadataTitlePipe
+    VolumeMetadataTitlePipe,
+    ComicPageComponent
   ],
   exports: [
     CommonModule,

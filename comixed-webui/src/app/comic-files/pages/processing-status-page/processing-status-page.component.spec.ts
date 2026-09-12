@@ -21,8 +21,8 @@ import { ProcessingStatusPageComponent } from './processing-status-page.componen
 import {
   IMPORT_COMIC_BOOKS_FEATURE_KEY,
   initialState as initialImportComicBooksComicsState
-} from '@app/reducers/import-comic-books.reducer';
-import { provideMockStore } from '@ngrx/store/testing';
+} from '@app/reducers/import-comics.reducer';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -33,10 +33,17 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { PROCESSING_COMIC_STATUS_1 } from '@app/comic-files/comic-file.fixtures';
 import { TitleService } from '@app/core/services/title.service';
 import { provideRouter } from '@angular/router';
+import { ProcessComicsService } from '@app/comic-books/services/process-comics.service';
+import {
+  initialState as initialMessagingState,
+  MESSAGING_FEATURE_KEY
+} from '@app/messaging/reducers/messaging.reducer';
 
 describe('ProcessingStatusPageComponent', () => {
   const STATUS = PROCESSING_COMIC_STATUS_1;
+  const PROCESS_LIST = [PROCESSING_COMIC_STATUS_1];
   const initialState = {
+    [MESSAGING_FEATURE_KEY]: initialMessagingState,
     [IMPORT_COMIC_BOOKS_FEATURE_KEY]: initialImportComicBooksComicsState
   };
 
@@ -44,6 +51,8 @@ describe('ProcessingStatusPageComponent', () => {
   let fixture: ComponentFixture<ProcessingStatusPageComponent>;
   let translateService: TranslateService;
   let titleService: TitleService;
+  let store: MockStore;
+  let processComicService: ProcessComicsService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -60,7 +69,8 @@ describe('ProcessingStatusPageComponent', () => {
         provideMockStore({ initialState }),
         provideRouter([]),
         QueryParameterService,
-        TitleService
+        TitleService,
+        ProcessComicsService
       ]
     }).compileComponents();
 
@@ -69,6 +79,8 @@ describe('ProcessingStatusPageComponent', () => {
     translateService = TestBed.inject(TranslateService);
     titleService = TestBed.inject(TitleService);
     spyOn(titleService, 'setTitle');
+    store = TestBed.inject(MockStore);
+    processComicService = TestBed.inject(ProcessComicsService);
     fixture.detectChanges();
   });
 
@@ -93,6 +105,28 @@ describe('ProcessingStatusPageComponent', () => {
       expect(component.dataSource.sortingDataAccessor(STATUS, '')).toEqual(
         STATUS.stepName
       );
+    });
+  });
+
+  describe('batch update processing', () => {
+    beforeEach(() => {
+      spyOn(processComicService, 'beep');
+      component.dataSource.data = [];
+      store.setState({
+        ...initialState,
+        [IMPORT_COMIC_BOOKS_FEATURE_KEY]: {
+          ...initialImportComicBooksComicsState,
+          batches: PROCESS_LIST
+        }
+      });
+    });
+
+    it('updates the data source', () => {
+      expect(component.dataSource.data).toBe(PROCESS_LIST);
+    });
+
+    it('beeps the service', () => {
+      expect(processComicService.beep).toHaveBeenCalled();
     });
   });
 

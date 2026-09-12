@@ -19,7 +19,7 @@
 package org.comixedproject.state.comicbooks.actions;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.model.comicbooks.Comic;
 import org.springframework.stereotype.Component;
 
 /**
@@ -32,7 +32,7 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class PrepareComicForProcessingAction extends AbstractComicAction {
   @Override
-  public void execute(final ComicDetail detail) {
+  public void execute(final Comic detail) {
     log.trace("Clearing pages");
     detail.getPages().clear();
     log.trace("Turning off file contents loaded flag");

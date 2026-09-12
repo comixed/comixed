@@ -57,7 +57,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import {
   IMPORT_COMIC_BOOKS_FEATURE_KEY,
   initialState as initialImportComicBooksComicsState
-} from '@app/reducers/import-comic-books.reducer';
+} from '@app/reducers/import-comics.reducer';
 import {
   Confirmation,
   ConfirmationService

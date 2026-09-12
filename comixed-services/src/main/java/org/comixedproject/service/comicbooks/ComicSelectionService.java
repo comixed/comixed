@@ -28,12 +28,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.messaging.PublishingException;
-import org.comixedproject.messaging.comicbooks.PublishComicBookSelectionStateAction;
+import org.comixedproject.messaging.comicbooks.PublishComicSelectionStateAction;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.model.comicbooks.ComicTagType;
 import org.comixedproject.model.comicbooks.ComicType;
-import org.comixedproject.model.messaging.comicbooks.ComicBookSelectionEvent;
+import org.comixedproject.model.messaging.comicbooks.ComicSelectionEvent;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.service.library.DisplayableComicService;
 import org.comixedproject.service.user.ComiXedUserException;
@@ -55,7 +55,7 @@ import tools.jackson.databind.ObjectMapper;
 public class ComicSelectionService {
   @Autowired private DisplayableComicService displayableComicService;
   @Autowired private UserService userService;
-  @Autowired private PublishComicBookSelectionStateAction publishComicBookSelectionStateAction;
+  @Autowired private PublishComicSelectionStateAction publishComicSelectionStateAction;
   @Autowired private ObjectMapper objectMapper;
 
   /**
@@ -163,10 +163,9 @@ public class ComicSelectionService {
    *
    * @param storeSelections the encoded selections
    * @return the decoded selections
-   * @throws ComicBookSelectionException if an error occurs
+   * @throws ComicSelectionException if an error occurs
    */
-  public List<Long> decodeSelections(final Object storeSelections)
-      throws ComicBookSelectionException {
+  public List<Long> decodeSelections(final Object storeSelections) throws ComicSelectionException {
     if (storeSelections == null) {
       log.debug("Creating new selection set");
       return new ArrayList();
@@ -176,7 +175,7 @@ public class ComicSelectionService {
             this.objectMapper.readValue(storeSelections.toString(), ListOfIds.class);
         return result.getIds().stream().collect(Collectors.toList());
       } catch (JacksonException error) {
-        throw new ComicBookSelectionException("failed to load selections from session", error);
+        throw new ComicSelectionException("failed to load selections from session", error);
       }
     }
   }
@@ -186,14 +185,14 @@ public class ComicSelectionService {
    *
    * @param selections the selections
    * @return the encoded selections
-   * @throws ComicBookSelectionException if an error occurs
+   * @throws ComicSelectionException if an error occurs
    */
-  public String encodeSelections(final List<Long> selections) throws ComicBookSelectionException {
+  public String encodeSelections(final List<Long> selections) throws ComicSelectionException {
     log.debug("Storing selection set");
     try {
       return this.objectMapper.writeValueAsString(new ListOfIds(new HashSet<>(selections)));
     } catch (JacksonException error) {
-      throw new ComicBookSelectionException("failed to save selections to session", error);
+      throw new ComicSelectionException("failed to save selections to session", error);
     }
   }
 
@@ -211,8 +210,7 @@ public class ComicSelectionService {
   protected void doPublishSelectionUpdateForUser(final String email, final List<Long> selections) {
     try {
       final ComiXedUser user = this.userService.findByEmail(email);
-      this.publishComicBookSelectionStateAction.publish(
-          new ComicBookSelectionEvent(user, selections));
+      this.publishComicSelectionStateAction.publish(new ComicSelectionEvent(user, selections));
     } catch (PublishingException | ComiXedUserException error) {
       log.error("Failed to publish selection update", error);
     }

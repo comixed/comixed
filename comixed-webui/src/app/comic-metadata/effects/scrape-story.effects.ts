@@ -27,7 +27,7 @@ import {
   scrapeStoryMetadataSuccess
 } from '../actions/scrape-story.actions';
 import { LoggerService } from '@angular-ru/cdk/logger';
-import { ComicBookScrapingService } from '@app/comic-metadata/services/comic-book-scraping.service';
+import { ComicScrapingService } from '@app/comic-metadata/services/comic-scraping.service';
 import { AlertService } from '@app/core/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
@@ -38,7 +38,7 @@ import { of } from 'rxjs';
 export class ScrapeStoryEffects {
   logger = inject(LoggerService);
   actions$ = inject(Actions);
-  comicBookScrapingService = inject(ComicBookScrapingService);
+  comicBookScrapingService = inject(ComicScrapingService);
   alertService = inject(AlertService);
   translateService = inject(TranslateService);
 

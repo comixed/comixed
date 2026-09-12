@@ -88,7 +88,7 @@ public class MarkBlockedPagesConfiguration {
       final MarkBlockedPagesReader reader,
       final MarkBlockedPageProcessor processor,
       final MarkBlockedPageWriter writer,
-      final MarkBlockedPagesChunkListener<ComicPage, ComicPage> chunkListener) {
+      final MarkBlockedPagesChunkListener chunkListener) {
     return new StepBuilder("markBlockedPagesStep", jobRepository)
         .<ComicPage, ComicPage>chunk(this.chunkSize)
         .transactionManager(platformTransactionManager)

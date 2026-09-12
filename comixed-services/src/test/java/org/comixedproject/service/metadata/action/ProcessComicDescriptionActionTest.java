@@ -18,7 +18,7 @@
 
 package org.comixedproject.service.metadata.action;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.comixedproject.service.admin.ConfigurationService;
 import org.junit.jupiter.api.Test;

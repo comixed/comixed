@@ -27,9 +27,8 @@ import java.util.List;
 import org.comixedproject.adaptors.file.FileAdaptor;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.batch.UpdateMetadataEvent;
-import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.service.comicbooks.ComicBookService;
-import org.comixedproject.service.comicbooks.ComicDetailService;
+import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.service.comicpages.PageCacheService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -43,15 +42,14 @@ class LibraryServiceTest {
       "/home/ComiXedReader/.comixed/image-cache";
 
   @InjectMocks private LibraryService service;
-  @Mock private ComicBookService comicBookService;
-  @Mock private ComicDetailService comicDetailService;
+  @Mock private ComicService comicService;
   @Mock private ArchiveType archiveType;
-  @Mock private ComicBook comicBook;
+  @Mock private Comic comicBook;
   @Mock private FileAdaptor fileAdaptor;
   @Mock private PageCacheService pageCacheService;
   @Mock private ApplicationEventPublisher applicationEventPublisher;
 
-  private List<ComicBook> comicBookList = new ArrayList<>();
+  private List<Comic> comicList = new ArrayList<>();
   private List<Long> comicIdList = new ArrayList<>();
 
   @Test
@@ -79,37 +77,37 @@ class LibraryServiceTest {
 
     service.updateMetadata(comicIdList);
 
-    verify(comicDetailService).prepareForMetadataUpdate(comicIdList);
+    verify(comicService).prepareForMetadataUpdate(comicIdList);
     verify(applicationEventPublisher).publishEvent(UpdateMetadataEvent.instance);
   }
 
   @Test
   void prepareForOrganization() {
-    for (int index = 0; index < 25; index++) comicBookList.add(comicBook);
+    for (int index = 0; index < 25; index++) comicList.add(comicBook);
 
     service.prepareForOrganization(comicIdList);
 
-    verify(comicBookService).prepareForOrganization(comicIdList);
+    verify(comicService).prepareForOrganization(comicIdList);
   }
 
   @Test
   void prepareAllForOrganization() {
     service.prepareAllForOrganization();
 
-    verify(comicBookService).prepareAllForOrganization();
+    verify(comicService).prepareAllForOrganization();
   }
 
   @Test
   void prepareToRecreate() {
     service.prepareToRecreate(comicIdList, archiveType);
 
-    verify(comicDetailService).prepareForRecreation(comicIdList, archiveType);
+    verify(comicService).prepareForRecreation(comicIdList, archiveType);
   }
 
   @Test
   void prepareForPurge() {
     service.prepareForPurging();
 
-    verify(comicBookService).prepareComicBooksForDeleting();
+    verify(comicService).prepareComicBooksForDeleting();
   }
 }

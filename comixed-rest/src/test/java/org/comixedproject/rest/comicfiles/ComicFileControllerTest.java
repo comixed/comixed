@@ -19,7 +19,7 @@
 package org.comixedproject.rest.comicfiles;
 
 import static org.comixedproject.rest.comicfiles.ComicFileController.COMIC_FILES;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;

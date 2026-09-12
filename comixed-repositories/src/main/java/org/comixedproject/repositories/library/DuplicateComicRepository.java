@@ -39,6 +39,6 @@ public interface DuplicateComicRepository extends JpaRepository<DuplicateComic, 
    * @return the comic book ids
    */
   @Query(
-      "SELECT DISTINCT d.comicBookId FROM DuplicateComic dc JOIN DisplayableComic d ON d.publisher = dc.id.publisher AND d.series = dc.id.series AND d.volume = dc.id.volume AND d.issueNumber = dc.id.issueNumber AND d.coverDate = dc.id.coverDate ")
+      "SELECT DISTINCT d.comicDetailId FROM DuplicateComic dc JOIN DisplayableComic d ON d.publisher = dc.id.publisher AND d.series = dc.id.series AND d.volume = dc.id.volume AND d.issueNumber = dc.id.issueNumber AND d.coverDate = dc.id.coverDate ")
   List<Long> getDuplicateComicIds();
 }

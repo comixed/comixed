@@ -26,7 +26,7 @@ import static org.comixedproject.service.admin.ConfigurationService.CFG_DONT_MOV
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
+import org.comixedproject.adaptors.comicbooks.ComicAdaptor;
 import org.comixedproject.adaptors.comicbooks.ComicFileAdaptor;
 import org.comixedproject.adaptors.file.FileAdaptor;
 import org.comixedproject.model.archives.ArchiveType;
@@ -70,7 +70,7 @@ class MoveComicFilesProcessorTest {
   @Mock private StepExecution stepExecution;
   @Mock private FileAdaptor fileAdaptor;
   @Mock private ComicFileAdaptor comicFileAdaptor;
-  @Mock private ComicBookAdaptor comicBookAdaptor;
+  @Mock private ComicAdaptor comicAdaptor;
   @Mock private OrganizingComic organizingComic;
   @Mock private File comicDetailFile;
 
@@ -78,7 +78,7 @@ class MoveComicFilesProcessorTest {
   @Captor private ArgumentCaptor<File> moveFileTargetArgumentCaptor;
 
   @BeforeEach
-  public void setUp() throws IOException {
+  void setUp() throws IOException {
     Mockito.when(configurationService.isFeatureEnabled(CFG_DONT_MOVE_UNSCRAPED_COMICS))
         .thenReturn(false);
     Mockito.when(jobParameters.getString(ORGANIZE_LIBRARY_JOB_TARGET_DIRECTORY))
@@ -103,7 +103,7 @@ class MoveComicFilesProcessorTest {
                 Mockito.anyString(),
                 Mockito.anyString()))
         .thenReturn(TEST_REBUILT_FILENAME_FROM_RULE);
-    Mockito.when(comicBookAdaptor.getMetadataFilename(Mockito.anyString()))
+    Mockito.when(comicAdaptor.getMetadataFilename(Mockito.anyString()))
         .thenReturn(TEST_SOURCE_METADATA_FILENAME_NOT_EXISTS);
     Mockito.when(fileAdaptor.sameFile(Mockito.any(File.class), Mockito.any(File.class)))
         .thenReturn(false, false);
@@ -222,7 +222,7 @@ class MoveComicFilesProcessorTest {
 
   @Test
   void process_metadataFileExists() throws IOException {
-    Mockito.when(comicBookAdaptor.getMetadataFilename(Mockito.anyString()))
+    Mockito.when(comicAdaptor.getMetadataFilename(Mockito.anyString()))
         .thenReturn(TEST_SOURCE_METADATA_FILENAME, TEST_TARGET_METADATA_FILENAME);
     Mockito.when(fileAdaptor.sameFile(Mockito.any(File.class), Mockito.any(File.class)))
         .thenReturn(true, false);

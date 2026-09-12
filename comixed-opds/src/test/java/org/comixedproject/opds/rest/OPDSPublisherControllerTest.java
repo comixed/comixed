@@ -20,6 +20,10 @@ package org.comixedproject.opds.rest;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.security.Principal;
 import java.util.ArrayList;
@@ -27,7 +31,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.apache.commons.lang.math.RandomUtils;
-import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.opds.OPDSUtils;
 import org.comixedproject.opds.model.OPDSAcquisitionFeed;
 import org.comixedproject.opds.model.OPDSNavigationFeed;
@@ -38,7 +42,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
@@ -61,31 +64,29 @@ class OPDSPublisherControllerTest {
   @Mock private OPDSNavigationFeed navigationFeed;
   @Mock private OPDSAcquisitionFeed acquisitionFeed;
   @Mock private OPDSUtils opdsUtils;
-  @Mock private ComicBook comicBook;
   @Mock private Principal principal;
+  @Mock private Comic comic;
 
   private Set<String> seriesList = new HashSet<>();
   private Set<String> volumeList = new HashSet<>();
-  private List<ComicBook> comicBookList = new ArrayList<>();
+  private List<Comic> comicList = new ArrayList<>();
 
   @BeforeEach
-  public void setUp() {
-    Mockito.when(opdsUtils.urlDecodeString(TEST_PUBLISHER_ENCODED)).thenReturn(TEST_PUBLISHER);
-    Mockito.when(opdsUtils.urlDecodeString(TEST_SERIES_ENCODED)).thenReturn(TEST_SERIES);
-    Mockito.when(opdsUtils.urlDecodeString(TEST_VOLUME_ENCODED)).thenReturn(TEST_VOLUME);
+  void setUp() {
+    when(opdsUtils.urlDecodeString(TEST_PUBLISHER_ENCODED)).thenReturn(TEST_PUBLISHER);
+    when(opdsUtils.urlDecodeString(TEST_SERIES_ENCODED)).thenReturn(TEST_SERIES);
+    when(opdsUtils.urlDecodeString(TEST_VOLUME_ENCODED)).thenReturn(TEST_VOLUME);
 
     seriesList.add(TEST_SERIES);
     volumeList.add(TEST_VOLUME);
-    comicBookList.add(comicBook);
+    comicList.add(comic);
 
-    Mockito.when(principal.getName()).thenReturn(TEST_EMAIL);
+    when(principal.getName()).thenReturn(TEST_EMAIL);
   }
 
   @Test
   void getRootFeedForPublishers() {
-    Mockito.when(
-            opdsNavigationService.getRootFeedForPublishers(
-                Mockito.anyString(), Mockito.anyBoolean()))
+    when(opdsNavigationService.getRootFeedForPublishers(anyString(), anyBoolean()))
         .thenReturn(navigationFeed);
 
     final OPDSNavigationFeed result = controller.getRootFeedForPublishers(principal, TEST_UNREAD);
@@ -93,15 +94,12 @@ class OPDSPublisherControllerTest {
     assertNotNull(result);
     assertSame(navigationFeed, result);
 
-    Mockito.verify(opdsNavigationService, Mockito.times(1))
-        .getRootFeedForPublishers(TEST_EMAIL, TEST_UNREAD);
+    verify(opdsNavigationService).getRootFeedForPublishers(TEST_EMAIL, TEST_UNREAD);
   }
 
   @Test
   void getSeriesFeedForPublisher() {
-    Mockito.when(
-            opdsNavigationService.getSeriesFeedForPublisher(
-                Mockito.anyString(), Mockito.anyString(), Mockito.anyBoolean()))
+    when(opdsNavigationService.getSeriesFeedForPublisher(anyString(), anyString(), anyBoolean()))
         .thenReturn(navigationFeed);
 
     final OPDSNavigationFeed result =
@@ -110,18 +108,14 @@ class OPDSPublisherControllerTest {
     assertNotNull(result);
     assertSame(navigationFeed, result);
 
-    Mockito.verify(opdsNavigationService, Mockito.times(1))
+    verify(opdsNavigationService)
         .getSeriesFeedForPublisher(TEST_PUBLISHER, TEST_EMAIL, TEST_UNREAD);
   }
 
   @Test
   void getVolumeFeedForPublisherAndSeries() {
-    Mockito.when(
-            opdsNavigationService.getVolumeFeedForPublisherAndSeries(
-                Mockito.anyString(),
-                Mockito.anyString(),
-                Mockito.anyString(),
-                Mockito.anyBoolean()))
+    when(opdsNavigationService.getVolumeFeedForPublisherAndSeries(
+            anyString(), anyString(), anyString(), anyBoolean()))
         .thenReturn(navigationFeed);
 
     final OPDSNavigationFeed response =
@@ -131,19 +125,14 @@ class OPDSPublisherControllerTest {
     assertNotNull(response);
     assertSame(navigationFeed, response);
 
-    Mockito.verify(opdsNavigationService, Mockito.times(1))
+    verify(opdsNavigationService)
         .getVolumeFeedForPublisherAndSeries(TEST_PUBLISHER, TEST_SERIES, TEST_EMAIL, TEST_UNREAD);
   }
 
   @Test
   void getComicFeedForPublisherAndSeriesAndVolume() {
-    Mockito.when(
-            opdsAcquisitionService.getComicFeedsForPublisherAndSeriesAndVolume(
-                Mockito.anyString(),
-                Mockito.anyString(),
-                Mockito.anyString(),
-                Mockito.anyString(),
-                Mockito.anyBoolean()))
+    when(opdsAcquisitionService.getComicFeedsForPublisherAndSeriesAndVolume(
+            anyString(), anyString(), anyString(), anyString(), anyBoolean()))
         .thenReturn(acquisitionFeed);
 
     final OPDSAcquisitionFeed result =
@@ -157,7 +146,7 @@ class OPDSPublisherControllerTest {
     assertNotNull(result);
     assertSame(acquisitionFeed, result);
 
-    Mockito.verify(opdsAcquisitionService, Mockito.times(1))
+    verify(opdsAcquisitionService)
         .getComicFeedsForPublisherAndSeriesAndVolume(
             TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME, TEST_EMAIL, TEST_UNREAD);
   }

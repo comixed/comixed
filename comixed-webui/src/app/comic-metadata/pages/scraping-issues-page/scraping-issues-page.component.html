@@ -168,7 +168,7 @@
           <mat-row
             *matRowDef="let row; columns: displayColumns"
             [class.cx-selected-row]="
-              (currentComicBook$ | async)?.comicBookId === row.comicBookId
+              (currentComicBook$ | async)?.comicDetailId === row.comicDetailId
             "
             (click)="onSelectComicBook(row)"
             (keyup)="onSelectComicBook(row)"

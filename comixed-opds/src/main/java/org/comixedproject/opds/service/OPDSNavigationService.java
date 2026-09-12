@@ -39,7 +39,7 @@ import org.comixedproject.opds.model.OPDSLink;
 import org.comixedproject.opds.model.OPDSNavigationFeed;
 import org.comixedproject.opds.model.OPDSNavigationFeedContent;
 import org.comixedproject.opds.model.OPDSNavigationFeedEntry;
-import org.comixedproject.service.comicbooks.ComicDetailService;
+import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.service.lists.ReadingListException;
 import org.comixedproject.service.lists.ReadingListService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,7 +72,7 @@ public class OPDSNavigationService {
   private static final String STORE_DATE_YEARS_ID = "20";
   static final int COMIC_STORE_DATE_FOR_YEAR_ID = 20;
 
-  @Autowired private ComicDetailService comicDetailService;
+  @Autowired private ComicService comicService;
   @Autowired private ReadingListService readingListService;
   @Autowired private OPDSUtils opdsUtils;
 
@@ -221,7 +221,7 @@ public class OPDSNavigationService {
         .add(
             new OPDSLink(
                 NAVIGATION_FEED_LINK_TYPE, SELF, String.format("publishers?unread=%s", unread)));
-    this.comicDetailService.getAllPublishers(email, unread).stream()
+    this.comicService.getAllPublishers(email, unread).stream()
         .map(
             publisher ->
                 new CollectionFeedEntry(
@@ -264,7 +264,7 @@ public class OPDSNavigationService {
     OPDSNavigationFeed result =
         new OPDSNavigationFeed(String.format("Publisher: %s", publisher), selfHref);
     result.getLinks().add(new OPDSLink(NAVIGATION_FEED_LINK_TYPE, SELF, selfHref));
-    this.comicDetailService.getAllSeriesForPublisher(publisher, email, unread).stream()
+    this.comicService.getAllSeriesForPublisher(publisher, email, unread).stream()
         .forEach(
             series -> {
               final OPDSNavigationFeedEntry feedEntry =
@@ -303,9 +303,8 @@ public class OPDSNavigationService {
     OPDSNavigationFeed result =
         new OPDSNavigationFeed(String.format("Series: %s", series), selfHref);
     result.getLinks().add(new OPDSLink(NAVIGATION_FEED_LINK_TYPE, SELF, selfHref));
-    this.comicDetailService
+    this.comicService
         .getAllVolumesForPublisherAndSeries(publisher, series, email, unread)
-        .stream()
         .forEach(
             volume -> {
               final OPDSNavigationFeedEntry feedEntry =
@@ -343,7 +342,7 @@ public class OPDSNavigationService {
     final String selfHref = String.format("series?unread=%s", unread);
     final OPDSNavigationFeed feed = new OPDSNavigationFeed("Series", selfHref);
     feed.getLinks().add(new OPDSLink(NAVIGATION_FEED_LINK_TYPE, SELF, selfHref));
-    this.comicDetailService.getAllSeries(email, unread).stream()
+    this.comicService.getAllSeries(email, unread).stream()
         .map(
             series ->
                 new CollectionFeedEntry(series, this.opdsUtils.createIdForEntry("SERIES", series)))
@@ -388,7 +387,8 @@ public class OPDSNavigationService {
         String.format("%s?unread=%s", this.opdsUtils.urlEncodeString(name), unread);
     OPDSNavigationFeed result = new OPDSNavigationFeed(String.format("Series: %s", name), selfHref);
     result.getLinks().add(new OPDSLink(NAVIGATION_FEED_LINK_TYPE, SELF, selfHref));
-    this.comicDetailService.getAllPublishersForSeries(name, email, unread).stream()
+    this.comicService
+        .getAllPublishersForSeries(name, email, unread)
         .forEach(
             publisher -> {
               final OPDSNavigationFeedEntry feedEntry =
@@ -434,7 +434,7 @@ public class OPDSNavigationService {
         collectionType,
         navigationFeed,
         collectionType.getOpdsIdKey(),
-        this.comicDetailService
+        this.comicService
             .getAllValuesForTag(collectionType.getComicTagType(), email, unread)
             .stream()
             .map(
@@ -495,7 +495,7 @@ public class OPDSNavigationService {
   public OPDSNavigationFeed getYearsFeed(final String email, final boolean unread) {
     final OPDSNavigationFeed response =
         new OPDSNavigationFeed("Store Date: Years", STORE_DATE_YEARS_ID);
-    this.comicDetailService.getAllYears(email, unread).stream()
+    this.comicService.getAllYears(email, unread).stream()
         .sorted()
         .forEach(
             year -> {
@@ -530,7 +530,7 @@ public class OPDSNavigationService {
         new OPDSNavigationFeed(
             "Comics For Year: " + year, String.valueOf(COMIC_STORE_DATE_FOR_YEAR_ID + year));
     log.trace("Loading days with comics for year: year={} email={} unread={}", year, email, unread);
-    this.comicDetailService.getAllWeeksForYear(year, email, unread).stream()
+    this.comicService.getAllWeeksForYear(year, email, unread).stream()
         .sorted()
         .forEach(
             weekNumber -> {

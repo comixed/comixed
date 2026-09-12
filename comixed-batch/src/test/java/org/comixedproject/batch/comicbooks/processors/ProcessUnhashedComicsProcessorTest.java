@@ -31,9 +31,8 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.GenericUtilitiesAdaptor;
-import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
-import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.adaptors.comicbooks.ComicAdaptor;
+import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicpages.ComicPage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -55,25 +54,22 @@ class ProcessUnhashedComicsProcessorTest {
   private static final String TEST_PAGE_HASH = "OICU812";
 
   @InjectMocks private ProcessUnhashedComicsProcessor processor;
-  @Mock private ComicBookAdaptor comicBookAdaptor;
+  @Mock private ComicAdaptor comicAdaptor;
   @Mock private GenericUtilitiesAdaptor genericUtilitiesAdaptor;
   @Mock private ComicPage page;
-  @Mock private ComicDetail comicDetail;
-  @Mock private ComicBook comicBook;
+  @Mock private Comic comic;
 
   private List<ComicPage> pageList = new ArrayList<>();
 
   @BeforeEach
-  public void setUp() throws AdaptorException, IOException {
+  void setUp() throws AdaptorException, IOException {
     imageContent = FileUtils.readFileToByteArray(new File(TEST_IMAGE_PATH));
     when(genericUtilitiesAdaptor.createHash(any(byte[].class))).thenReturn(TEST_PAGE_HASH);
-    when(comicBookAdaptor.loadPageContent(any(ComicBook.class), anyInt())).thenReturn(imageContent);
-    when(comicBook.getPages()).thenReturn(pageList);
-    when(comicDetail.getBaseFilename()).thenReturn(TEST_BASE_FILENAME);
-    when(comicDetail.isMissing()).thenReturn(false);
-    when(comicBook.getComicDetail()).thenReturn(comicDetail);
-    when(comicDetail.getComicBook()).thenReturn(comicBook);
-    when(page.getComicDetail()).thenReturn(comicDetail);
+    when(comicAdaptor.loadPageContent(any(Comic.class), anyInt())).thenReturn(imageContent);
+    when(comic.getPages()).thenReturn(pageList);
+    when(comic.getBaseFilename()).thenReturn(TEST_BASE_FILENAME);
+    when(comic.isMissing()).thenReturn(false);
+    when(page.getComic()).thenReturn(comic);
     when(page.getPageNumber()).thenReturn(TEST_PAGE_NUMBER);
     pageList.add(null);
     pageList.add(page);
@@ -81,16 +77,16 @@ class ProcessUnhashedComicsProcessorTest {
 
   @Test
   void process_missing() {
-    when(comicDetail.isMissing()).thenReturn(true);
-    assertNull(processor.process(comicBook));
+    when(comic.isMissing()).thenReturn(true);
+    assertNull(processor.process(comic));
   }
 
   @Test
   void process_createHashException() throws Exception {
-    when(comicBookAdaptor.loadPageContent(any(ComicBook.class), anyInt()))
+    when(comicAdaptor.loadPageContent(any(Comic.class), anyInt()))
         .thenThrow(AdaptorException.class);
 
-    processor.process(comicBook);
+    processor.process(comic);
 
     verify(genericUtilitiesAdaptor, never()).createHash(any(byte[].class));
     verify(page, never()).setHash(TEST_PAGE_HASH);
@@ -98,7 +94,7 @@ class ProcessUnhashedComicsProcessorTest {
 
   @Test
   void process() {
-    processor.process(comicBook);
+    processor.process(comic);
 
     assertNotEquals(-1, page.getWidth().intValue());
     assertNotEquals(-1, page.getHeight().intValue());

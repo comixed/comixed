@@ -20,7 +20,7 @@ package org.comixedproject.state.comicbooks.actions;
 
 import static org.mockito.Mockito.verify;
 
-import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.model.comicbooks.Comic;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -30,7 +30,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class MarkComicAsMissingActionTest {
   @InjectMocks private MarkComicAsMissingAction action;
-  @Mock private ComicDetail comic;
+  @Mock private Comic comic;
 
   @Test
   void execute() {

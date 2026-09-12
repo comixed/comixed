@@ -16,10 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import {
-  COMIC_BOOK_FEATURE_KEY,
-  ComicBookState
-} from '../reducers/comic-book.reducer';
+import { COMIC_BOOK_FEATURE_KEY, ComicState } from '../reducers/comic.reducer';
 import {
   selectComicBookDetail,
   selectComicBookMetadataSource,
@@ -43,7 +40,7 @@ import {
 } from '@app/comic-pages/comic-pages.fixtures';
 
 describe('ComicBook Selectors', () => {
-  let state: ComicBookState;
+  let state: ComicState;
 
   beforeEach(() => {
     state = {

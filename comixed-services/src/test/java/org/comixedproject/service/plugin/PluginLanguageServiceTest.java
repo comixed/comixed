@@ -18,7 +18,7 @@
 
 package org.comixedproject.service.plugin;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +49,7 @@ class PluginLanguageServiceTest {
   private List<PluginRuntimeProvider> pluginRuntimeList = new ArrayList<>();
 
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     Mockito.when(pluginRuntime1.getName()).thenReturn(TEST_PLUGIN_RUNTIME_1);
     pluginRuntimeList.add(pluginRuntime1);
     Mockito.when(pluginRuntime1.getName()).thenReturn(TEST_PLUGIN_RUNTIME_2);

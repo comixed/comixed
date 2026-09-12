@@ -106,7 +106,7 @@ import { QUERY_PARAM_COMICS_AS_GRID } from '@app/core';
 import {
   COMIC_BOOK_SELECTION_FEATURE_KEY,
   initialState as initialComicBookSelectionState
-} from '@app/comic-books/reducers/comic-book-selection.reducer';
+} from '@app/comic-books/reducers/comic-selection.reducer';
 import { PluginType } from '@app/library-plugins/models/plugin-type';
 
 describe('ComicListViewComponent', () => {
@@ -118,7 +118,7 @@ describe('ComicListViewComponent', () => {
     },
     { ...DISPLAYABLE_COMIC_2, coverDate: null, archiveType: ArchiveType.CBR }
   ];
-  const IDS = COMIC_BOOKS.map(detail => detail.comicBookId);
+  const IDS = COMIC_BOOKS.map(detail => detail.comicDetailId);
   const EDIT_DETAILS: EditMultipleComics = {
     publisher: 'The Publisher',
     series: 'The Series',
@@ -489,7 +489,7 @@ describe('ComicListViewComponent', () => {
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
           convertSingleComicBook({
-            id: COMIC_BOOK.comicBookId,
+            id: COMIC_BOOK.comicDetailId,
             archiveType: archiveTypeFromString(ARCHIVE_TYPE)
           })
         );
@@ -607,7 +607,7 @@ describe('ComicListViewComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          deleteSingleComicBook({ comicBookId: COMIC_BOOK.comicBookId })
+          deleteSingleComicBook({ comicBookId: COMIC_BOOK.comicDetailId })
         );
       });
     });
@@ -620,7 +620,7 @@ describe('ComicListViewComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          undeleteSingleComicBook({ comicBookId: COMIC_BOOK.comicBookId })
+          undeleteSingleComicBook({ comicBookId: COMIC_BOOK.comicDetailId })
         );
       });
     });
@@ -815,7 +815,7 @@ describe('ComicListViewComponent', () => {
 
     it('fires a message', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        updateSingleComicBookMetadata({ comicBookId: COMIC_BOOK.comicBookId })
+        updateSingleComicBookMetadata({ comicBookId: COMIC_BOOK.comicDetailId })
       );
     });
   });
@@ -893,7 +893,7 @@ describe('ComicListViewComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          rescanSingleComicBook({ comicBookId: COMIC_BOOK.comicBookId })
+          rescanSingleComicBook({ comicBookId: COMIC_BOOK.comicDetailId })
         );
       });
     });
@@ -929,7 +929,7 @@ describe('ComicListViewComponent', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
           runLibraryPluginOnOneComicBook({
             plugin: PLUGIN,
-            comicBookId: COMIC_BOOK.comicBookId
+            comicBookId: COMIC_BOOK.comicDetailId
           })
         );
       });

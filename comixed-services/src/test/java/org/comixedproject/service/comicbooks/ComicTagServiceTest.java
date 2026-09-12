@@ -33,7 +33,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class ComicTagServiceTest {
-  private static final long TEST_COMIC_BOOK_ID = 717L;
+  private static final long TEST_COMIC_ID = 717L;
 
   @InjectMocks private ComicTagService service;
   @Mock private ComicTagRepository comicTagRepository;
@@ -44,11 +44,11 @@ class ComicTagServiceTest {
   void getTagsForComicBook() {
     Mockito.when(comicTagRepository.getForComicBook(Mockito.anyLong())).thenReturn(comicTagList);
 
-    final List<ComicTag> result = service.getTagsForComicBook(TEST_COMIC_BOOK_ID);
+    final List<ComicTag> result = service.getTagsForComicBook(TEST_COMIC_ID);
 
     assertNotNull(result);
     assertSame(comicTagList, result);
 
-    Mockito.verify(comicTagRepository, Mockito.times(1)).getForComicBook(TEST_COMIC_BOOK_ID);
+    Mockito.verify(comicTagRepository, Mockito.times(1)).getForComicBook(TEST_COMIC_ID);
   }
 }

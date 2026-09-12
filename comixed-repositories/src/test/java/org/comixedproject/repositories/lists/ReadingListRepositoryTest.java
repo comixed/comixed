@@ -18,17 +18,17 @@
 
 package org.comixedproject.repositories.lists;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import java.util.List;
 import java.util.Optional;
-import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.repositories.RepositoryContext;
-import org.comixedproject.repositories.comicbooks.ComicBookRepository;
+import org.comixedproject.repositories.comicbooks.ComicRepository;
 import org.comixedproject.repositories.users.ComiXedUserRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -62,17 +62,17 @@ public class ReadingListRepositoryTest {
 
   @Autowired private ReadingListRepository repository;
   @Autowired private ComiXedUserRepository userRepository;
-  @Autowired private ComicBookRepository comicBookRepository;
+  @Autowired private ComicRepository comicRepository;
 
   private ComiXedUser reader;
-  private ComicDetail comicDetail1;
-  private ComicDetail comicDetail2;
+  private Comic comic1;
+  private Comic comic2;
 
   @Before
-  public void setUp() {
+  void setUp() {
     reader = userRepository.findById(TEST_USER_ID_1).get();
-    comicDetail1 = comicBookRepository.findById(TEST_COMIC_ID_1).get().getComicDetail();
-    comicDetail2 = comicBookRepository.findById(TEST_COMIC_ID_2).get().getComicDetail();
+    comic1 = comicRepository.findById(TEST_COMIC_ID_1).get();
+    comic2 = comicRepository.findById(TEST_COMIC_ID_2).get();
   }
 
   @Test
@@ -112,8 +112,8 @@ public class ReadingListRepositoryTest {
 
     list.setOwner(reader);
     list.setName(TEST_NEW_LIST_NAME);
-    list.getEntryIds().add(comicDetail1.getComicDetailId());
-    list.getEntryIds().add(comicDetail2.getComicDetailId());
+    list.getEntryIds().add(comic1.getComicDetailId());
+    list.getEntryIds().add(comic2.getComicDetailId());
 
     final ReadingList result = repository.save(list);
 
@@ -126,13 +126,13 @@ public class ReadingListRepositoryTest {
   public void testUpdateReadingList() {
     ReadingList list = repository.getById(TEST_READING_LIST_ID_1);
 
-    list.getEntryIds().add(comicDetail2.getComicId());
+    list.getEntryIds().add(comic2.getComicDetailId());
     repository.save(list);
 
     ReadingList result = repository.getById(list.getReadingListId());
 
     assertEquals(list.getEntryIds().size(), result.getEntryIds().size());
-    assertTrue(result.getEntryIds().contains(comicDetail2.getComicId()));
+    assertTrue(result.getEntryIds().contains(comic2.getComicDetailId()));
   }
 
   @Test
@@ -148,7 +148,7 @@ public class ReadingListRepositoryTest {
 
   @Test
   public void testGetReadingListsWithComicBook() {
-    final List<ReadingList> result = repository.getReadingListsWithComic(comicDetail1.getComicId());
+    final List<ReadingList> result = repository.getReadingListsWithComic(comic1.getComicDetailId());
 
     assertNotNull(result);
   }

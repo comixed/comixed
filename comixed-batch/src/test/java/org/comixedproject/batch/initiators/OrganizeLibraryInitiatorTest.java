@@ -22,7 +22,7 @@ import static org.comixedproject.batch.comicbooks.ProcessUnhashedComicsConfigura
 import static org.comixedproject.batch.library.OrganizeLibraryConfiguration.*;
 import static org.comixedproject.service.admin.ConfigurationService.CFG_LIBRARY_COMIC_RENAMING_RULE;
 import static org.comixedproject.service.admin.ConfigurationService.CFG_LIBRARY_ROOT_DIRECTORY;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.comixedproject.model.batch.OrganizingLibraryEvent;
 import org.comixedproject.service.admin.ConfigurationService;
@@ -70,7 +70,7 @@ class OrganizeLibraryInitiatorTest {
   @Captor private ArgumentCaptor<JobParameters> jobParametersArgumentCaptor;
 
   @BeforeEach
-  public void setUp()
+  void setUp()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
           InvalidJobParametersException,

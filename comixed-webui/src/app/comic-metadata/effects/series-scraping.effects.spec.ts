@@ -20,7 +20,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of, throwError } from 'rxjs';
 import { SeriesScrapingEffects } from './series-scraping.effects';
-import { ComicBookScrapingService } from '@app/comic-metadata/services/comic-book-scraping.service';
+import { ComicScrapingService } from '@app/comic-metadata/services/comic-scraping.service';
 import {
   scrapeSeriesMetadata,
   scrapeSeriesMetadataFailure,
@@ -49,7 +49,7 @@ describe('SeriesScrapingEffects', () => {
 
   let actions$: Observable<any>;
   let effects: SeriesScrapingEffects;
-  let metadataService: jasmine.SpyObj<ComicBookScrapingService>;
+  let metadataService: jasmine.SpyObj<ComicScrapingService>;
   let alertService: AlertService;
   let router: Router;
 
@@ -65,10 +65,10 @@ describe('SeriesScrapingEffects', () => {
         provideMockActions(() => actions$),
         provideRouter([]),
         {
-          provide: ComicBookScrapingService,
+          provide: ComicScrapingService,
           useValue: {
             scrapeSeries: jasmine.createSpy(
-              'ComicBookScrapingService.scrapeSeries()'
+              'ComicScrapingService.scrapeSeries()'
             )
           }
         },
@@ -78,8 +78,8 @@ describe('SeriesScrapingEffects', () => {
 
     effects = TestBed.inject(SeriesScrapingEffects);
     metadataService = TestBed.inject(
-      ComicBookScrapingService
-    ) as jasmine.SpyObj<ComicBookScrapingService>;
+      ComicScrapingService
+    ) as jasmine.SpyObj<ComicScrapingService>;
     alertService = TestBed.inject(AlertService);
     spyOn(alertService, 'info');
     spyOn(alertService, 'error');

@@ -22,8 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.model.comicpages.ComicPageType;
 import org.junit.jupiter.api.Test;
@@ -36,12 +35,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class MarkBlockedPageProcessorTest {
   @InjectMocks private MarkBlockedPageProcessor processor;
   @Mock private ComicPage page;
-  @Mock private ComicBook comicBook;
-  @Mock private ComicDetail comicDetail;
+  @Mock private Comic comic;
 
   @Test
   void process() {
-    when(page.getComicDetail()).thenReturn(comicDetail);
+    when(page.getComic()).thenReturn(comic);
 
     final ComicPage result = processor.process(page);
 

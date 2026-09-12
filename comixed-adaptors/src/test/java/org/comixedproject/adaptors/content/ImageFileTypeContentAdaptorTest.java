@@ -26,8 +26,7 @@ import static org.mockito.Mockito.when;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.model.comicpages.ComicPageType;
 import org.junit.jupiter.api.Test;
@@ -45,18 +44,17 @@ class ImageFileTypeContentAdaptorTest extends BaseContentAdaptorTest {
   @InjectMocks private ImageFileTypeContentAdaptor adaptor;
 
   @Mock private ComicPage comicPage;
-  @Mock private ComicBook comicBook;
-  @Mock private ComicDetail comicDetail;
+  @Mock private Comic comic;
 
   private List<ComicPage> pageList = new ArrayList<>();
 
   @Test
   void loadContent_fileAlreadyExists() throws IOException {
-    when(comicBook.hasPageWithFilename(anyString())).thenReturn(true);
+    when(comic.hasPageWithFilename(anyString())).thenReturn(true);
 
     byte[] content = loadFile(TEST_JPEG_FILENAME);
 
-    adaptor.loadContent(comicBook, TEST_JPEG_FILENAME, content);
+    adaptor.loadContent(comic, TEST_JPEG_FILENAME, content);
 
     assertEquals(0, pageList.size());
   }
@@ -65,11 +63,10 @@ class ImageFileTypeContentAdaptorTest extends BaseContentAdaptorTest {
   void loadContent_not_first_image() throws IOException {
     byte[] content = loadFile(TEST_JPEG_FILENAME);
     pageList.add(comicPage);
-    when(comicBook.hasPageWithFilename(anyString())).thenReturn(false);
-    when(comicBook.getPages()).thenReturn(pageList);
-    when(comicBook.getComicDetail()).thenReturn(comicDetail);
+    when(comic.hasPageWithFilename(anyString())).thenReturn(false);
+    when(comic.getPages()).thenReturn(pageList);
 
-    adaptor.loadContent(comicBook, TEST_JPEG_FILENAME, content);
+    adaptor.loadContent(comic, TEST_JPEG_FILENAME, content);
 
     assertEquals(2, pageList.size());
     assertNotNull(pageList.get(pageList.size() - 1));
@@ -79,11 +76,10 @@ class ImageFileTypeContentAdaptorTest extends BaseContentAdaptorTest {
   @Test
   void loadContent_jpg() throws IOException {
     byte[] content = loadFile(TEST_JPEG_FILENAME);
-    when(comicBook.hasPageWithFilename(anyString())).thenReturn(false);
-    when(comicBook.getPages()).thenReturn(pageList);
-    when(comicBook.getComicDetail()).thenReturn(comicDetail);
+    when(comic.hasPageWithFilename(anyString())).thenReturn(false);
+    when(comic.getPages()).thenReturn(pageList);
 
-    adaptor.loadContent(comicBook, TEST_JPEG_FILENAME, content);
+    adaptor.loadContent(comic, TEST_JPEG_FILENAME, content);
 
     assertEquals(1, pageList.size());
     assertNotNull(pageList.get(0));
@@ -93,11 +89,10 @@ class ImageFileTypeContentAdaptorTest extends BaseContentAdaptorTest {
   @Test
   void loadContent_webp() throws IOException {
     byte[] content = loadFile(TEST_WEBP_FILENAME);
-    when(comicBook.hasPageWithFilename(anyString())).thenReturn(false);
-    when(comicBook.getPages()).thenReturn(pageList);
-    when(comicBook.getComicDetail()).thenReturn(comicDetail);
+    when(comic.hasPageWithFilename(anyString())).thenReturn(false);
+    when(comic.getPages()).thenReturn(pageList);
 
-    adaptor.loadContent(comicBook, TEST_WEBP_FILENAME, content);
+    adaptor.loadContent(comic, TEST_WEBP_FILENAME, content);
 
     assertEquals(1, pageList.size());
     assertNotNull(pageList.get(0));
@@ -107,11 +102,10 @@ class ImageFileTypeContentAdaptorTest extends BaseContentAdaptorTest {
   @Test
   void loadContent_gif() throws IOException {
     byte[] content = loadFile(TEST_GIF_FILENAME);
-    when(comicBook.hasPageWithFilename(anyString())).thenReturn(false);
-    when(comicBook.getPages()).thenReturn(pageList);
-    when(comicBook.getComicDetail()).thenReturn(comicDetail);
+    when(comic.hasPageWithFilename(anyString())).thenReturn(false);
+    when(comic.getPages()).thenReturn(pageList);
 
-    adaptor.loadContent(comicBook, TEST_GIF_FILENAME, content);
+    adaptor.loadContent(comic, TEST_GIF_FILENAME, content);
 
     assertEquals(1, pageList.size());
     assertNotNull(pageList.get(0));

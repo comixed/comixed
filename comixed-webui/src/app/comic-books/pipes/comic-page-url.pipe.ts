@@ -28,6 +28,7 @@ import { ComicPage } from '@app/comic-books/models/comic-page';
 export class ComicPageUrlPipe implements PipeTransform {
   transform(page: ComicPage): string {
     if (page) {
+      interpolate(GET_PAGE_CONTENT_URL, { id: page.comicPageId });
       return interpolate(GET_PAGE_CONTENT_URL, { id: page.comicPageId });
     } else {
       return MISSING_COMIC_IMAGE_URL;

@@ -66,7 +66,7 @@ class BatchProcessesServiceTest {
   private Set<JobParameter<?>> parameters = new HashSet<>();
 
   @BeforeEach
-  public void setUp() throws NoSuchJobException {
+  void setUp() throws NoSuchJobException {
     jobNames.add(TEST_JOB_NAME);
     Mockito.when(jobRepository.getJobNames()).thenReturn(jobNames);
     Mockito.when(jobInstance.getJobName()).thenReturn(TEST_JOB_NAME);

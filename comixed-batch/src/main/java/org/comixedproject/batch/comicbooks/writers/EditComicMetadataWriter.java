@@ -31,7 +31,7 @@ import org.springframework.stereotype.Component;
 @Component
 @StepScope
 @Log4j2
-public class EditComicMetadataWriter extends AbstractComicBookWriter {
+public class EditComicMetadataWriter extends AbstractComicWriter {
   public EditComicMetadataWriter() {
     super(ComicEvent.comicMetadataChanged);
   }

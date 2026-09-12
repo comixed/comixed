@@ -18,8 +18,8 @@
 
 package org.comixedproject.rest.library;
 
-import static org.comixedproject.batch.comicbooks.EditComicBookMetadataConfiguration.*;
-import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LIBRARY_SELECTIONS;
+import static org.comixedproject.batch.comicbooks.EditComicMetadataConfiguration.*;
+import static org.comixedproject.rest.comicbooks.ComicSelectionController.LIBRARY_SELECTIONS;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -57,7 +57,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 @MockitoSettings(strictness = Strictness.LENIENT)
 class LibraryControllerTest {
   private static final ArchiveType TEST_ARCHIVE_TYPE = ArchiveType.CBZ;
-  private static final long TEST_COMIC_BOOK_ID = 718L;
+  private static final long TEST_COMIC_ID = 718L;
   private static final String TEST_PUBLISHER = "The Publisher";
   private static final String TEST_SERIES = "The Series";
   private static final String TEST_VOLUME = "1234";
@@ -70,8 +70,7 @@ class LibraryControllerTest {
   @InjectMocks private LibraryController controller;
   @Mock private LibraryService libraryService;
   @Mock private RemoteLibraryStateService remoteLibraryStateService;
-  @Mock private ComicBookService comicBookService;
-  @Mock private ComicDetailService comicDetailService;
+  @Mock private ComicService comicService;
   @Mock private ComicSelectionService comicSelectionService;
   @Mock private ConfigurationService configurationService;
   @Mock private List<Long> idList;
@@ -91,12 +90,12 @@ class LibraryControllerTest {
   @Captor private ArgumentCaptor<JobParameters> jobParametersArgumentCaptor;
 
   @BeforeEach
-  void setUp() throws ComicBookSelectionException {
+  void setUp() throws ComicSelectionException {
     when(httpSession.getAttribute(LIBRARY_SELECTIONS)).thenReturn(TEST_ENCODED_IDS);
     when(principal.getName()).thenReturn(TEST_EMAIL);
     when(comicSelectionService.decodeSelections(TEST_ENCODED_IDS)).thenReturn(selectedIds);
     when(comicSelectionService.encodeSelections(Mockito.anyList())).thenReturn(TEST_REENCODED_IDS);
-    selectedIds.add(TEST_COMIC_BOOK_ID);
+    selectedIds.add(TEST_COMIC_ID);
   }
 
   @Test
@@ -120,7 +119,7 @@ class LibraryControllerTest {
         LibraryException.class,
         () ->
             controller.convertSingleComicBooks(
-                new ConvertComicsRequest(TEST_ARCHIVE_TYPE), TEST_COMIC_BOOK_ID));
+                new ConvertComicsRequest(TEST_ARCHIVE_TYPE), TEST_COMIC_ID));
   }
 
   @Test
@@ -128,11 +127,10 @@ class LibraryControllerTest {
     when(configurationService.isFeatureEnabled(ConfigurationService.CFG_LIBRARY_NO_RECREATE_COMICS))
         .thenReturn(false);
 
-    controller.convertSingleComicBooks(
-        new ConvertComicsRequest(TEST_ARCHIVE_TYPE), TEST_COMIC_BOOK_ID);
+    controller.convertSingleComicBooks(new ConvertComicsRequest(TEST_ARCHIVE_TYPE), TEST_COMIC_ID);
 
     verify(libraryService)
-        .prepareToRecreate(new ArrayList<>(Arrays.asList(TEST_COMIC_BOOK_ID)), TEST_ARCHIVE_TYPE);
+        .prepareToRecreate(new ArrayList<>(Arrays.asList(TEST_COMIC_ID)), TEST_ARCHIVE_TYPE);
   }
 
   @Test
@@ -204,15 +202,14 @@ class LibraryControllerTest {
   void rescanComicBooks() throws Exception {
     controller.rescanSelectedComicBooks(httpSession, principal);
 
-    verify(comicDetailService).prepareForRescan(selectedIds);
+    verify(comicService).prepareForRescan(selectedIds);
   }
 
   @Test
   void updateSingleComicBookMetadata() throws Exception {
-    controller.updateSingleComicBookMetadata(TEST_COMIC_BOOK_ID);
+    controller.updateSingleComicBookMetadata(TEST_COMIC_ID);
 
-    verify(libraryService)
-        .prepareForMetadataUpdate(new ArrayList<>(Arrays.asList(TEST_COMIC_BOOK_ID)));
+    verify(libraryService).prepareForMetadataUpdate(new ArrayList<>(Arrays.asList(TEST_COMIC_ID)));
   }
 
   @Test
@@ -233,12 +230,10 @@ class LibraryControllerTest {
   void editMultipleComicsServiceThrowsException() throws Exception {
     when(editMultipleComicsRequest.getIds()).thenReturn(idList);
 
-    doThrow(ComicBookException.class)
-        .when(comicDetailService)
-        .updateMultipleComics(Mockito.anyList());
+    doThrow(ComicException.class).when(comicService).updateMultipleComics(Mockito.anyList());
 
     assertThrows(
-        ComicBookException.class, () -> controller.editMultipleComics(editMultipleComicsRequest));
+        ComicException.class, () -> controller.editMultipleComics(editMultipleComicsRequest));
   }
 
   @Test
@@ -254,7 +249,7 @@ class LibraryControllerTest {
 
     controller.editMultipleComics(editMultipleComicsRequest);
 
-    verify(comicDetailService).updateMultipleComics(idList);
+    verify(comicService).updateMultipleComics(idList);
 
     final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
 
@@ -271,7 +266,7 @@ class LibraryControllerTest {
                     EDIT_COMIC_METADATA_JOB_ISSUE_NUMBER,
                     EDIT_COMIC_METADATA_JOB_IMPRINT)));
 
-    verify(comicDetailService).updateMultipleComics(idList);
+    verify(comicService).updateMultipleComics(idList);
     verify(jobOperator).start(editComicMetadataJob, jobParameters);
   }
 }

@@ -72,7 +72,7 @@ import {
   withInterceptorsFromDi
 } from '@angular/common/http';
 import { ComicTagType } from '@app/comic-books/models/comic-tag-type';
-import { ComicBookData } from '@app/comic-books/models/comic-book-data';
+import { ComicDataSet } from '@app/comic-books/models/comic-data-set';
 
 describe('DisplayableComicService', () => {
   const PAGE_SIZE = 25;
@@ -100,7 +100,7 @@ describe('DisplayableComicService', () => {
   const SERIES = COMIC_LIST[0].series;
   const VOLUME = COMIC_LIST[0].volume;
   const PAGE_COUNT = 23;
-  const IDS = COMIC_LIST.map(entry => entry.comicBookId);
+  const IDS = COMIC_LIST.map(entry => entry.comicDetailId);
   const TOTAL_COUNT = COMIC_LIST.length * 2;
   const FILTERED_COUNT = Math.floor(TOTAL_COUNT * 0.75);
   const READING_LIST_ID = READING_LIST_3.readingListId;
@@ -164,7 +164,7 @@ describe('DisplayableComicService', () => {
             detail: COMIC_ADDED,
             pages: [],
             metadata: null
-          } as ComicBookData as any);
+          } as ComicDataSet as any);
           return {} as Subscription;
         });
       webSocketService.subscribe

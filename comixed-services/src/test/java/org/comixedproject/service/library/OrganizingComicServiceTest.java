@@ -24,8 +24,7 @@ import static org.mockito.Mockito.*;
 import java.util.ArrayList;
 import java.util.List;
 import org.comixedproject.model.library.OrganizingComic;
-import org.comixedproject.repositories.comicbooks.ComicBookRepository;
-import org.comixedproject.repositories.comicbooks.ComicDetailRepository;
+import org.comixedproject.repositories.comicbooks.ComicRepository;
 import org.comixedproject.repositories.library.OrganizingComicRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,15 +40,13 @@ import org.springframework.data.domain.PageRequest;
 class OrganizingComicServiceTest {
   private static final int TEST_MAX_COMICS = 23;
   private static final long TEST_COMIC_DETAIL_ID = 129L;
-  private static final long TEST_COMIC_BOOK_ID = 320L;
   private static final String TEST_UPDATED_FILENAME =
       "/Users/comixed_reader/Documents/comics/library/example.cbz";
   private static final long TEST_COMIC_COUNT = 27394L;
 
   @InjectMocks private OrganizingComicService service;
   @Mock private OrganizingComicRepository organizingComicRepository;
-  @Mock private ComicBookRepository comicBookRepository;
-  @Mock private ComicDetailRepository comicDetailRepository;
+  @Mock private ComicRepository comicRepository;
   @Mock private OrganizingComic comic;
 
   @Captor private ArgumentCaptor<PageRequest> pageRequestArgumentCaptor;
@@ -57,10 +54,9 @@ class OrganizingComicServiceTest {
   private List<OrganizingComic> organizingComicList = new ArrayList<>();
 
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     when(organizingComicRepository.loadComics(pageRequestArgumentCaptor.capture()))
         .thenReturn(organizingComicList);
-    when(comic.getComicBookId()).thenReturn(TEST_COMIC_BOOK_ID);
     when(comic.getComicDetailId()).thenReturn(TEST_COMIC_DETAIL_ID);
     when(comic.getUpdatedFilename()).thenReturn(TEST_UPDATED_FILENAME);
   }
@@ -83,9 +79,8 @@ class OrganizingComicServiceTest {
   void saveComic() {
     service.saveComic(comic);
 
-    verify(comicDetailRepository, times(1))
-        .updateFilename(TEST_COMIC_DETAIL_ID, TEST_UPDATED_FILENAME);
-    verify(comicDetailRepository, times(1)).clearOrganizingFlag(TEST_COMIC_BOOK_ID);
+    verify(comicRepository, times(1)).updateFilename(TEST_COMIC_DETAIL_ID, TEST_UPDATED_FILENAME);
+    verify(comicRepository, times(1)).clearOrganizingFlag(TEST_COMIC_DETAIL_ID);
   }
 
   @Test
@@ -94,8 +89,8 @@ class OrganizingComicServiceTest {
 
     service.saveComic(comic);
 
-    verify(comicDetailRepository, never()).updateFilename(anyLong(), anyString());
-    verify(comicDetailRepository, times(1)).clearOrganizingFlag(TEST_COMIC_BOOK_ID);
+    verify(comicRepository, never()).updateFilename(anyLong(), anyString());
+    verify(comicRepository, times(1)).clearOrganizingFlag(TEST_COMIC_DETAIL_ID);
   }
 
   @Test

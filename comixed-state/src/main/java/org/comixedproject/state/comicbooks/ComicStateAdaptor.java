@@ -23,8 +23,7 @@ import static org.comixedproject.state.comicbooks.ComicStateMachineConfiguration
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.state.StateMachine;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +31,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>ComicStateAdaptor</code> provides methods for initiating state transitions in {@link
- * ComicBook} objects, and for subscribing to state changes.
+ * <code>ComicStateAdaptor</code> provides methods for initiating state transitions in {@link Comic}
+ * objects, and for subscribing to state changes.
  *
  * @author Darryl L. Pierce
  */
@@ -42,7 +41,7 @@ import org.springframework.stereotype.Component;
 public class ComicStateAdaptor {
   @Autowired
   @Qualifier(COMIC_STATE_MACHINE)
-  private StateMachine<ComicDetail, ComicState, ComicEvent> stateMachine =
+  private StateMachine<Comic, ComicState, ComicEvent> stateMachine =
       new StateMachine<>(ComicState.class, ComicEvent.class);
 
   private final List<ComicStateListener> listeners = new ArrayList<>();
@@ -51,7 +50,7 @@ public class ComicStateAdaptor {
     this.listeners.add(listener);
   }
 
-  public void fireEvent(final ComicDetail comic, final ComicEvent event) {
+  public void fireEvent(final Comic comic, final ComicEvent event) {
     log.debug("Firing comic book event: {}:{}", comic.getState(), event);
     this.stateMachine.processEvent(comic, event);
     for (int index = 0; index < this.listeners.size(); index++) {

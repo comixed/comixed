@@ -50,7 +50,7 @@ class PublishStoryListUpdateActionTest {
   @Mock private ScrapedStory story;
 
   @BeforeEach
-  public void setUp() throws JacksonException {
+  void setUp() throws JacksonException {
     Mockito.when(objectMapper.writerWithView(Mockito.any())).thenReturn(objectWriter);
     Mockito.when(objectWriter.writeValueAsString(Mockito.any())).thenReturn(TEST_STORY_AS_JSON);
     Mockito.when(story.getScrapedStoryId()).thenReturn(TEST_STORY_ID);

@@ -19,7 +19,7 @@
 package org.comixedproject.repositories.comicbooks;
 
 import java.util.List;
-import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicbooks.ComicTag;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -31,17 +31,18 @@ public interface ComicTagRepository extends JpaRepository<ComicTag, Long> {
   /**
    * Deletes all tags for the given comic detail.
    *
-   * @param comicDetail the comic detail
+   * @param comic the comic detail
    */
-  void deleteAllByComicDetail(ComicDetail comicDetail);
+  @Query("DELETE FROM ComicTag t WHERE t.comic = :comic")
+  void deleteAllForComic(@Param("comic") Comic comic);
 
   /**
    * Returns the comic tags for the given comic book.
    *
-   * @param comicBookId the comic book id
+   * @param comicDetailId the comic book id
    * @return the comic tags
    */
   @Query(
-      "SELECT t FROM ComicTag t WHERE t.comicDetail.comicBook.comicBookId = :comicBookId ORDER BY t.type, t.value")
-  List<ComicTag> getForComicBook(@Param("comicBookId") long comicBookId);
+      "SELECT t FROM ComicTag t WHERE t.comic.comicDetailId = :comicDetailId ORDER BY t.type, t.value")
+  List<ComicTag> getForComicBook(@Param("comicDetailId") long comicDetailId);
 }

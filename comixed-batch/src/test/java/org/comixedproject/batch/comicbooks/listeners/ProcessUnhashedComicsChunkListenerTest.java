@@ -20,13 +20,14 @@ package org.comixedproject.batch.comicbooks.listeners;
 
 import static junit.framework.TestCase.*;
 import static org.comixedproject.batch.comicbooks.ProcessUnhashedComicsConfiguration.PROCESS_UNHASHED_COMICS_JOB;
+import static org.mockito.Mockito.*;
 
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.batch.PublishBatchProcessDetailUpdateAction;
-import org.comixedproject.messaging.comicbooks.PublishProcessComicBooksStatusAction;
+import org.comixedproject.messaging.comicbooks.PublishProcessComicsStatusAction;
 import org.comixedproject.model.batch.BatchProcessDetail;
-import org.comixedproject.model.messaging.batch.ProcessComicBooksStatus;
-import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.model.messaging.batch.ProcessComicsStatus;
+import org.comixedproject.service.comicbooks.ComicService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -46,38 +47,38 @@ class ProcessUnhashedComicsChunkListenerTest {
   private static final long TEST_PAGE_WITHOUT_HASH_COUNT = TEST_PAGE_COUNT / 2L;
 
   @InjectMocks private ProcessUnhashedComicsChunkListener listener;
-  @Mock private PublishProcessComicBooksStatusAction publishProcessComicBooksStatusAction;
+  @Mock private PublishProcessComicsStatusAction publishProcessComicsStatusAction;
   @Mock private PublishBatchProcessDetailUpdateAction publishBatchProcessDetailUpdateAction;
-  @Mock private ComicBookService comicBookService;
+  @Mock private ComicService comicService;
   @Mock private Chunk chunk;
   @Mock private StepExecution stepExecution;
   @Mock private JobParameters jobParameters;
   @Mock private JobInstance jobInstance;
   @Mock private JobExecution jobExecution;
 
-  @Captor private ArgumentCaptor<ProcessComicBooksStatus> publishComicBooksStatusArgumentCaptor;
+  @Captor private ArgumentCaptor<ProcessComicsStatus> publishComicBooksStatusArgumentCaptor;
   @Captor private ArgumentCaptor<BatchProcessDetail> batchProcessDetailArgumentCaptor;
 
   @BeforeEach
-  public void setUp() throws PublishingException {
-    Mockito.when(comicBookService.getComicBookCount()).thenReturn(TEST_PAGE_COUNT);
-    Mockito.when(comicBookService.findComicsWithUnhashedPagesCount())
-        .thenReturn(TEST_PAGE_WITHOUT_HASH_COUNT);
+  void setUp() throws PublishingException {
+    when(comicService.getComicCount()).thenReturn(TEST_PAGE_COUNT);
+    when(comicService.findComicsWithUnhashedPagesCount()).thenReturn(TEST_PAGE_WITHOUT_HASH_COUNT);
 
-    Mockito.when(jobExecution.getJobParameters()).thenReturn(jobParameters);
-    Mockito.when(jobInstance.getJobName()).thenReturn(PROCESS_UNHASHED_COMICS_JOB);
-    Mockito.when(jobExecution.getJobInstance()).thenReturn(jobInstance);
-    Mockito.when(jobExecution.getStatus()).thenReturn(BatchStatus.COMPLETED);
-    Mockito.when(jobExecution.getExitStatus()).thenReturn(ExitStatus.COMPLETED);
-    Mockito.when(stepExecution.getJobExecution()).thenReturn(jobExecution);
-    Mockito.doNothing()
-        .when(publishProcessComicBooksStatusAction)
+    when(jobExecution.getJobParameters()).thenReturn(jobParameters);
+    when(jobInstance.getJobName()).thenReturn(PROCESS_UNHASHED_COMICS_JOB);
+    when(jobExecution.getJobInstance()).thenReturn(jobInstance);
+    when(jobExecution.getStatus()).thenReturn(BatchStatus.COMPLETED);
+    when(jobExecution.getExitStatus()).thenReturn(ExitStatus.COMPLETED);
+    when(stepExecution.getJobExecution()).thenReturn(jobExecution);
+    when(comicService.hasComicsWithUnhashedPages()).thenReturn(true);
+    doNothing()
+        .when(publishProcessComicsStatusAction)
         .publish(publishComicBooksStatusArgumentCaptor.capture());
-    Mockito.doNothing()
+    doNothing()
         .when(publishBatchProcessDetailUpdateAction)
         .publish(batchProcessDetailArgumentCaptor.capture());
 
-    Mockito.when(stepExecution.getJobExecution()).thenReturn(jobExecution);
+    when(stepExecution.getJobExecution()).thenReturn(jobExecution);
     StepSynchronizationManager.register(stepExecution);
   }
 
@@ -103,11 +104,11 @@ class ProcessUnhashedComicsChunkListenerTest {
   }
 
   private void doCommonChecks() throws PublishingException {
-    final ProcessComicBooksStatus status = publishComicBooksStatusArgumentCaptor.getValue();
+    final ProcessComicsStatus status = publishComicBooksStatusArgumentCaptor.getValue();
 
     assertNotNull(status);
     assertTrue(status.isActive());
 
-    Mockito.verify(publishProcessComicBooksStatusAction, Mockito.times(1)).publish(status);
+    verify(publishProcessComicsStatusAction, times(1)).publish(status);
   }
 }

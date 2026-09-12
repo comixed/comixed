@@ -50,6 +50,6 @@ public interface ComiXedUserRepository extends JpaRepository<ComiXedUser, Long> 
   ComiXedUser getById(@Param("id") long id);
 
   @Query(
-      "SELECT new org.comixedproject.model.net.user.ComicsReadStatistic(d.publisher, COUNT(d)) FROM ComicDetail d WHERE d.publisher IS NOT NULL AND d.comicDetailId IN (SELECT rcb FROM ComiXedUser u INNER JOIN u.readComicBooks rcb WHERE u.email = :email) GROUP BY d.publisher")
+      "SELECT new org.comixedproject.model.net.user.ComicsReadStatistic(d.publisher, COUNT(d)) FROM Comic d WHERE d.publisher IS NOT NULL AND d.comicDetailId IN (SELECT rcb FROM ComiXedUser u INNER JOIN u.readComicBooks rcb WHERE u.email = :email) GROUP BY d.publisher")
   List<ComicsReadStatistic> loadComicsReadStatistics(@Param("email") String email);
 }

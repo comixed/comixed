@@ -1,0 +1,119 @@
+/*
+ * ComiXed - A digital comic book library management application.
+ * Copyright (C) 2022, The ComiXed Project
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses>
+ */
+
+package org.comixedproject.batch.metadata.processors;
+
+import static junit.framework.TestCase.*;
+import static org.comixedproject.batch.metadata.MetadataProcessConfiguration.PARAM_SKIP_CACHE;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import org.apache.commons.lang.math.RandomUtils;
+import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicMetadataSource;
+import org.comixedproject.model.metadata.MetadataSource;
+import org.comixedproject.service.metadata.MetadataService;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
+import org.springframework.batch.core.job.parameters.JobParameters;
+import org.springframework.batch.core.step.StepExecution;
+
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class ScrapeComicProcessorTest {
+  private static final Long TEST_COMIC_METADATA_SOURCE_ID = 72L;
+  private static final Long TEST_COMIC_ID = 27L;
+  private static final String TEST_METADATA_REFERENCE_ID = "92731";
+  private static final Long TEST_METADATA_SOURCE_ID = 717L;
+  private static final Boolean TEST_SKIP_CACHE = RandomUtils.nextBoolean();
+
+  @InjectMocks private ScrapeComicProcessor processor;
+  @Mock private MetadataService metadataService;
+  @Mock private ComicMetadataSource comicMetadataSource;
+  @Mock private Comic comic;
+  @Mock private Comic scrapedComic;
+  @Mock private MetadataSource metadataSource;
+  @Mock private StepExecution stepExecution;
+  @Mock private JobParameters jobParameters;
+
+  @BeforeEach
+  void setUp() {
+    when(comic.getComicDetailId()).thenReturn(TEST_COMIC_ID);
+    when(comic.getMetadata()).thenReturn(comicMetadataSource);
+    when(comicMetadataSource.getComicMetadataSourceId()).thenReturn(TEST_COMIC_METADATA_SOURCE_ID);
+    when(metadataSource.getMetadataSourceId()).thenReturn(TEST_METADATA_SOURCE_ID);
+    when(comicMetadataSource.getMetadataSource()).thenReturn(metadataSource);
+    when(comicMetadataSource.getReferenceId()).thenReturn(TEST_METADATA_REFERENCE_ID);
+    when(jobParameters.getString(PARAM_SKIP_CACHE)).thenReturn(String.valueOf(TEST_SKIP_CACHE));
+    when(stepExecution.getJobParameters()).thenReturn(jobParameters);
+  }
+
+  @Test
+  void process_noMetadataSource() throws Exception {
+    when(comic.getMetadata()).thenReturn(null);
+
+    final Comic result = processor.process(comic);
+
+    assertNotNull(result);
+    assertSame(comic, result);
+
+    verify(comic).setBatchUpdatingMetadata(false);
+  }
+
+  @Test
+  void process_noMetadataSourceId() throws Exception {
+    when(comicMetadataSource.getComicMetadataSourceId()).thenReturn(null);
+
+    final Comic result = processor.process(comic);
+
+    assertNotNull(result);
+    assertSame(comic, result);
+
+    verify(comic).setBatchUpdatingMetadata(false);
+  }
+
+  @Test
+  void process() throws Exception {
+    when(metadataService.scrapeComic(anyLong(), anyLong(), anyString(), anyBoolean()))
+        .thenReturn(scrapedComic);
+
+    processor.beforeStep(stepExecution);
+
+    final Comic result = processor.process(comic);
+
+    assertNotNull(result);
+    assertSame(scrapedComic, result);
+
+    verify(metadataService)
+        .scrapeComic(
+            TEST_METADATA_SOURCE_ID, TEST_COMIC_ID, TEST_METADATA_REFERENCE_ID, TEST_SKIP_CACHE);
+    verify(scrapedComic).setBatchUpdatingMetadata(false);
+  }
+
+  @Test
+  void afterStep() {
+    assertNull(processor.afterStep(stepExecution));
+  }
+}

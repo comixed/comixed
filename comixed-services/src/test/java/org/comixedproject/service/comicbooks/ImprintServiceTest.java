@@ -20,72 +20,66 @@ package org.comixedproject.service.comicbooks;
 
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertSame;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 
 import java.util.List;
-import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicbooks.Imprint;
 import org.comixedproject.repositories.comicbooks.ImprintRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
 
 @ExtendWith(MockitoExtension.class)
-@MockitoSettings(strictness = Strictness.LENIENT)
 class ImprintServiceTest {
-  private static final String TEST_PUBLISHER = "Marvel";
-  private static final String TEST_IMPRINT = "Marvel Soleil";
+  private static final String TEST_IMPRINT = "Incoming Imprint";
+  private static final String TEST_SAVED_IMPRINT = "Saved Imprint";
+  private static final String TEST_PUBLISHER = "The Publisher";
 
   @InjectMocks private ImprintService imprintService;
   @Mock private ImprintRepository imprintRepository;
-  @Mock private ComicBook comicBook;
-  @Mock private ComicDetail comicDetail;
+  @Mock private Comic comic;
   @Mock private Imprint imprint;
   @Mock private List<Imprint> imprintList;
 
-  @BeforeEach
-  public void setUp() {
-    Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
-    Mockito.when(comicDetail.getImprint()).thenReturn(TEST_IMPRINT);
-    Mockito.when(imprint.getPublisher()).thenReturn(TEST_PUBLISHER);
-    Mockito.when(imprint.getName()).thenReturn(TEST_IMPRINT);
-  }
-
   @Test
   void update_comicWithImprint() {
-    Mockito.when(imprintRepository.findByName(Mockito.anyString())).thenReturn(imprint);
+    when(comic.getImprint()).thenReturn(TEST_IMPRINT);
+    when(imprintRepository.findByName(anyString())).thenReturn(imprint);
+    when(imprint.getName()).thenReturn(TEST_SAVED_IMPRINT);
+    when(imprint.getPublisher()).thenReturn(TEST_PUBLISHER);
 
-    imprintService.update(comicBook);
+    imprintService.update(comic);
 
-    Mockito.verify(comicDetail, Mockito.times(1)).setImprint(TEST_IMPRINT);
-    Mockito.verify(comicDetail, Mockito.times(1)).setPublisher(TEST_PUBLISHER);
+    verify(imprintRepository).findByName(TEST_IMPRINT);
+    verify(comic).setImprint(TEST_SAVED_IMPRINT);
+    verify(comic).setPublisher(TEST_PUBLISHER);
   }
 
   @Test
   void update_comicWithoutImprint() {
-    Mockito.when(imprintRepository.findByName(Mockito.anyString())).thenReturn(null);
+    when(comic.getImprint()).thenReturn(TEST_IMPRINT);
+    when(imprintRepository.findByName(anyString())).thenReturn(null);
 
-    imprintService.update(comicBook);
+    imprintService.update(comic);
 
-    Mockito.verify(comicDetail, Mockito.times(1)).setImprint("");
-    Mockito.verify(comicDetail, Mockito.never()).setPublisher(Mockito.anyString());
+    verify(imprintRepository).findByName(TEST_IMPRINT);
+    verify(comic).setImprint("");
+    verify(comic, never()).setPublisher(anyString());
   }
 
   @Test
   void getAll() {
-    Mockito.when(imprintRepository.findAll()).thenReturn(imprintList);
+    when(imprintRepository.findAll()).thenReturn(imprintList);
 
     final List<Imprint> result = imprintService.getAll();
 
     assertNotNull(result);
     assertSame(imprintList, result);
 
-    Mockito.verify(imprintRepository, Mockito.times(1)).findAll();
+    verify(imprintRepository).findAll();
   }
 }

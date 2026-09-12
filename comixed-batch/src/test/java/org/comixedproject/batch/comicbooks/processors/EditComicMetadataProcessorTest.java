@@ -19,18 +19,17 @@
 package org.comixedproject.batch.comicbooks.processors;
 
 import static junit.framework.TestCase.assertNull;
-import static org.comixedproject.batch.comicbooks.EditComicBookMetadataConfiguration.*;
+import static org.comixedproject.batch.comicbooks.EditComicMetadataConfiguration.*;
+import static org.mockito.Mockito.*;
 
 import org.apache.commons.lang.math.RandomUtils;
-import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicbooks.ComicType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
@@ -53,115 +52,110 @@ class EditComicMetadataProcessorTest {
   @Mock private StepExecution stepExecution;
   @Mock private JobExecution jobExecution;
   @Mock private JobParameters jobParameters;
-  @Mock private ComicBook comicBook;
-  @Mock private ComicDetail comicDetail;
+  @Mock private Comic comic;
 
   @BeforeEach
   void setUp() {
-    Mockito.when(comicBook.isFileContentsLoaded()).thenReturn(true);
-    Mockito.when(comicBook.isPurging()).thenReturn(false);
-    Mockito.when(comicBook.isBatchMetadataUpdate()).thenReturn(false);
-    Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
+    when(comic.isLoadingFileContents()).thenReturn(false);
+    when(comic.isPurging()).thenReturn(false);
+    when(comic.isBatchUpdatingMetadata()).thenReturn(false);
 
-    Mockito.when(stepExecution.getJobExecution()).thenReturn(jobExecution);
-    Mockito.when(jobExecution.getJobParameters()).thenReturn(jobParameters);
+    when(stepExecution.getJobExecution()).thenReturn(jobExecution);
+    when(jobExecution.getJobParameters()).thenReturn(jobParameters);
     processor.beforeStep(stepExecution);
 
-    Mockito.when(jobParameters.getString(EDIT_COMIC_METADATA_JOB_PUBLISHER))
-        .thenReturn(TEST_PUBLISHER);
-    Mockito.when(jobParameters.getString(EDIT_COMIC_METADATA_JOB_SERIES)).thenReturn(TEST_SERIES);
-    Mockito.when(jobParameters.getString(EDIT_COMIC_METADATA_JOB_VOLUME)).thenReturn(TEST_VOLUME);
-    Mockito.when(jobParameters.getString(EDIT_COMIC_METADATA_JOB_ISSUE_NUMBER))
-        .thenReturn(TEST_ISSUENO);
-    Mockito.when(jobParameters.getString(EDIT_COMIC_METADATA_JOB_IMPRINT)).thenReturn(TEST_IMPRINT);
-    Mockito.when(jobParameters.getString(EDIT_COMIC_METADATA_JOB_COMIC_TYPE))
-        .thenReturn(TEST_COMIC_TYPE);
+    when(jobParameters.getString(EDIT_COMIC_METADATA_JOB_PUBLISHER)).thenReturn(TEST_PUBLISHER);
+    when(jobParameters.getString(EDIT_COMIC_METADATA_JOB_SERIES)).thenReturn(TEST_SERIES);
+    when(jobParameters.getString(EDIT_COMIC_METADATA_JOB_VOLUME)).thenReturn(TEST_VOLUME);
+    when(jobParameters.getString(EDIT_COMIC_METADATA_JOB_ISSUE_NUMBER)).thenReturn(TEST_ISSUENO);
+    when(jobParameters.getString(EDIT_COMIC_METADATA_JOB_IMPRINT)).thenReturn(TEST_IMPRINT);
+    when(jobParameters.getString(EDIT_COMIC_METADATA_JOB_COMIC_TYPE)).thenReturn(TEST_COMIC_TYPE);
   }
 
   @Test
-  void process_fileContentsNotLoaded() throws Exception {
-    Mockito.when(comicBook.isFileContentsLoaded()).thenReturn(false);
+  void process_isLoadingFileContents() throws Exception {
+    when(comic.isLoadingFileContents()).thenReturn(true);
 
-    assertNull(processor.process(comicBook));
+    assertNull(processor.process(comic));
   }
 
   @Test
   void process_isPurging() throws Exception {
-    Mockito.when(comicBook.isPurging()).thenReturn(true);
+    when(comic.isPurging()).thenReturn(true);
 
-    assertNull(processor.process(comicBook));
+    assertNull(processor.process(comic));
   }
 
   @Test
-  void process_isBatchMetadataUpdate() throws Exception {
-    Mockito.when(comicBook.isBatchMetadataUpdate()).thenReturn(true);
+  void process_isBatchUpdatingMetadata() throws Exception {
+    when(comic.isBatchUpdatingMetadata()).thenReturn(true);
 
-    assertNull(processor.process(comicBook));
+    assertNull(processor.process(comic));
   }
 
   @Test
   void process() throws Exception {
-    processor.process(comicBook);
+    processor.process(comic);
 
-    Mockito.verify(comicDetail, Mockito.times(1)).setPublisher(TEST_PUBLISHER);
-    Mockito.verify(comicDetail, Mockito.times(1)).setSeries(TEST_SERIES);
-    Mockito.verify(comicDetail, Mockito.times(1)).setVolume(TEST_VOLUME);
-    Mockito.verify(comicDetail, Mockito.times(1)).setIssueNumber(TEST_ISSUENO);
-    Mockito.verify(comicDetail, Mockito.times(1)).setImprint(TEST_IMPRINT);
+    verify(comic).setPublisher(TEST_PUBLISHER);
+    verify(comic).setSeries(TEST_SERIES);
+    verify(comic).setVolume(TEST_VOLUME);
+    verify(comic).setIssueNumber(TEST_ISSUENO);
+    verify(comic).setImprint(TEST_IMPRINT);
   }
 
   @Test
   void process_noPublisher() throws Exception {
-    Mockito.when(jobParameters.getString(EDIT_COMIC_METADATA_JOB_PUBLISHER)).thenReturn(null);
+    when(jobParameters.getString(EDIT_COMIC_METADATA_JOB_PUBLISHER)).thenReturn(null);
 
-    processor.process(comicBook);
+    processor.process(comic);
 
-    Mockito.verify(comicDetail, Mockito.never()).setPublisher(Mockito.anyString());
+    verify(comic, never()).setPublisher(anyString());
   }
 
   @Test
   void process_noSeries() throws Exception {
-    Mockito.when(jobParameters.getString(EDIT_COMIC_METADATA_JOB_SERIES)).thenReturn(null);
+    when(jobParameters.getString(EDIT_COMIC_METADATA_JOB_SERIES)).thenReturn(null);
 
-    processor.process(comicBook);
+    processor.process(comic);
 
-    Mockito.verify(comicDetail, Mockito.never()).setSeries(Mockito.anyString());
+    verify(comic, never()).setSeries(anyString());
   }
 
   @Test
   void process_noVolume() throws Exception {
-    Mockito.when(jobParameters.getString(EDIT_COMIC_METADATA_JOB_VOLUME)).thenReturn(null);
+    when(jobParameters.getString(EDIT_COMIC_METADATA_JOB_VOLUME)).thenReturn(null);
 
-    processor.process(comicBook);
+    processor.process(comic);
 
-    Mockito.verify(comicDetail, Mockito.never()).setVolume(Mockito.anyString());
+    verify(comic, never()).setVolume(anyString());
   }
 
   @Test
   void process_noIssueNumber() throws Exception {
-    Mockito.when(jobParameters.getString(EDIT_COMIC_METADATA_JOB_ISSUE_NUMBER)).thenReturn(null);
+    when(jobParameters.getString(EDIT_COMIC_METADATA_JOB_ISSUE_NUMBER)).thenReturn(null);
 
-    processor.process(comicBook);
+    processor.process(comic);
 
-    Mockito.verify(comicDetail, Mockito.never()).setIssueNumber(Mockito.anyString());
+    verify(comic, never()).setIssueNumber(anyString());
   }
 
   @Test
   void process_noImprint() throws Exception {
-    Mockito.when(jobParameters.getString(EDIT_COMIC_METADATA_JOB_IMPRINT)).thenReturn(null);
+    when(jobParameters.getString(EDIT_COMIC_METADATA_JOB_IMPRINT)).thenReturn(null);
 
-    processor.process(comicBook);
+    processor.process(comic);
 
-    Mockito.verify(comicDetail, Mockito.never()).setImprint(Mockito.anyString());
+    verify(comic, never()).setImprint(anyString());
   }
 
   @Test
   void process_noComicType() throws Exception {
-    Mockito.when(jobParameters.getString(EDIT_COMIC_METADATA_JOB_COMIC_TYPE)).thenReturn(null);
+    when(jobParameters.getString(EDIT_COMIC_METADATA_JOB_COMIC_TYPE)).thenReturn(null);
 
-    processor.process(comicBook);
+    processor.process(comic);
 
-    Mockito.verify(comicDetail, Mockito.never()).setComicType(Mockito.any(ComicType.class));
+    verify(comic, never()).setComicType(any(ComicType.class));
   }
 
   @Test

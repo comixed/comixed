@@ -18,9 +18,10 @@
 
 package org.comixedproject.batch.comicbooks.listeners;
 
-import static org.comixedproject.model.messaging.batch.ProcessComicBooksStatus.*;
+import static org.comixedproject.model.messaging.batch.ProcessComicsStatus.*;
 
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.model.comicbooks.Comic;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.stereotype.Component;
 
@@ -32,7 +33,7 @@ import org.springframework.stereotype.Component;
 @Component
 @StepScope
 @Log4j2
-public class LoadFileContentsChunkListener<I, O> extends AbstractBatchProcessChunkListener<I, O> {
+public class LoadFileContentsChunkListener extends AbstractBatchProcessChunkListener<Comic, Comic> {
   @Override
   protected String getStepName() {
     return LOAD_FILE_CONTENTS_STEP;
@@ -40,17 +41,16 @@ public class LoadFileContentsChunkListener<I, O> extends AbstractBatchProcessChu
 
   @Override
   protected boolean isActive() {
-    return this.comicBookService.getComicsWithoutContentCount() > 0L;
+    return this.comicService.getComicsWithoutContentCount() > 0L;
   }
 
   @Override
   protected long getProcessedElements() {
-    return this.comicBookService.getComicBookCount()
-        - this.comicBookService.getComicsWithoutContentCount();
+    return this.comicService.getComicCount() - this.comicService.getComicsWithoutContentCount();
   }
 
   @Override
   protected long getTotalElements() {
-    return this.comicBookService.getComicBookCount();
+    return this.comicService.getComicCount();
   }
 }

@@ -22,7 +22,7 @@ import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.collections.Issue;
 import org.comixedproject.repositories.collections.IssueRepository;
-import org.comixedproject.service.comicbooks.ComicDetailService;
+import org.comixedproject.service.comicbooks.ComicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,7 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Log4j2
 public class IssueService {
   @Autowired private IssueRepository issueRepository;
-  @Autowired private ComicDetailService comicDetailServices;
+  @Autowired private ComicService comicServices;
 
   /**
    * Returns the number of issues for the given series and volume.
@@ -64,7 +64,7 @@ public class IssueService {
 
     if (result.isEmpty()) {
       log.debug("No series metadata found: generating transient series data");
-      this.comicDetailServices
+      this.comicServices
           .getAllComicBooksForPublisherAndSeriesAndVolume(publisher, series, volume, "", false)
           .forEach(
               comicDetail -> {

@@ -19,8 +19,7 @@
 package org.comixedproject.state.comicbooks;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.state.StateMachine;
 import org.comixedproject.state.comicbooks.actions.*;
@@ -32,7 +31,7 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * <code>ComicStateMachineConfiguration</code> defines a state machine for instances of {@link
- * ComicBook}.
+ * Comic}.
  *
  * @author Darryl L. Pierce
  */
@@ -44,7 +43,7 @@ public class ComicStateMachineConfiguration {
   @Autowired private PrepareComicForProcessingAction prepareComicForProcessingAction;
   @Autowired private FileContentsLoadedAction fileContentsLoadedAction;
   @Autowired private MetadataSavedAction metadataSavedAction;
-  @Autowired private PrepareComicBooksForBatchEditingAction prepareComicBooksForBatchEditingAction;
+  @Autowired private PrepareComicsForBatchEditingAction prepareComicsForBatchEditingAction;
   @Autowired private ComicFileRecreatedAction comicFileRecreatedAction;
   @Autowired private MarkComicAsMissingGuard markComicAsMissingGuard;
   @Autowired private MarkComicAsMissingAction markComicAsMissingAction;
@@ -53,8 +52,8 @@ public class ComicStateMachineConfiguration {
   @Autowired private UnmarkComicForRemovalAction unmarkComicForRemovalAction;
 
   @Bean(name = COMIC_STATE_MACHINE)
-  public StateMachine<ComicDetail, ComicState, ComicEvent> comicStateMachine() {
-    final StateMachine<ComicDetail, ComicState, ComicEvent> stateMachine =
+  public StateMachine<Comic, ComicState, ComicEvent> comicStateMachine() {
+    final StateMachine<Comic, ComicState, ComicEvent> stateMachine =
         new StateMachine<>(ComicState.class, ComicEvent.class);
 
     return stateMachine
@@ -137,12 +136,12 @@ public class ComicStateMachineConfiguration {
         .startingState(ComicState.STABLE)
         .onEvent(ComicEvent.prepareComicsForBatchEditing)
         .endingState(ComicState.STABLE)
-        .withAction(this.prepareComicBooksForBatchEditingAction)
+        .withAction(this.prepareComicsForBatchEditingAction)
         .and()
         .startingState(ComicState.CHANGED)
         .onEvent(ComicEvent.prepareComicsForBatchEditing)
         .endingState(ComicState.CHANGED)
-        .withAction(this.prepareComicBooksForBatchEditingAction)
+        .withAction(this.prepareComicsForBatchEditingAction)
         .and()
         // metadata was cleared
         .startingState(ComicState.STABLE)

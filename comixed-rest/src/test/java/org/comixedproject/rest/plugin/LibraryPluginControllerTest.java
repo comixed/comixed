@@ -18,8 +18,8 @@
 
 package org.comixedproject.rest.plugin;
 
-import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LIBRARY_SELECTIONS;
-import static org.junit.Assert.*;
+import static org.comixedproject.rest.comicbooks.ComicSelectionController.LIBRARY_SELECTIONS;
+import static org.junit.jupiter.api.Assertions.*;
 
 import jakarta.servlet.http.HttpSession;
 import java.security.Principal;
@@ -29,7 +29,7 @@ import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.model.net.plugin.CreatePluginRequest;
 import org.comixedproject.model.net.plugin.UpdatePluginRequest;
 import org.comixedproject.model.plugin.LibraryPlugin;
-import org.comixedproject.service.comicbooks.ComicBookSelectionException;
+import org.comixedproject.service.comicbooks.ComicSelectionException;
 import org.comixedproject.service.comicbooks.ComicSelectionService;
 import org.comixedproject.service.plugin.LibraryPluginException;
 import org.comixedproject.service.plugin.LibraryPluginService;
@@ -49,7 +49,7 @@ class LibraryPluginControllerTest {
   private static final String TEST_PLUGIN_LANGUAGE = "The libraryPlugin language";
   private static final String TEST_PLUGIN_FILENAME = "The libraryPlugin filename";
   private static final Boolean TEST_ADMIN_ONLY = RandomUtils.nextBoolean();
-  private static final Long TEST_COMIC_BOOK_ID = 320L;
+  private static final Long TEST_COMIC_ID = 320L;
   private static final String TEST_ENCODED_IDS = "The encoded selected ids";
   private static final String TEST_REENCODED_IDS = "The re-encoded selected ids";
 
@@ -67,7 +67,7 @@ class LibraryPluginControllerTest {
   @Captor private ArgumentCaptor<List<Long>> idListArgumentCaptor;
 
   @BeforeEach
-  void setUp() throws ComicBookSelectionException {
+  void setUp() throws ComicSelectionException {
     Mockito.when(principal.getName()).thenReturn(TEST_USER_EMAIL);
     Mockito.when(session.getAttribute(LIBRARY_SELECTIONS)).thenReturn(TEST_ENCODED_IDS);
     Mockito.when(comicSelectionService.decodeSelections(TEST_ENCODED_IDS)).thenReturn(selectedIds);
@@ -179,7 +179,7 @@ class LibraryPluginControllerTest {
 
     assertThrows(
         LibraryPluginException.class,
-        () -> controller.runLibraryPluginOnOneComicBook(TEST_PLUGIN_ID, TEST_COMIC_BOOK_ID));
+        () -> controller.runLibraryPluginOnOneComicBook(TEST_PLUGIN_ID, TEST_COMIC_ID));
   }
 
   @Test
@@ -188,17 +188,17 @@ class LibraryPluginControllerTest {
         .when(libraryPluginService)
         .runLibraryPlugin(Mockito.anyLong(), Mockito.anyLong());
 
-    controller.runLibraryPluginOnOneComicBook(TEST_PLUGIN_ID, TEST_COMIC_BOOK_ID);
+    controller.runLibraryPluginOnOneComicBook(TEST_PLUGIN_ID, TEST_COMIC_ID);
 
     Mockito.verify(libraryPluginService, Mockito.times(1))
-        .runLibraryPlugin(TEST_PLUGIN_ID, TEST_COMIC_BOOK_ID);
+        .runLibraryPlugin(TEST_PLUGIN_ID, TEST_COMIC_ID);
   }
 
   @Test
   void runLibraryPlugin_selectedComicBooks_selectionDecodingException()
-      throws ComicBookSelectionException {
+      throws ComicSelectionException {
     Mockito.when(comicSelectionService.decodeSelections(TEST_ENCODED_IDS))
-        .thenThrow(ComicBookSelectionException.class);
+        .thenThrow(ComicSelectionException.class);
 
     assertThrows(
         LibraryPluginException.class,

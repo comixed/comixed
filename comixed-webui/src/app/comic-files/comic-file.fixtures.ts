@@ -17,7 +17,7 @@
  */
 
 import { ComicFile } from './models/comic-file';
-import { ProcessingComicStatus } from '@app/reducers/import-comic-books.reducer';
+import { ProcessingComicStatus } from '@app/reducers/import-comics.reducer';
 
 export const ROOT_DIRECTORY = '/home/comixedadmin/Documents/comics';
 

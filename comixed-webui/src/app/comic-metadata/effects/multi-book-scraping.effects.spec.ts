@@ -20,7 +20,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of, throwError } from 'rxjs';
 import { MultiBookScrapingEffects } from './multi-book-scraping.effects';
-import { ComicBookScrapingService } from '@app/comic-metadata/services/comic-book-scraping.service';
+import { ComicScrapingService } from '@app/comic-metadata/services/comic-scraping.service';
 import { METADATA_SOURCE_1 } from '@app/comic-metadata/comic-metadata.fixtures';
 import {
   DISPLAYABLE_COMIC_1,
@@ -75,7 +75,7 @@ describe('MultiBookScrapingEffects', () => {
 
   let actions$: Observable<any>;
   let effects: MultiBookScrapingEffects;
-  let comicBookScrapingService: jasmine.SpyObj<ComicBookScrapingService>;
+  let comicBookScrapingService: jasmine.SpyObj<ComicScrapingService>;
   let alertService: AlertService;
 
   beforeEach(() => {
@@ -89,22 +89,22 @@ describe('MultiBookScrapingEffects', () => {
         MultiBookScrapingEffects,
         provideMockActions(() => actions$),
         {
-          provide: ComicBookScrapingService,
+          provide: ComicScrapingService,
           useValue: {
             startMultiBookScraping: jasmine.createSpy(
-              'ComicBookScrapingService.startMultiBookScraping()'
+              'ComicScrapingService.startMultiBookScraping()'
             ),
             loadMultiBookScrapingPage: jasmine.createSpy(
-              'ComicBookScrapingService.loadMultiBookScrapingPage()'
+              'ComicScrapingService.loadMultiBookScrapingPage()'
             ),
             removeMultiBookComic: jasmine.createSpy(
-              'ComicBookScrapingService.removeMultiBookComic()'
+              'ComicScrapingService.removeMultiBookComic()'
             ),
             scrapeMultiBookComic: jasmine.createSpy(
-              'ComicBookScrapingService.scrapeMultiBookComic()'
+              'ComicScrapingService.scrapeMultiBookComic()'
             ),
             batchScrapeComicBooks: jasmine.createSpy(
-              'ComicBookScrapingService.batchScrapeComicBooks()'
+              'ComicScrapingService.batchScrapeComicBooks()'
             )
           }
         },
@@ -114,8 +114,8 @@ describe('MultiBookScrapingEffects', () => {
 
     effects = TestBed.inject(MultiBookScrapingEffects);
     comicBookScrapingService = TestBed.inject(
-      ComicBookScrapingService
-    ) as jasmine.SpyObj<ComicBookScrapingService>;
+      ComicScrapingService
+    ) as jasmine.SpyObj<ComicScrapingService>;
     alertService = TestBed.inject(AlertService);
     spyOn(alertService, 'info');
     spyOn(alertService, 'error');

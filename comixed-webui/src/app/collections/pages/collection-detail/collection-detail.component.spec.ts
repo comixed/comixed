@@ -74,7 +74,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import {
   COMIC_BOOK_SELECTION_FEATURE_KEY,
   initialState as initialComicBookSelectionState
-} from '@app/comic-books/reducers/comic-book-selection.reducer';
+} from '@app/comic-books/reducers/comic-selection.reducer';
 import {
   QUERY_PARAM_PAGE_INDEX,
   QUERY_PARAM_PAGE_SIZE,

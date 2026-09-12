@@ -62,7 +62,7 @@ class SeriesDetailServiceTest {
   private List<SeriesDetail> seriesDetailList = new ArrayList<>();
 
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     Mockito.when(seriesDetailPage.stream()).thenReturn(seriesDetailStream);
     Mockito.when(seriesDetailStream.toList()).thenReturn(seriesDetailList);
     seriesDetailList.add(

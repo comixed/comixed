@@ -51,7 +51,7 @@ class PublisherDetailServiceTest {
   @Captor private ArgumentCaptor<Pageable> pageableArgumentCaptor;
 
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     Mockito.when(publisherDetailStream.toList()).thenReturn(publisherDetailList);
     Mockito.when(publisherDetailPage.stream()).thenReturn(publisherDetailStream);
   }

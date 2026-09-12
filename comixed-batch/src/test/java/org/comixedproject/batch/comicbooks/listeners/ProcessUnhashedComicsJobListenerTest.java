@@ -44,7 +44,7 @@ class ProcessUnhashedComicsJobListenerTest {
   @Captor ArgumentCaptor<BatchProcessDetail> batchProcessDetailArgumentCaptor;
 
   @BeforeEach
-  public void setUp() throws PublishingException {
+  void setUp() throws PublishingException {
     Mockito.when(jobExecution.getJobParameters()).thenReturn(jobParameters);
     Mockito.when(jobInstance.getJobName()).thenReturn(TEST_JOB_NAME);
     Mockito.when(jobExecution.getJobInstance()).thenReturn(jobInstance);

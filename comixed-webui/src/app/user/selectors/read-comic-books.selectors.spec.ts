@@ -18,8 +18,8 @@
 
 import {
   READ_COMIC_BOOKS_FEATURE_KEY,
-  ReadComicBooksState
-} from '../reducers/read-comic-books.reducer';
+  ReadComicsState
+} from '../reducers/read-comics.reducer';
 import { selectReadComicBooksList } from './read-comic-books.selectors';
 
 import {
@@ -39,7 +39,7 @@ describe('ReadComicBooks Selectors', () => {
     READ_COMIC_BOOK_5
   ];
 
-  let state: ReadComicBooksState;
+  let state: ReadComicsState;
 
   beforeEach(() => {
     state = { entries: READ_COMIC_BOOKS };

@@ -21,13 +21,14 @@ package org.comixedproject.batch.comicbooks.listeners;
 import static org.comixedproject.batch.comicbooks.ScrapeMetadataConfiguration.SCRAPE_METADATA_STEP;
 
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.model.comicbooks.Comic;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.stereotype.Component;
 
 @Component
 @StepScope
 @Log4j2
-public class ScrapeMetadataChunkListener<I, O> extends AbstractBatchProcessChunkListener<I, O> {
+public class ScrapeMetadataChunkListener extends AbstractBatchProcessChunkListener<Comic, Comic> {
   @Override
   protected String getStepName() {
     return SCRAPE_METADATA_STEP;
@@ -35,17 +36,16 @@ public class ScrapeMetadataChunkListener<I, O> extends AbstractBatchProcessChunk
 
   @Override
   protected boolean isActive() {
-    return this.comicDetailService.getBatchScrapingCount() > 0;
+    return this.comicService.getBatchScrapingCount() > 0;
   }
 
   @Override
   protected long getProcessedElements() {
-    return this.comicBookService.getComicBookCount()
-        - this.comicDetailService.getBatchScrapingCount();
+    return this.comicService.getComicCount() - this.comicService.getBatchScrapingCount();
   }
 
   @Override
   protected long getTotalElements() {
-    return this.comicBookService.getComicBookCount();
+    return this.comicService.getComicCount();
   }
 }

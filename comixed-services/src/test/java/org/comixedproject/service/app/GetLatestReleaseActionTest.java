@@ -90,7 +90,7 @@ class GetLatestReleaseActionTest {
   private MockWebServer githubServer;
 
   @BeforeEach
-  public void setUp() throws IOException {
+  void setUp() throws IOException {
 
     githubServer = new MockWebServer();
     githubServer.start();

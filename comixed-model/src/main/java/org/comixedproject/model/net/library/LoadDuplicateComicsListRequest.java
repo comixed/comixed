@@ -22,11 +22,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.model.comicbooks.Comic;
 
 /**
  * <code>LoadComicDetailsForReadingListRequest</code> represents the request payload when loading
- * {@link ComicDetail} for duplicate comic books in the library.
+ * {@link Comic} for duplicate comic books in the library.
  *
  * @author Darryl L. Pierce
  */

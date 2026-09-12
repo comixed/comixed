@@ -18,7 +18,7 @@
 
 package org.comixedproject.rest.comicpages;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import jakarta.servlet.http.HttpSession;
 import java.util.List;

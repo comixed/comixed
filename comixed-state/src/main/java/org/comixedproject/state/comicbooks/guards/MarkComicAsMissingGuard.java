@@ -20,7 +20,7 @@ package org.comixedproject.state.comicbooks.guards;
 
 import java.io.File;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.model.comicbooks.Comic;
 import org.springframework.stereotype.Component;
 
 /**
@@ -30,11 +30,11 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Log4j2
-public class MarkComicAsMissingGuard extends AbstractComicBookGuard {
+public class MarkComicAsMissingGuard extends AbstractComicGuard {
   @Override
-  public boolean evaluate(final ComicDetail comic) {
+  public boolean evaluate(final Comic comic) {
     if (comic.isMarkedMissing()) {
-      log.trace("Comic book already marked as missing: id={}", comic.getComicId());
+      log.trace("Comic book already marked as missing: id={}", comic.getComicDetailId());
       return false;
     }
     final File file = comic.getFile();
@@ -43,7 +43,7 @@ public class MarkComicAsMissingGuard extends AbstractComicBookGuard {
       return false;
     }
 
-    log.debug("Comic book can be marked as missing: id={}", comic.getComicId());
+    log.debug("Comic book can be marked as missing: id={}", comic.getComicDetailId());
     return true;
   }
 }

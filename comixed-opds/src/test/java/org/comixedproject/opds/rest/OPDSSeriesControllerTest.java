@@ -18,7 +18,7 @@
 
 package org.comixedproject.opds.rest;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.security.Principal;
 import org.apache.commons.lang.math.RandomUtils;
@@ -51,7 +51,7 @@ class OPDSSeriesControllerTest {
   @Mock private Principal principal;
 
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     Mockito.when(principal.getName()).thenReturn(TEST_EMAIL);
   }
 

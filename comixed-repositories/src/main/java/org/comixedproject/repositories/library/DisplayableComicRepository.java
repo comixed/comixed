@@ -56,7 +56,7 @@ public interface DisplayableComicRepository extends JpaRepository<DisplayableCom
    * @return the matching comics
    */
   @Query(
-      "SELECT c FROM DisplayableComic c WHERE c.comicDetailId IN (SELECT t.comicDetail.comicDetailId FROM ComicTag t WHERE t.type = :tagType AND t.value = :tagValue)")
+      "SELECT c FROM DisplayableComic c WHERE c.comicDetailId IN (SELECT t.comic.comicDetailId FROM ComicTag t WHERE t.type = :tagType AND t.value = :tagValue)")
   List<DisplayableComic> loadComicsByTagTypeAndValue(
       @Param("tagType") ComicTagType tagType,
       @Param("tagValue") String tagValue,
@@ -70,7 +70,7 @@ public interface DisplayableComicRepository extends JpaRepository<DisplayableCom
    * @return the years
    */
   @Query(
-      "SELECT DISTINCT(d.yearPublished) FROM DisplayableComic d WHERE d.yearPublished IS NOT NULL AND d.comicDetailId IN (SELECT t.comicDetail.comicDetailId FROM ComicTag t WHERE t.type = :tagType AND t.value = :tagValue)")
+      "SELECT DISTINCT(d.yearPublished) FROM DisplayableComic d WHERE d.yearPublished IS NOT NULL AND d.comicDetailId IN (SELECT t.comic.comicDetailId FROM ComicTag t WHERE t.type = :tagType AND t.value = :tagValue)")
   List<Integer> getCoverYearsForTagTypeAndValue(
       @Param("tagType") ComicTagType tagType, @Param("tagValue") String tagValue);
 
@@ -82,7 +82,7 @@ public interface DisplayableComicRepository extends JpaRepository<DisplayableCom
    * @return the years
    */
   @Query(
-      "SELECT DISTINCT(d.monthPublished) FROM DisplayableComic d WHERE d.yearPublished IS NOT NULL AND d.comicDetailId IN (SELECT t.comicDetail.comicDetailId FROM ComicTag t WHERE t.type = :tagType AND t.value = :tagValue)")
+      "SELECT DISTINCT(d.monthPublished) FROM DisplayableComic d WHERE d.yearPublished IS NOT NULL AND d.comicDetailId IN (SELECT t.comic.comicDetailId FROM ComicTag t WHERE t.type = :tagType AND t.value = :tagValue)")
   List<Integer> getCoverMonthsForTagTypeAndValue(
       @Param("tagType") ComicTagType tagType, @Param("tagValue") String tagValue);
 
@@ -94,7 +94,7 @@ public interface DisplayableComicRepository extends JpaRepository<DisplayableCom
    * @return the years
    */
   @Query(
-      "SELECT COUNT(d) FROM DisplayableComic d WHERE d.comicDetailId IN (SELECT t.comicDetail.comicDetailId FROM ComicTag t WHERE t.type = :tagType AND t.value = :tagValue)")
+      "SELECT COUNT(d) FROM DisplayableComic d WHERE d.comicDetailId IN (SELECT t.comic.comicDetailId FROM ComicTag t WHERE t.type = :tagType AND t.value = :tagValue)")
   long getComicCountForTagTypeAndValue(
       @Param("tagType") ComicTagType tagType, @Param("tagValue") String tagValue);
 
@@ -158,7 +158,7 @@ public interface DisplayableComicRepository extends JpaRepository<DisplayableCom
    * @return the comic ids
    */
   @Query(
-      "SELECT d.comicDetailId FROM DisplayableComic d WHERE d.comicDetailId IN (SELECT t.comicDetail.comicDetailId FROM ComicTag t WHERE t.type = :tagType AND t.value = :tagValue)")
+      "SELECT d.comicDetailId FROM DisplayableComic d WHERE d.comicDetailId IN (SELECT t.comic.comicDetailId FROM ComicTag t WHERE t.type = :tagType AND t.value = :tagValue)")
   List<Long> getIdsByTagTypeAndValue(ComicTagType tagType, String tagValue);
 
   /**
@@ -200,9 +200,9 @@ public interface DisplayableComicRepository extends JpaRepository<DisplayableCom
   /**
    * Returns the record for the given comic book id.
    *
-   * @param id the comic book id
+   * @param comicDetailId the comic book id
    * @return the record
    */
-  @Query("SELECT d FROM DisplayableComic d WHERE d.comicBookId = :comicBookId")
-  DisplayableComic getByComicBookId(@Param("comicBookId") long id);
+  @Query("SELECT d FROM DisplayableComic d WHERE d.comicDetailId = :comicDetailId")
+  DisplayableComic getByComicBookId(@Param("comicDetailId") long comicDetailId);
 }

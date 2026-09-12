@@ -21,9 +21,9 @@ package org.comixedproject.service.library;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.library.PublishRemoteLibraryUpdateAction;
-import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.net.library.RemoteLibraryState;
-import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.state.comicbooks.ComicStateAdaptor;
 import org.comixedproject.state.comicbooks.ComicStateListener;
 import org.springframework.beans.factory.InitializingBean;
@@ -40,7 +40,7 @@ import org.springframework.stereotype.Service;
 @Log4j2
 public class RemoteLibraryStateService implements InitializingBean, ComicStateListener {
   @Autowired private ComicStateAdaptor comicStateAdaptor;
-  @Autowired private ComicBookService comicBookService;
+  @Autowired private ComicService comicService;
   @Autowired private DuplicateComicService duplicateComicService;
   @Autowired private PublishRemoteLibraryUpdateAction publishRemoteLibraryUpdateAction;
 
@@ -51,7 +51,7 @@ public class RemoteLibraryStateService implements InitializingBean, ComicStateLi
   }
 
   @Override
-  public void onComicStateChanged(final ComicDetail comic) {
+  public void onComicStateChanged(final Comic comic) {
     log.debug("Publishing library state update");
     try {
       this.publishRemoteLibraryUpdateAction.publish(this.getLibraryState());
@@ -69,19 +69,19 @@ public class RemoteLibraryStateService implements InitializingBean, ComicStateLi
     log.debug("Retrieving the library state");
     final RemoteLibraryState result =
         new RemoteLibraryState(
-            this.comicBookService.getComicBookCount(),
-            this.comicBookService.getUnscrapedComicCount(),
-            this.comicBookService.getDeletedComicCount(),
+            this.comicService.getComicCount(),
+            this.comicService.getUnscrapedComicCount(),
+            this.comicService.getDeletedComicCount(),
             this.duplicateComicService.getDuplicateComicBookCount());
-    result.setPublishers(this.comicBookService.getPublishersState());
-    result.setSeries(this.comicBookService.getSeriesState());
-    result.setCharacters(this.comicBookService.getCharactersState());
-    result.setTeams(this.comicBookService.getTeamsState());
-    result.setLocations(this.comicBookService.getLocationsState());
-    result.setStories(this.comicBookService.getStoriesState());
-    result.setStates(this.comicBookService.getComicBooksState());
-    result.setArchiveTypes(this.comicBookService.getComicBookArchiveTypes());
-    result.setByPublisherAndYear(this.comicBookService.getByPublisherAndYear());
+    result.setPublishers(this.comicService.getPublishersState());
+    result.setSeries(this.comicService.getSeriesState());
+    result.setCharacters(this.comicService.getCharactersState());
+    result.setTeams(this.comicService.getTeamsState());
+    result.setLocations(this.comicService.getLocationsState());
+    result.setStories(this.comicService.getStoriesState());
+    result.setStates(this.comicService.getComicBooksState());
+    result.setArchiveTypes(this.comicService.getComicBookArchiveTypes());
+    result.setByPublisherAndYear(this.comicService.getByPublisherAndYear());
     return result;
   }
 }

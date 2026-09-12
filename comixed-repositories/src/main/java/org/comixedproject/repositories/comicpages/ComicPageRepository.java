@@ -58,6 +58,7 @@ public interface ComicPageRepository extends JpaRepository<ComicPage, Long> {
   /**
    * Returns a list of Pages with duplicate hashes.
    *
+   * @param pageable the request details
    * @return a list of ComicPage objects with duplicate hashes
    */
   @Query("SELECT dp FROM DuplicatePage dp")
@@ -91,7 +92,7 @@ public interface ComicPageRepository extends JpaRepository<ComicPage, Long> {
    * @return the page list
    */
   @Query(
-      "SELECT new org.comixedproject.model.comicpages.DeletedPageAndComic(p.hash, p.comicDetail.comicBook.comicBookId) FROM ComicPage p WHERE p.pageType = 'DELETED'")
+      "SELECT new org.comixedproject.model.comicpages.DeletedPageAndComic(p.hash, p.comic.comicDetailId) FROM ComicPage p WHERE p.pageType = 'DELETED'")
   List<DeletedPageAndComic> loadAllDeletedPages();
 
   /**
@@ -160,14 +161,14 @@ public interface ComicPageRepository extends JpaRepository<ComicPage, Long> {
   /**
    * Returns the record id for page number 0 for for the given comic book.
    *
-   * @param comicBookId the comic book id
+   * @param comicDetailId the comic book id
    * @return the page id
    */
   @Query(
-      "SELECT p.comicPageId FROM ComicPage p WHERE p.comicDetail.comicBook.comicBookId = :comicBookId AND p.pageNumber = 0")
-  Long getPageIdForComicBookCover(@Param("comicBookId") long comicBookId);
+      "SELECT p.comicPageId FROM ComicPage p WHERE p.comic.comicDetailId = :comicDetailId AND p.pageNumber = 0")
+  Long getPageIdForComicBookCover(@Param("comicDetailId") long comicDetailId);
 
-  @Query("SELECT p.comicDetail.filename FROM ComicPage p WHERE p.comicPageId = :pageId")
+  @Query("SELECT p.comic.filename FROM ComicPage p WHERE p.comicPageId = :pageId")
   String getComicFilenameForPage(@Param("pageId") Long pageId);
 
   @Query("SELECT p.filename FROM ComicPage p WHERE p.comicPageId = :pageId")
@@ -183,10 +184,10 @@ public interface ComicPageRepository extends JpaRepository<ComicPage, Long> {
   /**
    * Returns all pages for the given comic book.
    *
-   * @param id the comic book id
+   * @param comicDetailId the comic book id
    * @return the pages
    */
   @Query(
-      "SELECT p FROM ComicPage p WHERE p.comicDetail.comicBook.comicBookId = :comicBookId ORDER BY p.pageNumber")
-  List<ComicPage> getAllPagesForComicBook(@Param("comicBookId") long id);
+      "SELECT p FROM ComicPage p WHERE p.comic.comicDetailId = :comicDetailId ORDER BY p.pageNumber")
+  List<ComicPage> getAllPagesForComicBook(@Param("comicDetailId") long comicDetailId);
 }

@@ -18,8 +18,8 @@
 
 package org.comixedproject.rest.library;
 
-import static org.comixedproject.batch.comicbooks.EditComicBookMetadataConfiguration.*;
-import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LIBRARY_SELECTIONS;
+import static org.comixedproject.batch.comicbooks.EditComicMetadataConfiguration.*;
+import static org.comixedproject.rest.comicbooks.ComicSelectionController.LIBRARY_SELECTIONS;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import io.micrometer.core.annotation.Timed;
@@ -60,7 +60,7 @@ import org.springframework.web.bind.annotation.*;
 public class LibraryController {
   @Autowired private LibraryService libraryService;
   @Autowired private RemoteLibraryStateService remoteLibraryStateService;
-  @Autowired private ComicDetailService comicDetailService;
+  @Autowired private ComicService comicService;
   @Autowired private ConfigurationService configurationService;
   @Autowired private ComicSelectionService comicSelectionService;
 
@@ -153,7 +153,7 @@ public class LibraryController {
       this.comicSelectionService.clearSelectedComicBooks(email, idList);
       log.trace("Saving comic book selections");
       session.setAttribute(LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(idList));
-    } catch (ComicBookSelectionException error) {
+    } catch (ComicSelectionException error) {
       throw new LibraryException("Failed to start converting selected comic books", error);
     }
   }
@@ -229,7 +229,7 @@ public class LibraryController {
   public void rescanSingleComicBook(@PathVariable("comicBookId") final long comicBookId)
       throws Exception {
     log.info("Rescanning single comic book: id={}", comicBookId);
-    this.comicDetailService.prepareForRescan(Arrays.asList(comicBookId));
+    this.comicService.prepareForRescan(Arrays.asList(comicBookId));
   }
 
   /**
@@ -248,7 +248,7 @@ public class LibraryController {
     final List<Long> selectedIdList =
         this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
     log.info("Rescanning selected comic books: email={}", email);
-    this.comicDetailService.prepareForRescan(selectedIdList);
+    this.comicService.prepareForRescan(selectedIdList);
     this.comicSelectionService.clearSelectedComicBooks(email, selectedIdList);
     session.setAttribute(
         LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selectedIdList));
@@ -309,7 +309,7 @@ public class LibraryController {
    * Updates a set of comics with the provided details.
    *
    * @param request the request body
-   * @throws ComicBookException if an error occurs
+   * @throws ComicException if an error occurs
    */
   @PostMapping(value = "/api/library/comics/edit", consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
@@ -318,7 +318,7 @@ public class LibraryController {
       throws Exception {
     final List<Long> ids = request.getIds();
     log.info("Preparing to update details for {} comic{}", ids.size(), ids.size() == 1 ? "" : "s");
-    this.comicDetailService.updateMultipleComics(ids);
+    this.comicService.updateMultipleComics(ids);
     log.trace("Launching update comics batch process");
     this.jobOperator.start(
         this.editComicMetadataJob,

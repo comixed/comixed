@@ -28,15 +28,14 @@ import java.util.Date;
 import java.util.List;
 import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.adaptors.AdaptorException;
-import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
+import org.comixedproject.adaptors.comicbooks.ComicAdaptor;
 import org.comixedproject.adaptors.comicbooks.ComicFileAdaptor;
-import org.comixedproject.model.batch.LoadComicBooksEvent;
-import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.model.batch.LoadComicsEvent;
+import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicfiles.ComicFile;
 import org.comixedproject.model.comicfiles.ComicFileGroup;
 import org.comixedproject.model.metadata.FilenameMetadata;
-import org.comixedproject.service.comicbooks.ComicDetailService;
+import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.service.metadata.FilenameScrapingRuleService;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateAdaptor;
@@ -68,33 +67,31 @@ class ComicFileServiceTest {
   private static final long TEST_FILE_SIZE = 867530L;
 
   @InjectMocks private ComicFileService service;
-  @Mock private ComicBookAdaptor comicBookAdaptor;
+  @Mock private ComicAdaptor comicAdaptor;
   @Mock private ComicFileAdaptor comicFileAdaptor;
-  @Mock private ComicDetailService comicDetailService;
+  @Mock private ComicService comicService;
   @Mock private ComicStateAdaptor comicStateAdaptor;
   @Mock private ApplicationEventPublisher applicationEventPublisher;
   @Mock private FilenameScrapingRuleService filenameScrapingRuleService;
-  @Mock private ComicDetail comic;
-  @Mock private ComicBook comicBook;
+  @Mock private Comic comic;
   @Mock private FilenameMetadata metadata;
   @Mock private ComicFile comicFile;
 
-  @Captor private ArgumentCaptor<ComicDetail> comicArgumentCaptor;
+  @Captor private ArgumentCaptor<Comic> comicArgumentCaptor;
 
   private List<String> filenameList = new ArrayList<>();
   private List<ComicFileGroup> comicFileGroupList = new ArrayList<>();
   private ComicFileGroup comicFileGroup = new ComicFileGroup(TEST_ROOT_DIRECTORY);
 
   @BeforeEach
-  public void setUp() throws AdaptorException {
+  void setUp() throws AdaptorException {
     filenameList.add(TEST_COMIC_ARCHIVE);
 
     doNothing()
         .when(comicStateAdaptor)
         .fireEvent(comicArgumentCaptor.capture(), any(ComicEvent.class));
     when(comic.getBaseFilename()).thenReturn(TEST_ARCHIVE_FILENAME);
-    when(comicBook.getComicDetail()).thenReturn(comic);
-    when(comicBookAdaptor.createComic(anyString())).thenReturn(comicBook);
+    when(comicAdaptor.createComic(anyString())).thenReturn(comic);
     when(metadata.isFound()).thenReturn(false);
     when(filenameScrapingRuleService.loadFilenameMetadata(anyString())).thenReturn(metadata);
 
@@ -103,23 +100,23 @@ class ComicFileServiceTest {
 
   @Test
   void getImportFileCover_noNoCover() throws AdaptorException {
-    when(comicBookAdaptor.loadCover(anyString())).thenReturn(null);
+    when(comicAdaptor.loadCover(anyString())).thenReturn(null);
 
     assertNull(service.getImportFileCover(TEST_COMIC_ARCHIVE));
 
-    verify(comicBookAdaptor).loadCover(TEST_COMIC_ARCHIVE);
+    verify(comicAdaptor).loadCover(TEST_COMIC_ARCHIVE);
   }
 
   @Test
   void getImportFileCover() throws AdaptorException {
-    when(comicBookAdaptor.loadCover(anyString())).thenReturn(TEST_COVER_CONTENT);
+    when(comicAdaptor.loadCover(anyString())).thenReturn(TEST_COVER_CONTENT);
 
     final byte[] result = service.getImportFileCover(TEST_COMIC_ARCHIVE);
 
     assertNotNull(result);
     assertEquals(TEST_COVER_CONTENT, result);
 
-    verify(comicBookAdaptor).loadCover(TEST_COMIC_ARCHIVE);
+    verify(comicAdaptor).loadCover(TEST_COMIC_ARCHIVE);
   }
 
   @Test
@@ -142,14 +139,14 @@ class ComicFileServiceTest {
   @Test
   void getAllComicsUnder_nothingNewFound() throws IOException {
     when(comicFileAdaptor.isComicFile(any(File.class))).thenReturn(true);
-    when(comicDetailService.filenameFound(anyString())).thenReturn(true);
+    when(comicService.filenameFound(anyString())).thenReturn(true);
 
     final List<ComicFileGroup> result = service.getAllComicsUnder(TEST_ROOT_DIRECTORY, TEST_LIMIT);
 
     assertNotNull(result);
     assertTrue(result.isEmpty());
 
-    verify(comicDetailService)
+    verify(comicService)
         .filenameFound(new File(TEST_COMIC_ARCHIVE).getCanonicalPath().replace("\\", "/"));
   }
 
@@ -185,7 +182,7 @@ class ComicFileServiceTest {
 
   @Test
   void getAllComicsUnder_withExistingComicBook() throws IOException {
-    when(comicDetailService.filenameFound(anyString())).thenReturn(true);
+    when(comicService.filenameFound(anyString())).thenReturn(true);
     when(comicFileAdaptor.isComicFile(any(File.class))).thenCallRealMethod();
 
     final List<ComicFileGroup> result =
@@ -194,46 +191,46 @@ class ComicFileServiceTest {
     assertNotNull(result);
     assertTrue(result.isEmpty());
 
-    verify(comicDetailService, atLeast(1)).filenameFound(anyString());
+    verify(comicService, atLeast(1)).filenameFound(anyString());
   }
 
   @Test
   void importComicFiles_alreadyFound() {
-    when(comicDetailService.filenameFound(anyString())).thenReturn(true);
+    when(comicService.filenameFound(anyString())).thenReturn(true);
 
     service.importComicFiles(filenameList);
 
-    verify(comicDetailService).filenameFound(TEST_COMIC_ARCHIVE);
+    verify(comicService).filenameFound(TEST_COMIC_ARCHIVE);
     verify(comicStateAdaptor, never()).fireEvent(any(), any());
-    verify(applicationEventPublisher).publishEvent(LoadComicBooksEvent.instance);
+    verify(applicationEventPublisher).publishEvent(LoadComicsEvent.instance);
   }
 
   @Test
   void importComicFiles() throws AdaptorException {
-    when(comicDetailService.filenameFound(anyString())).thenReturn(false);
+    when(comicService.filenameFound(anyString())).thenReturn(false);
 
     service.importComicFiles(filenameList);
 
-    verify(comicDetailService).filenameFound(TEST_COMIC_ARCHIVE);
-    verify(comicBookAdaptor, times(filenameList.size())).createComic(TEST_COMIC_ARCHIVE);
+    verify(comicService).filenameFound(TEST_COMIC_ARCHIVE);
+    verify(comicAdaptor, times(filenameList.size())).createComic(TEST_COMIC_ARCHIVE);
     verify(filenameScrapingRuleService, times(filenameList.size()))
         .loadFilenameMetadata(TEST_ARCHIVE_FILENAME);
     verify(comicStateAdaptor).fireEvent(comic, ComicEvent.comicBookImported);
-    verify(applicationEventPublisher).publishEvent(LoadComicBooksEvent.instance);
+    verify(applicationEventPublisher).publishEvent(LoadComicsEvent.instance);
   }
 
   @Test
   void importComicFiles_comicBookAdaptorException() throws AdaptorException {
-    when(comicDetailService.filenameFound(anyString())).thenReturn(false);
-    when(comicBookAdaptor.createComic(anyString())).thenThrow(AdaptorException.class);
+    when(comicService.filenameFound(anyString())).thenReturn(false);
+    when(comicAdaptor.createComic(anyString())).thenThrow(AdaptorException.class);
 
     service.importComicFiles(filenameList);
 
-    verify(comicDetailService).filenameFound(TEST_COMIC_ARCHIVE);
-    verify(comicBookAdaptor, times(filenameList.size())).createComic(TEST_COMIC_ARCHIVE);
+    verify(comicService).filenameFound(TEST_COMIC_ARCHIVE);
+    verify(comicAdaptor, times(filenameList.size())).createComic(TEST_COMIC_ARCHIVE);
     verify(filenameScrapingRuleService, never()).loadFilenameMetadata(anyString());
     verify(comicStateAdaptor, never()).fireEvent(any(), any());
-    verify(applicationEventPublisher).publishEvent(LoadComicBooksEvent.instance);
+    verify(applicationEventPublisher).publishEvent(LoadComicsEvent.instance);
   }
 
   @Test
@@ -243,12 +240,12 @@ class ComicFileServiceTest {
     when(metadata.getVolume()).thenReturn(TEST_VOLUME);
     when(metadata.getIssueNumber()).thenReturn(TEST_ISSUE_NUMBER);
     when(metadata.getCoverDate()).thenReturn(TEST_COVER_DATE);
-    when(comicDetailService.filenameFound(anyString())).thenReturn(false);
+    when(comicService.filenameFound(anyString())).thenReturn(false);
 
     service.importComicFiles(filenameList);
 
-    verify(comicDetailService).filenameFound(TEST_COMIC_ARCHIVE);
-    verify(comicBookAdaptor, times(filenameList.size())).createComic(TEST_COMIC_ARCHIVE);
+    verify(comicService).filenameFound(TEST_COMIC_ARCHIVE);
+    verify(comicAdaptor, times(filenameList.size())).createComic(TEST_COMIC_ARCHIVE);
     verify(filenameScrapingRuleService, times(filenameList.size()))
         .loadFilenameMetadata(TEST_ARCHIVE_FILENAME);
     verify(comic).setSeries(TEST_SERIES_NAME);
@@ -256,16 +253,16 @@ class ComicFileServiceTest {
     verify(comic).setIssueNumber(TEST_ISSUE_NUMBER);
     verify(comic).setCoverDate(TEST_COVER_DATE);
     verify(comicStateAdaptor).fireEvent(comic, ComicEvent.comicBookImported);
-    verify(applicationEventPublisher).publishEvent(LoadComicBooksEvent.instance);
+    verify(applicationEventPublisher).publishEvent(LoadComicsEvent.instance);
   }
 
   @Test
   void discoverComicFile() throws AdaptorException {
-    when(comicDetailService.filenameFound(anyString())).thenReturn(false);
+    when(comicService.filenameFound(anyString())).thenReturn(false);
 
     service.discoverComicFile(TEST_ARCHIVE_FILENAME);
 
-    verify(comicBookAdaptor).createComic(TEST_ARCHIVE_FILENAME);
+    verify(comicAdaptor).createComic(TEST_ARCHIVE_FILENAME);
     verify(filenameScrapingRuleService).loadFilenameMetadata(TEST_ARCHIVE_FILENAME);
     verify(comicStateAdaptor).fireEvent(comic, ComicEvent.comicFileDiscovered);
   }

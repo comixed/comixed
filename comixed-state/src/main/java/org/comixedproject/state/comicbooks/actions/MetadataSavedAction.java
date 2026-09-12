@@ -19,7 +19,7 @@
 package org.comixedproject.state.comicbooks.actions;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.model.comicbooks.Comic;
 import org.springframework.stereotype.Component;
 
 /**
@@ -31,7 +31,7 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class MetadataSavedAction extends AbstractComicAction {
   @Override
-  public void execute(final ComicDetail comic) {
+  public void execute(final Comic comic) {
     log.trace("Clearing update metadata flag");
     comic.setUpdatingMetadata(false);
   }

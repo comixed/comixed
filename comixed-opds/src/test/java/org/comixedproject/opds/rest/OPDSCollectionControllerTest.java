@@ -54,7 +54,7 @@ class OPDSCollectionControllerTest {
   @Mock private OPDSUtils opdsUtils;
 
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     Mockito.when(principal.getName()).thenReturn(TEST_EMAIL);
   }
 

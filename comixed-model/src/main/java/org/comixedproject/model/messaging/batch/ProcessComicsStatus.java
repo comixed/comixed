@@ -1,0 +1,66 @@
+/*
+ * ComiXed - A digital comic book library management application.
+ * Copyright (C) 2021, The ComiXed Project
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses>
+ */
+
+package org.comixedproject.model.messaging.batch;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.comixedproject.views.View;
+
+/**
+ * <code>ProcessComicsStatus</code> represents the current state for processing comic books files.
+ *
+ * @author Darryl L. Pierce
+ */
+@NoArgsConstructor
+public class ProcessComicsStatus {
+  public static final String LOAD_FILE_CONTENTS_STEP = "load-file-contents-step";
+  public static final String LOAD_PAGE_HASH_STEP = "processing-unhashed-comics";
+  public static final String MARK_BLOCKED_PAGE_STEP = "mark-blocked-page-step";
+  public static final String REMOVE_DELETED_COMIC_BOOKS_STEP = "remove-deleted-comic-books-step";
+  public static final String MOVE_COMIC_FILES_STEP = "move-comic-files-step";
+  public static final String UPDATE_METADATA_STEP = "update-metadata-step";
+  public static final String RECREATE_COMIC_FILE_STEP = "recreating-comic-file-step";
+
+  @JsonProperty("active")
+  @JsonView(View.GenericObjectView.class)
+  @Getter
+  @Setter
+  private boolean active = true;
+
+  @JsonProperty("stepName")
+  @JsonView(View.GenericObjectView.class)
+  @Getter
+  @Setter
+  private String stepName;
+
+  @JsonProperty("total")
+  @JsonView(View.GenericObjectView.class)
+  @Getter
+  @Setter
+  private long total;
+
+  @JsonProperty("processed")
+  @JsonView(View.GenericObjectView.class)
+  @Getter
+  @Setter
+  private long processed;
+}

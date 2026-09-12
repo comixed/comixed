@@ -70,7 +70,7 @@ import { ComicState } from '@app/comic-books/models/comic-state';
 import {
   COMIC_BOOK_SELECTION_FEATURE_KEY,
   initialState as initialComicBooksSelectionState
-} from '@app/comic-books/reducers/comic-book-selection.reducer';
+} from '@app/comic-books/reducers/comic-selection.reducer';
 import {
   setComicBookSelectionByUnreadState,
   setMultipleComicBookByFilterSelectionState
@@ -84,7 +84,7 @@ import { PREFERENCE_PAGE_SIZE } from '@app/comic-files/comic-file.constants';
 import {
   initialState as initialReadComicBooksState,
   READ_COMIC_BOOKS_FEATURE_KEY
-} from '@app/user/reducers/read-comic-books.reducer';
+} from '@app/user/reducers/read-comics.reducer';
 import {
   loadComicsByFilter,
   loadReadComics,

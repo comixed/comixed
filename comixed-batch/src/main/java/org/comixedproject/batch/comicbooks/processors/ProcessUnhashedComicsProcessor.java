@@ -24,8 +24,8 @@ import java.util.Objects;
 import javax.imageio.ImageIO;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.GenericUtilitiesAdaptor;
-import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
-import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.adaptors.comicbooks.ComicAdaptor;
+import org.comixedproject.model.comicbooks.Comic;
 import org.springframework.batch.infrastructure.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -39,26 +39,25 @@ import org.springframework.util.StringUtils;
  */
 @Component
 @Log4j2
-public class ProcessUnhashedComicsProcessor implements ItemProcessor<ComicBook, ComicBook> {
-  @Autowired private ComicBookAdaptor comicBookAdaptor;
+public class ProcessUnhashedComicsProcessor implements ItemProcessor<Comic, Comic> {
+  @Autowired private ComicAdaptor comicAdaptor;
   @Autowired private GenericUtilitiesAdaptor genericUtilitiesAdaptor;
 
   @Override
-  public ComicBook process(final ComicBook comicBook) {
-    if (comicBook.getComicDetail().isMissing()) {
-      log.debug("Comic file is missing, skipping: id={}", comicBook.getComicBookId());
+  public Comic process(final Comic comic) {
+    if (comic.isMissing()) {
+      log.debug("Comic file is missing, skipping: id={}", comic.getComicDetailId());
       return null;
     }
-    log.debug(
-        "Loading page hashes for comic book: {}", comicBook.getComicDetail().getBaseFilename());
-    comicBook.getPages().stream()
+    log.debug("Loading page hashes for comic book: {}", comic.getBaseFilename());
+    comic.getPages().stream()
         .filter(page -> Objects.nonNull(page))
         .filter(page -> !StringUtils.hasLength(page.getHash()))
         .forEach(
             page -> {
               try {
                 final byte[] content =
-                    this.comicBookAdaptor.loadPageContent(comicBook, page.getPageNumber());
+                    this.comicAdaptor.loadPageContent(comic, page.getPageNumber());
                 log.trace("Setting page hash");
                 page.setHash(this.genericUtilitiesAdaptor.createHash(content));
                 log.trace("Setting page dimensions");
@@ -70,6 +69,6 @@ public class ProcessUnhashedComicsProcessor implements ItemProcessor<ComicBook, 
               }
             });
 
-    return comicBook;
+    return comic;
   }
 }

@@ -24,7 +24,7 @@ import org.comixedproject.batch.comicbooks.listeners.RecreatingComicFilesJobList
 import org.comixedproject.batch.comicbooks.processors.RecreateComicFileProcessor;
 import org.comixedproject.batch.comicbooks.readers.RecreateComicFileReader;
 import org.comixedproject.batch.comicbooks.writers.RecreateComicFileWriter;
-import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.Comic;
 import org.springframework.batch.core.job.Job;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.launch.JobOperator;
@@ -74,9 +74,9 @@ public class RecreateComicFilesConfiguration {
       final RecreateComicFileReader reader,
       final RecreateComicFileProcessor processor,
       final RecreateComicFileWriter writer,
-      final RecreateComicFileChunkListener<ComicBook, ComicBook> listener) {
+      final RecreateComicFileChunkListener listener) {
     return new StepBuilder("recreateComicFileStep", jobRepository)
-        .<ComicBook, ComicBook>chunk(this.chunkSize)
+        .<Comic, Comic>chunk(this.chunkSize)
         .transactionManager(platformTransactionManager)
         .reader(reader)
         .processor(processor)

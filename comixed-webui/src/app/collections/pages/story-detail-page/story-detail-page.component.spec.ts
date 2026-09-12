@@ -34,7 +34,7 @@ import {
 import {
   COMIC_BOOK_SELECTION_FEATURE_KEY,
   initialState as initialComicBookSelectionState
-} from '@app/comic-books/reducers/comic-book-selection.reducer';
+} from '@app/comic-books/reducers/comic-selection.reducer';
 import {
   COMIC_LIST_FEATURE_KEY,
   initialState as initialComicListState
@@ -94,7 +94,7 @@ import { SCRAPE_STORY_PARAMETER } from '@app/collections/collections.constants';
 import {
   initialState as initialReadComicBooksState,
   READ_COMIC_BOOKS_FEATURE_KEY
-} from '@app/user/reducers/read-comic-books.reducer';
+} from '@app/user/reducers/read-comics.reducer';
 
 describe('StoryDetailPageComponent', () => {
   const PAGE_SIZE = 10;

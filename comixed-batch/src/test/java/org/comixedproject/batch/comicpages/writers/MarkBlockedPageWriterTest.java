@@ -21,7 +21,7 @@ package org.comixedproject.batch.comicpages.writers;
 import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
-import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateAdaptor;
@@ -38,13 +38,13 @@ class MarkBlockedPageWriterTest {
   @Mock private ComicStateAdaptor comicStateAdaptor;
 
   @Mock private ComicPage page;
-  @Mock private ComicDetail comic;
+  @Mock private Comic comic;
 
   private Chunk<ComicPage> pageList = new Chunk<>(new ArrayList<>());
 
   @Test
   void write() throws Exception {
-    when(page.getComicDetail()).thenReturn(comic);
+    when(page.getComic()).thenReturn(comic);
 
     pageList.add(page);
 

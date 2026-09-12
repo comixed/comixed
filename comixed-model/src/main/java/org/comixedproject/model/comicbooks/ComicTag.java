@@ -58,7 +58,7 @@ public class ComicTag {
   @JoinColumn(name = "comic_detail_id", insertable = true, nullable = false, updatable = false)
   @Getter
   @NonNull
-  private ComicDetail comicDetail;
+  private Comic comic;
 
   @Column(
       name = "tag_type",

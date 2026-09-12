@@ -24,13 +24,13 @@ import {
   convertSingleComicBook
 } from '../actions/convert-comic-books.actions';
 
-export const CONVERT_COMIC_BOOKS_FEATURE_KEY = 'convert_comic_books_state';
+export const CONVERT_COMICS_FEATURE_KEY = 'convert_comics_state';
 
-export interface ConvertComicBooksState {
+export interface ConvertComicsState {
   converting: boolean;
 }
 
-export const initialState: ConvertComicBooksState = {
+export const initialState: ConvertComicsState = {
   converting: false
 };
 
@@ -44,6 +44,6 @@ export const reducer = createReducer(
 );
 
 export const convertComicBooksFeature = createFeature({
-  name: CONVERT_COMIC_BOOKS_FEATURE_KEY,
+  name: CONVERT_COMICS_FEATURE_KEY,
   reducer
 });

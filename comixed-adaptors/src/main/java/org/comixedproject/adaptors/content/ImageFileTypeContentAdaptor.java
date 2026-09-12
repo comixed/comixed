@@ -21,7 +21,7 @@ package org.comixedproject.adaptors.content;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.archive.model.ArchiveEntryType;
-import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.model.comicpages.ComicPageType;
 
@@ -38,26 +38,26 @@ public class ImageFileTypeContentAdaptor implements FileTypeContentAdaptor {
   /**
    * Loads the image content.
    *
-   * @param comicBook the comicBook
+   * @param comic the comic
    * @param filename the content's filename
    * @param content the content
    */
   @Override
-  public void loadContent(final ComicBook comicBook, final String filename, final byte[] content) {
-    log.trace("Loading image into comicBook");
+  public void loadContent(final Comic comic, final String filename, final byte[] content) {
+    log.trace("Loading image into comic");
     // if the comicBook already has this offset then update the offset's content
-    if (comicBook.hasPageWithFilename(filename)) {
+    if (comic.hasPageWithFilename(filename)) {
       log.trace("Ignore known file: {}", filename);
     } else {
       var page = new ComicPage();
       page.setFilename(filename);
-      page.setComicDetail(comicBook.getComicDetail());
-      if (comicBook.getPages().isEmpty()) {
+      page.setComic(comic);
+      if (comic.getPages().isEmpty()) {
         page.setPageType(ComicPageType.FRONT_COVER);
       }
       log.trace("Adding page of type: {}", page.getPageType());
-      comicBook.getPages().add(page);
-      page.setPageNumber(comicBook.getPages().size());
+      comic.getPages().add(page);
+      page.setPageNumber(comic.getPages().size());
     }
   }
 }

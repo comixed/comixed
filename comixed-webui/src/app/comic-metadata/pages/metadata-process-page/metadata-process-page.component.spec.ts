@@ -44,7 +44,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import {
   COMIC_BOOK_SELECTION_FEATURE_KEY,
   initialState as initialComicBookSelectionState
-} from '@app/comic-books/reducers/comic-book-selection.reducer';
+} from '@app/comic-books/reducers/comic-selection.reducer';
 import {
   COMIC_LIST_FEATURE_KEY,
   initialState as initialComicListState

@@ -35,19 +35,14 @@ import org.comixedproject.model.batch.ScrapeMetadataEvent;
 import org.comixedproject.model.collections.Issue;
 import org.comixedproject.model.collections.ScrapedStory;
 import org.comixedproject.model.collections.ScrapedStoryEntry;
-import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.comicbooks.ComicDetail;
-import org.comixedproject.model.comicbooks.ComicMetadataSource;
-import org.comixedproject.model.comicbooks.ComicTag;
-import org.comixedproject.model.comicbooks.ComicTagType;
+import org.comixedproject.model.comicbooks.*;
 import org.comixedproject.model.metadata.MetadataSource;
 import org.comixedproject.model.net.metadata.ScrapeSeriesResponse;
 import org.comixedproject.service.admin.ConfigurationService;
 import org.comixedproject.service.collections.IssueService;
 import org.comixedproject.service.collections.ScrapedStoryService;
-import org.comixedproject.service.comicbooks.ComicBookException;
-import org.comixedproject.service.comicbooks.ComicBookService;
-import org.comixedproject.service.comicbooks.ComicDetailService;
+import org.comixedproject.service.comicbooks.ComicException;
+import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.service.comicbooks.ImprintService;
 import org.comixedproject.service.metadata.action.ProcessComicDescriptionAction;
 import org.comixedproject.state.comicbooks.ComicEvent;
@@ -74,8 +69,7 @@ public class MetadataService {
   @Autowired private ScrapedStoryService scrapedStoryService;
   @Autowired private ObjectMapper objectMapper;
   @Autowired private MetadataCacheService metadataCacheService;
-  @Autowired private ComicBookService comicBookService;
-  @Autowired private ComicDetailService comicDetailService;
+  @Autowired private ComicService comicService;
   @Autowired private ComicStateAdaptor comicStateAdaptor;
   @Autowired private ImprintService imprintService;
   @Autowired private IssueService issueService;
@@ -249,7 +243,7 @@ public class MetadataService {
    * @return the updated comic
    * @throws MetadataException if an error occurs
    */
-  public ComicBook scrapeComic(
+  public Comic scrapeComic(
       final Long metadataSourceId,
       final Long comicId,
       final String issueId,
@@ -257,8 +251,8 @@ public class MetadataService {
       throws MetadataException {
     this.doScrapeComic(metadataSourceId, comicId, issueId, skipCache);
     try {
-      return this.comicBookService.getComic(comicId);
-    } catch (ComicBookException error) {
+      return this.comicService.getComic(comicId);
+    } catch (ComicException error) {
       throw new MetadataException("failed to load comic", error);
     }
   }
@@ -289,15 +283,15 @@ public class MetadataService {
       final boolean skipCache)
       throws MetadataException {
     log.debug("Scraping comic: id={} issueId={} skipCache={}", comicId, issueId, skipCache);
-    ComicBook result = null;
+    Comic result = null;
     final MetadataSource metadataSource = this.doLoadMetadataSource(metadataSourceId);
     final MetadataAdaptor metadataAdaptor = this.doLoadScrapingAdaptor(metadataSource);
     final String source = metadataAdaptor.getSource();
     final String key = metadataAdaptor.getIssueDetailsKey(issueId);
 
     try {
-      result = this.comicBookService.getComic(comicId);
-    } catch (ComicBookException error) {
+      result = this.comicService.getComic(comicId);
+    } catch (ComicException error) {
       throw new MetadataException("failed to load comic", error);
     }
 
@@ -330,8 +324,7 @@ public class MetadataService {
           this.configurationService.isFeatureEnabled(
               ConfigurationService.CFG_METADATA_IGNORE_EMPTY_VALUES);
       // have to use a final reference here due to the lambdas later in this block
-      final ComicBook comicBook = result;
-      final ComicDetail detail = comicBook.getComicDetail();
+      final Comic detail = result;
       log.debug("Updating comicBook with scraped data");
       if (!ignoreEmptyValues || StringUtils.hasLength(issueDetails.getPublisher())) {
         detail.setPublisher(trim(issueDetails.getPublisher()));
@@ -349,16 +342,12 @@ public class MetadataService {
         detail.setIssueNumber(trim(issueDetails.getIssueNumber()));
       }
       if (issueDetails.getCoverDate() != null) {
-        comicBook
-            .getComicDetail()
-            .setCoverDate(this.adjustForTimezone(issueDetails.getCoverDate()));
+        detail.setCoverDate(this.adjustForTimezone(issueDetails.getCoverDate()));
       } else {
         detail.setCoverDate(null);
       }
       if (issueDetails.getStoreDate() != null) {
-        comicBook
-            .getComicDetail()
-            .setStoreDate(this.adjustForTimezone(issueDetails.getStoreDate()));
+        detail.setStoreDate(this.adjustForTimezone(issueDetails.getStoreDate()));
       } else {
         detail.setStoreDate(null);
       }
@@ -407,28 +396,23 @@ public class MetadataService {
                               detail,
                               ComicTagType.forValue(entry.getRole()),
                               trim(entry.getName()))));
-      log.trace("Creating comicBook metadata record");
-      if (Objects.isNull(comicBook.getMetadata())) {
-        comicBook.setMetadata(
+      log.trace("Creating comic metadata record");
+      if (Objects.isNull(detail.getMetadata())) {
+        detail.setMetadata(
             new ComicMetadataSource(
-                comicBook.getComicDetail(),
-                metadataSource,
-                trim(issueDetails.getSourceId()),
-                new Date()));
+                detail, metadataSource, trim(issueDetails.getSourceId()), new Date()));
       } else {
-        comicBook.getMetadata().setMetadataSource(metadataSource);
-        comicBook.getMetadata().setReferenceId(trim(issueDetails.getSourceId()));
+        detail.getMetadata().setMetadataSource(metadataSource);
+        detail.getMetadata().setReferenceId(trim(issueDetails.getSourceId()));
       }
-      comicBook
-          .getComicDetail()
-          .setNotes(
-              String.format(
-                  "ComicBook metadata scraped using ComiXed & %s.", metadataAdaptor.getSource()));
+      detail.setNotes(
+          String.format(
+              "ComicBook metadata scraped using ComiXed & %s.", metadataAdaptor.getSource()));
       log.trace("Checking for imprint");
-      this.imprintService.update(comicBook);
+      this.imprintService.update(detail);
       log.trace("Setting the comic metadata source last modified date");
-      comicBook.getMetadata().setLastScrapedDate(new Date());
-      log.trace("Updating comicBook state: scraped");
+      detail.getMetadata().setLastScrapedDate(new Date());
+      log.trace("Updating detail state: scraped");
       this.comicStateAdaptor.fireEvent(detail, ComicEvent.comicMetadataChanged);
     }
   }
@@ -508,14 +492,14 @@ public class MetadataService {
           index + 1,
           issues.size(),
           issue.getIssueNumber());
-      final List<ComicBook> comicBooks =
-          this.comicBookService.findComic(
+      final List<Comic> comicList =
+          this.comicService.getForPublisherAndSeriesAndVolumeAndIssueNumber(
               originalPublisher, originalSeries, originalVolume, trim(issue.getIssueNumber()));
-      if (!comicBooks.isEmpty()) {
-        comicBooks.forEach(
+      if (!comicList.isEmpty()) {
+        comicList.forEach(
             comicBook -> {
               log.trace("Updating comic details");
-              final ComicDetail comic = comicBook.getComicDetail();
+              final Comic comic = comicBook;
               comic.setPublisher(trim(issue.getPublisher()));
               comic.setSeries(trim(issue.getSeries()));
               comic.setVolume(trim(issue.getVolume()));
@@ -524,12 +508,12 @@ public class MetadataService {
                 comicBook.getMetadata().setMetadataSource(metadataSource);
                 comicBook.getMetadata().setReferenceId(trim(issue.getSourceId()));
               } else {
-                log.trace("Creating comic metadata source", comicBook.getComicBookId());
+                log.trace("Creating comic metadata source", comicBook.getComicDetailId());
                 comicBook.setMetadata(
                     new ComicMetadataSource(
                         comic, metadataSource, trim(issue.getSourceId()), new Date()));
               }
-              log.debug("Firing comic book event: id={}", comicBook.getComicBookId());
+              log.debug("Firing comic book event: id={}", comicBook.getComicDetailId());
               this.comicStateAdaptor.fireEvent(comic, ComicEvent.comicMetadataSaved);
             });
       } else {
@@ -592,7 +576,7 @@ public class MetadataService {
   @Async
   public void batchScrapeComicBooks(final List<Long> ids) {
     log.debug("Marking comics for batch scraping");
-    this.comicDetailService.markComicBooksForBatchScraping(ids);
+    this.comicService.markComicBooksForBatchScraping(ids);
     log.debug("Starting batch scraping process");
     this.applicationEventPublisher.publishEvent(ScrapeMetadataEvent.instance);
   }

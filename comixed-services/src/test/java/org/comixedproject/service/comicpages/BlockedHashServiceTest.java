@@ -38,7 +38,7 @@ import java.util.List;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.adaptors.AdaptorException;
-import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
+import org.comixedproject.adaptors.comicbooks.ComicAdaptor;
 import org.comixedproject.adaptors.csv.CsvAdaptor;
 import org.comixedproject.adaptors.csv.CsvRowDecoder;
 import org.comixedproject.adaptors.csv.CsvRowEncoder;
@@ -47,8 +47,7 @@ import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.comicpages.PublishBlockedPageRemovalAction;
 import org.comixedproject.messaging.comicpages.PublishBlockedPageUpdateAction;
 import org.comixedproject.messaging.library.PublishDuplicatePageListUpdateAction;
-import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicpages.BlockedHash;
 import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.model.library.DuplicatePage;
@@ -86,7 +85,7 @@ class BlockedHashServiceTest {
   @InjectMocks private BlockedHashService service;
   @Mock private DuplicatePageService duplicatePageService;
   @Mock private ComicPageService comicPageService;
-  @Mock private ComicBookAdaptor comicBookAdaptor;
+  @Mock private ComicAdaptor comicAdaptor;
   @Mock private BlockedHashRepository blockedHashRepository;
   @Mock private CsvAdaptor csvAdaptor;
   @Mock private PublishBlockedPageUpdateAction publishBlockedPageUpdateAction;
@@ -99,8 +98,8 @@ class BlockedHashServiceTest {
   @Mock private InputStream inputStream;
   @Mock private List<DuplicatePage> duplicatePageList;
   @Mock private ComicPage page;
-  @Mock private ComicBook comicBook;
-  @Mock private ComicDetail comicDetail;
+  @Mock private Comic comicBook;
+  @Mock private Comic comic;
   @Mock private DataEncoder dataEncoder;
   @Mock private LoadDuplicatePageListResponse loadDuplicatePageListResponse;
   @Mock private DuplicatePageUpdate duplicatePageUpdate;
@@ -114,19 +113,17 @@ class BlockedHashServiceTest {
   private List<String> blockedPageHashList = new ArrayList<>();
 
   @BeforeEach
-  public void setUp() throws AdaptorException, DuplicatePageException, PublishingException {
+  void setUp() throws AdaptorException, DuplicatePageException, PublishingException {
     when(blockedHash.getLabel()).thenReturn(TEST_PAGE_LABEL);
     when(blockedHash.getHash()).thenReturn(TEST_PAGE_HASH);
     when(blockedHash.getThumbnail()).thenReturn(TEST_PAGE_THUMBNAIL);
     TEST_DECODED_ROW.add(TEST_PAGE_LABEL);
     TEST_DECODED_ROW.add(TEST_PAGE_HASH);
     TEST_DECODED_ROW.add(TEST_PAGE_THUMBNAIL);
-    when(page.getComicDetail()).thenReturn(comicDetail);
-    when(comicDetail.getComicBook()).thenReturn(comicBook);
+    when(page.getComic()).thenReturn(comic);
     when(page.getPageNumber()).thenReturn(TEST_PAGE_NUMBER);
     when(comicPageService.getOneForHash(anyString())).thenReturn(page);
-    when(comicBookAdaptor.loadPageContent(any(ComicBook.class), anyInt()))
-        .thenReturn(TEST_PAGE_CONTENT);
+    when(comicAdaptor.loadPageContent(any(Comic.class), anyInt())).thenReturn(TEST_PAGE_CONTENT);
     when(dataEncoder.encode(any(byte[].class))).thenReturn(TEST_ENCODED_PAGE);
     when(dataEncoder.decode(anyString())).thenReturn(TEST_DECODED_PAGE);
     when(duplicatePageService.getForHash(anyString())).thenReturn(savedDuplicatePage);

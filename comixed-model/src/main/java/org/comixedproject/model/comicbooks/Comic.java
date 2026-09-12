@@ -1,0 +1,557 @@
+/*
+ * ComiXed - A digital comic book library management application.
+ * Copyright (C) 2023, The ComiXed Project
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses>
+ */
+
+package org.comixedproject.model.comicbooks;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
+import jakarta.persistence.*;
+import java.io.File;
+import java.util.*;
+import lombok.*;
+import lombok.extern.log4j.Log4j2;
+import org.apache.commons.io.FilenameUtils;
+import org.comixedproject.model.archives.ArchiveType;
+import org.comixedproject.model.comicpages.ComicPage;
+import org.comixedproject.model.library.PublicationDetail;
+import org.comixedproject.model.state.StatefulItem;
+import org.comixedproject.views.View;
+import org.hibernate.annotations.Formula;
+import org.springframework.data.annotation.CreatedDate;
+
+/**
+ * <code>Comic</code> contains the details for a comic.
+ *
+ * @author Darryl L. Pierce
+ */
+@Entity
+@Table(name = "comic_details_v4")
+@NoArgsConstructor
+@RequiredArgsConstructor
+@Log4j2
+public class Comic implements StatefulItem<ComicState>, PublicationDetail {
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "comic_detail_id")
+  @JsonView({
+    View.ComicListView.class,
+    View.DeletedPageList.class,
+    View.LastReadList.class,
+    View.ReadingListDetail.class,
+    View.DuplicatePageList.class
+  })
+  @Getter
+  private Long comicDetailId;
+
+  @OneToMany(mappedBy = "comic", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OrderColumn(name = "page_number")
+  @JsonProperty("pages")
+  @JsonView({View.ComicListView.class, View.ReadingListDetail.class})
+  @Getter
+  List<ComicPage> pages = new ArrayList<>();
+
+  @OneToOne(mappedBy = "comic", cascade = CascadeType.ALL, orphanRemoval = true)
+  @JsonProperty("metadata")
+  @JsonView({View.ComicListView.class})
+  @Getter
+  @Setter
+  private ComicMetadataSource metadata;
+
+  @Formula(
+      "(SELECT COUNT(*) FROM comic_pages_v4 p WHERE p.comic_detail_id = comic_detail_id AND p.file_hash IN (SELECT d.file_hash FROM comic_pages_v4 d GROUP BY d.file_hash HAVING COUNT(*) > 1))")
+  @JsonProperty("duplicatePageCount")
+  @JsonView({View.ComicListView.class})
+  @Getter
+  private int duplicatePageCount;
+
+  @Formula(
+      value =
+          "(SELECT COUNT(*) FROM comic_pages_v4 p WHERE p.comic_detail_id = comic_detail_id AND p.file_hash in (SELECT b.hash_value FROM blocked_hashes_v4 b))")
+  @JsonProperty("blockedPageCount")
+  @JsonView({View.ComicListView.class})
+  @Getter
+  private int blockedPageCount;
+
+  @Formula(
+      "(SELECT CASE WHEN (comic_detail_id IN (SELECT m.comic_detail_id FROM comic_metadata_sources_v4 m)) THEN false ELSE true END)")
+  @JsonProperty("unscraped")
+  @JsonView({View.ComicListView.class})
+  @Getter
+  @Setter
+  private Boolean unscraped;
+
+  @Column(name = "filename", nullable = false, unique = true, length = 1024)
+  @JsonProperty("filename")
+  @JsonView({View.ComicListView.class, View.DeletedPageList.class})
+  @Getter
+  @Setter
+  @NonNull
+  private String filename;
+
+  @Column(name = "missing", nullable = false, updatable = true)
+  @JsonProperty("missing")
+  @JsonView({View.ComicDetailsView.class})
+  @Setter
+  private boolean missing = false;
+
+  @Column(
+      name = "archive_type",
+      nullable = false,
+      updatable = true,
+      columnDefinition = "VARCHAR(4)")
+  @Enumerated(EnumType.STRING)
+  @JsonProperty("archiveType")
+  @JsonView({
+    View.ComicListView.class,
+    View.DuplicatePageDetail.class,
+    View.ReadingListDetail.class,
+    View.DeletedPageList.class,
+    View.DuplicatePageList.class
+  })
+  @Getter
+  @Setter
+  @NonNull
+  private ArchiveType archiveType;
+
+  @Column(
+      name = "comic_state",
+      nullable = false,
+      updatable = true,
+      columnDefinition = "VARCHAR(64)")
+  @Enumerated(EnumType.STRING)
+  @JsonProperty("comicState")
+  @JsonView({
+    View.ComicListView.class,
+    View.ReadingListDetail.class,
+    View.DeletedPageList.class,
+    View.DuplicatePageList.class
+  })
+  @Getter
+  @Setter
+  private ComicState state = ComicState.CREATED;
+
+  @Column(name = "comic_type", nullable = false, updatable = true, columnDefinition = "VARCHAR(32)")
+  @Enumerated(EnumType.STRING)
+  @JsonProperty("comicType")
+  @JsonView({
+    View.ComicListView.class,
+    View.ReadingListDetail.class,
+    View.DeletedPageList.class,
+    View.DuplicatePageList.class
+  })
+  @Getter
+  @Setter
+  private ComicType comicType = ComicType.ISSUE;
+
+  @Column(name = "publisher", length = 255)
+  @JsonProperty("publisher")
+  @JsonView({
+    View.ComicListView.class,
+    View.DuplicatePageDetail.class,
+    View.ReadingListDetail.class,
+    View.DeletedPageList.class,
+    View.DuplicatePageList.class
+  })
+  @Getter
+  @Setter
+  private String publisher;
+
+  @Column(name = "imprint", length = 255)
+  @JsonProperty("imprint")
+  @JsonView({View.ComicListView.class})
+  @Getter
+  @Setter
+  private String imprint;
+
+  @Column(name = "series", length = 255)
+  @JsonProperty("series")
+  @JsonView({
+    View.ComicListView.class,
+    View.DuplicatePageDetail.class,
+    View.ReadingListDetail.class,
+    View.DeletedPageList.class,
+    View.DuplicatePageList.class
+  })
+  @Getter
+  @Setter
+  private String series;
+
+  @Column(name = "volume", length = 4)
+  @JsonProperty("volume")
+  @JsonView({
+    View.ComicListView.class,
+    View.DuplicatePageDetail.class,
+    View.ReadingListDetail.class,
+    View.DeletedPageList.class,
+    View.DuplicatePageList.class
+  })
+  @Getter
+  @Setter
+  private String volume;
+
+  @Column(name = "issue_number", length = 16)
+  @JsonProperty("issueNumber")
+  @JsonView({
+    View.ComicListView.class,
+    View.DuplicatePageDetail.class,
+    View.ReadingListDetail.class,
+    View.DeletedPageList.class,
+    View.DuplicatePageList.class
+  })
+  @Getter
+  private String issueNumber;
+
+  @JsonProperty("sortableIssueNumber")
+  @JsonView({View.ComicListView.class})
+  @Formula("(issue_number)")
+  @Getter
+  private String sortableIssueNumber;
+
+  @Transient
+  @JsonProperty("nextIssueId")
+  @JsonView({View.ComicDetailsView.class})
+  @Getter
+  @Setter
+  private Long nextIssueId;
+
+  @Transient
+  @JsonProperty("previousIssueId")
+  @JsonView({View.ComicDetailsView.class})
+  @Getter
+  @Setter
+  private Long previousIssueId;
+
+  @JsonProperty("pageCount")
+  @JsonView({
+    View.ComicListView.class,
+  })
+  @Formula("(SELECT COUNT(*) FROM comic_pages_v4 p WHERE p.comic_detail_id = comic_detail_id)")
+  @Getter
+  private Integer pageCount = 0;
+
+  @Column(name = "sort_name", length = 128)
+  @JsonProperty("sortName")
+  @JsonView({View.ComicListView.class})
+  @Getter
+  @Setter
+  private String sortName;
+
+  @Column(name = "title", length = 128)
+  @JsonProperty("title")
+  @JsonView({View.ComicListView.class})
+  @Getter
+  @Setter
+  private String title;
+
+  @Column(name = "web_address", length = 256)
+  @JsonProperty("webAddress")
+  @JsonView({View.ComicListView.class})
+  @Getter
+  @Setter
+  private String webAddress;
+
+  @Column(name = "notes", nullable = true, updatable = true, columnDefinition = "text")
+  @JsonProperty("notes")
+  @JsonView({View.ComicListView.class})
+  @Getter
+  @Setter
+  private String notes;
+
+  @Column(name = "description", nullable = true, updatable = true, columnDefinition = "text")
+  @JsonProperty("description")
+  @JsonView({View.ComicDetailsView.class})
+  @Getter
+  @Setter
+  private String description;
+
+  @OneToMany(
+      mappedBy = "comic",
+      cascade = CascadeType.ALL,
+      orphanRemoval = true,
+      fetch = FetchType.EAGER)
+  @JsonProperty("tags")
+  @JsonView({View.ComicListView.class, View.ReadingListDetail.class})
+  @Getter
+  private Set<ComicTag> tags = new HashSet<>();
+
+  @Column(name = "cover_date", nullable = true)
+  @Temporal(TemporalType.DATE)
+  @JsonProperty("coverDate")
+  @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
+  @JsonView({
+    View.ComicListView.class,
+    View.DuplicatePageDetail.class,
+    View.ReadingListDetail.class,
+    View.DeletedPageList.class,
+    View.DuplicatePageList.class
+  })
+  @Getter
+  @Setter
+  private Date coverDate;
+
+  @Formula(
+      "(SELECT CASE WHEN cover_date IS NULL THEN 0 ELSE (SELECT EXTRACT(YEAR FROM cover_date)) END)")
+  @JsonProperty("yearPublished")
+  @JsonView({View.ComicListView.class})
+  @Getter
+  @Setter
+  private Integer yearPublished;
+
+  @Formula(
+      "(SELECT CASE WHEN cover_date IS NULL THEN 0 ELSE (SELECT EXTRACT(MONTH FROM cover_date)) END)")
+  @JsonProperty("monthPublished")
+  @JsonView({View.ComicListView.class})
+  @Getter
+  @Setter
+  private Integer monthPublished;
+
+  @Column(name = "store_date", nullable = true)
+  @Temporal(TemporalType.DATE)
+  @JsonProperty("storeDate")
+  @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
+  @JsonView({View.ComicListView.class, View.ReadingListDetail.class, View.DeletedPageList.class})
+  @Getter
+  @Setter
+  private Date storeDate;
+
+  @Column(name = "added_date", updatable = false, nullable = false)
+  @CreatedDate
+  @JsonProperty("addedDate")
+  @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
+  @JsonView({
+    View.ComicListView.class,
+    View.DuplicatePageDetail.class,
+    View.ReadingListDetail.class,
+    View.DeletedPageList.class
+  })
+  @Temporal(TemporalType.TIMESTAMP)
+  @Getter
+  @Setter
+  private Date addedDate = new Date();
+
+  @Column(name = "loading_file_contents", nullable = false, updatable = true)
+  @JsonIgnore
+  @Getter
+  @Setter
+  private boolean loadingFileContents;
+
+  @Column(name = "updating_metadata", nullable = false, updatable = true)
+  @JsonIgnore
+  @Getter
+  @Setter
+  private boolean updatingMetadata;
+
+  @Column(name = "batch_updating_metadata", nullable = false, updatable = true)
+  @JsonIgnore
+  @Getter
+  @Setter
+  private boolean batchUpdatingMetadata;
+
+  @Column(name = "batch_scraping", nullable = false, updatable = true)
+  @JsonIgnore
+  @Getter
+  @Setter
+  private boolean batchScraping;
+
+  @Column(name = "organizing", nullable = false, updatable = true)
+  @JsonIgnore
+  @Getter
+  @Setter
+  private boolean organizing;
+
+  @Column(name = "purging", nullable = false, updatable = true)
+  @JsonIgnore
+  @Getter
+  @Setter
+  private boolean purging;
+
+  @Column(name = "editing_metadata", nullable = false, updatable = true)
+  @JsonIgnore
+  @Getter
+  @Setter
+  private boolean editingMetadata = false;
+
+  @Column(
+      name = "target_archive_type",
+      nullable = true,
+      updatable = true,
+      columnDefinition = "VARCHAR(4)")
+  @Enumerated(EnumType.STRING)
+  @JsonIgnore
+  @Getter
+  @Setter
+  private ArchiveType targetArchiveType;
+
+  @Column(name = "last_modified_date", updatable = true, nullable = false)
+  @CreatedDate
+  @JsonProperty("lastModifiedDate")
+  @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
+  @JsonView({
+    View.ComicListView.class,
+    View.DuplicatePageDetail.class,
+    View.ReadingListDetail.class,
+    View.DeletedPageList.class
+  })
+  @Temporal(TemporalType.TIMESTAMP)
+  @Getter
+  @Setter
+  private Date lastModifiedDate = new Date();
+
+  @ElementCollection
+  @CollectionTable(
+      name = "read_comic_books_v4",
+      joinColumns = @JoinColumn(name = "comic_detail_id"))
+  @Column(name = "comixed_user_id")
+  @JsonView(View.UserList.class)
+  @Getter
+  private Set<Long> readByUserIds = new HashSet<>();
+
+  @Transient @Getter @Setter private String metadataSourceName;
+  @Transient @Getter @Setter private String metadataReferenceId;
+  @Transient @Getter @Setter private Date lastScrapedDate;
+
+  /**
+   * Returns just the filename without the path.
+   *
+   * @return the filename
+   */
+  @JsonProperty("baseFilename")
+  @JsonView({View.ComicListView.class})
+  public String getBaseFilename() {
+    return FilenameUtils.getName(this.filename);
+  }
+
+  /**
+   * Returns a file reference to the comic.
+   *
+   * @return the file
+   */
+  @Transient
+  public File getFile() {
+    return new File(this.filename);
+  }
+
+  /**
+   * Sets the issue number for the comic.
+   *
+   * @param issueNumber the issue number
+   */
+  public void setIssueNumber(String issueNumber) {
+    log.trace("Setting issue number=" + issueNumber);
+    if ((issueNumber != null) && issueNumber.startsWith("0")) {
+      log.trace("Removing leading 0s from issue number");
+      while (issueNumber.startsWith("0") && !issueNumber.equals("0")) {
+        issueNumber = issueNumber.substring(1);
+      }
+    }
+    this.issueNumber = issueNumber;
+  }
+
+  public boolean isMissing() {
+    return this.missing || !this.getFile().exists();
+  }
+
+  public boolean isMarkedMissing() {
+    return this.missing;
+  }
+
+  public int getIndexFor(ComicPage page) {
+    if (this.pages.contains(page)) return this.pages.indexOf(page);
+
+    return -1;
+  }
+
+  /**
+   * Returns whether a offset with the given filename is present.
+   *
+   * @param filename the filename
+   * @return true if such a offset exists
+   */
+  public boolean hasPageWithFilename(String filename) {
+    return this.getPageWithFilename(filename) != null;
+  }
+
+  /**
+   * Returns the offset for the given filename.
+   *
+   * @param filename the filename
+   * @return the {@link ComicPage} or null
+   */
+  public ComicPage getPageWithFilename(String filename) {
+    if (this.pages.isEmpty()) return null;
+    for (ComicPage page : this.pages) {
+      if (page.getFilename().equals(filename)) return page;
+    }
+
+    return null;
+  }
+
+  public void updatePageNumbers() {
+    Collections.sort(
+        this.pages, (left, right) -> left.getPageNumber().compareTo(right.getPageNumber()));
+    for (int index = 0; index < this.pages.size(); index++) {
+      this.pages.get(index).setPageNumber(index);
+    }
+  }
+
+  @Override
+  public boolean equals(final Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    final Comic that = (Comic) o;
+    return filename.equals(that.filename)
+        && archiveType == that.archiveType
+        && state == that.state
+        && comicType == that.comicType
+        && Objects.equals(publisher, that.publisher)
+        && Objects.equals(imprint, that.imprint)
+        && Objects.equals(series, that.series)
+        && Objects.equals(volume, that.volume)
+        && Objects.equals(issueNumber, that.issueNumber)
+        && Objects.equals(sortName, that.sortName)
+        && Objects.equals(title, that.title)
+        && Objects.equals(notes, that.notes)
+        && Objects.equals(description, that.description)
+        && Objects.equals(tags, that.tags)
+        && Objects.equals(coverDate, that.coverDate)
+        && Objects.equals(storeDate, that.storeDate);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(
+        filename,
+        archiveType,
+        state,
+        comicType,
+        publisher,
+        imprint,
+        series,
+        volume,
+        issueNumber,
+        sortName,
+        title,
+        notes,
+        description,
+        tags,
+        coverDate,
+        storeDate);
+  }
+}

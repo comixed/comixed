@@ -50,6 +50,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { FlexLayoutModule } from '@angular-ru/cdk/flex-layout';
 import { ComicFileLoaderComponent } from './components/comic-file-loader/comic-file-loader.component';
 import { ProcessingStatusPageComponent } from './pages/processing-status-page/processing-status-page.component';
+import { ProcessComicsService } from '@app/comic-books/services/process-comics.service';
 
 @NgModule({
   imports: [
@@ -88,6 +89,7 @@ import { ProcessingStatusPageComponent } from './pages/processing-status-page/pr
     ComicFileLoaderComponent,
     ProcessingStatusPageComponent
   ],
+  providers: [ProcessComicsService],
   exports: [CommonModule]
 })
 export class ComicFileModule {}

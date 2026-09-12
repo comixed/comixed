@@ -2,11 +2,13 @@ package org.comixedproject.batch.initiators;
 
 import static org.comixedproject.batch.comicbooks.PurgeLibraryConfiguration.PURGE_LIBRARY_JOB;
 import static org.comixedproject.batch.comicbooks.PurgeLibraryConfiguration.PURGE_LIBRARY_JOB_TIME_STARTED;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 import org.comixedproject.model.batch.PurgeLibraryEvent;
 import org.comixedproject.service.batch.BatchProcessesService;
-import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.comicbooks.ComicService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,7 +32,7 @@ class PurgeLibraryInitiatorTest {
   private static final Long TEST_COMICS_MARKED_FOR_DELETION = 717L;
 
   @InjectMocks private PurgeLibraryInitiator initiator;
-  @Mock private ComicBookService comicBookService;
+  @Mock private ComicService comicService;
   @Mock private BatchProcessesService batchProcessesService;
 
   @Mock
@@ -46,15 +48,14 @@ class PurgeLibraryInitiatorTest {
   @Captor private ArgumentCaptor<JobParameters> jobParametersArgumentCaptor;
 
   @BeforeEach
-  public void setUp()
+  void setUp()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
           InvalidJobParametersException,
           JobRestartException {
-    Mockito.when(comicBookService.findComicsToPurgeCount())
-        .thenReturn(TEST_COMICS_MARKED_FOR_DELETION);
-    Mockito.when(batchProcessesService.hasActiveExecutions(Mockito.anyString())).thenReturn(false);
-    Mockito.when(jobOperator.start(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
+    when(comicService.findComicsToPurgeCount()).thenReturn(TEST_COMICS_MARKED_FOR_DELETION);
+    when(batchProcessesService.hasActiveExecutions(anyString())).thenReturn(false);
+    when(jobOperator.start(any(Job.class), jobParametersArgumentCaptor.capture()))
         .thenReturn(jobExecution);
   }
 
@@ -64,11 +65,11 @@ class PurgeLibraryInitiatorTest {
           JobExecutionAlreadyRunningException,
           InvalidJobParametersException,
           JobRestartException {
-    Mockito.when(comicBookService.findComicsToPurgeCount()).thenReturn(0L);
+    when(comicService.findComicsToPurgeCount()).thenReturn(0L);
 
     initiator.execute();
 
-    Mockito.verify(jobOperator, Mockito.never()).start(Mockito.any(Job.class), Mockito.any());
+    verify(jobOperator, never()).start(any(Job.class), any());
   }
 
   @Test
@@ -77,11 +78,11 @@ class PurgeLibraryInitiatorTest {
           JobExecutionAlreadyRunningException,
           InvalidJobParametersException,
           JobRestartException {
-    Mockito.when(batchProcessesService.hasActiveExecutions(Mockito.anyString())).thenReturn(true);
+    when(batchProcessesService.hasActiveExecutions(anyString())).thenReturn(true);
 
     initiator.execute();
 
-    Mockito.verify(jobOperator, Mockito.never()).start(Mockito.any(Job.class), Mockito.any());
+    verify(jobOperator, never()).start(any(Job.class), any());
   }
 
   @Test
@@ -96,7 +97,7 @@ class PurgeLibraryInitiatorTest {
 
     assertNotNull(jobParameters.getLong(PURGE_LIBRARY_JOB_TIME_STARTED));
 
-    Mockito.verify(jobOperator, Mockito.times(1)).start(purgeLibraryJob, jobParameters);
+    verify(jobOperator).start(purgeLibraryJob, jobParameters);
   }
 
   @Test
@@ -111,7 +112,7 @@ class PurgeLibraryInitiatorTest {
 
     assertNotNull(jobParameters.getLong(PURGE_LIBRARY_JOB_TIME_STARTED));
 
-    Mockito.verify(jobOperator, Mockito.times(1)).start(purgeLibraryJob, jobParameters);
+    verify(jobOperator).start(purgeLibraryJob, jobParameters);
   }
 
   @Test
@@ -120,7 +121,7 @@ class PurgeLibraryInitiatorTest {
           JobExecutionAlreadyRunningException,
           InvalidJobParametersException,
           JobRestartException {
-    Mockito.when(jobOperator.start(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
+    when(jobOperator.start(any(Job.class), jobParametersArgumentCaptor.capture()))
         .thenThrow(InvalidJobParametersException.class);
 
     initiator.execute();
@@ -129,6 +130,6 @@ class PurgeLibraryInitiatorTest {
 
     assertNotNull(jobParameters.getLong(PURGE_LIBRARY_JOB_TIME_STARTED));
 
-    Mockito.verify(jobOperator, Mockito.times(1)).start(purgeLibraryJob, jobParameters);
+    verify(jobOperator).start(purgeLibraryJob, jobParameters);
   }
 }

@@ -20,11 +20,11 @@ package org.comixedproject.batch.initiators;
 
 import static org.comixedproject.batch.comicbooks.UpdateMetadataConfiguration.UPDATE_METADATA_JOB;
 import static org.comixedproject.batch.comicbooks.UpdateMetadataConfiguration.UPDATE_METADATA_JOB_TIME_STARTED;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.comixedproject.model.batch.UpdateMetadataEvent;
 import org.comixedproject.service.batch.BatchProcessesService;
-import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.comicbooks.ComicService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -48,7 +48,7 @@ class UpdateMetadataInitiatorTest {
   private static final Long TEST_UNPROCESSED_COMIC_COUNT = 717L;
 
   @InjectMocks private UpdateMetadataInitiator initiator;
-  @Mock private ComicBookService comicBookService;
+  @Mock private ComicService comicService;
   @Mock private BatchProcessesService batchProcessesService;
 
   @Mock
@@ -64,13 +64,12 @@ class UpdateMetadataInitiatorTest {
   @Captor private ArgumentCaptor<JobParameters> jobParametersArgumentCaptor;
 
   @BeforeEach
-  public void setUp()
+  void setUp()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
           InvalidJobParametersException,
           JobRestartException {
-    Mockito.when(comicBookService.getUpdateMetadataCount())
-        .thenReturn(TEST_UNPROCESSED_COMIC_COUNT);
+    Mockito.when(comicService.getUpdateMetadataCount()).thenReturn(TEST_UNPROCESSED_COMIC_COUNT);
     Mockito.when(batchProcessesService.hasActiveExecutions(Mockito.anyString())).thenReturn(false);
     Mockito.when(jobOperator.start(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
         .thenReturn(jobExecution);
@@ -82,7 +81,7 @@ class UpdateMetadataInitiatorTest {
           JobExecutionAlreadyRunningException,
           InvalidJobParametersException,
           JobRestartException {
-    Mockito.when(comicBookService.getUpdateMetadataCount()).thenReturn(0L);
+    Mockito.when(comicService.getUpdateMetadataCount()).thenReturn(0L);
 
     initiator.execute();
 

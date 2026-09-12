@@ -18,9 +18,10 @@
 
 package org.comixedproject.batch.comicbooks.listeners;
 
-import static org.comixedproject.model.messaging.batch.ProcessComicBooksStatus.UPDATE_METADATA_STEP;
+import static org.comixedproject.model.messaging.batch.ProcessComicsStatus.UPDATE_METADATA_STEP;
 
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.model.comicbooks.Comic;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.stereotype.Component;
 
@@ -32,7 +33,7 @@ import org.springframework.stereotype.Component;
 @Component
 @StepScope
 @Log4j2
-public class UpdateMetadataChunkListener<I, O> extends AbstractBatchProcessChunkListener<I, O> {
+public class UpdateMetadataChunkListener extends AbstractBatchProcessChunkListener<Comic, Comic> {
   @Override
   protected String getStepName() {
     return UPDATE_METADATA_STEP;
@@ -40,17 +41,16 @@ public class UpdateMetadataChunkListener<I, O> extends AbstractBatchProcessChunk
 
   @Override
   protected boolean isActive() {
-    return this.comicBookService.getUpdateMetadataCount() > 0L;
+    return this.comicService.getUpdateMetadataCount() > 0L;
   }
 
   @Override
   protected long getProcessedElements() {
-    return this.comicBookService.getComicBookCount()
-        - this.comicBookService.getUpdateMetadataCount();
+    return this.comicService.getComicCount() - this.comicService.getUpdateMetadataCount();
   }
 
   @Override
   protected long getTotalElements() {
-    return this.comicBookService.getComicBookCount();
+    return this.comicService.getComicCount();
   }
 }

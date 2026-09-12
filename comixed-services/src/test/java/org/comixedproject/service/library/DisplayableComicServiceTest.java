@@ -36,7 +36,7 @@ import org.comixedproject.model.library.DisplayableComic;
 import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.repositories.library.DisplayableComicRepository;
-import org.comixedproject.service.comicbooks.ComicBookException;
+import org.comixedproject.service.comicbooks.ComicException;
 import org.comixedproject.service.lists.ReadingListException;
 import org.comixedproject.service.lists.ReadingListService;
 import org.junit.jupiter.api.BeforeEach;
@@ -79,7 +79,7 @@ class DisplayableComicServiceTest {
   private static final String TEST_TAG_VALUE = "tag.value";
   private static final String TEST_EMAIL = "reader@comixedproject.org";
   private static final long TEST_READING_LIST_ID = 293L;
-  private static final long TEST_COMIC_BOOK_ID = 717L;
+  private static final long TEST_COMIC_ID = 717L;
 
   @InjectMocks private DisplayableComicService service;
   @Mock private DisplayableComicRepository displayableComicRepository;
@@ -613,23 +613,22 @@ class DisplayableComicServiceTest {
 
   @Test
   void getForComicBookId_notFound() {
-    when(displayableComicRepository.getByComicBookId(TEST_COMIC_BOOK_ID)).thenReturn(null);
+    when(displayableComicRepository.getByComicBookId(TEST_COMIC_ID)).thenReturn(null);
 
-    assertThrows(ComicBookException.class, () -> service.getForComicBookId(TEST_COMIC_BOOK_ID));
+    assertThrows(ComicException.class, () -> service.getForComicBookId(TEST_COMIC_ID));
 
-    verify(displayableComicRepository).getByComicBookId(TEST_COMIC_BOOK_ID);
+    verify(displayableComicRepository).getByComicBookId(TEST_COMIC_ID);
   }
 
   @Test
-  void getForComicBookId() throws ComicBookException {
-    when(displayableComicRepository.getByComicBookId(TEST_COMIC_BOOK_ID))
-        .thenReturn(displayableComic);
+  void getForComicBookId() throws ComicException {
+    when(displayableComicRepository.getByComicBookId(TEST_COMIC_ID)).thenReturn(displayableComic);
 
-    final DisplayableComic result = service.getForComicBookId(TEST_COMIC_BOOK_ID);
+    final DisplayableComic result = service.getForComicBookId(TEST_COMIC_ID);
 
     assertNotNull(result);
     assertSame(displayableComic, result);
 
-    verify(displayableComicRepository).getByComicBookId(TEST_COMIC_BOOK_ID);
+    verify(displayableComicRepository).getByComicBookId(TEST_COMIC_ID);
   }
 }

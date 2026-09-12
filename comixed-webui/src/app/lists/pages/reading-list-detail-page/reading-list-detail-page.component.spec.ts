@@ -81,7 +81,7 @@ import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 import {
   COMIC_BOOK_SELECTION_FEATURE_KEY,
   initialState as initialComicBookSelectionState
-} from '@app/comic-books/reducers/comic-book-selection.reducer';
+} from '@app/comic-books/reducers/comic-selection.reducer';
 import { setMultipleComicBookByIdSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
 import {
   initialState as initialLibraryPluginState,
@@ -94,7 +94,7 @@ import {
 import {
   initialState as initialReadComicBooksState,
   READ_COMIC_BOOKS_FEATURE_KEY
-} from '@app/user/reducers/read-comic-books.reducer';
+} from '@app/user/reducers/read-comics.reducer';
 import {
   COMIC_LIST_FEATURE_KEY,
   initialState as initialComicListState

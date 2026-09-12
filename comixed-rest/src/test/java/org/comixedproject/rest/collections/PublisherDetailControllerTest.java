@@ -19,6 +19,10 @@
 package org.comixedproject.rest.collections;
 
 import static junit.framework.TestCase.*;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.List;
 import org.comixedproject.model.collections.PublisherDetail;
@@ -28,12 +32,11 @@ import org.comixedproject.model.net.collections.LoadPublisherDetailResponse;
 import org.comixedproject.model.net.collections.LoadPublisherListRequest;
 import org.comixedproject.model.net.collections.LoadPublisherListResponse;
 import org.comixedproject.service.collections.PublisherDetailService;
-import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.comicbooks.ComicService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
@@ -48,18 +51,17 @@ class PublisherDetailControllerTest {
   private static final String TEST_FILTER_TEXT = "The filter text";
 
   @InjectMocks private PublisherDetailController controller;
-  @Mock private ComicBookService comicBookService;
+  @Mock private ComicService comicService;
   @Mock private PublisherDetailService publisherDetailService;
   @Mock private List<SeriesDetail> seriesDetailList;
   @Mock private List<PublisherDetail> publisherDetailList;
 
   @Test
   void loadPublisherList() {
-    Mockito.when(
-            publisherDetailService.getAllPublishers(
-                TEST_FILTER_TEXT, TEST_PAGE_NUMBER, TEST_PAGE_SIZE, "name", "asc"))
+    when(publisherDetailService.getAllPublishers(
+            TEST_FILTER_TEXT, TEST_PAGE_NUMBER, TEST_PAGE_SIZE, "name", "asc"))
         .thenReturn(publisherDetailList);
-    Mockito.when(publisherDetailService.getPublisherCount(TEST_FILTER_TEXT))
+    when(publisherDetailService.getPublisherCount(TEST_FILTER_TEXT))
         .thenReturn(TEST_PUBLISHER_COUNT);
 
     final LoadPublisherListResponse result =
@@ -71,22 +73,15 @@ class PublisherDetailControllerTest {
     assertSame(publisherDetailList, result.getPublishers());
     assertEquals(TEST_PUBLISHER_COUNT, result.getTotal());
 
-    Mockito.verify(publisherDetailService, Mockito.times(1))
+    verify(publisherDetailService)
         .getAllPublishers(TEST_FILTER_TEXT, TEST_PAGE_NUMBER, TEST_PAGE_SIZE, "name", "asc");
-    Mockito.verify(publisherDetailService, Mockito.times(1)).getPublisherCount(TEST_FILTER_TEXT);
+    verify(publisherDetailService).getPublisherCount(TEST_FILTER_TEXT);
   }
 
   @Test
   void getPublisherDetail() {
-    Mockito.when(comicBookService.getSeriesCountForPublisher(Mockito.anyString()))
-        .thenReturn(TEST_SERIES_COUNT);
-    Mockito.when(
-            comicBookService.getPublisherDetail(
-                Mockito.anyString(),
-                Mockito.anyInt(),
-                Mockito.anyInt(),
-                Mockito.anyString(),
-                Mockito.anyString()))
+    when(comicService.getSeriesCountForPublisher(anyString())).thenReturn(TEST_SERIES_COUNT);
+    when(comicService.getPublisherDetail(anyString(), anyInt(), anyInt(), anyString(), anyString()))
         .thenReturn(seriesDetailList);
 
     final LoadPublisherDetailResponse result =
@@ -99,9 +94,8 @@ class PublisherDetailControllerTest {
     assertEquals(TEST_SERIES_COUNT, result.getTotalSeries());
     assertSame(seriesDetailList, result.getEntries());
 
-    Mockito.verify(comicBookService, Mockito.times(1))
-        .getSeriesCountForPublisher(TEST_PUBLISHER_NAME);
-    Mockito.verify(comicBookService, Mockito.times(1))
+    verify(comicService).getSeriesCountForPublisher(TEST_PUBLISHER_NAME);
+    verify(comicService)
         .getPublisherDetail(
             TEST_PUBLISHER_NAME,
             TEST_PAGE_NUMBER,

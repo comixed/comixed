@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.Comic;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -41,10 +41,10 @@ public class ProcessUnhashedComicsReader extends AbstractComicReader {
   private int chunkSize;
 
   @Override
-  protected List<ComicBook> doLoadComics() {
+  protected List<Comic> doLoadComics() {
     log.trace("Loading pages without a hash");
-    return this.comicBookService.findComicsWithUnhashedPages(this.chunkSize).stream()
-        .filter(entry -> !entry.getComicDetail().isMissing())
+    return this.comicService.findComicsWithUnhashedPages(this.chunkSize).stream()
+        .filter(entry -> !entry.isMissing())
         .collect(Collectors.toList());
   }
 }
