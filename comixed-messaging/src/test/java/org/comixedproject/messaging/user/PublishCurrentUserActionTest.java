@@ -50,7 +50,7 @@ class PublishCurrentUserActionTest {
   @Mock private ComiXedUser user;
 
   @BeforeEach
-  public void setUp() throws JacksonException {
+  void setUp() throws JacksonException {
     Mockito.when(user.getEmail()).thenReturn(TEST_EMAIL);
     Mockito.when(objectMapper.writerWithView(Mockito.any())).thenReturn(objectWriter);
     Mockito.when(objectWriter.writeValueAsString(Mockito.any())).thenReturn(TEST_USER_AS_JSON);

@@ -19,10 +19,11 @@
 package org.comixedproject.batch.initiators;
 
 import static org.comixedproject.batch.comicbooks.ProcessUnhashedComicsConfiguration.PROCESS_UNHASHED_COMICS_JOB;
-import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 import org.comixedproject.service.batch.BatchProcessesService;
-import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.comicbooks.ComicService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
@@ -39,7 +40,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 @ExtendWith(MockitoExtension.class)
 class ProcessUnhashedComicsInitiatorTest {
   @InjectMocks private ProcessUnhashedComicsInitiator initiator;
-  @Mock private ComicBookService comicBookService;
+  @Mock private ComicService comicService;
   @Mock private BatchProcessesService batchProcessesService;
 
   @Mock
@@ -58,11 +59,11 @@ class ProcessUnhashedComicsInitiatorTest {
           JobExecutionAlreadyRunningException,
           InvalidJobParametersException,
           JobRestartException {
-    Mockito.when(comicBookService.hasComicsWithUnhashedPages()).thenReturn(false);
+    when(comicService.hasComicsWithUnhashedPages()).thenReturn(false);
 
     initiator.execute();
 
-    Mockito.verify(jobOperator, Mockito.never()).start(Mockito.any(Job.class), Mockito.any());
+    verify(jobOperator, never()).start(any(Job.class), any());
   }
 
   @Test
@@ -71,20 +72,20 @@ class ProcessUnhashedComicsInitiatorTest {
           JobExecutionAlreadyRunningException,
           InvalidJobParametersException,
           JobRestartException {
-    Mockito.when(comicBookService.hasComicsWithUnhashedPages()).thenReturn(true);
-    Mockito.when(batchProcessesService.hasActiveExecutions(Mockito.anyString())).thenReturn(true);
+    when(comicService.hasComicsWithUnhashedPages()).thenReturn(true);
+    when(batchProcessesService.hasActiveExecutions(anyString())).thenReturn(true);
 
     initiator.execute();
 
-    Mockito.verify(jobOperator, Mockito.never()).start(Mockito.any(Job.class), Mockito.any());
+    verify(jobOperator, never()).start(any(Job.class), any());
   }
 
   @Test
   void execute() {
-    Mockito.when(comicBookService.hasComicsWithUnhashedPages()).thenReturn(true);
+    when(comicService.hasComicsWithUnhashedPages()).thenReturn(true);
 
     initiator.execute();
 
-    Mockito.verify(jobOperator, Mockito.times(1)).startNextInstance(loadPageHashesJob);
+    verify(jobOperator).startNextInstance(loadPageHashesJob);
   }
 }

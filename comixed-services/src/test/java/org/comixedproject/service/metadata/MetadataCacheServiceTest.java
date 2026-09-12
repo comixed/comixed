@@ -60,7 +60,7 @@ class MetadataCacheServiceTest {
   private List<MetadataCacheEntry> scrapingCacheEntries = new ArrayList<>();
 
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     service.expirationDays = TEST_EXPIRATION_DAYS;
   }
 

@@ -18,8 +18,8 @@
 
 import {
   COMIC_BOOK_SELECTION_FEATURE_KEY,
-  ComicBookSelectionState
-} from '../reducers/comic-book-selection.reducer';
+  ComicSelectionState
+} from '../reducers/comic-selection.reducer';
 import {
   selectComicBookSelectionBusy,
   selectComicBookSelectionCount,
@@ -29,7 +29,7 @@ import {
 describe('ComicBookSelection Selectors', () => {
   const IDS = [1000, 1001, 1002, 1003, 1004];
 
-  let state: ComicBookSelectionState;
+  let state: ComicSelectionState;
 
   beforeEach(() => {
     state = { busy: Math.random() > 0.5, ids: IDS };

@@ -22,29 +22,27 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.service.comicbooks.ComicBookService;
-import org.comixedproject.service.comicbooks.ComicDetailService;
+import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.service.comicbooks.ComicService;
 import org.springframework.batch.core.listener.StepExecutionListener;
 import org.springframework.batch.infrastructure.item.ItemReader;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * <code>AbstractComicReader</code> provides a foundation for building new {@link ItemReader}
- * classes that work with instances of {@link ComicBook}.
+ * classes that work with instances of {@link Comic}.
  *
  * @author Darryl L. Pierce
  */
 @Log4j2
-public abstract class AbstractComicReader implements ItemReader<ComicBook>, StepExecutionListener {
-  @Autowired ComicBookService comicBookService;
-  @Autowired ComicDetailService comicDetailService;
+public abstract class AbstractComicReader implements ItemReader<Comic>, StepExecutionListener {
+  @Autowired protected ComicService comicService;
 
   @Getter String batchName;
-  @Getter @Setter List<ComicBook> comicBookList = null;
+  @Getter @Setter List<Comic> comicBookList = null;
 
   @Override
-  public ComicBook read() {
+  public Comic read() {
     if (this.comicBookList == null || this.comicBookList.isEmpty()) {
       log.trace("Load more comics to process");
       this.comicBookList = this.doLoadComics();
@@ -65,7 +63,7 @@ public abstract class AbstractComicReader implements ItemReader<ComicBook>, Step
    *
    * @return the comics
    */
-  protected abstract List<ComicBook> doLoadComics();
+  protected abstract List<Comic> doLoadComics();
 
   /**
    * Returns the chunk size.

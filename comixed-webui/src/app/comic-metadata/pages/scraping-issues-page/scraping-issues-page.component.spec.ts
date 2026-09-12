@@ -58,11 +58,11 @@ import {
 import {
   COMIC_BOOK_FEATURE_KEY,
   initialState as initialComicBookState
-} from '@app/comic-books/reducers/comic-book.reducer';
+} from '@app/comic-books/reducers/comic.reducer';
 import {
   COMIC_BOOK_SELECTION_FEATURE_KEY,
   initialState as initialComicBookSelectionState
-} from '@app/comic-books/reducers/comic-book-selection.reducer';
+} from '@app/comic-books/reducers/comic-selection.reducer';
 import {
   initialState as initialMultiBookScrapingState,
   MULTI_BOOK_SCRAPING_FEATURE_KEY

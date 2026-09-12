@@ -19,7 +19,7 @@
 package org.comixedproject.service.plugin;
 
 import static org.comixedproject.service.plugin.LibraryPluginService.*;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,7 +35,7 @@ import org.comixedproject.plugins.PluginRuntime;
 import org.comixedproject.plugins.PluginRuntimeException;
 import org.comixedproject.plugins.PluginRuntimeLocator;
 import org.comixedproject.repositories.plugin.LibraryPluginRepository;
-import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.service.lists.ReadingListService;
 import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.service.user.UserService;
@@ -67,7 +67,7 @@ class LibraryPluginServiceTest {
   @Mock private PublishLibraryPluginUpdateAction publishLibraryPluginUpdateAction;
   @Mock private UserService userService;
   @Mock private PluginRuntimeLocator pluginRuntimeLocator;
-  @Mock private ComicBookService comicBookService;
+  @Mock private ComicService comicService;
   @Mock private ReadingListService readingListService;
   @Mock private ComiXedUser user;
   @Mock private LibraryPlugin libraryPlugin;
@@ -304,7 +304,7 @@ class LibraryPluginServiceTest {
     Mockito.verify(pluginRuntime, Mockito.times(1))
         .addProperty(Mockito.eq(PROPERTY_NAME_LOG), Mockito.any());
     Mockito.verify(pluginRuntime, Mockito.times(1))
-        .addProperty(PROPERTY_NAME_COMIC_BOOK_SERVICE, comicBookService);
+        .addProperty(PROPERTY_NAME_COMIC_BOOK_SERVICE, comicService);
     Mockito.verify(pluginRuntime, Mockito.times(1))
         .addProperty(PROPERTY_NAME_READING_LIST_SERVICE, readingListService);
   }

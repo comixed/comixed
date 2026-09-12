@@ -3,6 +3,7 @@ package org.comixedproject.adaptors.content;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -37,10 +38,9 @@ class ComicMetadataWriterTest {
   @Mock JacksonXmlHttpMessageConverter xmlConverter;
   @Mock XmlMapper xmlMapper;
   @Mock XmlMapper.Builder xmlMapperBuilder;
-  @Mock private ComicDetail comicDetail;
+  @Mock private Comic comic;
   @Mock private MetadataSource metadataSource;
   @Mock private ComicMetadataSource comicMetadataSource;
-  @Mock private ComicBook comicBook;
 
   @Captor private ArgumentCaptor<ComicInfo> metadataArgumentCaptor;
 
@@ -50,33 +50,31 @@ class ComicMetadataWriterTest {
 
   @BeforeEach
   void setUp() {
-    Mockito.when(xmlConverter.getMapper()).thenReturn(xmlMapper);
+    when(xmlConverter.getMapper()).thenReturn(xmlMapper);
     when(xmlMapper.rebuild()).thenReturn(xmlMapperBuilder);
-    when(xmlMapperBuilder.configure(any(DeserializationFeature.class), Mockito.anyBoolean()))
+    when(xmlMapperBuilder.configure(any(DeserializationFeature.class), anyBoolean()))
         .thenReturn(xmlMapperBuilder);
     when(xmlMapperBuilder.build()).thenReturn(xmlMapper);
-    Mockito.when(xmlMapper.writeValueAsBytes(metadataArgumentCaptor.capture()))
-        .thenReturn(contentByte);
-    Mockito.when(comicDetail.getCoverDate()).thenReturn(TEST_COVER_DATE);
+    when(xmlMapper.writeValueAsBytes(metadataArgumentCaptor.capture())).thenReturn(contentByte);
+    when(comic.getCoverDate()).thenReturn(TEST_COVER_DATE);
     for (int index = 0; index < ComicTagType.values().length; index++) {
-      tags.add(new ComicTag(comicDetail, ComicTagType.values()[index], "Tag Value " + index));
+      tags.add(new ComicTag(comic, ComicTagType.values()[index], "Tag Value " + index));
     }
-    Mockito.when(comicDetail.getTags()).thenReturn(tags);
-    Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
-    Mockito.when(metadataSource.getAdaptorName()).thenReturn(TEST_METADATA_SOURCE_NAME);
-    Mockito.when(comicMetadataSource.getMetadataSource()).thenReturn(metadataSource);
-    Mockito.when(comicMetadataSource.getReferenceId()).thenReturn(TEST_METADATA_REFERENCE_ID);
-    Mockito.when(comicMetadataSource.getLastScrapedDate()).thenReturn(TEST_LAST_SCRAPED_DATE);
+    when(comic.getTags()).thenReturn(tags);
+    when(metadataSource.getAdaptorName()).thenReturn(TEST_METADATA_SOURCE_NAME);
+    when(comicMetadataSource.getMetadataSource()).thenReturn(metadataSource);
+    when(comicMetadataSource.getReferenceId()).thenReturn(TEST_METADATA_REFERENCE_ID);
+    when(comicMetadataSource.getLastScrapedDate()).thenReturn(TEST_LAST_SCRAPED_DATE);
     for (int index = 0; index < PageType.values().length; index++) {
       final ComicPage page = mock(ComicPage.class);
-      Mockito.when(page.getPageNumber()).thenReturn(index);
-      Mockito.when(page.getPageType()).thenReturn(PageType.values()[index].getComicPageType());
-      Mockito.when(page.getWidth()).thenReturn(index * 2048);
-      Mockito.when(page.getHeight()).thenReturn(index * 1024);
-      Mockito.when(page.getHash()).thenReturn(Integer.toString(index));
+      when(page.getPageNumber()).thenReturn(index);
+      when(page.getPageType()).thenReturn(PageType.values()[index].getComicPageType());
+      when(page.getWidth()).thenReturn(index * 2048);
+      when(page.getHeight()).thenReturn(index * 1024);
+      when(page.getHash()).thenReturn(Integer.toString(index));
       comicPages.add(page);
     }
-    Mockito.when(comicBook.getPages()).thenReturn(comicPages);
+    when(comic.getPages()).thenReturn(comicPages);
   }
 
   @Test
@@ -90,25 +88,25 @@ class ComicMetadataWriterTest {
 
   @Test
   void createContent() throws ContentAdaptorException {
-    final byte[] result = writer.createContent(comicBook);
+    final byte[] result = writer.createContent(comic);
 
     assertNotNull(result);
   }
 
   @Test
   void createContent_metadataContent() throws ContentAdaptorException {
-    Mockito.when(comicBook.getMetadata()).thenReturn(comicMetadataSource);
+    when(comic.getMetadata()).thenReturn(comicMetadataSource);
 
-    final byte[] result = writer.createContent(comicBook);
+    final byte[] result = writer.createContent(comic);
 
     assertNotNull(result);
   }
 
   @Test
   void createContent_objectWriterException() {
-    Mockito.when(xmlMapper.writeValueAsBytes(metadataArgumentCaptor.capture()))
+    when(xmlMapper.writeValueAsBytes(metadataArgumentCaptor.capture()))
         .thenThrow(JacksonException.class);
 
-    assertThrows(ContentAdaptorException.class, () -> writer.createContent(comicBook));
+    assertThrows(ContentAdaptorException.class, () -> writer.createContent(comic));
   }
 }

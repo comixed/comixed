@@ -18,8 +18,8 @@
 
 package org.comixedproject.rest.lists;
 
-import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LIBRARY_SELECTIONS;
-import static org.junit.Assert.*;
+import static org.comixedproject.rest.comicbooks.ComicSelectionController.LIBRARY_SELECTIONS;
+import static org.junit.jupiter.api.Assertions.*;
 
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
@@ -32,7 +32,7 @@ import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.model.net.lists.DeleteReadingListsRequest;
 import org.comixedproject.model.net.lists.SaveReadingListRequest;
 import org.comixedproject.model.net.lists.UpdateReadingListRequest;
-import org.comixedproject.service.comicbooks.ComicBookSelectionException;
+import org.comixedproject.service.comicbooks.ComicSelectionException;
 import org.comixedproject.service.comicbooks.ComicSelectionService;
 import org.comixedproject.service.lists.ReadingListException;
 import org.comixedproject.service.lists.ReadingListService;
@@ -72,7 +72,7 @@ class ReadingListControllerTest {
   private List selectedIdList = new ArrayList();
 
   @BeforeEach
-  void setUp() throws IOException, ComicBookSelectionException {
+  void setUp() throws IOException, ComicSelectionException {
     Mockito.when(principal.getName()).thenReturn(TEST_USER_EMAIL);
     Mockito.when(multipartFile.getInputStream()).thenReturn(inputStream);
     Mockito.when(multipartFile.getOriginalFilename())
@@ -160,9 +160,9 @@ class ReadingListControllerTest {
 
   @Test
   void addSelectedComicBooksToReadingList_selectionServiceExceptionOnDecode()
-      throws ComicBookSelectionException {
+      throws ComicSelectionException {
     Mockito.when(comicSelectionService.decodeSelections(Mockito.any()))
-        .thenThrow(ComicBookSelectionException.class);
+        .thenThrow(ComicSelectionException.class);
 
     assertThrows(
         ReadingListException.class,

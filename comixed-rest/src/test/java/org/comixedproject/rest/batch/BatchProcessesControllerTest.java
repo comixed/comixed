@@ -18,7 +18,7 @@
 
 package org.comixedproject.rest.batch;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 import org.comixedproject.model.batch.BatchProcessDetail;

@@ -31,7 +31,7 @@ import org.comixedproject.plugins.PluginRuntime;
 import org.comixedproject.plugins.PluginRuntimeException;
 import org.comixedproject.plugins.PluginRuntimeLocator;
 import org.comixedproject.repositories.plugin.LibraryPluginRepository;
-import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.service.lists.ReadingListService;
 import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.service.user.UserService;
@@ -62,7 +62,7 @@ public class LibraryPluginService {
   @Autowired private PublishLibraryPluginUpdateAction publishLibraryPluginUpateAction;
 
   // the following are provided to the plugin runtime and are not used by this service
-  @Autowired private ComicBookService comicBookService;
+  @Autowired private ComicService comicService;
   @Autowired private ReadingListService readingListService;
 
   /**
@@ -209,7 +209,7 @@ public class LibraryPluginService {
         this.pluginRuntimeLocator.getPluginRuntime(plugin.getLanguage());
     pluginRuntime.addProperty(PROPERTY_NAME_LOG, log);
     log.trace("Adding services to runtime");
-    pluginRuntime.addProperty(PROPERTY_NAME_COMIC_BOOK_SERVICE, this.comicBookService);
+    pluginRuntime.addProperty(PROPERTY_NAME_COMIC_BOOK_SERVICE, this.comicService);
     pluginRuntime.addProperty(PROPERTY_NAME_READING_LIST_SERVICE, this.readingListService);
     return pluginRuntime;
   }

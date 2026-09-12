@@ -26,7 +26,7 @@ import org.comixedproject.model.net.collections.LoadPublisherDetailResponse;
 import org.comixedproject.model.net.collections.LoadPublisherListRequest;
 import org.comixedproject.model.net.collections.LoadPublisherListResponse;
 import org.comixedproject.service.collections.PublisherDetailService;
-import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.comicbooks.ComicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -40,7 +40,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Log4j2
 public class PublisherDetailController {
-  @Autowired private ComicBookService comicBookService;
+  @Autowired private ComicService comicService;
   @Autowired private PublisherDetailService publisherDetailService;
 
   /**
@@ -96,7 +96,7 @@ public class PublisherDetailController {
         sortBy,
         sortDirection);
     return new LoadPublisherDetailResponse(
-        this.comicBookService.getSeriesCountForPublisher(name),
-        this.comicBookService.getPublisherDetail(name, pageIndex, pageSize, sortBy, sortDirection));
+        this.comicService.getSeriesCountForPublisher(name),
+        this.comicService.getPublisherDetail(name, pageIndex, pageSize, sortBy, sortDirection));
   }
 }

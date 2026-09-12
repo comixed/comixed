@@ -18,21 +18,20 @@
 
 package org.comixedproject.batch.comicbooks.writers;
 
-import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.infrastructure.item.ItemWriter;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>LoadFileContentsWriter</code> provides an {@link ItemWriter} for instances of {@link
- * ComicBook} that have had their contents loaded.
+ * <code>LoadFileContentsWriter</code> provides an {@link ItemWriter} for comics that have had their
+ * contents loaded.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @StepScope
-public class LoadFileContentsWriter extends AbstractComicBookWriter {
+public class LoadFileContentsWriter extends AbstractComicWriter {
   public LoadFileContentsWriter() {
     super(ComicEvent.comicFileContentsLoaded);
   }

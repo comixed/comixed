@@ -24,9 +24,9 @@ import static org.comixedproject.batch.comicpages.MarkBlockedPagesConfiguration.
 
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.batch.PublishBatchProcessDetailUpdateAction;
-import org.comixedproject.messaging.comicbooks.PublishProcessComicBooksStatusAction;
+import org.comixedproject.messaging.comicbooks.PublishProcessComicsStatusAction;
 import org.comixedproject.model.batch.BatchProcessDetail;
-import org.comixedproject.model.messaging.batch.ProcessComicBooksStatus;
+import org.comixedproject.model.messaging.batch.ProcessComicsStatus;
 import org.comixedproject.service.comicpages.ComicPageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -47,7 +47,7 @@ class MarkBlockedPagesChunkListenerTest {
   private static final long TEST_UNPROCESSED_PAGE_COUNT = TEST_PAGE_COUNT / 2L;
 
   @InjectMocks private MarkBlockedPagesChunkListener listener;
-  @Mock private PublishProcessComicBooksStatusAction publishProcessComicBooksStatusAction;
+  @Mock private PublishProcessComicsStatusAction publishProcessComicsStatusAction;
   @Mock private PublishBatchProcessDetailUpdateAction publishBatchProcessDetailUpdateAction;
   @Mock private ComicPageService comicPageService;
   @Mock private Chunk chunk;
@@ -56,11 +56,11 @@ class MarkBlockedPagesChunkListenerTest {
   @Mock private JobInstance jobInstance;
   @Mock private JobExecution jobExecution;
 
-  @Captor private ArgumentCaptor<ProcessComicBooksStatus> publishComicBooksStatusArgumentCaptor;
+  @Captor private ArgumentCaptor<ProcessComicsStatus> publishComicBooksStatusArgumentCaptor;
   @Captor private ArgumentCaptor<BatchProcessDetail> batchProcessDetailArgumentCaptor;
 
   @BeforeEach
-  public void setUp() throws PublishingException {
+  void setUp() throws PublishingException {
     Mockito.when(comicPageService.getCount()).thenReturn(TEST_PAGE_COUNT);
     Mockito.when(comicPageService.getUnmarkedWithBlockedHashCount())
         .thenReturn(TEST_UNPROCESSED_PAGE_COUNT);
@@ -72,7 +72,7 @@ class MarkBlockedPagesChunkListenerTest {
     Mockito.when(jobExecution.getExitStatus()).thenReturn(ExitStatus.COMPLETED);
     Mockito.when(stepExecution.getJobExecution()).thenReturn(jobExecution);
     Mockito.doNothing()
-        .when(publishProcessComicBooksStatusAction)
+        .when(publishProcessComicsStatusAction)
         .publish(publishComicBooksStatusArgumentCaptor.capture());
     Mockito.doNothing()
         .when(publishBatchProcessDetailUpdateAction)
@@ -104,11 +104,11 @@ class MarkBlockedPagesChunkListenerTest {
   }
 
   private void doCommonChecks() throws PublishingException {
-    final ProcessComicBooksStatus status = publishComicBooksStatusArgumentCaptor.getValue();
+    final ProcessComicsStatus status = publishComicBooksStatusArgumentCaptor.getValue();
 
     assertNotNull(status);
     assertTrue(status.isActive());
 
-    Mockito.verify(publishProcessComicBooksStatusAction, Mockito.times(1)).publish(status);
+    Mockito.verify(publishProcessComicsStatusAction, Mockito.times(1)).publish(status);
   }
 }

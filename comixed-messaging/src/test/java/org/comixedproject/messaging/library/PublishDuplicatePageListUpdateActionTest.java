@@ -44,7 +44,7 @@ class PublishDuplicatePageListUpdateActionTest {
   @Mock private DuplicatePageUpdate duplicatePageList;
 
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     Mockito.when(objectMapper.writerWithView(Mockito.any())).thenReturn(objectWriter);
   }
 

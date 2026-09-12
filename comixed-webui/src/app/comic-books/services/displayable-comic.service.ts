@@ -53,7 +53,7 @@ import {
 } from '@app/comic-books/actions/comic-list.actions';
 import { ComicTagType } from '@app/comic-books/models/comic-tag-type';
 import { filter, tap } from 'rxjs/operators';
-import { ComicBookData } from '@app/comic-books/models/comic-book-data';
+import { ComicDataSet } from '@app/comic-books/models/comic-data-set';
 
 @Injectable({
   providedIn: 'root'
@@ -71,7 +71,7 @@ export class DisplayableComicService {
         filter(started => started),
         tap(() => {
           this.logger.trace('Subscribing to comic list updates');
-          this.webSocketService.subscribe<ComicBookData>(
+          this.webSocketService.subscribe<ComicDataSet>(
             COMIC_LIST_UPDATE_TOPIC,
             comic => {
               this.logger.debug('Received comic list update:', comic);

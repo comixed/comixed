@@ -56,7 +56,7 @@ public class DisplayableComicExampleBuilder {
   @Setter private Integer pageCount;
 
   public Example<DisplayableComic> build() {
-    log.trace("Building ComicDetail example");
+    log.trace("Building Comic example");
     final DisplayableComic detail = new DisplayableComic();
 
     detail.setComicState(null);

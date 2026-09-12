@@ -22,7 +22,7 @@ import static org.comixedproject.batch.comicbooks.ProcessUnhashedComicsConfigura
 
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.service.batch.BatchProcessesService;
-import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.comicbooks.ComicService;
 import org.springframework.batch.core.job.Job;
 import org.springframework.batch.core.launch.JobOperator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +42,7 @@ import org.springframework.stereotype.Component;
 public class ProcessUnhashedComicsInitiator {
   private static final Object MUTEX = new Object();
 
-  @Autowired private ComicBookService comicBookService;
+  @Autowired private ComicService comicService;
   @Autowired private BatchProcessesService batchProcessesService;
 
   @Autowired
@@ -57,7 +57,7 @@ public class ProcessUnhashedComicsInitiator {
   public void execute() {
     synchronized (MUTEX) {
       log.trace("Checking for pages without hashes");
-      if (this.comicBookService.hasComicsWithUnhashedPages()
+      if (this.comicService.hasComicsWithUnhashedPages()
           && !this.batchProcessesService.hasActiveExecutions(PROCESS_UNHASHED_COMICS_JOB)) {
         log.trace("Starting batch job: load page hashes");
         this.jobOperator.startNextInstance(this.loadPageHashesJob);

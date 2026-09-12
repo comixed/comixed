@@ -26,7 +26,7 @@ describe('ComicCoverUrlPipe', () => {
 
   it('returns the URL for the comic cover image', () => {
     expect(pipe.transform(DISPLAYABLE_COMIC_1)).toEqual(
-      `${API_ROOT_URL}/comics/${DISPLAYABLE_COMIC_1.comicBookId}/cover/content`
+      `${API_ROOT_URL}/comics/${DISPLAYABLE_COMIC_1.comicDetailId}/cover/content`
     );
   });
 

@@ -22,8 +22,8 @@ import static org.comixedproject.service.admin.ConfigurationService.CFG_LIBRARY_
 
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.AdaptorException;
-import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
-import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.adaptors.comicbooks.ComicAdaptor;
+import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.service.admin.ConfigurationService;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.infrastructure.item.ItemProcessor;
@@ -38,39 +38,38 @@ import org.springframework.stereotype.Component;
 @Component
 @StepScope
 @Log4j2
-public class RecreateComicFileProcessor implements ItemProcessor<ComicBook, ComicBook> {
-  @Autowired private ComicBookAdaptor comicBookAdaptor;
+public class RecreateComicFileProcessor implements ItemProcessor<Comic, Comic> {
+  @Autowired private ComicAdaptor comicAdaptor;
   @Autowired private ConfigurationService configurationService;
 
   @Override
-  public ComicBook process(final ComicBook comicBook) throws Exception {
-    if (comicBook.getComicDetail().isMissing()) {
-      log.debug("Comic file is missing, skipping: id={}", comicBook.getComicBookId());
+  public Comic process(final Comic comic) throws Exception {
+    if (comic.isMissing()) {
+      log.debug("Comic file is missing, skipping: id={}", comic.getComicDetailId());
       return null;
     }
-    if (!comicBook.isFileContentsLoaded()
-        || comicBook.isPurging()
-        || comicBook.isBatchMetadataUpdate()
-        || comicBook.isEditDetails()
-        || comicBook.isUpdateMetadata()) {
-      log.debug("Comic book not ready for recreating, skipping: id={}", comicBook.getComicBookId());
+    if (comic.isLoadingFileContents()
+        || comic.isPurging()
+        || comic.isBatchUpdatingMetadata()
+        || comic.isEditingMetadata()
+        || comic.isUpdatingMetadata()) {
+      log.debug("Comic book not ready for recreating, skipping: id={}", comic.getComicDetailId());
       return null;
     }
-    log.debug("Getting target archive adaptor: id={}", comicBook.getComicBookId());
-    if (comicBook.getComicDetail().getFile().exists()
-        && comicBook.getComicDetail().getFile().isFile()) {
+    log.debug("Getting target archive adaptor: id={}", comic.getComicDetailId());
+    if (comic.getFile().exists() && comic.getFile().isFile()) {
       try {
         log.trace("Recreating comicBook files");
-        this.comicBookAdaptor.save(
-            comicBook,
-            comicBook.getTargetArchiveType(),
+        this.comicAdaptor.save(
+            comic,
+            comic.getTargetArchiveType(),
             this.configurationService.getOptionValue(CFG_LIBRARY_PAGE_RENAMING_RULE, ""));
       } catch (AdaptorException error) {
         log.error("Failed to recreate comic book file", error);
       }
     } else {
-      log.error("Can't recreate file: {}", comicBook.getComicDetail().getFile().getAbsoluteFile());
+      log.error("Can't recreate file: {}", comic.getFile().getAbsoluteFile());
     }
-    return comicBook;
+    return comic;
   }
 }

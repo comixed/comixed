@@ -24,7 +24,7 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.metadata.PublishMetadataUpdateProcessStateUpdateAction;
 import org.comixedproject.model.net.metadata.MetadataUpdateProcessUpdate;
-import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.comicbooks.ComicService;
 import org.springframework.batch.infrastructure.item.ExecutionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -36,7 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 @Log4j2
 public abstract class AbstractMetadataUpdateProcessingListener {
-  @Autowired protected ComicBookService comicBookService;
+  @Autowired protected ComicService comicService;
 
   @Autowired
   protected PublishMetadataUpdateProcessStateUpdateAction
@@ -53,7 +53,7 @@ public abstract class AbstractMetadataUpdateProcessingListener {
       log.trace("Getting total comics");
       totalComics = executionContext.getLong(PARAM_METADATA_UPDATE_TOTAL_COMICS);
       log.trace("Getting completed comics");
-      completedComics = totalComics - this.comicBookService.findComicsForBatchMetadataUpdateCount();
+      completedComics = totalComics - this.comicService.findComicsForBatchMetadataUpdateCount();
     }
     try {
       log.trace("Publishing metadata update process event");

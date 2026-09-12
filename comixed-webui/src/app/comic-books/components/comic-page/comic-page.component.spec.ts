@@ -22,7 +22,7 @@ import { LoggerModule } from '@angular-ru/cdk/logger';
 import { MatCardModule } from '@angular/material/card';
 import { PAGE_2 } from '@app/comic-pages/comic-pages.fixtures';
 
-describe('ComicPageComponent', () => {
+describe('ComicDetailsPageComponent', () => {
   const PAGE = PAGE_2;
 
   let component: ComicPageComponent;

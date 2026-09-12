@@ -25,11 +25,11 @@ import java.util.Objects;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
-import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicbooks.ComicTagType;
 import org.comixedproject.reader.ReaderUtil;
 import org.comixedproject.reader.model.DirectoryEntry;
-import org.comixedproject.service.comicbooks.ComicDetailService;
+import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.service.lists.ReadingListException;
 import org.comixedproject.service.lists.ReadingListService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +43,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Log4j2
 public class DirectoryReaderService {
-  @Autowired private ComicDetailService comicDetailService;
+  @Autowired private ComicService comicService;
   @Autowired private ReadingListService readingListService;
 
   private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM yyyy");
@@ -58,7 +58,7 @@ public class DirectoryReaderService {
    */
   public List<DirectoryEntry> getAllCoverDates(
       final String email, final boolean unread, final String rootUrl) {
-    return this.comicDetailService.getAllCoverDates(email, unread).stream()
+    return this.comicService.getAllCoverDates(email, unread).stream()
         .map(
             entry ->
                 new DirectoryEntry(
@@ -80,7 +80,7 @@ public class DirectoryReaderService {
    */
   public List<DirectoryEntry> getAllComicsForCoverDate(
       final String email, final boolean unread, final String coverDate, final String urlRoot) {
-    return this.comicDetailService.getAllComicsForCoverDate(coverDate, email, unread).stream()
+    return this.comicService.getAllComicsForCoverDate(coverDate, email, unread).stream()
         .map(comicDetail -> this.doCreateDirectoryEntry(comicDetail, urlRoot))
         .sorted((left, right) -> left.getName().compareTo(right.getName()))
         .toList();
@@ -96,7 +96,7 @@ public class DirectoryReaderService {
    */
   public List<DirectoryEntry> getAllPublishers(
       final String email, final boolean unread, final String rootUrl) {
-    return this.comicDetailService.getAllPublishers(email, unread).stream()
+    return this.comicService.getAllPublishers(email, unread).stream()
         .map(
             entry ->
                 new DirectoryEntry(
@@ -117,7 +117,7 @@ public class DirectoryReaderService {
    */
   public List<DirectoryEntry> getAllSeries(
       final String email, final boolean unread, final String rootUrl) {
-    return this.comicDetailService.getAllSeries(email, unread).stream()
+    return this.comicService.getAllSeries(email, unread).stream()
         .map(
             entry -> {
               final DirectoryEntry result =
@@ -144,7 +144,7 @@ public class DirectoryReaderService {
    */
   public List<DirectoryEntry> getAllPublishersForSeries(
       final String email, final boolean unread, final String series, final String rootUrl) {
-    return this.comicDetailService.getAllPublishersForSeries(series, email, unread).stream()
+    return this.comicService.getAllPublishersForSeries(series, email, unread).stream()
         .map(
             entry ->
                 new DirectoryEntry(
@@ -166,7 +166,7 @@ public class DirectoryReaderService {
    */
   public List<DirectoryEntry> getAllSeriesForPublisher(
       final String email, final boolean unread, final String publisher, final String rootUrl) {
-    return this.comicDetailService.getAllSeriesForPublisher(publisher, email, unread).stream()
+    return this.comicService.getAllSeriesForPublisher(publisher, email, unread).stream()
         .map(
             entry ->
                 new DirectoryEntry(
@@ -194,7 +194,7 @@ public class DirectoryReaderService {
       final String publisher,
       final String series,
       final String rootUrl) {
-    return this.comicDetailService
+    return this.comicService
         .getAllVolumesForPublisherAndSeries(publisher, series, email, unread)
         .stream()
         .map(
@@ -227,7 +227,7 @@ public class DirectoryReaderService {
       final String series,
       final String volume,
       final String rootUrl) {
-    return this.comicDetailService
+    return this.comicService
         .getAllComicBooksForPublisherAndSeriesAndVolume(publisher, series, volume, email, unread)
         .stream()
         .map(entry -> doCreateDirectoryEntry(entry, rootUrl))
@@ -265,7 +265,7 @@ public class DirectoryReaderService {
    */
   public List<DirectoryEntry> getAllComicsForReadingList(
       final String email, final Long id, final String urlRoot) {
-    return this.comicDetailService.getAllComicsForReadingList(email, id).stream()
+    return this.comicService.getAllComicsForReadingList(email, id).stream()
         .map(comicDetail -> this.doCreateDirectoryEntry(comicDetail, urlRoot))
         .sorted((left, right) -> left.getName().compareTo(right.getName()))
         .toList();
@@ -282,7 +282,7 @@ public class DirectoryReaderService {
    */
   public List<DirectoryEntry> getAllForTagType(
       final String email, final boolean unread, final ComicTagType tagType, final String urlRoot) {
-    return this.comicDetailService.getAllValuesForTag(tagType, email, unread).stream()
+    return this.comicService.getAllValuesForTag(tagType, email, unread).stream()
         .map(
             entry ->
                 new DirectoryEntry(
@@ -309,39 +309,38 @@ public class DirectoryReaderService {
       final ComicTagType tagType,
       final String tagValue,
       final String urlRoot) {
-    return this.comicDetailService.getAllComicsForTag(tagType, tagValue, email, unread).stream()
+    return this.comicService.getAllComicsForTag(tagType, tagValue, email, unread).stream()
         .map(comicDetail -> this.doCreateDirectoryEntry(comicDetail, urlRoot))
         .sorted((left, right) -> left.getName().compareTo(right.getName()))
         .toList();
   }
 
-  private DirectoryEntry doCreateDirectoryEntry(
-      final ComicDetail comicDetail, final String rootUrl) {
+  private DirectoryEntry doCreateDirectoryEntry(final Comic comic, final String rootUrl) {
     final DirectoryEntry result =
         new DirectoryEntry(
             ReaderUtil.generateId(
                 String.format(
                     "publisher:%s:series:%s:volume:%s:comic:%s",
-                    comicDetail.getPublisher(),
-                    comicDetail.getSeries(),
-                    comicDetail.getVolume(),
-                    comicDetail.getFilename())),
-            this.createTitle(comicDetail),
-            String.format(rootUrl, comicDetail.getComicId()));
-    result.setFilename(comicDetail.getBaseFilename());
-    result.setFileSize(FileUtils.sizeOf(comicDetail.getFile()));
+                    comic.getPublisher(),
+                    comic.getSeries(),
+                    comic.getVolume(),
+                    comic.getFilename())),
+            this.createTitle(comic),
+            String.format(rootUrl, comic.getComicDetailId()));
+    result.setFilename(comic.getBaseFilename());
+    result.setFileSize(FileUtils.sizeOf(comic.getFile()));
     result.setDirectory(false);
-    result.setCoverUrl(String.format(rootUrl, comicDetail.getComicId()));
+    result.setCoverUrl(String.format(rootUrl, comic.getComicDetailId()));
     return result;
   }
 
-  private @NonNull String createTitle(final ComicDetail comicDetail) {
+  private @NonNull String createTitle(final Comic comic) {
     return String.format(
         "%s V%s #%s (%s)",
-        this.getValueOrDefault(comicDetail.getSeries(), "[unknown]"),
-        this.getValueOrDefault(comicDetail.getVolume(), "????"),
-        this.getValueOrDefault(comicDetail.getIssueNumber(), "?"),
-        this.getValueOrDefault(comicDetail.getCoverDate(), "unknown"));
+        this.getValueOrDefault(comic.getSeries(), "[unknown]"),
+        this.getValueOrDefault(comic.getVolume(), "????"),
+        this.getValueOrDefault(comic.getIssueNumber(), "?"),
+        this.getValueOrDefault(comic.getCoverDate(), "unknown"));
   }
 
   private String getValueOrDefault(final String value, final String defaultValue) {

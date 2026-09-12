@@ -26,14 +26,13 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.csv.CsvAdaptor;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.lists.PublishReadingListDeletedAction;
-import org.comixedproject.messaging.lists.PublishReadingListUpdateAction;
-import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.repositories.lists.ReadingListRepository;
-import org.comixedproject.service.comicbooks.ComicBookException;
-import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.comicbooks.ComicException;
+import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,9 +61,8 @@ public class ReadingListService {
 
   @Autowired private ReadingListRepository readingListRepository;
   @Autowired private UserService userService;
-  @Autowired private ComicBookService comicBookService;
+  @Autowired private ComicService comicService;
   @Autowired private CsvAdaptor csvAdaptor;
-  @Autowired private PublishReadingListUpdateAction publishReadingListUpdateAction;
   @Autowired private PublishReadingListDeletedAction publishReadingListDeletedAction;
 
   /**
@@ -257,15 +255,15 @@ public class ReadingListService {
                   };
                 } else {
                   try {
-                    final ComicBook comic = this.comicBookService.getComic(entryId);
+                    final Comic comic = this.comicService.getComic(entryId);
                     return new String[] {
                       String.valueOf(index),
-                      comic.getComicDetail().getPublisher(),
-                      comic.getComicDetail().getSeries(),
-                      comic.getComicDetail().getVolume(),
-                      comic.getComicDetail().getIssueNumber()
+                      comic.getPublisher(),
+                      comic.getSeries(),
+                      comic.getVolume(),
+                      comic.getIssueNumber()
                     };
-                  } catch (ComicBookException error) {
+                  } catch (ComicException error) {
                     log.error("Failed to encode comic", error);
                     return new String[] {
                       String.valueOf(index),
@@ -307,12 +305,13 @@ public class ReadingListService {
         (index, row) -> {
           if (index > 0) {
             log.trace("Looking for comicBook");
-            final List<ComicBook> comicBooks =
-                this.comicBookService.findComic(row.get(1), row.get(2), row.get(3), row.get(4));
-            if (!comicBooks.isEmpty()) {
-              for (int which = 0; which < comicBooks.size(); which++) {
-                final ComicBook comicBook = comicBooks.get(which);
-                readingList.getEntryIds().add(comicBook.getComicDetail().getComicDetailId());
+            final List<Comic> comicList =
+                this.comicService.getForPublisherAndSeriesAndVolumeAndIssueNumber(
+                    row.get(1), row.get(2), row.get(3), row.get(4));
+            if (!comicList.isEmpty()) {
+              for (int which = 0; which < comicList.size(); which++) {
+                final Comic comicBook = comicList.get(which);
+                readingList.getEntryIds().add(comicBook.getComicDetailId());
               }
             }
           }
@@ -357,20 +356,19 @@ public class ReadingListService {
   /**
    * Deletes reading list entries that reference the given comic book.
    *
-   * @param comicBook the comic book
+   * @param comic the comic
    */
   @Transactional
-  public void deleteEntriesForComicBook(final ComicBook comicBook) {
-    log.trace(
-        "Deleting all reading list entries for comic book: id={}", comicBook.getComicBookId());
+  public void deleteEntriesForComicBook(final Comic comic) {
+    log.trace("Deleting all reading list entries for comic book: id={}", comic.getComicDetailId());
     this.readingListRepository
-        .getReadingListsWithComic(comicBook.getComicDetail().getComicDetailId())
+        .getReadingListsWithComic(comic.getComicDetailId())
         .forEach(
             readingList -> {
               log.trace(
                   "Removing comic book from reading list: list id={}",
                   readingList.getReadingListId());
-              readingList.getEntryIds().remove(comicBook.getComicDetail().getComicDetailId());
+              readingList.getEntryIds().remove(comic.getComicDetailId());
               log.trace("Saving reading list");
               this.readingListRepository.save(readingList);
             });

@@ -18,7 +18,7 @@
 
 package org.comixedproject.rest.plugin;
 
-import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LIBRARY_SELECTIONS;
+import static org.comixedproject.rest.comicbooks.ComicSelectionController.LIBRARY_SELECTIONS;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import io.micrometer.core.annotation.Timed;
@@ -31,7 +31,7 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.net.plugin.CreatePluginRequest;
 import org.comixedproject.model.net.plugin.UpdatePluginRequest;
 import org.comixedproject.model.plugin.LibraryPlugin;
-import org.comixedproject.service.comicbooks.ComicBookSelectionException;
+import org.comixedproject.service.comicbooks.ComicSelectionException;
 import org.comixedproject.service.comicbooks.ComicSelectionService;
 import org.comixedproject.service.plugin.LibraryPluginException;
 import org.comixedproject.service.plugin.LibraryPluginService;
@@ -179,7 +179,7 @@ public class LibraryPluginController {
       this.comicSelectionService.clearSelectedComicBooks(email, selectedComicBookIdList);
       session.setAttribute(
           LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selectedComicBookIdList));
-    } catch (ComicBookSelectionException error) {
+    } catch (ComicSelectionException error) {
       throw new LibraryPluginException("Failed to run plugin against selected comic books", error);
     }
   }

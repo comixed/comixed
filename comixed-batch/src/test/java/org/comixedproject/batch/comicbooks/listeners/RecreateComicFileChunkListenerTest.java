@@ -22,16 +22,15 @@ import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
 import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration.RECREATE_COMIC_FILES_JOB;
-import static org.comixedproject.model.messaging.batch.ProcessComicBooksStatus.RECREATE_COMIC_FILE_STEP;
+import static org.comixedproject.model.messaging.batch.ProcessComicsStatus.RECREATE_COMIC_FILE_STEP;
 import static org.mockito.Mockito.*;
 
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.batch.PublishBatchProcessDetailUpdateAction;
-import org.comixedproject.messaging.comicbooks.PublishProcessComicBooksStatusAction;
+import org.comixedproject.messaging.comicbooks.PublishProcessComicsStatusAction;
 import org.comixedproject.model.batch.BatchProcessDetail;
-import org.comixedproject.model.messaging.batch.ProcessComicBooksStatus;
-import org.comixedproject.service.comicbooks.ComicBookService;
-import org.comixedproject.service.comicbooks.ComicDetailService;
+import org.comixedproject.model.messaging.batch.ProcessComicsStatus;
+import org.comixedproject.service.comicbooks.ComicService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -51,32 +50,31 @@ class RecreateComicFileChunkListenerTest {
   private static final long TEST_PROCESSED_COMICS = 15L;
 
   @InjectMocks private RecreateComicFileChunkListener listener;
-  @Mock private ComicBookService comicBookService;
-  @Mock private ComicDetailService comicDetailService;
+  @Mock private ComicService comicService;
   @Mock private Chunk chunk;
   @Mock private StepExecution stepExecution;
   @Mock private JobInstance jobInstance;
   @Mock private JobExecution jobExecution;
-  @Mock private PublishProcessComicBooksStatusAction publishProcessComicBooksStatusAction;
+  @Mock private PublishProcessComicsStatusAction publishProcessComicsStatusAction;
   @Mock private PublishBatchProcessDetailUpdateAction publishBatchProcessDetailUpdateAction;
   @Mock private JobParameters jobParameters;
 
-  @Captor ArgumentCaptor<ProcessComicBooksStatus> processComicStatusArgumentCaptor;
+  @Captor ArgumentCaptor<ProcessComicsStatus> processComicStatusArgumentCaptor;
   @Captor ArgumentCaptor<BatchProcessDetail> batchProcessDetailArgumentCaptor;
 
   @BeforeEach
-  public void setUp() throws PublishingException {
+  void setUp() throws PublishingException {
     when(jobExecution.getJobParameters()).thenReturn(jobParameters);
     when(jobInstance.getJobName()).thenReturn(RECREATE_COMIC_FILES_JOB);
     when(jobExecution.getJobInstance()).thenReturn(jobInstance);
     when(jobExecution.getStatus()).thenReturn(BatchStatus.COMPLETED);
     when(jobExecution.getExitStatus()).thenReturn(ExitStatus.COMPLETED);
-    when(comicBookService.getComicBookCount()).thenReturn(TEST_TOTAL_COMICS);
-    when(comicDetailService.getRecreatingCount()).thenReturn(TEST_PROCESSED_COMICS);
+    when(comicService.getComicCount()).thenReturn(TEST_TOTAL_COMICS);
+    when(comicService.getRecreatingCount()).thenReturn(TEST_PROCESSED_COMICS);
 
     when(stepExecution.getJobExecution()).thenReturn(jobExecution);
     doNothing()
-        .when(publishProcessComicBooksStatusAction)
+        .when(publishProcessComicsStatusAction)
         .publish(processComicStatusArgumentCaptor.capture());
     doNothing()
         .when(publishBatchProcessDetailUpdateAction)
@@ -90,7 +88,7 @@ class RecreateComicFileChunkListenerTest {
   void beforeChunk() throws PublishingException {
     listener.beforeChunk(chunk);
 
-    final ProcessComicBooksStatus status = processComicStatusArgumentCaptor.getValue();
+    final ProcessComicsStatus status = processComicStatusArgumentCaptor.getValue();
 
     assertNotNull(status);
     assertTrue(status.isActive());
@@ -98,14 +96,14 @@ class RecreateComicFileChunkListenerTest {
     assertEquals(TEST_TOTAL_COMICS, status.getTotal());
     assertEquals(TEST_TOTAL_COMICS - TEST_PROCESSED_COMICS, status.getProcessed());
 
-    verify(publishProcessComicBooksStatusAction).publish(status);
+    verify(publishProcessComicsStatusAction).publish(status);
   }
 
   @Test
   void afterChunk() throws PublishingException {
     listener.afterChunk(chunk);
 
-    final ProcessComicBooksStatus status = processComicStatusArgumentCaptor.getValue();
+    final ProcessComicsStatus status = processComicStatusArgumentCaptor.getValue();
 
     assertNotNull(status);
     assertTrue(status.isActive());
@@ -113,14 +111,14 @@ class RecreateComicFileChunkListenerTest {
     assertEquals(TEST_TOTAL_COMICS, status.getTotal());
     assertEquals(TEST_TOTAL_COMICS - TEST_PROCESSED_COMICS, status.getProcessed());
 
-    verify(publishProcessComicBooksStatusAction).publish(status);
+    verify(publishProcessComicsStatusAction).publish(status);
   }
 
   @Test
   void afterChunkError() throws PublishingException {
     listener.onChunkError(new RuntimeException(), chunk);
 
-    final ProcessComicBooksStatus status = processComicStatusArgumentCaptor.getValue();
+    final ProcessComicsStatus status = processComicStatusArgumentCaptor.getValue();
 
     assertNotNull(status);
     assertTrue(status.isActive());
@@ -128,14 +126,14 @@ class RecreateComicFileChunkListenerTest {
     assertEquals(TEST_TOTAL_COMICS, status.getTotal());
     assertEquals(TEST_TOTAL_COMICS - TEST_PROCESSED_COMICS, status.getProcessed());
 
-    verify(publishProcessComicBooksStatusAction).publish(status);
+    verify(publishProcessComicsStatusAction).publish(status);
   }
 
   @Test
   void afterChunk_publishingException() throws PublishingException {
     listener.beforeChunk(chunk);
 
-    final ProcessComicBooksStatus status = processComicStatusArgumentCaptor.getValue();
+    final ProcessComicsStatus status = processComicStatusArgumentCaptor.getValue();
 
     assertNotNull(status);
     assertTrue(status.isActive());
@@ -143,6 +141,6 @@ class RecreateComicFileChunkListenerTest {
     assertEquals(TEST_TOTAL_COMICS, status.getTotal());
     assertEquals(TEST_TOTAL_COMICS - TEST_PROCESSED_COMICS, status.getProcessed());
 
-    verify(publishProcessComicBooksStatusAction).publish(status);
+    verify(publishProcessComicsStatusAction).publish(status);
   }
 }

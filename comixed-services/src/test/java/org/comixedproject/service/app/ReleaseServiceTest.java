@@ -49,7 +49,7 @@ class ReleaseServiceTest {
   @Mock private LatestReleaseDetails latestReleaseDetails;
 
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     ReflectionTestUtils.setField(service, "branch", TEST_BRANCH);
     ReflectionTestUtils.setField(service, "buildHost", TEST_BUILD_HOST);
     ReflectionTestUtils.setField(service, "buildTime", TEST_BUILD_TIME);

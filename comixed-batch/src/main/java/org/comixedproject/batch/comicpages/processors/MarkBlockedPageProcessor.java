@@ -36,7 +36,7 @@ public class MarkBlockedPageProcessor implements ItemProcessor<ComicPage, ComicP
   public ComicPage process(final ComicPage page) {
     log.debug(
         "Marking page for deletion: comic book={} page index={}",
-        page.getComicDetail().getComicId(),
+        page.getComic().getComicDetailId(),
         page.getPageNumber());
     page.setPageType(ComicPageType.DELETED);
     return page;

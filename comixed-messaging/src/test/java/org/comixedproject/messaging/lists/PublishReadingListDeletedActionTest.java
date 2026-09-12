@@ -49,7 +49,7 @@ class PublishReadingListDeletedActionTest {
   @Mock private ComiXedUser owner;
 
   @BeforeEach
-  public void setUp() throws JacksonException {
+  void setUp() throws JacksonException {
     Mockito.when(objectMapper.writerWithView(Mockito.any())).thenReturn(objectWriter);
     Mockito.when(objectWriter.writeValueAsString(Mockito.any()))
         .thenReturn(TEST_READING_LIST_AS_JSON);

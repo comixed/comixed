@@ -24,30 +24,7 @@
                                    metadata_source_id="1001"
                                    property_name="api-key"
                                    property_value="0192837465FAEBDC"/>
-    <comic_books_v4 comic_book_id="1000"
-                    last_modified_on="2020-01-09 06:25:00"/>
-    <comic_books_v4 comic_book_id="1001"
-                    last_modified_on="2020-01-09 06:27:00"/>
-    <comic_books_v4 comic_book_id="1002"
-                    last_modified_on="2020-01-09 06:26:00"/>
-    <comic_books_v4 comic_book_id="1003"
-                    last_modified_on="2020-01-09 06:25:00"/>
-    <comic_books_v4 comic_book_id="1004"
-                    last_modified_on="2020-01-09 06:27:11"/>
-    <comic_books_v4 comic_book_id="1005"
-                    last_modified_on="2020-01-09 06:27:02"/>
-    <comic_books_v4 comic_book_id="1006"
-                    last_modified_on="2020-01-09 06:27:30"/>
-    <comic_books_v4 comic_book_id="1010"
-                    last_modified_on="2020-01-09 06:27:30"/>
-    <comic_books_v4 comic_book_id="1020"
-                    last_modified_on="2019-04-24 09:35:00"/>
-    <comic_books_v4 comic_book_id="1021"
-                    last_modified_on="2019-04-24 09:36:00"/>
-    <comic_books_v4 comic_book_id="2000"
-                    last_modified_on="2019-04-24 09:36:00"/>
     <comic_details_v4 comic_detail_id="2000"
-                      comic_book_id="1000"
                       comic_state="STABLE"
                       comic_type="ISSUE"
                       filename="C:/users/comixeduser/Documents/comicBooks/example.cbz"
@@ -65,7 +42,6 @@
                       added_date="2017-06-16 15:21:00"
                       last_modified_date="2017-06-16 15:21:00"/>
     <comic_details_v4 comic_detail_id="2001"
-                      comic_book_id="1001"
                       comic_state="STABLE"
                       comic_type="ISSUE"
                       filename="C:/users/comixeduser/Documents/comicBooks/example2.cbz"
@@ -88,7 +64,6 @@
                       editing_metadata="false"
                       last_modified_date="2017-06-15 15:20:00"/>
     <comic_details_v4 comic_detail_id="2002"
-                      comic_book_id="1002"
                       comic_state="STABLE"
                       comic_type="ISSUE"
                       filename="C:/users/comixeduser/Documents/comicBooks/example3.cbz"
@@ -110,7 +85,6 @@
                       editing_metadata="false"
                       last_modified_date="2017-06-14 15:20:00"/>
     <comic_details_v4 comic_detail_id="2003"
-                      comic_book_id="1003"
                       comic_state="STABLE"
                       comic_type="ISSUE"
                       filename="C:/users/comixeduser/Documents/comicBooks/example4.cbz"
@@ -132,7 +106,6 @@
                       editing_metadata="false"
                       last_modified_date="2017-06-13 15:20:00"/>
     <comic_details_v4 comic_detail_id="2004"
-                      comic_book_id="1004"
                       comic_state="STABLE"
                       comic_type="ISSUE"
                       filename="C:/users/comixeduser/Documents/comicBooks/example5.cbz"
@@ -154,7 +127,6 @@
                       editing_metadata="false"
                       last_modified_date="2017-06-15 15:20:00"/>
     <comic_details_v4 comic_detail_id="2005"
-                      comic_book_id="1005"
                       comic_state="STABLE"
                       comic_type="ISSUE"
                       filename="C:/users/comixeduser/Documents/comicBooks/example6.cbz"
@@ -176,7 +148,6 @@
                       editing_metadata="false"
                       last_modified_date="2017-06-15 15:20:10"/>
     <comic_details_v4 comic_detail_id="2006"
-                      comic_book_id="1006"
                       comic_state="STABLE"
                       comic_type="ISSUE"
                       filename="C:/users/comixeduser/Documents/comicBooks/example7.cbz"
@@ -198,7 +169,6 @@
                       editing_metadata="false"
                       last_modified_date="2017-06-15 15:20:20"/>
     <comic_details_v4 comic_detail_id="2010"
-                      comic_book_id="1010"
                       comic_state="DELETED"
                       comic_type="ISSUE"
                       filename="C:/users/comixeduser/Documents/comicBooks/deleted-example1.cbz"
@@ -220,7 +190,6 @@
                       editing_metadata="false"
                       last_modified_date="2017-06-15 15:20:20"/>
     <comic_details_v4 comic_detail_id="2020"
-                      comic_book_id="1020"
                       comic_state="STABLE"
                       comic_type="TRADEPAPERBACK"
                       filename="C:/users/comixeduser/Documents/comicBooks/duplicate-1.cbz"
@@ -242,7 +211,6 @@
                       editing_metadata="false"
                       last_modified_date="2019-04-24 09:35:00"/>
     <comic_details_v4 comic_detail_id="2021"
-                      comic_book_id="1021"
                       comic_state="STABLE"
                       comic_type="TRADEPAPERBACK"
                       filename="C:/users/comixeduser/Documents/comicBooks/duplicate-2.cbz"
@@ -264,7 +232,6 @@
                       editing_metadata="false"
                       last_modified_date="2019-04-24 09:36:00"/>
     <comic_details_v4 comic_detail_id="3000"
-                      comic_book_id="2000"
                       comic_state="STABLE"
                       comic_type="MANGA"
                       filename="C:/users/comixeduser/Documents/comicBooks/unread-1.cbz"
@@ -694,8 +661,7 @@
                                   property_required="true"
                                   property_value="property-value"
     />
-    <organizing_comics_view comic_book_id="1000"
-                            comic_detail_id="2000"
+    <organizing_comics_view comic_detail_id="2000"
                             filename="C:/users/comixeduser/Documents/comicBooks/example1.cbz"
                             archive_type="CBZ"
                             is_scraped="false"
@@ -707,8 +673,7 @@
                             title="The Title"
                             cover_date="2025-01-05"
                             store_date="2025-01-05"/>
-    <organizing_comics_view comic_book_id="1001"
-                            comic_detail_id="2001"
+    <organizing_comics_view comic_detail_id="2001"
                             filename="C:/users/comixeduser/Documents/comicBooks/example2.cbz"
                             archive_type="CBR"
                             is_scraped="true"
@@ -720,8 +685,7 @@
                             title="The Other Title"
                             cover_date="2025-01-05"
                             store_date="2025-01-05"/>
-    <organizing_comics_view comic_book_id="1002"
-                            comic_detail_id="2002"
+    <organizing_comics_view comic_detail_id="2002"
                             filename="C:/users/comixeduser/Documents/comicBooks/example3.cbz"
                             archive_type="CB7"
                             is_scraped="false"
@@ -754,8 +718,7 @@
     <duplicate_pages_view file_hash="9ABCDEF0123456789ABCDEF012345678"
                           comic_count="27"/>
 
-    <displayable_comics_view comic_book_id="1000"
-                             comic_detail_id="2000"
+    <displayable_comics_view comic_detail_id="2000"
                              archive_type="CBZ"
                              comic_state="STABLE"
                              is_unscraped="false"
@@ -769,8 +732,7 @@
                              year_published="2025"
                              store_date="2025-01-08"
                              added_date="2025-01-08"/>
-    <displayable_comics_view comic_book_id="1001"
-                             comic_detail_id="2000"
+    <displayable_comics_view comic_detail_id="2000"
                              archive_type="CBZ"
                              comic_state="STABLE"
                              is_unscraped="false"
@@ -784,8 +746,7 @@
                              year_published="2025"
                              store_date="2025-01-08"
                              added_date="2025-01-08"/>
-    <displayable_comics_view comic_book_id="1002"
-                             comic_detail_id="2002"
+    <displayable_comics_view comic_detail_id="2002"
                              archive_type="CBZ"
                              comic_state="STABLE"
                              is_unscraped="false"
@@ -799,8 +760,7 @@
                              year_published="2025"
                              store_date="2025-01-08"
                              added_date="2025-01-08"/>
-    <displayable_comics_view comic_book_id="1003"
-                             comic_detail_id="2003"
+    <displayable_comics_view comic_detail_id="2003"
                              archive_type="CBZ"
                              comic_state="STABLE"
                              is_unscraped="false"
@@ -814,8 +774,7 @@
                              year_published="2025"
                              store_date="2025-01-08"
                              added_date="2025-01-08"/>
-    <displayable_comics_view comic_book_id="1004"
-                             comic_detail_id="2004"
+    <displayable_comics_view comic_detail_id="2004"
                              archive_type="CBZ"
                              comic_state="STABLE"
                              is_unscraped="false"

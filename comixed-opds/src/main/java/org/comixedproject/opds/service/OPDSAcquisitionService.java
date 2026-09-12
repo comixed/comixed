@@ -27,15 +27,15 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.opds.OPDSException;
 import org.comixedproject.opds.OPDSUtils;
 import org.comixedproject.opds.model.CollectionType;
 import org.comixedproject.opds.model.OPDSAcquisitionFeed;
 import org.comixedproject.opds.model.OPDSLink;
-import org.comixedproject.service.comicbooks.ComicDetailException;
-import org.comixedproject.service.comicbooks.ComicDetailService;
+import org.comixedproject.service.comicbooks.ComicException;
+import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.service.lists.ReadingListException;
 import org.comixedproject.service.lists.ReadingListService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +51,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Log4j2
 public class OPDSAcquisitionService {
 
-  @Autowired private ComicDetailService comicDetailService;
+  @Autowired private ComicService comicService;
   @Autowired private ReadingListService readingListService;
   @Autowired private OPDSUtils opdsUtils;
 
@@ -81,13 +81,13 @@ public class OPDSAcquisitionService {
                     "%s: %s", collectionType.getOpdsNavigationFeedTitle(), collectionName),
                 collectionName),
             String.valueOf(collectionType.getOpdsIdKey())),
-        this.comicDetailService.getAllComicsForTag(
+        this.comicService.getAllComicsForTag(
             collectionType.getComicTagType(), collectionName, email, unread),
         unread);
   }
 
   private OPDSAcquisitionFeed createCollectionEntriesFeed(
-      final OPDSAcquisitionFeed feed, final List<ComicDetail> entries, final boolean unread) {
+      final OPDSAcquisitionFeed feed, final List<Comic> entries, final boolean unread) {
     entries.forEach(
         comic -> {
           log.trace("Adding comic to collection entries: {}", comic.getComicDetailId());
@@ -142,7 +142,7 @@ public class OPDSAcquisitionService {
                 NAVIGATION_FEED_LINK_TYPE,
                 SELF,
                 String.format("%s?unread=%s", this.opdsUtils.urlEncodeString(volume), unread)));
-    this.comicDetailService
+    this.comicService
         .getAllComicBooksForPublisherAndSeriesAndVolume(publisher, series, volume, email, unread)
         .forEach(
             comicBook -> {
@@ -181,8 +181,8 @@ public class OPDSAcquisitionService {
                       .getEntries()
                       .add(
                           this.opdsUtils.createComicEntry(
-                              this.comicDetailService.getByComicBookId(entryId)));
-                } catch (ComicDetailException error) {
+                              this.comicService.getByComicBookId(entryId)));
+                } catch (ComicException error) {
                   log.error("Failed to load comic for acquisition feed", error);
                 }
               });
@@ -216,7 +216,7 @@ public class OPDSAcquisitionService {
                 simpleDateFormat.format(weekStarts), simpleDateFormat.format(weekEnds)),
             String.valueOf(COMIC_STORE_DATE_FOR_YEAR_ID + year));
     log.trace("Loading comics");
-    this.comicDetailService.getComicsForYearAndWeek(year, week, email, unread).stream()
+    this.comicService.getComicsForYearAndWeek(year, week, email, unread).stream()
         .forEach(
             comicBook -> {
               log.trace("Adding comic to collection entries: {}", comicBook.getComicDetailId());
@@ -250,7 +250,7 @@ public class OPDSAcquisitionService {
     final OPDSAcquisitionFeed response =
         new OPDSAcquisitionFeed(String.format("Search for term: %s", term), term);
     log.trace("Loading comics");
-    this.comicDetailService.getComicForSearchTerm(term).stream()
+    this.comicService.getComicForSearchTerm(term).stream()
         .forEach(
             comicDetail -> {
               log.trace("Adding comic to collection entries: {}", comicDetail.getComicDetailId());

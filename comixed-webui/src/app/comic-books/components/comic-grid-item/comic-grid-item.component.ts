@@ -75,20 +75,20 @@ export class ComicGridItemComponent {
   onDeleteComic(): void {
     this.logger.info('Marking comic for deletion:', this.comic);
     this.store.dispatch(
-      deleteSingleComicBook({ comicBookId: this.comic.comicBookId })
+      deleteSingleComicBook({ comicBookId: this.comic.comicDetailId })
     );
   }
 
   onUndeleteComic(): void {
     this.logger.info('Unmarking comic for deletion:', this.comic);
     this.store.dispatch(
-      undeleteSingleComicBook({ comicBookId: this.comic.comicBookId })
+      undeleteSingleComicBook({ comicBookId: this.comic.comicDetailId })
     );
   }
 
   onOpenComic(): void {
     this.logger.info('Opening comic book:', this.comic);
-    this.router.navigate(['/comics', this.comic.comicBookId]);
+    this.router.navigate(['/comics', this.comic.comicDetailId]);
   }
 
   isDeleted(comic: DisplayableComic): boolean {

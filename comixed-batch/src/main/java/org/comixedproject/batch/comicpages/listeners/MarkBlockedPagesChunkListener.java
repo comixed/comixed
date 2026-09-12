@@ -18,10 +18,11 @@
 
 package org.comixedproject.batch.comicpages.listeners;
 
-import static org.comixedproject.model.messaging.batch.ProcessComicBooksStatus.MARK_BLOCKED_PAGE_STEP;
+import static org.comixedproject.model.messaging.batch.ProcessComicsStatus.MARK_BLOCKED_PAGE_STEP;
 
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.batch.comicbooks.listeners.AbstractBatchProcessChunkListener;
+import org.comixedproject.model.comicpages.ComicPage;
 import org.springframework.stereotype.Component;
 
 /**
@@ -32,7 +33,8 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Log4j2
-public class MarkBlockedPagesChunkListener<I, O> extends AbstractBatchProcessChunkListener<I, O> {
+public class MarkBlockedPagesChunkListener
+    extends AbstractBatchProcessChunkListener<ComicPage, ComicPage> {
   @Override
   protected String getStepName() {
     return MARK_BLOCKED_PAGE_STEP;

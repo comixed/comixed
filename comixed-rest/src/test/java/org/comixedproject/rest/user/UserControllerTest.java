@@ -18,7 +18,7 @@
 
 package org.comixedproject.rest.user;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.security.Principal;
 import java.util.List;

@@ -18,7 +18,7 @@
 
 package org.comixedproject.state.comicbooks;
 
-import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.model.comicbooks.Comic;
 
 /**
  * <code>ComicStateListener</code> defines a type that receives notification when a comic's state
@@ -32,5 +32,5 @@ public interface ComicStateListener {
    *
    * @param comic the comic book
    */
-  void onComicStateChanged(final ComicDetail comic);
+  void onComicStateChanged(final Comic comic);
 }

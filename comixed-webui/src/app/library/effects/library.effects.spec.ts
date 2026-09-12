@@ -45,7 +45,7 @@ import { ComicType } from '@app/comic-books/models/comic-type';
 
 describe('LibraryEffects', () => {
   const COMIC_BOOKS = [DISPLAYABLE_COMIC_1, DISPLAYABLE_COMIC_3];
-  const IDS = COMIC_BOOKS.map(comicBook => comicBook.comicBookId);
+  const IDS = COMIC_BOOKS.map(comicBook => comicBook.comicDetailId);
   const LIBRARY_STATE = {} as RemoteLibraryState;
   const COMIC_DETAILS: EditMultipleComics = {
     publisher: 'The Publisher',

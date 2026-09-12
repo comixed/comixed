@@ -26,7 +26,7 @@ import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.comixedproject.adaptors.AdaptorException;
-import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
+import org.comixedproject.adaptors.comicbooks.ComicAdaptor;
 import org.comixedproject.adaptors.csv.CsvAdaptor;
 import org.comixedproject.adaptors.encoders.DataEncoder;
 import org.comixedproject.messaging.PublishingException;
@@ -64,7 +64,7 @@ public class BlockedHashService {
   @Autowired private PublishDuplicatePageListUpdateAction publishDuplicatePageListUpdateAction;
   @Autowired private DuplicatePageService duplicatePageService;
   @Autowired private ComicPageService comicPageService;
-  @Autowired private ComicBookAdaptor comicBookAdaptor;
+  @Autowired private ComicAdaptor comicAdaptor;
   @Autowired private DataEncoder dataEncoder;
 
   /**
@@ -168,8 +168,7 @@ public class BlockedHashService {
         final String hash = hashes.get(index);
         final ComicPage page = this.comicPageService.getOneForHash(hash);
         final byte[] pageContent =
-            this.comicBookAdaptor.loadPageContent(
-                page.getComicDetail().getComicBook(), page.getPageNumber());
+            this.comicAdaptor.loadPageContent(page.getComic(), page.getPageNumber());
         final String encodedPageContent = this.dataEncoder.encode(pageContent);
 
         final BlockedHash blockedHashRecord = this.doBlockPageHash(hash, null, encodedPageContent);

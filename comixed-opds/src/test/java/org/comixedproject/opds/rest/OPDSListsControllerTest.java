@@ -47,7 +47,7 @@ class OPDSListsControllerTest {
   @Mock private OPDSAcquisitionFeed opdsAcquisitionFeed;
 
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     Mockito.when(principal.getName()).thenReturn(TEST_EMAIL);
   }
 

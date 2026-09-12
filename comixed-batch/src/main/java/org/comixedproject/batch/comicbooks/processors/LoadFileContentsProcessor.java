@@ -24,13 +24,13 @@ import java.util.Objects;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
 import org.comixedproject.adaptors.archive.ArchiveAdaptor;
-import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
+import org.comixedproject.adaptors.comicbooks.ComicAdaptor;
 import org.comixedproject.adaptors.content.ContentAdaptor;
 import org.comixedproject.adaptors.content.ContentAdaptorRegistry;
 import org.comixedproject.adaptors.file.FileTypeAdaptor;
 import org.comixedproject.metadata.MetadataAdaptorProvider;
 import org.comixedproject.metadata.adaptors.MetadataAdaptor;
-import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicbooks.ComicMetadataSource;
 import org.comixedproject.model.metadata.MetadataSource;
 import org.comixedproject.service.metadata.MetadataService;
@@ -49,45 +49,44 @@ import org.springframework.util.StringUtils;
 @Component
 @StepScope
 @Log4j2
-public class LoadFileContentsProcessor implements ItemProcessor<ComicBook, ComicBook> {
-  @Autowired private ComicBookAdaptor comicBookAdaptor;
+public class LoadFileContentsProcessor implements ItemProcessor<Comic, Comic> {
+  @Autowired private ComicAdaptor comicAdaptor;
   @Autowired private ContentAdaptorRegistry contentAdaptorRegistry;
   @Autowired private MetadataService metadataService;
   @Autowired private MetadataSourceService metadataSourceService;
   @Autowired private FileTypeAdaptor fileTypeAdaptor;
 
   @Override
-  public ComicBook process(final ComicBook comicBook) {
-    if (comicBook.getComicDetail().isMissing()) {
-      log.debug("Comic file missing, skipping: id={}", comicBook.getComicBookId());
+  public Comic process(final Comic comic) {
+    if (comic.isMissing()) {
+      log.debug("Comic file missing, skipping: id={}", comic.getComicDetailId());
       return null;
     }
-    if (comicBook.isFileContentsLoaded()) {
-      log.debug("Comic book contents already loaded: id={}", comicBook.getComicBookId());
-      return comicBook;
+    if (!comic.isLoadingFileContents()) {
+      log.debug("Comic book contents already loaded: id={}", comic.getComicDetailId());
+      return comic;
     }
 
     try {
       final ArchiveAdaptor archiveAdaptor =
-          this.fileTypeAdaptor.getArchiveAdaptorFor(comicBook.getComicDetail().getFilename());
-      comicBook.getComicDetail().setArchiveType(archiveAdaptor.getArchiveType());
+          this.fileTypeAdaptor.getArchiveAdaptorFor(comic.getFilename());
+      comic.setArchiveType(archiveAdaptor.getArchiveType());
 
-      this.comicBookAdaptor.load(comicBook);
+      this.comicAdaptor.load(comic);
       log.trace("Sorting comicBook pages");
-      this.comicBookAdaptor.sortPages(comicBook);
+      this.comicAdaptor.sortPages(comic);
       final File metadataFile =
-          new File(
-              this.comicBookAdaptor.getMetadataFilename(comicBook.getComicDetail().getFilename()));
+          new File(this.comicAdaptor.getMetadataFilename(comic.getFilename()));
       if (metadataFile.exists()) {
         final ContentAdaptor contentAdaptor =
             this.contentAdaptorRegistry.getContentAdaptorForFilename(
                 metadataFile.getAbsolutePath());
         if (contentAdaptor != null) {
           log.trace("Loading external metadata file: {}", metadataFile.getAbsolutePath());
-          contentAdaptor.loadContent(comicBook, "", FileUtils.readFileToByteArray(metadataFile));
+          contentAdaptor.loadContent(comic, "", FileUtils.readFileToByteArray(metadataFile));
         }
       }
-      final String metadataWebAddress = comicBook.getComicDetail().getWebAddress();
+      final String metadataWebAddress = comic.getWebAddress();
       if (StringUtils.hasLength(metadataWebAddress)) {
         log.debug("Processing metadata web address: {}", metadataWebAddress);
         final MetadataAdaptorProvider provider =
@@ -97,31 +96,29 @@ public class LoadFileContentsProcessor implements ItemProcessor<ComicBook, Comic
           final MetadataSource source =
               this.metadataSourceService.getByAdaptorName(provider.getName());
           final String referenceId = adaptor.getReferenceId(metadataWebAddress);
-          Date lastScrapedDate = comicBook.getLastScrapedDate();
+          Date lastScrapedDate = comic.getLastScrapedDate();
           if (Objects.isNull(lastScrapedDate)) {
             // if no last scraped date is available, then use the last modified date instead.
-            lastScrapedDate = comicBook.getLastModifiedOn();
+            lastScrapedDate = comic.getLastModifiedDate();
           }
           log.debug(
               "Setting metadata source: source={} reference id={}",
               source.getAdaptorName(),
               referenceId);
-          if (Objects.isNull(comicBook.getMetadata())) {
-            comicBook.setMetadata(
-                new ComicMetadataSource(
-                    comicBook.getComicDetail(), source, referenceId, lastScrapedDate));
+          if (Objects.isNull(comic.getMetadata())) {
+            comic.setMetadata(new ComicMetadataSource(comic, source, referenceId, lastScrapedDate));
           } else {
-            comicBook.getMetadata().setMetadataSource(source);
-            comicBook.getMetadata().setReferenceId(referenceId);
-            comicBook.getMetadata().setLastScrapedDate(lastScrapedDate);
+            comic.getMetadata().setMetadataSource(source);
+            comic.getMetadata().setReferenceId(referenceId);
+            comic.getMetadata().setLastScrapedDate(lastScrapedDate);
           }
         }
       }
       log.trace("Returning updated comicBook");
-      return comicBook;
+      return comic;
     } catch (Throwable error) {
       log.error("Error loading comic file content", error);
-      return comicBook;
+      return comic;
     }
   }
 }

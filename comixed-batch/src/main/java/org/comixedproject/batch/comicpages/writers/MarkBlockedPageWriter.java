@@ -42,8 +42,7 @@ public class MarkBlockedPageWriter implements ItemWriter<ComicPage> {
   public void write(final Chunk<? extends ComicPage> pages) throws Exception {
     pages.forEach(
         page -> {
-          this.comicStateAdaptor.fireEvent(
-              page.getComicDetail(), ComicEvent.comicPageMarkedForRemoval);
+          this.comicStateAdaptor.fireEvent(page.getComic(), ComicEvent.comicPageMarkedForRemoval);
         });
   }
 }

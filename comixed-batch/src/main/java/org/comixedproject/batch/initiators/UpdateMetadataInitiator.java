@@ -24,7 +24,7 @@ import static org.comixedproject.batch.comicbooks.UpdateMetadataConfiguration.UP
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.batch.UpdateMetadataEvent;
 import org.comixedproject.service.batch.BatchProcessesService;
-import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.comicbooks.ComicService;
 import org.springframework.batch.core.job.Job;
 import org.springframework.batch.core.job.parameters.InvalidJobParametersException;
 import org.springframework.batch.core.job.parameters.JobParametersBuilder;
@@ -50,7 +50,7 @@ import org.springframework.stereotype.Component;
 public class UpdateMetadataInitiator {
   private static final Object MUTEX = new Object();
 
-  @Autowired private ComicBookService comicBookService;
+  @Autowired private ComicService comicService;
   @Autowired private BatchProcessesService batchProcessesService;
 
   @Autowired
@@ -75,7 +75,7 @@ public class UpdateMetadataInitiator {
   private void doExecute() {
     synchronized (MUTEX) {
       log.trace("Checking for pending metadata updates");
-      if (this.comicBookService.getUpdateMetadataCount() > 0L
+      if (this.comicService.getUpdateMetadataCount() > 0L
           && !this.batchProcessesService.hasActiveExecutions(UPDATE_METADATA_JOB)) {
         try {
           log.trace("Starting batch job: update metadata");

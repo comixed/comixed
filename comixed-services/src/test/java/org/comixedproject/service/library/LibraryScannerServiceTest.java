@@ -30,8 +30,7 @@ import java.nio.file.*;
 import java.util.HashSet;
 import java.util.Set;
 import org.comixedproject.service.admin.ConfigurationService;
-import org.comixedproject.service.comicbooks.ComicBookService;
-import org.comixedproject.service.comicbooks.ComicDetailService;
+import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.service.comicfiles.ComicFileService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,12 +51,10 @@ class LibraryScannerServiceTest {
       new File("target/test-classes/example.cbz").getAbsolutePath();
   private static final String TEST_MISSING_COMIC_FILENAME = TEST_COMIC_FILENAME + "-not-found";
   private static final String TEST_RELATIVE_FILENAME = "example.cbz";
-  private static final String TEST_LIBRARY_DIRECTORY = "target/test-class";
 
   @InjectMocks private LibraryScannerService scanner;
   @Mock private ConfigurationService configurationService;
-  @Mock private ComicBookService comicBookService;
-  @Mock private ComicDetailService comicDetailService;
+  @Mock private ComicService comicService;
   @Mock private ComicFileService comicFileService;
   @Mock private WatchService watchService;
   @Mock private WatchKey key;
@@ -74,16 +71,16 @@ class LibraryScannerServiceTest {
     when(configurationService.getOptionValue(anyString())).thenReturn(TEST_ROOT_DIRECTORY);
     missingComicDetailSet.add(TEST_COMIC_FILENAME);
     missingComicDetailSet.add(TEST_MISSING_COMIC_FILENAME);
-    when(comicBookService.getAllComicDetails(true)).thenReturn(missingComicDetailSet);
+    when(comicService.getAllComicDetailsByMissingFlag(true)).thenReturn(missingComicDetailSet);
     notMissingComicDetailSet.add(TEST_COMIC_FILENAME);
     notMissingComicDetailSet.add(TEST_MISSING_COMIC_FILENAME);
-    when(comicBookService.getAllComicDetails(false)).thenReturn(notMissingComicDetailSet);
+    when(comicService.getAllComicDetailsByMissingFlag(false)).thenReturn(notMissingComicDetailSet);
     when(resolvedPath.toString()).thenReturn(TEST_COMIC_FILENAME);
     when(keyWatchablePath.resolve(any(Path.class))).thenReturn(resolvedPath);
     when(key.watchable()).thenReturn(keyWatchablePath);
     when(watchEventPath.toString()).thenReturn(TEST_RELATIVE_FILENAME);
     when(watchEvent.context()).thenReturn(watchEventPath);
-    when(comicDetailService.filenameFound(anyString())).thenReturn(true);
+    when(comicService.filenameFound(anyString())).thenReturn(true);
   }
 
   @AfterEach
@@ -111,8 +108,8 @@ class LibraryScannerServiceTest {
     assertNull(scanner.rootDirectory);
     assertNull(scanner.watchService);
 
-    verify(comicDetailService, never()).markComicAsFound(anyString());
-    verify(comicDetailService, never()).markComicAsMissing(anyString());
+    verify(comicService, never()).markComicAsFound(anyString());
+    verify(comicService, never()).markComicAsMissing(anyString());
   }
 
   @Test
@@ -124,8 +121,8 @@ class LibraryScannerServiceTest {
     assertNull(scanner.rootDirectory);
     assertNull(scanner.watchService);
 
-    verify(comicDetailService, never()).markComicAsFound(anyString());
-    verify(comicDetailService, never()).markComicAsMissing(anyString());
+    verify(comicService, never()).markComicAsFound(anyString());
+    verify(comicService, never()).markComicAsMissing(anyString());
   }
 
   @Test
@@ -137,8 +134,8 @@ class LibraryScannerServiceTest {
     assertEquals(TEST_ROOT_DIRECTORY, scanner.rootDirectory);
     assertNotNull(scanner.watchService);
 
-    verify(comicDetailService).markComicAsFound(TEST_COMIC_FILENAME);
-    verify(comicDetailService).markComicAsMissing(TEST_MISSING_COMIC_FILENAME);
+    verify(comicService).markComicAsFound(TEST_COMIC_FILENAME);
+    verify(comicService).markComicAsMissing(TEST_MISSING_COMIC_FILENAME);
   }
 
   @Test
@@ -155,23 +152,23 @@ class LibraryScannerServiceTest {
   @Test
   void processWatchEvent_entrycreate_notInLibrary() throws IOException {
     when(watchEvent.kind()).thenReturn(ENTRY_CREATE);
-    when(comicDetailService.filenameFound(anyString())).thenReturn(false);
+    when(comicService.filenameFound(anyString())).thenReturn(false);
 
     scanner.processWatchEvent(key, watchEvent);
 
-    verify(comicDetailService).filenameFound(TEST_COMIC_FILENAME);
+    verify(comicService).filenameFound(TEST_COMIC_FILENAME);
     verify(comicFileService).discoverComicFile(TEST_COMIC_FILENAME);
   }
 
   @Test
   void processWatchEvent_entrycreate_inLibrary() throws IOException {
     when(watchEvent.kind()).thenReturn(ENTRY_CREATE);
-    when(comicDetailService.filenameFound(anyString())).thenReturn(true);
+    when(comicService.filenameFound(anyString())).thenReturn(true);
 
     scanner.processWatchEvent(key, watchEvent);
 
-    verify(comicDetailService).filenameFound(TEST_COMIC_FILENAME);
-    verify(comicDetailService).markComicAsFound(TEST_COMIC_FILENAME);
+    verify(comicService).filenameFound(TEST_COMIC_FILENAME);
+    verify(comicService).markComicAsFound(TEST_COMIC_FILENAME);
   }
 
   @Test
@@ -180,7 +177,7 @@ class LibraryScannerServiceTest {
 
     scanner.processWatchEvent(key, watchEvent);
 
-    verify(comicDetailService).markComicAsMissing(TEST_COMIC_FILENAME);
+    verify(comicService).markComicAsMissing(TEST_COMIC_FILENAME);
   }
 
   @Test
@@ -189,8 +186,8 @@ class LibraryScannerServiceTest {
 
     scanner.processWatchEvent(key, watchEvent);
 
-    verify(comicDetailService).filenameFound(TEST_COMIC_FILENAME);
-    verify(comicDetailService).markComicAsFound(TEST_COMIC_FILENAME);
+    verify(comicService).filenameFound(TEST_COMIC_FILENAME);
+    verify(comicService).markComicAsFound(TEST_COMIC_FILENAME);
   }
 
   @Test
@@ -199,7 +196,7 @@ class LibraryScannerServiceTest {
 
     scanner.processWatchEvent(key, watchEvent);
 
-    verify(comicDetailService).filenameFound(TEST_COMIC_FILENAME);
-    verify(comicDetailService).markComicAsFound(TEST_COMIC_FILENAME);
+    verify(comicService).filenameFound(TEST_COMIC_FILENAME);
+    verify(comicService).markComicAsFound(TEST_COMIC_FILENAME);
   }
 }

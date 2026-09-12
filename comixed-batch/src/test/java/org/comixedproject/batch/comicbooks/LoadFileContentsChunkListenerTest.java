@@ -19,16 +19,18 @@
 package org.comixedproject.batch.comicbooks;
 
 import static junit.framework.TestCase.*;
-import static org.comixedproject.batch.comicbooks.LoadComicBooksConfiguration.LOAD_COMIC_BOOKS_JOB;
-import static org.comixedproject.model.messaging.batch.ProcessComicBooksStatus.*;
+import static org.comixedproject.batch.comicbooks.LoadComicsConfiguration.LOAD_COMIC_BOOKS_JOB;
+import static org.comixedproject.model.messaging.batch.ProcessComicsStatus.*;
+import static org.mockito.Mockito.*;
 
 import org.comixedproject.batch.comicbooks.listeners.LoadFileContentsChunkListener;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.batch.PublishBatchProcessDetailUpdateAction;
-import org.comixedproject.messaging.comicbooks.PublishProcessComicBooksStatusAction;
+import org.comixedproject.messaging.comicbooks.PublishProcessComicsStatusAction;
 import org.comixedproject.model.batch.BatchProcessDetail;
-import org.comixedproject.model.messaging.batch.ProcessComicBooksStatus;
-import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.messaging.batch.ProcessComicsStatus;
+import org.comixedproject.service.comicbooks.ComicService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,8 +40,6 @@ import org.springframework.batch.core.*;
 import org.springframework.batch.core.job.JobExecution;
 import org.springframework.batch.core.job.JobInstance;
 import org.springframework.batch.core.job.parameters.JobParameters;
-import org.springframework.batch.core.scope.context.ChunkContext;
-import org.springframework.batch.core.scope.context.StepContext;
 import org.springframework.batch.core.scope.context.StepSynchronizationManager;
 import org.springframework.batch.core.step.StepExecution;
 import org.springframework.batch.infrastructure.item.Chunk;
@@ -50,39 +50,37 @@ class LoadFileContentsChunkListenerTest {
   private static final long TEST_PROCESSED_COMICS = 15L;
 
   @InjectMocks private LoadFileContentsChunkListener listener;
-  @Mock private Chunk<?> chunk;
-  @Mock private ComicBookService comicBookService;
-  @Mock private ChunkContext chunkContext;
-  @Mock private StepContext stepContext;
+  @Mock private Chunk<Comic> chunk;
+  @Mock private ComicService comicService;
   @Mock private StepExecution stepExecution;
   @Mock private JobInstance jobInstance;
   @Mock private JobExecution jobExecution;
-  @Mock private PublishProcessComicBooksStatusAction publishProcessComicBooksStatusAction;
+  @Mock private PublishProcessComicsStatusAction publishProcessComicsStatusAction;
   @Mock private PublishBatchProcessDetailUpdateAction publishBatchProcessDetailUpdateAction;
   @Mock private JobParameters jobParameters;
 
-  @Captor ArgumentCaptor<ProcessComicBooksStatus> processComicStatusArgumentCaptor;
+  @Captor ArgumentCaptor<ProcessComicsStatus> processComicStatusArgumentCaptor;
   @Captor ArgumentCaptor<BatchProcessDetail> batchProcessDetailArgumentCaptor;
 
   @BeforeEach
   void setUp() throws PublishingException {
-    Mockito.when(jobExecution.getJobParameters()).thenReturn(jobParameters);
-    Mockito.when(jobInstance.getJobName()).thenReturn(LOAD_COMIC_BOOKS_JOB);
-    Mockito.when(jobExecution.getJobInstance()).thenReturn(jobInstance);
-    Mockito.when(jobExecution.getStatus()).thenReturn(BatchStatus.COMPLETED);
-    Mockito.when(jobExecution.getExitStatus()).thenReturn(ExitStatus.COMPLETED);
-    Mockito.when(comicBookService.getComicBookCount()).thenReturn(TEST_TOTAL_COMICS);
-    Mockito.when(comicBookService.getComicsWithoutContentCount()).thenReturn(TEST_PROCESSED_COMICS);
+    when(jobExecution.getJobParameters()).thenReturn(jobParameters);
+    when(jobInstance.getJobName()).thenReturn(LOAD_COMIC_BOOKS_JOB);
+    when(jobExecution.getJobInstance()).thenReturn(jobInstance);
+    when(jobExecution.getStatus()).thenReturn(BatchStatus.COMPLETED);
+    when(jobExecution.getExitStatus()).thenReturn(ExitStatus.COMPLETED);
+    when(comicService.getComicCount()).thenReturn(TEST_TOTAL_COMICS);
+    when(comicService.getComicsWithoutContentCount()).thenReturn(TEST_PROCESSED_COMICS);
 
-    Mockito.when(stepExecution.getJobExecution()).thenReturn(jobExecution);
-    Mockito.doNothing()
-        .when(publishProcessComicBooksStatusAction)
+    when(stepExecution.getJobExecution()).thenReturn(jobExecution);
+    doNothing()
+        .when(publishProcessComicsStatusAction)
         .publish(processComicStatusArgumentCaptor.capture());
-    Mockito.doNothing()
+    doNothing()
         .when(publishBatchProcessDetailUpdateAction)
         .publish(batchProcessDetailArgumentCaptor.capture());
 
-    Mockito.when(stepExecution.getJobExecution()).thenReturn(jobExecution);
+    when(stepExecution.getJobExecution()).thenReturn(jobExecution);
     StepSynchronizationManager.register(stepExecution);
   }
 
@@ -90,7 +88,7 @@ class LoadFileContentsChunkListenerTest {
   void beforeChunk() throws PublishingException {
     listener.beforeChunk(chunk);
 
-    final ProcessComicBooksStatus status = processComicStatusArgumentCaptor.getValue();
+    final ProcessComicsStatus status = processComicStatusArgumentCaptor.getValue();
 
     assertNotNull(status);
     assertTrue(status.isActive());
@@ -98,14 +96,14 @@ class LoadFileContentsChunkListenerTest {
     assertEquals(TEST_TOTAL_COMICS, status.getTotal());
     assertEquals(TEST_TOTAL_COMICS - TEST_PROCESSED_COMICS, status.getProcessed());
 
-    Mockito.verify(publishProcessComicBooksStatusAction, Mockito.times(1)).publish(status);
+    verify(publishProcessComicsStatusAction).publish(status);
   }
 
   @Test
   void afterChunk() throws PublishingException {
     listener.afterChunk(chunk);
 
-    final ProcessComicBooksStatus status = processComicStatusArgumentCaptor.getValue();
+    final ProcessComicsStatus status = processComicStatusArgumentCaptor.getValue();
 
     assertNotNull(status);
     assertTrue(status.isActive());
@@ -113,14 +111,14 @@ class LoadFileContentsChunkListenerTest {
     assertEquals(TEST_TOTAL_COMICS, status.getTotal());
     assertEquals(TEST_TOTAL_COMICS - TEST_PROCESSED_COMICS, status.getProcessed());
 
-    Mockito.verify(publishProcessComicBooksStatusAction, Mockito.times(1)).publish(status);
+    verify(publishProcessComicsStatusAction).publish(status);
   }
 
   @Test
   void afterChunkError() throws PublishingException {
     listener.onChunkError(new RuntimeException(), chunk);
 
-    final ProcessComicBooksStatus status = processComicStatusArgumentCaptor.getValue();
+    final ProcessComicsStatus status = processComicStatusArgumentCaptor.getValue();
 
     assertNotNull(status);
     assertTrue(status.isActive());
@@ -128,14 +126,14 @@ class LoadFileContentsChunkListenerTest {
     assertEquals(TEST_TOTAL_COMICS, status.getTotal());
     assertEquals(TEST_TOTAL_COMICS - TEST_PROCESSED_COMICS, status.getProcessed());
 
-    Mockito.verify(publishProcessComicBooksStatusAction, Mockito.times(1)).publish(status);
+    verify(publishProcessComicsStatusAction).publish(status);
   }
 
   @Test
   void afterChunk_publishingException() throws PublishingException {
     listener.beforeChunk(chunk);
 
-    final ProcessComicBooksStatus status = processComicStatusArgumentCaptor.getValue();
+    final ProcessComicsStatus status = processComicStatusArgumentCaptor.getValue();
 
     assertNotNull(status);
     assertTrue(status.isActive());
@@ -143,6 +141,6 @@ class LoadFileContentsChunkListenerTest {
     assertEquals(TEST_TOTAL_COMICS, status.getTotal());
     assertEquals(TEST_TOTAL_COMICS - TEST_PROCESSED_COMICS, status.getProcessed());
 
-    Mockito.verify(publishProcessComicBooksStatusAction, Mockito.times(1)).publish(status);
+    verify(publishProcessComicsStatusAction).publish(status);
   }
 }

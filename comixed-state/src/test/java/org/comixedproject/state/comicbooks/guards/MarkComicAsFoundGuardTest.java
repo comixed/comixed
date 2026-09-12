@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
-import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.model.comicbooks.Comic;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,7 +36,7 @@ class MarkComicAsFoundGuardTest {
   private static final String TEST_EXISTING_FILE = "src/test/resources/example.cbz";
 
   @InjectMocks private MarkComicAsFoundGuard guard;
-  @Mock private ComicDetail comic;
+  @Mock private Comic comic;
 
   @BeforeEach
   void setUp() {

@@ -55,7 +55,7 @@ public class DisplayableComicRepositoryTest {
   private List<Long> idList = new ArrayList<>();
 
   @Before
-  public void setUp() {
+  void setUp() {
     idList.add(2000L);
     idList.add(2001L);
     idList.add(2002L);

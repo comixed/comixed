@@ -29,7 +29,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Log4j2
-public class ProcessUnhashedComicsWriter extends AbstractComicBookWriter {
+public class ProcessUnhashedComicsWriter extends AbstractComicWriter {
   public ProcessUnhashedComicsWriter() {
     super(ComicEvent.comicPageHashesLoaded);
   }

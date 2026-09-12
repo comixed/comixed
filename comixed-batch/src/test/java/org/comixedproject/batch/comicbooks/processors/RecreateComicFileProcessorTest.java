@@ -25,10 +25,9 @@ import static org.mockito.Mockito.*;
 
 import java.io.File;
 import org.comixedproject.adaptors.AdaptorException;
-import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
+import org.comixedproject.adaptors.comicbooks.ComicAdaptor;
 import org.comixedproject.model.archives.ArchiveType;
-import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.service.admin.ConfigurationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,24 +47,22 @@ class RecreateComicFileProcessorTest {
 
   @InjectMocks private RecreateComicFileProcessor processor;
   @Mock private ConfigurationService configurationService;
-  @Mock private ComicBookAdaptor comicBookAdaptor;
+  @Mock private ComicAdaptor comicAdaptor;
   @Mock private File comicFile;
-  @Mock private ComicDetail comicDetail;
-  @Mock private ComicBook comicBook;
+  @Mock private Comic comic;
 
   @BeforeEach
   void setUp() {
     when(comicFile.exists()).thenReturn(true);
     when(comicFile.isFile()).thenReturn(true);
-    when(comicDetail.isMissing()).thenReturn(false);
-    when(comicDetail.getFile()).thenReturn(comicFile);
-    when(comicBook.getComicDetail()).thenReturn(comicDetail);
-    when(comicBook.isFileContentsLoaded()).thenReturn(true);
-    when(comicBook.isPurging()).thenReturn(false);
-    when(comicBook.isBatchMetadataUpdate()).thenReturn(false);
-    when(comicBook.isEditDetails()).thenReturn(false);
-    when(comicBook.isUpdateMetadata()).thenReturn(false);
-    when(comicBook.getTargetArchiveType()).thenReturn(TEST_TARGET_ARCHIVE);
+    when(comic.isMissing()).thenReturn(false);
+    when(comic.getFile()).thenReturn(comicFile);
+    when(comic.isLoadingFileContents()).thenReturn(false);
+    when(comic.isPurging()).thenReturn(false);
+    when(comic.isBatchUpdatingMetadata()).thenReturn(false);
+    when(comic.isEditingMetadata()).thenReturn(false);
+    when(comic.isUpdatingMetadata()).thenReturn(false);
+    when(comic.getTargetArchiveType()).thenReturn(TEST_TARGET_ARCHIVE);
     when(configurationService.getOptionValue(
             ConfigurationService.CFG_LIBRARY_PAGE_RENAMING_RULE, ""))
         .thenReturn(TEST_PAGE_RENAMING_RULE);
@@ -73,91 +70,91 @@ class RecreateComicFileProcessorTest {
 
   @Test
   void process_missing() throws Exception {
-    when(comicDetail.isMissing()).thenReturn(true);
+    when(comic.isMissing()).thenReturn(true);
 
-    assertNull(processor.process(comicBook));
+    assertNull(processor.process(comic));
   }
 
   @Test
   void process_fileContentsNotLoaded() throws Exception {
-    when(comicBook.isFileContentsLoaded()).thenReturn(false);
+    when(comic.isLoadingFileContents()).thenReturn(true);
 
-    assertNull(processor.process(comicBook));
+    assertNull(processor.process(comic));
   }
 
   @Test
   void process_isPurging() throws Exception {
-    when(comicBook.isPurging()).thenReturn(true);
+    when(comic.isPurging()).thenReturn(true);
 
-    assertNull(processor.process(comicBook));
+    assertNull(processor.process(comic));
   }
 
   @Test
   void process_isBatchMetadataUpdate() throws Exception {
-    when(comicBook.isBatchMetadataUpdate()).thenReturn(true);
+    when(comic.isBatchUpdatingMetadata()).thenReturn(true);
 
-    assertNull(processor.process(comicBook));
+    assertNull(processor.process(comic));
   }
 
   @Test
   void process_isEditDetails() throws Exception {
-    when(comicBook.isEditDetails()).thenReturn(true);
+    when(comic.isEditingMetadata()).thenReturn(true);
 
-    assertNull(processor.process(comicBook));
+    assertNull(processor.process(comic));
   }
 
   @Test
   void process_isUpdateMetadata() throws Exception {
-    when(comicBook.isUpdateMetadata()).thenReturn(true);
+    when(comic.isUpdatingMetadata()).thenReturn(true);
 
-    assertNull(processor.process(comicBook));
+    assertNull(processor.process(comic));
   }
 
   @Test
   void process_adaptorExceptionOnSave() throws Exception {
     doThrow(AdaptorException.class)
-        .when(comicBookAdaptor)
-        .save(Mockito.any(ComicBook.class), Mockito.any(ArchiveType.class), Mockito.anyString());
+        .when(comicAdaptor)
+        .save(Mockito.any(Comic.class), Mockito.any(ArchiveType.class), Mockito.anyString());
 
-    final ComicBook result = processor.process(comicBook);
+    final Comic result = processor.process(comic);
 
     assertNotNull(result);
-    assertSame(comicBook, result);
+    assertSame(comic, result);
 
-    verify(comicBookAdaptor).save(comicBook, TEST_TARGET_ARCHIVE, TEST_PAGE_RENAMING_RULE);
+    verify(comicAdaptor).save(comic, TEST_TARGET_ARCHIVE, TEST_PAGE_RENAMING_RULE);
   }
 
   @Test
   void process_sourceNotFound() throws Exception {
     when(comicFile.exists()).thenReturn(false);
 
-    final ComicBook result = processor.process(comicBook);
+    final Comic result = processor.process(comic);
 
     assertNotNull(result);
-    assertSame(comicBook, result);
+    assertSame(comic, result);
 
-    verify(comicBookAdaptor, never()).save(Mockito.any(), Mockito.any(), Mockito.anyString());
+    verify(comicAdaptor, never()).save(Mockito.any(), Mockito.any(), Mockito.anyString());
   }
 
   @Test
   void process_sourceNotFile() throws Exception {
     when(comicFile.isFile()).thenReturn(false);
 
-    final ComicBook result = processor.process(comicBook);
+    final Comic result = processor.process(comic);
 
     assertNotNull(result);
-    assertSame(comicBook, result);
+    assertSame(comic, result);
 
-    verify(comicBookAdaptor, never()).save(Mockito.any(), Mockito.any(), Mockito.anyString());
+    verify(comicAdaptor, never()).save(Mockito.any(), Mockito.any(), Mockito.anyString());
   }
 
   @Test
   void process() throws Exception {
-    final ComicBook result = processor.process(comicBook);
+    final Comic result = processor.process(comic);
 
     assertNotNull(result);
-    assertSame(comicBook, result);
+    assertSame(comic, result);
 
-    verify(comicBookAdaptor).save(comicBook, TEST_TARGET_ARCHIVE, TEST_PAGE_RENAMING_RULE);
+    verify(comicAdaptor).save(comic, TEST_TARGET_ARCHIVE, TEST_PAGE_RENAMING_RULE);
   }
 }

@@ -21,8 +21,7 @@ package org.comixedproject.batch.comicbooks.writers;
 import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
-import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateAdaptor;
 import org.junit.jupiter.api.Test;
@@ -36,19 +35,17 @@ import org.springframework.batch.infrastructure.item.Chunk;
 class LoadFileContentsWriterTest {
   @InjectMocks private LoadFileContentsWriter writer;
   @Mock private ComicStateAdaptor comicStateAdaptor;
-  @Mock private ComicBook comicBook;
-  @Mock private ComicDetail comic;
+  @Mock private Comic comic;
 
-  private Chunk<ComicBook> comicBookList = new Chunk<>(new ArrayList<>());
+  private Chunk<Comic> comicList = new Chunk<>(new ArrayList<>());
 
   @Test
   void write() {
-    for (int index = 0; index < 25; index++) comicBookList.add(comicBook);
-    when(comicBook.getComicDetail()).thenReturn(comic);
+    for (int index = 0; index < 25; index++) comicList.add(comic);
 
-    writer.write(comicBookList);
+    writer.write(comicList);
 
-    verify(comicStateAdaptor, times(comicBookList.size()))
+    verify(comicStateAdaptor, times(comicList.size()))
         .fireEvent(comic, ComicEvent.comicFileContentsLoaded);
   }
 }

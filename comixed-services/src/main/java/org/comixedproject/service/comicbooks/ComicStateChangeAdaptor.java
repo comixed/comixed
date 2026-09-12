@@ -23,8 +23,8 @@ import java.util.List;
 import java.util.Set;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.messaging.PublishingException;
-import org.comixedproject.messaging.comicbooks.PublishComicBookRemovalAction;
-import org.comixedproject.messaging.comicbooks.PublishComicBookUpdateAction;
+import org.comixedproject.messaging.comicbooks.PublishComicRemovalAction;
+import org.comixedproject.messaging.comicbooks.PublishComicUpdateAction;
 import org.comixedproject.model.comicbooks.*;
 import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.model.library.DisplayableComic;
@@ -44,10 +44,10 @@ import org.springframework.stereotype.Component;
 @Component
 @Log4j2
 public class ComicStateChangeAdaptor implements InitializingBean, ComicStateListener {
-  @Autowired private ComicDetailService comicDetailService;
+  @Autowired private ComicService comicService;
   @Autowired private ComicStateAdaptor comicStateAdaptor;
-  @Autowired private PublishComicBookUpdateAction publishComicBookUpdateAction;
-  @Autowired private PublishComicBookRemovalAction publishComicBookRemovalAction;
+  @Autowired private PublishComicUpdateAction publishComicUpdateAction;
+  @Autowired private PublishComicRemovalAction publishComicRemovalAction;
   @Autowired private DisplayableComicService displayableComicService;
 
   @Override
@@ -57,26 +57,26 @@ public class ComicStateChangeAdaptor implements InitializingBean, ComicStateList
   }
 
   @Override
-  public void onComicStateChanged(final ComicDetail comic) {
+  public void onComicStateChanged(final Comic comic) {
     try {
       if (comic.getState().equals(ComicState.REMOVED)) {
         log.debug("Comic book deleted");
-        this.publishComicBookRemovalAction.publish(
-            this.displayableComicService.getForComicBookId(comic.getComicId()));
+        this.publishComicRemovalAction.publish(
+            this.displayableComicService.getForComicBookId(comic.getComicDetailId()));
       } else {
         log.debug("Saving updated comic book");
         comic.setLastModifiedDate(new Date());
-        final ComicDetail updated = this.comicDetailService.save(comic);
+        final Comic updated = this.comicService.save(comic);
         final DisplayableComic details =
-            this.displayableComicService.getForComicBookId(updated.getComicId());
+            this.displayableComicService.getForComicBookId(updated.getComicDetailId());
         final List<ComicPage> pages = updated.getPages();
         final ComicMetadataSource metadata = updated.getMetadata();
         final Set<ComicTag> tags = updated.getTags();
 
-        this.publishComicBookUpdateAction.publish(
-            new ComicBookData(details, pages, metadata, tags.stream().toList()));
+        this.publishComicUpdateAction.publish(
+            new ComicDataSet(details, pages, metadata, tags.stream().toList()));
       }
-    } catch (PublishingException | ComicBookException error) {
+    } catch (PublishingException | ComicException error) {
       log.error("Failed to publish comic state change", error);
     }
   }

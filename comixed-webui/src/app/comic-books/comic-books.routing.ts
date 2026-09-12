@@ -18,13 +18,13 @@
 
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
-import { ComicBookPageComponent } from '@app/comic-books/pages/comic-book-page/comic-book-page.component';
+import { ComicDetailsPageComponent } from '@app/comic-books/pages/comic-details-page/comic-details-page.component';
 import { ReaderGuard } from '@app/user';
 
 const routes: Routes = [
   {
     path: 'comics/:comicId',
-    component: ComicBookPageComponent,
+    component: ComicDetailsPageComponent,
     canActivate: [ReaderGuard]
   }
 ];

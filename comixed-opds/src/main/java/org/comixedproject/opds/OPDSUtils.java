@@ -24,10 +24,10 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
-import org.comixedproject.adaptors.comicbooks.ComicBookMetadataAdaptor;
+import org.comixedproject.adaptors.comicbooks.ComicAdaptor;
+import org.comixedproject.adaptors.comicbooks.ComicMetadataAdaptor;
 import org.comixedproject.adaptors.file.FileTypeAdaptor;
-import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicbooks.ComicTagType;
 import org.comixedproject.opds.model.OPDSAcquisitionFeedContent;
 import org.comixedproject.opds.model.OPDSAcquisitionFeedEntry;
@@ -52,37 +52,37 @@ public class OPDSUtils {
   public static final String ENCODED_SLASH = "[SLASH]";
 
   @Autowired private FileTypeAdaptor fileTypeAdaptor;
-  @Autowired private ComicBookAdaptor comicBookAdaptor;
-  @Autowired private ComicBookMetadataAdaptor comicBookMetadataAdaptor;
+  @Autowired private ComicAdaptor comicAdaptor;
+  @Autowired private ComicMetadataAdaptor comicMetadataAdaptor;
 
   /**
    * Creates a link for the given comicBook.
    *
-   * @param comicDetail the comicBook
+   * @param comic the comicBook
    * @return the link
    */
-  public OPDSLink createComicLink(final ComicDetail comicDetail) {
+  public OPDSLink createComicLink(final Comic comic) {
     return new OPDSLink(
-        comicDetail.getArchiveType().getMimeType(),
+        comic.getArchiveType().getMimeType(),
         OPDS_ACQUISITION_RELATION,
         String.format(
             COMIC_LINK_URL,
-            comicDetail.getComicId(),
-            this.urlEncodeString(comicDetail.getBaseFilename())));
+            comic.getComicDetailId(),
+            this.urlEncodeString(comic.getBaseFilename())));
   }
 
-  public OPDSLink createComicCoverLink(final ComicDetail comicDetail) {
+  public OPDSLink createComicCoverLink(final Comic comic) {
     return new OPDSLink(
         MIME_TYPE_IMAGE,
         OPDS_IMAGE_RELATION,
-        String.format(COMIC_COVER_URL, comicDetail.getComicId(), 0, 160));
+        String.format(COMIC_COVER_URL, comic.getComicDetailId(), 0, 160));
   }
 
-  public OPDSLink createComicThumbnailLink(final ComicDetail comicDetail) {
+  public OPDSLink createComicThumbnailLink(final Comic comic) {
     return new OPDSLink(
         MIME_TYPE_IMAGE,
         OPDS_IMAGE_THUMBNAIL,
-        String.format(COMIC_COVER_URL, comicDetail.getComicId(), 0, 160));
+        String.format(COMIC_COVER_URL, comic.getComicDetailId(), 0, 160));
   }
 
   /**
@@ -120,19 +120,19 @@ public class OPDSUtils {
   /**
    * Creates a well-formed entry for a comicBook book.
    *
-   * @param comicDetail the comicBook
+   * @param comic the comicBook
    * @return the entry
    */
-  public OPDSAcquisitionFeedEntry createComicEntry(final ComicDetail comicDetail) {
+  public OPDSAcquisitionFeedEntry createComicEntry(final Comic comic) {
     final OPDSAcquisitionFeedEntry result =
         new OPDSAcquisitionFeedEntry(
-            this.comicBookMetadataAdaptor.getDisplayableTitle(comicDetail),
-            String.valueOf(comicDetail.getComicDetailId()));
+            this.comicMetadataAdaptor.getDisplayableTitle(comic),
+            String.valueOf(comic.getComicDetailId()));
     log.trace("Setting comicBook link");
-    result.getLinks().add(this.createComicCoverLink(comicDetail));
-    result.getLinks().add(this.createComicThumbnailLink(comicDetail));
-    result.getLinks().add(this.createComicLink(comicDetail));
-    result.setContent(new OPDSAcquisitionFeedContent(comicDetail.getBaseFilename()));
+    result.getLinks().add(this.createComicCoverLink(comic));
+    result.getLinks().add(this.createComicThumbnailLink(comic));
+    result.getLinks().add(this.createComicLink(comic));
+    result.setContent(new OPDSAcquisitionFeedContent(comic.getBaseFilename()));
     return result;
   }
 

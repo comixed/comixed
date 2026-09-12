@@ -27,12 +27,12 @@ import java.util.Set;
 import javax.imageio.ImageIO;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.GenericUtilitiesAdaptor;
-import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.model.comicpages.ComicPageType;
 import org.comixedproject.repositories.comicpages.ComicPageRepository;
-import org.comixedproject.service.comicbooks.ComicBookException;
-import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.comicbooks.ComicException;
+import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateAdaptor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +49,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Log4j2
 public class ComicPageService {
   @Autowired private ComicPageRepository comicPageRepository;
-  @Autowired private ComicBookService comicBookService;
+  @Autowired private ComicService comicService;
   @Autowired private ComicStateAdaptor comicStateAdaptor;
   @Autowired private GenericUtilitiesAdaptor genericUtilitiesAdaptor;
 
@@ -72,15 +72,15 @@ public class ComicPageService {
    * @param comicId the comic record id
    * @param pageIndex the page index
    * @return the content
-   * @throws ComicBookException if the comic does not exist
+   * @throws ComicException if the comic does not exist
    */
   public ComicPage getPageInComicByIndex(final long comicId, final int pageIndex)
-      throws ComicBookException {
+      throws ComicException {
     log.debug(
         "Getting page content for comicBook: comicBook id={} page index={}", comicId, pageIndex);
 
     log.debug("Fetching comicBook: id={}", comicId);
-    final ComicBook comicBook = this.comicBookService.getComic(comicId);
+    final Comic comicBook = this.comicService.getComic(comicId);
 
     if (comicBook != null) {
       if (pageIndex < comicBook.getPageCount()) {
@@ -163,12 +163,10 @@ public class ComicPageService {
       final ComicPage page = this.comicPageRepository.getById(id);
       if (deleted) {
         page.setPageType(ComicPageType.DELETED);
-        this.comicStateAdaptor.fireEvent(
-            page.getComicDetail(), ComicEvent.comicPageMarkedForRemoval);
+        this.comicStateAdaptor.fireEvent(page.getComic(), ComicEvent.comicPageMarkedForRemoval);
       } else {
         page.setPageType(ComicPageType.STORY);
-        this.comicStateAdaptor.fireEvent(
-            page.getComicDetail(), ComicEvent.comicPageUnmarkedForRemoval);
+        this.comicStateAdaptor.fireEvent(page.getComic(), ComicEvent.comicPageUnmarkedForRemoval);
       }
     }
   }

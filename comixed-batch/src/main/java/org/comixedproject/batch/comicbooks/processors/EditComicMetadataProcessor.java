@@ -18,10 +18,10 @@
 
 package org.comixedproject.batch.comicbooks.processors;
 
-import static org.comixedproject.batch.comicbooks.EditComicBookMetadataConfiguration.*;
+import static org.comixedproject.batch.comicbooks.EditComicMetadataConfiguration.*;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicbooks.ComicType;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.job.parameters.JobParameters;
@@ -40,16 +40,17 @@ import org.springframework.util.StringUtils;
 @StepScope
 @Log4j2
 public class EditComicMetadataProcessor
-    implements ItemProcessor<ComicBook, ComicBook>, StepExecutionListener {
+    implements ItemProcessor<Comic, Comic>, StepExecutionListener {
   private JobParameters jobParameters;
 
   @Override
-  public ComicBook process(final ComicBook comicBook) throws Exception {
-    if (comicBook.isFileContentsLoaded() == false
+  public Comic process(final Comic comicBook) throws Exception {
+    if (comicBook.isLoadingFileContents()
         || comicBook.isPurging()
-        || comicBook.isBatchMetadataUpdate()) {
+        || comicBook.isBatchUpdatingMetadata()) {
       log.debug(
-          "Comic book not ready for metadata update, skipping: id={}", comicBook.getComicBookId());
+          "Comic book not ready for metadata update, skipping: id={}",
+          comicBook.getComicDetailId());
       return null;
     }
     log.trace("Loading job parameters");
@@ -62,30 +63,30 @@ public class EditComicMetadataProcessor
 
     if (StringUtils.hasLength(publisher)) {
       log.debug("Setting publisher to {}", publisher);
-      comicBook.getComicDetail().setPublisher(publisher);
+      comicBook.setPublisher(publisher);
     }
     if (StringUtils.hasLength(series)) {
       log.debug("Setting series to {}", series);
-      comicBook.getComicDetail().setSeries(series);
+      comicBook.setSeries(series);
     }
     if (StringUtils.hasLength(volume)) {
       log.debug("Setting volume to {}", volume);
-      comicBook.getComicDetail().setVolume(volume);
+      comicBook.setVolume(volume);
     }
     if (StringUtils.hasLength(issueNumber)) {
       log.debug("Setting issue number to {}", issueNumber);
-      comicBook.getComicDetail().setIssueNumber(issueNumber);
+      comicBook.setIssueNumber(issueNumber);
     }
     if (StringUtils.hasLength(imprint)) {
       log.debug("Setting imprint to {}", imprint);
-      comicBook.getComicDetail().setImprint(imprint);
+      comicBook.setImprint(imprint);
     }
     if (StringUtils.hasLength(comicType)) {
       log.debug("Setting comic type: {}", comicType);
-      comicBook.getComicDetail().setComicType(ComicType.valueOf(comicType));
+      comicBook.setComicType(ComicType.valueOf(comicType));
     }
 
-    comicBook.setEditDetails(false);
+    comicBook.setEditingMetadata(false);
 
     return comicBook;
   }

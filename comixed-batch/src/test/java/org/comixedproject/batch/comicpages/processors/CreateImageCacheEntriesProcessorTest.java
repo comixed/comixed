@@ -18,7 +18,7 @@
 
 package org.comixedproject.batch.comicpages.processors;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.service.comicpages.PageCacheService;
@@ -41,7 +41,7 @@ class CreateImageCacheEntriesProcessorTest {
   private byte[] cachedPage = "THis is the cached page".getBytes();
 
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     Mockito.when(page.getHash()).thenReturn(TEST_PAGE_HASH);
   }
 

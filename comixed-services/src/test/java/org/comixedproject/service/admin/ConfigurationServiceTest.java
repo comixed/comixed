@@ -51,7 +51,7 @@ class ConfigurationServiceTest {
   private List<ConfigurationOption> optionList = new ArrayList<>();
 
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     optionList.add(option);
     Mockito.when(option.getName()).thenReturn(TEST_OPTION_NAME);
     Mockito.when(option.getValue()).thenReturn(TEST_OPTION_VALUE);

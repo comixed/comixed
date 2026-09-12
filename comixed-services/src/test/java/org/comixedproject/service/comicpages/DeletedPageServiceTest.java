@@ -29,7 +29,7 @@ import org.comixedproject.model.comicpages.DeletedPage;
 import org.comixedproject.model.comicpages.DeletedPageAndComic;
 import org.comixedproject.model.library.DisplayableComic;
 import org.comixedproject.repositories.comicpages.ComicPageRepository;
-import org.comixedproject.service.comicbooks.ComicBookException;
+import org.comixedproject.service.comicbooks.ComicException;
 import org.comixedproject.service.library.DisplayableComicService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -51,12 +51,12 @@ class DeletedPageServiceTest {
   private List<DeletedPageAndComic> deletedPageList = new ArrayList<>();
 
   @Test
-  void loadAll_comicPageException() throws ComicBookException {
+  void loadAll_comicPageException() throws ComicException {
     deletedPageList.add(deletedPage);
     when(comicPageRepository.loadAllDeletedPages()).thenReturn(deletedPageList);
     when(deletedPage.getHash()).thenReturn(TEST_PAGE_HASH);
     when(deletedPage.getComicId()).thenReturn(TEST_COMIC_ID);
-    when(displayableComicService.getForComicBookId(anyLong())).thenThrow(ComicBookException.class);
+    when(displayableComicService.getForComicBookId(anyLong())).thenThrow(ComicException.class);
 
     assertThrows(ComicPageException.class, () -> service.loadAll());
 
@@ -65,7 +65,7 @@ class DeletedPageServiceTest {
   }
 
   @Test
-  void loadAll() throws ComicPageException, ComicBookException {
+  void loadAll() throws ComicPageException, ComicException {
     deletedPageList.add(deletedPage);
     when(comicPageRepository.loadAllDeletedPages()).thenReturn(deletedPageList);
     when(deletedPage.getHash()).thenReturn(TEST_PAGE_HASH);

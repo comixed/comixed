@@ -64,7 +64,7 @@ class AddPagesToImageCacheInitiatorTest {
   @Captor private ArgumentCaptor<JobParameters> jobParametersArgumentCaptor;
 
   @BeforeEach
-  public void setUp()
+  void setUp()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
           InvalidJobParametersException,

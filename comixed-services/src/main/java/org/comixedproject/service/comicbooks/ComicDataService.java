@@ -26,9 +26,8 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.comixedproject.adaptors.file.FileTypeAdaptor;
-import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.comicbooks.ComicBookData;
-import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicDataSet;
 import org.comixedproject.model.comicbooks.ComicType;
 import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.model.library.DisplayableComic;
@@ -53,8 +52,7 @@ import org.springframework.util.StringUtils;
 @Log4j2
 public class ComicDataService {
   @Autowired private DisplayableComicService displayableComicService;
-  @Autowired private ComicBookService comicBookService;
-  @Autowired private ComicDetailService comicDetailService;
+  @Autowired private ComicService comicService;
   @Autowired private ComicPageService comicPageService;
   @Autowired private ComicMetadataSourceService comicMetadataSourceService;
   @Autowired private ComicTagService comicTagService;
@@ -67,9 +65,9 @@ public class ComicDataService {
    *
    * @param comicId the comic id
    * @return the comic's data
-   * @throws ComicBookException if the id is invalid
+   * @throws ComicException if the id is invalid
    */
-  public ComicBookData getComic(final long comicId) throws ComicBookException {
+  public ComicDataSet getComic(final long comicId) throws ComicException {
     log.debug("Loading comic: id={}", comicId);
     return this.doLoadComicBookData(comicId);
   }
@@ -79,12 +77,12 @@ public class ComicDataService {
    *
    * @param comicId the comic id
    * @return the content
-   * @throws ComicBookException if the id is invalid
+   * @throws ComicException if the id is invalid
    */
-  public DownloadDocument getComicContent(final long comicId) throws ComicBookException {
+  public DownloadDocument getComicContent(final long comicId) throws ComicException {
     log.debug("Loading contents for file: {}", comicId);
-    final ComicBook comicBook = this.comicBookService.getComic(comicId);
-    final String filename = comicBook.getComicDetail().getFilename();
+    final Comic comic = this.comicService.getComic(comicId);
+    final String filename = comic.getFilename();
     final String baseFilename = FilenameUtils.getName(filename);
 
     try {
@@ -95,7 +93,7 @@ public class ComicDataService {
           this.fileTypeAdaptor.getMimeTypeFor(new ByteArrayInputStream(content)),
           content);
     } catch (IOException error) {
-      throw new ComicBookException("Failed to load comic file content", error);
+      throw new ComicException("Failed to load comic file content", error);
     }
   }
 
@@ -104,33 +102,32 @@ public class ComicDataService {
    *
    * @param comicId the comic id
    * @param pageOrderEntryList the newly ordered pages
-   * @throws ComicBookException if the comic id is invalid
+   * @throws ComicException if the comic id is invalid
    */
   public void savePageOrder(final long comicId, final List<PageOrderEntry> pageOrderEntryList)
-      throws ComicBookException {
-    log.trace("Loading comicBook: id={}", comicId);
-    final ComicBook comicBook = this.comicBookService.getComic(comicId);
-    final ComicDetail comic = comicBook.getComicDetail();
+      throws ComicException {
+    log.trace("Loading comic: id={}", comicId);
+    final Comic comic = this.comicService.getComic(comicId);
     log.trace("Sorting new page list");
     pageOrderEntryList.sort(Comparator.comparingInt(PageOrderEntry::getPosition));
     log.trace("Checking for holes in order");
     for (int index = 0; index < pageOrderEntryList.size(); index++) {
       final PageOrderEntry entry = pageOrderEntryList.get(index);
       if (entry.getPosition() != index)
-        throw new ComicBookException(
+        throw new ComicException(
             String.format("Invalid page order list: %d != %d", index, entry.getPosition()));
     }
 
     log.trace("Applying order");
-    for (int index = 0; index < comicBook.getPages().size(); index++) {
-      final ComicPage page = comicBook.getPages().get(index);
+    for (int index = 0; index < comic.getPages().size(); index++) {
+      final ComicPage page = comic.getPages().get(index);
       if (Objects.nonNull(page)) {
         final Optional<PageOrderEntry> position =
             pageOrderEntryList.stream()
                 .filter(pageOrderEntry -> pageOrderEntry.getFilename().equals(page.getFilename()))
                 .findFirst();
         if (position.isEmpty())
-          throw new ComicBookException(
+          throw new ComicException(
               String.format("No such order entry: filename=%s", page.getFilename()));
         log.trace("Applying position");
         page.setPageNumber(position.get().getPosition());
@@ -141,7 +138,7 @@ public class ComicDataService {
     this.comicStateAdaptor.fireEvent(comic, ComicEvent.comicMetadataChanged);
   }
 
-  public ComicBookData updateComic(
+  public ComicDataSet updateComic(
       final long comicBookId,
       final ComicType comicType,
       final String publisher,
@@ -153,10 +150,10 @@ public class ComicDataService {
       final String title,
       final Date coverDate,
       final Date storeDate)
-      throws ComicBookException {
+      throws ComicException {
     log.debug("Updating comic: id={}", comicBookId);
     try {
-      final ComicDetail comic = this.comicDetailService.getByComicBookId(comicBookId);
+      final Comic comic = this.comicService.getByComicBookId(comicBookId);
 
       log.trace("Updating the comic fields");
 
@@ -183,12 +180,12 @@ public class ComicDataService {
         comic.setStoreDate(storeDate);
       }
 
-      this.imprintService.update(comic.getComicBook());
+      this.imprintService.update(comic);
 
       this.comicStateAdaptor.fireEvent(comic, ComicEvent.comicMetadataChanged);
       return this.doLoadComicBookData(comicBookId);
-    } catch (ComicDetailException error) {
-      throw new ComicBookException("Failed to update comic metadata", error);
+    } catch (ComicException error) {
+      throw new ComicException("Failed to update comic metadata", error);
     }
   }
 
@@ -196,9 +193,9 @@ public class ComicDataService {
    * Marks a comic for removal from the library.
    *
    * @param comicId the comic id
-   * @throws ComicBookException
+   * @throws ComicException
    */
-  public void deleteComicBook(final long comicId) throws ComicBookException {
+  public void deleteComicBook(final long comicId) throws ComicException {
     log.debug("Marking comic for removal: id={}", comicId);
     doFireEvent(comicId, ComicEvent.markComicForRemoval);
   }
@@ -207,9 +204,9 @@ public class ComicDataService {
    * Unmarks a comic for removal from the library.
    *
    * @param comicId the comic id
-   * @throws ComicBookException
+   * @throws ComicException
    */
-  public void undeleteComicBook(final long comicId) throws ComicBookException {
+  public void undeleteComicBook(final long comicId) throws ComicException {
     log.debug("Unmarking comic for removal: id={}", comicId);
     doFireEvent(comicId, ComicEvent.unmarkComicForRemoval);
   }
@@ -218,10 +215,10 @@ public class ComicDataService {
    * Marks all comics in a given id list for removal.
    *
    * @param comicIdList the comic id list
-   * @throws ComicBookException if any of the ids are invalid
+   * @throws ComicException if any of the ids are invalid
    */
-  @Transactional
-  public void deleteComicBooksById(final List<Long> comicIdList) throws ComicBookException {
+  @Transactional(rollbackFor = Exception.class)
+  public void deleteComicBooksById(final List<Long> comicIdList) throws ComicException {
     for (int index = 0; index < comicIdList.size(); index++) {
       this.doFireEvent(comicIdList.get(index), ComicEvent.markComicForRemoval);
     }
@@ -231,27 +228,27 @@ public class ComicDataService {
    * Unmarks all comics in a given id list for removal.
    *
    * @param comicIdList the comic id list
-   * @throws ComicBookException if any of the ids are invalid
+   * @throws ComicException if any of the ids are invalid
    */
-  public void undeleteComicBooksById(final List<Long> comicIdList) throws ComicBookException {
+  public void undeleteComicBooksById(final List<Long> comicIdList) throws ComicException {
     for (int index = 0; index < comicIdList.size(); index++) {
       this.doFireEvent(comicIdList.get(index), ComicEvent.unmarkComicForRemoval);
     }
   }
 
-  private void doFireEvent(final long comicId, final ComicEvent event) throws ComicBookException {
+  private void doFireEvent(final long comicId, final ComicEvent event) throws ComicException {
     log.debug("Firing comic event: id={} event={}", comicId, event);
     try {
-      final ComicDetail comic = this.comicDetailService.getByComicBookId(comicId);
+      final Comic comic = this.comicService.getByComicBookId(comicId);
       this.comicStateAdaptor.fireEvent(comic, event);
-    } catch (ComicDetailException error) {
-      throw new ComicBookException(
+    } catch (ComicException error) {
+      throw new ComicException(
           String.format("Failed to fire comic event: id=%d event=%s", comicId, event), error);
     }
   }
 
-  private ComicBookData doLoadComicBookData(final long comicId) throws ComicBookException {
-    return new ComicBookData(
+  private ComicDataSet doLoadComicBookData(final long comicId) throws ComicException {
+    return new ComicDataSet(
         this.displayableComicService.getForComicBookId(comicId),
         this.comicPageService.getPagesForComicBook(comicId),
         this.comicMetadataSourceService.getMetadataForComicBook(comicId),

@@ -44,7 +44,7 @@ class OrganizeLibraryJobListenerTest {
   @Captor ArgumentCaptor<BatchProcessDetail> batchProcessDetailArgumentCaptor;
 
   @BeforeEach
-  public void setUp() throws PublishingException {
+  void setUp() throws PublishingException {
     Mockito.when(jobExecution.getJobParameters()).thenReturn(jobParameters);
     Mockito.when(jobInstance.getJobName()).thenReturn(ORGANIZE_LIBRARY_JOB);
     Mockito.when(jobExecution.getJobInstance()).thenReturn(jobInstance);

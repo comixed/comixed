@@ -270,7 +270,7 @@
         <mat-cell *matCellDef="let entry">
           <span class="cx-width-100 cx-text-nowrap cx-padding-5">
             <a
-              [routerLink]="['/comics', entry.item.comicBookId]"
+              [routerLink]="['/comics', entry.item.comicDetailId]"
               (click)="$event.stopImmediatePropagation()"
             >
               {{ entry.item.issueNumber }}
@@ -322,10 +322,10 @@
       <mat-row
         *matRowDef="let row; columns: displayedColumns"
         [class.cx-selected-row]="
-          selectedIds.includes(row.comicBookId) || row.selected
+          selectedIds.includes(row.comicDetailId) || row.selected
         "
         [class.cx-missing-comic-file]="row.item.missing"
-        [routerLink]="['/comics', row.item.comicBookId]"
+        [routerLink]="['/comics', row.item.comicDetailId]"
       ></mat-row>
       <tr class="mat-row" *matNoDataRow>
         <td class="mat-cell" colspan="4">

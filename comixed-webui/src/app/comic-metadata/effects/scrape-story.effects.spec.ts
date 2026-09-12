@@ -21,7 +21,7 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of, throwError } from 'rxjs';
 
 import { ScrapeStoryEffects } from './scrape-story.effects';
-import { ComicBookScrapingService } from '@app/comic-metadata/services/comic-book-scraping.service';
+import { ComicScrapingService } from '@app/comic-metadata/services/comic-scraping.service';
 import {
   STORY_METADATA_1,
   STORY_METADATA_2,
@@ -56,7 +56,7 @@ describe('ScrapeStoryEffects', () => {
 
   let actions$: Observable<any>;
   let effects: ScrapeStoryEffects;
-  let comicBookScrapingService: jasmine.SpyObj<ComicBookScrapingService>;
+  let comicBookScrapingService: jasmine.SpyObj<ComicScrapingService>;
   let alertService: AlertService;
 
   beforeEach(() => {
@@ -66,7 +66,7 @@ describe('ScrapeStoryEffects', () => {
         ScrapeStoryEffects,
         provideMockActions(() => actions$),
         {
-          provide: ComicBookScrapingService,
+          provide: ComicScrapingService,
           useValue: {
             loadStoryCandidates: jasmine.createSpy(
               'ComicBookScrapingservice.loadStoryCandidates{}'
@@ -82,8 +82,8 @@ describe('ScrapeStoryEffects', () => {
 
     effects = TestBed.inject(ScrapeStoryEffects);
     comicBookScrapingService = TestBed.inject(
-      ComicBookScrapingService
-    ) as jasmine.SpyObj<ComicBookScrapingService>;
+      ComicScrapingService
+    ) as jasmine.SpyObj<ComicScrapingService>;
     alertService = TestBed.inject(AlertService);
     spyOn(alertService, 'info');
     spyOn(alertService, 'error');

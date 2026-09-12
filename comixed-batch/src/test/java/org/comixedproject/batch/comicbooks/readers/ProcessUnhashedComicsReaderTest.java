@@ -19,18 +19,18 @@
 package org.comixedproject.batch.comicbooks.readers;
 
 import static junit.framework.TestCase.*;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.comicbooks.ComicDetail;
-import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.service.comicbooks.ComicService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
@@ -41,93 +41,83 @@ class ProcessUnhashedComicsReaderTest {
   private static final int MAX_RECORDS = 25;
 
   @InjectMocks private ProcessUnhashedComicsReader reader;
-  @Mock private ComicBookService comicBookService;
-  @Mock private ComicDetail comicDetail;
-  @Mock private ComicBook comicBook;
+  @Mock private ComicService comicService;
+  @Mock private Comic comic;
 
-  private List<ComicBook> comicBookList = new ArrayList<>();
+  private List<Comic> comicList = new ArrayList<>();
 
   @BeforeEach
   void setUp() {
-    Mockito.when(comicDetail.isMissing()).thenReturn(false);
-    Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
+    when(comic.isMissing()).thenReturn(false);
   }
 
   @Test
   void read_noneLoaded() {
-    Mockito.when(comicBookService.findComicsWithUnhashedPages(Mockito.anyInt()))
-        .thenReturn(comicBookList);
+    when(comicService.findComicsWithUnhashedPages(anyInt())).thenReturn(comicList);
 
     reader.comicBookList = null;
 
-    final ComicBook result = reader.read();
+    final Comic result = reader.read();
 
     assertNull(result);
 
-    Mockito.verify(comicBookService, Mockito.times(1))
-        .findComicsWithUnhashedPages(reader.getChunkSize());
+    verify(comicService).findComicsWithUnhashedPages(reader.getChunkSize());
   }
 
   @Test
   void read_comicMissing() {
-    comicBookList.add(comicBook);
-    Mockito.when(comicDetail.isMissing()).thenReturn(true);
+    comicList.add(comic);
+    when(comic.isMissing()).thenReturn(true);
 
-    Mockito.when(comicBookService.findComicsWithUnhashedPages(Mockito.anyInt()))
-        .thenReturn(comicBookList);
+    when(comicService.findComicsWithUnhashedPages(anyInt())).thenReturn(comicList);
 
     reader.comicBookList = null;
 
-    final ComicBook result = reader.read();
+    final Comic result = reader.read();
 
     assertNull(result);
 
-    Mockito.verify(comicBookService, Mockito.times(1))
-        .findComicsWithUnhashedPages(reader.getChunkSize());
+    verify(comicService).findComicsWithUnhashedPages(reader.getChunkSize());
   }
 
   @Test
   void read_noneRemaining() {
-    Mockito.when(comicBookService.findComicsWithUnhashedPages(Mockito.anyInt()))
-        .thenReturn(comicBookList);
+    when(comicService.findComicsWithUnhashedPages(anyInt())).thenReturn(comicList);
 
     reader.comicBookList = new ArrayList<>();
 
-    final ComicBook result = reader.read();
+    final Comic result = reader.read();
 
     assertNull(result);
 
-    Mockito.verify(comicBookService, Mockito.times(1))
-        .findComicsWithUnhashedPages(reader.getChunkSize());
+    verify(comicService).findComicsWithUnhashedPages(reader.getChunkSize());
   }
 
   @Test
   void read_someRemaining() {
-    for (int index = 0; index < MAX_RECORDS; index++) comicBookList.add(comicBook);
+    for (int index = 0; index < MAX_RECORDS; index++) comicList.add(comic);
 
-    reader.comicBookList = comicBookList;
+    reader.comicBookList = comicList;
 
-    final ComicBook result = reader.read();
+    final Comic result = reader.read();
 
     assertNotNull(result);
-    assertSame(comicBook, result);
-    assertFalse(comicBookList.isEmpty());
-    assertEquals(MAX_RECORDS - 1, comicBookList.size());
+    assertSame(comic, result);
+    assertFalse(comicList.isEmpty());
+    assertEquals(MAX_RECORDS - 1, comicList.size());
 
-    Mockito.verify(comicBookService, Mockito.never()).findComicsWithUnhashedPages(Mockito.anyInt());
+    verify(comicService, never()).findComicsWithUnhashedPages(anyInt());
   }
 
   @Test
   void read_noneLoaded_noneFound() {
-    Mockito.when(comicBookService.findComicsWithUnhashedPages(Mockito.anyInt()))
-        .thenReturn(comicBookList);
+    when(comicService.findComicsWithUnhashedPages(anyInt())).thenReturn(comicList);
 
-    final ComicBook result = reader.read();
+    final Comic result = reader.read();
 
     assertNull(result);
     assertNull(reader.comicBookList);
 
-    Mockito.verify(comicBookService, Mockito.times(1))
-        .findComicsWithUnhashedPages(reader.getChunkSize());
+    verify(comicService).findComicsWithUnhashedPages(reader.getChunkSize());
   }
 }

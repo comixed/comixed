@@ -50,8 +50,8 @@ import {
   reducer as organizeLibraryReducer
 } from './reducers/organize-library.reducer';
 import {
-  CONVERT_COMIC_BOOKS_FEATURE_KEY,
-  ConvertComicBooksState,
+  CONVERT_COMICS_FEATURE_KEY,
+  ConvertComicsState,
   reducer as convertComicsReducer
 } from './reducers/convert-comic-books.reducer';
 import {
@@ -80,7 +80,7 @@ export interface LibraryModuleState {
   [RESCAN_COMICS_FEATURE_KEY]: RescanComicsState;
   [UPDATE_METADATA_FEATURE_KEY]: UpdateMetadataState;
   [ORGANIZE_LIBRARY_FEATURE_KEY]: OrganizeLibraryState;
-  [CONVERT_COMIC_BOOKS_FEATURE_KEY]: ConvertComicBooksState;
+  [CONVERT_COMICS_FEATURE_KEY]: ConvertComicsState;
   [PURGE_LIBRARY_FEATURE_KEY]: PurgeLibraryState;
 }
 
@@ -95,6 +95,6 @@ export const reducers: ActionReducerMap<LibraryModuleState> = {
   [RESCAN_COMICS_FEATURE_KEY]: rescanComicsReducer,
   [UPDATE_METADATA_FEATURE_KEY]: updateMetadataReducer,
   [ORGANIZE_LIBRARY_FEATURE_KEY]: organizeLibraryReducer,
-  [CONVERT_COMIC_BOOKS_FEATURE_KEY]: convertComicsReducer,
+  [CONVERT_COMICS_FEATURE_KEY]: convertComicsReducer,
   [PURGE_LIBRARY_FEATURE_KEY]: purgeLibraryReducer
 };

@@ -217,7 +217,7 @@ describe('ComicDetailEditComponent', () => {
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         updateComicBook({
-          comicBookId: COMIC.comicBookId,
+          comicBookId: COMIC.comicDetailId,
           comicType: COMIC.comicType,
           publisher: COMIC.publisher,
           series: COMIC.series,

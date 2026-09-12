@@ -47,7 +47,7 @@ class PublishApplicationMessageActionTest {
   @Mock private ApplicationEvent applicationEvent;
 
   @BeforeEach
-  public void setUp() throws JacksonException {
+  void setUp() throws JacksonException {
     Mockito.when(objectMapper.writerWithView(Mockito.any())).thenReturn(objectWriter);
     Mockito.when(objectWriter.writeValueAsString(Mockito.any())).thenReturn(TEST_UPDATE_AS_JSON);
   }

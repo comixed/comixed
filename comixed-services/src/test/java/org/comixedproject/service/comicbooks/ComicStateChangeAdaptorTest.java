@@ -10,8 +10,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.comixedproject.messaging.PublishingException;
-import org.comixedproject.messaging.comicbooks.PublishComicBookRemovalAction;
-import org.comixedproject.messaging.comicbooks.PublishComicBookUpdateAction;
+import org.comixedproject.messaging.comicbooks.PublishComicRemovalAction;
+import org.comixedproject.messaging.comicbooks.PublishComicUpdateAction;
 import org.comixedproject.model.comicbooks.*;
 import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.model.library.DisplayableComic;
@@ -24,24 +24,21 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class ComicStateChangeAdaptorTest {
   private static final ComicState TEST_STATE = ComicState.CHANGED;
-  private static final long TEST_COMIC_BOOK_ID = 710129L;
+  private static final long TEST_COMIC_ID = 710129L;
 
   @InjectMocks private ComicStateChangeAdaptor adaptor;
   @Mock private org.comixedproject.state.comicbooks.ComicStateAdaptor comicStateAdaptor;
-  @Mock private ComicBookService comicBookService;
-  @Mock private ComicDetailService comicDetailService;
+  @Mock private ComicService comicService;
   @Mock private DisplayableComicService displayableComicService;
-  @Mock private PublishComicBookUpdateAction comicUpdatePublishAction;
-  @Mock private PublishComicBookRemovalAction comicRemovalPublishAction;
-  @Mock private ComicBook comicBook;
-  @Mock private ComicBook comicBookRecord;
-  @Mock private ComicDetail comicDetail;
-  @Mock private ComicDetail savedComic;
+  @Mock private PublishComicUpdateAction comicUpdatePublishAction;
+  @Mock private PublishComicRemovalAction comicRemovalPublishAction;
+  @Mock private Comic comic;
+  @Mock private Comic savedComic;
   @Mock private DisplayableComic displayableComicBook;
   @Mock private ComicMetadataSource comicMetadataSource;
   @Mock private List<ComicPage> pageList;
 
-  @Captor private ArgumentCaptor<ComicBookData> comicBookDataArgumentCaptor;
+  @Captor private ArgumentCaptor<ComicDataSet> comicBookDataArgumentCaptor;
 
   private Set<ComicTag> comicTagList = new HashSet<>();
 
@@ -53,60 +50,60 @@ class ComicStateChangeAdaptorTest {
   }
 
   @Test
-  void onComicStateChange_comicDeleted() throws PublishingException, ComicBookException {
-    when(comicDetail.getState()).thenReturn(ComicState.REMOVED);
-    when(comicDetail.getComicId()).thenReturn(TEST_COMIC_BOOK_ID);
+  void onComicStateChange_comicDeleted() throws PublishingException, ComicException {
+    when(comic.getState()).thenReturn(ComicState.REMOVED);
+    when(comic.getComicDetailId()).thenReturn(TEST_COMIC_ID);
     when(displayableComicService.getForComicBookId(anyLong())).thenReturn(displayableComicBook);
 
-    adaptor.onComicStateChanged(comicDetail);
+    adaptor.onComicStateChanged(comic);
 
-    verify(displayableComicService).getForComicBookId(TEST_COMIC_BOOK_ID);
+    verify(displayableComicService).getForComicBookId(TEST_COMIC_ID);
     verify(comicRemovalPublishAction).publish(displayableComicBook);
   }
 
   @Test
   void onComicStateChange_comicDeleted_publishingException()
-      throws PublishingException, ComicBookException {
-    when(comicDetail.getState()).thenReturn(ComicState.REMOVED);
-    when(comicDetail.getComicId()).thenReturn(TEST_COMIC_BOOK_ID);
+      throws PublishingException, ComicException {
+    when(comic.getState()).thenReturn(ComicState.REMOVED);
+    when(comic.getComicDetailId()).thenReturn(TEST_COMIC_ID);
     when(displayableComicService.getForComicBookId(anyLong())).thenReturn(displayableComicBook);
     doThrow(PublishingException.class)
         .when(comicRemovalPublishAction)
         .publish(any(DisplayableComic.class));
 
-    adaptor.onComicStateChanged(comicDetail);
+    adaptor.onComicStateChanged(comic);
 
-    verify(displayableComicService).getForComicBookId(TEST_COMIC_BOOK_ID);
+    verify(displayableComicService).getForComicBookId(TEST_COMIC_ID);
     verify(comicRemovalPublishAction).publish(displayableComicBook);
   }
 
   @Test
-  void onComicStateChange() throws PublishingException, ComicBookException {
-    when(comicDetail.getState()).thenReturn(TEST_STATE);
-    when(comicDetailService.save(any(ComicDetail.class))).thenReturn(savedComic);
+  void onComicStateChange() throws PublishingException, ComicException {
+    when(comic.getState()).thenReturn(TEST_STATE);
+    when(comicService.save(any(Comic.class))).thenReturn(savedComic);
     when(displayableComicService.getForComicBookId(anyLong())).thenReturn(displayableComicBook);
-    when(savedComic.getComicId()).thenReturn(TEST_COMIC_BOOK_ID);
+    when(savedComic.getComicDetailId()).thenReturn(TEST_COMIC_ID);
     when(savedComic.getMetadata()).thenReturn(comicMetadataSource);
     when(savedComic.getPages()).thenReturn(pageList);
     when(savedComic.getTags()).thenReturn(comicTagList);
     doNothing().when(comicUpdatePublishAction).publish(comicBookDataArgumentCaptor.capture());
 
-    adaptor.onComicStateChanged(comicDetail);
+    adaptor.onComicStateChanged(comic);
 
-    final ComicBookData comicBookData = comicBookDataArgumentCaptor.getValue();
-    assertNotNull(comicBookData);
+    final ComicDataSet comicDataSet = comicBookDataArgumentCaptor.getValue();
+    assertNotNull(comicDataSet);
 
-    verify(comicDetail).setLastModifiedDate(any(Date.class));
-    verify(comicDetailService).save(comicDetail);
-    verify(comicUpdatePublishAction).publish(comicBookData);
+    verify(comic).setLastModifiedDate(any(Date.class));
+    verify(comicService).save(comic);
+    verify(comicUpdatePublishAction).publish(comicDataSet);
   }
 
   @Test
-  void onComicStateChange_publishingError() throws PublishingException, ComicBookException {
-    when(comicDetail.getState()).thenReturn(TEST_STATE);
-    when(comicDetailService.save(any(ComicDetail.class))).thenReturn(savedComic);
+  void onComicStateChange_publishingError() throws PublishingException, ComicException {
+    when(comic.getState()).thenReturn(TEST_STATE);
+    when(comicService.save(any(Comic.class))).thenReturn(savedComic);
     when(displayableComicService.getForComicBookId(anyLong())).thenReturn(displayableComicBook);
-    when(savedComic.getComicId()).thenReturn(TEST_COMIC_BOOK_ID);
+    when(savedComic.getComicDetailId()).thenReturn(TEST_COMIC_ID);
     when(savedComic.getMetadata()).thenReturn(comicMetadataSource);
     when(savedComic.getPages()).thenReturn(pageList);
     when(savedComic.getTags()).thenReturn(comicTagList);
@@ -114,17 +111,17 @@ class ComicStateChangeAdaptorTest {
         .when(comicUpdatePublishAction)
         .publish(comicBookDataArgumentCaptor.capture());
 
-    adaptor.onComicStateChanged(comicDetail);
+    adaptor.onComicStateChanged(comic);
 
-    final ComicBookData comicBookData = comicBookDataArgumentCaptor.getValue();
-    assertNotNull(comicBookData);
-    assertSame(displayableComicBook, comicBookData.getDetail());
-    assertSame(comicMetadataSource, comicBookData.getMetadata());
-    assertSame(pageList, comicBookData.getPages());
-    assertEquals(comicTagList.stream().toList(), comicBookData.getTags());
+    final ComicDataSet comicDataSet = comicBookDataArgumentCaptor.getValue();
+    assertNotNull(comicDataSet);
+    assertSame(displayableComicBook, comicDataSet.getDetail());
+    assertSame(comicMetadataSource, comicDataSet.getMetadata());
+    assertSame(pageList, comicDataSet.getPages());
+    assertEquals(comicTagList.stream().toList(), comicDataSet.getTags());
 
-    verify(comicDetail).setLastModifiedDate(any(Date.class));
-    verify(comicDetailService).save(comicDetail);
-    verify(comicUpdatePublishAction).publish(comicBookData);
+    verify(comic).setLastModifiedDate(any(Date.class));
+    verify(comicService).save(comic);
+    verify(comicUpdatePublishAction).publish(comicDataSet);
   }
 }

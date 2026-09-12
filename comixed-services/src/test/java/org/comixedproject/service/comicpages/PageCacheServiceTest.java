@@ -33,10 +33,9 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.GenericUtilitiesAdaptor;
-import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
+import org.comixedproject.adaptors.comicbooks.ComicAdaptor;
 import org.comixedproject.adaptors.file.FileTypeAdaptor;
-import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicpages.ComicPage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -63,11 +62,10 @@ class PageCacheServiceTest {
 
   @InjectMocks private PageCacheService service;
   @Mock private ComicPageService comicPageService;
-  @Mock private ComicBookAdaptor comicBookAdaptor;
+  @Mock private ComicAdaptor comicAdaptor;
   @Mock private FileTypeAdaptor fileTypeAdaptor;
   @Mock private GenericUtilitiesAdaptor genericUtilitiesAdaptor;
-  @Mock private ComicBook comicBook;
-  @Mock private ComicDetail comicDetail;
+  @Mock private Comic comic;
   @Mock private ComicPage page;
   @Mock private ComicPage savedPage;
 
@@ -78,11 +76,10 @@ class PageCacheServiceTest {
   private Set<String> pageHashList = new HashSet<>();
 
   @BeforeEach
-  public void setUp() throws ComicPageException, AdaptorException, IOException {
+  void setUp() throws ComicPageException, AdaptorException, IOException {
     service.cacheDirectory = new File("target/test-classes/image-cache").getAbsolutePath();
     when(page.getHash()).thenReturn(TEST_PAGE_HASH);
-    when(page.getComicDetail()).thenReturn(comicDetail);
-    when(comicDetail.getComicBook()).thenReturn(comicBook);
+    when(page.getComic()).thenReturn(comic);
     when(page.getPageNumber()).thenReturn(TEST_PAGE_NUMBER);
     when(fileTypeAdaptor.getType(inputStreamArgumentCaptor.capture()))
         .thenReturn(TEST_CONTENT_TYPE);
@@ -97,7 +94,7 @@ class PageCacheServiceTest {
 
     pageContent = FileUtils.readFileToByteArray(new File(TEST_PAGE_FILENAME));
     when(comicPageService.getOneForHash(anyString())).thenReturn(page);
-    when(comicBookAdaptor.loadPageContent(any(ComicBook.class), anyInt())).thenReturn(pageContent);
+    when(comicAdaptor.loadPageContent(any(Comic.class), anyInt())).thenReturn(pageContent);
     when(savedPage.getHash()).thenReturn(TEST_PAGE_HASH);
     when(savedPage.getFilename()).thenReturn(TEST_PAGE_BASE_FILENAME);
     when(page.getFilename()).thenReturn(TEST_PAGE_BASE_FILENAME);
@@ -145,25 +142,25 @@ class PageCacheServiceTest {
   @Test
   void addPageToCache_comicBookAdaptorException() throws AdaptorException {
     when(page.getHash()).thenReturn(TEST_MISSING_PAGE_HASH);
-    when(comicBookAdaptor.loadPageContent(any(ComicBook.class), anyInt()))
+    when(comicAdaptor.loadPageContent(any(Comic.class), anyInt()))
         .thenThrow(AdaptorException.class);
 
     service.addPageToCache(page);
 
-    verify(comicBookAdaptor).loadPageContent(comicBook, TEST_PAGE_NUMBER);
+    verify(comicAdaptor).loadPageContent(comic, TEST_PAGE_NUMBER);
   }
 
   @Test
   void addPageToCache() throws AdaptorException {
     when(page.getHash()).thenReturn(TEST_MISSING_PAGE_HASH);
-    when(comicBookAdaptor.loadPageContent(any(ComicBook.class), anyInt()))
+    when(comicAdaptor.loadPageContent(any(Comic.class), anyInt()))
         .thenReturn(TEST_MISSING_PAGE_HASH.getBytes());
 
     service.addPageToCache(page);
 
     assertTrue(service.getFileForHash(TEST_MISSING_PAGE_HASH).exists());
 
-    verify(comicBookAdaptor).loadPageContent(comicBook, TEST_PAGE_NUMBER);
+    verify(comicAdaptor).loadPageContent(comic, TEST_PAGE_NUMBER);
   }
 
   @Test
@@ -209,7 +206,7 @@ class PageCacheServiceTest {
   @Test
   void getPageContentForPageHashAdaptorException() throws AdaptorException {
     when(page.getHash()).thenReturn(null);
-    when(comicBookAdaptor.loadPageContent(any(ComicBook.class), anyInt()))
+    when(comicAdaptor.loadPageContent(any(Comic.class), anyInt()))
         .thenThrow(AdaptorException.class);
 
     assertThrows(
@@ -257,8 +254,7 @@ class PageCacheServiceTest {
 
   @Test
   void getPageContent_adaptorThrowsException() throws AdaptorException {
-    when(comicBookAdaptor.loadPageContent(anyString(), anyString()))
-        .thenThrow(AdaptorException.class);
+    when(comicAdaptor.loadPageContent(anyString(), anyString())).thenThrow(AdaptorException.class);
 
     assertThrows(
         ComicPageException.class,
@@ -267,7 +263,7 @@ class PageCacheServiceTest {
 
   @Test
   void getPageContent_pageAdaptorLoadsNothing() throws ComicPageException, AdaptorException {
-    when(comicBookAdaptor.loadPageContent(anyString(), anyString())).thenReturn(null);
+    when(comicAdaptor.loadPageContent(anyString(), anyString())).thenReturn(null);
 
     try {
       service.getPageContent(TEST_PAGE_ID, TEST_MISSING_FILENAME);
@@ -278,7 +274,7 @@ class PageCacheServiceTest {
 
   @Test
   void GetPageContent_pageAdaptoReturnsNull_missingPageIsInvalid() throws AdaptorException {
-    when(comicBookAdaptor.loadPageContent(anyString(), anyString())).thenReturn(null);
+    when(comicAdaptor.loadPageContent(anyString(), anyString())).thenReturn(null);
 
     assertThrows(
         ComicPageException.class,

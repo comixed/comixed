@@ -57,30 +57,28 @@ public class ComicMetadataWriter implements InitializingBean {
   }
 
   /**
-   * Writes the content of the provided comicBook as a ComicInfo.xml file to the provided output
-   * stream.
+   * Writes the content of the provided comic as a ComicInfo.xml file to the provided output stream.
    *
-   * @param comicBook the comicBook
+   * @param comic the comic
    * @return the content of the file
    * @throws org.comixedproject.adaptors.content.ContentAdaptorException if an error occurs
    */
-  public byte[] createContent(ComicBook comicBook) throws ContentAdaptorException {
+  public byte[] createContent(Comic comic) throws ContentAdaptorException {
     log.trace("Mapping comic metadata to ComicInfo");
     final ComicInfo comicInfo = new ComicInfo();
-    var comicDetail = comicBook.getComicDetail();
-    comicInfo.setWeb(comicDetail.getWebAddress());
-    comicInfo.setPublisher(comicDetail.getPublisher());
-    comicInfo.setSeries(comicDetail.getSeries());
-    comicInfo.setVolume(comicDetail.getVolume());
-    comicInfo.setIssueNumber(comicDetail.getIssueNumber());
-    if (comicDetail.getCoverDate() != null) {
+    comicInfo.setWeb(comic.getWebAddress());
+    comicInfo.setPublisher(comic.getPublisher());
+    comicInfo.setSeries(comic.getSeries());
+    comicInfo.setVolume(comic.getVolume());
+    comicInfo.setIssueNumber(comic.getIssueNumber());
+    if (comic.getCoverDate() != null) {
       final GregorianCalendar calendar = new GregorianCalendar();
-      calendar.setTime(comicDetail.getCoverDate());
+      calendar.setTime(comic.getCoverDate());
       comicInfo.setYear(calendar.get(Calendar.YEAR));
       comicInfo.setMonth(calendar.get(Calendar.MONTH) + 1);
     }
-    comicInfo.setTitle(comicDetail.getTitle());
-    final ComicDetail detail = comicDetail;
+    comicInfo.setTitle(comic.getTitle());
+    final Comic detail = comic;
     comicInfo.setCharacters(
         String.join(
             ",",
@@ -158,9 +156,9 @@ public class ComicMetadataWriter implements InitializingBean {
                 .filter(tag -> tag.getType() == ComicTagType.COVER)
                 .map(ComicTag::getValue)
                 .collect(Collectors.toList())));
-    comicInfo.setNotes(comicDetail.getNotes());
-    comicInfo.setSummary(comicDetail.getDescription());
-    final ComicMetadataSource metadata = comicBook.getMetadata();
+    comicInfo.setNotes(comic.getNotes());
+    comicInfo.setSummary(comic.getDescription());
+    final ComicMetadataSource metadata = comic.getMetadata();
     if (metadata != null
         && StringUtils.hasLength(metadata.getMetadataSource().getAdaptorName())
         && StringUtils.hasLength(metadata.getReferenceId())) {
@@ -171,7 +169,7 @@ public class ComicMetadataWriter implements InitializingBean {
               metadata.getReferenceId(),
               this.dateFormat.format(metadata.getLastScrapedDate())));
     }
-    comicBook
+    comic
         .getPages()
         .forEach(
             page -> {

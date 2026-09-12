@@ -25,8 +25,8 @@ import {
 } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
-import { selectProcessingComicBooksBatches } from '@app/selectors/import-comic-books.selectors';
-import { ProcessingComicStatus } from '@app/reducers/import-comic-books.reducer';
+import { selectImportComicBatches } from '@app/selectors/import-comic-books.selectors';
+import { ProcessingComicStatus } from '@app/reducers/import-comics.reducer';
 import {
   MatCell,
   MatCellDef,
@@ -50,6 +50,7 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { AsyncPipe } from '@angular/common';
 import { tap } from 'rxjs/operators';
+import { ProcessComicsService } from '@app/comic-books/services/process-comics.service';
 
 @Component({
   selector: 'app-processing-status-page',
@@ -88,14 +89,20 @@ export class ProcessingStatusPageComponent implements AfterViewInit, OnInit {
   translateService = inject(TranslateService);
   titleService = inject(TitleService);
   queryParameterService = inject(QueryParameterService);
+  processStatusService = inject(ProcessComicsService);
 
   constructor() {
     this.translateService.onLangChange
       .pipe(tap(() => this.loadTranslations()))
       .subscribe();
     this.store
-      .select(selectProcessingComicBooksBatches)
-      .pipe(tap(batches => (this.dataSource.data = batches)))
+      .select(selectImportComicBatches)
+      .pipe(
+        tap(batches => {
+          this.dataSource.data = batches;
+          this.processStatusService.beep();
+        })
+      )
       .subscribe();
   }
 

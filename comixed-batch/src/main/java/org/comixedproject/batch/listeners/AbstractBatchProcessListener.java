@@ -21,11 +21,10 @@ package org.comixedproject.batch.listeners;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.batch.PublishBatchProcessDetailUpdateAction;
-import org.comixedproject.messaging.comicbooks.PublishProcessComicBooksStatusAction;
+import org.comixedproject.messaging.comicbooks.PublishProcessComicsStatusAction;
 import org.comixedproject.model.batch.BatchProcessDetail;
-import org.comixedproject.model.messaging.batch.ProcessComicBooksStatus;
-import org.comixedproject.service.comicbooks.ComicBookService;
-import org.comixedproject.service.comicbooks.ComicDetailService;
+import org.comixedproject.model.messaging.batch.ProcessComicsStatus;
+import org.comixedproject.service.comicbooks.ComicService;
 import org.springframework.batch.core.job.JobExecution;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -37,21 +36,20 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 @Log4j2
 public abstract class AbstractBatchProcessListener {
-  @Autowired private PublishProcessComicBooksStatusAction publishProcessComicBooksStatusAction;
+  @Autowired private PublishProcessComicsStatusAction publishProcessComicsStatusAction;
   @Autowired private PublishBatchProcessDetailUpdateAction publishBatchProcessDetailUpdateAction;
-  @Autowired protected ComicBookService comicBookService;
-  @Autowired protected ComicDetailService comicDetailService;
+  @Autowired protected ComicService comicService;
 
   protected void doPublishProcessComicBookStatus(
       final boolean active, final String stepName, final long total, final long processed) {
-    final ProcessComicBooksStatus status = new ProcessComicBooksStatus();
+    final ProcessComicsStatus status = new ProcessComicsStatus();
     status.setActive(active);
     status.setStepName(stepName);
     status.setTotal(total);
     status.setProcessed(processed);
     log.trace("Publishing add comics to library status");
     try {
-      this.publishProcessComicBooksStatusAction.publish(status);
+      this.publishProcessComicsStatusAction.publish(status);
     } catch (PublishingException error) {
       log.error("Failed to publish add comics to library status", error);
     }

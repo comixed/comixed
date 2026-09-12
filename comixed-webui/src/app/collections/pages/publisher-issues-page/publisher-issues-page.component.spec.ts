@@ -38,7 +38,7 @@ import { ComicType } from '@app/comic-books/models/comic-type';
 import {
   COMIC_BOOK_SELECTION_FEATURE_KEY,
   initialState as initialComicBookSelectionState
-} from '@app/comic-books/reducers/comic-book-selection.reducer';
+} from '@app/comic-books/reducers/comic-selection.reducer';
 import { setMultipleComicBookByPublisherSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
 import { TitleService } from '@app/core/services/title.service';
 import {

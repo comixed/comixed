@@ -40,7 +40,7 @@ describe('Library Reducer', () => {
     DISPLAYABLE_COMIC_2,
     DISPLAYABLE_COMIC_3
   ];
-  const IDS = COMIC_LIST.map(comic => comic.comicBookId);
+  const IDS = COMIC_LIST.map(comic => comic.comicDetailId);
   const TOTAL_COMICS = Math.abs(Math.random() * 100);
   const UNSCRAPED_COMICS = Math.abs(Math.random() * 100);
   const DELETED_COMICS = Math.abs(Math.random() * 100);

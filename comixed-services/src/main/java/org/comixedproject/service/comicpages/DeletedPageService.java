@@ -25,7 +25,7 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicpages.DeletedPage;
 import org.comixedproject.model.comicpages.DeletedPageAndComic;
 import org.comixedproject.repositories.comicpages.ComicPageRepository;
-import org.comixedproject.service.comicbooks.ComicBookException;
+import org.comixedproject.service.comicbooks.ComicException;
 import org.comixedproject.service.library.DisplayableComicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -70,7 +70,7 @@ public class DeletedPageService {
             .get(deletedPageAndComic.getHash())
             .getComics()
             .add(this.displayableComicService.getForComicBookId(deletedPageAndComic.getComicId()));
-      } catch (ComicBookException error) {
+      } catch (ComicException error) {
         throw new ComicPageException("Failed to load parent comic", error);
       }
     }

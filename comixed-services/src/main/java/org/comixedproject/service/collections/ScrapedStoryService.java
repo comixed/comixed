@@ -25,7 +25,7 @@ import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.lists.PublishStoryListUpdateAction;
 import org.comixedproject.model.collections.ScrapedStory;
 import org.comixedproject.repositories.collections.ScrapedStoryRepository;
-import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.service.lists.StoryException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,7 +41,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Log4j2
 public class ScrapedStoryService {
   @Autowired private ScrapedStoryRepository scrapedStoryRepository;
-  @Autowired private ComicBookService comicBookService;
+  @Autowired private ComicService comicService;
   @Autowired private PublishStoryListUpdateAction publishStoryListUpdateAction;
 
   /**
@@ -77,7 +77,7 @@ public class ScrapedStoryService {
               log.trace("Adding story: id={}", story.getScrapedStoryId());
               result.add(story);
             });
-    this.comicBookService
+    this.comicService
         .getAllPublishersForStory(name)
         .forEach(
             publisher -> {

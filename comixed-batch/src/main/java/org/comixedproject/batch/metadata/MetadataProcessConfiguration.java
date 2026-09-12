@@ -19,12 +19,12 @@
 package org.comixedproject.batch.metadata;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.batch.metadata.listeners.ScrapeComicBookChunkListener;
-import org.comixedproject.batch.metadata.listeners.UpdateComicBookMetadataJobListener;
-import org.comixedproject.batch.metadata.processors.ScrapeComicBookProcessor;
-import org.comixedproject.batch.metadata.readers.ScrapeComicBookReader;
-import org.comixedproject.batch.metadata.writers.ScrapeComicBookWriter;
-import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.batch.metadata.listeners.ScrapeComicChunkListener;
+import org.comixedproject.batch.metadata.listeners.UpdateComicMetadataJobListener;
+import org.comixedproject.batch.metadata.processors.ScrapeComicProcessor;
+import org.comixedproject.batch.metadata.readers.ScrapeComicReader;
+import org.comixedproject.batch.metadata.writers.ScrapeComicWriter;
+import org.comixedproject.model.comicbooks.Comic;
 import org.springframework.batch.core.job.Job;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
@@ -63,7 +63,7 @@ public class MetadataProcessConfiguration {
   @Bean(name = "updateComicBookMetadata")
   public Job updateComicBookMetadata(
       final JobRepository jobRepository,
-      final UpdateComicBookMetadataJobListener jobListener,
+      final UpdateComicMetadataJobListener jobListener,
       @Qualifier("scrapeComicBook") final Step scrapeComicBook) {
     return new JobBuilder("updateComicBookMetadata", jobRepository)
         .listener(jobListener)
@@ -85,12 +85,12 @@ public class MetadataProcessConfiguration {
   public Step scrapeComicBook(
       final JobRepository jobRepository,
       final PlatformTransactionManager platformTransactionManager,
-      final ScrapeComicBookChunkListener listener,
-      final ScrapeComicBookReader reader,
-      final ScrapeComicBookProcessor processor,
-      final ScrapeComicBookWriter writer) {
+      final ScrapeComicChunkListener listener,
+      final ScrapeComicReader reader,
+      final ScrapeComicProcessor processor,
+      final ScrapeComicWriter writer) {
     return new StepBuilder("scrapeComicBook", jobRepository)
-        .<ComicBook, ComicBook>chunk(this.chunkSize)
+        .<Comic, Comic>chunk(this.chunkSize)
         .transactionManager(platformTransactionManager)
         .reader(reader)
         .processor(processor)

@@ -18,7 +18,7 @@
 
 package org.comixedproject.rest.comicpages;
 
-import static org.comixedproject.rest.comicbooks.ComicBookController.MISSING_COMIC_COVER_FILENAME;
+import static org.comixedproject.rest.comicbooks.ComicController.MISSING_COMIC_COVER_FILENAME;
 
 import io.micrometer.core.annotation.Timed;
 import java.util.List;

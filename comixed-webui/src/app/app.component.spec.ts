@@ -49,7 +49,7 @@ import {
 import {
   IMPORT_COMIC_BOOKS_FEATURE_KEY,
   initialState as initialImportCountState
-} from '@app/reducers/import-comic-books.reducer';
+} from '@app/reducers/import-comics.reducer';
 import {
   APP_MESSAGING_TOPIC,
   LOADING_ICON_URL,
@@ -77,7 +77,7 @@ import {
 import {
   COMIC_BOOK_SELECTION_FEATURE_KEY,
   initialState as initialComicBookSelectionState
-} from '@app/comic-books/reducers/comic-book-selection.reducer';
+} from '@app/comic-books/reducers/comic-selection.reducer';
 import {
   FEATURE_ENABLED_FEATURE_KEY,
   initialState as initialFeatureEnabledState
@@ -86,7 +86,7 @@ import { BusyIcon } from '@app/core/actions/busy.actions';
 import {
   initialState as initialReadComicBooksState,
   READ_COMIC_BOOKS_FEATURE_KEY
-} from '@app/user/reducers/read-comic-books.reducer';
+} from '@app/user/reducers/read-comics.reducer';
 import { Subscription } from 'rxjs';
 import { WebSocketService } from '@app/messaging';
 import { ApplicationEvent } from '@app/models/messages/application-event';

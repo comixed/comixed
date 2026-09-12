@@ -21,9 +21,9 @@ package org.comixedproject.batch.comicbooks.processors;
 import static org.comixedproject.batch.comicbooks.ScrapeMetadataConfiguration.SCRAPE_METADATA_JOB_ERROR_THRESHOLD;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicbooks.ComicMetadataSource;
-import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.service.metadata.MetadataService;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.configuration.annotation.StepScope;
@@ -44,10 +44,9 @@ import org.springframework.stereotype.Component;
 @Component
 @StepScope
 @Log4j2
-public class ScrapeMetadataProcessor
-    implements ItemProcessor<ComicBook, ComicBook>, StepExecutionListener {
+public class ScrapeMetadataProcessor implements ItemProcessor<Comic, Comic>, StepExecutionListener {
   @Autowired private MetadataService metadataService;
-  @Autowired private ComicBookService comicBookService;
+  @Autowired private ComicService comicService;
 
   StepExecution stepExecution = null;
   long errorThreshold = 0L;
@@ -75,9 +74,9 @@ public class ScrapeMetadataProcessor
   }
 
   @Override
-  public ComicBook process(final ComicBook comicBook) {
-    if (comicBook.isFileContentsLoaded() == false || comicBook.isPurging()) {
-      log.debug("Comic not ready for batch scraping: id={}", comicBook.getComicBookId());
+  public Comic process(final Comic comic) {
+    if (comic.isLoadingFileContents() || comic.isPurging()) {
+      log.debug("Comic not ready for batch scraping: id={}", comic.getComicDetailId());
       return null;
     }
 
@@ -86,25 +85,25 @@ public class ScrapeMetadataProcessor
           "Abort scraping: error threshold exceeded ({} > {})",
           stepExecution.getSkipCount(),
           this.errorThreshold);
-      return comicBook;
+      return comic;
     }
 
-    log.debug("Batch scraping comic book: id={}", comicBook.getComicBookId());
+    log.debug("Batch scraping comic book: id={}", comic.getComicDetailId());
     try {
-      final ComicMetadataSource metadata = comicBook.getMetadata();
-      log.debug("Turning off batch scraping flag: id={}", comicBook.getComicBookId());
-      comicBook.setBatchScraping(false);
-      this.comicBookService.save(comicBook);
+      final ComicMetadataSource metadata = comic.getMetadata();
+      log.debug("Turning off batch scraping flag: id={}", comic.getComicDetailId());
+      comic.setBatchScraping(false);
+      this.comicService.save(comic);
       log.debug("Scraping comic");
       this.metadataService.scrapeComic(
           metadata.getMetadataSource().getMetadataSourceId(),
-          comicBook.getComicBookId(),
+          comic.getComicDetailId(),
           metadata.getReferenceId(),
           false);
     } catch (Exception error) {
       log.error("Failed to batch scrape comic book", error);
       this.stepExecution.setProcessSkipCount(this.stepExecution.getProcessSkipCount() + 1);
     }
-    return comicBook;
+    return comic;
   }
 }

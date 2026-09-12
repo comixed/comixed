@@ -24,9 +24,9 @@ import {
 } from '@app/reducers/release.reducer';
 import {
   IMPORT_COMIC_BOOKS_FEATURE_KEY,
-  ImportComicBooksState,
+  ImportComicsState,
   reducer as importCountReducer
-} from '@app/reducers/import-comic-books.reducer';
+} from '@app/reducers/import-comics.reducer';
 import {
   DARK_THEME_FEATURE_KEY,
   DarkThemeState,
@@ -40,7 +40,7 @@ import {
 
 export interface AppState {
   [RELEASE_DETAILS_FEATURE_KEY]: ReleaseDetailsState;
-  [IMPORT_COMIC_BOOKS_FEATURE_KEY]: ImportComicBooksState;
+  [IMPORT_COMIC_BOOKS_FEATURE_KEY]: ImportComicsState;
   [DARK_THEME_FEATURE_KEY]: DarkThemeState;
   [COMICS_READ_STATISTICS_FEATURE_KEY]: ComicsReadStatisticsState;
 }

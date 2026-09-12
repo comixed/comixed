@@ -233,7 +233,7 @@ export class SeriesMetadataPageComponent implements OnInit, AfterViewInit {
         comicBook.volume === issue.volume &&
         comicBook.issueNumber === issue.issueNumber
     );
-    return found?.comicBookId;
+    return found?.comicDetailId;
   }
 
   private loadTranslations(): void {

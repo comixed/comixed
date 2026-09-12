@@ -201,7 +201,7 @@ describe('SeriesMetadataPageComponent', () => {
 
     it('returns a value when the issue is found', () => {
       expect(component.getComicBookIdForRow(ISSUE)).toEqual(
-        COMIC_BOOK.comicBookId
+        COMIC_BOOK.comicDetailId
       );
     });
 

@@ -17,7 +17,7 @@
  */
 
 import {
-  ConvertComicBooksState,
+  ConvertComicsState,
   initialState,
   reducer
 } from './convert-comic-books.reducer';
@@ -31,10 +31,10 @@ import {
 } from '@app/library/actions/convert-comic-books.actions';
 
 describe('ConvertComicBooks Reducer', () => {
-  const ID = DISPLAYABLE_COMIC_1.comicBookId;
+  const ID = DISPLAYABLE_COMIC_1.comicDetailId;
   const ARCHIVE_TYPE = ArchiveType.CBZ;
 
-  let state: ConvertComicBooksState;
+  let state: ConvertComicsState;
 
   beforeEach(() => {
     state = { ...initialState };

@@ -21,8 +21,7 @@ package org.comixedproject.service.library;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.library.OrganizingComic;
-import org.comixedproject.repositories.comicbooks.ComicBookRepository;
-import org.comixedproject.repositories.comicbooks.ComicDetailRepository;
+import org.comixedproject.repositories.comicbooks.ComicRepository;
 import org.comixedproject.repositories.library.OrganizingComicRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -40,8 +39,7 @@ import org.springframework.util.StringUtils;
 @Log4j2
 public class OrganizingComicService {
   @Autowired private OrganizingComicRepository organizingComicRepository;
-  @Autowired private ComicBookRepository comicBookRepository;
-  @Autowired private ComicDetailRepository comicDetailRepository;
+  @Autowired private ComicRepository comicRepository;
 
   /**
    * Loads a set of records from the database.
@@ -64,12 +62,11 @@ public class OrganizingComicService {
   public void saveComic(final OrganizingComic comic) {
     if (StringUtils.hasLength(comic.getUpdatedFilename())) {
       log.trace(
-          "Updating filename: id={} filename={}", comic.getComicBookId(), comic.getFilename());
-      this.comicDetailRepository.updateFilename(
-          comic.getComicDetailId(), comic.getUpdatedFilename());
+          "Updating filename: id={} filename={}", comic.getComicDetailId(), comic.getFilename());
+      this.comicRepository.updateFilename(comic.getComicDetailId(), comic.getUpdatedFilename());
     }
-    log.trace("Clearing organizing flag: id={}", comic.getComicBookId());
-    this.comicDetailRepository.clearOrganizingFlag(comic.getComicBookId());
+    log.trace("Clearing organizing flag: id={}", comic.getComicDetailId());
+    this.comicRepository.clearOrganizingFlag(comic.getComicDetailId());
   }
 
   /**

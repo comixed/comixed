@@ -153,7 +153,6 @@ export class ComicDetailEditComponent implements OnInit {
       : null;
     return {
       ...this._comicBook,
-      comicDetailId: undefined,
       comicType: this.comicBookForm.controls.comicType.value,
       publisher: this.comicBookForm.controls.publisher.value,
       series: this.comicBookForm.controls.series.value,
@@ -221,7 +220,7 @@ export class ComicDetailEditComponent implements OnInit {
         this.logger.debug('Saving changes to comic:', this.comicBook);
         this.store.dispatch(
           updateComicBook({
-            comicBookId: this.comicBook.comicBookId,
+            comicBookId: this.comicBook.comicDetailId,
             comicType: this.comicBookForm.controls.comicType.value,
             publisher: this.comicBookForm.controls.publisher.value,
             series: this.comicBookForm.controls.series.value,

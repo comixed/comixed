@@ -252,7 +252,7 @@ public class ComicFileController {
     final Object encodedComicFiles = session.getAttribute(COMIC_FILES);
     if (Objects.isNull(encodedComicFiles)) {
       log.debug("No comic files found in session");
-      return null;
+      return Collections.emptyList();
     }
     return this.objectMapper.readValue(encodedComicFiles.toString(), new TypeReference<>() {});
   }

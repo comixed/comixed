@@ -27,15 +27,13 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.comixedproject.adaptors.AdaptorException;
-import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
+import org.comixedproject.adaptors.comicbooks.ComicAdaptor;
 import org.comixedproject.adaptors.comicbooks.ComicFileAdaptor;
-import org.comixedproject.model.batch.LoadComicBooksEvent;
-import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.model.batch.LoadComicsEvent;
 import org.comixedproject.model.comicfiles.ComicFile;
 import org.comixedproject.model.comicfiles.ComicFileGroup;
 import org.comixedproject.model.metadata.FilenameMetadata;
-import org.comixedproject.service.comicbooks.ComicDetailService;
+import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.service.metadata.FilenameScrapingRuleService;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateAdaptor;
@@ -54,8 +52,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Log4j2
 public class ComicFileService {
-  @Autowired private ComicBookAdaptor comicBookAdaptor;
-  @Autowired private ComicDetailService comicDetailService;
+  @Autowired private ComicAdaptor comicAdaptor;
+  @Autowired private ComicService comicService;
   @Autowired private ComicStateAdaptor comicStateAdaptor;
   @Autowired private ComicFileAdaptor comicFileAdaptor;
   @Autowired private FilenameScrapingRuleService filenameScrapingRuleService;
@@ -63,7 +61,7 @@ public class ComicFileService {
 
   public byte[] getImportFileCover(final String comicArchive) throws AdaptorException {
     log.debug("Getting first image from archive: {}", comicArchive);
-    return this.comicBookAdaptor.loadCover(comicArchive);
+    return this.comicAdaptor.loadCover(comicArchive);
   }
 
   /**
@@ -149,7 +147,7 @@ public class ComicFileService {
 
     final String filename = file.getCanonicalPath().replace("\\", "/");
     log.debug("Checking if comicBook file is already in the database: {}", filename);
-    return !this.comicDetailService.filenameFound(filename);
+    return !this.comicService.filenameFound(filename);
   }
 
   /**
@@ -162,12 +160,12 @@ public class ComicFileService {
   public void importComicFiles(final List<String> filenames) {
     for (int index = 0; index < filenames.size(); index++) {
       final String filename = filenames.get(index);
-      if (!this.comicDetailService.filenameFound(filename)) {
+      if (!this.comicService.filenameFound(filename)) {
         doImportComicFile(filename, ComicEvent.comicBookImported);
       }
     }
     log.debug("Initiating processing");
-    this.applicationEventPublisher.publishEvent(LoadComicBooksEvent.instance);
+    this.applicationEventPublisher.publishEvent(LoadComicsEvent.instance);
   }
 
   @Transactional
@@ -179,8 +177,7 @@ public class ComicFileService {
   private void doImportComicFile(final String filename, final ComicEvent event) {
     try {
       log.debug("Creating comicBook: filename={}", filename);
-      final ComicBook comicBook = this.comicBookAdaptor.createComic(filename);
-      final ComicDetail comic = comicBook.getComicDetail();
+      var comic = this.comicAdaptor.createComic(filename);
       log.trace("Scraping comicBook filename");
       final FilenameMetadata metadata =
           this.filenameScrapingRuleService.loadFilenameMetadata(comic.getBaseFilename());

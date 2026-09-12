@@ -25,10 +25,9 @@ import static org.comixedproject.service.admin.ConfigurationService.CREATE_EXTER
 import static org.mockito.Mockito.*;
 
 import org.comixedproject.adaptors.AdaptorException;
-import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
+import org.comixedproject.adaptors.comicbooks.ComicAdaptor;
 import org.comixedproject.model.archives.ArchiveType;
-import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.service.admin.ConfigurationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,149 +45,145 @@ class UpdateMetadataProcessorTest {
   private static final ArchiveType TEST_ARCHIVE_TYPE = ArchiveType.CB7;
 
   @InjectMocks private UpdateMetadataProcessor processor;
-  @Mock private ComicBookAdaptor comicBookAdaptor;
+  @Mock private ComicAdaptor comicAdaptor;
   @Mock private ConfigurationService configurationService;
-  @Mock private ComicBook comicBook;
-  @Mock private ComicDetail comicDetail;
+  @Mock private Comic comic;
 
   @BeforeEach
   void setUp() {
-    when(comicBook.isFileContentsLoaded()).thenReturn(true);
-    when(comicBook.isPurging()).thenReturn(false);
-    when(comicBook.isBatchMetadataUpdate()).thenReturn(false);
-    when(comicBook.isEditDetails()).thenReturn(false);
-    when(comicBook.getComicDetail()).thenReturn(comicDetail);
-    when(comicDetail.isMissing()).thenReturn(false);
-    when(comicDetail.getArchiveType()).thenReturn(TEST_ARCHIVE_TYPE);
+    when(comic.isLoadingFileContents()).thenReturn(false);
+    when(comic.isPurging()).thenReturn(false);
+    when(comic.isBatchUpdatingMetadata()).thenReturn(false);
+    when(comic.isEditingMetadata()).thenReturn(false);
+    when(comic.isMissing()).thenReturn(false);
+    when(comic.getArchiveType()).thenReturn(TEST_ARCHIVE_TYPE);
   }
 
   @Test
   void process_missing() {
-    when(comicDetail.isMissing()).thenReturn(true);
+    when(comic.isMissing()).thenReturn(true);
 
-    assertNull(processor.process(comicBook));
+    assertNull(processor.process(comic));
   }
 
   @Test
-  void process_fileContentsNotLoaded() {
-    when(comicBook.isFileContentsLoaded()).thenReturn(false);
+  void process_isLoadingFileContents() {
+    when(comic.isLoadingFileContents()).thenReturn(true);
 
-    assertNull(processor.process(comicBook));
+    assertNull(processor.process(comic));
   }
 
   @Test
   void process_isPurging() {
-    when(comicBook.isPurging()).thenReturn(true);
+    when(comic.isPurging()).thenReturn(true);
 
-    assertNull(processor.process(comicBook));
+    assertNull(processor.process(comic));
   }
 
   @Test
-  void process_batchMetadataUpdate() {
-    when(comicBook.isBatchMetadataUpdate()).thenReturn(true);
+  void process_isBatchUpdatingMetadata() {
+    when(comic.isBatchUpdatingMetadata()).thenReturn(true);
 
-    assertNull(processor.process(comicBook));
+    assertNull(processor.process(comic));
   }
 
   @Test
-  void process_isEditDetails() {
-    when(comicBook.isEditDetails()).thenReturn(true);
+  void process_isEditingMetadata() {
+    when(comic.isEditingMetadata()).thenReturn(true);
 
-    assertNull(processor.process(comicBook));
+    assertNull(processor.process(comic));
   }
 
   @Test
   void process_updateException() throws Exception {
     doThrow(AdaptorException.class)
-        .when(comicBookAdaptor)
-        .save(Mockito.any(ComicBook.class), Mockito.any(ArchiveType.class), Mockito.anyString());
+        .when(comicAdaptor)
+        .save(Mockito.any(Comic.class), Mockito.any(ArchiveType.class), Mockito.anyString());
 
-    final ComicBook result = processor.process(comicBook);
+    final Comic result = processor.process(comic);
 
     assertNotNull(result);
-    assertSame(comicBook, result);
+    assertSame(comic, result);
 
-    verify(comicBookAdaptor).save(comicBook, TEST_ARCHIVE_TYPE, "");
+    verify(comicAdaptor).save(comic, TEST_ARCHIVE_TYPE, "");
   }
 
   @Test
   void process_createExternalFileThrowsException() throws Exception {
     when(configurationService.isFeatureEnabled(CREATE_EXTERNAL_METADATA_FILE)).thenReturn(true);
-    doThrow(AdaptorException.class)
-        .when(comicBookAdaptor)
-        .saveMetadataFile(Mockito.any(ComicBook.class));
+    doThrow(AdaptorException.class).when(comicAdaptor).saveMetadataFile(Mockito.any(Comic.class));
 
-    final ComicBook result = processor.process(comicBook);
+    final Comic result = processor.process(comic);
 
     assertNotNull(result);
-    assertSame(comicBook, result);
+    assertSame(comic, result);
 
     verify(configurationService).isFeatureEnabled(CREATE_EXTERNAL_METADATA_FILE);
-    verify(comicBookAdaptor).saveMetadataFile(comicBook);
+    verify(comicAdaptor).saveMetadataFile(comic);
   }
 
   @Test
   void process_createExternalFile() throws Exception {
     when(configurationService.isFeatureEnabled(CREATE_EXTERNAL_METADATA_FILE)).thenReturn(true);
 
-    final ComicBook result = processor.process(comicBook);
+    final Comic result = processor.process(comic);
 
     assertNotNull(result);
-    assertSame(comicBook, result);
+    assertSame(comic, result);
 
     verify(configurationService).isFeatureEnabled(CREATE_EXTERNAL_METADATA_FILE);
-    verify(comicBookAdaptor).saveMetadataFile(comicBook);
+    verify(comicAdaptor).saveMetadataFile(comic);
   }
 
   @Test
   void process_forRarFile() throws Exception {
-    when(comicDetail.getArchiveType()).thenReturn(ArchiveType.CBR);
+    when(comic.getArchiveType()).thenReturn(ArchiveType.CBR);
 
-    final ComicBook result = processor.process(comicBook);
+    final Comic result = processor.process(comic);
 
     assertNotNull(result);
-    assertSame(comicBook, result);
+    assertSame(comic, result);
 
-    verify(comicBookAdaptor, never())
-        .save(Mockito.any(ComicBook.class), Mockito.any(ArchiveType.class), Mockito.anyString());
+    verify(comicAdaptor, never())
+        .save(Mockito.any(Comic.class), Mockito.any(ArchiveType.class), Mockito.anyString());
   }
 
   @Test
   void process_noComicInfoFileEnabled() throws Exception {
     when(configurationService.isFeatureEnabled(CFG_LIBRARY_NO_COMICINFO_ENTRY)).thenReturn(true);
 
-    final ComicBook result = processor.process(comicBook);
+    final Comic result = processor.process(comic);
 
     assertNotNull(result);
-    assertSame(comicBook, result);
+    assertSame(comic, result);
 
-    verify(comicBookAdaptor, never())
-        .save(Mockito.any(ComicBook.class), Mockito.any(ArchiveType.class), Mockito.anyString());
+    verify(comicAdaptor, never())
+        .save(Mockito.any(Comic.class), Mockito.any(ArchiveType.class), Mockito.anyString());
   }
 
   @Test
   void process_noRecreateComicFileAlowed() throws Exception {
     when(configurationService.isFeatureEnabled(CFG_LIBRARY_NO_RECREATE_COMICS)).thenReturn(true);
 
-    final ComicBook result = processor.process(comicBook);
+    final Comic result = processor.process(comic);
 
     assertNotNull(result);
-    assertSame(comicBook, result);
+    assertSame(comic, result);
 
-    verify(comicBookAdaptor, never())
-        .save(Mockito.any(ComicBook.class), Mockito.any(ArchiveType.class), Mockito.anyString());
+    verify(comicAdaptor, never())
+        .save(Mockito.any(Comic.class), Mockito.any(ArchiveType.class), Mockito.anyString());
   }
 
   @Test
   void process() throws Exception {
     when(configurationService.isFeatureEnabled(CREATE_EXTERNAL_METADATA_FILE)).thenReturn(true);
 
-    final ComicBook result = processor.process(comicBook);
+    final Comic result = processor.process(comic);
 
     assertNotNull(result);
-    assertSame(comicBook, result);
+    assertSame(comic, result);
 
-    verify(comicBookAdaptor).save(comicBook, TEST_ARCHIVE_TYPE, "");
+    verify(comicAdaptor).save(comic, TEST_ARCHIVE_TYPE, "");
     verify(configurationService).isFeatureEnabled(CREATE_EXTERNAL_METADATA_FILE);
   }
 }

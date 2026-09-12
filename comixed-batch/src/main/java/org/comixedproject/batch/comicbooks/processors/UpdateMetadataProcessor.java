@@ -20,9 +20,9 @@ package org.comixedproject.batch.comicbooks.processors;
 
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.AdaptorException;
-import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
+import org.comixedproject.adaptors.comicbooks.ComicAdaptor;
 import org.comixedproject.model.archives.ArchiveType;
-import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.service.admin.ConfigurationService;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.infrastructure.item.ItemProcessor;
@@ -37,29 +37,29 @@ import org.springframework.stereotype.Component;
 @Component
 @StepScope
 @Log4j2
-public class UpdateMetadataProcessor implements ItemProcessor<ComicBook, ComicBook> {
-  @Autowired private ComicBookAdaptor comicBookAdaptor;
+public class UpdateMetadataProcessor implements ItemProcessor<Comic, Comic> {
+  @Autowired private ComicAdaptor comicAdaptor;
   @Autowired private ConfigurationService configurationService;
 
   @Override
-  public ComicBook process(final ComicBook comicBook) {
-    if (comicBook.getComicDetail().isMissing()) {
-      log.debug("Comic file is missing, skipping: id={}", comicBook.getComicBookId());
+  public Comic process(final Comic comic) {
+    if (comic.isMissing()) {
+      log.debug("Comic file is missing, skipping: id={}", comic.getComicDetailId());
       return null;
     }
-    if (!comicBook.isFileContentsLoaded()
-        || comicBook.isPurging()
-        || comicBook.isBatchMetadataUpdate()
-        || comicBook.isEditDetails()) {
-      log.debug("Comic not ready for metadata update, skipping: id={}", comicBook.getComicBookId());
+    if (comic.isLoadingFileContents()
+        || comic.isPurging()
+        || comic.isBatchUpdatingMetadata()
+        || comic.isEditingMetadata()) {
+      log.debug("Comic not ready for metadata update, skipping: id={}", comic.getComicDetailId());
       return null;
     }
 
     if (this.configurationService.isFeatureEnabled(
         ConfigurationService.CREATE_EXTERNAL_METADATA_FILE)) {
-      log.debug("Creating external metadata file for comic: id={}", comicBook.getComicBookId());
+      log.debug("Creating external metadata file for comic: id={}", comic.getComicDetailId());
       try {
-        this.comicBookAdaptor.saveMetadataFile(comicBook);
+        this.comicAdaptor.saveMetadataFile(comic);
       } catch (AdaptorException error) {
         log.error("Failed to create external metadata file file comic", error);
       }
@@ -70,20 +70,20 @@ public class UpdateMetadataProcessor implements ItemProcessor<ComicBook, ComicBo
         || this.configurationService.isFeatureEnabled(
             ConfigurationService.CFG_LIBRARY_NO_RECREATE_COMICS)) {
       log.debug("Writing ComicInfo.xml entries disabled: skipping");
-      return comicBook;
+      return comic;
     }
 
-    if (comicBook.getComicDetail().getArchiveType() == ArchiveType.CBR) {
+    if (comic.getArchiveType() == ArchiveType.CBR) {
       log.warn("Cannot write comic metadata entry for CBR files: skipping");
-      return comicBook;
+      return comic;
     }
 
     try {
-      log.debug("Updating comic book metadata: id={}", comicBook.getComicBookId());
-      this.comicBookAdaptor.save(comicBook, comicBook.getComicDetail().getArchiveType(), "");
+      log.debug("Updating comic book metadata: id={}", comic.getComicDetailId());
+      this.comicAdaptor.save(comic, comic.getArchiveType(), "");
     } catch (AdaptorException error) {
       log.error("Failed to update metadata for comic book", error);
     }
-    return comicBook;
+    return comic;
   }
 }

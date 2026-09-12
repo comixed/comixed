@@ -45,12 +45,12 @@ import {
 import {
   initialState as initialReadComicBooksState,
   READ_COMIC_BOOKS_FEATURE_KEY
-} from '@app/user/reducers/read-comic-books.reducer';
+} from '@app/user/reducers/read-comics.reducer';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import {
   COMIC_BOOK_SELECTION_FEATURE_KEY,
   initialState as initialcomicBookSelectionState
-} from '@app/comic-books/reducers/comic-book-selection.reducer';
+} from '@app/comic-books/reducers/comic-selection.reducer';
 import { provideRouter } from '@angular/router';
 
 describe('SideNavigationComponent', () => {

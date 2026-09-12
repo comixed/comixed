@@ -18,8 +18,8 @@
 
 package org.comixedproject.rest.comicpages;
 
-import static org.comixedproject.rest.comicbooks.ComicBookController.MISSING_COMIC_COVER_FILENAME;
-import static org.junit.Assert.*;
+import static org.comixedproject.rest.comicbooks.ComicController.MISSING_COMIC_COVER_FILENAME;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.InputStream;
 import java.util.List;
