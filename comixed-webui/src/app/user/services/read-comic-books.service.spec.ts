@@ -33,10 +33,10 @@ import {
   HttpTestingController,
   provideHttpClientTesting
 } from '@angular/common/http/testing';
-import { COMIC_DETAIL_4 } from '@app/comic-books/comic-books.fixtures';
+import { DISPLAYABLE_COMIC_4 } from '@app/comic-books/comic-books.fixtures';
 
 describe('ReadComicBooksService', () => {
-  const COMIC = COMIC_DETAIL_4;
+  const COMIC = DISPLAYABLE_COMIC_4;
 
   let service: ReadComicBooksService;
   let httpMock: HttpTestingController;
@@ -61,12 +61,12 @@ describe('ReadComicBooksService', () => {
   describe('marking a single comic book', () => {
     it('marks them as read', () => {
       service
-        .setSingleReadState({ comicDetailId: COMIC.comicDetailId, read: true })
+        .setSingleReadState({ comicId: COMIC.comicDetailId, read: true })
         .subscribe(response => expect(response.status).toEqual(200));
 
       const req = httpMock.expectOne(
         interpolate(SET_COMIC_BOOK_READ_STATE_URL, {
-          comicDetailId: COMIC.comicDetailId
+          comicId: COMIC.comicDetailId
         })
       );
       expect(req.request.method).toEqual('PUT');
@@ -75,12 +75,12 @@ describe('ReadComicBooksService', () => {
 
     it('marks them as unread', () => {
       service
-        .setSingleReadState({ comicDetailId: COMIC.comicDetailId, read: false })
+        .setSingleReadState({ comicId: COMIC.comicDetailId, read: false })
         .subscribe(response => expect(response.status).toEqual(200));
 
       const req = httpMock.expectOne(
         interpolate(SET_COMIC_BOOK_READ_STATE_URL, {
-          comicDetailId: COMIC.comicDetailId
+          comicId: COMIC.comicDetailId
         })
       );
       expect(req.request.method).toEqual('DELETE');

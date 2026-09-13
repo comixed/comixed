@@ -39,17 +39,17 @@ import org.comixedproject.views.View;
 public class DisplayableComic {
   @Id
   @Column(name = "comic_book_id")
-  @JsonView({View.ComicListView.class})
+  @JsonView({View.ComicListView.class, View.DeletedPageList.class})
   @Getter
   private Long comicBookId;
 
   @Column(name = "comic_detail_id")
-  @JsonView({View.ComicListView.class})
+  @JsonView({View.ComicListView.class, View.DeletedPageList.class})
   @Getter
   private Long comicDetailId;
 
   @Column(name = "reference_id")
-  @JsonView({View.ComicListView.class})
+  @JsonView({View.ComicListView.class, View.DeletedPageList.class})
   @Getter
   private String referenceId;
 
@@ -98,31 +98,31 @@ public class DisplayableComic {
   private String sortName;
 
   @Column(name = "publisher")
-  @JsonView({View.ComicListView.class})
+  @JsonView({View.ComicListView.class, View.DeletedPageList.class})
   @Getter
   @Setter
   private String publisher;
 
   @Column(name = "imprint")
-  @JsonView({View.ComicListView.class})
+  @JsonView({View.ComicListView.class, View.DeletedPageList.class})
   @Getter
   @Setter
   private String imprint;
 
   @Column(name = "series")
-  @JsonView({View.ComicListView.class})
+  @JsonView({View.ComicListView.class, View.DeletedPageList.class})
   @Getter
   @Setter
   private String series;
 
   @Column(name = "volume")
-  @JsonView({View.ComicListView.class})
+  @JsonView({View.ComicListView.class, View.DeletedPageList.class})
   @Getter
   @Setter
   private String volume;
 
   @Column(name = "issue_number")
-  @JsonView({View.ComicListView.class})
+  @JsonView({View.ComicListView.class, View.DeletedPageList.class})
   @Getter
   private String issueNumber;
 
@@ -191,7 +191,7 @@ public class DisplayableComic {
   private Date lastModifiedDate;
 
   @Transient
-  @JsonView({View.ComicListView.class})
+  @JsonView({View.ComicListView.class, View.DeletedPageList.class})
   public String getBaseFilename() {
     return FilenameUtils.getName(this.filename);
   }

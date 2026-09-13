@@ -31,13 +31,13 @@ import { hot } from 'jasmine-marbles';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { AlertService } from '@app/core/services/alert.service';
 import { ReadComicBooksService } from '@app/user/services/read-comic-books.service';
-import { COMIC_DETAIL_4 } from '@app/comic-books/comic-books.fixtures';
+import { DISPLAYABLE_COMIC_4 } from '@app/comic-books/comic-books.fixtures';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 
 describe('ReadComicBooksEffects', () => {
   const READ = Math.random() > 0.5;
-  const COMIC_DETAIL = COMIC_DETAIL_4;
+  const COMIC = DISPLAYABLE_COMIC_4;
 
   let actions$: Observable<any>;
   let effects: ReadComicBooksEffects;
@@ -82,14 +82,14 @@ describe('ReadComicBooksEffects', () => {
     it('fires an action on success', () => {
       const serviceResponse = new HttpResponse({ status: 200 });
       const action = markSingleComicBookRead({
-        comicDetailId: COMIC_DETAIL.comicDetailId,
+        comicDetailId: COMIC.comicDetailId,
         read: READ
       });
       const outcome = markSelectedComicBooksReadSuccess();
 
       actions$ = hot('-a', { a: action });
       readComicBooksService.setSingleReadState
-        .withArgs({ comicDetailId: COMIC_DETAIL.comicDetailId, read: READ })
+        .withArgs({ comicId: COMIC.comicDetailId, read: READ })
         .and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
@@ -100,14 +100,14 @@ describe('ReadComicBooksEffects', () => {
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
       const action = markSingleComicBookRead({
-        comicDetailId: COMIC_DETAIL.comicDetailId,
+        comicDetailId: COMIC.comicDetailId,
         read: READ
       });
       const outcome = markSelectedComicBooksReadFailed();
 
       actions$ = hot('-a', { a: action });
       readComicBooksService.setSingleReadState
-        .withArgs({ comicDetailId: COMIC_DETAIL.comicDetailId, read: READ })
+        .withArgs({ comicId: COMIC.comicDetailId, read: READ })
         .and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
@@ -117,14 +117,14 @@ describe('ReadComicBooksEffects', () => {
 
     it('fires an action on general failure', () => {
       const action = markSingleComicBookRead({
-        comicDetailId: COMIC_DETAIL.comicDetailId,
+        comicDetailId: COMIC.comicDetailId,
         read: READ
       });
       const outcome = markSelectedComicBooksReadFailed();
 
       actions$ = hot('-a', { a: action });
       readComicBooksService.setSingleReadState
-        .withArgs({ comicDetailId: COMIC_DETAIL.comicDetailId, read: READ })
+        .withArgs({ comicId: COMIC.comicDetailId, read: READ })
         .and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });

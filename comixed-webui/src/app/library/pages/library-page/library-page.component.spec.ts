@@ -46,7 +46,6 @@ import {
   Router
 } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
-import { ArchiveTypePipe } from '@app/library/pipes/archive-type.pipe';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
@@ -57,7 +56,6 @@ import {
 import { MatDividerModule } from '@angular/material/divider';
 import { MatSortModule } from '@angular/material/sort';
 import { USER_READER } from '@app/user/user.fixtures';
-import { CoverDateFilterPipe } from '@app/comic-books/pipes/cover-date-filter.pipe';
 import { MatInputModule } from '@angular/material/input';
 import { ComicListViewComponent } from '@app/comic-books/components/comic-list-view/comic-list-view.component';
 import { MatTableModule } from '@angular/material/table';
@@ -146,8 +144,6 @@ describe('LibraryPageComponent', () => {
         MatCheckboxModule,
         LibraryPageComponent,
         ComicListViewComponent,
-        ArchiveTypePipe,
-        CoverDateFilterPipe,
         ComicCoverUrlPipe,
         ComicTitlePipe
       ],

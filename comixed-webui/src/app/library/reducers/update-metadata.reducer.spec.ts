@@ -27,10 +27,9 @@ import {
   updateSelectedComicBooksMetadataSuccess,
   updateSingleComicBookMetadata
 } from '@app/library/actions/update-metadata.actions';
-import { COMIC_DETAIL_1 } from '@app/comic-books/comic-books.fixtures';
 
 describe('UpdateMetadata Reducer', () => {
-  const COMIC_DETAIL = COMIC_DETAIL_1;
+  const COMIC_ID = 1000;
 
   let state: UpdateMetadataState;
 
@@ -52,7 +51,7 @@ describe('UpdateMetadata Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, updating: false },
-        updateSingleComicBookMetadata({ comicBookId: COMIC_DETAIL.comicBookId })
+        updateSingleComicBookMetadata({ comicBookId: COMIC_ID })
       );
     });
 

@@ -18,25 +18,25 @@
 
 import { Component, inject, Input } from '@angular/core';
 import {
-  MatTableDataSource,
-  MatTable,
-  MatColumnDef,
-  MatHeaderCellDef,
-  MatHeaderCell,
-  MatCellDef,
   MatCell,
-  MatHeaderRowDef,
+  MatCellDef,
+  MatColumnDef,
+  MatHeaderCell,
+  MatHeaderCellDef,
   MatHeaderRow,
+  MatHeaderRowDef,
+  MatRow,
   MatRowDef,
-  MatRow
+  MatTable,
+  MatTableDataSource
 } from '@angular/material/table';
 import { LoggerService } from '@angular-ru/cdk/logger';
-import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { MatTooltip } from '@angular/material/tooltip';
 import { RouterLink } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 import { TranslateModule } from '@ngx-translate/core';
+import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 
 @Component({
   selector: 'app-comic-book-list',
@@ -62,7 +62,7 @@ import { TranslateModule } from '@ngx-translate/core';
 })
 export class ComicBookListComponent {
   @Input()
-  dataSource: MatTableDataSource<ComicDetail>;
+  dataSource: MatTableDataSource<DisplayableComic>;
 
   readonly displayedColumns = [
     'publisher',

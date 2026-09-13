@@ -44,7 +44,7 @@ import {
   SEND_COMIC_FILES_URL,
   TOGGLE_COMIC_FILE_SELECTIONS_URL
 } from '@app/comic-files/comic-file.constants';
-import { COMIC_DETAIL_2 } from '@app/comic-books/comic-books.fixtures';
+import { DISPLAYABLE_COMIC_2 } from '@app/comic-books/comic-books.fixtures';
 import { FilenameMetadataResponse } from '@app/comic-files/models/net/filename-metadata-response';
 import { FilenameMetadataRequest } from '@app/comic-files/models/net/filename-metadata-request';
 import { ComicFileGroup } from '@app/comic-files/models/comic-file-group';
@@ -62,11 +62,11 @@ describe('ComicImportService', () => {
     }
   ];
   const MAXIMUM = 100;
-  const FILENAME = COMIC_DETAIL_2.baseFilename;
-  const SERIES = COMIC_DETAIL_2.series;
-  const VOLUME = COMIC_DETAIL_2.volume;
-  const ISSUE_NUMBER = COMIC_DETAIL_2.issueNumber;
-  const COVER_DATE = COMIC_DETAIL_2.coverDate;
+  const FILENAME = DISPLAYABLE_COMIC_2.baseFilename;
+  const SERIES = DISPLAYABLE_COMIC_2.series;
+  const VOLUME = DISPLAYABLE_COMIC_2.volume;
+  const ISSUE_NUMBER = DISPLAYABLE_COMIC_2.issueNumber;
+  const COVER_DATE = DISPLAYABLE_COMIC_2.coverDate;
   const SELECTED = Math.random() > 0.5;
   const SINGLE = Math.random() > 0.5;
 

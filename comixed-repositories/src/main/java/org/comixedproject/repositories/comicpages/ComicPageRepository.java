@@ -91,7 +91,7 @@ public interface ComicPageRepository extends JpaRepository<ComicPage, Long> {
    * @return the page list
    */
   @Query(
-      "SELECT new org.comixedproject.model.comicpages.DeletedPageAndComic(p.hash, p.comicDetail) FROM ComicPage p WHERE p.pageType = 'DELETED'")
+      "SELECT new org.comixedproject.model.comicpages.DeletedPageAndComic(p.hash, p.comicDetail.comicBook.comicBookId) FROM ComicPage p WHERE p.pageType = 'DELETED'")
   List<DeletedPageAndComic> loadAllDeletedPages();
 
   /**

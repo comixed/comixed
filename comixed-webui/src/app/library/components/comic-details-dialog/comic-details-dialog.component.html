@@ -1,14 +1,14 @@
-@if (!!comicBook) {
+@if (!!comic) {
   <h1 mat-dialog-title>
-    {{ comicBook.detail | comicTitle }}
+    {{ comic | comicTitle }}
   </h1>
 }
-@if (!!comicBook) {
+@if (!!comic) {
   <mat-dialog-content>
     <div class="cx-horizontal-container">
       <div>
         <app-comic-page
-          [imageUrl]="comicBook.detail | comicDetailCoverUrl"
+          [imageUrl]="comic | comicDetailCoverUrl"
         ></app-comic-page>
       </div>
       <div class="cx-grow-1">
@@ -18,7 +18,7 @@
           >
             {{ "comic-book.label.publisher" | translate }}
           </span>
-          {{ comicBook.publisher }}
+          {{ comic.publisher }}
         </span>
         <br />
         <span>
@@ -27,7 +27,7 @@
           >
             {{ "comic-book.label.series" | translate }}
           </span>
-          {{ comicBook.series }}
+          {{ comic.series }}
         </span>
         <br />
         <span>
@@ -36,7 +36,7 @@
           >
             {{ "comic-book.label.volume" | translate }}
           </span>
-          {{ comicBook.volume }}
+          {{ comic.volume }}
         </span>
         <br />
         <span>
@@ -45,7 +45,7 @@
           >
             {{ "comic-book.label.issue-number" | translate }}
           </span>
-          {{ comicBook.issueNumber }}
+          {{ comic.issueNumber }}
         </span>
         <br />
         <span>
@@ -54,7 +54,7 @@
           >
             {{ "comic-book.label.page-count" | translate }}
           </span>
-          {{ comicBook.pageCount }}
+          {{ comic.pageCount }}
         </span>
         <br />
         <span>
@@ -63,7 +63,7 @@
           >
             {{ "comic-book.label.cover-date" | translate }}
           </span>
-          {{ comicBook.coverDate | date: "mediumDate" }}
+          {{ comic.coverDate | date: "mediumDate" }}
         </span>
         <br />
         <span>
@@ -72,20 +72,20 @@
           >
             {{ "comic-book.label.added-date" | translate }}
           </span>
-          {{ comicBook.addedDate | date: "medium" }}
+          {{ comic.addedDate | date: "medium" }}
         </span>
         <br />
-        @if (!!comicBook.lastRead) {
+        @if (!!comic.lastRead) {
           <span>
             <span
               class="cx-detail-label cx-float-left cx-align-text-right cx-padding-right-5"
             >
               {{ "comic-book.label.last-read-date" | translate }}
             </span>
-            {{ comicBook.lastRead | date: "medium" }}
+            {{ comic.lastRead | date: "medium" }}
           </span>
         }
-        @if (!!comicBook.lastRead) {
+        @if (!!comic.lastRead) {
           <br />
         }
         <span>
@@ -94,7 +94,7 @@
           >
             {{ "comic-book.label.archive-type" | translate }}
           </span>
-          {{ "text.archive-type" | translate: { type: comicBook.archiveType } }}
+          {{ "text.archive-type" | translate: { type: comic.archiveType } }}
         </span>
         <br />
         <span>

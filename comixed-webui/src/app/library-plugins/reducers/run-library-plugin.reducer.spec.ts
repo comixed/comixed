@@ -28,11 +28,10 @@ import {
   runLibraryPluginSuccess
 } from '@app/library-plugins/actions/run-library-plugin.actions';
 import { LIBRARY_PLUGIN_4 } from '@app/library-plugins/library-plugins.fixtures';
-import { COMIC_BOOK_2 } from '@app/comic-books/comic-books.fixtures';
 
 describe('RunLibraryPlugin Reducer', () => {
   const PLUGIN = LIBRARY_PLUGIN_4;
-  const COMIC_BOOK = COMIC_BOOK_2;
+  const COMIC_ID = 1000;
 
   let state: RunLibraryPluginState;
 
@@ -57,7 +56,7 @@ describe('RunLibraryPlugin Reducer', () => {
           { ...state, busy: false },
           runLibraryPluginOnOneComicBook({
             plugin: PLUGIN,
-            comicBookId: COMIC_BOOK.comicBookId
+            comicBookId: COMIC_ID
           })
         );
       });

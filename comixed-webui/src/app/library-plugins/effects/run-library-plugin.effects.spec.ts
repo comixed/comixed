@@ -22,7 +22,6 @@ import { Observable, of, throwError } from 'rxjs';
 import { RunLibraryPluginEffects } from './run-library-plugin.effects';
 import { LibraryPluginService } from '@app/library-plugins/services/library-plugin.service';
 import { LIBRARY_PLUGIN_4 } from '@app/library-plugins/library-plugins.fixtures';
-import { COMIC_BOOK_2 } from '@app/comic-books/comic-books.fixtures';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import {
   runLibraryPluginFailure,
@@ -38,7 +37,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 describe('RunLibraryPluginEffects', () => {
   const PLUGIN = LIBRARY_PLUGIN_4;
-  const COMIC_BOOK = COMIC_BOOK_2;
+  const COMIC_ID = 71765;
 
   let actions$: Observable<any>;
   let effects: RunLibraryPluginEffects;
@@ -88,7 +87,7 @@ describe('RunLibraryPluginEffects', () => {
       const serviceResponse = new HttpResponse({ status: 200 });
       const action = runLibraryPluginOnOneComicBook({
         plugin: PLUGIN,
-        comicBookId: COMIC_BOOK.comicBookId
+        comicBookId: COMIC_ID
       });
       const outcome = runLibraryPluginSuccess();
 
@@ -96,7 +95,7 @@ describe('RunLibraryPluginEffects', () => {
       libraryPluginService.runLibraryPluginOnOneComicBook
         .withArgs({
           plugin: PLUGIN,
-          comicBookId: COMIC_BOOK.comicBookId
+          comicBookId: COMIC_ID
         })
         .and.returnValue(of(serviceResponse));
 
@@ -109,7 +108,7 @@ describe('RunLibraryPluginEffects', () => {
       const serviceResponse = new HttpErrorResponse({});
       const action = runLibraryPluginOnOneComicBook({
         plugin: PLUGIN,
-        comicBookId: COMIC_BOOK.comicBookId
+        comicBookId: COMIC_ID
       });
       const outcome = runLibraryPluginFailure();
 
@@ -117,7 +116,7 @@ describe('RunLibraryPluginEffects', () => {
       libraryPluginService.runLibraryPluginOnOneComicBook
         .withArgs({
           plugin: PLUGIN,
-          comicBookId: COMIC_BOOK.comicBookId
+          comicBookId: COMIC_ID
         })
         .and.returnValue(throwError(serviceResponse));
 
@@ -129,7 +128,7 @@ describe('RunLibraryPluginEffects', () => {
     it('fires an action on general failure', () => {
       const action = runLibraryPluginOnOneComicBook({
         plugin: PLUGIN,
-        comicBookId: COMIC_BOOK.comicBookId
+        comicBookId: COMIC_ID
       });
       const outcome = runLibraryPluginFailure();
 
@@ -137,7 +136,7 @@ describe('RunLibraryPluginEffects', () => {
       libraryPluginService.runLibraryPluginOnOneComicBook
         .withArgs({
           plugin: PLUGIN,
-          comicBookId: COMIC_BOOK.comicBookId
+          comicBookId: COMIC_ID
         })
         .and.throwError('expected');
 

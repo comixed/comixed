@@ -21,11 +21,11 @@ import { Role } from '@app/user/models/role';
 import { ROLE_NAME_ADMIN, ROLE_NAME_READER } from '@app/user/user.constants';
 import { Preference } from '@app/user/models/preference';
 import {
-  COMIC_DETAIL_1,
-  COMIC_DETAIL_2,
-  COMIC_DETAIL_3,
-  COMIC_DETAIL_4,
-  COMIC_DETAIL_5
+  DISPLAYABLE_COMIC_1,
+  DISPLAYABLE_COMIC_2,
+  DISPLAYABLE_COMIC_3,
+  DISPLAYABLE_COMIC_4,
+  DISPLAYABLE_COMIC_5
 } from '@app/comic-books/comic-books.fixtures';
 
 export const ROLE_READER: Role = {
@@ -77,12 +77,12 @@ export const USER_BLOCKED: User = {
   readComicBooks: []
 };
 
-export const READ_COMIC_BOOK_1 = COMIC_DETAIL_1.comicDetailId;
+export const READ_COMIC_BOOK_1 = DISPLAYABLE_COMIC_1.comicDetailId;
 
-export const READ_COMIC_BOOK_2 = COMIC_DETAIL_2.comicDetailId;
+export const READ_COMIC_BOOK_2 = DISPLAYABLE_COMIC_2.comicDetailId;
 
-export const READ_COMIC_BOOK_3 = COMIC_DETAIL_3.comicDetailId;
+export const READ_COMIC_BOOK_3 = DISPLAYABLE_COMIC_3.comicDetailId;
 
-export const READ_COMIC_BOOK_4 = COMIC_DETAIL_4.comicDetailId;
+export const READ_COMIC_BOOK_4 = DISPLAYABLE_COMIC_4.comicDetailId;
 
-export const READ_COMIC_BOOK_5 = COMIC_DETAIL_5.comicDetailId;
+export const READ_COMIC_BOOK_5 = DISPLAYABLE_COMIC_5.comicDetailId;

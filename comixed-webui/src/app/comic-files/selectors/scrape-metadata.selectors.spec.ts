@@ -25,10 +25,10 @@ import {
   selectScrapeMetadataSeries,
   selectScrapeMetadataVolume
 } from './scrape-metadata.selectors';
-import { COMIC_DETAIL_2 } from '@app/comic-books/comic-books.fixtures';
+import { DISPLAYABLE_COMIC_2 } from '@app/comic-books/comic-books.fixtures';
 
 describe('ScrapeMetadata Selectors', () => {
-  const COMIC = COMIC_DETAIL_2;
+  const COMIC = DISPLAYABLE_COMIC_2;
 
   let state: ScrapeMetadataState;
 

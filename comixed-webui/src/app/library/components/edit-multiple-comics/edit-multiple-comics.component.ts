@@ -38,7 +38,6 @@ import { Store } from '@ngrx/store';
 import { selectImprints } from '@app/comic-books/selectors/imprint-list.selectors';
 import { loadImprints } from '@app/comic-books/actions/imprint-list.actions';
 import { EditMultipleComics } from '@app/library/models/ui/edit-multiple-comics';
-import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { COMIC_TYPE_SELECTION_OPTIONS } from '@app/comic-books/comic-books.constants';
 import { ComicType } from '@app/comic-books/models/comic-type';
 import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
@@ -49,6 +48,7 @@ import { MatIcon } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
 import { AsyncPipe } from '@angular/common';
 import { tap } from 'rxjs/operators';
+import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 
 @Component({
   selector: 'app-edit-multiple-comics',
@@ -88,7 +88,7 @@ export class EditMultipleComicsComponent implements OnInit {
   logger = inject(LoggerService);
   formBuilder = inject(UntypedFormBuilder);
   store = inject(Store);
-  comicBooks = inject<ComicDetail[]>(MAT_DIALOG_DATA);
+  comicList = inject<DisplayableComic[]>(MAT_DIALOG_DATA);
 
   constructor() {
     this.detailsForm = this.formBuilder.group({
@@ -127,13 +127,13 @@ export class EditMultipleComicsComponent implements OnInit {
       .subscribe();
   }
 
-  private _comics: ComicDetail[] = [];
+  private _comics: DisplayableComic[] = [];
 
-  get comics(): ComicDetail[] {
+  get comics(): DisplayableComic[] {
     return this._comics;
   }
 
-  set comics(comics: ComicDetail[]) {
+  set comics(comics: DisplayableComic[]) {
     this._comics = comics;
     this.detailsForm.controls.publisher.setValue(
       this.findOption(comics.map(comic => comic.publisher))

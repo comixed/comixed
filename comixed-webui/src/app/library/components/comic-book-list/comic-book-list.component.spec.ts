@@ -22,29 +22,29 @@ import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import {
-  COMIC_DETAIL_1,
-  COMIC_DETAIL_2,
-  COMIC_DETAIL_3,
-  COMIC_DETAIL_4,
-  COMIC_DETAIL_5
+  DISPLAYABLE_COMIC_1,
+  DISPLAYABLE_COMIC_2,
+  DISPLAYABLE_COMIC_3,
+  DISPLAYABLE_COMIC_4,
+  DISPLAYABLE_COMIC_5
 } from '@app/comic-books/comic-books.fixtures';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { provideRouter } from '@angular/router';
+import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 
 describe('ComicBookListComponent', () => {
   const COMIC_BOOKS = [
-    COMIC_DETAIL_1,
-    COMIC_DETAIL_2,
-    COMIC_DETAIL_3,
-    COMIC_DETAIL_4,
-    COMIC_DETAIL_5
+    DISPLAYABLE_COMIC_1,
+    DISPLAYABLE_COMIC_2,
+    DISPLAYABLE_COMIC_3,
+    DISPLAYABLE_COMIC_4,
+    DISPLAYABLE_COMIC_5
   ];
 
   let component: ComicBookListComponent;
   let fixture: ComponentFixture<ComicBookListComponent>;
-  const dataSource = new MatTableDataSource<ComicDetail>(COMIC_BOOKS);
+  const dataSource = new MatTableDataSource<DisplayableComic>(COMIC_BOOKS);
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({

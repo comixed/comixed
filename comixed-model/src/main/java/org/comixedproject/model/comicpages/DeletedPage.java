@@ -26,7 +26,7 @@ import java.util.Objects;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.model.library.DisplayableComic;
 import org.comixedproject.views.View;
 
 /**
@@ -45,7 +45,7 @@ public class DeletedPage {
   @JsonProperty("comics")
   @JsonView(View.DeletedPageList.class)
   @Getter
-  private List<ComicDetail> comics = new ArrayList<>();
+  private List<DisplayableComic> comics = new ArrayList<>();
 
   @Override
   public boolean equals(final Object o) {

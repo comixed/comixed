@@ -21,22 +21,21 @@ import { SelectedComicsComponent } from './selected-comics.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import {
-  COMIC_BOOK_1,
-  COMIC_BOOK_2,
-  COMIC_BOOK_3,
-  COMIC_BOOK_4
+  DISPLAYABLE_COMIC_1,
+  DISPLAYABLE_COMIC_2,
+  DISPLAYABLE_COMIC_3,
+  DISPLAYABLE_COMIC_4
 } from '@app/comic-books/comic-books.fixtures';
 import { ComicDetailsDialogComponent } from '@app/library/components/comic-details-dialog/comic-details-dialog.component';
 
 describe('SelectedComicsComponent', () => {
   const COMICS = [
-    COMIC_BOOK_1.detail,
-    COMIC_BOOK_2.detail,
-    COMIC_BOOK_3.detail,
-    COMIC_BOOK_4.detail
+    DISPLAYABLE_COMIC_1,
+    DISPLAYABLE_COMIC_2,
+    DISPLAYABLE_COMIC_3,
+    DISPLAYABLE_COMIC_4
   ];
-  const COMIC_BOOK = COMIC_BOOK_3;
-  const COMIC_DETAIL = COMIC_BOOK.detail;
+  const COMIC = DISPLAYABLE_COMIC_3;
 
   let component: SelectedComicsComponent;
   let fixture: ComponentFixture<SelectedComicsComponent>;
@@ -87,13 +86,11 @@ describe('SelectedComicsComponent', () => {
 
   describe('when the selection has changed', () => {
     beforeEach(() => {
-      component.onSelectionChanged(COMIC_DETAIL);
+      component.onSelectionChanged(COMIC);
     });
 
     it('emits an event', () => {
-      expect(component.selectionChanged.emit).toHaveBeenCalledWith(
-        COMIC_DETAIL
-      );
+      expect(component.selectionChanged.emit).toHaveBeenCalledWith(COMIC);
     });
   });
 
@@ -103,12 +100,12 @@ describe('SelectedComicsComponent', () => {
     beforeEach(() => {
       event = new MouseEvent('test');
       spyOn(event, 'stopPropagation');
-      component.onShowComicDetails(COMIC_BOOK, event);
+      component.onShowComicDetails(COMIC, event);
     });
 
     it('opens the comic details dialog', () => {
       expect(dialog.open).toHaveBeenCalledWith(ComicDetailsDialogComponent, {
-        data: COMIC_BOOK
+        data: COMIC
       });
     });
 
