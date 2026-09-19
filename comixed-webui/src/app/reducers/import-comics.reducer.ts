@@ -19,7 +19,7 @@
 import { createReducer, on } from '@ngrx/store';
 import { importComicsUpdate } from '../actions/import-comics.actions';
 
-export const IMPORT_COMIC_BOOKS_FEATURE_KEY = 'import_comics_state';
+export const IMPORT_COMICS_FEATURE_KEY = 'import_comics_state';
 
 export interface ProcessingComicStatus {
   stepName: string;

@@ -160,20 +160,20 @@ export class ComicScrapingService {
    *
    * @param args.metadataSource the metadata source
    * @param args.issueId the source issue id
-   * @param args.comicBook the comic to be updated
+   * @param args.comic the comic to be updated
    * @param args.skipCache the skip cache flag
    */
   scrapeSingleBookComic(args: {
     metadataSource: MetadataSource;
     issueId: string;
-    comicBook: DisplayableComic;
+    comic: DisplayableComic;
     skipCache: boolean;
   }): Observable<any> {
     this.logger.debug('Scrape comic:', args);
     return this.http.put(
       interpolate(SCRAPE_SINGLE_BOOK_COMIC_URL, {
         sourceId: args.metadataSource.metadataSourceId,
-        comicId: args.comicBook.comicDetailId
+        comicId: args.comic.comicId
       }),
       {
         issueId: args.issueId,
@@ -204,13 +204,13 @@ export class ComicScrapingService {
   }
 
   removeMultiBookComic(args: {
-    comicBook: DisplayableComic;
+    comic: DisplayableComic;
     pageSize: number;
   }): Observable<any> {
     this.logger.debug('Removing comic from multi-books scraping:', args);
     return this.http.delete(
       interpolate(REMOVE_MULTI_BOOK_COMIC_URL, {
-        comicBookId: args.comicBook.comicDetailId,
+        comicId: args.comic.comicId,
         pageSize: args.pageSize
       })
     );
@@ -219,7 +219,7 @@ export class ComicScrapingService {
   scrapeMultiBookComic(args: {
     metadataSource: MetadataSource;
     issueId: string;
-    comicBook: DisplayableComic;
+    comic: DisplayableComic;
     skipCache: boolean;
     pageSize: number;
     pageNumber: number;
@@ -228,7 +228,7 @@ export class ComicScrapingService {
     return this.http.post(
       interpolate(SCRAPE_MULTI_BOOK_COMIC_URL, {
         sourceId: args.metadataSource.metadataSourceId,
-        comicBookId: args.comicBook.comicDetailId
+        comicId: args.comic.comicId
       }),
       {
         issueId: args.issueId,

@@ -95,7 +95,7 @@ class DuplicatePageServiceTest {
 
     when(comicPageRepository.findByHash(anyString())).thenReturn(comicPageList);
     when(comicPage.getComic()).thenReturn(comic);
-    when(comic.getComicDetailId()).thenReturn(TEST_COMIC_ID);
+    when(comic.getComicId()).thenReturn(TEST_COMIC_ID);
     when(displayableComicService.getForComicBookId(anyLong())).thenThrow(ComicException.class);
 
     assertThrows(DuplicatePageException.class, () -> service.getForHash(TEST_PAGE_HASH));
@@ -110,7 +110,7 @@ class DuplicatePageServiceTest {
 
     when(comicPageRepository.findByHash(anyString())).thenReturn(comicPageList);
     when(comicPage.getComic()).thenReturn(comic);
-    when(comic.getComicDetailId()).thenReturn(TEST_COMIC_ID);
+    when(comic.getComicId()).thenReturn(TEST_COMIC_ID);
     when(displayableComicService.getForComicBookId(anyLong())).thenReturn(displayableComic);
 
     final DuplicatePage result = service.getForHash(TEST_PAGE_HASH);

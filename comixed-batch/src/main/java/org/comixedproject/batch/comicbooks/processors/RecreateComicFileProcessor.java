@@ -45,7 +45,7 @@ public class RecreateComicFileProcessor implements ItemProcessor<Comic, Comic> {
   @Override
   public Comic process(final Comic comic) throws Exception {
     if (comic.isMissing()) {
-      log.debug("Comic file is missing, skipping: id={}", comic.getComicDetailId());
+      log.debug("Comic file is missing, skipping: id={}", comic.getComicId());
       return null;
     }
     if (comic.isLoadingFileContents()
@@ -53,13 +53,13 @@ public class RecreateComicFileProcessor implements ItemProcessor<Comic, Comic> {
         || comic.isBatchUpdatingMetadata()
         || comic.isEditingMetadata()
         || comic.isUpdatingMetadata()) {
-      log.debug("Comic book not ready for recreating, skipping: id={}", comic.getComicDetailId());
+      log.debug("Comic book not ready for recreating, skipping: id={}", comic.getComicId());
       return null;
     }
-    log.debug("Getting target archive adaptor: id={}", comic.getComicDetailId());
+    log.debug("Getting target archive adaptor: id={}", comic.getComicId());
     if (comic.getFile().exists() && comic.getFile().isFile()) {
       try {
-        log.trace("Recreating comicBook files");
+        log.trace("Recreating comic files");
         this.comicAdaptor.save(
             comic,
             comic.getTargetArchiveType(),

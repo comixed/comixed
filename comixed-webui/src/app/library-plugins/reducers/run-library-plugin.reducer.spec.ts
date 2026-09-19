@@ -56,7 +56,7 @@ describe('RunLibraryPlugin Reducer', () => {
           { ...state, busy: false },
           runLibraryPluginOnOneComicBook({
             plugin: PLUGIN,
-            comicBookId: COMIC_ID
+            comicId: COMIC_ID
           })
         );
       });

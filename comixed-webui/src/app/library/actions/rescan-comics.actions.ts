@@ -21,7 +21,7 @@ import { createAction, props } from '@ngrx/store';
 export const rescanSingleComicBook = createAction(
   '[Rescan Comic Books] Rescan a single comic book',
   props<{
-    comicBookId: number;
+    comicId: number;
   }>()
 );
 

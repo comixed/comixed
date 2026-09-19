@@ -56,9 +56,9 @@ public class OPDSUtils {
   @Autowired private ComicMetadataAdaptor comicMetadataAdaptor;
 
   /**
-   * Creates a link for the given comicBook.
+   * Creates a link for the given comic.
    *
-   * @param comic the comicBook
+   * @param comic the comic
    * @return the link
    */
   public OPDSLink createComicLink(final Comic comic) {
@@ -66,23 +66,21 @@ public class OPDSUtils {
         comic.getArchiveType().getMimeType(),
         OPDS_ACQUISITION_RELATION,
         String.format(
-            COMIC_LINK_URL,
-            comic.getComicDetailId(),
-            this.urlEncodeString(comic.getBaseFilename())));
+            COMIC_LINK_URL, comic.getComicId(), this.urlEncodeString(comic.getBaseFilename())));
   }
 
   public OPDSLink createComicCoverLink(final Comic comic) {
     return new OPDSLink(
         MIME_TYPE_IMAGE,
         OPDS_IMAGE_RELATION,
-        String.format(COMIC_COVER_URL, comic.getComicDetailId(), 0, 160));
+        String.format(COMIC_COVER_URL, comic.getComicId(), 0, 160));
   }
 
   public OPDSLink createComicThumbnailLink(final Comic comic) {
     return new OPDSLink(
         MIME_TYPE_IMAGE,
         OPDS_IMAGE_THUMBNAIL,
-        String.format(COMIC_COVER_URL, comic.getComicDetailId(), 0, 160));
+        String.format(COMIC_COVER_URL, comic.getComicId(), 0, 160));
   }
 
   /**
@@ -118,17 +116,17 @@ public class OPDSUtils {
   }
 
   /**
-   * Creates a well-formed entry for a comicBook book.
+   * Creates a well-formed entry for a comic book.
    *
-   * @param comic the comicBook
+   * @param comic the comic
    * @return the entry
    */
   public OPDSAcquisitionFeedEntry createComicEntry(final Comic comic) {
     final OPDSAcquisitionFeedEntry result =
         new OPDSAcquisitionFeedEntry(
             this.comicMetadataAdaptor.getDisplayableTitle(comic),
-            String.valueOf(comic.getComicDetailId()));
-    log.trace("Setting comicBook link");
+            String.valueOf(comic.getComicId()));
+    log.trace("Setting comic link");
     result.getLinks().add(this.createComicCoverLink(comic));
     result.getLinks().add(this.createComicThumbnailLink(comic));
     result.getLinks().add(this.createComicLink(comic));

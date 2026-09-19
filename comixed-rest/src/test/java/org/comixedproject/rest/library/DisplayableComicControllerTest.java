@@ -108,7 +108,7 @@ class DisplayableComicControllerTest {
   @Mock private List<Long> selectedIdList;
   @Mock private Principal principal;
   @Mock private ComiXedUser user;
-  @Mock private Set<Long> comicBooksRead;
+  @Mock private Set<Long> comicsRead;
   @Mock private LoadComicsResponse loadComicsResponse;
   @Mock private Comic comic;
 
@@ -143,8 +143,8 @@ class DisplayableComicControllerTest {
 
     when(comicService.getComicCount()).thenReturn(TEST_COMIC_COUNT);
     when(principal.getName()).thenReturn(TEST_EMAIL);
-    when(comicBooksRead.size()).thenReturn(TEST_READ_COMIC_COUNT);
-    when(user.getReadComicBooks()).thenReturn(comicBooksRead);
+    when(comicsRead.size()).thenReturn(TEST_READ_COMIC_COUNT);
+    when(user.getReadComicBooks()).thenReturn(comicsRead);
     when(userService.findByEmail(anyString())).thenReturn(user);
   }
 

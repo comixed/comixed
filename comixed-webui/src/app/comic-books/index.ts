@@ -20,7 +20,7 @@ import { Params } from '@angular/router';
 import { routerReducer, RouterReducerState } from '@ngrx/router-store';
 import { ActionReducerMap } from '@ngrx/store';
 import {
-  COMIC_BOOK_FEATURE_KEY,
+  COMIC_FEATURE_KEY,
   ComicState,
   reducer as comicReducer
 } from './reducers/comic.reducer';
@@ -35,9 +35,9 @@ import {
   reducer as imprintListReducer
 } from './reducers/imprint-list.reducer';
 import {
-  COMIC_BOOK_SELECTION_FEATURE_KEY,
+  COMIC_SELECTION_FEATURE_KEY,
   ComicSelectionState,
-  reducer as comicBookSelectionReducer
+  reducer as comicSelectionReducer
 } from '@app/comic-books/reducers/comic-selection.reducer';
 import {
   COMIC_LIST_FEATURE_KEY,
@@ -53,20 +53,20 @@ interface RouterStateUrl {
 
 export interface ComicModuleState {
   router: RouterReducerState<RouterStateUrl>;
-  [COMIC_BOOK_FEATURE_KEY]: ComicState;
+  [COMIC_FEATURE_KEY]: ComicState;
   [IMPRINT_LIST_FEATURE_KEY]: ImprintListState;
   [MARK_COMICS_DELETED_FEATURE_KEY]: MarkComicsDeletedState;
   [COMIC_LIST_FEATURE_KEY]: ComicListState;
-  [COMIC_BOOK_SELECTION_FEATURE_KEY]: ComicSelectionState;
+  [COMIC_SELECTION_FEATURE_KEY]: ComicSelectionState;
 }
 
 export type ModuleState = ComicModuleState;
 
 export const reducers: ActionReducerMap<ComicModuleState> = {
   router: routerReducer,
-  [COMIC_BOOK_FEATURE_KEY]: comicReducer,
+  [COMIC_FEATURE_KEY]: comicReducer,
   [IMPRINT_LIST_FEATURE_KEY]: imprintListReducer,
   [MARK_COMICS_DELETED_FEATURE_KEY]: markComicsDeletedReducer,
   [COMIC_LIST_FEATURE_KEY]: comicListReducer,
-  [COMIC_BOOK_SELECTION_FEATURE_KEY]: comicBookSelectionReducer
+  [COMIC_SELECTION_FEATURE_KEY]: comicSelectionReducer
 };

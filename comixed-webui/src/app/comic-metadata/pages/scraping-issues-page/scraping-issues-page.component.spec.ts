@@ -56,11 +56,11 @@ import {
   SCRAPING_VOLUME_1
 } from '@app/comic-metadata/comic-metadata.fixtures';
 import {
-  COMIC_BOOK_FEATURE_KEY,
+  COMIC_FEATURE_KEY,
   initialState as initialComicBookState
 } from '@app/comic-books/reducers/comic.reducer';
 import {
-  COMIC_BOOK_SELECTION_FEATURE_KEY,
+  COMIC_SELECTION_FEATURE_KEY,
   initialState as initialComicBookSelectionState
 } from '@app/comic-books/reducers/comic-selection.reducer';
 import {
@@ -78,7 +78,7 @@ import { BehaviorSubject } from 'rxjs';
 describe('ScrapingIssuesPageComponent', () => {
   const USER = USER_READER;
   const DISPLAYABLE_COMIC = DISPLAYABLE_COMIC_3;
-  const COMIC_BOOKS = [
+  const COMICS = [
     DISPLAYABLE_COMIC_1,
     DISPLAYABLE_COMIC_2,
     DISPLAYABLE_COMIC_3,
@@ -95,12 +95,12 @@ describe('ScrapingIssuesPageComponent', () => {
     [LIBRARY_FEATURE_KEY]: { ...initialLibraryState },
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER },
     [SINGLE_BOOK_SCRAPING_FEATURE_KEY]: { ...initialScrapingState },
-    [COMIC_BOOK_FEATURE_KEY]: { ...initialComicBookState },
+    [COMIC_FEATURE_KEY]: { ...initialComicBookState },
     [MULTI_BOOK_SCRAPING_FEATURE_KEY]: {
       ...initialMultiBookScrapingState,
-      comicBooks: COMIC_BOOKS
+      comics: COMICS
     },
-    [COMIC_BOOK_SELECTION_FEATURE_KEY]: initialComicBookSelectionState
+    [COMIC_SELECTION_FEATURE_KEY]: initialComicBookSelectionState
   };
 
   let component: ScrapingIssuesPageComponent;
@@ -225,7 +225,7 @@ describe('ScrapingIssuesPageComponent', () => {
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         multiBookScrapingRemoveBook({
-          comicBook: DISPLAYABLE_COMIC,
+          comic: DISPLAYABLE_COMIC,
           pageSize: PAGE_SIZE
         })
       );
@@ -239,7 +239,7 @@ describe('ScrapingIssuesPageComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        multiBookScrapingSetCurrentBook({ comicBook: DISPLAYABLE_COMIC })
+        multiBookScrapingSetCurrentBook({ comic: DISPLAYABLE_COMIC })
       );
     });
   });

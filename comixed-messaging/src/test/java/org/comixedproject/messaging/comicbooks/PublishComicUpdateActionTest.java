@@ -1,5 +1,5 @@
 /*
- * ComiXed - A digital comicBook book library management application.
+ * ComiXed - A digital comic book library management application.
  * Copyright (C) 2021, The ComiXed Project.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -49,15 +49,15 @@ class PublishComicUpdateActionTest {
   @Mock private SimpMessagingTemplate messagingTemplate;
   @Mock private ObjectMapper objectMapper;
   @Mock private ObjectWriter objectWriter;
-  @Mock private DisplayableComic comicDetails;
+  @Mock private DisplayableComic comics;
   @Mock private ComicDataSet data;
 
   @BeforeEach
   void setUp() throws JacksonException {
     when(objectMapper.writerWithView(Mockito.any())).thenReturn(objectWriter);
     when(objectWriter.writeValueAsString(Mockito.any())).thenReturn(TEST_COMIC_AS_JSON);
-    when(comicDetails.getComicDetailId()).thenReturn(TEST_COMIC_ID);
-    when(data.getDetail()).thenReturn(comicDetails);
+    when(comics.getComicId()).thenReturn(TEST_COMIC_ID);
+    when(data.getComic()).thenReturn(comics);
   }
 
   @Test
@@ -79,7 +79,7 @@ class PublishComicUpdateActionTest {
         .convertAndSend(PublishComicUpdateAction.COMIC_LIST_UPDATE_TOPIC, TEST_COMIC_AS_JSON);
     verify(messagingTemplate)
         .convertAndSend(
-            String.format(PublishComicUpdateAction.COMIC_BOOK_UPDATE_TOPIC, TEST_COMIC_ID),
+            String.format(PublishComicUpdateAction.COMIC_UPDATE_TOPIC, TEST_COMIC_ID),
             TEST_COMIC_AS_JSON);
   }
 }

@@ -55,7 +55,7 @@ class ProcessUnhashedComicsReaderTest {
   void read_noneLoaded() {
     when(comicService.findComicsWithUnhashedPages(anyInt())).thenReturn(comicList);
 
-    reader.comicBookList = null;
+    reader.comicList = null;
 
     final Comic result = reader.read();
 
@@ -71,7 +71,7 @@ class ProcessUnhashedComicsReaderTest {
 
     when(comicService.findComicsWithUnhashedPages(anyInt())).thenReturn(comicList);
 
-    reader.comicBookList = null;
+    reader.comicList = null;
 
     final Comic result = reader.read();
 
@@ -84,7 +84,7 @@ class ProcessUnhashedComicsReaderTest {
   void read_noneRemaining() {
     when(comicService.findComicsWithUnhashedPages(anyInt())).thenReturn(comicList);
 
-    reader.comicBookList = new ArrayList<>();
+    reader.comicList = new ArrayList<>();
 
     final Comic result = reader.read();
 
@@ -97,7 +97,7 @@ class ProcessUnhashedComicsReaderTest {
   void read_someRemaining() {
     for (int index = 0; index < MAX_RECORDS; index++) comicList.add(comic);
 
-    reader.comicBookList = comicList;
+    reader.comicList = comicList;
 
     final Comic result = reader.read();
 
@@ -116,7 +116,7 @@ class ProcessUnhashedComicsReaderTest {
     final Comic result = reader.read();
 
     assertNull(result);
-    assertNull(reader.comicBookList);
+    assertNull(reader.comicList);
 
     verify(comicService).findComicsWithUnhashedPages(reader.getChunkSize());
   }

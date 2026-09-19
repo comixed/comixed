@@ -60,7 +60,7 @@ class ScrapeComicProcessorTest {
 
   @BeforeEach
   void setUp() {
-    when(comic.getComicDetailId()).thenReturn(TEST_COMIC_ID);
+    when(comic.getComicId()).thenReturn(TEST_COMIC_ID);
     when(comic.getMetadata()).thenReturn(comicMetadataSource);
     when(comicMetadataSource.getComicMetadataSourceId()).thenReturn(TEST_COMIC_METADATA_SOURCE_ID);
     when(metadataSource.getMetadataSourceId()).thenReturn(TEST_METADATA_SOURCE_ID);

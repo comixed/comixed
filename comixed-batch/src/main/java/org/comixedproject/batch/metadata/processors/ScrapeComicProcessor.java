@@ -48,16 +48,16 @@ public class ScrapeComicProcessor implements ItemProcessor<Comic, Comic>, StepEx
   public Comic process(final Comic comic) throws Exception {
     Comic result = comic;
     if (comic.getMetadata() == null || comic.getMetadata().getComicMetadataSourceId() == null) {
-      log.error("No metadata source associated with comic: {}", comic.getComicDetailId());
+      log.error("No metadata source associated with comic: {}", comic.getComicId());
     } else {
       final boolean skipCache =
           Boolean.parseBoolean(this.jobParameters.getString(PARAM_SKIP_CACHE));
-      log.info("Scraping comic book: id={}", comic.getComicDetailId());
+      log.info("Scraping comic book: id={}", comic.getComicId());
       final ComicMetadataSource source = comic.getMetadata();
       result =
           this.metadataService.scrapeComic(
               source.getMetadataSource().getMetadataSourceId(),
-              comic.getComicDetailId(),
+              comic.getComicId(),
               source.getReferenceId(),
               skipCache);
     }

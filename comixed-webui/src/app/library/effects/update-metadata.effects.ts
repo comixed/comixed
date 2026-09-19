@@ -50,7 +50,7 @@ export class UpdateMetadataEffects {
       ),
       switchMap(action =>
         this.libraryService
-          .updateSingleComicBookMetadata({ comicBookId: action.comicBookId })
+          .updateSingleComicBookMetadata({ comicId: action.comicId })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
             tap(() =>

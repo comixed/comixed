@@ -21,9 +21,9 @@ import {
   addSingleComicBookSelection,
   clearComicBookSelectionState,
   clearComicBookSelectionStateFailed,
-  comicBookSelectionsLoaded,
-  comicBookSelectionStateCleared,
-  comicBookSelectionUpdate,
+  comicSelectionsLoaded,
+  comicSelectionStateCleared,
+  comicSelectionUpdate,
   loadComicBookSelections,
   loadComicBookSelectionsFailed,
   removeSingleComicBookSelection,
@@ -40,7 +40,7 @@ import {
   singleComicBookSelectionUpdated
 } from '../actions/comic-book-selection.actions';
 
-export const COMIC_BOOK_SELECTION_FEATURE_KEY = 'comic_book_selection_state';
+export const COMIC_SELECTION_FEATURE_KEY = 'comic_book_selection_state';
 
 export interface ComicSelectionState {
   busy: boolean;
@@ -58,18 +58,18 @@ export const reducer = createReducer(
     ...state,
     busy: true
   })),
-  on(comicBookSelectionsLoaded, (state, action) => ({
+  on(comicSelectionsLoaded, (state, action) => ({
     ...state,
     busy: false,
     ids: action.ids
   })),
   on(loadComicBookSelectionsFailed, state => ({ ...state, busy: false })),
-  on(comicBookSelectionUpdate, (state, action) => ({
+  on(comicSelectionUpdate, (state, action) => ({
     ...state,
     ids: action.ids
   })),
   on(clearComicBookSelectionState, state => ({ ...state, busy: true })),
-  on(comicBookSelectionStateCleared, state => ({
+  on(comicSelectionStateCleared, state => ({
     ...state,
     busy: false
   })),
@@ -128,7 +128,7 @@ export const reducer = createReducer(
   }))
 );
 
-export const comicBookSelectionFeature = createFeature({
-  name: COMIC_BOOK_SELECTION_FEATURE_KEY,
+export const comicSelectionFeature = createFeature({
+  name: COMIC_SELECTION_FEATURE_KEY,
   reducer
 });

@@ -121,11 +121,11 @@ public class ComicController {
   }
 
   /**
-   * Updates a comicBook with all incoming data.
+   * Updates a comic with all incoming data.
    *
-   * @param comicId the comicBook id
+   * @param comicId the comic id
    * @param request the request body
-   * @return the updated comicBook
+   * @return the updated comic
    * @throws ComicException if the id is invalid
    */
   @PutMapping(
@@ -137,7 +137,7 @@ public class ComicController {
   public ComicDataSet updateComic(
       @PathVariable("comicId") long comicId, @RequestBody() UpdateComicRequest request)
       throws ComicException {
-    log.info("Updating comicBook: id={}", comicId, request);
+    log.info("Updating comic: id={}", comicId, request);
 
     return this.comicDataService.updateComic(
         comicId,

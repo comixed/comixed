@@ -1,5 +1,5 @@
 /*
- * ComiXed - A digital comicBook book library management application.
+ * ComiXed - A digital comic book library management application.
  * Copyright (C) 2020, The ComiXed Project.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -44,7 +44,7 @@ class LibraryServiceTest {
   @InjectMocks private LibraryService service;
   @Mock private ComicService comicService;
   @Mock private ArchiveType archiveType;
-  @Mock private Comic comicBook;
+  @Mock private Comic comic;
   @Mock private FileAdaptor fileAdaptor;
   @Mock private PageCacheService pageCacheService;
   @Mock private ApplicationEventPublisher applicationEventPublisher;
@@ -83,7 +83,7 @@ class LibraryServiceTest {
 
   @Test
   void prepareForOrganization() {
-    for (int index = 0; index < 25; index++) comicList.add(comicBook);
+    for (int index = 0; index < 25; index++) comicList.add(comic);
 
     service.prepareForOrganization(comicIdList);
 

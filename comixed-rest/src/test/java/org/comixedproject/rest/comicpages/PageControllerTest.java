@@ -1,5 +1,5 @@
 /*
- * ComiXed - A digital comicBook book library management application.
+ * ComiXed - A digital comic book library management application.
  * Copyright (C) 2018, The ComiXed Project.
  *
  * This program is free software: you can redistribute it and/or modify

@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { COMIC_BOOK_FEATURE_KEY, ComicState } from '../reducers/comic.reducer';
+import { COMIC_FEATURE_KEY, ComicState } from '../reducers/comic.reducer';
 import {
   selectComicBookDetail,
   selectComicBookMetadataSource,
@@ -55,25 +55,25 @@ describe('ComicBook Selectors', () => {
   });
 
   it('selects the comic book', () => {
-    expect(selectComicBookDetail({ [COMIC_BOOK_FEATURE_KEY]: state })).toEqual(
+    expect(selectComicBookDetail({ [COMIC_FEATURE_KEY]: state })).toEqual(
       state.detail
     );
   });
 
   it('selects the metadata source', () => {
     expect(
-      selectComicBookMetadataSource({ [COMIC_BOOK_FEATURE_KEY]: state })
+      selectComicBookMetadataSource({ [COMIC_FEATURE_KEY]: state })
     ).toEqual(state.metadata.metadataSource);
   });
 
   it('selects the pages', () => {
-    expect(selectComicBookPages({ [COMIC_BOOK_FEATURE_KEY]: state })).toEqual(
+    expect(selectComicBookPages({ [COMIC_FEATURE_KEY]: state })).toEqual(
       state.pages
     );
   });
 
   it('selects the tags', () => {
-    expect(selectComicBookTags({ [COMIC_BOOK_FEATURE_KEY]: state })).toEqual(
+    expect(selectComicBookTags({ [COMIC_FEATURE_KEY]: state })).toEqual(
       state.tags
     );
   });

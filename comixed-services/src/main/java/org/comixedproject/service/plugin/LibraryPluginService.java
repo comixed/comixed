@@ -54,7 +54,7 @@ public class LibraryPluginService {
   public static final String PROPERTY_NAME_LOG = "log";
 
   /** The comic book ervice property name. */
-  public static final String PROPERTY_NAME_COMIC_BOOK_SERVICE = "comicBookService";
+  public static final String PROPERTY_NAME_COMIC_SERVICE = "comicService";
 
   @Autowired private LibraryPluginRepository libraryPluginRepository;
   @Autowired private UserService userService;
@@ -186,17 +186,17 @@ public class LibraryPluginService {
    * Runs a plugin against a single comic book.
    *
    * @param pluginId the plugin id
-   * @param comicBookId the comic book id
+   * @param comicId the comic book id
    * @throws LibraryPluginException if an error occurs
    */
   @Transactional
-  public void runLibraryPlugin(final long pluginId, final Long comicBookId)
+  public void runLibraryPlugin(final long pluginId, final Long comicId)
       throws LibraryPluginException {
     try {
       final LibraryPlugin plugin = this.doLoadPlugin(pluginId);
       final var pluginRuntime = doPreparePluginRuntime(plugin);
-      log.debug("Running plugin with id={}", comicBookId);
-      pluginRuntime.execute(plugin, comicBookId);
+      log.debug("Running plugin with id={}", comicId);
+      pluginRuntime.execute(plugin, comicId);
     } catch (PluginRuntimeException error) {
       throw new LibraryPluginException("Failed to run plugin", error);
     }
@@ -209,7 +209,7 @@ public class LibraryPluginService {
         this.pluginRuntimeLocator.getPluginRuntime(plugin.getLanguage());
     pluginRuntime.addProperty(PROPERTY_NAME_LOG, log);
     log.trace("Adding services to runtime");
-    pluginRuntime.addProperty(PROPERTY_NAME_COMIC_BOOK_SERVICE, this.comicService);
+    pluginRuntime.addProperty(PROPERTY_NAME_COMIC_SERVICE, this.comicService);
     pluginRuntime.addProperty(PROPERTY_NAME_READING_LIST_SERVICE, this.readingListService);
     return pluginRuntime;
   }
@@ -218,18 +218,18 @@ public class LibraryPluginService {
    * Runs a plugin against a list of comic books.
    *
    * @param pluginId the plugin id
-   * @param comicBookIds the comic book id
+   * @param comicIds the comic book id
    * @throws LibraryPluginException if an error occurs
    */
   @Transactional
-  public void runLibraryPlugin(final long pluginId, final List<Long> comicBookIds)
+  public void runLibraryPlugin(final long pluginId, final List<Long> comicIds)
       throws LibraryPluginException {
     try {
       log.trace("Loading plugin: id={}", pluginId);
       final LibraryPlugin plugin = this.doLoadPlugin(pluginId);
       final var pluginRuntime = doPreparePluginRuntime(plugin);
-      log.debug("Running plugin with {} id(s)", comicBookIds.size());
-      pluginRuntime.execute(plugin, comicBookIds);
+      log.debug("Running plugin with {} id(s)", comicIds.size());
+      pluginRuntime.execute(plugin, comicIds);
     } catch (PluginRuntimeException error) {
       throw new LibraryPluginException("Failed to run plugin", error);
     }

@@ -23,7 +23,7 @@ export const runLibraryPluginOnOneComicBook = createAction(
   '[Run Library Plugin] Load a library plugin against one comic book',
   props<{
     plugin: LibraryPlugin;
-    comicBookId: number;
+    comicId: number;
   }>()
 );
 

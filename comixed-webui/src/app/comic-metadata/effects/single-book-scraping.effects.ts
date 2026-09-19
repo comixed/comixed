@@ -143,7 +143,7 @@ export class SingleBookScrapingEffects {
           .scrapeSingleBookComic({
             metadataSource: action.metadataSource,
             issueId: action.issueId,
-            comicBook: action.comic,
+            comic: action.comic,
             skipCache: action.skipCache
           })
           .pipe(
@@ -158,7 +158,7 @@ export class SingleBookScrapingEffects {
             mergeMap(() => [
               scrapeSingleComicBookSuccess(),
               removeSingleComicBookSelection({
-                comicDetailId: action.comic.comicDetailId
+                comicId: action.comic.comicId
               })
             ]),
             catchError(error => {

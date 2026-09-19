@@ -51,7 +51,7 @@ describe('UpdateMetadata Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, updating: false },
-        updateSingleComicBookMetadata({ comicBookId: COMIC_ID })
+        updateSingleComicBookMetadata({ comicId: COMIC_ID })
       );
     });
 

@@ -54,14 +54,14 @@ export class ComicStoryComponent {
   locations: ComicTag[] = [];
   stories: ComicTag[] = [];
 
-  private _comicBook: DisplayableComic;
+  private _comic: DisplayableComic;
 
   get comic(): DisplayableComic {
-    return this._comicBook;
+    return this._comic;
   }
 
   @Input() set comic(comic: DisplayableComic) {
-    this._comicBook = comic;
+    this._comic = comic;
   }
 
   @Input() set tags(tags: ComicTag[]) {

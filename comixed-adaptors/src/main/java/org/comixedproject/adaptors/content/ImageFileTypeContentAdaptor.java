@@ -45,7 +45,7 @@ public class ImageFileTypeContentAdaptor implements FileTypeContentAdaptor {
   @Override
   public void loadContent(final Comic comic, final String filename, final byte[] content) {
     log.trace("Loading image into comic");
-    // if the comicBook already has this offset then update the offset's content
+    // if the comic already has this offset then update the offset's content
     if (comic.hasPageWithFilename(filename)) {
       log.trace("Ignore known file: {}", filename);
     } else {

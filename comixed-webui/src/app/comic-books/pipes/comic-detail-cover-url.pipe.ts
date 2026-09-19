@@ -24,11 +24,11 @@ import {
 import { interpolate } from '@app/core';
 import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 
-@Pipe({ name: 'comicDetailCoverUrl' })
+@Pipe({ name: 'comicCoverUrl' })
 export class ComicDetailCoverUrlPipe implements PipeTransform {
   transform(comic: DisplayableComic): string {
     if (comic) {
-      return interpolate(GET_COMIC_COVER_URL, { id: comic.comicDetailId });
+      return interpolate(GET_COMIC_COVER_URL, { id: comic.comicId });
     }
     return MISSING_COMIC_IMAGE_URL;
   }

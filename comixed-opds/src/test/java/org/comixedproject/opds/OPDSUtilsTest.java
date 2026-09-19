@@ -1,5 +1,5 @@
 /*
- * ComiXed - A digital comicBook book library management application.
+ * ComiXed - A digital comic book library management application.
  * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
@@ -77,19 +77,18 @@ class OPDSUtilsTest {
     assertEquals(TEST_ARCHIVE_TYPE.getMimeType(), result.getMimeType());
     assertEquals(
         String.format(
-            COMIC_LINK_URL, comic.getComicDetailId(), utils.urlEncodeString(TEST_BASE_FILENAME)),
+            COMIC_LINK_URL, comic.getComicId(), utils.urlEncodeString(TEST_BASE_FILENAME)),
         result.getReference());
   }
 
   @Test
-  void createComicCoverLink_comicBookAdaptorException() {
+  void createComicCoverLink_comicAdaptorException() {
     final OPDSLink result = utils.createComicCoverLink(comic);
 
     assertNotNull(result);
     assertEquals(MIME_TYPE_IMAGE, result.getMimeType());
     assertEquals(OPDS_IMAGE_RELATION, result.getRelation());
-    assertEquals(
-        String.format(COMIC_COVER_URL, comic.getComicDetailId(), 0, 160), result.getReference());
+    assertEquals(String.format(COMIC_COVER_URL, comic.getComicId(), 0, 160), result.getReference());
   }
 
   @Test
@@ -99,8 +98,7 @@ class OPDSUtilsTest {
     assertNotNull(result);
     assertEquals(TEST_MIME_TYPE_IMAGE, result.getMimeType());
     assertEquals(OPDS_IMAGE_RELATION, result.getRelation());
-    assertEquals(
-        String.format(COMIC_COVER_URL, comic.getComicDetailId(), 0, 160), result.getReference());
+    assertEquals(String.format(COMIC_COVER_URL, comic.getComicId(), 0, 160), result.getReference());
   }
 
   @Test
@@ -110,8 +108,7 @@ class OPDSUtilsTest {
     assertNotNull(result);
     assertEquals(TEST_MIME_TYPE_IMAGE, result.getMimeType());
     assertEquals(OPDS_IMAGE_THUMBNAIL, result.getRelation());
-    assertEquals(
-        String.format(COMIC_COVER_URL, comic.getComicDetailId(), 0, 160), result.getReference());
+    assertEquals(String.format(COMIC_COVER_URL, comic.getComicId(), 0, 160), result.getReference());
   }
 
   @Test

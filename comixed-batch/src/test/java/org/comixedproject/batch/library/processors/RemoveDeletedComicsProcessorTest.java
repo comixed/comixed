@@ -1,5 +1,5 @@
 /*
- * ComiXed - A digital comicBook book library management application.
+ * ComiXed - A digital comic book library management application.
  * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
@@ -43,7 +43,7 @@ import org.springframework.batch.infrastructure.item.ExecutionContext;
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class RemoveDeletedComicsProcessorTest {
-  private static final String TEST_FILENAME = "/Users/comixed/Documents/comics/comicBook.cbz";
+  private static final String TEST_FILENAME = "/Users/comixed/Documents/comics/comic.cbz";
 
   @InjectMocks private RemoveDeletedComicsProcessor processor;
   @Mock private ComicService comicService;

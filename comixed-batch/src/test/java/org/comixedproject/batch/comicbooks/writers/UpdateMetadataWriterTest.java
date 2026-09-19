@@ -1,5 +1,5 @@
 /*
- * ComiXed - A digital comicBook book library management application.
+ * ComiXed - A digital comic book library management application.
  * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
@@ -37,15 +37,15 @@ class UpdateMetadataWriterTest {
   @Mock private ComicStateAdaptor comicStateAdaptor;
   @Mock private Comic comic;
 
-  private Chunk<Comic> comicBookList = new Chunk<>(new ArrayList<>());
+  private Chunk<Comic> comicList = new Chunk<>(new ArrayList<>());
 
   @Test
   void write() {
-    for (int index = 0; index < 25; index++) comicBookList.add(comic);
+    for (int index = 0; index < 25; index++) comicList.add(comic);
 
-    writer.write(comicBookList);
+    writer.write(comicList);
 
-    verify(comicStateAdaptor, times(comicBookList.size()))
+    verify(comicStateAdaptor, times(comicList.size()))
         .fireEvent(comic, ComicEvent.comicMetadataSaved);
   }
 }

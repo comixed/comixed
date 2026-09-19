@@ -56,7 +56,7 @@ describe('ScrapeStoryEffects', () => {
 
   let actions$: Observable<any>;
   let effects: ScrapeStoryEffects;
-  let comicBookScrapingService: jasmine.SpyObj<ComicScrapingService>;
+  let comicScrapingService: jasmine.SpyObj<ComicScrapingService>;
   let alertService: AlertService;
 
   beforeEach(() => {
@@ -81,7 +81,7 @@ describe('ScrapeStoryEffects', () => {
     });
 
     effects = TestBed.inject(ScrapeStoryEffects);
-    comicBookScrapingService = TestBed.inject(
+    comicScrapingService = TestBed.inject(
       ComicScrapingService
     ) as jasmine.SpyObj<ComicScrapingService>;
     alertService = TestBed.inject(AlertService);
@@ -107,7 +107,7 @@ describe('ScrapeStoryEffects', () => {
       });
 
       actions$ = hot('-a', { a: action });
-      comicBookScrapingService.loadStoryCandidates
+      comicScrapingService.loadStoryCandidates
         .withArgs({
           sourceId: METADATA_SOURCE.metadataSourceId,
           storyName: STORY_NAME,
@@ -131,7 +131,7 @@ describe('ScrapeStoryEffects', () => {
       const outcome = loadStoryCandidatesFailure();
 
       actions$ = hot('-a', { a: action });
-      comicBookScrapingService.loadStoryCandidates
+      comicScrapingService.loadStoryCandidates
         .withArgs({
           sourceId: METADATA_SOURCE.metadataSourceId,
           storyName: STORY_NAME,
@@ -155,7 +155,7 @@ describe('ScrapeStoryEffects', () => {
       const outcome = loadStoryCandidatesFailure();
 
       actions$ = hot('-a', { a: action });
-      comicBookScrapingService.loadStoryCandidates
+      comicScrapingService.loadStoryCandidates
         .withArgs({
           sourceId: METADATA_SOURCE.metadataSourceId,
           storyName: STORY_NAME,
@@ -181,7 +181,7 @@ describe('ScrapeStoryEffects', () => {
       const outcome = scrapeStoryMetadataSuccess();
 
       actions$ = hot('-a', { a: action });
-      comicBookScrapingService.scrapeStory
+      comicScrapingService.scrapeStory
         .withArgs({
           sourceId: METADATA_SOURCE.metadataSourceId,
           referenceId: REFERENCE_ID,
@@ -204,7 +204,7 @@ describe('ScrapeStoryEffects', () => {
       const outcome = scrapeStoryMetadataFailure();
 
       actions$ = hot('-a', { a: action });
-      comicBookScrapingService.scrapeStory
+      comicScrapingService.scrapeStory
         .withArgs({
           sourceId: METADATA_SOURCE.metadataSourceId,
           referenceId: REFERENCE_ID,
@@ -226,7 +226,7 @@ describe('ScrapeStoryEffects', () => {
       const outcome = scrapeStoryMetadataFailure();
 
       actions$ = hot('-a', { a: action });
-      comicBookScrapingService.scrapeStory
+      comicScrapingService.scrapeStory
         .withArgs({
           sourceId: METADATA_SOURCE.metadataSourceId,
           referenceId: REFERENCE_ID,

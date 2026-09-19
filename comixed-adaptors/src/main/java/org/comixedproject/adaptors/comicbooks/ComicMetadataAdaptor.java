@@ -62,22 +62,22 @@ public class ComicMetadataAdaptor {
   /**
    * Returns a displayable title for a comic book.
    *
-   * @param comicBook the comic book
+   * @param comic the comic book
    * @return the title
    */
-  public String getDisplayableTitle(final Comic comicBook) {
+  public String getDisplayableTitle(final Comic comic) {
     log.trace("Getting cover date");
     final String coverDate =
-        comicBook.getCoverDate() != null
-            ? this.coverDateFormat.format(comicBook.getCoverDate())
+        comic.getCoverDate() != null
+            ? this.coverDateFormat.format(comic.getCoverDate())
             : NO_COVER_DATE;
     final String series =
-        StringUtils.hasLength(comicBook.getSeries()) ? comicBook.getSeries() : UNNAMED_SERIES;
+        StringUtils.hasLength(comic.getSeries()) ? comic.getSeries() : UNNAMED_SERIES;
     final String volume =
-        StringUtils.hasLength(comicBook.getVolume()) ? comicBook.getVolume() : MISSING_VOLUME;
+        StringUtils.hasLength(comic.getVolume()) ? comic.getVolume() : MISSING_VOLUME;
     final String issueNumber =
-        StringUtils.hasLength(comicBook.getIssueNumber())
-            ? comicBook.getIssueNumber()
+        StringUtils.hasLength(comic.getIssueNumber())
+            ? comic.getIssueNumber()
             : MISSING_ISSUE_NUMBER;
     log.trace("Assembling displayable title");
     return String.format(
@@ -86,7 +86,7 @@ public class ComicMetadataAdaptor {
             volume,
             issueNumber,
             coverDate,
-            comicBook.getState() == ComicState.CHANGED ? CHANGED_COMIC_MARKER : "")
+            comic.getState() == ComicState.CHANGED ? CHANGED_COMIC_MARKER : "")
         .trim();
   }
 }

@@ -49,7 +49,7 @@ import { LoadMultiBookScrapingResponse } from '@app/comic-metadata/models/net/lo
 export class MultiBookScrapingEffects {
   logger = inject(LoggerService);
   actions$ = inject(Actions);
-  comicBookScrapingService = inject(ComicScrapingService);
+  comicScrapingService = inject(ComicScrapingService);
   alertService = inject(AlertService);
   translateService = inject(TranslateService);
 
@@ -58,7 +58,7 @@ export class MultiBookScrapingEffects {
       ofType(startMultiBookScraping),
       tap(() => this.logger.debug('Starting multi-book comic scraping')),
       switchMap(action =>
-        this.comicBookScrapingService
+        this.comicScrapingService
           .startMultiBookScraping({ pageSize: action.pageSize })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
@@ -67,7 +67,7 @@ export class MultiBookScrapingEffects {
                 pageSize: response.pageSize,
                 pageNumber: response.pageNumber,
                 totalComics: response.totalComics,
-                comicBooks: response.comicBooks
+                comics: response.comics
               })
             ),
             catchError(error => {
@@ -100,7 +100,7 @@ export class MultiBookScrapingEffects {
         )
       ),
       switchMap(action =>
-        this.comicBookScrapingService
+        this.comicScrapingService
           .loadMultiBookScrapingPage({
             pageSize: action.pageSize,
             pageNumber: action.pageNumber
@@ -112,7 +112,7 @@ export class MultiBookScrapingEffects {
                 pageSize: response.pageSize,
                 pageNumber: response.pageNumber,
                 totalComics: response.totalComics,
-                comicBooks: response.comicBooks
+                comics: response.comics
               })
             ),
             catchError(error => {
@@ -145,9 +145,9 @@ export class MultiBookScrapingEffects {
         )
       ),
       switchMap(action =>
-        this.comicBookScrapingService
+        this.comicScrapingService
           .removeMultiBookComic({
-            comicBook: action.comicBook,
+            comic: action.comic,
             pageSize: action.pageSize
           })
           .pipe(
@@ -164,7 +164,7 @@ export class MultiBookScrapingEffects {
                 pageSize: response.pageSize,
                 pageNumber: response.pageNumber,
                 totalComics: response.totalComics,
-                comicBooks: response.comicBooks
+                comics: response.comics
               })
             ),
             catchError(error => {
@@ -192,11 +192,11 @@ export class MultiBookScrapingEffects {
       ofType(multiBookScrapeComic),
       tap(action => this.logger.debug('Scraping mult-book comic:', action)),
       switchMap(action =>
-        this.comicBookScrapingService
+        this.comicScrapingService
           .scrapeMultiBookComic({
             metadataSource: action.metadataSource,
             issueId: action.issueId,
-            comicBook: action.comicBook,
+            comic: action.comic,
             skipCache: action.skipCache,
             pageSize: action.pageSize,
             pageNumber: action.pageNumber
@@ -215,7 +215,7 @@ export class MultiBookScrapingEffects {
                 pageSize: response.pageSize,
                 pageNumber: response.pageNumber,
                 totalComics: response.totalComics,
-                comicBooks: response.comicBooks
+                comics: response.comics
               })
             ),
             catchError(error => {
@@ -243,7 +243,7 @@ export class MultiBookScrapingEffects {
       ofType(batchScrapeComicBooks),
       tap(action => this.logger.debug('Batch scraping comic books:', action)),
       switchMap(() =>
-        this.comicBookScrapingService.batchScrapeComicBooks().pipe(
+        this.comicScrapingService.batchScrapeComicBooks().pipe(
           tap(response => this.logger.debug('Response received;', response)),
           tap(() =>
             this.alertService.info(

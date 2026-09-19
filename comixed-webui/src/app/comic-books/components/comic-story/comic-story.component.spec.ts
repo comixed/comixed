@@ -38,7 +38,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { provideRouter } from '@angular/router';
 
 describe('ComicStoryComponent', () => {
-  const COMIC_BOOK = DISPLAYABLE_COMIC_1;
+  const COMIC = DISPLAYABLE_COMIC_1;
   const TAGS = [
     COMIC_TAG_1,
     COMIC_TAG_1,
@@ -74,7 +74,7 @@ describe('ComicStoryComponent', () => {
 
     fixture = TestBed.createComponent(ComicStoryComponent);
     component = fixture.componentInstance;
-    component.comic = COMIC_BOOK;
+    component.comic = COMIC;
     fixture.detectChanges();
   }));
 
