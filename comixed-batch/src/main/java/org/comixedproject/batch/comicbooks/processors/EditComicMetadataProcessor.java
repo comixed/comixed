@@ -44,13 +44,9 @@ public class EditComicMetadataProcessor
   private JobParameters jobParameters;
 
   @Override
-  public Comic process(final Comic comicBook) throws Exception {
-    if (comicBook.isLoadingFileContents()
-        || comicBook.isPurging()
-        || comicBook.isBatchUpdatingMetadata()) {
-      log.debug(
-          "Comic book not ready for metadata update, skipping: id={}",
-          comicBook.getComicDetailId());
+  public Comic process(final Comic comic) throws Exception {
+    if (comic.isLoadingFileContents() || comic.isPurging() || comic.isBatchUpdatingMetadata()) {
+      log.debug("Comic book not ready for metadata update, skipping: id={}", comic.getComicId());
       return null;
     }
     log.trace("Loading job parameters");
@@ -63,32 +59,32 @@ public class EditComicMetadataProcessor
 
     if (StringUtils.hasLength(publisher)) {
       log.debug("Setting publisher to {}", publisher);
-      comicBook.setPublisher(publisher);
+      comic.setPublisher(publisher);
     }
     if (StringUtils.hasLength(series)) {
       log.debug("Setting series to {}", series);
-      comicBook.setSeries(series);
+      comic.setSeries(series);
     }
     if (StringUtils.hasLength(volume)) {
       log.debug("Setting volume to {}", volume);
-      comicBook.setVolume(volume);
+      comic.setVolume(volume);
     }
     if (StringUtils.hasLength(issueNumber)) {
       log.debug("Setting issue number to {}", issueNumber);
-      comicBook.setIssueNumber(issueNumber);
+      comic.setIssueNumber(issueNumber);
     }
     if (StringUtils.hasLength(imprint)) {
       log.debug("Setting imprint to {}", imprint);
-      comicBook.setImprint(imprint);
+      comic.setImprint(imprint);
     }
     if (StringUtils.hasLength(comicType)) {
       log.debug("Setting comic type: {}", comicType);
-      comicBook.setComicType(ComicType.valueOf(comicType));
+      comic.setComicType(ComicType.valueOf(comicType));
     }
 
-    comicBook.setEditingMetadata(false);
+    comic.setEditingMetadata(false);
 
-    return comicBook;
+    return comic;
   }
 
   @Override

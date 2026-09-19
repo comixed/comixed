@@ -21,7 +21,7 @@ import { createAction, props } from '@ngrx/store';
 export const updateSingleComicBookMetadata = createAction(
   '[Update Metadata] Update the metadata for a single comic book',
   props<{
-    comicBookId: number;
+    comicId: number;
   }>()
 );
 

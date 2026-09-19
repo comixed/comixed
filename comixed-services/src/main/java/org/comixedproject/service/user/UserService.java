@@ -326,7 +326,7 @@ public class UserService {
   }
 
   @Transactional
-  public Collection<Long> getComicDetailIdsForUser(final String email, final boolean unread)
+  public Collection<Long> getComicIdsForUser(final String email, final boolean unread)
       throws ComiXedUserException {
     final ComiXedUser user = this.doGetByEmail(email);
     if (!unread) {

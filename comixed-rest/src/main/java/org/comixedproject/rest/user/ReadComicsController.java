@@ -54,36 +54,36 @@ public class ReadComicsController {
    * Marks a single comic book as read by the given user.
    *
    * @param principal the user principal
-   * @param comicDetailId the comic detail id
+   * @param comicId the comic detail id
    * @throws ReadComicsException if an error occurs
    */
-  @PutMapping(value = "/api/user/read/{comicDetailId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PutMapping(value = "/api/user/read/{comicId}", consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('READER')")
   @Timed("comixed.read-comic-books.mark-single")
   public void markSingleComicBookRead(
-      final Principal principal, @PathVariable("comicDetailId") final long comicDetailId)
+      final Principal principal, @PathVariable("comicId") final long comicId)
       throws ReadComicsException {
     final String email = principal.getName();
-    log.info("Marking a single comic book as read by {}: id={}", email, comicDetailId);
-    this.readComicsService.markComicBookAsRead(email, comicDetailId);
+    log.info("Marking a single comic book as read by {}: id={}", email, comicId);
+    this.readComicsService.markComicBookAsRead(email, comicId);
   }
 
   /**
    * Unmarks a single comic book as read by the given user.
    *
    * @param principal the user principal
-   * @param comicDetailId the comic book id
+   * @param comicId the comic book id
    * @throws ReadComicsException if an error occurs
    */
-  @DeleteMapping(value = "/api/user/read/{comicDetailId}")
+  @DeleteMapping(value = "/api/user/read/{comicId}")
   @PreAuthorize("hasRole('READER')")
   @Timed("comixed.read-comic-books.unmark-single")
   public void unmarkSingleComicBookRead(
-      final Principal principal, @PathVariable("comicDetailId") final long comicDetailId)
+      final Principal principal, @PathVariable("comicId") final long comicId)
       throws ReadComicsException {
     final String email = principal.getName();
-    log.info("Unmarking a single comic book as read by {}: id={}", email, comicDetailId);
-    this.readComicsService.unmarkComicBookAsRead(email, comicDetailId);
+    log.info("Unmarking a single comic book as read by {}: id={}", email, comicId);
+    this.readComicsService.unmarkComicBookAsRead(email, comicId);
   }
 
   /**

@@ -36,15 +36,15 @@ public class PublishComicUpdateAction extends AbstractPublishAction<ComicDataSet
   public static final String COMIC_LIST_UPDATE_TOPIC = "/topic/comic-list.update";
 
   /** Topic which receives individual comic updates in real time. */
-  public static final String COMIC_BOOK_UPDATE_TOPIC = "/topic/comic-book.%d.update";
+  public static final String COMIC_UPDATE_TOPIC = "/topic/comic-book.%d.update";
 
   @Override
   public void publish(final ComicDataSet data) throws PublishingException {
-    log.trace("Publishing comicBook list update");
+    log.trace("Publishing comic list update");
     this.doPublish(COMIC_LIST_UPDATE_TOPIC, data, View.ComicDetailsView.class);
-    log.trace("Publishing comicBook book update");
+    log.trace("Publishing comic book update");
     this.doPublish(
-        String.format(COMIC_BOOK_UPDATE_TOPIC, data.getDetail().getComicDetailId()),
+        String.format(COMIC_UPDATE_TOPIC, data.getComic().getComicId()),
         data,
         View.ComicDetailsView.class);
   }

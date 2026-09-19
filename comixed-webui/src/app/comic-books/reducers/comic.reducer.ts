@@ -18,8 +18,8 @@
 
 import { createFeature, createReducer, on } from '@ngrx/store';
 import {
-  comicBookLoaded,
-  comicBookUpdated,
+  comicLoaded,
+  comicUpdated,
   downloadComicBook,
   downloadComicBookFailure,
   downloadComicBookSuccess,
@@ -39,7 +39,7 @@ import { ComicMetadataSource } from '@app/comic-books/models/comic-metadata-sour
 import { ComicPage } from '@app/comic-books/models/comic-page';
 import { ComicTag } from '@app/comic-books/models/comic-tag';
 
-export const COMIC_BOOK_FEATURE_KEY = 'comic_book_state';
+export const COMIC_FEATURE_KEY = 'comic_book_state';
 
 export interface ComicState {
   loading: boolean;
@@ -71,7 +71,7 @@ export const reducer = createReducer(
     pages: [],
     loading: true
   })),
-  on(comicBookLoaded, (state, action) => ({
+  on(comicLoaded, (state, action) => ({
     ...state,
     loading: false,
     detail: action.detail,
@@ -81,11 +81,8 @@ export const reducer = createReducer(
   })),
   on(loadComicBookFailed, state => ({ ...state, loading: false })),
   on(updateComicBook, state => ({ ...state, saving: true, saved: false })),
-  on(comicBookUpdated, (state, action) => {
-    if (
-      !!state.detail &&
-      state.detail.comicDetailId === action.detail.comicDetailId
-    ) {
+  on(comicUpdated, (state, action) => {
+    if (!!state.detail && state.detail.comicId === action.detail.comicId) {
       return {
         ...state,
         saving: false,
@@ -114,7 +111,7 @@ export const reducer = createReducer(
   on(downloadComicBookFailure, state => ({ ...state, loading: false }))
 );
 
-export const comicBookFeature = createFeature({
-  name: COMIC_BOOK_FEATURE_KEY,
+export const comicFeature = createFeature({
+  name: COMIC_FEATURE_KEY,
   reducer
 });

@@ -65,17 +65,17 @@ public interface PluginRuntime {
    * Executes the given plugin. The comic book id is provided as the second argument.
    *
    * @param libraryPlugin the libraryPlugin
-   * @param comicBookId the comic book id
+   * @param comicId the comic book id
    */
-  void execute(LibraryPlugin libraryPlugin, Long comicBookId);
+  void execute(LibraryPlugin libraryPlugin, Long comicId);
 
   /**
    * Executes the given plugin. The list of comic book ids are provided as the second argument.
    *
    * @param libraryPlugin the libraryPlugin
-   * @param comicBookIds the comic book ids
+   * @param comicIds the comic book ids
    */
-  void execute(LibraryPlugin libraryPlugin, List<Long> comicBookIds);
+  void execute(LibraryPlugin libraryPlugin, List<Long> comicIds);
 
   /**
    * Defines a property for the plugin runtime.

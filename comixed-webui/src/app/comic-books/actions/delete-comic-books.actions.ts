@@ -20,12 +20,12 @@ import { createAction, props } from '@ngrx/store';
 
 export const deleteSingleComicBook = createAction(
   '[Delete Comic Books] Mark a single comic book as deleted',
-  props<{ comicBookId: number }>()
+  props<{ comicId: number }>()
 );
 
 export const undeleteSingleComicBook = createAction(
   '[Delete Comic Books] Mark a single comic book as undeleted',
-  props<{ comicBookId: number }>()
+  props<{ comicId: number }>()
 );
 
 export const deleteSelectedComicBooks = createAction(

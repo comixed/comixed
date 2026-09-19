@@ -64,12 +64,12 @@ class ScrapeComicReaderTest {
   void read_noneRemaining() {
     when(comicService.findComicsForBatchMetadataUpdate(anyInt())).thenReturn(comicList);
 
-    reader.setComicBookList(comicList);
+    reader.setComicList(comicList);
 
     final Comic result = reader.read();
 
     assertNull(result);
-    assertNull(reader.getComicBookList());
+    assertNull(reader.getComicList());
 
     verify(comicService).findComicsForBatchMetadataUpdate(reader.getChunkSize());
   }
@@ -81,7 +81,7 @@ class ScrapeComicReaderTest {
     final Comic result = reader.read();
 
     assertNull(result);
-    assertNull(reader.getComicBookList());
+    assertNull(reader.getComicList());
 
     verify(comicService).findComicsForBatchMetadataUpdate(reader.getChunkSize());
   }

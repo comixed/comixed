@@ -22,7 +22,7 @@ import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
 import static org.comixedproject.batch.library.OrganizeLibraryConfiguration.ORGANIZE_LIBRARY_JOB;
-import static org.comixedproject.model.messaging.batch.ProcessComicsStatus.REMOVE_DELETED_COMIC_BOOKS_STEP;
+import static org.comixedproject.model.messaging.batch.ProcessComicsStatus.REMOVE_DELETED_COMICS_STEP;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -102,7 +102,7 @@ class RemoveDeletedComicsChunkListenerTest {
 
     assertNotNull(status);
     assertTrue(status.isActive());
-    assertEquals(REMOVE_DELETED_COMIC_BOOKS_STEP, status.getStepName());
+    assertEquals(REMOVE_DELETED_COMICS_STEP, status.getStepName());
     assertEquals(TEST_TOTAL_COMICS, status.getTotal());
     assertEquals(TEST_TOTAL_COMICS - TEST_REMAINING_COMICS, status.getProcessed());
 
@@ -117,7 +117,7 @@ class RemoveDeletedComicsChunkListenerTest {
 
     assertNotNull(status);
     assertTrue(status.isActive());
-    assertEquals(REMOVE_DELETED_COMIC_BOOKS_STEP, status.getStepName());
+    assertEquals(REMOVE_DELETED_COMICS_STEP, status.getStepName());
     assertEquals(TEST_TOTAL_COMICS, status.getTotal());
     assertEquals(TEST_TOTAL_COMICS - TEST_REMAINING_COMICS, status.getProcessed());
 
@@ -132,7 +132,7 @@ class RemoveDeletedComicsChunkListenerTest {
 
     assertNotNull(status);
     assertTrue(status.isActive());
-    assertEquals(REMOVE_DELETED_COMIC_BOOKS_STEP, status.getStepName());
+    assertEquals(REMOVE_DELETED_COMICS_STEP, status.getStepName());
     assertEquals(TEST_TOTAL_COMICS, status.getTotal());
     assertEquals(TEST_TOTAL_COMICS - TEST_REMAINING_COMICS, status.getProcessed());
 
@@ -148,7 +148,7 @@ class RemoveDeletedComicsChunkListenerTest {
 
     assertNotNull(status);
     assertTrue(status.isActive());
-    assertEquals(REMOVE_DELETED_COMIC_BOOKS_STEP, status.getStepName());
+    assertEquals(REMOVE_DELETED_COMICS_STEP, status.getStepName());
     assertEquals(TEST_TOTAL_COMICS, status.getTotal());
     assertEquals(TEST_TOTAL_COMICS - TEST_REMAINING_COMICS, status.getProcessed());
 

@@ -1,5 +1,5 @@
 /*
- * ComiXed - A digital comicBook book library management application.
+ * ComiXed - A digital comic book library management application.
  * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
@@ -57,7 +57,7 @@ import org.mockito.quality.Strictness;
 @MockitoSettings(strictness = Strictness.LENIENT)
 class ComicAdaptorTest {
   private static final String TEST_COMIC_FILENAME =
-      new File("src/test/comicBook.cbz").getAbsolutePath();
+      new File("src/test/comic.cbz").getAbsolutePath();
   private static final String TEST_PAGE_EXTENSION = "jpg";
   private static final String TEST_ENTRY_FILENAME = "Entry filename." + TEST_PAGE_EXTENSION;
   private static final byte[] TEST_ARCHIVE_ENTRY_CONTENT = "Some data".getBytes();

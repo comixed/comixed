@@ -44,7 +44,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { ComicCoverUrlPipe } from '@app/comic-books/pipes/comic-cover-url.pipe';
 import { ComicPageUrlPipe } from '@app/comic-books/pipes/comic-page-url.pipe';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
-import { comicBookFeature } from '@app/comic-books/reducers/comic.reducer';
+import { comicFeature } from '@app/comic-books/reducers/comic.reducer';
 import { ComicEffects } from '@app/comic-books/effects/comic.effects';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TranslateModule } from '@ngx-translate/core';
@@ -68,7 +68,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { FlexLayoutModule } from '@angular-ru/cdk/flex-layout';
 import { ComicListFilterComponent } from '@app/comic-books/components/comic-list-filter/comic-list-filter.component';
-import { comicBookSelectionFeature } from '@app/comic-books/reducers/comic-selection.reducer';
+import { comicSelectionFeature } from '@app/comic-books/reducers/comic-selection.reducer';
 import { ComicSelectionEffects } from '@app/comic-books/effects/comic-selection.effects';
 import { VolumeMetadataTitlePipe } from './pipes/volume-metadata-title.pipe';
 import { comicListFeature } from '@app/comic-books/reducers/comic-list.reducer';
@@ -79,11 +79,11 @@ import { ComicDetailCoverUrlPipe } from '@app/comic-books/pipes/comic-detail-cov
   imports: [
     CommonModule,
     ComicBooksRouting,
-    StoreModule.forFeature(comicBookFeature),
+    StoreModule.forFeature(comicFeature),
     StoreModule.forFeature(imprintListFeature),
     StoreModule.forFeature(markComicsDeletedFeature),
     StoreModule.forFeature(comicListFeature),
-    StoreModule.forFeature(comicBookSelectionFeature),
+    StoreModule.forFeature(comicSelectionFeature),
     EffectsModule.forFeature([
       ComicEffects,
       ImprintListEffects,

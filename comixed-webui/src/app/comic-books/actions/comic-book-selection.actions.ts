@@ -26,7 +26,7 @@ export const loadComicBookSelections = createAction(
   '[Comic Book Selection] Loads the initial set of comic book selections'
 );
 
-export const comicBookSelectionsLoaded = createAction(
+export const comicSelectionsLoaded = createAction(
   '[Comic Book Selection] The initial set of comic book selects were loaded',
   props<{
     ids: number[];
@@ -37,7 +37,7 @@ export const loadComicBookSelectionsFailed = createAction(
   '[Comic Book Select] Failed to load the initial set of comic book selectsion'
 );
 
-export const comicBookSelectionUpdate = createAction(
+export const comicSelectionUpdate = createAction(
   '[Comic Book Selection] The current set of selected comic book is',
   props<{
     ids: number[];
@@ -48,7 +48,7 @@ export const clearComicBookSelectionState = createAction(
   '[Comic Book Selection] Clear the comic book selection state'
 );
 
-export const comicBookSelectionStateCleared = createAction(
+export const comicSelectionStateCleared = createAction(
   '[Comic Book Selection] The comic book selection state was cleared'
 );
 
@@ -58,12 +58,12 @@ export const clearComicBookSelectionStateFailed = createAction(
 
 export const addSingleComicBookSelection = createAction(
   '[Comic Book Selection] Adds a single comic book selection',
-  props<{ comicDetailId: number }>()
+  props<{ comicId: number }>()
 );
 
 export const removeSingleComicBookSelection = createAction(
   '[Comic Book Selection] Removes a single comic book selection',
-  props<{ comicDetailId: number }>()
+  props<{ comicId: number }>()
 );
 
 export const singleComicBookSelectionUpdated = createAction(
@@ -101,7 +101,7 @@ export const setMultipleComicBooksByTagTypeAndValueSelectionState =
 export const setMultipleComicBookByIdSelectionState = createAction(
   '[Comic Book Selection] Set the selected state for multiple comic books by id',
   props<{
-    comicBookIds: number[];
+    comicIds: number[];
     selected: boolean;
   }>()
 );

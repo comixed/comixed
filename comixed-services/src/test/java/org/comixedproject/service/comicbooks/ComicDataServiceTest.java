@@ -98,7 +98,7 @@ class ComicDataServiceTest {
     final ComicDataSet result = service.getComic(TEST_COMIC_ID);
 
     assertNotNull(result);
-    assertSame(displayableComic, result.getDetail());
+    assertSame(displayableComic, result.getComic());
     assertSame(pageList, result.getPages());
     assertSame(comicMetadataSource, result.getMetadata());
     assertSame(tagList, result.getTags());
@@ -191,7 +191,7 @@ class ComicDataServiceTest {
             null);
 
     assertNotNull(result);
-    assertSame(displayableComic, result.getDetail());
+    assertSame(displayableComic, result.getComic());
     assertSame(pageList, result.getPages());
     assertSame(comicMetadataSource, result.getMetadata());
     assertSame(tagList, result.getTags());
@@ -236,7 +236,7 @@ class ComicDataServiceTest {
             TEST_STORE_DATE);
 
     assertNotNull(result);
-    assertSame(displayableComic, result.getDetail());
+    assertSame(displayableComic, result.getComic());
     assertSame(pageList, result.getPages());
     assertSame(comicMetadataSource, result.getMetadata());
     assertSame(tagList, result.getTags());

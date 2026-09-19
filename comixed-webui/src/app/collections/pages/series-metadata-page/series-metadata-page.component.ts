@@ -227,13 +227,13 @@ export class SeriesMetadataPageComponent implements OnInit, AfterViewInit {
 
   getComicBookIdForRow(issue: Issue): number {
     const found = this.comics$.value.find(
-      comicBook =>
-        comicBook.publisher === issue.publisher &&
-        comicBook.series === issue.series &&
-        comicBook.volume === issue.volume &&
-        comicBook.issueNumber === issue.issueNumber
+      comic =>
+        comic.publisher === issue.publisher &&
+        comic.series === issue.series &&
+        comic.volume === issue.volume &&
+        comic.issueNumber === issue.issueNumber
     );
-    return found?.comicDetailId;
+    return found?.comicId;
   }
 
   private loadTranslations(): void {

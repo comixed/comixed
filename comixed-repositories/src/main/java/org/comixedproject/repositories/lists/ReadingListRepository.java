@@ -68,6 +68,6 @@ public interface ReadingListRepository extends JpaRepository<ReadingList, Long> 
   @Query("SELECT l FROM ReadingList l WHERE l.readingListId = :id")
   ReadingList getById(@Param("id") Long id);
 
-  @Query("SELECT l FROM ReadingList l WHERE :comicBookId MEMBER OF l.entryIds ")
-  List<ReadingList> getReadingListsWithComic(@Param("comicBookId") Long comicBookId);
+  @Query("SELECT l FROM ReadingList l WHERE :comicId MEMBER OF l.entryIds ")
+  List<ReadingList> getReadingListsWithComic(@Param("comicId") Long comicId);
 }

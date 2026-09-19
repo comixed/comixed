@@ -17,7 +17,7 @@
  */
 
 import {
-  IMPORT_COMIC_BOOKS_FEATURE_KEY,
+  IMPORT_COMICS_FEATURE_KEY,
   ImportComicsState
 } from '../reducers/import-comics.reducer';
 import { selectImportComicBatches } from './import-comic-books.selectors';
@@ -35,7 +35,7 @@ describe('ImportComicBooks Selectors', () => {
   it('selects the batch process list', () => {
     expect(
       selectImportComicBatches({
-        [IMPORT_COMIC_BOOKS_FEATURE_KEY]: state
+        [IMPORT_COMICS_FEATURE_KEY]: state
       })
     ).toEqual(state.batches);
   });

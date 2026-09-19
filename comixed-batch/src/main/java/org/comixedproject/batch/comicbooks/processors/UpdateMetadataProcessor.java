@@ -44,20 +44,20 @@ public class UpdateMetadataProcessor implements ItemProcessor<Comic, Comic> {
   @Override
   public Comic process(final Comic comic) {
     if (comic.isMissing()) {
-      log.debug("Comic file is missing, skipping: id={}", comic.getComicDetailId());
+      log.debug("Comic file is missing, skipping: id={}", comic.getComicId());
       return null;
     }
     if (comic.isLoadingFileContents()
         || comic.isPurging()
         || comic.isBatchUpdatingMetadata()
         || comic.isEditingMetadata()) {
-      log.debug("Comic not ready for metadata update, skipping: id={}", comic.getComicDetailId());
+      log.debug("Comic not ready for metadata update, skipping: id={}", comic.getComicId());
       return null;
     }
 
     if (this.configurationService.isFeatureEnabled(
         ConfigurationService.CREATE_EXTERNAL_METADATA_FILE)) {
-      log.debug("Creating external metadata file for comic: id={}", comic.getComicDetailId());
+      log.debug("Creating external metadata file for comic: id={}", comic.getComicId());
       try {
         this.comicAdaptor.saveMetadataFile(comic);
       } catch (AdaptorException error) {
@@ -79,7 +79,7 @@ public class UpdateMetadataProcessor implements ItemProcessor<Comic, Comic> {
     }
 
     try {
-      log.debug("Updating comic book metadata: id={}", comic.getComicDetailId());
+      log.debug("Updating comic book metadata: id={}", comic.getComicId());
       this.comicAdaptor.save(comic, comic.getArchiveType(), "");
     } catch (AdaptorException error) {
       log.error("Failed to update metadata for comic book", error);

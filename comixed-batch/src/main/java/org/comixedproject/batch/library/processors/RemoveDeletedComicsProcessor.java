@@ -58,9 +58,9 @@ public class RemoveDeletedComicsProcessor
         || comic.isEditingMetadata()
         || comic.getTargetArchiveType() != null
         || comic.isUpdatingMetadata()) {
-      log.debug("Comic not ready for removal, skipping: id={}", comic.getComicDetailId());
+      log.debug("Comic not ready for removal, skipping: id={}", comic.getComicId());
     }
-    log.debug("Removing comicBook from database: id={}", comic.getComicDetailId());
+    log.debug("Removing comic from database: id={}", comic.getComicId());
     this.comicService.deleteComic(comic);
     if (Boolean.parseBoolean(
         this.executionContext.getString(

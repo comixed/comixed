@@ -96,8 +96,8 @@ describe('ComicScrapingService', () => {
   const SCRAPING_ISSUE = SCRAPING_ISSUE_1;
   const VOLUME_ID = SCRAPING_VOLUME_1.id;
   const ISSUE_NUMBER = '27';
-  const COMIC_BOOK = DISPLAYABLE_COMIC_1;
-  const COMIC_BOOKS = [
+  const COMIC = DISPLAYABLE_COMIC_1;
+  const COMICS = [
     DISPLAYABLE_COMIC_1,
     DISPLAYABLE_COMIC_2,
     DISPLAYABLE_COMIC_3,
@@ -217,7 +217,7 @@ describe('ComicScrapingService', () => {
       .scrapeSingleBookComic({
         metadataSource: METADATA_SOURCE,
         issueId: SCRAPING_ISSUE.id,
-        comicBook: COMIC_BOOK,
+        comic: COMIC,
         skipCache: SKIP_CACHE
       })
       .subscribe(response => expect(response.status).toEqual(200));
@@ -225,7 +225,7 @@ describe('ComicScrapingService', () => {
     const req = httpMock.expectOne(
       interpolate(SCRAPE_SINGLE_BOOK_COMIC_URL, {
         sourceId: METADATA_SOURCE.metadataSourceId,
-        comicId: COMIC_BOOK.comicDetailId
+        comicId: COMIC.comicId
       })
     );
     expect(req.request.method).toEqual('PUT');
@@ -240,7 +240,7 @@ describe('ComicScrapingService', () => {
 
   it('can start multi-book scraping', () => {
     const serverResponse = {
-      comicBooks: COMIC_BOOKS
+      comics: COMICS
     } as StartMultiBookScrapingResponse;
     service
       .startMultiBookScraping({ pageSize: PAGE_SIZE })
@@ -274,15 +274,15 @@ describe('ComicScrapingService', () => {
 
   it('can remove a comic from multi-book scraping', () => {
     const serverResponse = {
-      comicBooks: COMIC_BOOKS
+      comics: COMICS
     } as RemoveMultiBookComicResponse;
     service
-      .removeMultiBookComic({ comicBook: COMIC_BOOK, pageSize: PAGE_SIZE })
+      .removeMultiBookComic({ comic: COMIC, pageSize: PAGE_SIZE })
       .subscribe(response => expect(response).toEqual(serverResponse));
 
     const req = httpMock.expectOne(
       interpolate(REMOVE_MULTI_BOOK_COMIC_URL, {
-        comicBookId: COMIC_BOOK.comicDetailId,
+        comicId: COMIC.comicId,
         pageSize: PAGE_SIZE
       })
     );
@@ -292,13 +292,13 @@ describe('ComicScrapingService', () => {
 
   it('can scrape a comic book as part of multi-book scraping', () => {
     const serverResponse = {
-      comicBooks: COMIC_BOOKS
+      comics: COMICS
     } as ScrapeMultiBookComicResponse;
     service
       .scrapeMultiBookComic({
         metadataSource: METADATA_SOURCE,
         issueId: SCRAPING_ISSUE.id,
-        comicBook: COMIC_BOOK,
+        comic: COMIC,
         skipCache: SKIP_CACHE,
         pageSize: PAGE_SIZE,
         pageNumber: PAGE_NUMBER
@@ -308,7 +308,7 @@ describe('ComicScrapingService', () => {
     const req = httpMock.expectOne(
       interpolate(SCRAPE_MULTI_BOOK_COMIC_URL, {
         sourceId: METADATA_SOURCE.metadataSourceId,
-        comicBookId: COMIC_BOOK.comicDetailId
+        comicId: COMIC.comicId
       })
     );
     expect(req.request.method).toEqual('POST');

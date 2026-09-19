@@ -123,7 +123,7 @@ class MetadataServiceTest {
   @Mock private ComicMetadataSource comicMetadataSource;
   @Mock private MetadataAdaptorProvider metadataAdaptorProvider;
   @Mock private Comic comic;
-  @Mock private List<Long> comicBookIdList;
+  @Mock private List<Long> comicIdList;
   @Mock private ApplicationEventPublisher applicationEventPublisher;
   @Mock private StoryMetadata storyMetadata;
   @Mock private ScrapedStory scrapedStory;
@@ -1162,9 +1162,9 @@ class MetadataServiceTest {
 
   @Test
   void batchScrape() {
-    service.batchScrapeComicBooks(comicBookIdList);
+    service.batchScrapeComicBooks(comicIdList);
 
-    verify(comicService).markComicBooksForBatchScraping(comicBookIdList);
+    verify(comicService).markComicBooksForBatchScraping(comicIdList);
     verify(applicationEventPublisher).publishEvent(ScrapeMetadataEvent.instance);
   }
 

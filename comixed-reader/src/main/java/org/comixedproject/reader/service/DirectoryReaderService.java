@@ -81,7 +81,7 @@ public class DirectoryReaderService {
   public List<DirectoryEntry> getAllComicsForCoverDate(
       final String email, final boolean unread, final String coverDate, final String urlRoot) {
     return this.comicService.getAllComicsForCoverDate(coverDate, email, unread).stream()
-        .map(comicDetail -> this.doCreateDirectoryEntry(comicDetail, urlRoot))
+        .map(comic -> this.doCreateDirectoryEntry(comic, urlRoot))
         .sorted((left, right) -> left.getName().compareTo(right.getName()))
         .toList();
   }
@@ -266,7 +266,7 @@ public class DirectoryReaderService {
   public List<DirectoryEntry> getAllComicsForReadingList(
       final String email, final Long id, final String urlRoot) {
     return this.comicService.getAllComicsForReadingList(email, id).stream()
-        .map(comicDetail -> this.doCreateDirectoryEntry(comicDetail, urlRoot))
+        .map(comic -> this.doCreateDirectoryEntry(comic, urlRoot))
         .sorted((left, right) -> left.getName().compareTo(right.getName()))
         .toList();
   }
@@ -310,7 +310,7 @@ public class DirectoryReaderService {
       final String tagValue,
       final String urlRoot) {
     return this.comicService.getAllComicsForTag(tagType, tagValue, email, unread).stream()
-        .map(comicDetail -> this.doCreateDirectoryEntry(comicDetail, urlRoot))
+        .map(comic -> this.doCreateDirectoryEntry(comic, urlRoot))
         .sorted((left, right) -> left.getName().compareTo(right.getName()))
         .toList();
   }
@@ -326,11 +326,11 @@ public class DirectoryReaderService {
                     comic.getVolume(),
                     comic.getFilename())),
             this.createTitle(comic),
-            String.format(rootUrl, comic.getComicDetailId()));
+            String.format(rootUrl, comic.getComicId()));
     result.setFilename(comic.getBaseFilename());
     result.setFileSize(FileUtils.sizeOf(comic.getFile()));
     result.setDirectory(false);
-    result.setCoverUrl(String.format(rootUrl, comic.getComicDetailId()));
+    result.setCoverUrl(String.format(rootUrl, comic.getComicId()));
     return result;
   }
 

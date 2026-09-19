@@ -22,5 +22,5 @@ export interface RemoveMultiBookComicResponse {
   pageSize: number;
   pageNumber: number;
   totalComics: number;
-  comicBooks: DisplayableComic[];
+  comics: DisplayableComic[];
 }

@@ -105,7 +105,7 @@ class ComicSelectionServiceTest {
 
     final ComicSelectionEvent event = eventArgumentCaptor.getValue();
     assertSame(user, event.getUser());
-    assertTrue(event.getComicBookIds().contains(TEST_COMIC_ID));
+    assertTrue(event.getComicIds().contains(TEST_COMIC_ID));
 
     verify(publishComicSelectionStateAction).publish(event);
   }
@@ -124,7 +124,7 @@ class ComicSelectionServiceTest {
 
     final ComicSelectionEvent event = eventArgumentCaptor.getValue();
     assertSame(user, event.getUser());
-    assertSame(selectedIds, event.getComicBookIds());
+    assertSame(selectedIds, event.getComicIds());
 
     verify(publishComicSelectionStateAction).publish(event);
   }
@@ -148,7 +148,7 @@ class ComicSelectionServiceTest {
 
     final ComicSelectionEvent event = eventArgumentCaptor.getValue();
     assertSame(user, event.getUser());
-    assertSame(selectedIds, event.getComicBookIds());
+    assertSame(selectedIds, event.getComicIds());
 
     verify(publishComicSelectionStateAction).publish(event);
   }
@@ -165,7 +165,7 @@ class ComicSelectionServiceTest {
 
     final ComicSelectionEvent event = eventArgumentCaptor.getValue();
     assertSame(user, event.getUser());
-    assertFalse(event.getComicBookIds().contains(TEST_COMIC_ID));
+    assertFalse(event.getComicIds().contains(TEST_COMIC_ID));
 
     verify(publishComicSelectionStateAction).publish(event);
   }
@@ -208,7 +208,7 @@ class ComicSelectionServiceTest {
 
     final ComicSelectionEvent event = eventArgumentCaptor.getValue();
     assertSame(user, event.getUser());
-    assertSame(selectedIds, event.getComicBookIds());
+    assertSame(selectedIds, event.getComicIds());
 
     verify(publishComicSelectionStateAction, times(comicList.size())).publish(event);
 
@@ -261,7 +261,7 @@ class ComicSelectionServiceTest {
 
     final ComicSelectionEvent event = eventArgumentCaptor.getValue();
     assertSame(user, event.getUser());
-    assertSame(selectedIds, event.getComicBookIds());
+    assertSame(selectedIds, event.getComicIds());
 
     verify(publishComicSelectionStateAction, times(comicList.size())).publish(event);
 
@@ -288,7 +288,7 @@ class ComicSelectionServiceTest {
 
     final ComicSelectionEvent event = eventArgumentCaptor.getValue();
     assertSame(user, event.getUser());
-    assertSame(selectedIds, event.getComicBookIds());
+    assertSame(selectedIds, event.getComicIds());
 
     verify(publishComicSelectionStateAction).publish(event);
   }
@@ -358,7 +358,7 @@ class ComicSelectionServiceTest {
 
     final ComicSelectionEvent event = eventArgumentCaptor.getValue();
     assertSame(user, event.getUser());
-    assertSame(selectedIds, event.getComicBookIds());
+    assertSame(selectedIds, event.getComicIds());
 
     verify(publishComicSelectionStateAction).publish(event);
   }

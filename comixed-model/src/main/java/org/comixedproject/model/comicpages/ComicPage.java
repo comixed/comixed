@@ -27,7 +27,7 @@ import org.comixedproject.views.View;
 import org.hibernate.annotations.Formula;
 
 /**
- * <code>ComicPage</code> represents a single offset from a comicBook.
+ * <code>ComicPage</code> represents a single offset from a comic.
  *
  * @author Darryl L. Pierce
  */
@@ -47,7 +47,7 @@ public class ComicPage {
   private Long comicPageId;
 
   @ManyToOne
-  @JoinColumn(name = "comic_detail_id")
+  @JoinColumn(name = "comic_id")
   @JsonProperty("comic")
   @Getter
   @Setter
@@ -116,7 +116,7 @@ public class ComicPage {
   private boolean blocked;
 
   /**
-   * Returns the offset's index within the comicBook.
+   * Returns the offset's index within the comic.
    *
    * @return the offset index
    */

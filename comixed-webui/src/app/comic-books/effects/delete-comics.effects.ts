@@ -50,7 +50,7 @@ export class DeleteComicsEffects {
       switchMap(action =>
         this.comicService
           .deleteSingleComicBook({
-            comicBookId: action.comicBookId
+            comicId: action.comicId
           })
           .pipe(
             tap(response => this.logger.trace('Response received:', response)),
@@ -83,7 +83,7 @@ export class DeleteComicsEffects {
       ),
       switchMap(action =>
         this.comicService
-          .undeleteSingleComicBook({ comicBookId: action.comicBookId })
+          .undeleteSingleComicBook({ comicId: action.comicId })
           .pipe(
             tap(response => this.logger.trace('Response received:', response)),
             tap(() =>

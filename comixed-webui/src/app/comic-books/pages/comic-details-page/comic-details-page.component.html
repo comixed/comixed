@@ -15,7 +15,7 @@
         mat-fab
         color="accent"
         [matTooltip]="'comic-book.tooltip.go-to-previous-comic' | translate"
-        [disabled]="!comicBook?.previousIssueId"
+        [disabled]="!comic?.previousIssueId"
         [routerLink]="['/comics', (comic$ | async)?.previousIssueId]"
       >
         <mat-icon>arrow_back</mat-icon>
@@ -25,7 +25,7 @@
         class="cx-toolbar-button"
         mat-fab
         color="accent"
-        [disabled]="!comicBook?.nextIssueId"
+        [disabled]="!comic?.nextIssueId"
         [matTooltip]="'comic-book.tooltip.go-to-next-comic' | translate"
         [routerLink]="['/comics', (comic$ | async)?.nextIssueId]"
       >
@@ -234,7 +234,7 @@
       >
         <mat-tab [label]="'comic-book.label.comic-overview' | translate">
           <app-comic-detail-edit
-            [comicBook]="comic$ | async"
+            [comic]="comic$ | async"
             [isAdmin]="isAdmin$ | async"
           ></app-comic-detail-edit>
         </mat-tab>
@@ -281,7 +281,7 @@
             }
             @if ((volumes$ | async).length > 0) {
               <app-scraping-volume-selection
-                [comicBook]="comic$ | async"
+                [comic]="comic$ | async"
                 [metadataSource]="metadataSource$ | async"
                 [comicSeriesName]="scrapingSeriesName$ | async"
                 [comicVolume]="scrapingVolume$ | async"

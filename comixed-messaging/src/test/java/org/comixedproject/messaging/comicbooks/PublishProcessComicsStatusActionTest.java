@@ -18,7 +18,7 @@
 
 package org.comixedproject.messaging.comicbooks;
 
-import static org.comixedproject.messaging.comicbooks.PublishProcessComicsStatusAction.PROCESS_COMIC_BOOKS_STATUS_TOPIC;
+import static org.comixedproject.messaging.comicbooks.PublishProcessComicsStatusAction.PROCESS_COMICS_STATUS_TOPIC;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.comixedproject.messaging.PublishingException;
@@ -68,8 +68,8 @@ class PublishProcessComicsStatusActionTest {
     Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.GenericObjectView.class);
     Mockito.verify(objectWriter, Mockito.times(1)).writeValueAsString(status);
     Mockito.verify(messagingTemplate, Mockito.times(1))
-        .convertAndSend(PROCESS_COMIC_BOOKS_STATUS_TOPIC, TEST_STATUS_AS_JSON);
+        .convertAndSend(PROCESS_COMICS_STATUS_TOPIC, TEST_STATUS_AS_JSON);
     Mockito.verify(messagingTemplate, Mockito.times(1))
-        .convertAndSend(PROCESS_COMIC_BOOKS_STATUS_TOPIC, TEST_STATUS_AS_JSON);
+        .convertAndSend(PROCESS_COMICS_STATUS_TOPIC, TEST_STATUS_AS_JSON);
   }
 }

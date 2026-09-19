@@ -22,20 +22,20 @@ import {
   setReadComicBooks
 } from '@app/user/actions/read-comic-books.actions';
 import {
-  READ_COMIC_BOOK_1,
-  READ_COMIC_BOOK_2,
-  READ_COMIC_BOOK_3,
-  READ_COMIC_BOOK_4,
-  READ_COMIC_BOOK_5
+  READ_COMIC_1,
+  READ_COMIC_2,
+  READ_COMIC_3,
+  READ_COMIC_4,
+  READ_COMIC_5
 } from '@app/user/user.fixtures';
 
 describe('ReadComicBooks Reducer', () => {
-  const READ_COMIC_BOOKS = [
-    READ_COMIC_BOOK_1,
-    READ_COMIC_BOOK_2,
-    READ_COMIC_BOOK_3,
-    READ_COMIC_BOOK_4,
-    READ_COMIC_BOOK_5
+  const READ_COMICS = [
+    READ_COMIC_1,
+    READ_COMIC_2,
+    READ_COMIC_3,
+    READ_COMIC_4,
+    READ_COMIC_5
   ];
 
   let state: ReadComicsState;
@@ -58,19 +58,19 @@ describe('ReadComicBooks Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, entries: [] },
-        setReadComicBooks({ entries: READ_COMIC_BOOKS })
+        setReadComicBooks({ entries: READ_COMICS })
       );
     });
 
     it('updates the list of read comic books', () => {
-      expect(state.entries).toEqual(READ_COMIC_BOOKS);
+      expect(state.entries).toEqual(READ_COMICS);
     });
   });
 
   describe('resetting the list of read comic entries', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, entries: READ_COMIC_BOOKS },
+        { ...state, entries: READ_COMICS },
         resetReadComicBooks()
       );
     });

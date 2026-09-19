@@ -31,11 +31,11 @@ import {
   DISPLAYABLE_COMIC_5
 } from '@app/comic-books/comic-books.fixtures';
 import {
-  READ_COMIC_BOOK_1,
-  READ_COMIC_BOOK_2,
-  READ_COMIC_BOOK_3,
-  READ_COMIC_BOOK_4,
-  READ_COMIC_BOOK_5
+  READ_COMIC_1,
+  READ_COMIC_2,
+  READ_COMIC_3,
+  READ_COMIC_4,
+  READ_COMIC_5
 } from '@app/user/user.fixtures';
 import { READING_LIST_3 } from '@app/lists/lists.fixtures';
 import { AlertService } from '@app/core/services/alert.service';
@@ -82,17 +82,17 @@ describe('ComicListEffects', () => {
     DISPLAYABLE_COMIC_5
   ];
   const LAST_READ_ENTRIES = [
-    READ_COMIC_BOOK_1,
-    READ_COMIC_BOOK_2,
-    READ_COMIC_BOOK_3,
-    READ_COMIC_BOOK_4,
-    READ_COMIC_BOOK_5
+    READ_COMIC_1,
+    READ_COMIC_2,
+    READ_COMIC_3,
+    READ_COMIC_4,
+    READ_COMIC_5
   ];
   const PUBLISHER = COMIC_LIST[0].publisher;
   const SERIES = COMIC_LIST[0].series;
   const VOLUME = COMIC_LIST[0].volume;
   const PAGE_COUNT = 0;
-  const IDS = COMIC_LIST.map(entry => entry.comicDetailId);
+  const IDS = COMIC_LIST.map(entry => entry.comicId);
   const COVER_YEARS = [1965, 1971, 1996, 1998, 2006];
   const COVER_MONTHS = [1, 3, 4, 7, 9];
   const TOTAL_COUNT = COMIC_LIST.length * 2;

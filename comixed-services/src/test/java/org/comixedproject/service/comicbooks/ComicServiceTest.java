@@ -92,7 +92,6 @@ class ComicServiceTest {
   @Mock private Set<Long> comicIdSet;
   @Mock private Example<Comic> example;
   @Mock private CollectionEntry collectionEntry;
-  @Mock private Comic comicBook;
   @Mock private Comic comic;
   @Mock private ArchiveType targetArchiveType;
   @Mock private List<RemoteLibrarySegmentState> librarySegmentList;
@@ -693,7 +692,7 @@ class ComicServiceTest {
 
   @Test
   void getAllIds() {
-    comicList.add(comicBook);
+    comicList.add(comic);
     when(comicRepository.getAllIds()).thenReturn(idList);
 
     final List<Long> result = service.getAllIds();

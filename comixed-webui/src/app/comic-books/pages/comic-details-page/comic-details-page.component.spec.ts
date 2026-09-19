@@ -50,11 +50,11 @@ import {
   initialState as initialScrapingState,
   SINGLE_BOOK_SCRAPING_FEATURE_KEY
 } from '@app/comic-metadata/reducers/single-book-scraping.reducer';
-import { READ_COMIC_BOOK_1, USER_READER } from '@app/user/user.fixtures';
+import { READ_COMIC_1, USER_READER } from '@app/user/user.fixtures';
 import { loadVolumeMetadata } from '@app/comic-metadata/actions/single-book-scraping.actions';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 import {
-  COMIC_BOOK_FEATURE_KEY,
+  COMIC_FEATURE_KEY,
   initialState as initialComicBookState
 } from '@app/comic-books/reducers/comic.reducer';
 import { TitleService } from '@app/core/services/title.service';
@@ -69,10 +69,10 @@ import {
 } from '@app/messaging/reducers/messaging.reducer';
 import { WebSocketService } from '@app/messaging';
 import { Subscription } from 'rxjs';
-import { COMIC_BOOK_UPDATE_TOPIC } from '@app/comic-books/comic-books.constants';
+import { COMIC_UPDATE_TOPIC } from '@app/comic-books/comic-books.constants';
 import { interpolate } from '@app/core';
 import {
-  comicBookLoaded,
+  comicLoaded,
   downloadComicBook,
   savePageOrder
 } from '@app/comic-books/actions/comic-book.actions';
@@ -90,7 +90,7 @@ import { METADATA_SOURCE_1 } from '@app/comic-metadata/comic-metadata.fixtures';
 import { markSingleComicBookRead } from '@app/user/actions/read-comic-books.actions';
 import {
   initialState as initialReadComicBooksState,
-  READ_COMIC_BOOKS_FEATURE_KEY
+  READ_COMICS_FEATURE_KEY
 } from '@app/user/reducers/read-comics.reducer';
 import {
   PAGE_1,
@@ -117,7 +117,7 @@ describe('ComicDetailsPageComponent', () => {
     COMIC_TAG_4,
     COMIC_TAG_5
   ];
-  const READ_COMIC_BOOK_ENTRY = READ_COMIC_BOOK_1;
+  const READ_COMIC_ENTRY = READ_COMIC_1;
   const USER = USER_READER;
   const PUBLISHER = 'The Publisher';
   const SERIES = 'The Series';
@@ -131,9 +131,9 @@ describe('ComicDetailsPageComponent', () => {
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER },
     [SINGLE_BOOK_SCRAPING_FEATURE_KEY]: { ...initialScrapingState },
-    [COMIC_BOOK_FEATURE_KEY]: { ...initialComicBookState },
+    [COMIC_FEATURE_KEY]: { ...initialComicBookState },
     [MESSAGING_FEATURE_KEY]: { ...initialMessagingState },
-    [READ_COMIC_BOOKS_FEATURE_KEY]: { ...initialReadComicBooksState },
+    [READ_COMICS_FEATURE_KEY]: { ...initialReadComicBooksState },
     [IMPRINT_LIST_FEATURE_KEY]: { ...initialImprintListState }
   };
 
@@ -209,7 +209,7 @@ describe('ComicDetailsPageComponent', () => {
       component.comic$.next(null);
       store.setState({
         ...initialState,
-        [COMIC_BOOK_FEATURE_KEY]: {
+        [COMIC_FEATURE_KEY]: {
           ...initialComicBookState,
           detail: DETAIL
         }
@@ -299,7 +299,7 @@ describe('ComicDetailsPageComponent', () => {
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
           markSingleComicBookRead({
-            comicDetailId: DETAIL.comicDetailId,
+            comicId: DETAIL.comicId,
             read: true
           })
         );
@@ -314,7 +314,7 @@ describe('ComicDetailsPageComponent', () => {
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
           markSingleComicBookRead({
-            comicDetailId: DETAIL.comicDetailId,
+            comicId: DETAIL.comicId,
             read: false
           })
         );
@@ -337,7 +337,7 @@ describe('ComicDetailsPageComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        updateSingleComicBookMetadata({ comicBookId: DETAIL.comicDetailId })
+        updateSingleComicBookMetadata({ comicId: DETAIL.comicId })
       );
     });
   });
@@ -345,16 +345,16 @@ describe('ComicDetailsPageComponent', () => {
   describe('loading the last read state', () => {
     beforeEach(() => {
       component.comic$.next(DETAIL);
-      component.comicId$.next(DETAIL.comicDetailId);
+      component.comicId$.next(DETAIL.comicId);
     });
 
     describe('when the comic is read', () => {
       beforeEach(() => {
         store.setState({
           ...initialState,
-          [READ_COMIC_BOOKS_FEATURE_KEY]: {
+          [READ_COMICS_FEATURE_KEY]: {
             ...initialReadComicBooksState,
-            entries: [READ_COMIC_BOOK_ENTRY]
+            entries: [READ_COMIC_ENTRY]
           }
         });
       });
@@ -368,7 +368,7 @@ describe('ComicDetailsPageComponent', () => {
       beforeEach(() => {
         store.setState({
           ...initialState,
-          [READ_COMIC_BOOKS_FEATURE_KEY]: {
+          [READ_COMICS_FEATURE_KEY]: {
             ...initialReadComicBooksState,
             entries: []
           }
@@ -400,7 +400,7 @@ describe('ComicDetailsPageComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          deleteSingleComicBook({ comicBookId: DETAIL.comicDetailId })
+          deleteSingleComicBook({ comicId: DETAIL.comicId })
         );
       });
     });
@@ -416,7 +416,7 @@ describe('ComicDetailsPageComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          undeleteSingleComicBook({ comicBookId: DETAIL.comicDetailId })
+          undeleteSingleComicBook({ comicId: DETAIL.comicId })
         );
       });
     });
@@ -424,7 +424,7 @@ describe('ComicDetailsPageComponent', () => {
 
   describe('subscribing to comic updates', () => {
     beforeEach(() => {
-      component.comicId$.next(DETAIL.comicDetailId);
+      component.comicId$.next(DETAIL.comicId);
       webSocketService.subscribe.and.callFake((topic, callback) => {
         callback({
           detail: DETAIL,
@@ -445,14 +445,14 @@ describe('ComicDetailsPageComponent', () => {
 
     it('subscribes to the task topic', () => {
       expect(webSocketService.subscribe).toHaveBeenCalledWith(
-        interpolate(COMIC_BOOK_UPDATE_TOPIC, { id: DETAIL.comicDetailId }),
+        interpolate(COMIC_UPDATE_TOPIC, { id: DETAIL.comicId }),
         jasmine.anything()
       );
     });
 
     it('publishes updates', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        comicBookLoaded({
+        comicLoaded({
           detail: DETAIL,
           metadata: METADATA,
           pages: PAGES,
@@ -490,7 +490,7 @@ describe('ComicDetailsPageComponent', () => {
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         savePageOrder({
-          comicBookId: DETAIL.comicDetailId,
+          comicId: DETAIL.comicId,
           entries: PAGES.map((page, index) => {
             return { index, filename: page.filename };
           })
@@ -551,7 +551,7 @@ describe('ComicDetailsPageComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        downloadComicBook({ comicBookId: DETAIL.comicDetailId })
+        downloadComicBook({ comicId: DETAIL.comicId })
       );
     });
   });

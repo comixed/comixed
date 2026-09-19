@@ -32,18 +32,18 @@ import {
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { interpolate } from '@app/core';
 import {
-  CONVERT_SELECTED_COMIC_BOOKS_URL,
-  CONVERT_SINGLE_COMIC_BOOK_URL,
+  CONVERT_SELECTED_COMICS_URL,
+  CONVERT_SINGLE_COMIC_URL,
   EDIT_MULTIPLE_COMICS_URL,
   LOAD_LIBRARY_STATE_URL,
   PURGE_LIBRARY_URL,
   REMOTE_LIBRARY_STATE_TOPIC,
-  RESCAN_SELECTED_COMIC_BOOKS_URL,
-  RESCAN_SINGLE_COMIC_BOOK_URL,
+  RESCAN_SELECTED_COMICS_URL,
+  RESCAN_SINGLE_COMIC_URL,
   START_ENTIRE_LIBRARY_ORGANIZATION_URL,
   START_LIBRARY_ORGANIZATION_URL,
-  UPDATE_SELECTED_COMIC_BOOKS_METADATA_URL,
-  UPDATE_SINGLE_COMIC_BOOK_METADATA_URL
+  UPDATE_SELECTED_COMICS_METADATA_URL,
+  UPDATE_SINGLE_COMIC_METADATA_URL
 } from '@app/library/library.constants';
 import {
   HttpResponse,
@@ -75,7 +75,7 @@ describe('LibraryService', () => {
     DISPLAYABLE_COMIC_4,
     DISPLAYABLE_COMIC_5
   ];
-  const IDS = COMIC_LIST.map(entry => entry.comicDetailId);
+  const IDS = COMIC_LIST.map(entry => entry.comicId);
   const ARCHIVE_TYPE = ArchiveType.CBZ;
   const EDIT_MULTIPLE_COMICS: EditMultipleComics = {
     publisher: 'The Publisher',
@@ -163,12 +163,12 @@ describe('LibraryService', () => {
 
   it('can start rescanning a single comic book', () => {
     service
-      .rescanSingleComicBook({ comicBookId: COMIC.comicDetailId })
+      .rescanSingleComicBook({ comicId: COMIC.comicId })
       .subscribe(response => expect(response.status).toEqual(200));
 
     const req = httpMock.expectOne(
-      interpolate(RESCAN_SINGLE_COMIC_BOOK_URL, {
-        comicBookId: COMIC.comicDetailId
+      interpolate(RESCAN_SINGLE_COMIC_URL, {
+        comicId: COMIC.comicId
       })
     );
     expect(req.request.method).toEqual('PUT');
@@ -181,9 +181,7 @@ describe('LibraryService', () => {
       .rescanSelectedComicBooks()
       .subscribe(response => expect(response.status).toEqual(200));
 
-    const req = httpMock.expectOne(
-      interpolate(RESCAN_SELECTED_COMIC_BOOKS_URL)
-    );
+    const req = httpMock.expectOne(interpolate(RESCAN_SELECTED_COMICS_URL));
     expect(req.request.method).toEqual('PUT');
     expect(req.request.body).toEqual({});
     req.flush(new HttpResponse({ status: 200 }));
@@ -191,12 +189,12 @@ describe('LibraryService', () => {
 
   it('can start updating metadata for a single comic book', () => {
     service
-      .updateSingleComicBookMetadata({ comicBookId: COMIC.comicDetailId })
+      .updateSingleComicBookMetadata({ comicId: COMIC.comicId })
       .subscribe(response => expect(response.status).toEqual(200));
 
     const req = httpMock.expectOne(
-      interpolate(UPDATE_SINGLE_COMIC_BOOK_METADATA_URL, {
-        comicBookId: COMIC.comicDetailId
+      interpolate(UPDATE_SINGLE_COMIC_METADATA_URL, {
+        comicId: COMIC.comicId
       })
     );
     expect(req.request.method).toEqual('PUT');
@@ -210,7 +208,7 @@ describe('LibraryService', () => {
       .subscribe(response => expect(response.status).toEqual(200));
 
     const req = httpMock.expectOne(
-      interpolate(UPDATE_SELECTED_COMIC_BOOKS_METADATA_URL)
+      interpolate(UPDATE_SELECTED_COMICS_METADATA_URL)
     );
     expect(req.request.method).toEqual('PUT');
     expect(req.request.body).toEqual({});
@@ -220,14 +218,14 @@ describe('LibraryService', () => {
   it('can convert a single comic book', () => {
     service
       .convertSingleComicBook({
-        id: COMIC.comicDetailId,
+        id: COMIC.comicId,
         archiveType: ARCHIVE_TYPE
       })
       .subscribe(response => expect(response.status).toEqual(200));
 
     const req = httpMock.expectOne(
-      interpolate(CONVERT_SINGLE_COMIC_BOOK_URL, {
-        comicBookId: COMIC.comicDetailId
+      interpolate(CONVERT_SINGLE_COMIC_URL, {
+        comicId: COMIC.comicId
       })
     );
     expect(req.request.method).toEqual('PUT');
@@ -244,9 +242,7 @@ describe('LibraryService', () => {
       })
       .subscribe(response => expect(response.status).toEqual(200));
 
-    const req = httpMock.expectOne(
-      interpolate(CONVERT_SELECTED_COMIC_BOOKS_URL)
-    );
+    const req = httpMock.expectOne(interpolate(CONVERT_SELECTED_COMICS_URL));
     expect(req.request.method).toEqual('PUT');
     expect(req.request.body).toEqual({
       archiveType: ARCHIVE_TYPE
@@ -276,7 +272,7 @@ describe('LibraryService', () => {
     const req = httpMock.expectOne(interpolate(EDIT_MULTIPLE_COMICS_URL));
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
-      ids: COMIC_LIST.map(comic => comic.comicDetailId),
+      ids: COMIC_LIST.map(comic => comic.comicId),
       publisher: EDIT_MULTIPLE_COMICS.publisher,
       series: EDIT_MULTIPLE_COMICS.series,
       volume: EDIT_MULTIPLE_COMICS.volume,

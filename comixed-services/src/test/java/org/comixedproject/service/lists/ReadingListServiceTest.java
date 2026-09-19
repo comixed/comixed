@@ -1,5 +1,5 @@
 /*
- * ComiXed - A digital comicBook book library management application.
+ * ComiXed - A digital comic book library management application.
  * Copyright (C) 2019, The ComiXed Project.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -99,7 +99,7 @@ class ReadingListServiceTest {
     when(owner.getEmail()).thenReturn(TEST_OWNER_EMAIL);
     when(readingList.getName()).thenReturn(TEST_READING_LIST_NAME);
     when(readingList.getEntryIds()).thenReturn(entryIdList);
-    when(comic.getComicDetailId()).thenReturn(TEST_COMIC_ID);
+    when(comic.getComicId()).thenReturn(TEST_COMIC_ID);
     when(comic.getPublisher()).thenReturn(TEST_PUBLISHER);
     when(comic.getSeries()).thenReturn(TEST_SERIES);
     when(comic.getVolume()).thenReturn(TEST_VOLUME);

@@ -32,17 +32,17 @@ import {
 import { interpolate } from '@app/core';
 import {
   ADD_SINGLE_COMIC_SELECTION_URL,
-  CLEAR_COMIC_BOOK_SELECTION_STATE_URL,
-  COMIC_BOOK_SELECTION_UPDATE_TOPIC,
-  LOAD_COMIC_BOOK_SELECTIONS_URL,
+  CLEAR_COMIC_SELECTION_STATE_URL,
+  COMIC_SELECTION_UPDATE_TOPIC,
+  LOAD_COMIC_SELECTIONS_URL,
   REMOVE_SINGLE_COMIC_SELECTION_URL,
-  SET_SELECTED_BY_UNREAD_STATE_COMIC_BOOKS_URL,
-  SET_SELECTED_COMIC_BOOKS_BY_FILTER_URL,
-  SET_SELECTED_COMIC_BOOKS_BY_ID_URL,
-  SET_SELECTED_COMIC_BOOKS_BY_PUBLISHER_SERIES_VOLUME_URL,
-  SET_SELECTED_COMIC_BOOKS_BY_PUBLISHER_URL,
-  SET_SELECTED_COMIC_BOOKS_BY_TAG_TYPE_AND_VALUE_URL,
-  SET_SELECTED_DUPLICATE_COMIC_BOOKS_URL
+  SET_SELECTED_BY_UNREAD_STATE_COMICS_URL,
+  SET_SELECTED_COMICS_BY_FILTER_URL,
+  SET_SELECTED_COMICS_BY_ID_URL,
+  SET_SELECTED_COMICS_BY_PUBLISHER_SERIES_VOLUME_URL,
+  SET_SELECTED_COMICS_BY_PUBLISHER_URL,
+  SET_SELECTED_COMICS_BY_TAG_TYPE_AND_VALUE_URL,
+  SET_SELECTED_DUPLICATE_COMICS_URL
 } from '@app/comic-books/comic-books.constants';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ComicType } from '@app/comic-books/models/comic-type';
@@ -56,7 +56,7 @@ import {
 import { WebSocketService } from '@app/messaging';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import {
-  comicBookSelectionUpdate,
+  comicSelectionUpdate,
   loadComicBookSelections
 } from '@app/comic-books/actions/comic-book-selection.actions';
 import { SetSelectedByIdRequest } from '@app/comic-books/models/net/set-selected-by-id-request';
@@ -137,7 +137,7 @@ describe('ComicSelectionService', () => {
       .loadSelections()
       .subscribe(response => expect(response).toEqual(serverResponse));
 
-    const req = httpMock.expectOne(interpolate(LOAD_COMIC_BOOK_SELECTIONS_URL));
+    const req = httpMock.expectOne(interpolate(LOAD_COMIC_SELECTIONS_URL));
     expect(req.request.method).toEqual('GET');
     req.flush(serverResponse);
   });
@@ -146,11 +146,11 @@ describe('ComicSelectionService', () => {
     const serverResponse = new HttpResponse({});
 
     service
-      .addSingleSelection({ comicDetailId: ID })
+      .addSingleSelection({ comicId: ID })
       .subscribe(response => expect(response).toEqual(serverResponse));
 
     const req = httpMock.expectOne(
-      interpolate(ADD_SINGLE_COMIC_SELECTION_URL, { comicDetailId: ID })
+      interpolate(ADD_SINGLE_COMIC_SELECTION_URL, { comicId: ID })
     );
     expect(req.request.method).toEqual('PUT');
     expect(req.request.body).toEqual({});
@@ -161,11 +161,11 @@ describe('ComicSelectionService', () => {
     const serverResponse = new HttpResponse({});
 
     service
-      .removeSingleSelection({ comicDetailId: ID })
+      .removeSingleSelection({ comicId: ID })
       .subscribe(response => expect(response).toEqual(serverResponse));
 
     const req = httpMock.expectOne(
-      interpolate(REMOVE_SINGLE_COMIC_SELECTION_URL, { comicDetailId: ID })
+      interpolate(REMOVE_SINGLE_COMIC_SELECTION_URL, { comicId: ID })
     );
     expect(req.request.method).toEqual('DELETE');
     req.flush(serverResponse);
@@ -188,7 +188,7 @@ describe('ComicSelectionService', () => {
       .subscribe(response => expect(response).toEqual(serverResponse));
 
     const req = httpMock.expectOne(
-      interpolate(SET_SELECTED_COMIC_BOOKS_BY_FILTER_URL)
+      interpolate(SET_SELECTED_COMICS_BY_FILTER_URL)
     );
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
@@ -217,7 +217,7 @@ describe('ComicSelectionService', () => {
         .subscribe(response => expect(response).toEqual(serverResponse));
 
       const req = httpMock.expectOne(
-        interpolate(SET_SELECTED_COMIC_BOOKS_BY_TAG_TYPE_AND_VALUE_URL, {
+        interpolate(SET_SELECTED_COMICS_BY_TAG_TYPE_AND_VALUE_URL, {
           tagType: TAG_TYPE,
           tagValue: TAG_VALUE
         })
@@ -238,7 +238,7 @@ describe('ComicSelectionService', () => {
         .subscribe(response => expect(response).toEqual(serverResponse));
 
       const req = httpMock.expectOne(
-        interpolate(SET_SELECTED_COMIC_BOOKS_BY_TAG_TYPE_AND_VALUE_URL, {
+        interpolate(SET_SELECTED_COMICS_BY_TAG_TYPE_AND_VALUE_URL, {
           tagType: TAG_TYPE,
           tagValue: TAG_VALUE
         })
@@ -253,17 +253,15 @@ describe('ComicSelectionService', () => {
 
     service
       .setSelectedById({
-        comicBookIds: COMIC_IDS,
+        comicIds: COMIC_IDS,
         selected: SELECTED
       })
       .subscribe(response => expect(response).toEqual(serverResponse));
 
-    const req = httpMock.expectOne(
-      interpolate(SET_SELECTED_COMIC_BOOKS_BY_ID_URL)
-    );
+    const req = httpMock.expectOne(interpolate(SET_SELECTED_COMICS_BY_ID_URL));
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
-      comicBookIds: COMIC_IDS,
+      comicIds: COMIC_IDS,
       selected: SELECTED
     } as SetSelectedByIdRequest);
     req.flush(serverResponse);
@@ -280,7 +278,7 @@ describe('ComicSelectionService', () => {
       .subscribe(response => expect(response).toEqual(serverResponse));
 
     const req = httpMock.expectOne(
-      interpolate(SET_SELECTED_COMIC_BOOKS_BY_PUBLISHER_URL)
+      interpolate(SET_SELECTED_COMICS_BY_PUBLISHER_URL)
     );
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
@@ -303,7 +301,7 @@ describe('ComicSelectionService', () => {
       .subscribe(response => expect(response).toEqual(serverResponse));
 
     const req = httpMock.expectOne(
-      interpolate(SET_SELECTED_COMIC_BOOKS_BY_PUBLISHER_SERIES_VOLUME_URL)
+      interpolate(SET_SELECTED_COMICS_BY_PUBLISHER_SERIES_VOLUME_URL)
     );
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
@@ -325,7 +323,7 @@ describe('ComicSelectionService', () => {
       .subscribe(response => expect(response).toEqual(serverResponse));
 
     const req = httpMock.expectOne(
-      interpolate(SET_SELECTED_DUPLICATE_COMIC_BOOKS_URL)
+      interpolate(SET_SELECTED_DUPLICATE_COMICS_URL)
     );
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
@@ -345,7 +343,7 @@ describe('ComicSelectionService', () => {
       .subscribe(response => expect(response).toEqual(serverResponse));
 
     const req = httpMock.expectOne(
-      interpolate(SET_SELECTED_BY_UNREAD_STATE_COMIC_BOOKS_URL)
+      interpolate(SET_SELECTED_BY_UNREAD_STATE_COMICS_URL)
     );
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
@@ -363,7 +361,7 @@ describe('ComicSelectionService', () => {
       .subscribe(response => expect(response).toEqual(serverResponse));
 
     const req = httpMock.expectOne(
-      interpolate(CLEAR_COMIC_BOOK_SELECTION_STATE_URL)
+      interpolate(CLEAR_COMIC_SELECTION_STATE_URL)
     );
     expect(req.request.method).toEqual('DELETE');
     req.flush(serverResponse);
@@ -391,7 +389,7 @@ describe('ComicSelectionService', () => {
 
     it('subscribes to user updates', () => {
       expect(topic).toEqual(
-        interpolate(COMIC_BOOK_SELECTION_UPDATE_TOPIC, { email: USER.email })
+        interpolate(COMIC_SELECTION_UPDATE_TOPIC, { email: USER.email })
       );
     });
 
@@ -402,7 +400,7 @@ describe('ComicSelectionService', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          comicBookSelectionUpdate({ ids: [ID] })
+          comicSelectionUpdate({ ids: [ID] })
         );
       });
     });

@@ -17,7 +17,7 @@
  */
 
 import {
-  COMIC_BOOK_SELECTION_FEATURE_KEY,
+  COMIC_SELECTION_FEATURE_KEY,
   ComicSelectionState
 } from '../reducers/comic-selection.reducer';
 import {
@@ -38,7 +38,7 @@ describe('ComicBookSelection Selectors', () => {
   it('selects the busy state', () => {
     expect(
       selectComicBookSelectionBusy({
-        [COMIC_BOOK_SELECTION_FEATURE_KEY]: state
+        [COMIC_SELECTION_FEATURE_KEY]: state
       })
     ).toEqual(state.busy);
   });
@@ -46,7 +46,7 @@ describe('ComicBookSelection Selectors', () => {
   it('selects the list of ids', () => {
     expect(
       selectComicBookSelectionIds({
-        [COMIC_BOOK_SELECTION_FEATURE_KEY]: state
+        [COMIC_SELECTION_FEATURE_KEY]: state
       })
     ).toEqual(state.ids);
   });
@@ -54,7 +54,7 @@ describe('ComicBookSelection Selectors', () => {
   it('selects the number of ids', () => {
     expect(
       selectComicBookSelectionCount({
-        [COMIC_BOOK_SELECTION_FEATURE_KEY]: state
+        [COMIC_SELECTION_FEATURE_KEY]: state
       })
     ).toEqual(state.ids.length);
   });

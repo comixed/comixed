@@ -25,7 +25,7 @@ import {
 import { WebSocketService } from '@app/messaging';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { LoggerModule } from '@angular-ru/cdk/logger';
-import { PROCESS_COMIC_BOOKS_TOPIC } from '@app/app.constants';
+import { PROCESS_COMICS_TOPIC } from '@app/app.constants';
 import { Subscription } from 'rxjs';
 
 describe('ProcessComicsService', () => {
@@ -88,7 +88,7 @@ describe('ProcessComicsService', () => {
 
     it('subscribes to the processing comic books updates', () => {
       expect(webSocketService.subscribe).toHaveBeenCalledWith(
-        PROCESS_COMIC_BOOKS_TOPIC,
+        PROCESS_COMICS_TOPIC,
         jasmine.anything()
       );
     });

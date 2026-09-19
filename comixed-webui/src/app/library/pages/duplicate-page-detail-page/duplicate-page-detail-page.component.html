@@ -89,7 +89,7 @@
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
       <mat-row
         *matRowDef="let row; columns: displayedColumns"
-        [routerLink]="['/comics', row.comicDetailId]"
+        [routerLink]="['/comics', row.comicId]"
       ></mat-row>
     </mat-table>
   </div>

@@ -38,10 +38,10 @@ import org.comixedproject.views.View;
 @Table(name = "displayable_comics_view")
 public class DisplayableComic {
   @Id
-  @Column(name = "comic_detail_id")
+  @Column(name = "comic_id")
   @JsonView({View.ComicListView.class, View.DeletedPageList.class})
   @Getter
-  private Long comicDetailId;
+  private Long comicId;
 
   @Column(name = "reference_id")
   @JsonView({View.ComicListView.class, View.DeletedPageList.class})

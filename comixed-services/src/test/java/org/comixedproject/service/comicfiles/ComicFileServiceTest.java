@@ -1,5 +1,5 @@
 /*
- * ComiXed - A digital comicBook book library management application.
+ * ComiXed - A digital comic book library management application.
  * Copyright (C) 2019, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
@@ -215,12 +215,12 @@ class ComicFileServiceTest {
     verify(comicAdaptor, times(filenameList.size())).createComic(TEST_COMIC_ARCHIVE);
     verify(filenameScrapingRuleService, times(filenameList.size()))
         .loadFilenameMetadata(TEST_ARCHIVE_FILENAME);
-    verify(comicStateAdaptor).fireEvent(comic, ComicEvent.comicBookImported);
+    verify(comicStateAdaptor).fireEvent(comic, ComicEvent.comicImported);
     verify(applicationEventPublisher).publishEvent(LoadComicsEvent.instance);
   }
 
   @Test
-  void importComicFiles_comicBookAdaptorException() throws AdaptorException {
+  void importComicFiles_comicAdaptorException() throws AdaptorException {
     when(comicService.filenameFound(anyString())).thenReturn(false);
     when(comicAdaptor.createComic(anyString())).thenThrow(AdaptorException.class);
 
@@ -252,7 +252,7 @@ class ComicFileServiceTest {
     verify(comic).setVolume(TEST_VOLUME);
     verify(comic).setIssueNumber(TEST_ISSUE_NUMBER);
     verify(comic).setCoverDate(TEST_COVER_DATE);
-    verify(comicStateAdaptor).fireEvent(comic, ComicEvent.comicBookImported);
+    verify(comicStateAdaptor).fireEvent(comic, ComicEvent.comicImported);
     verify(applicationEventPublisher).publishEvent(LoadComicsEvent.instance);
   }
 

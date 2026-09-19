@@ -18,7 +18,7 @@
 
 package org.comixedproject.messaging.comicbooks;
 
-import static org.comixedproject.messaging.comicbooks.PublishComicSelectionStateAction.COMIC_BOOK_SELECTION_UPDATE_TOPIC;
+import static org.comixedproject.messaging.comicbooks.PublishComicSelectionStateAction.COMIC_SELECTION_UPDATE_TOPIC;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.ArrayList;
@@ -50,7 +50,7 @@ class PublishComicSelectionStateActionTest {
   @Mock private ObjectWriter objectWriter;
   @Mock private ComiXedUser user;
 
-  private final List<Long> comicBookIds = new ArrayList<>();
+  private final List<Long> comicIds = new ArrayList<>();
   private ComicSelectionEvent comicSelectionEvent;
 
   @BeforeEach
@@ -60,7 +60,7 @@ class PublishComicSelectionStateActionTest {
         .when(objectWriter.writeValueAsString(Mockito.any()))
         .thenReturn(TEST_IDS_AS_JSON);
     Mockito.lenient().when(user.getEmail()).thenReturn(TEST_USER_EMAIL);
-    this.comicSelectionEvent = new ComicSelectionEvent(this.user, this.comicBookIds);
+    this.comicSelectionEvent = new ComicSelectionEvent(this.user, this.comicIds);
   }
 
   @Test
@@ -77,8 +77,8 @@ class PublishComicSelectionStateActionTest {
     action.publish(comicSelectionEvent);
 
     Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.GenericObjectView.class);
-    Mockito.verify(objectWriter, Mockito.times(1)).writeValueAsString(comicBookIds);
+    Mockito.verify(objectWriter, Mockito.times(1)).writeValueAsString(comicIds);
     Mockito.verify(messagingTemplate, Mockito.times(1))
-        .convertAndSendToUser(TEST_USER_EMAIL, COMIC_BOOK_SELECTION_UPDATE_TOPIC, TEST_IDS_AS_JSON);
+        .convertAndSendToUser(TEST_USER_EMAIL, COMIC_SELECTION_UPDATE_TOPIC, TEST_IDS_AS_JSON);
   }
 }

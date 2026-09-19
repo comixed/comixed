@@ -51,7 +51,7 @@ describe('RescanComics Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, working: false },
-        rescanSingleComicBook({ comicBookId: COMIC_ID })
+        rescanSingleComicBook({ comicId: COMIC_ID })
       );
     });
 

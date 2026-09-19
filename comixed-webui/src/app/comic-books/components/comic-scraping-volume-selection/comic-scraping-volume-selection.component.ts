@@ -134,7 +134,7 @@ export class ComicScrapingVolumeSelectionComponent implements AfterViewInit {
 
   readonly pageSizeOptions = PAGE_SIZE_OPTIONS;
 
-  @Input() comicBook: DisplayableComic = null;
+  @Input() comic: DisplayableComic = null;
   @Input() metadataSource: MetadataSource;
   @Input() publisherName: string;
   @Input() comicSeriesName: string;
@@ -313,7 +313,7 @@ export class ComicScrapingVolumeSelectionComponent implements AfterViewInit {
       this.logger.debug('Scraping multi-book comic');
       this.store.dispatch(
         multiBookScrapeComic({
-          comicBook: this.comicBook,
+          comic: this.comic,
           metadataSource: this.metadataSource,
           issueId: this.issue.id,
           skipCache: this.skipCache,
@@ -327,7 +327,7 @@ export class ComicScrapingVolumeSelectionComponent implements AfterViewInit {
         scrapeSingleComicBook({
           metadataSource: this.metadataSource,
           issueId: this.issue.id,
-          comic: this.comicBook,
+          comic: this.comic,
           skipCache: this.skipCache
         })
       );

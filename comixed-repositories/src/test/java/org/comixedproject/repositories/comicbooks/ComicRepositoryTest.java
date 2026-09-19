@@ -57,11 +57,9 @@ public class ComicRepositoryTest {
   private static final String TEST_READ_VOLUME = "2017";
   private static final String TEST_EMAIL = "comixedreader@localhost";
   private static final Long TEST_COMIC_ID = 1000L;
-  private static final Long TEST_COMIC_DETAIL_ID = 2000L;
   private static final String TEST_UPDATED_FILENAME =
       "/Users/comixed_reader/Documents/library/comics/comicbook.cbz";
-  private static final long TEST_ORGANIZING_COMIC_BOOK = 1005L;
-  private static final long TEST_ORGANIZING_COMIC_DETAIL = 2005L;
+  private static final long TEST_ORGANZING_COMIC = 1005L;
 
   @Autowired private ComicRepository repository;
 
@@ -101,26 +99,26 @@ public class ComicRepositoryTest {
     List<Comic> result = repository.findAll();
 
     assertFalse(result.stream().filter(Comic::getUnscraped).toList().isEmpty());
-    assertTrue(result.stream().anyMatch(comicDetail -> comicDetail.getPageCount() > 0));
+    assertTrue(result.stream().anyMatch(comic -> comic.getPageCount() > 0));
   }
 
   @Test
   @Transactional
   public void testUpdateFilename() {
-    repository.updateFilename(TEST_COMIC_DETAIL_ID, TEST_UPDATED_FILENAME);
+    repository.updateFilename(TEST_COMIC_ID, TEST_UPDATED_FILENAME);
 
     final Comic after = repository.findByComicBookId(TEST_COMIC_ID);
 
-    assertEquals(TEST_COMIC_DETAIL_ID, after.getComicDetailId());
+    assertEquals(TEST_COMIC_ID, after.getComicId());
     assertEquals(TEST_UPDATED_FILENAME, after.getFilename());
   }
 
   @Test
   @Transactional
   public void testClearOrganizingFlag() {
-    repository.clearOrganizingFlag(TEST_ORGANIZING_COMIC_BOOK);
+    repository.clearOrganizingFlag(TEST_ORGANZING_COMIC);
 
-    final Comic after = repository.getReferenceById(TEST_ORGANIZING_COMIC_DETAIL);
+    final Comic after = repository.getReferenceById(TEST_ORGANZING_COMIC);
 
     assertNotNull(after);
     assertFalse(after.isOrganizing());

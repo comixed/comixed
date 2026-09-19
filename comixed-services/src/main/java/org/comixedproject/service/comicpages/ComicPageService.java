@@ -76,16 +76,15 @@ public class ComicPageService {
    */
   public ComicPage getPageInComicByIndex(final long comicId, final int pageIndex)
       throws ComicException {
-    log.debug(
-        "Getting page content for comicBook: comicBook id={} page index={}", comicId, pageIndex);
+    log.debug("Getting page content for comic: comic id={} page index={}", comicId, pageIndex);
 
-    log.debug("Fetching comicBook: id={}", comicId);
-    final Comic comicBook = this.comicService.getComic(comicId);
+    log.debug("Fetching comic: id={}", comicId);
+    final Comic comic = this.comicService.getComic(comicId);
 
-    if (comicBook != null) {
-      if (pageIndex < comicBook.getPageCount()) {
+    if (comic != null) {
+      if (pageIndex < comic.getPageCount()) {
         log.debug("Returning page");
-        return comicBook.getPages().get(pageIndex);
+        return comic.getPages().get(pageIndex);
       } else {
         log.warn("Index out of range");
       }
@@ -307,13 +306,13 @@ public class ComicPageService {
   /**
    * Returns the record id for the cover page for the specified comic book.
    *
-   * @param comicBookId the comic book id
+   * @param comicId the comic book id
    * @return the page id, or null if not found
    */
   @Transactional
-  public Long getPageIdForComicBookCover(final long comicBookId) {
-    log.debug("Retrieving first page id for comic book: id={}", comicBookId);
-    return this.comicPageRepository.getPageIdForComicBookCover(comicBookId);
+  public Long getPageIdForComicBookCover(final long comicId) {
+    log.debug("Retrieving first page id for comic book: id={}", comicId);
+    return this.comicPageRepository.getPageIdForComicBookCover(comicId);
   }
 
   /**

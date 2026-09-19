@@ -325,7 +325,7 @@ public class MetadataService {
               ConfigurationService.CFG_METADATA_IGNORE_EMPTY_VALUES);
       // have to use a final reference here due to the lambdas later in this block
       final Comic detail = result;
-      log.debug("Updating comicBook with scraped data");
+      log.debug("Updating comic with scraped data");
       if (!ignoreEmptyValues || StringUtils.hasLength(issueDetails.getPublisher())) {
         detail.setPublisher(trim(issueDetails.getPublisher()));
       }
@@ -497,23 +497,22 @@ public class MetadataService {
               originalPublisher, originalSeries, originalVolume, trim(issue.getIssueNumber()));
       if (!comicList.isEmpty()) {
         comicList.forEach(
-            comicBook -> {
+            comic -> {
               log.trace("Updating comic details");
-              final Comic comic = comicBook;
               comic.setPublisher(trim(issue.getPublisher()));
               comic.setSeries(trim(issue.getSeries()));
               comic.setVolume(trim(issue.getVolume()));
-              if (comicBook.getMetadata() != null) {
+              if (comic.getMetadata() != null) {
                 log.trace("Updating existing comic metadata source");
-                comicBook.getMetadata().setMetadataSource(metadataSource);
-                comicBook.getMetadata().setReferenceId(trim(issue.getSourceId()));
+                comic.getMetadata().setMetadataSource(metadataSource);
+                comic.getMetadata().setReferenceId(trim(issue.getSourceId()));
               } else {
-                log.trace("Creating comic metadata source", comicBook.getComicDetailId());
-                comicBook.setMetadata(
+                log.trace("Creating comic metadata source", comic.getComicId());
+                comic.setMetadata(
                     new ComicMetadataSource(
                         comic, metadataSource, trim(issue.getSourceId()), new Date()));
               }
-              log.debug("Firing comic book event: id={}", comicBook.getComicDetailId());
+              log.debug("Firing comic book event: id={}", comic.getComicId());
               this.comicStateAdaptor.fireEvent(comic, ComicEvent.comicMetadataSaved);
             });
       } else {

@@ -17,6 +17,6 @@
  */
 
 export interface SetSingleComicsReadStateRequest {
-  comicBookId: number;
+  comicId: number;
   read: boolean;
 }

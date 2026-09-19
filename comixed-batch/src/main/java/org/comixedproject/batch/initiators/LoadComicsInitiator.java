@@ -51,7 +51,7 @@ public class LoadComicsInitiator {
   @Autowired private BatchProcessesService batchProcessesService;
 
   @Autowired
-  @Qualifier(value = LOAD_COMIC_BOOKS_JOB)
+  @Qualifier(value = LOAD_COMICS_JOB)
   private Job loadComicBooksJob;
 
   @Autowired
@@ -77,14 +77,14 @@ public class LoadComicsInitiator {
 
   private void doExecute() {
     synchronized (MUTEX) {
-      if (!this.batchProcessesService.hasActiveExecutions(LOAD_COMIC_BOOKS_JOB)
+      if (!this.batchProcessesService.hasActiveExecutions(LOAD_COMICS_JOB)
           && this.comicService.getUnprocessedComicBookCount() > 0) {
         log.info("Starting process comics job");
         try {
           this.jobOperator.start(
               this.loadComicBooksJob,
               new JobParametersBuilder()
-                  .addLong(LOAD_COMIC_BOOKS_JOB_STARTED, System.currentTimeMillis())
+                  .addLong(LOAD_COMICS_JOB_STARTED, System.currentTimeMillis())
                   .toJobParameters());
         } catch (JobExecutionAlreadyRunningException
             | JobRestartException

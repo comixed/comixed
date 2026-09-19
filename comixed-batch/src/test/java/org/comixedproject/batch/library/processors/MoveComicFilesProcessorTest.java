@@ -1,5 +1,5 @@
 /*
- * ComiXed - A digital comicBook book library management application.
+ * ComiXed - A digital comic book library management application.
  * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
@@ -72,7 +72,7 @@ class MoveComicFilesProcessorTest {
   @Mock private ComicFileAdaptor comicFileAdaptor;
   @Mock private ComicAdaptor comicAdaptor;
   @Mock private OrganizingComic organizingComic;
-  @Mock private File comicDetailFile;
+  @Mock private File comicFile;
 
   @Captor private ArgumentCaptor<File> moveFileSourceArgumentCaptor;
   @Captor private ArgumentCaptor<File> moveFileTargetArgumentCaptor;
@@ -86,8 +86,8 @@ class MoveComicFilesProcessorTest {
     Mockito.when(jobParameters.getString(ORGANIZE_LIBRARY_JOB_RENAMING_RULE))
         .thenReturn(TEST_RENAMING_RULE);
     Mockito.when(organizingComic.getArchiveType()).thenReturn(TEST_ARCHIVE_TYPE);
-    Mockito.when(comicDetailFile.exists()).thenReturn(true);
-    Mockito.when(organizingComic.getFile()).thenReturn(comicDetailFile);
+    Mockito.when(comicFile.exists()).thenReturn(true);
+    Mockito.when(organizingComic.getFile()).thenReturn(comicFile);
     Mockito.when(organizingComic.getFilename()).thenReturn(TEST_SOURCE_FILENAME);
     Mockito.when(organizingComic.getFilename()).thenReturn(TEST_SOURCE_FILENAME);
     Mockito.when(
@@ -115,7 +115,7 @@ class MoveComicFilesProcessorTest {
 
   @Test
   void process_comicbookNotFound() {
-    Mockito.when(comicDetailFile.exists()).thenReturn(false);
+    Mockito.when(comicFile.exists()).thenReturn(false);
 
     final OrganizingComic result = processor.process(organizingComic);
 
@@ -139,15 +139,15 @@ class MoveComicFilesProcessorTest {
     List<File> moveFileSources = moveFileSourceArgumentCaptor.getAllValues();
     List<File> moveFileTargets = moveFileTargetArgumentCaptor.getAllValues();
 
-    File comicDetailSourceFile = moveFileSources.get(0);
-    assertNotNull(comicDetailSourceFile);
-    assertSame(comicDetailFile, comicDetailSourceFile);
+    File comicSourceFile = moveFileSources.get(0);
+    assertNotNull(comicSourceFile);
+    assertSame(comicFile, comicSourceFile);
 
     File rebuiltComicBookFile = moveFileTargets.get(0);
     assertNotNull(rebuiltComicBookFile);
     assertEquals(TEST_REBUILT_FILENAME, rebuiltComicBookFile.getAbsolutePath());
 
-    Mockito.verify(fileAdaptor, Mockito.times(1)).moveFile(comicDetailFile, rebuiltComicBookFile);
+    Mockito.verify(fileAdaptor, Mockito.times(1)).moveFile(comicFile, rebuiltComicBookFile);
     Mockito.verify(comicFileAdaptor, Mockito.times(1)).standardizeFilename(TEST_REBUILT_FILENAME);
   }
 
@@ -172,15 +172,15 @@ class MoveComicFilesProcessorTest {
     List<File> moveFileSources = moveFileSourceArgumentCaptor.getAllValues();
     List<File> moveFileTargets = moveFileTargetArgumentCaptor.getAllValues();
 
-    File comicDetailSourceFile = moveFileSources.get(0);
-    assertNotNull(comicDetailSourceFile);
-    assertSame(comicDetailFile, comicDetailSourceFile);
+    File comicSourceFile = moveFileSources.get(0);
+    assertNotNull(comicSourceFile);
+    assertSame(comicFile, comicSourceFile);
 
     File rebuiltComicBookFile = moveFileTargets.get(0);
     assertNotNull(rebuiltComicBookFile);
     assertEquals(TEST_REBUILT_FILENAME, rebuiltComicBookFile.getAbsolutePath());
 
-    Mockito.verify(fileAdaptor, Mockito.times(1)).moveFile(comicDetailFile, rebuiltComicBookFile);
+    Mockito.verify(fileAdaptor, Mockito.times(1)).moveFile(comicFile, rebuiltComicBookFile);
     Mockito.verify(comicFileAdaptor, Mockito.times(1)).standardizeFilename(TEST_REBUILT_FILENAME);
   }
 

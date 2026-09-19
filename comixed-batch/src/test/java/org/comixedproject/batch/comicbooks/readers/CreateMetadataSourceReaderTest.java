@@ -45,46 +45,46 @@ class CreateMetadataSourceReaderTest {
   @Mock private ComicService comicService;
   @Mock private Comic comic;
 
-  private List<Comic> comicBookList = new ArrayList<>();
+  private List<Comic> comicList = new ArrayList<>();
 
   @Test
   void read_noneLoaded_manyFound() {
-    for (int index = 0; index < MAX_RECORDS; index++) comicBookList.add(comic);
+    for (int index = 0; index < MAX_RECORDS; index++) comicList.add(comic);
 
-    when(comicService.findComicsWithCreateMetadataFlagSet(anyInt())).thenReturn(comicBookList);
+    when(comicService.findComicsWithCreateMetadataFlagSet(anyInt())).thenReturn(comicList);
 
     final Comic result = reader.read();
 
     assertNotNull(result);
     assertSame(comic, result);
-    assertFalse(comicBookList.isEmpty());
-    assertEquals(MAX_RECORDS - 1, comicBookList.size());
+    assertFalse(comicList.isEmpty());
+    assertEquals(MAX_RECORDS - 1, comicList.size());
 
     verify(comicService).findComicsWithCreateMetadataFlagSet(reader.getChunkSize());
   }
 
   @Test
   void read_noneRemaining() {
-    when(comicService.findComicsWithCreateMetadataFlagSet(anyInt())).thenReturn(comicBookList);
+    when(comicService.findComicsWithCreateMetadataFlagSet(anyInt())).thenReturn(comicList);
 
-    reader.comicBookList = comicBookList;
+    reader.comicList = comicList;
 
     final Comic result = reader.read();
 
     assertNull(result);
-    assertNull(reader.comicBookList);
+    assertNull(reader.comicList);
 
     verify(comicService).findComicsWithCreateMetadataFlagSet(reader.getChunkSize());
   }
 
   @Test
   void read_noneLoaded_noneFound() {
-    when(comicService.findComicsWithCreateMetadataFlagSet(anyInt())).thenReturn(comicBookList);
+    when(comicService.findComicsWithCreateMetadataFlagSet(anyInt())).thenReturn(comicList);
 
     final Comic result = reader.read();
 
     assertNull(result);
-    assertNull(reader.comicBookList);
+    assertNull(reader.comicList);
 
     verify(comicService).findComicsWithCreateMetadataFlagSet(reader.getChunkSize());
   }

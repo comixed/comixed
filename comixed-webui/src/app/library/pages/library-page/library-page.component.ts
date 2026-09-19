@@ -114,7 +114,7 @@ export class LibraryPageComponent implements OnInit {
   deletedOnly$ = new BehaviorSubject(false);
   missingOnly$ = new BehaviorSubject(false);
   unprocessedOnly$ = new BehaviorSubject(false);
-  comicBooksRead$ = new BehaviorSubject<number[]>([]);
+  comicsRead$ = new BehaviorSubject<number[]>([]);
   readingLists$ = new BehaviorSubject<ReadingList[]>([]);
   pageContent$ = new BehaviorSubject('comics');
   showCovers$ = new BehaviorSubject(true);
@@ -219,15 +219,15 @@ export class LibraryPageComponent implements OnInit {
               `${true}`
             ) === `${true}`
           );
-          this.comicBooksRead$.next(user.readComicBooks);
+          this.comicsRead$.next(user.readComicBooks);
         })
       )
       .subscribe();
     this.store
       .select(selectReadComicBooksList)
       .pipe(
-        tap(comicBooksRead => {
-          this.comicBooksRead$.next(comicBooksRead);
+        tap(comicsRead => {
+          this.comicsRead$.next(comicsRead);
         })
       )
       .subscribe();

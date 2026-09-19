@@ -89,17 +89,17 @@ public class LibraryController {
    * Prepares comics to have their underlying file recreated.
    *
    * @param request the request body
-   * @param comicBookId the comic book id
+   * @param comicId the comic book id
    * @throws LibraryException if an error occurs
    */
   @PutMapping(
-      value = "/api/library/conversion/{comicBookId}",
+      value = "/api/library/conversion/{comicId}",
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @Timed(value = "comixed.library.convert-single-comic-book")
   @PreAuthorize("hasRole('ADMIN')")
   public void convertSingleComicBooks(
       @RequestBody() final ConvertComicsRequest request,
-      @PathVariable("comicBookId") final long comicBookId)
+      @PathVariable("comicId") final long comicId)
       throws LibraryException {
     if (this.configurationService.isFeatureEnabled(
         ConfigurationService.CFG_LIBRARY_NO_RECREATE_COMICS)) {
@@ -108,10 +108,10 @@ public class LibraryController {
 
     final ArchiveType archiveType = request.getArchiveType();
 
-    log.info("Converting single comic book: target={}", comicBookId, archiveType);
+    log.info("Converting single comic book: target={}", comicId, archiveType);
 
     log.trace("Preparing to recreate comic book file");
-    this.libraryService.prepareToRecreate(new ArrayList<>(Arrays.asList(comicBookId)), archiveType);
+    this.libraryService.prepareToRecreate(new ArrayList<>(Arrays.asList(comicId)), archiveType);
   }
 
   /**
@@ -218,18 +218,15 @@ public class LibraryController {
   /**
    * Initiates the rescan process for a single comic book.
    *
-   * @param comicBookId the comic book id
+   * @param comicId the comic book id
    * @throws Exception if an error occurs
    */
-  @PutMapping(
-      value = "/api/library/rescan/{comicBookId}",
-      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PutMapping(value = "/api/library/rescan/{comicId}", consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @Timed(value = "comixed.library.batch.rescan-single")
-  public void rescanSingleComicBook(@PathVariable("comicBookId") final long comicBookId)
-      throws Exception {
-    log.info("Rescanning single comic book: id={}", comicBookId);
-    this.comicService.prepareForRescan(Arrays.asList(comicBookId));
+  public void rescanSingleComicBook(@PathVariable("comicId") final long comicId) throws Exception {
+    log.info("Rescanning single comic book: id={}", comicId);
+    this.comicService.prepareForRescan(Arrays.asList(comicId));
   }
 
   /**
@@ -257,16 +254,16 @@ public class LibraryController {
   /**
    * Starts the metadata update process for a single comic book.
    *
-   * @param comicBookId the comic book id
+   * @param comicId the comic book id
    * @throws Exception if an error occurs
    */
-  @PutMapping(value = "/api/library/metadata/update/{comicBookId}")
+  @PutMapping(value = "/api/library/metadata/update/{comicId}")
   @PreAuthorize("hasRole('ADMIN')")
   @Timed(value = "comixed.library.batch.metadata-update-selected-comic-books")
-  public void updateSingleComicBookMetadata(@PathVariable("comicBookId") final long comicBookId)
+  public void updateSingleComicBookMetadata(@PathVariable("comicId") final long comicId)
       throws Exception {
-    log.info("Updating the metadata a single comic book: id={}", comicBookId);
-    this.libraryService.prepareForMetadataUpdate(new ArrayList<>(Arrays.asList(comicBookId)));
+    log.info("Updating the metadata a single comic book: id={}", comicId);
+    this.libraryService.prepareForMetadataUpdate(new ArrayList<>(Arrays.asList(comicId)));
   }
 
   /**

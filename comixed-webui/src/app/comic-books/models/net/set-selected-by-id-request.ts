@@ -17,6 +17,6 @@
  */
 
 export interface SetSelectedByIdRequest {
-  comicBookIds: number[];
+  comicIds: number[];
   selected: boolean;
 }

@@ -67,7 +67,8 @@ class ComicSelectionControllerTest {
   @Mock private HttpSession httpSession;
   @Mock private List<Long> selectedIds;
   @Mock private Principal principal;
-  @Mock private List<Long> comicDetailIdList;
+
+  private List<Long> comicIdList = new ArrayList<>();
 
   @BeforeEach
   void setUp() throws ComicSelectionException, ComiXedUserException {
@@ -75,8 +76,7 @@ class ComicSelectionControllerTest {
     when(comicSelectionService.decodeSelections(TEST_ENCODED_SELECTIONS)).thenReturn(selectedIds);
     when(comicSelectionService.encodeSelections(anyList())).thenReturn(TEST_REENCODED_SELECTIONS);
     when(principal.getName()).thenReturn(TEST_EMAIL);
-    when(userService.getComicDetailIdsForUser(anyString(), anyBoolean()))
-        .thenReturn(comicDetailIdList);
+    when(userService.getComicIdsForUser(anyString(), anyBoolean())).thenReturn(comicIdList);
   }
 
   @Test
@@ -168,28 +168,26 @@ class ComicSelectionControllerTest {
 
   @Test
   void addSelectionsById_selecting() throws ComicSelectionException {
-    final List<Long> comicBookIdList = new ArrayList<Long>();
-    for (long index = 1000L; index < 2000L; index++) comicBookIdList.add(index);
+    for (long index = 1000L; index < 2000L; index++) comicIdList.add(index);
 
     controller.addComicBookSelectionsById(
-        httpSession, principal, new AddComicSelectionsByIdRequest(comicBookIdList, true));
+        httpSession, principal, new AddComicSelectionsByIdRequest(comicIdList, true));
 
     verify(httpSession).getAttribute(LIBRARY_SELECTIONS);
-    verify(selectedIds).addAll(comicBookIdList);
+    verify(selectedIds).addAll(comicIdList);
     verify(comicSelectionService).encodeSelections(selectedIds);
     verify(httpSession).setAttribute(LIBRARY_SELECTIONS, TEST_REENCODED_SELECTIONS);
   }
 
   @Test
   void addSelectionsById_deselecting() throws ComicSelectionException {
-    final List<Long> comicBookIdList = new ArrayList<Long>();
-    for (long index = 1000L; index < 2000L; index++) comicBookIdList.add(index);
+    for (long index = 1000L; index < 2000L; index++) comicIdList.add(index);
 
     controller.addComicBookSelectionsById(
-        httpSession, principal, new AddComicSelectionsByIdRequest(comicBookIdList, false));
+        httpSession, principal, new AddComicSelectionsByIdRequest(comicIdList, false));
 
     verify(httpSession).getAttribute(LIBRARY_SELECTIONS);
-    verify(selectedIds).removeAll(comicBookIdList);
+    verify(selectedIds).removeAll(comicIdList);
     verify(comicSelectionService).encodeSelections(selectedIds);
     verify(httpSession).setAttribute(LIBRARY_SELECTIONS, TEST_REENCODED_SELECTIONS);
   }
@@ -269,8 +267,8 @@ class ComicSelectionControllerTest {
         httpSession, principal, new UnreadComicsSelectionRequest(true, false));
 
     verify(httpSession).getAttribute(LIBRARY_SELECTIONS);
-    verify(userService).getComicDetailIdsForUser(TEST_EMAIL, false);
-    verify(selectedIds).addAll(comicDetailIdList);
+    verify(userService).getComicIdsForUser(TEST_EMAIL, false);
+    verify(selectedIds).addAll(comicIdList);
     verify(comicSelectionService).encodeSelections(selectedIds);
     verify(httpSession).setAttribute(LIBRARY_SELECTIONS, TEST_REENCODED_SELECTIONS);
   }
@@ -282,8 +280,8 @@ class ComicSelectionControllerTest {
         httpSession, principal, new UnreadComicsSelectionRequest(false, false));
 
     verify(httpSession).getAttribute(LIBRARY_SELECTIONS);
-    verify(userService).getComicDetailIdsForUser(TEST_EMAIL, false);
-    verify(selectedIds).removeAll(comicDetailIdList);
+    verify(userService).getComicIdsForUser(TEST_EMAIL, false);
+    verify(selectedIds).removeAll(comicIdList);
     verify(comicSelectionService).encodeSelections(selectedIds);
     verify(httpSession).setAttribute(LIBRARY_SELECTIONS, TEST_REENCODED_SELECTIONS);
   }
@@ -295,8 +293,8 @@ class ComicSelectionControllerTest {
         httpSession, principal, new UnreadComicsSelectionRequest(true, true));
 
     verify(httpSession).getAttribute(LIBRARY_SELECTIONS);
-    verify(userService).getComicDetailIdsForUser(TEST_EMAIL, true);
-    verify(selectedIds).addAll(comicDetailIdList);
+    verify(userService).getComicIdsForUser(TEST_EMAIL, true);
+    verify(selectedIds).addAll(comicIdList);
     verify(comicSelectionService).encodeSelections(selectedIds);
     verify(httpSession).setAttribute(LIBRARY_SELECTIONS, TEST_REENCODED_SELECTIONS);
   }
@@ -308,8 +306,8 @@ class ComicSelectionControllerTest {
         httpSession, principal, new UnreadComicsSelectionRequest(false, true));
 
     verify(httpSession).getAttribute(LIBRARY_SELECTIONS);
-    verify(userService).getComicDetailIdsForUser(TEST_EMAIL, true);
-    verify(selectedIds).removeAll(comicDetailIdList);
+    verify(userService).getComicIdsForUser(TEST_EMAIL, true);
+    verify(selectedIds).removeAll(comicIdList);
     verify(comicSelectionService).encodeSelections(selectedIds);
     verify(httpSession).setAttribute(LIBRARY_SELECTIONS, TEST_REENCODED_SELECTIONS);
   }

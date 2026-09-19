@@ -32,5 +32,5 @@ import org.comixedproject.model.user.ComiXedUser;
 @AllArgsConstructor
 public class ComicSelectionEvent {
   @Getter private final ComiXedUser user;
-  @Getter private final List<Long> comicBookIds;
+  @Getter private final List<Long> comicIds;
 }

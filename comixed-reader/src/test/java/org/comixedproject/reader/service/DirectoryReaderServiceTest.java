@@ -74,7 +74,7 @@ class DirectoryReaderServiceTest {
   @BeforeEach
   void setUp() {
     stringSet.add(TEST_STRING_ENTRY);
-    when(comic.getComicDetailId()).thenReturn(TEST_COMIC_ID);
+    when(comic.getComicId()).thenReturn(TEST_COMIC_ID);
     when(comic.getPublisher()).thenReturn(TEST_PUBLISHER);
     when(comic.getSeries()).thenReturn(TEST_SERIES);
     when(comic.getVolume()).thenReturn(TEST_VOLUME);

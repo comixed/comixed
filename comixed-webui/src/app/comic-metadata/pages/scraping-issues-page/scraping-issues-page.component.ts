@@ -137,7 +137,7 @@ export class ScrapingIssuesPageComponent implements OnInit {
   );
   multiBookScrapingBusy$ = new BehaviorSubject(false);
   totalComics$ = new BehaviorSubject(0);
-  comicBooks$ = new BehaviorSubject<DisplayableComic[]>([]);
+  comics$ = new BehaviorSubject<DisplayableComic[]>([]);
   currentComicBook$ = new BehaviorSubject<DisplayableComic | null>(null);
   metadataSource$ = new BehaviorSubject<MetadataSource | null>(null);
   currentSeries$ = new BehaviorSubject('');
@@ -222,15 +222,15 @@ export class ScrapingIssuesPageComponent implements OnInit {
     this.store
       .select(selectMultiBookScrapingList)
       .pipe(
-        tap(comicBooks => {
-          this.comicBooks$.next(comicBooks);
-          this.dataSource.data = comicBooks;
+        tap(comics => {
+          this.comics$.next(comics);
+          this.dataSource.data = comics;
         })
       )
       .subscribe();
     this.store
       .select(selectMultiBookScrapingCurrent)
-      .pipe(filter(comicBook => !!comicBook))
+      .pipe(filter(comic => !!comic))
       .pipe(
         tap(currentComicBook => {
           this.currentComicBook$.next(currentComicBook);
@@ -285,9 +285,9 @@ export class ScrapingIssuesPageComponent implements OnInit {
     this.loadTranslations();
   }
 
-  onSelectionChanged(comicBook: DisplayableComic): void {
-    this.logger.trace('Selected comic changed:', comicBook);
-    this.currentComicBook$.next(comicBook);
+  onSelectionChanged(comic: DisplayableComic): void {
+    this.logger.trace('Selected comic changed:', comic);
+    this.currentComicBook$.next(comic);
   }
 
   onScrape(event: MetadataEvent): void {
@@ -313,23 +313,20 @@ export class ScrapingIssuesPageComponent implements OnInit {
     this.popupComic$.next(comic);
   }
 
-  onRemoveComicBook(comicDetail: DisplayableComic) {
+  onRemoveComicBook(comic: DisplayableComic) {
     this.store.dispatch(
       multiBookScrapingRemoveBook({
-        comicBook: this.comicBooks$.value.find(
-          entry => entry.comicDetailId === comicDetail.comicDetailId
+        comic: this.comics$.value.find(
+          entry => entry.comicId === comic.comicId
         ),
         pageSize: this.queryParameterService.pageSize$.value
       })
     );
   }
 
-  onSelectComicBook(comicDetail: DisplayableComic): void {
-    const comicBook = this.comicBooks$.value.find(
-      entry => entry.comicDetailId === comicDetail.comicDetailId
-    );
-    this.logger.debug('Selecting comic book:', comicDetail);
-    this.store.dispatch(multiBookScrapingSetCurrentBook({ comicBook }));
+  onSelectComicBook(comic: DisplayableComic): void {
+    this.logger.debug('Selecting comic book:', comic);
+    this.store.dispatch(multiBookScrapingSetCurrentBook({ comic }));
   }
 
   private loadTranslations(): void {

@@ -34,7 +34,7 @@ public class MarkComicAsMissingGuard extends AbstractComicGuard {
   @Override
   public boolean evaluate(final Comic comic) {
     if (comic.isMarkedMissing()) {
-      log.trace("Comic book already marked as missing: id={}", comic.getComicDetailId());
+      log.trace("Comic book already marked as missing: id={}", comic.getComicId());
       return false;
     }
     final File file = comic.getFile();
@@ -43,7 +43,7 @@ public class MarkComicAsMissingGuard extends AbstractComicGuard {
       return false;
     }
 
-    log.debug("Comic book can be marked as missing: id={}", comic.getComicDetailId());
+    log.debug("Comic book can be marked as missing: id={}", comic.getComicId());
     return true;
   }
 }

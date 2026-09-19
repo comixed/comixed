@@ -43,7 +43,7 @@ import { VolumeMetadata } from '@app/comic-metadata/models/volume-metadata';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 import {
-  comicBookLoaded,
+  comicLoaded,
   downloadComicBook,
   loadComicBook,
   savePageOrder
@@ -62,7 +62,7 @@ import {
   deleteSingleComicBook,
   undeleteSingleComicBook
 } from '@app/comic-books/actions/delete-comic-books.actions';
-import { COMIC_BOOK_UPDATE_TOPIC } from '@app/comic-books/comic-books.constants';
+import { COMIC_UPDATE_TOPIC } from '@app/comic-books/comic-books.constants';
 import { ComicPage } from '@app/comic-books/models/comic-page';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import { ComicState } from '@app/comic-books/models/comic-state';
@@ -162,7 +162,7 @@ export class ComicDetailsPageComponent implements OnInit, AfterViewInit {
       .pipe(
         tap(params => {
           this.comicId$.next(+params.comicId);
-          this.logger.trace('ComicBook id parameter:', params.comicDetailId);
+          this.logger.trace('ComicBook id parameter:', params.comicId);
           this.store.dispatch(loadComicBook({ id: this.comicId$.value }));
           this.subscribeToUpdates();
         })
@@ -225,7 +225,7 @@ export class ComicDetailsPageComponent implements OnInit, AfterViewInit {
 
   get isRead$(): Observable<boolean> {
     return of(
-      this.readComicBookList$.value.includes(this.comic$.value?.comicDetailId)
+      this.readComicBookList$.value.includes(this.comic$.value?.comicId)
     );
   }
 
@@ -277,7 +277,7 @@ export class ComicDetailsPageComponent implements OnInit, AfterViewInit {
     this.logger.debug('Marking comic read status:', read);
     this.store.dispatch(
       markSingleComicBookRead({
-        comicDetailId: this.comic$.value.comicDetailId,
+        comicId: this.comic$.value.comicId,
         read
       })
     );
@@ -296,7 +296,7 @@ export class ComicDetailsPageComponent implements OnInit, AfterViewInit {
         this.logger.debug('Updating comic file:', this.comic$.value);
         this.store.dispatch(
           updateSingleComicBookMetadata({
-            comicBookId: this.comic$.value.comicDetailId
+            comicId: this.comic$.value.comicId
           })
         );
       }
@@ -319,13 +319,13 @@ export class ComicDetailsPageComponent implements OnInit, AfterViewInit {
         if (deleted) {
           this.store.dispatch(
             deleteSingleComicBook({
-              comicBookId: this.comic$.value.comicDetailId
+              comicId: this.comic$.value.comicId
             })
           );
         } else {
           this.store.dispatch(
             undeleteSingleComicBook({
-              comicBookId: this.comic$.value.comicDetailId
+              comicId: this.comic$.value.comicId
             })
           );
         }
@@ -349,7 +349,7 @@ export class ComicDetailsPageComponent implements OnInit, AfterViewInit {
         this.logger.trace('Firing event: save page order');
         this.store.dispatch(
           savePageOrder({
-            comicBookId: this.comic$.value.comicDetailId,
+            comicId: this.comic$.value.comicId,
             entries: this.pages$.value.map((page, index) => {
               return {
                 index,
@@ -365,7 +365,7 @@ export class ComicDetailsPageComponent implements OnInit, AfterViewInit {
   onDownloadComicFile(): void {
     this.logger.debug('Downloading comic file');
     this.store.dispatch(
-      downloadComicBook({ comicBookId: this.comic$.value.comicDetailId })
+      downloadComicBook({ comicId: this.comic$.value.comicId })
     );
   }
 
@@ -391,14 +391,14 @@ export class ComicDetailsPageComponent implements OnInit, AfterViewInit {
   }
 
   private subscribeToUpdates(): void {
-    const topic = interpolate(COMIC_BOOK_UPDATE_TOPIC, {
+    const topic = interpolate(COMIC_UPDATE_TOPIC, {
       id: this.comicId$.value
     });
     this.logger.trace('Subscribing to comic book updates:', topic);
     this.webSocketService.subscribe<LoadComicResponse>(topic, data => {
       this.logger.debug('ComicBook book update received:', data);
       this.store.dispatch(
-        comicBookLoaded({
+        comicLoaded({
           detail: data.detail,
           metadata: data.metadata,
           pages: data.pages,

@@ -22,9 +22,9 @@ import { Observable, of, throwError } from 'rxjs';
 import { UserEffects } from './user.effects';
 import { UserService } from '@app/user/services/user.service';
 import {
-  READ_COMIC_BOOK_1,
-  READ_COMIC_BOOK_2,
-  READ_COMIC_BOOK_3,
+  READ_COMIC_1,
+  READ_COMIC_2,
+  READ_COMIC_3,
   USER_READER
 } from '@app/user/user.fixtures';
 import {
@@ -55,11 +55,7 @@ import { provideRouter, Router } from '@angular/router';
 import { setReadComicBooks } from '@app/user/actions/read-comic-books.actions';
 
 describe('UserEffects', () => {
-  const LAST_READ_ENTRIES = [
-    READ_COMIC_BOOK_1,
-    READ_COMIC_BOOK_2,
-    READ_COMIC_BOOK_3
-  ];
+  const LAST_READ_ENTRIES = [READ_COMIC_1, READ_COMIC_2, READ_COMIC_3];
   const USER = { ...USER_READER, readComicBooks: LAST_READ_ENTRIES };
   const PASSWORD = 'this!is!my!password';
   const AUTH_TOKEN = 'my!token';

@@ -1,5 +1,5 @@
 /*
- * ComiXed - A digital comicBook book library management application.
+ * ComiXed - A digital comic book library management application.
  * Copyright (C) 2017, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
@@ -246,7 +246,7 @@ class ComicScrapingControllerTest {
   }
 
   @Test
-  void startBatchMetadataUpdate_comicBookServiceException() throws Exception {
+  void startBatchMetadataUpdate_comicServiceException() throws Exception {
     doThrow(ComicException.class)
         .when(comicService)
         .markComicBooksForBatchMetadataUpdate(anyList());
@@ -341,7 +341,7 @@ class ComicScrapingControllerTest {
             session, principal, new StartMultiBookScrapingRequest(TEST_PAGE_SIZE));
 
     assertNotNull(result);
-    assertSame(displayableComicList, result.getComicBooks());
+    assertSame(displayableComicList, result.getComics());
 
     verify(comicSelectionService).decodeSelections(TEST_ENCODED_MULTI_BOOKS);
     verify(multiBookIdList).addAll(selectedIdList);
@@ -362,7 +362,7 @@ class ComicScrapingControllerTest {
             session, principal, new StartMultiBookScrapingRequest(TEST_PAGE_SIZE));
 
     assertNotNull(result);
-    assertSame(displayableComicList, result.getComicBooks());
+    assertSame(displayableComicList, result.getComics());
 
     verify(comicSelectionService).decodeSelections(TEST_ENCODED_MULTI_BOOKS);
     verify(multiBookIdList, never()).addAll(selectedIdList);
@@ -385,7 +385,7 @@ class ComicScrapingControllerTest {
     assertEquals(TEST_PAGE_SIZE, result.getPageSize());
     assertEquals(TEST_PAGE_NUMBER, result.getPageNumber());
     assertEquals(multiBookIdList.size(), result.getTotalComics());
-    assertSame(displayableComicList, result.getComicBooks());
+    assertSame(displayableComicList, result.getComics());
 
     verify(displayableComicService).loadComicsById(TEST_PAGE_SIZE, 0, "", "", multiBookIdList);
   }

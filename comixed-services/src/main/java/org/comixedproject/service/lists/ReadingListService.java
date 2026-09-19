@@ -304,14 +304,14 @@ public class ReadingListService {
         },
         (index, row) -> {
           if (index > 0) {
-            log.trace("Looking for comicBook");
+            log.trace("Looking for comic");
             final List<Comic> comicList =
                 this.comicService.getForPublisherAndSeriesAndVolumeAndIssueNumber(
                     row.get(1), row.get(2), row.get(3), row.get(4));
             if (!comicList.isEmpty()) {
               for (int which = 0; which < comicList.size(); which++) {
-                final Comic comicBook = comicList.get(which);
-                readingList.getEntryIds().add(comicBook.getComicDetailId());
+                final Comic comic = comicList.get(which);
+                readingList.getEntryIds().add(comic.getComicId());
               }
             }
           }
@@ -360,15 +360,15 @@ public class ReadingListService {
    */
   @Transactional
   public void deleteEntriesForComicBook(final Comic comic) {
-    log.trace("Deleting all reading list entries for comic book: id={}", comic.getComicDetailId());
+    log.trace("Deleting all reading list entries for comic book: id={}", comic.getComicId());
     this.readingListRepository
-        .getReadingListsWithComic(comic.getComicDetailId())
+        .getReadingListsWithComic(comic.getComicId())
         .forEach(
             readingList -> {
               log.trace(
                   "Removing comic book from reading list: list id={}",
                   readingList.getReadingListId());
-              readingList.getEntryIds().remove(comic.getComicDetailId());
+              readingList.getEntryIds().remove(comic.getComicId());
               log.trace("Saving reading list");
               this.readingListRepository.save(readingList);
             });

@@ -18,7 +18,7 @@
 
 package org.comixedproject.batch.comicbooks.listeners;
 
-import static org.comixedproject.batch.comicbooks.LoadComicsConfiguration.LOAD_COMIC_BOOKS_JOB;
+import static org.comixedproject.batch.comicbooks.LoadComicsConfiguration.LOAD_COMICS_JOB;
 import static org.mockito.Mockito.*;
 
 import org.comixedproject.messaging.PublishingException;
@@ -47,7 +47,7 @@ class LoadComicsJobListenerTest {
   @BeforeEach
   void setUp() throws PublishingException {
     when(jobExecution.getJobParameters()).thenReturn(jobParameters);
-    when(jobInstance.getJobName()).thenReturn(LOAD_COMIC_BOOKS_JOB);
+    when(jobInstance.getJobName()).thenReturn(LOAD_COMICS_JOB);
     when(jobExecution.getJobInstance()).thenReturn(jobInstance);
     when(jobExecution.getStatus()).thenReturn(BatchStatus.COMPLETED);
     when(jobExecution.getExitStatus()).thenReturn(ExitStatus.COMPLETED);

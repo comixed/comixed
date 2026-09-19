@@ -36,17 +36,15 @@ import org.springframework.stereotype.Component;
 @Component
 @Log4j2
 public class PublishComicSelectionStateAction extends AbstractPublishAction<ComicSelectionEvent> {
-  static final String COMIC_BOOK_SELECTION_UPDATE_TOPIC = "/topic/comic-book-selection.update";
+  static final String COMIC_SELECTION_UPDATE_TOPIC = "/topic/comic-book-selection.update";
 
   @Override
   public void publish(final ComicSelectionEvent event) throws PublishingException {
     final ComiXedUser user = event.getUser();
-    final List<Long> comicBookIds = event.getComicBookIds();
+    final List<Long> comicIds = event.getComicIds();
     log.debug(
-        "Publishing update of {} selected comic book id for user: email={}",
-        comicBookIds.size(),
-        user);
+        "Publishing update of {} selected comic book id for user: email={}", comicIds.size(), user);
     this.doPublishToUser(
-        user, COMIC_BOOK_SELECTION_UPDATE_TOPIC, comicBookIds, View.GenericObjectView.class);
+        user, COMIC_SELECTION_UPDATE_TOPIC, comicIds, View.GenericObjectView.class);
   }
 }

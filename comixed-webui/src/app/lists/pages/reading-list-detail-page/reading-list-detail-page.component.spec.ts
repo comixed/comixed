@@ -79,7 +79,7 @@ import { QueryParameterService } from '@app/core/services/query-parameter.servic
 import { ComicCoverUrlPipe } from '@app/comic-books/pipes/comic-cover-url.pipe';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 import {
-  COMIC_BOOK_SELECTION_FEATURE_KEY,
+  COMIC_SELECTION_FEATURE_KEY,
   initialState as initialComicBookSelectionState
 } from '@app/comic-books/reducers/comic-selection.reducer';
 import { setMultipleComicBookByIdSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
@@ -93,7 +93,7 @@ import {
 } from '@app/user/reducers/user.reducer';
 import {
   initialState as initialReadComicBooksState,
-  READ_COMIC_BOOKS_FEATURE_KEY
+  READ_COMICS_FEATURE_KEY
 } from '@app/user/reducers/read-comics.reducer';
 import {
   COMIC_LIST_FEATURE_KEY,
@@ -123,11 +123,11 @@ describe('ReadingListDetailPageComponent', () => {
     [READING_LIST_DETAIL_FEATURE_KEY]: initialReadingListDetailsState,
     [MESSAGING_FEATURE_KEY]: initialMessagingState,
     [DOWNLOAD_READING_LIST_FEATURE_KEY]: initialDownloadReadingListState,
-    [COMIC_BOOK_SELECTION_FEATURE_KEY]: initialComicBookSelectionState,
+    [COMIC_SELECTION_FEATURE_KEY]: initialComicBookSelectionState,
     [USER_FEATURE_KEY]: initialUserState,
     [LIBRARY_PLUGIN_FEATURE_KEY]: initialLibraryPluginState,
     [COMIC_LIST_FEATURE_KEY]: initialComicListState,
-    [READ_COMIC_BOOKS_FEATURE_KEY]: initialReadComicBooksState
+    [READ_COMICS_FEATURE_KEY]: initialReadComicBooksState
   };
 
   let component: ReadingListDetailPageComponent;
@@ -531,7 +531,7 @@ describe('ReadingListDetailPageComponent', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         setMultipleComicBookByIdSelectionState({
           selected: SELECT,
-          comicBookIds: component.selectedIds$.value
+          comicIds: component.selectedIds$.value
         })
       );
     });

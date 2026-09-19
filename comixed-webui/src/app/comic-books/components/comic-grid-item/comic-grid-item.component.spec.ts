@@ -72,7 +72,7 @@ describe('ComicGridItemComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        deleteSingleComicBook({ comicBookId: COMIC.comicDetailId })
+        deleteSingleComicBook({ comicId: COMIC.comicId })
       );
     });
   });
@@ -84,7 +84,7 @@ describe('ComicGridItemComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        undeleteSingleComicBook({ comicBookId: COMIC.comicDetailId })
+        undeleteSingleComicBook({ comicId: COMIC.comicId })
       );
     });
   });
@@ -95,10 +95,7 @@ describe('ComicGridItemComponent', () => {
     });
 
     it('fires an action', () => {
-      expect(router.navigate).toHaveBeenCalledWith([
-        '/comics',
-        COMIC.comicDetailId
-      ]);
+      expect(router.navigate).toHaveBeenCalledWith(['/comics', COMIC.comicId]);
     });
   });
 });

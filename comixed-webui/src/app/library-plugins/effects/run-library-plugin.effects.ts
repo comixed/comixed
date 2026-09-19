@@ -52,7 +52,7 @@ export class RunLibraryPluginEffects {
         this.libraryPluginService
           .runLibraryPluginOnOneComicBook({
             plugin: action.plugin,
-            comicBookId: action.comicBookId
+            comicId: action.comicId
           })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),

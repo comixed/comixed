@@ -1,5 +1,5 @@
 /*
- * ComiXed - A digital comicBook book library management application.
+ * ComiXed - A digital comic book library management application.
  * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
@@ -90,7 +90,7 @@ public class OPDSAcquisitionService {
       final OPDSAcquisitionFeed feed, final List<Comic> entries, final boolean unread) {
     entries.forEach(
         comic -> {
-          log.trace("Adding comic to collection entries: {}", comic.getComicDetailId());
+          log.trace("Adding comic to collection entries: {}", comic.getComicId());
           feed.getEntries().add(this.opdsUtils.createComicEntry(comic));
         });
     String type = feed.getTitle().split(": ")[0];
@@ -145,9 +145,9 @@ public class OPDSAcquisitionService {
     this.comicService
         .getAllComicBooksForPublisherAndSeriesAndVolume(publisher, series, volume, email, unread)
         .forEach(
-            comicBook -> {
+            comic -> {
               log.trace("Adding comic book to feed");
-              result.getEntries().add(this.opdsUtils.createComicEntry(comicBook));
+              result.getEntries().add(this.opdsUtils.createComicEntry(comic));
             });
     return result;
   }
@@ -218,9 +218,9 @@ public class OPDSAcquisitionService {
     log.trace("Loading comics");
     this.comicService.getComicsForYearAndWeek(year, week, email, unread).stream()
         .forEach(
-            comicBook -> {
-              log.trace("Adding comic to collection entries: {}", comicBook.getComicDetailId());
-              response.getEntries().add(this.opdsUtils.createComicEntry(comicBook));
+            comic -> {
+              log.trace("Adding comic to collection entries: {}", comic.getComicId());
+              response.getEntries().add(this.opdsUtils.createComicEntry(comic));
             });
     response
         .getLinks()
@@ -252,9 +252,9 @@ public class OPDSAcquisitionService {
     log.trace("Loading comics");
     this.comicService.getComicForSearchTerm(term).stream()
         .forEach(
-            comicDetail -> {
-              log.trace("Adding comic to collection entries: {}", comicDetail.getComicDetailId());
-              response.getEntries().add(this.opdsUtils.createComicEntry(comicDetail));
+            comic -> {
+              log.trace("Adding comic to collection entries: {}", comic.getComicId());
+              response.getEntries().add(this.opdsUtils.createComicEntry(comic));
             });
     response
         .getLinks()

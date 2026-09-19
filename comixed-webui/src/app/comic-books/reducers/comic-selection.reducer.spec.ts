@@ -25,9 +25,9 @@ import {
   addSingleComicBookSelection,
   clearComicBookSelectionState,
   clearComicBookSelectionStateFailed,
-  comicBookSelectionsLoaded,
-  comicBookSelectionStateCleared,
-  comicBookSelectionUpdate,
+  comicSelectionsLoaded,
+  comicSelectionStateCleared,
+  comicSelectionUpdate,
   loadComicBookSelections,
   loadComicBookSelectionsFailed,
   removeSingleComicBookSelection,
@@ -64,7 +64,7 @@ describe('ComicBookSelection Reducer', () => {
   const COMIC_STATE = ComicState.UNPROCESSED;
   const UNSCRAPED_STATE = Math.random() > 0.5;
   const SEARCH_TEXT = 'This is some text';
-  const COMIC_BOOKS = [
+  const COMICS = [
     DISPLAYABLE_COMIC_1,
     DISPLAYABLE_COMIC_2,
     DISPLAYABLE_COMIC_3,
@@ -73,7 +73,7 @@ describe('ComicBookSelection Reducer', () => {
   ];
   const TAG_TYPE = ComicTagType.TEAM;
   const TAG_VALUE = 'Some team';
-  const IDS = COMIC_BOOKS.map(comicBook => comicBook.comicDetailId);
+  const IDS = COMICS.map(comic => comic.comicId);
   const PUBLISHER = PUBLISHER_1.name;
   const SERIES = SERIES_1.name;
   const VOLUME = '2024';
@@ -113,7 +113,7 @@ describe('ComicBookSelection Reducer', () => {
       beforeEach(() => {
         state = reducer(
           { ...state, busy: true, ids: [] },
-          comicBookSelectionsLoaded({ ids: IDS })
+          comicSelectionsLoaded({ ids: IDS })
         );
       });
 
@@ -144,7 +144,7 @@ describe('ComicBookSelection Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, ids: IDS.map(id => id * 2) },
-        comicBookSelectionUpdate({ ids: IDS })
+        comicSelectionUpdate({ ids: IDS })
       );
     });
 
@@ -169,7 +169,7 @@ describe('ComicBookSelection Reducer', () => {
       beforeEach(() => {
         state = reducer(
           { ...state, ids: IDS, busy: true },
-          comicBookSelectionStateCleared()
+          comicSelectionStateCleared()
         );
       });
 
@@ -197,7 +197,7 @@ describe('ComicBookSelection Reducer', () => {
       state = reducer(
         { ...state, busy: false },
         addSingleComicBookSelection({
-          comicDetailId: IDS[0]
+          comicId: IDS[0]
         })
       );
     });
@@ -232,7 +232,7 @@ describe('ComicBookSelection Reducer', () => {
       state = reducer(
         { ...state, busy: false },
         removeSingleComicBookSelection({
-          comicDetailId: IDS[0]
+          comicId: IDS[0]
         })
       );
     });
@@ -307,7 +307,7 @@ describe('ComicBookSelection Reducer', () => {
         { ...state, busy: false },
         setMultipleComicBookByIdSelectionState({
           selected: SELECTED,
-          comicBookIds: IDS
+          comicIds: IDS
         })
       );
     });

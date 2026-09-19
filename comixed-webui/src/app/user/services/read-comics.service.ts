@@ -20,8 +20,8 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { interpolate } from '@app/core';
 import {
-  SET_COMIC_BOOK_READ_STATE_URL,
-  SET_SELECTED_COMIC_BOOKS_READ_STATE_URL
+  SET_COMIC_READ_STATE_URL,
+  SET_SELECTED_COMICS_READ_STATE_URL
 } from '@app/user/user.constants';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { HttpClient } from '@angular/common/http';
@@ -40,7 +40,7 @@ export class ReadComicsService {
     if (args.read) {
       this.logger.debug('Service: marking comic book as read:', args);
       return this.http.put(
-        interpolate(SET_COMIC_BOOK_READ_STATE_URL, {
+        interpolate(SET_COMIC_READ_STATE_URL, {
           comicId: args.comicId
         }),
         {}
@@ -48,7 +48,7 @@ export class ReadComicsService {
     } else {
       this.logger.debug('Service: markin comic book as unread:', args);
       return this.http.delete(
-        interpolate(SET_COMIC_BOOK_READ_STATE_URL, {
+        interpolate(SET_COMIC_READ_STATE_URL, {
           comicId: args.comicId
         })
       );
@@ -58,18 +58,13 @@ export class ReadComicsService {
   setSelectedReadState(args: { read: boolean }): Observable<any> {
     if (args.read) {
       this.logger.debug('Service: marking selected comic books as read:', args);
-      return this.http.put(
-        interpolate(SET_SELECTED_COMIC_BOOKS_READ_STATE_URL),
-        {}
-      );
+      return this.http.put(interpolate(SET_SELECTED_COMICS_READ_STATE_URL), {});
     } else {
       this.logger.debug(
         'Service: marking selected comic books as unread:',
         args
       );
-      return this.http.delete(
-        interpolate(SET_SELECTED_COMIC_BOOKS_READ_STATE_URL)
-      );
+      return this.http.delete(interpolate(SET_SELECTED_COMICS_READ_STATE_URL));
     }
   }
 }

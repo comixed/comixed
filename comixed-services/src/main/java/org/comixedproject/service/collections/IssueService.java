@@ -67,22 +67,22 @@ public class IssueService {
       this.comicServices
           .getAllComicBooksForPublisherAndSeriesAndVolume(publisher, series, volume, "", false)
           .forEach(
-              comicDetail -> {
+              comic -> {
                 log.debug(
                     "Creating issue  metadata for: [{}] {} v{} #{}",
-                    comicDetail.getPublisher(),
-                    comicDetail.getSeries(),
-                    comicDetail.getVolume(),
-                    comicDetail.getIssueNumber());
+                    comic.getPublisher(),
+                    comic.getSeries(),
+                    comic.getVolume(),
+                    comic.getIssueNumber());
                 final Issue issue =
                     new Issue(
-                        comicDetail.getPublisher(),
-                        comicDetail.getSeries(),
-                        comicDetail.getVolume(),
-                        comicDetail.getIssueNumber());
-                issue.setTitle(comicDetail.getTitle());
-                issue.setCoverDate(comicDetail.getCoverDate());
-                issue.setStoreDate(comicDetail.getStoreDate());
+                        comic.getPublisher(),
+                        comic.getSeries(),
+                        comic.getVolume(),
+                        comic.getIssueNumber());
+                issue.setTitle(comic.getTitle());
+                issue.setCoverDate(comic.getCoverDate());
+                issue.setStoreDate(comic.getStoreDate());
                 issue.setFound(true);
                 result.add(issue);
               });

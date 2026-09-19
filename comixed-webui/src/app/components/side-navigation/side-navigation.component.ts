@@ -129,9 +129,7 @@ export class SideNavigationComponent {
       .subscribe();
     this.store
       .select(selectReadComicBooksList)
-      .pipe(
-        tap(comicBooksRead => this.readComicBooks$.next(comicBooksRead.length))
-      )
+      .pipe(tap(comicsRead => this.readComicBooks$.next(comicsRead.length)))
       .subscribe();
     this.store
       .select(selectComicBookSelectionCount)

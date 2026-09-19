@@ -29,14 +29,14 @@ import {
 } from '@app/lists/lists.fixtures';
 import { interpolate } from '@app/core';
 import {
-  ADD_SELECTED_COMIC_BOOKS_TO_READING_LIST_URL,
+  ADD_SELECTED_COMICS_TO_READING_LIST_URL,
   DELETE_READING_LISTS_URL,
   DOWNLOAD_READING_LIST_URL,
   LOAD_READING_LIST_URL,
   LOAD_READING_LISTS_URL,
   READING_LIST_REMOVAL_TOPIC,
   READING_LISTS_UPDATES_TOPIC,
-  REMOVE_SELECTED_COMIC_BOOKS_FROM_READING_LIST_URL,
+  REMOVE_SELECTED_COMICS_FROM_READING_LIST_URL,
   SAVE_READING_LIST,
   UPDATE_READING_LIST,
   UPLOAD_READING_LIST_URL
@@ -180,7 +180,7 @@ describe('ReadingListService', () => {
       .subscribe(response => expect(response).toBe(serverResponse));
 
     const req = httpMock.expectOne(
-      interpolate(ADD_SELECTED_COMIC_BOOKS_TO_READING_LIST_URL, {
+      interpolate(ADD_SELECTED_COMICS_TO_READING_LIST_URL, {
         id: READING_LIST.readingListId
       })
     );
@@ -197,7 +197,7 @@ describe('ReadingListService', () => {
       .subscribe(response => expect(response).toEqual(READING_LIST));
 
     const req = httpMock.expectOne(
-      interpolate(REMOVE_SELECTED_COMIC_BOOKS_FROM_READING_LIST_URL, {
+      interpolate(REMOVE_SELECTED_COMICS_FROM_READING_LIST_URL, {
         id: READING_LIST.readingListId
       })
     );

@@ -82,7 +82,7 @@ class LibraryPluginServiceTest {
   private List<LibraryPluginProperty> pluginProperties = new ArrayList<>();
   private Map<String, String> pluginPropertyMap = new HashMap<>();
   private List<LibraryPluginProperty> libraryPluginPropertyList = new ArrayList<>();
-  private List<Long> comicBookIdList = new ArrayList<>();
+  private List<Long> comicIdList = new ArrayList<>();
 
   @BeforeEach
   void setUp() throws ComiXedUserException, PluginRuntimeException {
@@ -281,8 +281,7 @@ class LibraryPluginServiceTest {
     Mockito.when(libraryPluginRepository.getById(Mockito.anyLong())).thenReturn(null);
 
     assertThrows(
-        LibraryPluginException.class,
-        () -> service.runLibraryPlugin(TEST_PLUGIN_ID, comicBookIdList));
+        LibraryPluginException.class, () -> service.runLibraryPlugin(TEST_PLUGIN_ID, comicIdList));
   }
 
   @Test
@@ -291,20 +290,19 @@ class LibraryPluginServiceTest {
         .thenThrow(PluginRuntimeException.class);
 
     assertThrows(
-        LibraryPluginException.class,
-        () -> service.runLibraryPlugin(TEST_PLUGIN_ID, comicBookIdList));
+        LibraryPluginException.class, () -> service.runLibraryPlugin(TEST_PLUGIN_ID, comicIdList));
   }
 
   @Test
   void runLibraryPlugin() throws LibraryPluginException, PluginRuntimeException {
-    service.runLibraryPlugin(TEST_PLUGIN_ID, comicBookIdList);
+    service.runLibraryPlugin(TEST_PLUGIN_ID, comicIdList);
 
     Mockito.verify(libraryPluginRepository, Mockito.times(1)).getById(TEST_PLUGIN_ID);
     Mockito.verify(pluginRuntimeLocator, Mockito.times(1)).getPluginRuntime(TEST_LANGUAGE);
     Mockito.verify(pluginRuntime, Mockito.times(1))
         .addProperty(Mockito.eq(PROPERTY_NAME_LOG), Mockito.any());
     Mockito.verify(pluginRuntime, Mockito.times(1))
-        .addProperty(PROPERTY_NAME_COMIC_BOOK_SERVICE, comicService);
+        .addProperty(PROPERTY_NAME_COMIC_SERVICE, comicService);
     Mockito.verify(pluginRuntime, Mockito.times(1))
         .addProperty(PROPERTY_NAME_READING_LIST_SERVICE, readingListService);
   }

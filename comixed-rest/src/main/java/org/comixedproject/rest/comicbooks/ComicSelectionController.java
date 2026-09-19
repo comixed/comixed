@@ -75,11 +75,11 @@ public class ComicSelectionController {
    *
    * @param session the session
    * @param principal the user principal
-   * @param comicBookId the comic book id
+   * @param comicId the comic book id
    * @throws ComicSelectionException if an error occurs
    */
   @PutMapping(
-      value = "/api/comics/selections/{comicBookId}",
+      value = "/api/comics/selections/{comicId}",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('READER')")
@@ -87,13 +87,13 @@ public class ComicSelectionController {
   public void addSingleSelection(
       final HttpSession session,
       final Principal principal,
-      @PathVariable("comicBookId") final Long comicBookId)
+      @PathVariable("comicId") final Long comicId)
       throws ComicSelectionException {
     final String email = principal.getName();
     final List<Long> selections =
         this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
-    log.info("Adding comic selection: email={} comic book id={}", email, comicBookId);
-    this.comicSelectionService.addComicSelectionForUser(email, selections, comicBookId);
+    log.info("Adding comic selection: email={} comic book id={}", email, comicId);
+    this.comicSelectionService.addComicSelectionForUser(email, selections, comicId);
     log.debug("Updating comic selections");
     session.setAttribute(
         LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selections));
@@ -104,22 +104,22 @@ public class ComicSelectionController {
    *
    * @param session the session
    * @param principal the user principal
-   * @param comicBookId the comic book id
+   * @param comicId the comic book id
    * @throws ComicSelectionException if an error occurs
    */
-  @DeleteMapping(value = "/api/comics/selections/{comicBookId}")
+  @DeleteMapping(value = "/api/comics/selections/{comicId}")
   @PreAuthorize("hasRole('READER')")
   @Timed(value = "comixed.comic-book.selections.delete-single")
   public void deleteSingleSelection(
       final HttpSession session,
       final Principal principal,
-      @PathVariable("comicBookId") final Long comicBookId)
+      @PathVariable("comicId") final Long comicId)
       throws ComicSelectionException {
     final String email = principal.getName();
-    log.info("Removing comic selection: email={} comic book id={}", email, comicBookId);
+    log.info("Removing comic selection: email={} comic book id={}", email, comicId);
     final List<Long> selections =
         this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
-    this.comicSelectionService.removeComicSelectionFromUser(email, selections, comicBookId);
+    this.comicSelectionService.removeComicSelectionFromUser(email, selections, comicId);
     session.setAttribute(
         LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selections));
   }
@@ -253,10 +253,10 @@ public class ComicSelectionController {
 
     if (request.isSelected()) {
       log.info("Adding ids from comic book selections for {}", email);
-      selections.addAll(request.getComicBookIds());
+      selections.addAll(request.getComicIds());
     } else {
       log.info("Removing ids from comic book selections for {}", email);
-      selections.removeAll(request.getComicBookIds());
+      selections.removeAll(request.getComicIds());
     }
 
     this.comicSelectionService.publishSelections(email, selections);
@@ -415,9 +415,9 @@ public class ComicSelectionController {
         this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
 
     if (selected) {
-      selections.addAll(this.userService.getComicDetailIdsForUser(email, unread));
+      selections.addAll(this.userService.getComicIdsForUser(email, unread));
     } else {
-      selections.removeAll(this.userService.getComicDetailIdsForUser(email, unread));
+      selections.removeAll(this.userService.getComicIdsForUser(email, unread));
     }
     this.comicSelectionService.publishSelections(email, selections);
     session.setAttribute(

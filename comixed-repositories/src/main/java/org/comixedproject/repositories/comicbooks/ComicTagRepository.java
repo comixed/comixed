@@ -39,10 +39,9 @@ public interface ComicTagRepository extends JpaRepository<ComicTag, Long> {
   /**
    * Returns the comic tags for the given comic book.
    *
-   * @param comicDetailId the comic book id
+   * @param comicId the comic book id
    * @return the comic tags
    */
-  @Query(
-      "SELECT t FROM ComicTag t WHERE t.comic.comicDetailId = :comicDetailId ORDER BY t.type, t.value")
-  List<ComicTag> getForComicBook(@Param("comicDetailId") long comicDetailId);
+  @Query("SELECT t FROM ComicTag t WHERE t.comic.comicId = :comicId ORDER BY t.type, t.value")
+  List<ComicTag> getForComicBook(@Param("comicId") long comicId);
 }

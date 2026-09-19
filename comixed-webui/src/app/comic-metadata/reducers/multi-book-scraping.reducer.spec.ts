@@ -52,15 +52,14 @@ import { MultiBookScrapingProcessStatus } from '@app/comic-metadata/models/multi
 import { PAGE_SIZE_DEFAULT } from '@app/core';
 
 describe('MultiBookScraping Reducer', () => {
-  const COMIC_BOOKS = [
+  const COMICS = [
     DISPLAYABLE_COMIC_1,
     DISPLAYABLE_COMIC_2,
     DISPLAYABLE_COMIC_3,
     DISPLAYABLE_COMIC_4,
     DISPLAYABLE_COMIC_5
   ];
-  const CURRENT_COMIC_BOOK =
-    COMIC_BOOKS[Math.floor(Math.random() * COMIC_BOOKS.length)];
+  const CURRENT_COMIC = COMICS[Math.floor(Math.random() * COMICS.length)];
   const METADATA_SOURCE = METADATA_SOURCE_1;
   const ISSUE_ID = ISSUE_1.issueNumber;
   const SKIP_CACHE = Math.random() > 0.5;
@@ -100,7 +99,7 @@ describe('MultiBookScraping Reducer', () => {
     });
 
     it('has no list of comic books', () => {
-      expect(state.comicBooks).toEqual([]);
+      expect(state.comics).toEqual([]);
     });
 
     it('has no current comic book', () => {
@@ -129,11 +128,11 @@ describe('MultiBookScraping Reducer', () => {
             pageSize: 0,
             pageNumber: 0,
             totalComics: 0,
-            comicBooks: [],
+            comics: [],
             currentComicBook: null
           },
           startMultiBookScrapingSuccess({
-            comicBooks: COMIC_BOOKS,
+            comics: COMICS,
             pageSize: PAGE_SIZE,
             pageNumber: PAGE_NUMBER,
             totalComics: TOTAL_COMICS
@@ -162,11 +161,11 @@ describe('MultiBookScraping Reducer', () => {
       });
 
       it('sets the list of comic details', () => {
-        expect(state.comicBooks).toEqual(COMIC_BOOKS);
+        expect(state.comics).toEqual(COMICS);
       });
 
       it('sets the current  comic detail', () => {
-        expect(state.currentComicBook).toEqual(COMIC_BOOKS[0]);
+        expect(state.currentComicBook).toEqual(COMICS[0]);
       });
 
       describe('when there are no comic books', () => {
@@ -180,7 +179,7 @@ describe('MultiBookScraping Reducer', () => {
               totalComics: 1
             },
             startMultiBookScrapingSuccess({
-              comicBooks: [],
+              comics: [],
               pageSize: PAGE_SIZE,
               pageNumber: 0,
               totalComics: 0
@@ -248,13 +247,13 @@ describe('MultiBookScraping Reducer', () => {
             pageSize: 0,
             pageNumber: 0,
             totalComics: 0,
-            comicBooks: []
+            comics: []
           },
           loadMultiBookScrapingPageSuccess({
             pageSize: PAGE_SIZE,
             pageNumber: PAGE_NUMBER,
             totalComics: TOTAL_COMICS,
-            comicBooks: COMIC_BOOKS
+            comics: COMICS
           })
         );
       });
@@ -276,7 +275,7 @@ describe('MultiBookScraping Reducer', () => {
       });
 
       it('sets the comic books', () => {
-        expect(state.comicBooks).toBe(COMIC_BOOKS);
+        expect(state.comics).toBe(COMICS);
       });
     });
 
@@ -298,13 +297,13 @@ describe('MultiBookScraping Reducer', () => {
   });
 
   describe('setting the current comic book', () => {
-    const OLD_CURRENT = COMIC_BOOKS[0];
-    const NEW_CURRENT = COMIC_BOOKS[1];
+    const OLD_CURRENT = COMICS[0];
+    const NEW_CURRENT = COMICS[1];
 
     beforeEach(() => {
       state = reducer(
         { ...state, currentComicBook: OLD_CURRENT },
-        multiBookScrapingSetCurrentBook({ comicBook: NEW_CURRENT })
+        multiBookScrapingSetCurrentBook({ comic: NEW_CURRENT })
       );
     });
 
@@ -314,15 +313,15 @@ describe('MultiBookScraping Reducer', () => {
   });
 
   describe('removing a book from the process', () => {
-    const UPDATED_COMIC_DETAILS = COMIC_BOOKS.filter(
-      entry => entry.comicDetailId != CURRENT_COMIC_BOOK.comicDetailId
+    const UPDATED_COMICS = COMICS.filter(
+      entry => entry.comicId != CURRENT_COMIC.comicId
     );
 
     beforeEach(() => {
       state = reducer(
         { ...state, busy: false },
         multiBookScrapingRemoveBook({
-          comicBook: CURRENT_COMIC_BOOK,
+          comic: CURRENT_COMIC,
           pageSize: PAGE_SIZE
         })
       );
@@ -340,11 +339,11 @@ describe('MultiBookScraping Reducer', () => {
             pageSize: 0,
             pageNumber: 0,
             totalComics: 0,
-            comicBooks: COMIC_BOOKS,
+            comics: COMICS,
             currentComicBook: null
           },
           multiBookScrapingRemoveBookSuccess({
-            comicBooks: UPDATED_COMIC_DETAILS,
+            comics: UPDATED_COMICS,
             pageSize: PAGE_SIZE,
             pageNumber: PAGE_NUMBER,
             totalComics: TOTAL_COMICS
@@ -369,11 +368,11 @@ describe('MultiBookScraping Reducer', () => {
       });
 
       it('updates the list of comic details', () => {
-        expect(state.comicBooks).toEqual(UPDATED_COMIC_DETAILS);
+        expect(state.comics).toEqual(UPDATED_COMICS);
       });
 
       it('sets the current  comic detail', () => {
-        expect(state.currentComicBook).toEqual(UPDATED_COMIC_DETAILS[0]);
+        expect(state.currentComicBook).toEqual(UPDATED_COMICS[0]);
       });
 
       describe('when it was the last comic book', () => {
@@ -387,7 +386,7 @@ describe('MultiBookScraping Reducer', () => {
               totalComics: 1
             },
             multiBookScrapeComicSuccess({
-              comicBooks: [],
+              comics: [],
               pageSize: PAGE_SIZE,
               pageNumber: 0,
               totalComics: 0
@@ -425,16 +424,14 @@ describe('MultiBookScraping Reducer', () => {
   });
 
   describe('scraping a comic book', () => {
-    const UPDATED_COMIC_BOOKS = COMIC_BOOKS.filter(
-      entry => entry != CURRENT_COMIC_BOOK
-    );
+    const UPDATED_COMICS = COMICS.filter(entry => entry != CURRENT_COMIC);
 
     beforeEach(() => {
       state = reducer(
         { ...state, busy: false },
         multiBookScrapeComic({
           metadataSource: METADATA_SOURCE,
-          comicBook: CURRENT_COMIC_BOOK,
+          comic: CURRENT_COMIC,
           issueId: ISSUE_ID,
           skipCache: SKIP_CACHE,
           pageSize: PAGE_SIZE,
@@ -455,11 +452,11 @@ describe('MultiBookScraping Reducer', () => {
             pageSize: 0,
             pageNumber: 0,
             totalComics: 0,
-            comicBooks: COMIC_BOOKS,
+            comics: COMICS,
             currentComicBook: null
           },
           multiBookScrapeComicSuccess({
-            comicBooks: UPDATED_COMIC_BOOKS,
+            comics: UPDATED_COMICS,
             pageNumber: PAGE_NUMBER,
             pageSize: PAGE_SIZE,
             totalComics: TOTAL_COMICS
@@ -484,11 +481,11 @@ describe('MultiBookScraping Reducer', () => {
       });
 
       it('updates the list of comic details', () => {
-        expect(state.comicBooks).toEqual(UPDATED_COMIC_BOOKS);
+        expect(state.comics).toEqual(UPDATED_COMICS);
       });
 
       it('sets the current  comic detail', () => {
-        expect(state.currentComicBook).toEqual(UPDATED_COMIC_BOOKS[0]);
+        expect(state.currentComicBook).toEqual(UPDATED_COMICS[0]);
       });
 
       describe('when it was the last comic book', () => {
@@ -502,7 +499,7 @@ describe('MultiBookScraping Reducer', () => {
               totalComics: 1
             },
             multiBookScrapingRemoveBookSuccess({
-              comicBooks: [],
+              comics: [],
               pageSize: PAGE_SIZE,
               pageNumber: 0,
               totalComics: 0

@@ -42,14 +42,14 @@ import org.springframework.data.annotation.CreatedDate;
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "comic_details_v4")
+@Table(name = "comics_v4")
 @NoArgsConstructor
 @RequiredArgsConstructor
 @Log4j2
 public class Comic implements StatefulItem<ComicState>, PublicationDetail {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "comic_detail_id")
+  @Column(name = "comic_id")
   @JsonView({
     View.ComicListView.class,
     View.DeletedPageList.class,
@@ -58,7 +58,7 @@ public class Comic implements StatefulItem<ComicState>, PublicationDetail {
     View.DuplicatePageList.class
   })
   @Getter
-  private Long comicDetailId;
+  private Long comicId;
 
   @OneToMany(mappedBy = "comic", cascade = CascadeType.ALL, orphanRemoval = true)
   @OrderColumn(name = "page_number")
@@ -75,7 +75,7 @@ public class Comic implements StatefulItem<ComicState>, PublicationDetail {
   private ComicMetadataSource metadata;
 
   @Formula(
-      "(SELECT COUNT(*) FROM comic_pages_v4 p WHERE p.comic_detail_id = comic_detail_id AND p.file_hash IN (SELECT d.file_hash FROM comic_pages_v4 d GROUP BY d.file_hash HAVING COUNT(*) > 1))")
+      "(SELECT COUNT(*) FROM comic_pages_v4 p WHERE p.comic_id = comic_id AND p.file_hash IN (SELECT d.file_hash FROM comic_pages_v4 d GROUP BY d.file_hash HAVING COUNT(*) > 1))")
   @JsonProperty("duplicatePageCount")
   @JsonView({View.ComicListView.class})
   @Getter
@@ -83,14 +83,14 @@ public class Comic implements StatefulItem<ComicState>, PublicationDetail {
 
   @Formula(
       value =
-          "(SELECT COUNT(*) FROM comic_pages_v4 p WHERE p.comic_detail_id = comic_detail_id AND p.file_hash in (SELECT b.hash_value FROM blocked_hashes_v4 b))")
+          "(SELECT COUNT(*) FROM comic_pages_v4 p WHERE p.comic_id = comic_id AND p.file_hash in (SELECT b.hash_value FROM blocked_hashes_v4 b))")
   @JsonProperty("blockedPageCount")
   @JsonView({View.ComicListView.class})
   @Getter
   private int blockedPageCount;
 
   @Formula(
-      "(SELECT CASE WHEN (comic_detail_id IN (SELECT m.comic_detail_id FROM comic_metadata_sources_v4 m)) THEN false ELSE true END)")
+      "(SELECT CASE WHEN (comic_id IN (SELECT m.comic_id FROM comic_metadata_sources_v4 m)) THEN false ELSE true END)")
   @JsonProperty("unscraped")
   @JsonView({View.ComicListView.class})
   @Getter
@@ -242,7 +242,7 @@ public class Comic implements StatefulItem<ComicState>, PublicationDetail {
   @JsonView({
     View.ComicListView.class,
   })
-  @Formula("(SELECT COUNT(*) FROM comic_pages_v4 p WHERE p.comic_detail_id = comic_detail_id)")
+  @Formula("(SELECT COUNT(*) FROM comic_pages_v4 p WHERE p.comic_id = comic_id)")
   @Getter
   private Integer pageCount = 0;
 
@@ -415,9 +415,7 @@ public class Comic implements StatefulItem<ComicState>, PublicationDetail {
   private Date lastModifiedDate = new Date();
 
   @ElementCollection
-  @CollectionTable(
-      name = "read_comic_books_v4",
-      joinColumns = @JoinColumn(name = "comic_detail_id"))
+  @CollectionTable(name = "read_comic_books_v4", joinColumns = @JoinColumn(name = "comic_id"))
   @Column(name = "comixed_user_id")
   @JsonView(View.UserList.class)
   @Getter

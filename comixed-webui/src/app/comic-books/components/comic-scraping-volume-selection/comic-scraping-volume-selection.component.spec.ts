@@ -69,7 +69,7 @@ describe('ComicScrapingVolumeSelectionComponent', () => {
   ];
   const SKIP_CACHE = Math.random() > 0.5;
   const ISSUE_NUMBER = '27';
-  const COMIC_BOOK = DISPLAYABLE_COMIC_1;
+  const COMIC = DISPLAYABLE_COMIC_1;
   const METADATA_SOURCE = METADATA_SOURCE_1;
   const PAGE_SIZE = 25;
   const PAGE_NUMBER = 1;
@@ -307,7 +307,7 @@ describe('ComicScrapingVolumeSelectionComponent', () => {
 
     beforeEach(() => {
       component.issue = SCRAPING_ISSUE;
-      component.comicBook = COMIC_BOOK;
+      component.comic = COMIC;
       component.metadataSource = METADATA_SOURCE;
     });
 
@@ -324,7 +324,7 @@ describe('ComicScrapingVolumeSelectionComponent', () => {
           scrapeSingleComicBook({
             metadataSource: METADATA_SOURCE,
             issueId: SCRAPING_ISSUE.id,
-            comic: COMIC_BOOK,
+            comic: COMIC,
             skipCache: SKIP_CACHE
           })
         );
@@ -414,7 +414,7 @@ describe('ComicScrapingVolumeSelectionComponent', () => {
 
   describe('when metadata for an issue is received', () => {
     beforeEach(() => {
-      component.comicBook = COMIC_BOOK;
+      component.comic = COMIC;
       component.multimode = true;
       component.metadataSource = METADATA_SOURCE;
       component.skipCache = SKIP_CACHE;
@@ -448,7 +448,7 @@ describe('ComicScrapingVolumeSelectionComponent', () => {
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
           multiBookScrapeComic({
-            comicBook: COMIC_BOOK,
+            comic: COMIC,
             metadataSource: METADATA_SOURCE,
             issueId: SCRAPING_ISSUE.id,
             skipCache: SKIP_CACHE,

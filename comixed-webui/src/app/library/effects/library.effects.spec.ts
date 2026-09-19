@@ -44,10 +44,10 @@ import { RemoteLibraryState } from '@app/library/models/net/remote-library-state
 import { ComicType } from '@app/comic-books/models/comic-type';
 
 describe('LibraryEffects', () => {
-  const COMIC_BOOKS = [DISPLAYABLE_COMIC_1, DISPLAYABLE_COMIC_3];
-  const IDS = COMIC_BOOKS.map(comicBook => comicBook.comicDetailId);
+  const COMICS = [DISPLAYABLE_COMIC_1, DISPLAYABLE_COMIC_3];
+  const IDS = COMICS.map(comic => comic.comicId);
   const LIBRARY_STATE = {} as RemoteLibraryState;
-  const COMIC_DETAILS: EditMultipleComics = {
+  const DETAILS: EditMultipleComics = {
     publisher: 'The Publisher',
     series: 'The Series',
     volume: '1234',
@@ -143,7 +143,7 @@ describe('LibraryEffects', () => {
     it('fires an action on success', () => {
       const action = editMultipleComics({
         ids: IDS,
-        details: COMIC_DETAILS
+        details: DETAILS
       });
       const outcome = multipleComicsEdited();
 
@@ -151,7 +151,7 @@ describe('LibraryEffects', () => {
       libraryService.editMultipleComics
         .withArgs({
           ids: IDS,
-          details: COMIC_DETAILS
+          details: DETAILS
         })
         .and.returnValue(of(outcome));
 
@@ -163,7 +163,7 @@ describe('LibraryEffects', () => {
     it('fires an action on service failure', () => {
       const action = editMultipleComics({
         ids: IDS,
-        details: COMIC_DETAILS
+        details: DETAILS
       });
       const outcome = editMultipleComicsFailed();
 
@@ -171,7 +171,7 @@ describe('LibraryEffects', () => {
       libraryService.editMultipleComics
         .withArgs({
           ids: IDS,
-          details: COMIC_DETAILS
+          details: DETAILS
         })
         .and.returnValue(throwError(() => outcome));
 
@@ -183,7 +183,7 @@ describe('LibraryEffects', () => {
     it('fires an action on general failure', () => {
       const action = editMultipleComics({
         ids: IDS,
-        details: COMIC_DETAILS
+        details: DETAILS
       });
       const outcome = editMultipleComicsFailed();
 
@@ -191,7 +191,7 @@ describe('LibraryEffects', () => {
       libraryService.editMultipleComics
         .withArgs({
           ids: IDS,
-          details: COMIC_DETAILS
+          details: DETAILS
         })
         .and.throwError('expected');
 

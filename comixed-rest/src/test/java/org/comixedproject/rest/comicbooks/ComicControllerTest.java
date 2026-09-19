@@ -1,5 +1,5 @@
 /*
- * ComiXed - A digital comicBook book library management application.
+ * ComiXed - A digital comic book library management application.
  * Copyright (C) 2018, The ComiXed Project.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -63,7 +63,7 @@ class ComicControllerTest {
   @Mock private List<PageOrderEntry> pageOrderEntryList;
   @Mock private HttpSession httpSession;
   @Mock private Principal principal;
-  @Mock private DownloadDocument comicBookContent;
+  @Mock private DownloadDocument comicContent;
   @Mock private ResponseEntity<byte[]> responseEntity;
   @Mock private ComicDataSet comicData;
 
@@ -101,12 +101,12 @@ class ComicControllerTest {
 
   @Test
   void downloadComic() throws ComicException {
-    when(comicDataService.getComicContent(anyLong())).thenReturn(comicBookContent);
+    when(comicDataService.getComicContent(anyLong())).thenReturn(comicContent);
 
     final DownloadDocument result = controller.downloadComic(TEST_COMIC_ID);
 
     assertNotNull(result);
-    assertSame(comicBookContent, result);
+    assertSame(comicContent, result);
 
     verify(comicDataService).getComicContent(TEST_COMIC_ID);
   }

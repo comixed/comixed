@@ -139,7 +139,7 @@ public class ComicDataService {
   }
 
   public ComicDataSet updateComic(
-      final long comicBookId,
+      final long comicId,
       final ComicType comicType,
       final String publisher,
       final String series,
@@ -151,9 +151,9 @@ public class ComicDataService {
       final Date coverDate,
       final Date storeDate)
       throws ComicException {
-    log.debug("Updating comic: id={}", comicBookId);
+    log.debug("Updating comic: id={}", comicId);
     try {
-      final Comic comic = this.comicService.getByComicBookId(comicBookId);
+      final Comic comic = this.comicService.getByComicBookId(comicId);
 
       log.trace("Updating the comic fields");
 
@@ -183,7 +183,7 @@ public class ComicDataService {
       this.imprintService.update(comic);
 
       this.comicStateAdaptor.fireEvent(comic, ComicEvent.comicMetadataChanged);
-      return this.doLoadComicBookData(comicBookId);
+      return this.doLoadComicBookData(comicId);
     } catch (ComicException error) {
       throw new ComicException("Failed to update comic metadata", error);
     }

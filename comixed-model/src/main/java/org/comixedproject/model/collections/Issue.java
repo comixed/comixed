@@ -103,7 +103,7 @@ public class Issue {
   @JsonProperty("found")
   @Formula(
       value =
-          "(SELECT CASE WHEN COUNT(*) > 0 THEN true ELSE false END FROM comic_details_v4 c WHERE c.comic_detail_id IN (SELECT d.comic_detail_id FROM comic_details_v4 d WHERE d.publisher = publisher AND d.series = series AND d.volume = volume AND d.issue_number = issue_number))")
+          "(SELECT CASE WHEN COUNT(*) > 0 THEN true ELSE false END FROM comics_v4 c WHERE c.comic_id IN (SELECT d.comic_id FROM comics_v4 d WHERE d.publisher = publisher AND d.series = series AND d.volume = volume AND d.issue_number = issue_number))")
   @Getter
   @Setter
   private boolean found;

@@ -139,20 +139,17 @@ public class LibraryPluginController {
    * Runs a plugin against a single comic book.
    *
    * @param pluginId the plugin id
-   * @param comicBookId the comic book id
+   * @param comicId the comic book id
    * @throws LibraryPluginException if an error occurs
    */
-  @PostMapping(value = "/api/plugins/{pluginId}/comics/{comicBookId}")
+  @PostMapping(value = "/api/plugins/{pluginId}/comics/{comicId}")
   @Timed(value = "comixed.plugins.run-single-comic-book")
   public void runLibraryPluginOnOneComicBook(
-      @PathVariable("pluginId") final long pluginId,
-      @PathVariable("comicBookId") final Long comicBookId)
+      @PathVariable("pluginId") final long pluginId, @PathVariable("comicId") final Long comicId)
       throws LibraryPluginException {
     log.info(
-        "Running plugin on single comic book: plugin id={} comic book id={}",
-        pluginId,
-        comicBookId);
-    this.libraryPluginService.runLibraryPlugin(pluginId, comicBookId);
+        "Running plugin on single comic book: plugin id={} comic book id={}", pluginId, comicId);
+    this.libraryPluginService.runLibraryPlugin(pluginId, comicId);
   }
 
   /**

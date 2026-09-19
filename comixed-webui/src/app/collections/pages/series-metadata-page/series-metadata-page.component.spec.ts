@@ -71,13 +71,13 @@ describe('SeriesMetadataPageComponent', () => {
     DISPLAYABLE_COMIC_4,
     DISPLAYABLE_COMIC_5
   ];
-  const COMIC_BOOK = DISPLAYABLE_COMIC_1;
+  const COMIC = DISPLAYABLE_COMIC_1;
   const ISSUE = {
     ...ISSUE_1,
-    publisher: COMIC_BOOK.publisher,
-    series: COMIC_BOOK.series,
-    volume: COMIC_BOOK.volume,
-    issue: COMIC_BOOK.issueNumber
+    publisher: COMIC.publisher,
+    series: COMIC.series,
+    volume: COMIC.volume,
+    issue: COMIC.issueNumber
   };
   const initialState = {
     [SERIES_FEATURE_KEY]: initialSeriesState,
@@ -200,16 +200,14 @@ describe('SeriesMetadataPageComponent', () => {
     });
 
     it('returns a value when the issue is found', () => {
-      expect(component.getComicBookIdForRow(ISSUE)).toEqual(
-        COMIC_BOOK.comicDetailId
-      );
+      expect(component.getComicBookIdForRow(ISSUE)).toEqual(COMIC.comicId);
     });
 
     it('returns a null when the issue is not found', () => {
       expect(
         component.getComicBookIdForRow({
           ...ISSUE,
-          publisher: COMIC_BOOK.publisher.substr(1)
+          publisher: COMIC.publisher.substr(1)
         })
       ).toBeUndefined();
     });

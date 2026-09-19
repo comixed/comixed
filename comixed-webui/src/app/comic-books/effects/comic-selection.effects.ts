@@ -23,8 +23,8 @@ import {
   addSingleComicBookSelection,
   clearComicBookSelectionState,
   clearComicBookSelectionStateFailed,
-  comicBookSelectionsLoaded,
-  comicBookSelectionStateCleared,
+  comicSelectionsLoaded,
+  comicSelectionStateCleared,
   loadComicBookSelections,
   loadComicBookSelectionsFailed,
   removeSingleComicBookSelection,
@@ -50,7 +50,7 @@ import { of } from 'rxjs';
 export class ComicSelectionEffects {
   logger = inject(LoggerService);
   actions$ = inject(Actions);
-  comicBookSelectionService = inject(ComicSelectionService);
+  comicSelectionService = inject(ComicSelectionService);
   setSelectedByFilter$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(setMultipleComicBookByFilterSelectionState),
@@ -58,7 +58,7 @@ export class ComicSelectionEffects {
         this.logger.debug('Selecting multiple comic books by filter:', action)
       ),
       switchMap(action =>
-        this.comicBookSelectionService
+        this.comicSelectionService
           .setSelectedByFilter({
             coverYear: action.coverYear,
             coverMonth: action.coverMonth,
@@ -89,7 +89,7 @@ export class ComicSelectionEffects {
         )
       ),
       switchMap(action =>
-        this.comicBookSelectionService
+        this.comicSelectionService
           .setSelectedByTagTypeAndValue({
             tagType: action.tagType,
             tagValue: action.tagValue,
@@ -112,9 +112,9 @@ export class ComicSelectionEffects {
         this.logger.debug('Selecting multiple comic books by id:', action)
       ),
       switchMap(action =>
-        this.comicBookSelectionService
+        this.comicSelectionService
           .setSelectedById({
-            comicBookIds: action.comicBookIds,
+            comicIds: action.comicIds,
             selected: action.selected
           })
           .pipe(
@@ -137,7 +137,7 @@ export class ComicSelectionEffects {
         )
       ),
       switchMap(action =>
-        this.comicBookSelectionService
+        this.comicSelectionService
           .setSelectedByPublisher({
             publisher: action.publisher,
             selected: action.selected
@@ -162,7 +162,7 @@ export class ComicSelectionEffects {
         )
       ),
       switchMap(action =>
-        this.comicBookSelectionService
+        this.comicSelectionService
           .setSelectedByPublisherSeriesAndVolume({
             publisher: action.publisher,
             series: action.series,
@@ -186,7 +186,7 @@ export class ComicSelectionEffects {
         this.logger.debug('Selecting all duplicate comic books:', action)
       ),
       switchMap(action =>
-        this.comicBookSelectionService
+        this.comicSelectionService
           .setDuplicateComicBooksSelectionState({
             selected: action.selected
           })
@@ -207,7 +207,7 @@ export class ComicSelectionEffects {
         this.logger.debug('Selecting comic books by unread state:', action)
       ),
       switchMap(action =>
-        this.comicBookSelectionService
+        this.comicSelectionService
           .setUnreadComicBooksSelectionState({
             selected: action.selected,
             unreadOnly: action.unreadOnly
@@ -228,11 +228,9 @@ export class ComicSelectionEffects {
       ofType(loadComicBookSelections),
       tap(() => this.logger.debug('Loading comic book selectsion')),
       switchMap(() =>
-        this.comicBookSelectionService.loadSelections().pipe(
+        this.comicSelectionService.loadSelections().pipe(
           tap(response => this.logger.debug('Response received:', response)),
-          map((response: number[]) =>
-            comicBookSelectionsLoaded({ ids: response })
-          ),
+          map((response: number[]) => comicSelectionsLoaded({ ids: response })),
           catchError(error => {
             this.logger.error('Service failure:', error);
             this.alertService.error(
@@ -258,9 +256,9 @@ export class ComicSelectionEffects {
       ofType(addSingleComicBookSelection),
       tap(action => this.logger.debug('Adding a single comic book:', action)),
       switchMap(action =>
-        this.comicBookSelectionService
+        this.comicSelectionService
           .addSingleSelection({
-            comicDetailId: action.comicDetailId
+            comicId: action.comicId
           })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
@@ -290,9 +288,9 @@ export class ComicSelectionEffects {
       ofType(removeSingleComicBookSelection),
       tap(action => this.logger.debug('Removing a single comic book:', action)),
       switchMap(action =>
-        this.comicBookSelectionService
+        this.comicSelectionService
           .removeSingleSelection({
-            comicDetailId: action.comicDetailId
+            comicId: action.comicId
           })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
@@ -322,9 +320,9 @@ export class ComicSelectionEffects {
       ofType(clearComicBookSelectionState),
       tap(() => this.logger.debug('Clearing comic book selectsion')),
       switchMap(() =>
-        this.comicBookSelectionService.clearSelections().pipe(
+        this.comicSelectionService.clearSelections().pipe(
           tap(response => this.logger.debug('Response received:', response)),
-          map(() => comicBookSelectionStateCleared()),
+          map(() => comicSelectionStateCleared()),
           catchError(error => {
             this.logger.error('Service failure:', error);
             this.alertService.error(

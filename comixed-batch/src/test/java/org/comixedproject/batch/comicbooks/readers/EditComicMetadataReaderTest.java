@@ -67,12 +67,12 @@ class EditComicMetadataReaderTest {
   void read_noneRemaining() {
     when(comicService.findComicsWithEditDetails(anyInt())).thenReturn(comicList);
 
-    reader.comicBookList = comicList;
+    reader.comicList = comicList;
 
     final Comic result = reader.read();
 
     assertNull(result);
-    assertNull(reader.comicBookList);
+    assertNull(reader.comicList);
 
     verify(comicService).findComicsWithEditDetails(reader.getChunkSize());
   }
@@ -84,7 +84,7 @@ class EditComicMetadataReaderTest {
     final Comic result = reader.read();
 
     assertNull(result);
-    assertNull(reader.comicBookList);
+    assertNull(reader.comicList);
 
     verify(comicService).findComicsWithEditDetails(reader.getChunkSize());
   }

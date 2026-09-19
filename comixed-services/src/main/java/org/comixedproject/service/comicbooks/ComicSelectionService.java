@@ -65,13 +65,13 @@ public class ComicSelectionService {
    *
    * @param email the user's email
    * @param selections the current selection set
-   * @param comicBookId the incoming comic book id
+   * @param comicId the incoming comic book id
    */
   public void addComicSelectionForUser(
-      final String email, final List<Long> selections, final Long comicBookId) {
-    if (!selections.contains(comicBookId)) {
-      log.debug("Adding comic book to selections: {}", comicBookId);
-      selections.add(comicBookId);
+      final String email, final List<Long> selections, final Long comicId) {
+    if (!selections.contains(comicId)) {
+      log.debug("Adding comic book to selections: {}", comicId);
+      selections.add(comicId);
       this.doPublishSelectionUpdateForUser(email, selections);
     }
   }
@@ -81,13 +81,13 @@ public class ComicSelectionService {
    *
    * @param email the user's email
    * @param selections the current selections
-   * @param comicBookId the incoming comic book id
+   * @param comicId the incoming comic book id
    */
   public void removeComicSelectionFromUser(
-      final String email, final List selections, final Long comicBookId) {
-    if (selections.contains(comicBookId)) {
-      log.debug("Removing comic book from selections: {}", comicBookId);
-      selections.remove(comicBookId);
+      final String email, final List selections, final Long comicId) {
+    if (selections.contains(comicId)) {
+      log.debug("Removing comic book from selections: {}", comicId);
+      selections.remove(comicId);
       this.doPublishSelectionUpdateForUser(email, selections);
     }
   }

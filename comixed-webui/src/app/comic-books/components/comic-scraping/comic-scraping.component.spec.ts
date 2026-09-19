@@ -381,7 +381,7 @@ describe('ComicScrapingComponent', () => {
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
           updateComicBook({
-            comicBookId: COMIC.comicDetailId,
+            comicId: COMIC.comicId,
             publisher: COMIC.publisher,
             series: COMIC.series,
             volume: COMIC.volume,
@@ -410,7 +410,7 @@ describe('ComicScrapingComponent', () => {
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
           updateComicBook({
-            comicBookId: COMIC.comicDetailId,
+            comicId: COMIC.comicId,
             publisher: COMIC.publisher,
             series: COMIC.series,
             volume: COMIC.volume,

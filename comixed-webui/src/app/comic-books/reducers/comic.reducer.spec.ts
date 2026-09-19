@@ -28,8 +28,8 @@ import {
   DISPLAYABLE_COMIC_2
 } from '@app/comic-books/comic-books.fixtures';
 import {
-  comicBookLoaded,
-  comicBookUpdated,
+  comicLoaded,
+  comicUpdated,
   downloadComicBook,
   downloadComicBookFailure,
   downloadComicBookSuccess,
@@ -115,7 +115,7 @@ describe('ComicBook Reducer', () => {
           pages: PAGES,
           loading: false
         },
-        loadComicBook({ id: DETAIL.comicDetailId })
+        loadComicBook({ id: DETAIL.comicId })
       );
     });
 
@@ -146,7 +146,7 @@ describe('ComicBook Reducer', () => {
             pages: [],
             tags: []
           },
-          comicBookLoaded({
+          comicLoaded({
             detail: DETAIL,
             metadata: METADATA,
             pages: PAGES,
@@ -192,7 +192,7 @@ describe('ComicBook Reducer', () => {
       state = reducer(
         { ...state, saving: false, saved: true },
         updateComicBook({
-          comicBookId: DETAIL.comicDetailId,
+          comicId: DETAIL.comicId,
           publisher: DETAIL.publisher,
           series: DETAIL.series,
           volume: DETAIL.volume,
@@ -230,7 +230,7 @@ describe('ComicBook Reducer', () => {
             metadata: METADATA,
             pages: PAGES
           },
-          comicBookUpdated({
+          comicUpdated({
             detail: UPDATED_DETAILS,
             metadata: UPDATED_METADATA,
             pages: UPDATED_PAGES
@@ -274,7 +274,7 @@ describe('ComicBook Reducer', () => {
             metadata: METADATA,
             pages: PAGES
           },
-          comicBookUpdated({
+          comicUpdated({
             detail: OTHER_DETAILS,
             metadata: OTHER_METADATA,
             pages: OTHER_PAGES
@@ -359,7 +359,7 @@ describe('ComicBook Reducer', () => {
       state = reducer(
         { ...state, saving: false },
         savePageOrder({
-          comicBookId: DETAIL.comicDetailId,
+          comicId: DETAIL.comicId,
           entries: [{ index: 0, filename: PAGE.filename }]
         })
       );
@@ -394,7 +394,7 @@ describe('ComicBook Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, loading: false },
-        downloadComicBook({ comicBookId: DETAIL.comicDetailId })
+        downloadComicBook({ comicId: DETAIL.comicId })
       );
     });
 

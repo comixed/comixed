@@ -100,7 +100,7 @@ describe('ComicDetailEditComponent', () => {
 
     fixture = TestBed.createComponent(ComicDetailEditComponent);
     component = fixture.componentInstance;
-    component.comicBook = COMIC;
+    component.comic = COMIC;
     store = TestBed.inject(MockStore);
     spyOnStoreDispatch = spyOn(store, 'dispatch');
     confirmationService = TestBed.inject(ConfirmationService);
@@ -116,7 +116,7 @@ describe('ComicDetailEditComponent', () => {
   describe('checking if a comic is changed', () => {
     describe('when ADDED', () => {
       beforeEach(() => {
-        component.comicBook = {
+        component.comic = {
           ...COMIC,
           comicState: ComicState.ADDED
         };
@@ -133,7 +133,7 @@ describe('ComicDetailEditComponent', () => {
 
     describe('when CHANGED', () => {
       beforeEach(() => {
-        component.comicBook = {
+        component.comic = {
           ...COMIC,
           comicState: ComicState.CHANGED
         };
@@ -150,7 +150,7 @@ describe('ComicDetailEditComponent', () => {
 
     describe('when STABLE', () => {
       beforeEach(() => {
-        component.comicBook = {
+        component.comic = {
           ...COMIC,
           comicState: ComicState.STABLE
         };
@@ -167,7 +167,7 @@ describe('ComicDetailEditComponent', () => {
 
     describe('when DELETED', () => {
       beforeEach(() => {
-        component.comicBook = {
+        component.comic = {
           ...COMIC,
           comicState: ComicState.DELETED
         };
@@ -185,7 +185,7 @@ describe('ComicDetailEditComponent', () => {
 
   describe('when the dates are null', () => {
     beforeEach(() => {
-      component.comicBook = {
+      component.comic = {
         ...COMIC,
         coverDate: null,
         storeDate: null
@@ -193,11 +193,11 @@ describe('ComicDetailEditComponent', () => {
     });
 
     it('sets a null cover date value', () => {
-      expect(component.comicBookForm.controls.coverDate.value).toBeNull();
+      expect(component.comicForm.controls.coverDate.value).toBeNull();
     });
 
     it('sets a null store date value', () => {
-      expect(component.comicBookForm.controls.storeDate.value).toBeNull();
+      expect(component.comicForm.controls.storeDate.value).toBeNull();
     });
   });
 
@@ -217,7 +217,7 @@ describe('ComicDetailEditComponent', () => {
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         updateComicBook({
-          comicBookId: COMIC.comicDetailId,
+          comicId: COMIC.comicId,
           comicType: COMIC.comicType,
           publisher: COMIC.publisher,
           series: COMIC.series,
@@ -235,65 +235,59 @@ describe('ComicDetailEditComponent', () => {
 
   describe('undoing changes', () => {
     beforeEach(() => {
-      component.comicBookForm.controls.comicType.setValue(ComicType.MANGA);
-      component.comicBookForm.controls.publisher.setValue(
+      component.comicForm.controls.comicType.setValue(ComicType.MANGA);
+      component.comicForm.controls.publisher.setValue(
         COMIC.publisher.substr(1)
       );
-      component.comicBookForm.controls.imprint.setValue(null);
-      component.comicBookForm.controls.series.setValue(COMIC.series.substr(1));
-      component.comicBookForm.controls.volume.setValue(COMIC.volume.substr(1));
-      component.comicBookForm.controls.issueNumber.setValue(
+      component.comicForm.controls.imprint.setValue(null);
+      component.comicForm.controls.series.setValue(COMIC.series.substr(1));
+      component.comicForm.controls.volume.setValue(COMIC.volume.substr(1));
+      component.comicForm.controls.issueNumber.setValue(
         COMIC.issueNumber.substr(1)
       );
-      component.comicBookForm.controls.coverDate.setValue(null);
-      component.comicBookForm.controls.storeDate.setValue(null);
+      component.comicForm.controls.coverDate.setValue(null);
+      component.comicForm.controls.storeDate.setValue(null);
       component.onUndoChanges();
     });
 
     it('resets the comic type', () => {
-      expect(component.comicBookForm.controls.comicType.value).toEqual(
+      expect(component.comicForm.controls.comicType.value).toEqual(
         COMIC.comicType
       );
     });
 
     it('resets the changes to the publisher', () => {
-      expect(component.comicBookForm.controls.publisher.value).toEqual(
+      expect(component.comicForm.controls.publisher.value).toEqual(
         COMIC.publisher
       );
     });
 
     it('resets the changes to the imprint', () => {
-      expect(component.comicBookForm.controls.imprint.value).toEqual(
-        COMIC.imprint
-      );
+      expect(component.comicForm.controls.imprint.value).toEqual(COMIC.imprint);
     });
 
     it('resets the changes to the series', () => {
-      expect(component.comicBookForm.controls.series.value).toEqual(
-        COMIC.series
-      );
+      expect(component.comicForm.controls.series.value).toEqual(COMIC.series);
     });
 
     it('resets the changes to the volume', () => {
-      expect(component.comicBookForm.controls.volume.value).toEqual(
-        COMIC.volume
-      );
+      expect(component.comicForm.controls.volume.value).toEqual(COMIC.volume);
     });
 
     it('resets the changes to the issue number', () => {
-      expect(component.comicBookForm.controls.issueNumber.value).toEqual(
+      expect(component.comicForm.controls.issueNumber.value).toEqual(
         COMIC.issueNumber
       );
     });
 
     it('resets the changes to the cover date', () => {
-      expect(component.comicBookForm.controls.coverDate.value).toEqual(
+      expect(component.comicForm.controls.coverDate.value).toEqual(
         new Date(COMIC.coverDate)
       );
     });
 
     it('resets the changes to the store dater', () => {
-      expect(component.comicBookForm.controls.storeDate.value).toEqual(
+      expect(component.comicForm.controls.storeDate.value).toEqual(
         new Date(COMIC.storeDate)
       );
     });
@@ -303,7 +297,7 @@ describe('ComicDetailEditComponent', () => {
     const IMPRINT = ENTRIES[0];
 
     beforeEach(() => {
-      component.comicBook = COMIC;
+      component.comic = COMIC;
     });
 
     describe('selecting a new one', () => {
@@ -312,7 +306,7 @@ describe('ComicDetailEditComponent', () => {
       });
 
       it('updates the imprint', () => {
-        expect(component.comicBookForm.controls.imprint.value).toEqual(IMPRINT);
+        expect(component.comicForm.controls.imprint.value).toEqual(IMPRINT);
       });
     });
 
@@ -322,7 +316,7 @@ describe('ComicDetailEditComponent', () => {
       });
 
       it('updates the imprint', () => {
-        expect(component.comicBookForm.controls.imprint.value).toBeNull();
+        expect(component.comicForm.controls.imprint.value).toBeNull();
       });
     });
   });
@@ -335,9 +329,7 @@ describe('ComicDetailEditComponent', () => {
     });
 
     it('updates the comic type', () => {
-      expect(component.comicBookForm.controls.comicType.value).toEqual(
-        COMIC_TYPE
-      );
+      expect(component.comicForm.controls.comicType.value).toEqual(COMIC_TYPE);
     });
   });
 

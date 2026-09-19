@@ -84,13 +84,13 @@ describe('UpdateMetadataEffects', () => {
     it('fires an action on success', () => {
       const serviceResponse = new HttpResponse({ status: 200 });
       const action = updateSingleComicBookMetadata({
-        comicBookId: COMIC_ID
+        comicId: COMIC_ID
       });
       const outcome = updateSelectedComicBooksMetadataSuccess();
 
       actions$ = hot('-a', { a: action });
       libraryService.updateSingleComicBookMetadata
-        .withArgs({ comicBookId: COMIC_ID })
+        .withArgs({ comicId: COMIC_ID })
         .and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
@@ -101,13 +101,13 @@ describe('UpdateMetadataEffects', () => {
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
       const action = updateSingleComicBookMetadata({
-        comicBookId: COMIC_ID
+        comicId: COMIC_ID
       });
       const outcome = updateSelectedComicBooksMetadataFailure();
 
       actions$ = hot('-a', { a: action });
       libraryService.updateSingleComicBookMetadata
-        .withArgs({ comicBookId: COMIC_ID })
+        .withArgs({ comicId: COMIC_ID })
         .and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
@@ -117,13 +117,13 @@ describe('UpdateMetadataEffects', () => {
 
     it('fires an action on general failure', () => {
       const action = updateSingleComicBookMetadata({
-        comicBookId: COMIC_ID
+        comicId: COMIC_ID
       });
       const outcome = updateSelectedComicBooksMetadataFailure();
 
       actions$ = hot('-a', { a: action });
       libraryService.updateSingleComicBookMetadata
-        .withArgs({ comicBookId: COMIC_ID })
+        .withArgs({ comicId: COMIC_ID })
         .and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });

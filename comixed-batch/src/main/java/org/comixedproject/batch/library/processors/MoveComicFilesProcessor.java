@@ -65,11 +65,11 @@ public class MoveComicFilesProcessor
 
     if (this.configurationService.isFeatureEnabled(CFG_DONT_MOVE_UNSCRAPED_COMICS)
         && Objects.isNull(comic.isScraped())) {
-      log.error("Comic book is not scraped: id={}", comic.getComicDetailId());
+      log.error("Comic book is not scraped: id={}", comic.getComicId());
       return comic;
     }
 
-    log.debug("Getting target directory: id={}", comic.getComicDetailId());
+    log.debug("Getting target directory: id={}", comic.getComicId());
     final File targetDirectory =
         new File(this.jobParameters.getString(ORGANIZE_LIBRARY_JOB_TARGET_DIRECTORY));
     log.trace("Getting renaming rule");
@@ -78,27 +78,27 @@ public class MoveComicFilesProcessor
     try {
       log.trace("Creating target directory (if needed)");
       this.fileAdaptor.createDirectory(targetDirectory);
-      log.trace("Getting comicBook extension");
+      log.trace("Getting comic extension");
       final String comicExtension = comic.getArchiveType().getExtension();
-      log.trace("Generating new comicBook filename");
+      log.trace("Generating new comic filename");
       String rebuiltFilename =
           this.comicFileAdaptor.createFilenameFromRule(
               comic, comic.getFilename(), renamingRule, targetDirectory.getAbsolutePath());
       final File metadataSourceFile =
           new File(this.comicAdaptor.getMetadataFilename(comic.getFilename()));
       log.trace("Finding available filename");
-      File comicDetailFile = comic.getFile();
+      File comicFile = comic.getFile();
       rebuiltFilename =
           this.comicFileAdaptor.findAvailableFilename(
               comic.getFilename(), rebuiltFilename, 0, comicExtension);
       File rebuiltFile = new File(rebuiltFilename);
-      if (!this.fileAdaptor.sameFile(rebuiltFile, comicDetailFile)) {
+      if (!this.fileAdaptor.sameFile(rebuiltFile, comicFile)) {
         log.debug(
-            "Moving comicBook file: {} => {}",
-            comicDetailFile.getAbsolutePath(),
+            "Moving comic file: {} => {}",
+            comicFile.getAbsolutePath(),
             rebuiltFile.getAbsolutePath());
-        this.fileAdaptor.moveFile(comicDetailFile, rebuiltFile);
-        log.trace("Updating comicBook filename: {}", rebuiltFile.getAbsoluteFile());
+        this.fileAdaptor.moveFile(comicFile, rebuiltFile);
+        log.trace("Updating comic filename: {}", rebuiltFile.getAbsoluteFile());
         comic.setUpdatedFilename(
             this.comicFileAdaptor.standardizeFilename(rebuiltFile.getAbsolutePath()));
       } else {

@@ -55,7 +55,7 @@ public class ComicTag {
   private Long comicTagId;
 
   @ManyToOne
-  @JoinColumn(name = "comic_detail_id", insertable = true, nullable = false, updatable = false)
+  @JoinColumn(name = "comic_id", insertable = true, nullable = false, updatable = false)
   @Getter
   @NonNull
   private Comic comic;

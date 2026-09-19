@@ -26,14 +26,14 @@ import {
 } from '@app/library/library.constants';
 import { interpolate } from '@app/core';
 import {
-  DELETE_SELECTED_COMIC_BOOKS_URL,
-  DELETE_SINGLE_COMIC_BOOK_URL,
-  DOWNLOAD_COMIC_BOOK_URL,
+  DELETE_SELECTED_COMICS_URL,
+  DELETE_SINGLE_COMIC_URL,
+  DOWNLOAD_COMIC_URL,
   MARK_PAGES_DELETED_URL,
   MARK_PAGES_UNDELETED_URL,
   SAVE_PAGE_ORDER_URL,
-  UNDELETE_SELECTED_COMIC_BOOKS_URL,
-  UNDELETE_SINGLE_COMIC_BOOK_URL
+  UNDELETE_SELECTED_COMICS_URL,
+  UNDELETE_SINGLE_COMIC_URL
 } from '@app/comic-books/comic-books.constants';
 import { ComicPage } from '@app/comic-books/models/comic-page';
 import { MarkPagesDeletedRequest } from '@app/comic-books/models/net/mark-pages-deleted-request';
@@ -65,7 +65,7 @@ export class ComicService {
    * @param args.comic the comic
    */
   updateOne(args: {
-    comicBookId: number;
+    comicId: number;
     comicType?: ComicType;
     publisher: string;
     series: string;
@@ -78,33 +78,30 @@ export class ComicService {
     storeDate?: number;
   }): Observable<any> {
     this.logger.debug('Service: updating one comic:', args);
-    return this.http.put(
-      interpolate(UPDATE_COMIC_URL, { id: args.comicBookId }),
-      {
-        comicType: args.comicType,
-        publisher: args.publisher,
-        series: args.series,
-        volume: args.volume,
-        issueNumber: args.issueNumber,
-        imprint: args.imprint,
-        sortName: args.sortName,
-        title: args.title,
-        coverDate: args.coverDate,
-        storeDate: args.storeDate
-      } as UpdateComicRequest
-    );
+    return this.http.put(interpolate(UPDATE_COMIC_URL, { id: args.comicId }), {
+      comicType: args.comicType,
+      publisher: args.publisher,
+      series: args.series,
+      volume: args.volume,
+      issueNumber: args.issueNumber,
+      imprint: args.imprint,
+      sortName: args.sortName,
+      title: args.title,
+      coverDate: args.coverDate,
+      storeDate: args.storeDate
+    } as UpdateComicRequest);
   }
 
   /**
    * Marks a single comic book as deleted.
    *
-   * @param args.comicDetailId the comic book's id
+   * @param args.comicId the comic book's id
    */
-  deleteSingleComicBook(args: { comicBookId: number }): Observable<any> {
+  deleteSingleComicBook(args: { comicId: number }): Observable<any> {
     this.logger.debug('Marking selected comic books as deleted');
     return this.http.delete(
-      interpolate(DELETE_SINGLE_COMIC_BOOK_URL, {
-        comicBookId: args.comicBookId
+      interpolate(DELETE_SINGLE_COMIC_URL, {
+        comicId: args.comicId
       })
     );
   }
@@ -112,13 +109,13 @@ export class ComicService {
   /**
    * Marks all selected comic books as undeleted.
    *
-   * @param args.comicDetailId the comic book's id
+   * @param args.comicId the comic book's id
    */
-  undeleteSingleComicBook(args: { comicBookId: number }): Observable<any> {
+  undeleteSingleComicBook(args: { comicId: number }): Observable<any> {
     this.logger.debug('Marking selected comic books as deleted');
     return this.http.put(
-      interpolate(UNDELETE_SINGLE_COMIC_BOOK_URL, {
-        comicBookId: args.comicBookId
+      interpolate(UNDELETE_SINGLE_COMIC_URL, {
+        comicId: args.comicId
       }),
       {}
     );
@@ -129,7 +126,7 @@ export class ComicService {
    */
   deleteSelectedComicBooks(): Observable<any> {
     this.logger.debug('Marking selected comic books as deleted');
-    return this.http.delete(interpolate(DELETE_SELECTED_COMIC_BOOKS_URL));
+    return this.http.delete(interpolate(DELETE_SELECTED_COMICS_URL));
   }
 
   /**
@@ -137,7 +134,7 @@ export class ComicService {
    */
   undeleteSelectedComicBooks(): Observable<any> {
     this.logger.debug('Marking selected comic books as undeleted');
-    return this.http.put(interpolate(UNDELETE_SELECTED_COMIC_BOOKS_URL), {});
+    return this.http.put(interpolate(UNDELETE_SELECTED_COMICS_URL), {});
   }
 
   updatePageDeletion(args: {
@@ -160,21 +157,21 @@ export class ComicService {
   }
 
   savePageOrder(args: {
-    comicBookId: number;
+    comicId: number;
     entries: PageOrderEntry[];
   }): Observable<any> {
     this.logger.debug('Saving page order:', args);
     return this.http.post(
-      interpolate(SAVE_PAGE_ORDER_URL, { id: args.comicBookId }),
+      interpolate(SAVE_PAGE_ORDER_URL, { id: args.comicId }),
       { entries: args.entries } as SavePageOrderRequest
     );
   }
 
-  downloadComicBook(args: { comicBookId: number }): Observable<any> {
+  downloadComicBook(args: { comicId: number }): Observable<any> {
     this.logger.debug('Downloading comic book:', args);
     return this.http.get(
-      interpolate(DOWNLOAD_COMIC_BOOK_URL, {
-        comicBookId: args.comicBookId
+      interpolate(DOWNLOAD_COMIC_URL, {
+        comicId: args.comicId
       })
     );
   }

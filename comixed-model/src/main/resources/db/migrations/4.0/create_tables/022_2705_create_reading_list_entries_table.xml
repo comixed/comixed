@@ -25,6 +25,11 @@
             </column>
         </createTable>
 
+        <addForeignKeyConstraint baseTableName="reading_list_entries_v4" baseColumnNames="comic_detail_id"
+                                 constraintName="reading_list_entries_v4_comic_detail_fk"
+                                 referencedTableName="comic_details_v4"
+                                 referencedColumnNames="comic_detail_id"/>
+
         <addForeignKeyConstraint baseTableName="reading_list_entries_v4" baseColumnNames="reading_list_id"
                                  constraintName="reading_list_entries_v4_reading_list_fk"
                                  referencedTableName="reading_lists_v4"
@@ -32,7 +37,7 @@
 
         <addUniqueConstraint tableName="reading_list_entries_v4"
                              columnNames="reading_list_id, comic_detail_id"
-                             constraintName="reading_list_entries_v4_unique_reading_list_and_comic_details"/>
+                             constraintName="reading_list_entries_v4_unique_reading_list_and_comic_detail"/>
 
     </changeSet>
 </databaseChangeLog>

@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="010_2785_migrate_comic_details_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="comic_details_v4"/>
+        </preConditions>
+
+        <dropView viewName="displayable_comics_view"/>
+        <dropView viewName="duplicate_comics_view"/>
+        <dropView viewName="duplicate_pages_view"/>
+        <dropView viewName="organizing_comics_view"/>
+        <dropView viewName="publisher_details_view"/>
+        <dropView viewName="series_details_view"/>
+        <dropView viewName="stories_view"/>
+
+        <!-- update comic page -->
+        <addColumn tableName="comic_pages_v4">
+            <column name="comic_id" type="bigint"/>
+        </addColumn>
+
+        <addForeignKeyConstraint baseTableName="comic_pages_v4" baseColumnNames="comic_id"
+                                 constraintName="comic_pages_v4_comic_fk"
+                                 referencedTableName="comics_v4"
+                                 referencedColumnNames="comic_id"/>
+
+        <sql>
+            UPDATE comic_pages_v4 p
+            SET comic_id=(SELECT c.comic_id FROM comics_v4 c WHERE c.comic_detail_id = p.comic_detail_id);
+        </sql>
+
+        <dropForeignKeyConstraint baseTableName="comic_pages_v4" constraintName="comic_pages_v4_comic_detail_fk"/>
+        <dropUniqueConstraint tableName="comic_pages_v4"
+                              constraintName="comic_pages_v4_unique_comic_detail_and_page_number"/>
+        <dropColumn tableName="comic_pages_v4" columnName="comic_detail_id"/>
+
+        <addNotNullConstraint tableName="comic_pages_v4" columnName="comic_id" columnDataType="bigint"/>
+        <addUniqueConstraint tableName="comic_pages_v4" constraintName="comic_pages_v4_unique_comic_and_page_number"
+                             columnNames="comic_id,page_number"/>
+
+        <!-- read comics -->
+
+        <addColumn tableName="read_comic_books_v4">
+            <column name="comic_id" type="bigint"/>
+        </addColumn>
+
+        <addForeignKeyConstraint baseTableName="read_comic_books_v4" baseColumnNames="comic_id"
+                                 constraintName="read_comic_books_v4_comic_fk"
+                                 referencedTableName="comics_v4"
+                                 referencedColumnNames="comic_id"/>
+
+        <sql>UPDATE read_comic_books_v4 r
+             SET comic_id = (SELECT c.comic_id FROM comics_v4 c WHERE c.comic_detail_id = r.comic_detail_id);</sql>
+
+        <dropForeignKeyConstraint baseTableName="read_comic_books_v4"
+                                  constraintName="read_comic_books_v4_comic_detail_fk"/>
+        <dropUniqueConstraint tableName="read_comic_books_v4"
+                              constraintName="read_comic_books_v4_unique_comixed_user_and_comic_detail"/>
+        <dropIndex tableName="read_comic_books_v4" indexName="read_comic_books_v4_comic_detail_idx"/>
+        <dropColumn tableName="read_comic_books_v4" columnName="comic_detail_id"/>
+
+        <addNotNullConstraint tableName="read_comic_books_v4" columnName="comic_id" columnDataType="bigint"/>
+        <addUniqueConstraint tableName="read_comic_books_v4"
+                             constraintName="read_comic_books_v4_unique_comixed_user_and_comic"
+                             columnNames="comixed_user_id,comic_id"/>
+        <createIndex tableName="read_comic_books_v4" indexName="read_comic_books_v4_comic_idx">
+            <column name="comic_id"/>
+        </createIndex>
+
+        <!-- comic tags -->
+
+        <addColumn tableName="comic_tags_v4">
+            <column name="comic_id" type="bigint"/>
+        </addColumn>
+
+        <addForeignKeyConstraint baseTableName="comic_tags_v4" baseColumnNames="comic_id"
+                                 constraintName="comic_tags_v4_comic_fk"
+                                 referencedTableName="comics_v4"
+                                 referencedColumnNames="comic_id"/>
+
+        <sql>UPDATE comic_tags_v4 t
+             SET comic_id = (SELECT c.comic_id FROM comics_v4 c WHERE c.comic_detail_id = t.comic_detail_id);</sql>
+
+        <dropForeignKeyConstraint baseTableName="comic_tags_v4" constraintName="comic_tags_v4_comic_detail_fk"/>
+        <dropIndex tableName="comic_tags_v4" indexName="comic_tags_v4_comic_detail_idx"/>
+        <dropColumn tableName="comic_tags_v4" columnName="comic_detail_id"/>
+
+        <addNotNullConstraint tableName="comic_tags_v4" columnName="comic_id" columnDataType="bigint"/>
+        <createIndex tableName="comic_tags_v4" indexName="comic_tags_v4_comic_idx">
+            <column name="comic_id"/>
+        </createIndex>
+
+        <!-- comic metadata sources -->
+
+        <addColumn tableName="comic_metadata_sources_v4">
+            <column name="comic_id" type="bigint"/>
+        </addColumn>
+
+        <addForeignKeyConstraint baseTableName="comic_metadata_sources_v4" baseColumnNames="comic_id"
+                                 constraintName="comic_metadata_sources_v4_comic_fk"
+                                 referencedTableName="comics_v4"
+                                 referencedColumnNames="comic_id"/>
+
+        <sql>
+            UPDATE comic_metadata_sources_v4 s
+            SET comic_id = (SELECT c.comic_id FROM comics_v4 c WHERE c.comic_detail_id = s.comic_detail_id);</sql>
+
+        <dropForeignKeyConstraint baseTableName="comic_metadata_sources_v4"
+                                  constraintName="comic_metadata_sources_v4_comic_detail_fk"/>
+        <dropIndex tableName="comic_metadata_sources_v4" indexName="comic_metadata_sources_v4_comic_detail_idx"/>
+        <dropUniqueConstraint tableName="comic_metadata_sources_v4"
+                              constraintName="comic_metadata_sources_v4_unique_comic_detail"/>
+
+        <addNotNullConstraint tableName="comic_metadata_sources_v4" columnName="comic_id" columnDataType="bigint"/>
+        <createIndex tableName="comic_metadata_sources_v4" indexName="comic_metadata_sources_v4_comic_idx">
+            <column name="comic_id"/>
+        </createIndex>
+        <addUniqueConstraint tableName="comic_metadata_sources_v4"
+                             constraintName="comic_metadata_sources_v4_unique_comic" columnNames="comic_id"/>
+        <dropColumn tableName="comic_metadata_sources_v4" columnName="comic_detail_id"/>
+
+        <!-- reading list entries - needs to be recreated -->
+
+        <renameTable oldTableName="reading_list_entries_v4" newTableName="old_reading_list_entries_v4"/>
+
+        <createTable tableName="reading_list_entries_v5">
+            <column name="reading_list_entry_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="reading_list_entries_v5_pk"/>
+            </column>
+
+            <column name="reading_list_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="comic_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <sql>INSERT INTO reading_list_entries_v5(reading_list_entry_id, reading_list_id, comic_id)
+             SELECT a.reading_list_entry_id, a.reading_list_id, a.comic_id
+             FROM (SELECT e.reading_list_entry_id                                                          as reading_list_entry_id,
+                          e.reading_list_id                                                                as reading_list_id,
+                          (SELECT c.comic_id FROM comics_v4 c WHERE c.comic_detail_id = e.comic_detail_id) as comic_id
+                   FROM old_reading_list_entries_v4 e) a;</sql>
+
+        <dropTable tableName="old_reading_list_entries_v4"/>
+
+        <addForeignKeyConstraint baseTableName="reading_list_entries_v5" baseColumnNames="comic_id"
+                                 constraintName="reading_list_entries_v5_comic_fk"
+                                 referencedTableName="comics_v4"
+                                 referencedColumnNames="comic_id"/>
+
+        <addForeignKeyConstraint baseTableName="reading_list_entries_v5" baseColumnNames="reading_list_id"
+                                 constraintName="reading_list_entries_v5_reading_list_fk"
+                                 referencedTableName="reading_lists_v4"
+                                 referencedColumnNames="reading_list_id"/>
+
+        <addUniqueConstraint tableName="reading_list_entries_v5"
+                             columnNames="reading_list_id, comic_id"
+                             constraintName="reading_list_entries_v5_unique_reading_list_and_comic"/>
+
+        <!-- remove comic detail column -->
+        <dropColumn tableName="comics_v4" columnName="comic_detail_id"/>
+
+        <!-- now drop the table -->
+
+        <dropTable tableName="comic_details_v4"/>
+
+    </changeSet>
+</databaseChangeLog>

@@ -18,7 +18,7 @@
 
 package org.comixedproject.batch.library.listeners;
 
-import static org.comixedproject.model.messaging.batch.ProcessComicsStatus.REMOVE_DELETED_COMIC_BOOKS_STEP;
+import static org.comixedproject.model.messaging.batch.ProcessComicsStatus.REMOVE_DELETED_COMICS_STEP;
 
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.batch.comicbooks.listeners.AbstractBatchProcessChunkListener;
@@ -39,7 +39,7 @@ public class RemoveDeletedComicsChunkListener
     extends AbstractBatchProcessChunkListener<Comic, Comic> {
   @Override
   protected String getStepName() {
-    return REMOVE_DELETED_COMIC_BOOKS_STEP;
+    return REMOVE_DELETED_COMICS_STEP;
   }
 
   @Override

@@ -23,17 +23,17 @@ import { Observable } from 'rxjs';
 import { interpolate } from '@app/core';
 import {
   ADD_SINGLE_COMIC_SELECTION_URL,
-  CLEAR_COMIC_BOOK_SELECTION_STATE_URL,
-  COMIC_BOOK_SELECTION_UPDATE_TOPIC,
-  LOAD_COMIC_BOOK_SELECTIONS_URL,
+  CLEAR_COMIC_SELECTION_STATE_URL,
+  COMIC_SELECTION_UPDATE_TOPIC,
+  LOAD_COMIC_SELECTIONS_URL,
   REMOVE_SINGLE_COMIC_SELECTION_URL,
-  SET_SELECTED_BY_UNREAD_STATE_COMIC_BOOKS_URL,
-  SET_SELECTED_COMIC_BOOKS_BY_FILTER_URL,
-  SET_SELECTED_COMIC_BOOKS_BY_ID_URL,
-  SET_SELECTED_COMIC_BOOKS_BY_PUBLISHER_SERIES_VOLUME_URL,
-  SET_SELECTED_COMIC_BOOKS_BY_PUBLISHER_URL,
-  SET_SELECTED_COMIC_BOOKS_BY_TAG_TYPE_AND_VALUE_URL,
-  SET_SELECTED_DUPLICATE_COMIC_BOOKS_URL
+  SET_SELECTED_BY_UNREAD_STATE_COMICS_URL,
+  SET_SELECTED_COMICS_BY_FILTER_URL,
+  SET_SELECTED_COMICS_BY_ID_URL,
+  SET_SELECTED_COMICS_BY_PUBLISHER_SERIES_VOLUME_URL,
+  SET_SELECTED_COMICS_BY_PUBLISHER_URL,
+  SET_SELECTED_COMICS_BY_TAG_TYPE_AND_VALUE_URL,
+  SET_SELECTED_DUPLICATE_COMICS_URL
 } from '@app/comic-books/comic-books.constants';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ComicType } from '@app/comic-books/models/comic-type';
@@ -43,7 +43,7 @@ import { Store } from '@ngrx/store';
 import { selectMessagingStarted } from '@app/messaging/selectors/messaging.selectors';
 import { WebSocketService } from '@app/messaging';
 import {
-  comicBookSelectionUpdate,
+  comicSelectionUpdate,
   loadComicBookSelections
 } from '@app/comic-books/actions/comic-book-selection.actions';
 import { SetSelectedByIdRequest } from '@app/comic-books/models/net/set-selected-by-id-request';
@@ -85,24 +85,24 @@ export class ComicSelectionService {
 
   loadSelections(): Observable<any> {
     this.logger.debug('Loading current comic book selections');
-    return this.http.get(interpolate(LOAD_COMIC_BOOK_SELECTIONS_URL));
+    return this.http.get(interpolate(LOAD_COMIC_SELECTIONS_URL));
   }
 
-  addSingleSelection(args: { comicDetailId: number }): Observable<any> {
+  addSingleSelection(args: { comicId: number }): Observable<any> {
     this.logger.debug('Setting single comic book selection state:', args);
     return this.http.put(
       interpolate(ADD_SINGLE_COMIC_SELECTION_URL, {
-        comicDetailId: args.comicDetailId
+        comicId: args.comicId
       }),
       {}
     );
   }
 
-  removeSingleSelection(args: { comicDetailId: number }): Observable<any> {
+  removeSingleSelection(args: { comicId: number }): Observable<any> {
     this.logger.debug('Setting single comic book selection state:', args);
     return this.http.delete(
       interpolate(REMOVE_SINGLE_COMIC_SELECTION_URL, {
-        comicDetailId: args.comicDetailId
+        comicId: args.comicId
       }),
       {}
     );
@@ -119,7 +119,7 @@ export class ComicSelectionService {
     selected: boolean;
   }): Observable<any> {
     this.logger.debug('Setting multiple comic book selection state:', args);
-    return this.http.post(interpolate(SET_SELECTED_COMIC_BOOKS_BY_FILTER_URL), {
+    return this.http.post(interpolate(SET_SELECTED_COMICS_BY_FILTER_URL), {
       coverYear: args.coverYear,
       coverMonth: args.coverMonth,
       archiveType: args.archiveType,
@@ -139,7 +139,7 @@ export class ComicSelectionService {
     if (args.selected) {
       this.logger.debug('Selecting comic books by tag type and value:', args);
       return this.http.put(
-        interpolate(SET_SELECTED_COMIC_BOOKS_BY_TAG_TYPE_AND_VALUE_URL, {
+        interpolate(SET_SELECTED_COMICS_BY_TAG_TYPE_AND_VALUE_URL, {
           tagType: args.tagType,
           tagValue: args.tagValue
         }),
@@ -148,7 +148,7 @@ export class ComicSelectionService {
     } else {
       this.logger.debug('Selecting comic books by tag type and value:', args);
       return this.http.delete(
-        interpolate(SET_SELECTED_COMIC_BOOKS_BY_TAG_TYPE_AND_VALUE_URL, {
+        interpolate(SET_SELECTED_COMICS_BY_TAG_TYPE_AND_VALUE_URL, {
           tagType: args.tagType,
           tagValue: args.tagValue
         })
@@ -157,12 +157,12 @@ export class ComicSelectionService {
   }
 
   setSelectedById(args: {
-    comicBookIds: number[];
+    comicIds: number[];
     selected: boolean;
   }): Observable<any> {
     this.logger.debug('Selecting comic books by id:', args);
-    return this.http.post(interpolate(SET_SELECTED_COMIC_BOOKS_BY_ID_URL), {
-      comicBookIds: args.comicBookIds,
+    return this.http.post(interpolate(SET_SELECTED_COMICS_BY_ID_URL), {
+      comicIds: args.comicIds,
       selected: args.selected
     } as SetSelectedByIdRequest);
   }
@@ -172,13 +172,10 @@ export class ComicSelectionService {
     selected: boolean;
   }): Observable<any> {
     this.logger.debug('Selecting comic books by publisher:', args);
-    return this.http.post(
-      interpolate(SET_SELECTED_COMIC_BOOKS_BY_PUBLISHER_URL),
-      {
-        publisher: args.publisher,
-        selected: args.selected
-      } as SetSelectedByPublisherRequest
-    );
+    return this.http.post(interpolate(SET_SELECTED_COMICS_BY_PUBLISHER_URL), {
+      publisher: args.publisher,
+      selected: args.selected
+    } as SetSelectedByPublisherRequest);
   }
 
   setSelectedByPublisherSeriesAndVolume(args: {
@@ -192,7 +189,7 @@ export class ComicSelectionService {
       args
     );
     return this.http.post(
-      interpolate(SET_SELECTED_COMIC_BOOKS_BY_PUBLISHER_SERIES_VOLUME_URL),
+      interpolate(SET_SELECTED_COMICS_BY_PUBLISHER_SERIES_VOLUME_URL),
       {
         publisher: args.publisher,
         series: args.series,
@@ -206,7 +203,7 @@ export class ComicSelectionService {
     selected: boolean;
   }): Observable<any> {
     this.logger.debug('Selecting duplicate comic books:', args);
-    return this.http.post(interpolate(SET_SELECTED_DUPLICATE_COMIC_BOOKS_URL), {
+    return this.http.post(interpolate(SET_SELECTED_DUPLICATE_COMICS_URL), {
       selected: args.selected
     } as DuplicateComicsSelectionRequest);
   }
@@ -217,7 +214,7 @@ export class ComicSelectionService {
   }): Observable<any> {
     this.logger.debug('Selecting unread comic books:', args);
     return this.http.post(
-      interpolate(SET_SELECTED_BY_UNREAD_STATE_COMIC_BOOKS_URL),
+      interpolate(SET_SELECTED_BY_UNREAD_STATE_COMICS_URL),
       {
         selected: args.selected,
         unreadOnly: args.unreadOnly
@@ -227,20 +224,20 @@ export class ComicSelectionService {
 
   clearSelections(): Observable<any> {
     this.logger.debug('Clearing comic book selections');
-    return this.http.delete(interpolate(CLEAR_COMIC_BOOK_SELECTION_STATE_URL));
+    return this.http.delete(interpolate(CLEAR_COMIC_SELECTION_STATE_URL));
   }
 
   private doSubscribeToSelectionUpdates() {
     if (this.email) {
       this.logger.trace('Subscribing to comic book selection updates');
       this.webSocketService.subscribe<number[]>(
-        interpolate(COMIC_BOOK_SELECTION_UPDATE_TOPIC, { email: this.email }),
+        interpolate(COMIC_SELECTION_UPDATE_TOPIC, { email: this.email }),
         ids => {
           this.logger.debug(
             'Received comic book selection update update:',
             ids
           );
-          this.store.dispatch(comicBookSelectionUpdate({ ids }));
+          this.store.dispatch(comicSelectionUpdate({ ids }));
         }
       );
       this.logger.debug('Loading the initial set of ids');

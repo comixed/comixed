@@ -97,7 +97,7 @@ export class ReadingListDetailPageComponent {
   readingListForm: FormGroup;
   readingListId$ = new BehaviorSubject(-1);
   selectedIds$ = new BehaviorSubject<number[]>([]);
-  comicBooksRead$ = new BehaviorSubject<number[]>([]);
+  comicsRead$ = new BehaviorSubject<number[]>([]);
   comics$ = new BehaviorSubject<DisplayableComic[]>([]);
   email$ = new BehaviorSubject<string | null>(null);
 
@@ -191,7 +191,7 @@ export class ReadingListDetailPageComponent {
       .subscribe();
     this.store
       .select(selectReadComicBooksList)
-      .pipe(tap(comicBooksRead => this.comicBooksRead$.next(comicBooksRead)))
+      .pipe(tap(comicsRead => this.comicsRead$.next(comicsRead)))
       .subscribe();
     this.store
       .select(selectMessagingStarted)
@@ -309,7 +309,7 @@ export class ReadingListDetailPageComponent {
     this.store.dispatch(
       setMultipleComicBookByIdSelectionState({
         selected,
-        comicBookIds: this.readingList.entryIds
+        comicIds: this.readingList.entryIds
       })
     );
   }

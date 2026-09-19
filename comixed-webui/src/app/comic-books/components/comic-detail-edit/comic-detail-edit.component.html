@@ -5,7 +5,7 @@
       class="cx-toolbar-button cx-margin-left-5"
       mat-icon-button
       [matTooltip]="'comic-book.tooltip.save-changes' | translate"
-      [disabled]="!comicBookForm.valid"
+      [disabled]="!comicForm.valid"
       (click)="onSaveChanges()"
     >
       <mat-icon>save</mat-icon>
@@ -15,7 +15,7 @@
       class="cx-toolbar-button cx-margin-left-5"
       mat-icon-button
       [matTooltip]="'comic-book.tooltip.undo-changes' | translate"
-      [disabled]="comicBookForm.untouched"
+      [disabled]="comicForm.untouched"
       (click)="onUndoChanges()"
     >
       <mat-icon>undo</mat-icon>
@@ -23,7 +23,7 @@
   </mat-toolbar>
 }
 
-<form [formGroup]="comicBookForm">
+<form [formGroup]="comicForm">
   <mat-form-field appearance="fill" class="cx-width-25" required>
     <mat-label>{{ "comic-book.label.publisher" | translate }}</mat-label>
     <input matInput formControlName="publisher" [readonly]="!isAdmin" />
@@ -127,7 +127,7 @@
     </mat-label>
     <input
       matInput
-      [value]="comicBook.lastModifiedDate | date: 'medium'"
+      [value]="comic.lastModifiedDate | date: 'medium'"
       readonly
     />
   </mat-form-field>

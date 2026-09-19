@@ -33,7 +33,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 /**
- * <code>ReadingLists</code> represents a list of comicBooks.
+ * <code>ReadingLists</code> represents a list of comics.
  *
  * @author Darryl L. Pierce
  */
@@ -93,9 +93,9 @@ public class ReadingList implements StatefulItem<ReadingListState> {
 
   @ElementCollection(fetch = FetchType.EAGER)
   @CollectionTable(
-      name = "reading_list_entries_v4",
+      name = "reading_list_entries_v5",
       joinColumns = @JoinColumn(name = "reading_list_id"))
-  @Column(name = "comic_detail_id")
+  @Column(name = "comic_id")
   @JsonView({View.ReadingLists.class})
   @Getter
   private List<Long> entryIds = new ArrayList<>();

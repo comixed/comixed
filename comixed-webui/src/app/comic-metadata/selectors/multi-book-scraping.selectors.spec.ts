@@ -37,15 +37,14 @@ import { MultiBookScrapingProcessStatus } from '@app/comic-metadata/models/multi
 import { PAGE_SIZE_DEFAULT } from '@app/core';
 
 describe('MultiBookScraping Selectors', () => {
-  const COMIC_BOOKS = [
+  const COMICS = [
     DISPLAYABLE_COMIC_1,
     DISPLAYABLE_COMIC_2,
     DISPLAYABLE_COMIC_3,
     DISPLAYABLE_COMIC_4,
     DISPLAYABLE_COMIC_5
   ];
-  const CURRENT_COMIC_BOOK =
-    COMIC_BOOKS[Math.floor(Math.random() * COMIC_BOOKS.length)];
+  const CURRENT_COMIC = COMICS[Math.floor(Math.random() * COMICS.length)];
 
   let state: MultiBookScrapingState;
 
@@ -56,8 +55,8 @@ describe('MultiBookScraping Selectors', () => {
       pageSize: PAGE_SIZE_DEFAULT,
       pageNumber: Math.floor(Math.random() * 10),
       totalComics: Math.floor(Math.random() * 100),
-      comicBooks: COMIC_BOOKS,
-      currentComicBook: CURRENT_COMIC_BOOK
+      comics: COMICS,
+      currentComicBook: CURRENT_COMIC
     };
   });
 
@@ -82,7 +81,7 @@ describe('MultiBookScraping Selectors', () => {
       selectMultiBookScrapingList({
         [MULTI_BOOK_SCRAPING_FEATURE_KEY]: state
       })
-    ).toEqual(state.comicBooks);
+    ).toEqual(state.comics);
   });
 
   it('should select the current comic book', () => {

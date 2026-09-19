@@ -18,8 +18,8 @@
 
 package org.comixedproject.batch.initiators;
 
-import static org.comixedproject.batch.comicbooks.LoadComicsConfiguration.LOAD_COMIC_BOOKS_JOB;
-import static org.comixedproject.batch.comicbooks.LoadComicsConfiguration.LOAD_COMIC_BOOKS_JOB_STARTED;
+import static org.comixedproject.batch.comicbooks.LoadComicsConfiguration.LOAD_COMICS_JOB;
+import static org.comixedproject.batch.comicbooks.LoadComicsConfiguration.LOAD_COMICS_JOB_STARTED;
 import static org.comixedproject.batch.comicpages.AddPagesToImageCacheConfiguration.ADD_PAGES_TO_IMAGE_CACHE_JOB;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -70,7 +70,7 @@ class LoadComicsInitiatorTest {
           JobExecutionAlreadyRunningException,
           InvalidJobParametersException,
           JobRestartException {
-    when(batchProcessesService.hasActiveExecutions(LOAD_COMIC_BOOKS_JOB)).thenReturn(false);
+    when(batchProcessesService.hasActiveExecutions(LOAD_COMICS_JOB)).thenReturn(false);
     for (int index = 0; index < 100; index++) comicList.add(mock(Comic.class));
     when(jobOperator.start(any(Job.class), jobParametersArgumentCaptor.capture()))
         .thenReturn(jobExecution);
@@ -89,7 +89,7 @@ class LoadComicsInitiatorTest {
 
     final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
     assertNotNull(jobParameters);
-    assertNotNull(jobParameters.getLong(LOAD_COMIC_BOOKS_JOB_STARTED));
+    assertNotNull(jobParameters.getLong(LOAD_COMICS_JOB_STARTED));
 
     verify(comicService).getUnprocessedComicBookCount();
     verify(jobOperator).start(addPagesToImageCacheJob, jobParameters);
@@ -107,7 +107,7 @@ class LoadComicsInitiatorTest {
 
     final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
     assertNotNull(jobParameters);
-    assertNotNull(jobParameters.getLong(LOAD_COMIC_BOOKS_JOB_STARTED));
+    assertNotNull(jobParameters.getLong(LOAD_COMICS_JOB_STARTED));
 
     verify(comicService).getUnprocessedComicBookCount();
     verify(jobOperator).start(addPagesToImageCacheJob, jobParameters);
@@ -125,7 +125,7 @@ class LoadComicsInitiatorTest {
 
     final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
     assertNotNull(jobParameters);
-    assertNotNull(jobParameters.getLong(LOAD_COMIC_BOOKS_JOB_STARTED));
+    assertNotNull(jobParameters.getLong(LOAD_COMICS_JOB_STARTED));
 
     verify(jobOperator).start(addPagesToImageCacheJob, jobParameters);
   }
@@ -141,7 +141,7 @@ class LoadComicsInitiatorTest {
 
     final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
     assertNotNull(jobParameters);
-    assertNotNull(jobParameters.getLong(LOAD_COMIC_BOOKS_JOB_STARTED));
+    assertNotNull(jobParameters.getLong(LOAD_COMICS_JOB_STARTED));
 
     verify(jobOperator).start(addPagesToImageCacheJob, jobParameters);
   }
@@ -184,7 +184,7 @@ class LoadComicsInitiatorTest {
           JobExecutionAlreadyRunningException,
           InvalidJobParametersException,
           JobRestartException {
-    when(batchProcessesService.hasActiveExecutions(LOAD_COMIC_BOOKS_JOB)).thenReturn(true);
+    when(batchProcessesService.hasActiveExecutions(LOAD_COMICS_JOB)).thenReturn(true);
 
     initiator.execute();
 
