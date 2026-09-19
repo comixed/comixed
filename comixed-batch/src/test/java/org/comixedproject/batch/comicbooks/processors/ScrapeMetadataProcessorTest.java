@@ -71,7 +71,7 @@ class ScrapeMetadataProcessorTest {
     when(metadata.getMetadataSource()).thenReturn(metadataSource);
     when(metadata.getReferenceId()).thenReturn(TEST_REFERENCE_NUMBER);
     when(comic.getMetadata()).thenReturn(metadata);
-    when(comic.getComicDetailId()).thenReturn(TEST_COMIC_ID);
+    when(comic.getComicId()).thenReturn(TEST_COMIC_ID);
     when(comic.isLoadingFileContents()).thenReturn(false);
     when(comic.isPurging()).thenReturn(false);
     when(jobExecutionContext.getJobParameters()).thenReturn(jobParameters);

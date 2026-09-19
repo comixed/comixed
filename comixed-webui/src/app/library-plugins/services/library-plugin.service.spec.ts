@@ -33,8 +33,8 @@ import {
   DELETE_PLUGIN_URL,
   LIBRARY_PLUGIN_LIST_UPDATES,
   LOAD_ALL_PLUGINS_URL,
-  RUN_LIBRARY_PLUGIN_ON_ONE_COMIC_BOOK_URL,
-  RUN_LIBRARY_PLUGIN_ON_SELECTED_COMIC_BOOKS_URL,
+  RUN_LIBRARY_PLUGIN_ON_ONE_COMIC_URL,
+  RUN_LIBRARY_PLUGIN_ON_SELECTED_COMICS_URL,
   UPDATE_PLUGIN_URL
 } from '@app/library-plugins/library-plugins.constants';
 import { CreatePluginRequest } from '@app/library-plugins/models/net/create-plugin-request';
@@ -159,14 +159,14 @@ describe('LibraryPluginService', () => {
     service
       .runLibraryPluginOnOneComicBook({
         plugin: PLUGIN,
-        comicBookId: COMIC_ID
+        comicId: COMIC_ID
       })
       .subscribe(response => expect(response.status).toEqual(200));
 
     const req = httpMock.expectOne(
-      interpolate(RUN_LIBRARY_PLUGIN_ON_ONE_COMIC_BOOK_URL, {
+      interpolate(RUN_LIBRARY_PLUGIN_ON_ONE_COMIC_URL, {
         pluginId: PLUGIN.libraryPluginId,
-        comicBookId: COMIC_ID
+        comicId: COMIC_ID
       })
     );
     expect(req.request.method).toEqual('POST');
@@ -182,7 +182,7 @@ describe('LibraryPluginService', () => {
       .subscribe(response => expect(response.status).toEqual(200));
 
     const req = httpMock.expectOne(
-      interpolate(RUN_LIBRARY_PLUGIN_ON_SELECTED_COMIC_BOOKS_URL, {
+      interpolate(RUN_LIBRARY_PLUGIN_ON_SELECTED_COMICS_URL, {
         pluginId: PLUGIN.libraryPluginId
       })
     );

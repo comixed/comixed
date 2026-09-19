@@ -167,7 +167,7 @@ public class DisplayableComicService {
             pageCount);
 
     return this.displayableComicRepository.findAll(displayableComicExample).stream()
-        .map(DisplayableComic::getComicDetailId)
+        .map(DisplayableComic::getComicId)
         .toList();
   }
 
@@ -199,7 +199,7 @@ public class DisplayableComicService {
       final String volume,
       final Integer pageCount) {
     log.debug("Loading cover years for filter");
-    final var comicDetailExample =
+    final var comicExample =
         doCreateExample(
             null,
             null,
@@ -214,7 +214,7 @@ public class DisplayableComicService {
             volume,
             pageCount);
 
-    return this.displayableComicRepository.findAll(comicDetailExample).stream()
+    return this.displayableComicRepository.findAll(comicExample).stream()
         .map(DisplayableComic::getYearPublished)
         .distinct()
         .toList();
@@ -248,7 +248,7 @@ public class DisplayableComicService {
       final String volume,
       final Integer pageCount) {
     log.debug("Loading cover months for filter");
-    final var comicDetailExample =
+    final var comicExample =
         doCreateExample(
             null,
             null,
@@ -263,7 +263,7 @@ public class DisplayableComicService {
             volume,
             pageCount);
 
-    return this.displayableComicRepository.findAll(comicDetailExample).stream()
+    return this.displayableComicRepository.findAll(comicExample).stream()
         .map(DisplayableComic::getMonthPublished)
         .distinct()
         .toList();
@@ -301,7 +301,7 @@ public class DisplayableComicService {
       final String volume,
       final Integer pageCount) {
     log.debug("Loading comic count for filter");
-    final var comicDetailExample =
+    final var comicExample =
         doCreateExample(
             coverYear,
             coverMonth,
@@ -316,7 +316,7 @@ public class DisplayableComicService {
             volume,
             pageCount);
 
-    return this.displayableComicRepository.count(comicDetailExample);
+    return this.displayableComicRepository.count(comicExample);
   }
 
   /**
@@ -326,7 +326,7 @@ public class DisplayableComicService {
    * @param pageIndex the page index
    * @param sortBy the optional sort field
    * @param sortDirection the optional sort direction
-   * @param comicDetailidList the id list
+   * @param comicidList the id list
    * @return the comics
    */
   @Transactional(readOnly = true)
@@ -335,10 +335,9 @@ public class DisplayableComicService {
       final Integer pageIndex,
       final String sortBy,
       final String sortDirection,
-      final List<Long> comicDetailidList) {
+      final List<Long> comicidList) {
     return this.displayableComicRepository.loadComicsById(
-        comicDetailidList,
-        PageRequest.of(pageIndex, pageSize, this.doCreateSort(sortBy, sortDirection)));
+        comicidList, PageRequest.of(pageIndex, pageSize, this.doCreateSort(sortBy, sortDirection)));
   }
 
   /**
@@ -568,7 +567,7 @@ public class DisplayableComicService {
       case "comic-count" -> fieldName = "comicCount";
       case "tag-value" -> fieldName = "value";
       case "store-date" -> fieldName = "storeDate";
-      default -> fieldName = "comicDetailId";
+      default -> fieldName = "comicId";
     }
 
     Sort.Direction direction = Sort.Direction.DESC;

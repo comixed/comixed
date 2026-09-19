@@ -32,7 +32,7 @@ import {
   LIBRARY_FEATURE_KEY
 } from '@app/library/reducers/library.reducer';
 import {
-  COMIC_BOOK_SELECTION_FEATURE_KEY,
+  COMIC_SELECTION_FEATURE_KEY,
   initialState as initialComicBookSelectionState
 } from '@app/comic-books/reducers/comic-selection.reducer';
 import {
@@ -93,7 +93,7 @@ import { QueryParameterService } from '@app/core/services/query-parameter.servic
 import { SCRAPE_STORY_PARAMETER } from '@app/collections/collections.constants';
 import {
   initialState as initialReadComicBooksState,
-  READ_COMIC_BOOKS_FEATURE_KEY
+  READ_COMICS_FEATURE_KEY
 } from '@app/user/reducers/read-comics.reducer';
 
 describe('StoryDetailPageComponent', () => {
@@ -111,11 +111,11 @@ describe('StoryDetailPageComponent', () => {
   const USER = USER_READER;
   const initialState = {
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
-    [COMIC_BOOK_SELECTION_FEATURE_KEY]: initialComicBookSelectionState,
-    [READ_COMIC_BOOKS_FEATURE_KEY]: initialReadComicBooksState,
+    [COMIC_SELECTION_FEATURE_KEY]: initialComicBookSelectionState,
+    [READ_COMICS_FEATURE_KEY]: initialReadComicBooksState,
     [COMIC_LIST_FEATURE_KEY]: {
       ...initialComicListState,
-      comicBooks: COMIC_LIST
+      comics: COMIC_LIST
     },
     [READING_LISTS_FEATURE_KEY]: initialReadingListsState,
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER },

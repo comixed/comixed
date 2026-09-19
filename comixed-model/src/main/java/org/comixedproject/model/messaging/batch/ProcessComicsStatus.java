@@ -35,7 +35,7 @@ public class ProcessComicsStatus {
   public static final String LOAD_FILE_CONTENTS_STEP = "load-file-contents-step";
   public static final String LOAD_PAGE_HASH_STEP = "processing-unhashed-comics";
   public static final String MARK_BLOCKED_PAGE_STEP = "mark-blocked-page-step";
-  public static final String REMOVE_DELETED_COMIC_BOOKS_STEP = "remove-deleted-comic-books-step";
+  public static final String REMOVE_DELETED_COMICS_STEP = "remove-deleted-comic-books-step";
   public static final String MOVE_COMIC_FILES_STEP = "move-comic-files-step";
   public static final String UPDATE_METADATA_STEP = "update-metadata-step";
   public static final String RECREATE_COMIC_FILE_STEP = "recreating-comic-file-step";

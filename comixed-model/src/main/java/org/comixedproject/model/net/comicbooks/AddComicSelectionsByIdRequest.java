@@ -33,9 +33,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AddComicSelectionsByIdRequest {
-  @JsonProperty("comicBookIds")
+  @JsonProperty("comicIds")
   @Getter
-  private List<Long> comicBookIds;
+  private List<Long> comicIds;
 
   @JsonProperty("selected")
   @Getter

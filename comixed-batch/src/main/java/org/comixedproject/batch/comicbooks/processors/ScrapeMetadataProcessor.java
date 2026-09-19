@@ -76,7 +76,7 @@ public class ScrapeMetadataProcessor implements ItemProcessor<Comic, Comic>, Ste
   @Override
   public Comic process(final Comic comic) {
     if (comic.isLoadingFileContents() || comic.isPurging()) {
-      log.debug("Comic not ready for batch scraping: id={}", comic.getComicDetailId());
+      log.debug("Comic not ready for batch scraping: id={}", comic.getComicId());
       return null;
     }
 
@@ -88,16 +88,16 @@ public class ScrapeMetadataProcessor implements ItemProcessor<Comic, Comic>, Ste
       return comic;
     }
 
-    log.debug("Batch scraping comic book: id={}", comic.getComicDetailId());
+    log.debug("Batch scraping comic book: id={}", comic.getComicId());
     try {
       final ComicMetadataSource metadata = comic.getMetadata();
-      log.debug("Turning off batch scraping flag: id={}", comic.getComicDetailId());
+      log.debug("Turning off batch scraping flag: id={}", comic.getComicId());
       comic.setBatchScraping(false);
       this.comicService.save(comic);
       log.debug("Scraping comic");
       this.metadataService.scrapeComic(
           metadata.getMetadataSource().getMetadataSourceId(),
-          comic.getComicDetailId(),
+          comic.getComicId(),
           metadata.getReferenceId(),
           false);
     } catch (Exception error) {

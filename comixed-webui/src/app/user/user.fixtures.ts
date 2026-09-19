@@ -77,12 +77,12 @@ export const USER_BLOCKED: User = {
   readComicBooks: []
 };
 
-export const READ_COMIC_BOOK_1 = DISPLAYABLE_COMIC_1.comicDetailId;
+export const READ_COMIC_1 = DISPLAYABLE_COMIC_1.comicId;
 
-export const READ_COMIC_BOOK_2 = DISPLAYABLE_COMIC_2.comicDetailId;
+export const READ_COMIC_2 = DISPLAYABLE_COMIC_2.comicId;
 
-export const READ_COMIC_BOOK_3 = DISPLAYABLE_COMIC_3.comicDetailId;
+export const READ_COMIC_3 = DISPLAYABLE_COMIC_3.comicId;
 
-export const READ_COMIC_BOOK_4 = DISPLAYABLE_COMIC_4.comicDetailId;
+export const READ_COMIC_4 = DISPLAYABLE_COMIC_4.comicId;
 
-export const READ_COMIC_BOOK_5 = DISPLAYABLE_COMIC_5.comicDetailId;
+export const READ_COMIC_5 = DISPLAYABLE_COMIC_5.comicId;

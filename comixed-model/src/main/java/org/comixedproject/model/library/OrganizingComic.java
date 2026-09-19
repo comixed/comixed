@@ -34,9 +34,9 @@ import org.comixedproject.model.archives.ArchiveType;
 @Table(name = "organizing_comics_view")
 public class OrganizingComic implements PublicationDetail {
   @Id
-  @Column(name = "comic_detail_id")
+  @Column(name = "comic_id")
   @Getter
-  private Long comicDetailId;
+  private Long comicId;
 
   @Column(name = "filename")
   @Getter

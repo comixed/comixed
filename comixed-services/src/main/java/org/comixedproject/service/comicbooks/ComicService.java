@@ -69,10 +69,10 @@ public class ComicService {
 
   @Transactional
   public Comic save(final Comic comic) {
-    if (Objects.nonNull(comic.getComicDetailId())) {
+    if (Objects.nonNull(comic.getComicId())) {
       log.debug("Saving comic: filename={}", comic.getFilename());
     } else {
-      log.debug("Updating comic: id={}", comic.getComicDetailId());
+      log.debug("Updating comic: id={}", comic.getComicId());
     }
     return this.comicRepository.saveAndFlush(comic);
   }
@@ -106,7 +106,7 @@ public class ComicService {
             result.getCoverDate(),
             Limit.of(1)));
 
-    log.debug("Returning comic: id={}", result.getComicDetailId());
+    log.debug("Returning comic: id={}", result.getComicId());
     return result;
   }
 
@@ -564,10 +564,10 @@ public class ComicService {
   }
 
   @Transactional(readOnly = true)
-  public Comic getByComicBookId(final Long comicBookId) throws ComicException {
-    final Comic result = this.comicRepository.findByComicBookId(comicBookId);
+  public Comic getByComicBookId(final Long comicId) throws ComicException {
+    final Comic result = this.comicRepository.findByComicBookId(comicId);
     if (result == null)
-      throw new ComicException("Comic detail not found for comic book id: " + comicBookId);
+      throw new ComicException("Comic detail not found for comic book id: " + comicId);
     return result;
   }
 
@@ -927,7 +927,7 @@ public class ComicService {
   public void updateMultipleComics(final List<Long> comicIds) throws ComicException {
     log.debug("Updating details for {} comic{}", comicIds.size(), comicIds.size() == 1 ? "" : "s");
     for (long comicId : comicIds) {
-      log.trace("Loading comicBook: id={}", comicId);
+      log.trace("Loading comic: id={}", comicId);
       final Comic comic = this.comicRepository.findByComicBookId(comicId);
       if (Objects.isNull(comic))
         throw new ComicException(String.format("No such comic book to update: id=%d", comicId));
@@ -945,7 +945,7 @@ public class ComicService {
         comicId -> {
           log.trace("Loading comic: id={}", comicId);
           final Comic comic = this.comicRepository.findByComicBookId(comicId);
-          log.trace("Firing event: rescan comicBook");
+          log.trace("Firing event: rescan comic");
           this.comicStateAdaptor.fireEvent(comic, ComicEvent.rescanComicBookFile);
         });
   }
@@ -963,7 +963,7 @@ public class ComicService {
             ? this.comicRepository.findByFilename(standardizeFilename)
             : this.comicRepository.findByFilenameCaseInsensitive(standardizeFilename);
     if (Objects.nonNull(comic)) {
-      log.debug("Marking comic book as found: id={}", comic.getComicDetailId());
+      log.debug("Marking comic book as found: id={}", comic.getComicId());
       this.comicStateAdaptor.fireEvent(comic, ComicEvent.comicFileFound);
     }
   }
@@ -981,7 +981,7 @@ public class ComicService {
             ? this.comicRepository.findByFilename(standardizeFilename)
             : this.comicRepository.findByFilenameCaseInsensitive(standardizeFilename);
     if (Objects.nonNull(comic)) {
-      log.debug("Marking comic book as found: id={}", comic.getComicDetailId());
+      log.debug("Marking comic book as found: id={}", comic.getComicId());
       this.comicStateAdaptor.fireEvent(comic, ComicEvent.comicFileMissing);
     }
   }
@@ -1125,7 +1125,7 @@ public class ComicService {
       case "series-volume" -> fieldName = "id.volume";
       case "in-library" -> fieldName = "inLibrary";
       case "total-issues" -> fieldName = "totalIssues";
-      default -> fieldName = "comicDetail.series";
+      default -> fieldName = "comic.series";
     }
 
     Sort.Direction direction = Sort.Direction.DESC;
@@ -1149,7 +1149,7 @@ public class ComicService {
 
   @Transactional
   public void deleteComic(final Comic comic) {
-    log.debug("Deleting comic: id={}", comic.getComicDetailId());
+    log.debug("Deleting comic: id={}", comic.getComicId());
     this.comicRepository.delete(comic);
   }
 }

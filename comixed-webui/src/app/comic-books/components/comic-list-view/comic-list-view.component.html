@@ -270,7 +270,7 @@
         <mat-cell *matCellDef="let entry">
           <span class="cx-width-100 cx-text-nowrap cx-padding-5">
             <a
-              [routerLink]="['/comics', entry.item.comicDetailId]"
+              [routerLink]="['/comics', entry.item.comicId]"
               (click)="$event.stopImmediatePropagation()"
             >
               {{ entry.item.issueNumber }}
@@ -322,10 +322,10 @@
       <mat-row
         *matRowDef="let row; columns: displayedColumns"
         [class.cx-selected-row]="
-          selectedIds.includes(row.comicDetailId) || row.selected
+          selectedIds.includes(row.comicId) || row.selected
         "
         [class.cx-missing-comic-file]="row.item.missing"
-        [routerLink]="['/comics', row.item.comicDetailId]"
+        [routerLink]="['/comics', row.item.comicId]"
       ></mat-row>
       <tr class="mat-row" *matNoDataRow>
         <td class="mat-cell" colspan="4">
@@ -371,7 +371,7 @@
   <button mat-menu-item [matMenuTriggerFor]="currentComicConvertMenu">
     <mat-label>{{ "library.context-menu.convert" | translate }}</mat-label>
   </button>
-  @if ((comicBookPluginList$ | async).length > 0) {
+  @if ((comicPluginList$ | async).length > 0) {
     <button mat-menu-item [matMenuTriggerFor]="currentComicPluginMenu">
       <mat-label>
         {{ "library.context-menu.plugin-menu" | translate }}
@@ -440,7 +440,7 @@
 </mat-menu>
 
 <mat-menu #currentComicPluginMenu="matMenu">
-  @for (plugin of comicBookPluginList$ | async; track plugin) {
+  @for (plugin of comicPluginList$ | async; track plugin) {
     <button
       mat-menu-item
       (click)="

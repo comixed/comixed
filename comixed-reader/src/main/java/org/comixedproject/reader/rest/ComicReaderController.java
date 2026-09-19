@@ -177,18 +177,18 @@ public class ComicReaderController {
    * Returns all volumes for a given publisher and series. If the unread parameter is present then
    * only those publishers with unread comics are returned.
    *
-   * @param comicBookId the comic book id
+   * @param comicId the comic book id
    * @return the comic book content
    * @throws ComicException if the id is invalid
    */
-  @GetMapping(value = API_ROOT + "/comics/{comicBookId}/download")
+  @GetMapping(value = API_ROOT + "/comics/{comicId}/download")
   @PreAuthorize("hasRole('READER')")
   @Timed(value = "comixed.reader.library.download-comic")
   public ResponseEntity<InputStreamResource> downloadComic(
-      @PathVariable("comicBookId") final long comicBookId) throws Exception {
+      @PathVariable("comicId") final long comicId) throws Exception {
     try {
-      log.info("Downloading comicBook: id={}", comicBookId);
-      Comic comic = this.comicService.getComic(comicBookId);
+      log.info("Downloading comic: id={}", comicId);
+      Comic comic = this.comicService.getComic(comicId);
       log.trace("Returning encoded file: {}", comic.getFilename());
       return this.webResponseEncoder.encode(
           (int) comic.getFile().length(),
@@ -196,7 +196,7 @@ public class ComicReaderController {
           comic.getBaseFilename(),
           MediaType.parseMediaType(comic.getArchiveType().getMimeType()));
     } catch (ComicException | FileNotFoundException error) {
-      throw new ReaderException("Failed to download comic: id=" + comicBookId, error);
+      throw new ReaderException("Failed to download comic: id=" + comicId, error);
     }
   }
 }

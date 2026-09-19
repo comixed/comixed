@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="011_2785_recreate_views.xml" author="mcpierce">
+
+        <createView replaceIfExists="true" viewName="displayable_comics_view">
+            SELECT DISTINCT c.comic_id                      as comic_id,
+                            (SELECT reference_id
+                             FROM comic_metadata_sources_v4 m
+                             WHERE m.comic_id = c.comic_id) AS reference_id,
+                            c.filename                      as filename,
+                            c.archive_type                  as archive_type,
+                            c.comic_state                   as comic_state,
+                            c.missing                       as is_missing,
+                            CASE
+                                WHEN EXISTS(SELECT s.comic_id
+                                            FROM comic_metadata_sources_v4 s
+                                            WHERE s.comic_id = c.comic_id)
+                                    THEN false
+                                ELSE true END               AS is_unscraped,
+                            c.comic_type                    as comic_type,
+                            c.sort_name                     as sort_name,
+                            c.publisher                     as publisher,
+                            c.imprint                       as imprint,
+                            c.series                        as series,
+                            c.volume                        as volume,
+                            c.issue_number                  as issue_number,
+                            c.description                   as description,
+                            c.notes                         as notes,
+                            (SELECT RIGHT (CONCAT('0000000000', c.issue_number), 10)) as sortable_issue_number, c.title as title, (
+            SELECT COUNT(*)
+            FROM comic_pages_v4 cp
+            WHERE cp.comic_id = c.comic_id) as page_count
+                , c.cover_date as cover_date
+                , CASE WHEN c.cover_date IS NULL THEN 0 ELSE (
+            SELECT EXTRACT(MONTH FROM cover_date))
+            END
+            as month_published
+                    , CASE WHEN c.cover_date IS NULL THEN 0 ELSE (SELECT EXTRACT(YEAR FROM cover_date))
+            END
+            as year_published,
+                            c.store_date as store_date,
+                            c.added_date as added_date,
+                            c.last_modified_date as last_modified_date
+            FROM comics_v4 c
+        </createView>
+
+        <createView replaceIfExists="true" viewName="duplicate_comics_view">
+            SELECT DISTINCT c.publisher    as publisher,
+                            c.series       as series,
+                            c.volume       as volume,
+                            c.issue_number as issue_number,
+                            c.cover_date   as cover_date,
+                            COUNT(*) as count
+            FROM comics_v4 c
+            WHERE publisher IS NOT NULL
+              AND LENGTH (publisher)
+                > 0
+              AND series IS NOT NULL
+              AND LENGTH (series)
+                > 0
+              AND volume IS NOT NULL
+              AND LENGTH (volume)
+                > 0
+              AND issue_number IS NOT NULL
+              AND LENGTH (issue_number)
+                > 0
+              AND cover_date IS NOT NULL
+            GROUP BY c.publisher, c.series, c.volume, c.issue_number, c.cover_date
+            HAVING COUNT(*) > 1
+        </createView>
+
+        <createView replaceIfExists="true" viewName="duplicate_pages_view">
+            SELECT DISTINCT p.file_hash,
+                            (SELECT COUNT(DISTINCT cp.comic_id)
+                             FROM comic_pages_v4 cp
+                             WHERE cp.file_hash = p.file_hash) as comic_count
+            FROM comic_pages_v4 p
+            WHERE p.file_hash IN (SELECT file_hash FROM comic_pages_v4 GROUP BY file_hash HAVING COUNT(*) > 1);
+        </createView>
+
+        <createView replaceIfExists="true" viewName="organizing_comics_view">
+            SELECT c.comic_id AS comic_id,
+                   c.filename,
+                   c.archive_type,
+                   c.publisher,
+                   c.imprint,
+                   c.series,
+                   c.volume,
+                   c.issue_number,
+                   c.title,
+                   c.cover_date,
+                   c.store_date,
+                   CASE
+                       WHEN EXISTS(SELECT *
+                                    FROM comic_metadata_sources_v4
+                                    WHERE comic_metadata_sources_v4.comic_id = c.comic_id)
+                           THEN true
+                       ELSE false
+                       END    AS is_scraped
+            FROM comics_v4 c
+            WHERE c.loading_file_contents IS FALSE
+              AND c.organizing IS TRUE
+              AND c.purging IS FALSE
+              AND c.updating_metadata IS FALSE
+              AND c.target_archive_type IS NULL
+              AND c.editing_metadata IS FALSE
+        </createView>
+
+        <createView replaceIfExists="true" viewName="`publisher_details_view`">
+            SELECT c1.publisher                                                          as name,
+                   (SELECT COUNT(*) FROM comics_v4 c2 WHERE c2.publisher = c1.publisher) as issue_count,
+                   (SELECT COUNT(DISTINCT c2.series)
+                    FROM comics_v4 c2
+                    WHERE c2.publisher = c1.publisher
+                      AND c2.series IS NOT NULL
+                      AND LENGTH(c2.series) > 0)                                          AS series_count
+            FROM comics_v4 c1
+            GROUP BY c1.publisher;
+        </createView>
+
+        <createView replaceIfExists="true" viewName="series_details_view">
+            SELECT c.publisher,
+                   c.series,
+                   c.volume,
+                   (COUNT(*))                  AS in_library,
+                   (SELECT COUNT(*)
+                    FROM issues_v4 i
+                    WHERE i.publisher = c.publisher
+                      AND i.series = c.series
+                      AND i.volume = c.volume) AS issue_count
+            FROM comics_v4 c
+            GROUP BY c.publisher, c.series, c.volume;
+        </createView>
+
+        <createView replaceIfExists="true" viewName="stories_view">
+            SELECT t.tag_value                     AS story_name,
+                   (SELECT COUNT(*)
+                    FROM comics_v4 c
+                    WHERE t.comic_id = c.comic_id) AS comic_count
+            FROM comic_tags_v4 t
+            WHERE t.tag_type = 'STORY'
+            UNION
+            SELECT s.story_name                                     AS story_name,
+                   (SELECT COUNT(*)
+                    FROM scraped_story_entries_v4 se
+                    WHERE se.scraped_story_id = s.scraped_story_id) AS comic_count
+            FROM scraped_stories_v4 s;
+        </createView>
+
+    </changeSet>
+</databaseChangeLog>

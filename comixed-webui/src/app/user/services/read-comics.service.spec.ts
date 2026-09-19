@@ -20,8 +20,8 @@ import { TestBed } from '@angular/core/testing';
 import { ReadComicsService } from './read-comics.service';
 import { interpolate } from '@app/core';
 import {
-  SET_COMIC_BOOK_READ_STATE_URL,
-  SET_SELECTED_COMIC_BOOKS_READ_STATE_URL
+  SET_COMIC_READ_STATE_URL,
+  SET_SELECTED_COMICS_READ_STATE_URL
 } from '@app/user/user.constants';
 import {
   HttpResponse,
@@ -61,12 +61,12 @@ describe('ReadComicsService', () => {
   describe('marking a single comic book', () => {
     it('marks them as read', () => {
       service
-        .setSingleReadState({ comicId: COMIC.comicDetailId, read: true })
+        .setSingleReadState({ comicId: COMIC.comicId, read: true })
         .subscribe(response => expect(response.status).toEqual(200));
 
       const req = httpMock.expectOne(
-        interpolate(SET_COMIC_BOOK_READ_STATE_URL, {
-          comicId: COMIC.comicDetailId
+        interpolate(SET_COMIC_READ_STATE_URL, {
+          comicId: COMIC.comicId
         })
       );
       expect(req.request.method).toEqual('PUT');
@@ -75,12 +75,12 @@ describe('ReadComicsService', () => {
 
     it('marks them as unread', () => {
       service
-        .setSingleReadState({ comicId: COMIC.comicDetailId, read: false })
+        .setSingleReadState({ comicId: COMIC.comicId, read: false })
         .subscribe(response => expect(response.status).toEqual(200));
 
       const req = httpMock.expectOne(
-        interpolate(SET_COMIC_BOOK_READ_STATE_URL, {
-          comicId: COMIC.comicDetailId
+        interpolate(SET_COMIC_READ_STATE_URL, {
+          comicId: COMIC.comicId
         })
       );
       expect(req.request.method).toEqual('DELETE');
@@ -95,7 +95,7 @@ describe('ReadComicsService', () => {
         .subscribe(response => expect(response.status).toEqual(200));
 
       const req = httpMock.expectOne(
-        interpolate(SET_SELECTED_COMIC_BOOKS_READ_STATE_URL)
+        interpolate(SET_SELECTED_COMICS_READ_STATE_URL)
       );
       expect(req.request.method).toEqual('PUT');
       req.flush(new HttpResponse({ status: 200 }));
@@ -107,7 +107,7 @@ describe('ReadComicsService', () => {
         .subscribe(response => expect(response.status).toEqual(200));
 
       const req = httpMock.expectOne(
-        interpolate(SET_SELECTED_COMIC_BOOKS_READ_STATE_URL)
+        interpolate(SET_SELECTED_COMICS_READ_STATE_URL)
       );
       expect(req.request.method).toEqual('DELETE');
       req.flush(new HttpResponse({ status: 200 }));

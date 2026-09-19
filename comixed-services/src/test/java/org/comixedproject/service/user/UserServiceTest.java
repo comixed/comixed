@@ -55,8 +55,8 @@ class UserServiceTest {
       "/User/comixedreader/Documents/../Downloads/../Library/../Documents/comics";
   private static final boolean TEST_ADMIN = RandomUtils.nextBoolean();
   private static final long TEST_UNREAD_COMIC_IDS = 750;
-  private static final long TEST_TOTAL_COMIC_BOOKS = 800L;
-  private static final long TEST_READ_COMIC_IDS = TEST_TOTAL_COMIC_BOOKS - TEST_UNREAD_COMIC_IDS;
+  private static final long TEST_TOTAL_COMICS = 800L;
+  private static final long TEST_READ_COMIC_IDS = TEST_TOTAL_COMICS - TEST_UNREAD_COMIC_IDS;
 
   @InjectMocks private UserService service;
   @Mock private ComiXedUserRepository userRepository;
@@ -77,7 +77,7 @@ class UserServiceTest {
   private List<ComiXedUser> userList = new ArrayList<>();
   private List<ComiXedRole> roleList = new ArrayList<>();
   private Set<Long> readComicBookIdList = new HashSet<>();
-  private List<Long> comicBookIdList = new ArrayList<>();
+  private List<Long> comicIdList = new ArrayList<>();
 
   @BeforeEach
   void setUp() {
@@ -90,8 +90,8 @@ class UserServiceTest {
     Mockito.when(userRepository.findAll()).thenReturn(userList);
     Mockito.when(userRepository.save(userArgumentCaptor.capture())).thenReturn(savedUser);
     Mockito.when(userRepository.saveAndFlush(userArgumentCaptor.capture())).thenReturn(savedUser);
-    for (long index = 0; index < TEST_TOTAL_COMIC_BOOKS; index++) comicBookIdList.add(index);
-    Mockito.when(comicService.getAllIds()).thenReturn(comicBookIdList);
+    for (long index = 0; index < TEST_TOTAL_COMICS; index++) comicIdList.add(index);
+    Mockito.when(comicService.getAllIds()).thenReturn(comicIdList);
   }
 
   @Test
@@ -583,23 +583,22 @@ class UserServiceTest {
   }
 
   @Test
-  void getComicDetailIdsForUser_invalidUser() {
+  void getComicIdsForUser_invalidUser() {
     Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(null);
 
-    assertThrows(
-        ComiXedUserException.class, () -> service.getComicDetailIdsForUser(TEST_EMAIL, true));
+    assertThrows(ComiXedUserException.class, () -> service.getComicIdsForUser(TEST_EMAIL, true));
   }
 
   @Test
-  void getComicDetailIdsForUser_unread() throws ComiXedUserException {
-    final Collection<Long> result = service.getComicDetailIdsForUser(TEST_EMAIL, true);
+  void getComicIdsForUser_unread() throws ComiXedUserException {
+    final Collection<Long> result = service.getComicIdsForUser(TEST_EMAIL, true);
 
     assertEquals(TEST_UNREAD_COMIC_IDS, result.size());
   }
 
   @Test
-  void getComicDetailIdsForUser_read() throws ComiXedUserException {
-    final Collection<Long> result = service.getComicDetailIdsForUser(TEST_EMAIL, false);
+  void getComicIdsForUser_read() throws ComiXedUserException {
+    final Collection<Long> result = service.getComicIdsForUser(TEST_EMAIL, false);
 
     assertEquals(TEST_READ_COMIC_IDS, result.size());
   }

@@ -146,7 +146,7 @@ public class ComicFileService {
     }
 
     final String filename = file.getCanonicalPath().replace("\\", "/");
-    log.debug("Checking if comicBook file is already in the database: {}", filename);
+    log.debug("Checking if comic file is already in the database: {}", filename);
     return !this.comicService.filenameFound(filename);
   }
 
@@ -161,7 +161,7 @@ public class ComicFileService {
     for (int index = 0; index < filenames.size(); index++) {
       final String filename = filenames.get(index);
       if (!this.comicService.filenameFound(filename)) {
-        doImportComicFile(filename, ComicEvent.comicBookImported);
+        doImportComicFile(filename, ComicEvent.comicImported);
       }
     }
     log.debug("Initiating processing");
@@ -176,9 +176,9 @@ public class ComicFileService {
 
   private void doImportComicFile(final String filename, final ComicEvent event) {
     try {
-      log.debug("Creating comicBook: filename={}", filename);
+      log.debug("Creating comic: filename={}", filename);
       var comic = this.comicAdaptor.createComic(filename);
-      log.trace("Scraping comicBook filename");
+      log.trace("Scraping comic filename");
       final FilenameMetadata metadata =
           this.filenameScrapingRuleService.loadFilenameMetadata(comic.getBaseFilename());
       if (metadata.isFound()) {

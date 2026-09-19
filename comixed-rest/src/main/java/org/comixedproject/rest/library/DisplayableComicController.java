@@ -235,14 +235,14 @@ public class DisplayableComicController implements InitializingBean, ComicStateL
       log.info("Cache hit for tag: {}={}", tagType, tagValue);
       return this.tagAndValueCache.get(key);
     }
-    final List<DisplayableComic> comicDetails =
+    final List<DisplayableComic> comics =
         this.displayableComicService.loadComicsByTagTypeAndValue(
             pageSize, pageIndex, tagType, tagValue, sortBy, sortDirection);
     final long filteredComics =
         this.displayableComicService.getComicCountForTagTypeAndValue(tagType, tagValue);
     final LoadComicsResponse result =
         new LoadComicsResponse(
-            comicDetails,
+            comics,
             this.displayableComicService.getCoverYearsForTagTypeAndValue(tagType, tagValue),
             this.displayableComicService.getCoverMonthsForTagTypeAndValue(tagType, tagValue),
             filteredComics,
@@ -278,8 +278,8 @@ public class DisplayableComicController implements InitializingBean, ComicStateL
     final List<DisplayableComic> comics =
         this.displayableComicService.loadUnreadComics(
             user, pageSize, pageIndex, sortBy, sortDirection);
-    final long comicBookCount = this.comicService.getComicCount();
-    final long filteredCount = comicBookCount - user.getReadComicBooks().size();
+    final long comicCount = this.comicService.getComicCount();
+    final long filteredCount = comicCount - user.getReadComicBooks().size();
     return new LoadComicsResponse(
         comics, Collections.emptyList(), Collections.emptyList(), filteredCount, filteredCount);
   }

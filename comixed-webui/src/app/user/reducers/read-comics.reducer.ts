@@ -22,7 +22,7 @@ import {
   setReadComicBooks
 } from '@app/user/actions/read-comic-books.actions';
 
-export const READ_COMIC_BOOKS_FEATURE_KEY = 'read_comics_state';
+export const READ_COMICS_FEATURE_KEY = 'read_comics_state';
 
 export interface ReadComicsState {
   entries: number[];
@@ -42,6 +42,6 @@ export const reducer = createReducer(
 );
 
 export const readComicBooksFeature = createFeature({
-  name: READ_COMIC_BOOKS_FEATURE_KEY,
+  name: READ_COMICS_FEATURE_KEY,
   reducer
 });

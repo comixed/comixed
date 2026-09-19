@@ -47,7 +47,7 @@ import {
   MESSAGING_FEATURE_KEY
 } from '@app/messaging/reducers/messaging.reducer';
 import {
-  IMPORT_COMIC_BOOKS_FEATURE_KEY,
+  IMPORT_COMICS_FEATURE_KEY,
   initialState as initialImportCountState
 } from '@app/reducers/import-comics.reducer';
 import {
@@ -75,7 +75,7 @@ import {
   initialState as initialDarkThemeState
 } from '@app/reducers/dark-theme.reducer';
 import {
-  COMIC_BOOK_SELECTION_FEATURE_KEY,
+  COMIC_SELECTION_FEATURE_KEY,
   initialState as initialComicBookSelectionState
 } from '@app/comic-books/reducers/comic-selection.reducer';
 import {
@@ -85,7 +85,7 @@ import {
 import { BusyIcon } from '@app/core/actions/busy.actions';
 import {
   initialState as initialReadComicBooksState,
-  READ_COMIC_BOOKS_FEATURE_KEY
+  READ_COMICS_FEATURE_KEY
 } from '@app/user/reducers/read-comics.reducer';
 import { Subscription } from 'rxjs';
 import { WebSocketService } from '@app/messaging';
@@ -108,11 +108,11 @@ describe('AppComponent', () => {
     [USER_FEATURE_KEY]: initialUserState,
     [BUSY_FEATURE_KEY]: initialBusyState,
     [MESSAGING_FEATURE_KEY]: initialMessagingState,
-    [IMPORT_COMIC_BOOKS_FEATURE_KEY]: initialImportCountState,
-    [READ_COMIC_BOOKS_FEATURE_KEY]: initialReadComicBooksState,
+    [IMPORT_COMICS_FEATURE_KEY]: initialImportCountState,
+    [READ_COMICS_FEATURE_KEY]: initialReadComicBooksState,
     [READING_LISTS_FEATURE_KEY]: initialReadingListsState,
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
-    [COMIC_BOOK_SELECTION_FEATURE_KEY]: initialComicBookSelectionState,
+    [COMIC_SELECTION_FEATURE_KEY]: initialComicBookSelectionState,
     [DARK_THEME_FEATURE_KEY]: initialDarkThemeState,
     [FEATURE_ENABLED_FEATURE_KEY]: { ...initialFeatureEnabledState },
     [BATCH_PROCESSES_FEATURE_KEY]: initialBatchProcessesState,

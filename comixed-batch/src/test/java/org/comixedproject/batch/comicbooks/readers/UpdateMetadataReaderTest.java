@@ -1,5 +1,5 @@
 /*
- * ComiXed - A digital comicBook book library management application.
+ * ComiXed - A digital comic book library management application.
  * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
@@ -63,12 +63,12 @@ class UpdateMetadataReaderTest {
   void read_noneRemaining() {
     when(comicService.findComicsWithMetadataToUpdate(anyInt())).thenReturn(comicList);
 
-    reader.comicBookList = comicList;
+    reader.comicList = comicList;
 
     final Comic result = reader.read();
 
     assertNull(result);
-    assertNull(reader.comicBookList);
+    assertNull(reader.comicList);
 
     verify(comicService).findComicsWithMetadataToUpdate(reader.getChunkSize());
   }
@@ -80,7 +80,7 @@ class UpdateMetadataReaderTest {
     final Comic result = reader.read();
 
     assertNull(result);
-    assertNull(reader.comicBookList);
+    assertNull(reader.comicList);
 
     verify(comicService).findComicsWithMetadataToUpdate(reader.getChunkSize());
   }

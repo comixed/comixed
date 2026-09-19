@@ -100,7 +100,7 @@ describe('DisplayableComicService', () => {
   const SERIES = COMIC_LIST[0].series;
   const VOLUME = COMIC_LIST[0].volume;
   const PAGE_COUNT = 23;
-  const IDS = COMIC_LIST.map(entry => entry.comicDetailId);
+  const IDS = COMIC_LIST.map(entry => entry.comicId);
   const TOTAL_COUNT = COMIC_LIST.length * 2;
   const FILTERED_COUNT = Math.floor(TOTAL_COUNT * 0.75);
   const READING_LIST_ID = READING_LIST_3.readingListId;

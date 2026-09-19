@@ -106,7 +106,7 @@ public class ComicFileAdaptor {
   }
 
   /**
-   * Generates a filename for the given comicBook based on the supplied rule.
+   * Generates a filename for the given comic based on the supplied rule.
    *
    * @param detail the publication details
    * @param filename the current filename
@@ -177,7 +177,7 @@ public class ComicFileAdaptor {
                 directory,
                 File.separator,
                 sanitizeFilename(baseFilename)));
-    log.trace("Relative comicBook filename: {}", result);
+    log.trace("Relative comic filename: {}", result);
     return result;
   }
 

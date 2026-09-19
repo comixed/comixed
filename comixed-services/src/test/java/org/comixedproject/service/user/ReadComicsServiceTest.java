@@ -40,14 +40,14 @@ import org.mockito.quality.Strictness;
 @MockitoSettings(strictness = Strictness.LENIENT)
 class ReadComicsServiceTest {
   private static final String TEST_EMAIL = "reader@comixedproject.org";
-  private static final Long TEST_COMIC_DETAIL_ID = 717L;
+  private static final Long TEST_COMIC_ID = 717L;
 
   @InjectMocks private ReadComicsService service;
   @Mock private UserService userService;
   @Mock private ComiXedUser user;
   @Mock private Set<Long> readComicBookList;
 
-  private List<Long> comicDetailIdList = new ArrayList<>();
+  private List<Long> comicIdList = new ArrayList<>();
 
   @BeforeEach
   void setUp() throws ComiXedUserException {
@@ -60,17 +60,16 @@ class ReadComicsServiceTest {
     when(userService.findByEmail(anyString())).thenThrow(ComiXedUserException.class);
 
     assertThrows(
-        ReadComicsException.class,
-        () -> service.markComicBookAsRead(TEST_EMAIL, TEST_COMIC_DETAIL_ID));
+        ReadComicsException.class, () -> service.markComicBookAsRead(TEST_EMAIL, TEST_COMIC_ID));
   }
 
   @Test
   void markComicBookAsRead() throws ReadComicsException, ComiXedUserException {
-    service.markComicBookAsRead(TEST_EMAIL, TEST_COMIC_DETAIL_ID);
+    service.markComicBookAsRead(TEST_EMAIL, TEST_COMIC_ID);
 
     verify(userService).findByEmail(TEST_EMAIL);
     verify(user).getReadComicBooks();
-    verify(readComicBookList).add(TEST_COMIC_DETAIL_ID);
+    verify(readComicBookList).add(TEST_COMIC_ID);
   }
 
   @Test
@@ -78,26 +77,25 @@ class ReadComicsServiceTest {
     when(userService.findByEmail(anyString())).thenThrow(ComiXedUserException.class);
 
     assertThrows(
-        ReadComicsException.class,
-        () -> service.unmarkComicBookAsRead(TEST_EMAIL, TEST_COMIC_DETAIL_ID));
+        ReadComicsException.class, () -> service.unmarkComicBookAsRead(TEST_EMAIL, TEST_COMIC_ID));
   }
 
   @Test
   void unmarkComicBookAsRead() throws ReadComicsException, ComiXedUserException {
-    service.unmarkComicBookAsRead(TEST_EMAIL, TEST_COMIC_DETAIL_ID);
+    service.unmarkComicBookAsRead(TEST_EMAIL, TEST_COMIC_ID);
 
     verify(userService).findByEmail(TEST_EMAIL);
     verify(user).getReadComicBooks();
-    verify(readComicBookList).remove(TEST_COMIC_DETAIL_ID);
+    verify(readComicBookList).remove(TEST_COMIC_ID);
   }
 
   @Test
   void markSelectedAsRead() throws ReadComicsException, ComiXedUserException {
-    service.markSelectionsAsRead(TEST_EMAIL, comicDetailIdList);
+    service.markSelectionsAsRead(TEST_EMAIL, comicIdList);
 
     verify(userService).findByEmail(TEST_EMAIL);
     verify(user).getReadComicBooks();
-    verify(readComicBookList).addAll(comicDetailIdList);
+    verify(readComicBookList).addAll(comicIdList);
   }
 
   @Test
@@ -105,16 +103,15 @@ class ReadComicsServiceTest {
     when(userService.findByEmail(anyString())).thenThrow(ComiXedUserException.class);
 
     assertThrows(
-        ReadComicsException.class,
-        () -> service.unmarkSelectionsAsRead(TEST_EMAIL, comicDetailIdList));
+        ReadComicsException.class, () -> service.unmarkSelectionsAsRead(TEST_EMAIL, comicIdList));
   }
 
   @Test
   void unmarkSelectedAsRead() throws ReadComicsException, ComiXedUserException {
-    service.unmarkSelectionsAsRead(TEST_EMAIL, comicDetailIdList);
+    service.unmarkSelectionsAsRead(TEST_EMAIL, comicIdList);
 
     verify(userService).findByEmail(TEST_EMAIL);
     verify(user).getReadComicBooks();
-    verify(readComicBookList).removeAll(comicDetailIdList);
+    verify(readComicBookList).removeAll(comicIdList);
   }
 }

@@ -19,11 +19,11 @@
 import { TestBed } from '@angular/core/testing';
 import { UserService } from './user.service';
 import {
-  READ_COMIC_BOOK_1,
-  READ_COMIC_BOOK_2,
-  READ_COMIC_BOOK_3,
-  READ_COMIC_BOOK_4,
-  READ_COMIC_BOOK_5,
+  READ_COMIC_1,
+  READ_COMIC_2,
+  READ_COMIC_3,
+  READ_COMIC_4,
+  READ_COMIC_5,
   USER_ADMIN,
   USER_BLOCKED,
   USER_READER
@@ -85,14 +85,14 @@ import {
 
 describe('UserService', () => {
   const USERS = [USER_ADMIN, USER_BLOCKED, USER_READER];
-  const READ_COMIC_BOOKS = [
-    READ_COMIC_BOOK_1,
-    READ_COMIC_BOOK_2,
-    READ_COMIC_BOOK_3,
-    READ_COMIC_BOOK_4,
-    READ_COMIC_BOOK_5
+  const READ_COMICS = [
+    READ_COMIC_1,
+    READ_COMIC_2,
+    READ_COMIC_3,
+    READ_COMIC_4,
+    READ_COMIC_5
   ];
-  const USER = { ...USER_READER, readComicBooks: READ_COMIC_BOOKS };
+  const USER = { ...USER_READER, readComicBooks: READ_COMICS };
   const EMAIL = USER.email;
   const PASSWORD = 'this!is!my!password';
   const PREFERENCE_NAME = 'user.preference';
@@ -300,7 +300,7 @@ describe('UserService', () => {
 
       it('sets the read comic books list', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          setReadComicBooks({ entries: READ_COMIC_BOOKS })
+          setReadComicBooks({ entries: READ_COMICS })
         );
       });
     });

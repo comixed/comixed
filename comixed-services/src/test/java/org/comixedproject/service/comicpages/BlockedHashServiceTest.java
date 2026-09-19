@@ -98,7 +98,6 @@ class BlockedHashServiceTest {
   @Mock private InputStream inputStream;
   @Mock private List<DuplicatePage> duplicatePageList;
   @Mock private ComicPage page;
-  @Mock private Comic comicBook;
   @Mock private Comic comic;
   @Mock private DataEncoder dataEncoder;
   @Mock private LoadDuplicatePageListResponse loadDuplicatePageListResponse;

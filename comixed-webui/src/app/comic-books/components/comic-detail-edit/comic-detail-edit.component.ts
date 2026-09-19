@@ -82,7 +82,7 @@ import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 export class ComicDetailEditComponent implements OnInit {
   @Input() isAdmin = false;
 
-  comicBookForm: UntypedFormGroup;
+  comicForm: UntypedFormGroup;
 
   imprints$ = new BehaviorSubject<Imprint[]>([]);
   imprintOptions$ = new BehaviorSubject<SelectionOption<Imprint>[]>([]);
@@ -97,7 +97,7 @@ export class ComicDetailEditComponent implements OnInit {
 
   constructor() {
     this.logger.trace('Building comic book details form');
-    this.comicBookForm = this.formBuilder.group({
+    this.comicForm = this.formBuilder.group({
       comicType: ['', Validators.required],
       publisher: ['', Validators.required],
       imprint: [''],
@@ -142,65 +142,65 @@ export class ComicDetailEditComponent implements OnInit {
       .subscribe();
   }
 
-  private _comicBook: DisplayableComic;
+  private _comic: DisplayableComic;
 
-  get comicBook(): DisplayableComic {
-    const coverDate = this.comicBookForm.controls.coverDate.value
-      ? new Date(this.comicBookForm.controls.coverDate.value).getTime()
+  get comic(): DisplayableComic {
+    const coverDate = this.comicForm.controls.coverDate.value
+      ? new Date(this.comicForm.controls.coverDate.value).getTime()
       : null;
-    const storeDate = this.comicBookForm.controls.storeDate.value
-      ? new Date(this.comicBookForm.controls.storeDate.value).getTime()
+    const storeDate = this.comicForm.controls.storeDate.value
+      ? new Date(this.comicForm.controls.storeDate.value).getTime()
       : null;
     return {
-      ...this._comicBook,
-      comicType: this.comicBookForm.controls.comicType.value,
-      publisher: this.comicBookForm.controls.publisher.value,
-      series: this.comicBookForm.controls.series.value,
-      volume: this.comicBookForm.controls.volume.value,
-      issueNumber: this.comicBookForm.controls.issueNumber.value,
-      imprint: this.comicBookForm.controls.imprint.value,
-      sortName: this.comicBookForm.controls.sortName.value,
-      title: this.comicBookForm.controls.title.value,
+      ...this._comic,
+      comicType: this.comicForm.controls.comicType.value,
+      publisher: this.comicForm.controls.publisher.value,
+      series: this.comicForm.controls.series.value,
+      volume: this.comicForm.controls.volume.value,
+      issueNumber: this.comicForm.controls.issueNumber.value,
+      imprint: this.comicForm.controls.imprint.value,
+      sortName: this.comicForm.controls.sortName.value,
+      title: this.comicForm.controls.title.value,
       coverDate,
       storeDate,
-      notes: this.comicBookForm.controls.notes.value
+      notes: this.comicForm.controls.notes.value
     } as DisplayableComic;
   }
 
-  @Input() set comicBook(comic: DisplayableComic) {
-    this._comicBook = comic;
-    this.comicBookForm.controls.comicType.setValue(comic.comicType);
-    this.comicBookForm.controls.publisher.setValue(comic.publisher);
-    this.comicBookForm.controls.series.setValue(comic.series);
-    this.comicBookForm.controls.volume.setValue(comic.volume);
-    this.comicBookForm.controls.issueNumber.setValue(comic.issueNumber);
-    this.comicBookForm.controls.imprint.setValue(comic.imprint);
-    this.comicBookForm.controls.sortName.setValue(comic.sortName);
-    this.comicBookForm.controls.title.setValue(comic.title);
+  @Input() set comic(comic: DisplayableComic) {
+    this._comic = comic;
+    this.comicForm.controls.comicType.setValue(comic.comicType);
+    this.comicForm.controls.publisher.setValue(comic.publisher);
+    this.comicForm.controls.series.setValue(comic.series);
+    this.comicForm.controls.volume.setValue(comic.volume);
+    this.comicForm.controls.issueNumber.setValue(comic.issueNumber);
+    this.comicForm.controls.imprint.setValue(comic.imprint);
+    this.comicForm.controls.sortName.setValue(comic.sortName);
+    this.comicForm.controls.title.setValue(comic.title);
     if (comic.coverDate) {
-      this.comicBookForm.controls.coverDate.setValue(new Date(comic.coverDate));
+      this.comicForm.controls.coverDate.setValue(new Date(comic.coverDate));
     } else {
-      this.comicBookForm.controls.coverDate.setValue(null);
+      this.comicForm.controls.coverDate.setValue(null);
     }
     if (comic.storeDate) {
-      this.comicBookForm.controls.storeDate.setValue(new Date(comic.storeDate));
+      this.comicForm.controls.storeDate.setValue(new Date(comic.storeDate));
     } else {
-      this.comicBookForm.controls.storeDate.setValue(null);
+      this.comicForm.controls.storeDate.setValue(null);
     }
-    this.comicBookForm.controls.comicState.setValue(comic.comicState);
-    this.comicBookForm.controls.filename.setValue(comic.filename);
-    this.comicBookForm.controls.archiveType.setValue(comic.archiveType);
-    this.comicBookForm.controls.fileSize.setValue(0);
-    this.comicBookForm.controls.notes.setValue(comic.notes);
-    this.comicBookForm.markAsUntouched();
+    this.comicForm.controls.comicState.setValue(comic.comicState);
+    this.comicForm.controls.filename.setValue(comic.filename);
+    this.comicForm.controls.archiveType.setValue(comic.archiveType);
+    this.comicForm.controls.fileSize.setValue(0);
+    this.comicForm.controls.notes.setValue(comic.notes);
+    this.comicForm.markAsUntouched();
   }
 
   get deleted(): boolean {
-    return this.comicBook.comicState === ComicState.DELETED;
+    return this.comic.comicState === ComicState.DELETED;
   }
 
   get comicChanged(): boolean {
-    return !!this.comicBook && this.comicBook.comicState === ComicState.CHANGED;
+    return !!this.comic && this.comic.comicState === ComicState.CHANGED;
   }
 
   ngOnInit(): void {
@@ -217,20 +217,20 @@ export class ComicDetailEditComponent implements OnInit {
         'comic-book.save-changes.confirmation-message'
       ),
       confirm: () => {
-        this.logger.debug('Saving changes to comic:', this.comicBook);
+        this.logger.debug('Saving changes to comic:', this.comic);
         this.store.dispatch(
           updateComicBook({
-            comicBookId: this.comicBook.comicDetailId,
-            comicType: this.comicBookForm.controls.comicType.value,
-            publisher: this.comicBookForm.controls.publisher.value,
-            series: this.comicBookForm.controls.series.value,
-            volume: this.comicBookForm.controls.volume.value,
-            issueNumber: this.comicBookForm.controls.issueNumber.value,
-            imprint: this.comicBookForm.controls.imprint.value?.name || null,
-            sortName: this.comicBookForm.controls.sortName.value,
-            title: this.comicBookForm.controls.title.value,
-            storeDate: this.comicBookForm.controls.storeDate.value?.getTime(),
-            coverDate: this.comicBookForm.controls.coverDate.value?.getTime()
+            comicId: this.comic.comicId,
+            comicType: this.comicForm.controls.comicType.value,
+            publisher: this.comicForm.controls.publisher.value,
+            series: this.comicForm.controls.series.value,
+            volume: this.comicForm.controls.volume.value,
+            issueNumber: this.comicForm.controls.issueNumber.value,
+            imprint: this.comicForm.controls.imprint.value?.name || null,
+            sortName: this.comicForm.controls.sortName.value,
+            title: this.comicForm.controls.title.value,
+            storeDate: this.comicForm.controls.storeDate.value?.getTime(),
+            coverDate: this.comicForm.controls.coverDate.value?.getTime()
           })
         );
       }
@@ -239,26 +239,26 @@ export class ComicDetailEditComponent implements OnInit {
 
   onUndoChanges(): void {
     this.logger.debug('Resetting comic book changes');
-    this.comicBook = this._comicBook;
+    this.comic = this._comic;
   }
 
   onImprintSelected(imprint: Imprint): void {
     this.logger.info('Setting publisher name from imprint:', imprint);
-    this.comicBookForm.controls.publisher.setValue(imprint?.publisher || '');
+    this.comicForm.controls.publisher.setValue(imprint?.publisher || '');
     this.logger.trace('Setting imprint name');
-    this.comicBookForm.controls.imprint.setValue(imprint || null);
+    this.comicForm.controls.imprint.setValue(imprint || null);
   }
 
   onComicTypeSelected(comicType: ComicType) {
     this.logger.trace('Setting comic type:', comicType);
-    this.comicBookForm.controls.comicType.setValue(comicType);
+    this.comicForm.controls.comicType.setValue(comicType);
   }
 
   onCopyFilenameToClipboard(): void {
-    this.clipboard.copy(this.comicBook.filename);
+    this.clipboard.copy(this.comic.filename);
   }
 
   private doLoadImprint() {
-    this.comicBookForm.controls.imprint.setValue(this.comicBook.imprint);
+    this.comicForm.controls.imprint.setValue(this.comic.imprint);
   }
 }

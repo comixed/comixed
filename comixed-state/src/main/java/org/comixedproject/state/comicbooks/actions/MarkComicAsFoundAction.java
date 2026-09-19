@@ -32,7 +32,7 @@ import org.springframework.stereotype.Component;
 public class MarkComicAsFoundAction extends AbstractComicAction {
   @Override
   public void execute(final Comic comic) {
-    log.debug("Marking comic book as found: id={}", comic.getComicDetailId());
+    log.debug("Marking comic book as found: id={}", comic.getComicId());
     comic.setMissing(false);
   }
 }

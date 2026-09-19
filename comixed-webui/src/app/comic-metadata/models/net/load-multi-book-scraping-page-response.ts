@@ -22,5 +22,5 @@ export interface LoadMultiBookScrapingResponse {
   pageSize: number;
   pageNumber: number;
   totalComics: number;
-  comicBooks: DisplayableComic[];
+  comics: DisplayableComic[];
 }

@@ -38,7 +38,7 @@ import { of } from 'rxjs';
 export class ScrapeStoryEffects {
   logger = inject(LoggerService);
   actions$ = inject(Actions);
-  comicBookScrapingService = inject(ComicScrapingService);
+  comicScrapingService = inject(ComicScrapingService);
   alertService = inject(AlertService);
   translateService = inject(TranslateService);
 
@@ -47,7 +47,7 @@ export class ScrapeStoryEffects {
       ofType(loadStoryCandidates),
       tap(action => this.logger.trace('Loading story candidates:', action)),
       switchMap(action =>
-        this.comicBookScrapingService
+        this.comicScrapingService
           .loadStoryCandidates({
             sourceId: action.sourceId,
             storyName: action.name,
@@ -85,7 +85,7 @@ export class ScrapeStoryEffects {
       ofType(scrapeStoryMetadata),
       tap(action => this.logger.trace('Scraping story:', action)),
       switchMap(action =>
-        this.comicBookScrapingService
+        this.comicScrapingService
           .scrapeStory({
             sourceId: action.sourceId,
             referenceId: action.referenceId,

@@ -21,8 +21,7 @@ import { ComicState } from '@app/comic-books/models/comic-state';
 import { ComicType } from '@app/comic-books/models/comic-type';
 
 export interface DisplayableComic {
-  comicBookId: number;
-  comicDetailId: number;
+  comicId: number;
   referenceId: string | null;
   filename: string;
   baseFilename: string;

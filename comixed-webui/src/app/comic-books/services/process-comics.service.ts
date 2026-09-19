@@ -21,7 +21,7 @@ import { LoggerService } from '@angular-ru/cdk/logger';
 import { WebSocketService } from '@app/messaging';
 import { Store } from '@ngrx/store';
 import { selectMessagingStarted } from '@app/messaging/selectors/messaging.selectors';
-import { PROCESS_COMIC_BOOKS_TOPIC } from '@app/app.constants';
+import { PROCESS_COMICS_TOPIC } from '@app/app.constants';
 import { importComicsUpdate } from '@app/actions/import-comics.actions';
 import { ProcessComicsStatus } from '@app/models/messages/process-comics-status';
 import { filter, tap } from 'rxjs/operators';
@@ -42,7 +42,7 @@ export class ProcessComicsService {
         tap(() => {
           this.logger.trace('Subscribing to import count updates');
           this.webSocketService.subscribe<ProcessComicsStatus>(
-            PROCESS_COMIC_BOOKS_TOPIC,
+            PROCESS_COMICS_TOPIC,
             update => {
               this.logger.debug(
                 'Received process comic status update:',

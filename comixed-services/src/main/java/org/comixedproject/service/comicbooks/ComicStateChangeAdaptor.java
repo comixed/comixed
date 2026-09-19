@@ -62,13 +62,13 @@ public class ComicStateChangeAdaptor implements InitializingBean, ComicStateList
       if (comic.getState().equals(ComicState.REMOVED)) {
         log.debug("Comic book deleted");
         this.publishComicRemovalAction.publish(
-            this.displayableComicService.getForComicBookId(comic.getComicDetailId()));
+            this.displayableComicService.getForComicBookId(comic.getComicId()));
       } else {
         log.debug("Saving updated comic book");
         comic.setLastModifiedDate(new Date());
         final Comic updated = this.comicService.save(comic);
         final DisplayableComic details =
-            this.displayableComicService.getForComicBookId(updated.getComicDetailId());
+            this.displayableComicService.getForComicBookId(updated.getComicId());
         final List<ComicPage> pages = updated.getPages();
         final ComicMetadataSource metadata = updated.getMetadata();
         final Set<ComicTag> tags = updated.getTags();

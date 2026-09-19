@@ -45,7 +45,7 @@ export class RescanComicsEffects {
       tap(action => this.logger.trace('Rescan a single comic book:', action)),
       switchMap(action =>
         this.libraryService
-          .rescanSingleComicBook({ comicBookId: action.comicBookId })
+          .rescanSingleComicBook({ comicId: action.comicId })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
             tap(() =>

@@ -61,12 +61,11 @@ public class OrganizingComicService {
   @Transactional
   public void saveComic(final OrganizingComic comic) {
     if (StringUtils.hasLength(comic.getUpdatedFilename())) {
-      log.trace(
-          "Updating filename: id={} filename={}", comic.getComicDetailId(), comic.getFilename());
-      this.comicRepository.updateFilename(comic.getComicDetailId(), comic.getUpdatedFilename());
+      log.trace("Updating filename: id={} filename={}", comic.getComicId(), comic.getFilename());
+      this.comicRepository.updateFilename(comic.getComicId(), comic.getUpdatedFilename());
     }
-    log.trace("Clearing organizing flag: id={}", comic.getComicDetailId());
-    this.comicRepository.clearOrganizingFlag(comic.getComicDetailId());
+    log.trace("Clearing organizing flag: id={}", comic.getComicId());
+    this.comicRepository.clearOrganizingFlag(comic.getComicId());
   }
 
   /**

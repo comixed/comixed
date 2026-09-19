@@ -18,12 +18,12 @@
 
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import {
-  IMPORT_COMIC_BOOKS_FEATURE_KEY,
+  IMPORT_COMICS_FEATURE_KEY,
   ImportComicsState
 } from '../reducers/import-comics.reducer';
 
 const selectImportComicState = createFeatureSelector<ImportComicsState>(
-  IMPORT_COMIC_BOOKS_FEATURE_KEY
+  IMPORT_COMICS_FEATURE_KEY
 );
 
 export const selectImportComicBatches = createSelector(

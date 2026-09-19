@@ -37,15 +37,15 @@ class EditComicMetadataWriterTest {
   @Mock private ComicStateAdaptor comicStateAdaptor;
   @Mock private Comic comic;
 
-  private Chunk<Comic> comicBookList = new Chunk<>(new ArrayList<>());
+  private Chunk<Comic> comicList = new Chunk<>(new ArrayList<>());
 
   @Test
   void write() {
-    for (int index = 0; index < 25; index++) comicBookList.add(comic);
+    for (int index = 0; index < 25; index++) comicList.add(comic);
 
-    writer.write(comicBookList);
+    writer.write(comicList);
 
-    verify(comicStateAdaptor, times(comicBookList.size()))
+    verify(comicStateAdaptor, times(comicList.size()))
         .fireEvent(comic, ComicEvent.comicMetadataChanged);
   }
 }

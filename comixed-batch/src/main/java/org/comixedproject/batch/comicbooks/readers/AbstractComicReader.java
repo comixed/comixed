@@ -39,23 +39,23 @@ public abstract class AbstractComicReader implements ItemReader<Comic>, StepExec
   @Autowired protected ComicService comicService;
 
   @Getter String batchName;
-  @Getter @Setter List<Comic> comicBookList = null;
+  @Getter @Setter List<Comic> comicList = null;
 
   @Override
   public Comic read() {
-    if (this.comicBookList == null || this.comicBookList.isEmpty()) {
+    if (this.comicList == null || this.comicList.isEmpty()) {
       log.trace("Load more comics to process");
-      this.comicBookList = this.doLoadComics();
+      this.comicList = this.doLoadComics();
     }
 
-    if (this.comicBookList.isEmpty()) {
+    if (this.comicList.isEmpty()) {
       log.trace("No comics to process");
-      this.comicBookList = null;
+      this.comicList = null;
       return null;
     }
 
     log.trace("Returning next comic to process");
-    return this.comicBookList.remove(0);
+    return this.comicList.remove(0);
   }
 
   /**
