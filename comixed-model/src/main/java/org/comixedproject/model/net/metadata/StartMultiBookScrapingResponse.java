@@ -49,8 +49,8 @@ public class StartMultiBookScrapingResponse {
   @Getter
   private final int totalComics;
 
-  @JsonProperty("comicBooks")
+  @JsonProperty("comics")
   @JsonView(View.ComicListView.class)
   @Getter
-  private List<DisplayableComic> comicBooks;
+  private List<DisplayableComic> comics;
 }

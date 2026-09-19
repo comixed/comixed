@@ -26,8 +26,8 @@ import {
   DELETE_PLUGIN_URL,
   LIBRARY_PLUGIN_LIST_UPDATES,
   LOAD_ALL_PLUGINS_URL,
-  RUN_LIBRARY_PLUGIN_ON_ONE_COMIC_BOOK_URL,
-  RUN_LIBRARY_PLUGIN_ON_SELECTED_COMIC_BOOKS_URL,
+  RUN_LIBRARY_PLUGIN_ON_ONE_COMIC_URL,
+  RUN_LIBRARY_PLUGIN_ON_SELECTED_COMICS_URL,
   UPDATE_PLUGIN_URL
 } from '@app/library-plugins/library-plugins.constants';
 import { CreatePluginRequest } from '@app/library-plugins/models/net/create-plugin-request';
@@ -107,13 +107,13 @@ export class LibraryPluginService {
 
   runLibraryPluginOnOneComicBook(args: {
     plugin: LibraryPlugin;
-    comicBookId: number;
+    comicId: number;
   }): Observable<any> {
     this.logger.trace('Running plugin against one comic book:', args);
     return this.http.post(
-      interpolate(RUN_LIBRARY_PLUGIN_ON_ONE_COMIC_BOOK_URL, {
+      interpolate(RUN_LIBRARY_PLUGIN_ON_ONE_COMIC_URL, {
         pluginId: args.plugin.libraryPluginId,
-        comicBookId: args.comicBookId
+        comicId: args.comicId
       }),
       {}
     );
@@ -124,7 +124,7 @@ export class LibraryPluginService {
   }): Observable<any> {
     this.logger.trace('Running plugin against selected comic books:', args);
     return this.http.post(
-      interpolate(RUN_LIBRARY_PLUGIN_ON_SELECTED_COMIC_BOOKS_URL, {
+      interpolate(RUN_LIBRARY_PLUGIN_ON_SELECTED_COMICS_URL, {
         pluginId: args.plugin.libraryPluginId
       }),
       {}

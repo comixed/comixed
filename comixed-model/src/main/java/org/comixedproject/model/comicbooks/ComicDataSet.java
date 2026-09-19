@@ -37,7 +37,7 @@ public class ComicDataSet {
   @JsonProperty("detail")
   @JsonView(View.ComicDetailsView.class)
   @Getter
-  private DisplayableComic detail;
+  private DisplayableComic comic;
 
   @JsonProperty("pages")
   @JsonView(View.ComicDetailsView.class)

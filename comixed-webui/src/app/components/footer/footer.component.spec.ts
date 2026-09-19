@@ -29,9 +29,9 @@ import {
   initialState as initialBatchProcessesState
 } from '@app/admin/reducers/batch-processes.reducer';
 import {
-  READ_COMIC_BOOK_1,
-  READ_COMIC_BOOK_2,
-  READ_COMIC_BOOK_3,
+  READ_COMIC_1,
+  READ_COMIC_2,
+  READ_COMIC_3,
   USER_ADMIN,
   USER_READER
 } from '@app/user/user.fixtures';
@@ -40,20 +40,16 @@ import {
   BATCH_PROCESS_DETAIL_2
 } from '@app/admin/admin.fixtures';
 import {
-  COMIC_BOOK_SELECTION_FEATURE_KEY,
+  COMIC_SELECTION_FEATURE_KEY,
   initialState as initialComicBookSelectionState
 } from '@app/comic-books/reducers/comic-selection.reducer';
 
 describe('FooterComponent', () => {
   const USER = USER_ADMIN;
-  const COMICS_READ_ENTRIES = [
-    READ_COMIC_BOOK_1,
-    READ_COMIC_BOOK_2,
-    READ_COMIC_BOOK_3
-  ];
+  const COMICS_READ_ENTRIES = [READ_COMIC_1, READ_COMIC_2, READ_COMIC_3];
   const initialState = {
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
-    [COMIC_BOOK_SELECTION_FEATURE_KEY]: initialComicBookSelectionState,
+    [COMIC_SELECTION_FEATURE_KEY]: initialComicBookSelectionState,
     [BATCH_PROCESSES_FEATURE_KEY]: {
       ...initialBatchProcessesState,
       entries: [

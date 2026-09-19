@@ -1,5 +1,5 @@
 /*
- * ComiXed - A digital comicBook book library management application.
+ * ComiXed - A digital comic book library management application.
  * Copyright (C) 2017, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
@@ -45,7 +45,7 @@ public class ComicMetadataSource {
   private Long comicMetadataSourceId;
 
   @OneToOne
-  @JoinColumn(name = "comic_detail_id", nullable = false, updatable = false, unique = true)
+  @JoinColumn(name = "comic_id", nullable = false, updatable = false, unique = true)
   @Getter
   @NonNull
   private Comic comic;

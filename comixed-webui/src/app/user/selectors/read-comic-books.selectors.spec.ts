@@ -17,38 +17,38 @@
  */
 
 import {
-  READ_COMIC_BOOKS_FEATURE_KEY,
+  READ_COMICS_FEATURE_KEY,
   ReadComicsState
 } from '../reducers/read-comics.reducer';
 import { selectReadComicBooksList } from './read-comic-books.selectors';
 
 import {
-  READ_COMIC_BOOK_1,
-  READ_COMIC_BOOK_2,
-  READ_COMIC_BOOK_3,
-  READ_COMIC_BOOK_4,
-  READ_COMIC_BOOK_5
+  READ_COMIC_1,
+  READ_COMIC_2,
+  READ_COMIC_3,
+  READ_COMIC_4,
+  READ_COMIC_5
 } from '@app/user/user.fixtures';
 
 describe('ReadComicBooks Selectors', () => {
-  const READ_COMIC_BOOKS = [
-    READ_COMIC_BOOK_1,
-    READ_COMIC_BOOK_2,
-    READ_COMIC_BOOK_3,
-    READ_COMIC_BOOK_4,
-    READ_COMIC_BOOK_5
+  const READ_COMICS = [
+    READ_COMIC_1,
+    READ_COMIC_2,
+    READ_COMIC_3,
+    READ_COMIC_4,
+    READ_COMIC_5
   ];
 
   let state: ReadComicsState;
 
   beforeEach(() => {
-    state = { entries: READ_COMIC_BOOKS };
+    state = { entries: READ_COMICS };
   });
 
   it('returns the list of read comic book ids', () => {
     expect(
       selectReadComicBooksList({
-        [READ_COMIC_BOOKS_FEATURE_KEY]: state
+        [READ_COMICS_FEATURE_KEY]: state
       })
     ).toEqual(state.entries);
   });

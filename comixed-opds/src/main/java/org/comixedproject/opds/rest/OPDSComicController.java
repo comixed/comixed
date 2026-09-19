@@ -81,7 +81,7 @@ public class OPDSComicController {
       @PathVariable("filename") final String filename)
       throws OPDSException {
     try {
-      log.info("Downloading comicBook: id={} filename={}", id, filename);
+      log.info("Downloading comic: id={} filename={}", id, filename);
       Comic comic = this.comicService.getComic(id);
       long start = 0L;
       long finish = comic.getFile().length();

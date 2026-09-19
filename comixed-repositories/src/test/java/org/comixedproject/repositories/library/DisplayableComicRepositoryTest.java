@@ -55,10 +55,10 @@ public class DisplayableComicRepositoryTest {
   private List<Long> idList = new ArrayList<>();
 
   @Before
-  void setUp() {
-    idList.add(2000L);
-    idList.add(2001L);
-    idList.add(2002L);
+  public void setUp() {
+    idList.add(1000L);
+    idList.add(1001L);
+    idList.add(1002L);
   }
 
   @Test
@@ -67,7 +67,6 @@ public class DisplayableComicRepositoryTest {
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
-    assertTrue(
-        idList.containsAll(result.stream().map(DisplayableComic::getComicDetailId).toList()));
+    assertTrue(idList.containsAll(result.stream().map(DisplayableComic::getComicId).toList()));
   }
 }

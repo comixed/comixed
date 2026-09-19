@@ -1,5 +1,5 @@
 /*
- * ComiXed - A digital comicBook book library management application.
+ * ComiXed - A digital comic book library management application.
  * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
@@ -53,7 +53,7 @@ class PublishComicRemovalActionTest {
   void setUp() throws JacksonException {
     when(objectMapper.writerWithView(any())).thenReturn(objectWriter);
     when(objectWriter.writeValueAsString(any())).thenReturn(TEST_COMIC_AS_JSON);
-    when(comic.getComicDetailId()).thenReturn(TEST_COMIC_ID);
+    when(comic.getComicId()).thenReturn(TEST_COMIC_ID);
   }
 
   @Test
@@ -75,7 +75,7 @@ class PublishComicRemovalActionTest {
         .convertAndSend(PublishComicRemovalAction.COMIC_LIST_REMOVAL_TOPIC, TEST_COMIC_AS_JSON);
     verify(messagingTemplate)
         .convertAndSend(
-            String.format(PublishComicRemovalAction.COMIC_BOOK_REMOVAL_TOPIC, TEST_COMIC_ID),
+            String.format(PublishComicRemovalAction.COMIC_REMOVAL_TOPIC, TEST_COMIC_ID),
             TEST_COMIC_AS_JSON);
   }
 }

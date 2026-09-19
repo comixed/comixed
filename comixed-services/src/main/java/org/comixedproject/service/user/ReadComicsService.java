@@ -40,17 +40,17 @@ public class ReadComicsService {
    * Marks a single comic book as read by the given user.
    *
    * @param email the user's email
-   * @param comicDetailId the comic detail id
+   * @param comicId the comic detail id
    * @throws ReadComicsException if an error occurs
    */
   @Transactional(rollbackFor = Throwable.class)
   @Async
-  public void markComicBookAsRead(final String email, final long comicDetailId)
+  public void markComicBookAsRead(final String email, final long comicId)
       throws ReadComicsException {
     try {
       final ComiXedUser user = this.userService.findByEmail(email);
-      log.debug("Adding comic book to read list: id={}", comicDetailId);
-      user.getReadComicBooks().add(comicDetailId);
+      log.debug("Adding comic book to read list: id={}", comicId);
+      user.getReadComicBooks().add(comicId);
       this.userService.save(user);
     } catch (ComiXedUserException error) {
       throw new ReadComicsException("Failed to mark comic book as read", error);
@@ -61,17 +61,17 @@ public class ReadComicsService {
    * Unmarks a comic as read by the given user.
    *
    * @param email the user's email
-   * @param comicDetailId the comic detail id
+   * @param comicId the comic detail id
    * @throws ReadComicsException if an error occurs
    */
   @Transactional(rollbackFor = Throwable.class)
   @Async
-  public void unmarkComicBookAsRead(final String email, final long comicDetailId)
+  public void unmarkComicBookAsRead(final String email, final long comicId)
       throws ReadComicsException {
     try {
       final ComiXedUser user = this.userService.findByEmail(email);
-      log.debug("Removing comic book from read list: id={}", comicDetailId);
-      user.getReadComicBooks().remove(comicDetailId);
+      log.debug("Removing comic book from read list: id={}", comicId);
+      user.getReadComicBooks().remove(comicId);
       this.userService.save(user);
     } catch (ComiXedUserException error) {
       throw new ReadComicsException("Failed to mark comic book as read", error);

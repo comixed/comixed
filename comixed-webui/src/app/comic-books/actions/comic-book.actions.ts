@@ -29,7 +29,7 @@ export const loadComicBook = createAction(
   props<{ id: number }>()
 );
 
-export const comicBookLoaded = createAction(
+export const comicLoaded = createAction(
   '[Comic Book] A single comic was loaded',
   props<{
     detail: DisplayableComic;
@@ -46,7 +46,7 @@ export const loadComicBookFailed = createAction(
 export const updateComicBook = createAction(
   '[Comic Book] Update a comic',
   props<{
-    comicBookId: number;
+    comicId: number;
     comicType?: ComicType;
     publisher: string;
     series: string;
@@ -60,7 +60,7 @@ export const updateComicBook = createAction(
   }>()
 );
 
-export const comicBookUpdated = createAction(
+export const comicUpdated = createAction(
   '[Comic Book] ComicBook updated',
   props<{
     detail: DisplayableComic;
@@ -88,7 +88,7 @@ export const updatePageDeletionFailed = createAction(
 
 export const savePageOrder = createAction(
   '[Comic Book] Save page order',
-  props<{ comicBookId: number; entries: PageOrderEntry[] }>()
+  props<{ comicId: number; entries: PageOrderEntry[] }>()
 );
 
 export const pageOrderSaved = createAction('[Comic Book] Page order saved');
@@ -99,7 +99,7 @@ export const savePageOrderFailed = createAction(
 
 export const downloadComicBook = createAction(
   '[Comic Book] Attempt to download a comic book file',
-  props<{ comicBookId: number }>()
+  props<{ comicId: number }>()
 );
 
 export const downloadComicBookSuccess = createAction(

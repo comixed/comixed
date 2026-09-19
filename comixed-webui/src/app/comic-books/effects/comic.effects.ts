@@ -23,8 +23,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { AlertService } from '@app/core/services/alert.service';
 import { ComicService } from '@app/comic-books/services/comic.service';
 import {
-  comicBookLoaded,
-  comicBookUpdated,
+  comicLoaded,
+  comicUpdated,
   downloadComicBook,
   downloadComicBookFailure,
   downloadComicBookSuccess,
@@ -63,7 +63,7 @@ export class ComicEffects {
         this.comicService.loadOne({ id: action.id }).pipe(
           tap(response => this.logger.debug('Response received:', response)),
           map((response: LoadComicResponse) =>
-            comicBookLoaded({
+            comicLoaded({
               detail: response.detail,
               metadata: response.metadata,
               pages: response.pages,
@@ -99,7 +99,7 @@ export class ComicEffects {
       switchMap(action =>
         this.comicService
           .updateOne({
-            comicBookId: action.comicBookId,
+            comicId: action.comicId,
             comicType: action.comicType,
             publisher: action.publisher,
             series: action.series,
@@ -121,7 +121,7 @@ export class ComicEffects {
               )
             ),
             map((response: LoadComicResponse) =>
-              comicBookUpdated({
+              comicUpdated({
                 detail: response.detail,
                 metadata: response.metadata,
                 pages: response.pages
@@ -199,7 +199,7 @@ export class ComicEffects {
       switchMap(action =>
         this.comicService
           .savePageOrder({
-            comicBookId: action.comicBookId,
+            comicId: action.comicId,
             entries: action.entries
           })
           .pipe(
@@ -238,24 +238,22 @@ export class ComicEffects {
       ofType(downloadComicBook),
       tap(action => this.logger.debug('Download comic book:', action)),
       switchMap(action =>
-        this.comicService
-          .downloadComicBook({ comicBookId: action.comicBookId })
-          .pipe(
-            tap(response => this.logger.debug('Response received:', response)),
-            tap(response =>
-              this.fileDownloadService.saveFile({ document: response })
-            ),
-            map(() => downloadComicBookSuccess()),
-            catchError(error => {
-              this.logger.error('Service failure:', error);
-              this.alertService.error(
-                this.translateService.instant(
-                  'comic-book.download.effect-failure'
-                )
-              );
-              return of(downloadComicBookFailure());
-            })
-          )
+        this.comicService.downloadComicBook({ comicId: action.comicId }).pipe(
+          tap(response => this.logger.debug('Response received:', response)),
+          tap(response =>
+            this.fileDownloadService.saveFile({ document: response })
+          ),
+          map(() => downloadComicBookSuccess()),
+          catchError(error => {
+            this.logger.error('Service failure:', error);
+            this.alertService.error(
+              this.translateService.instant(
+                'comic-book.download.effect-failure'
+              )
+            );
+            return of(downloadComicBookFailure());
+          })
+        )
       ),
       catchError(error => {
         this.logger.error('General failure:', error);

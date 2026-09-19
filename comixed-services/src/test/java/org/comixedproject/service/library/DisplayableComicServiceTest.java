@@ -581,7 +581,7 @@ class DisplayableComicServiceTest {
   void createSort() {
     final String[][] fields =
         new String[][] {
-          {"unknown", "comicDetailId"},
+          {"unknown", "comicId"},
           {"archive-type", "archiveType"},
           {"comic-state", "comicState"},
           {"comic-type", "comicType"},

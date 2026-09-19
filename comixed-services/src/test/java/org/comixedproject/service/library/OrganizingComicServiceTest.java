@@ -39,7 +39,7 @@ import org.springframework.data.domain.PageRequest;
 @MockitoSettings(strictness = Strictness.LENIENT)
 class OrganizingComicServiceTest {
   private static final int TEST_MAX_COMICS = 23;
-  private static final long TEST_COMIC_DETAIL_ID = 129L;
+  private static final long TEST_COMIC_ID = 129L;
   private static final String TEST_UPDATED_FILENAME =
       "/Users/comixed_reader/Documents/comics/library/example.cbz";
   private static final long TEST_COMIC_COUNT = 27394L;
@@ -57,7 +57,7 @@ class OrganizingComicServiceTest {
   void setUp() {
     when(organizingComicRepository.loadComics(pageRequestArgumentCaptor.capture()))
         .thenReturn(organizingComicList);
-    when(comic.getComicDetailId()).thenReturn(TEST_COMIC_DETAIL_ID);
+    when(comic.getComicId()).thenReturn(TEST_COMIC_ID);
     when(comic.getUpdatedFilename()).thenReturn(TEST_UPDATED_FILENAME);
   }
 
@@ -79,8 +79,8 @@ class OrganizingComicServiceTest {
   void saveComic() {
     service.saveComic(comic);
 
-    verify(comicRepository, times(1)).updateFilename(TEST_COMIC_DETAIL_ID, TEST_UPDATED_FILENAME);
-    verify(comicRepository, times(1)).clearOrganizingFlag(TEST_COMIC_DETAIL_ID);
+    verify(comicRepository, times(1)).updateFilename(TEST_COMIC_ID, TEST_UPDATED_FILENAME);
+    verify(comicRepository, times(1)).clearOrganizingFlag(TEST_COMIC_ID);
   }
 
   @Test
@@ -90,7 +90,7 @@ class OrganizingComicServiceTest {
     service.saveComic(comic);
 
     verify(comicRepository, never()).updateFilename(anyLong(), anyString());
-    verify(comicRepository, times(1)).clearOrganizingFlag(TEST_COMIC_DETAIL_ID);
+    verify(comicRepository, times(1)).clearOrganizingFlag(TEST_COMIC_ID);
   }
 
   @Test

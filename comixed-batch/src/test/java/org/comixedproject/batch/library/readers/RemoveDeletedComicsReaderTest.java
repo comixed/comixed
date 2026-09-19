@@ -1,5 +1,5 @@
 /*
- * ComiXed - A digital comicBook book library management application.
+ * ComiXed - A digital comic book library management application.
  * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
@@ -41,27 +41,27 @@ class RemoveDeletedComicsReaderTest {
   @Mock private ComicService comicService;
   @Mock private Comic comic;
 
-  private List<Comic> comicBookList = new ArrayList<>();
+  private List<Comic> comicList = new ArrayList<>();
 
   @Test
   void read_noneLoaded_manyFound() {
-    for (int index = 0; index < MAX_RECORDS; index++) comicBookList.add(comic);
+    for (int index = 0; index < MAX_RECORDS; index++) comicList.add(comic);
 
-    when(comicService.findComicBooksToBePurged(anyInt())).thenReturn(comicBookList);
+    when(comicService.findComicBooksToBePurged(anyInt())).thenReturn(comicList);
 
     final Comic result = reader.read();
 
     assertNotNull(result);
     assertSame(comic, result);
-    assertFalse(comicBookList.isEmpty());
-    assertEquals(MAX_RECORDS - 1, comicBookList.size());
+    assertFalse(comicList.isEmpty());
+    assertEquals(MAX_RECORDS - 1, comicList.size());
 
     verify(comicService).findComicBooksToBePurged(reader.getChunkSize());
   }
 
   @Test
   void read_noneRemaining() {
-    when(comicService.findComicBooksToBePurged(anyInt())).thenReturn(comicBookList);
+    when(comicService.findComicBooksToBePurged(anyInt())).thenReturn(comicList);
 
     final Comic result = reader.read();
 

@@ -29,32 +29,32 @@ export const LOAD_UNREAD_COMICS_URL = `${API_ROOT_URL}/comics/unread`;
 export const LOAD_READ_COMICS_URL = `${API_ROOT_URL}/comics/read`;
 export const LOAD_COMICS_FOR_READING_LIST_URL = `${API_ROOT_URL}/comics/lists/\${readingListId}`;
 
-export const LOAD_COMIC_BOOK_SELECTIONS_URL = `${API_ROOT_URL}/comics/selections`;
-export const ADD_SINGLE_COMIC_SELECTION_URL = `${API_ROOT_URL}/comics/selections/\${comicDetailId}`;
-export const REMOVE_SINGLE_COMIC_SELECTION_URL = `${API_ROOT_URL}/comics/selections/\${comicDetailId}`;
-export const SET_SELECTED_COMIC_BOOKS_BY_FILTER_URL = `${API_ROOT_URL}/comics/selections/multiple`;
-export const SET_SELECTED_COMIC_BOOKS_BY_TAG_TYPE_AND_VALUE_URL = `${API_ROOT_URL}/comics/selections/tag/\${tagType}/\${tagValue}`;
-export const SET_SELECTED_COMIC_BOOKS_BY_ID_URL = `${API_ROOT_URL}/comics/selections/ids`;
-export const SET_SELECTED_COMIC_BOOKS_BY_PUBLISHER_URL = `${API_ROOT_URL}/comics/selections/publisher`;
-export const SET_SELECTED_COMIC_BOOKS_BY_PUBLISHER_SERIES_VOLUME_URL = `${API_ROOT_URL}/comics/selections/series`;
-export const SET_SELECTED_DUPLICATE_COMIC_BOOKS_URL = `${API_ROOT_URL}/comics/selections/duplicates`;
-export const SET_SELECTED_BY_UNREAD_STATE_COMIC_BOOKS_URL = `${API_ROOT_URL}/comics/selections/unread`;
-export const CLEAR_COMIC_BOOK_SELECTION_STATE_URL = `${API_ROOT_URL}/comics/selections/clear`;
+export const LOAD_COMIC_SELECTIONS_URL = `${API_ROOT_URL}/comics/selections`;
+export const ADD_SINGLE_COMIC_SELECTION_URL = `${API_ROOT_URL}/comics/selections/\${comicId}`;
+export const REMOVE_SINGLE_COMIC_SELECTION_URL = `${API_ROOT_URL}/comics/selections/\${comicId}`;
+export const SET_SELECTED_COMICS_BY_FILTER_URL = `${API_ROOT_URL}/comics/selections/multiple`;
+export const SET_SELECTED_COMICS_BY_TAG_TYPE_AND_VALUE_URL = `${API_ROOT_URL}/comics/selections/tag/\${tagType}/\${tagValue}`;
+export const SET_SELECTED_COMICS_BY_ID_URL = `${API_ROOT_URL}/comics/selections/ids`;
+export const SET_SELECTED_COMICS_BY_PUBLISHER_URL = `${API_ROOT_URL}/comics/selections/publisher`;
+export const SET_SELECTED_COMICS_BY_PUBLISHER_SERIES_VOLUME_URL = `${API_ROOT_URL}/comics/selections/series`;
+export const SET_SELECTED_DUPLICATE_COMICS_URL = `${API_ROOT_URL}/comics/selections/duplicates`;
+export const SET_SELECTED_BY_UNREAD_STATE_COMICS_URL = `${API_ROOT_URL}/comics/selections/unread`;
+export const CLEAR_COMIC_SELECTION_STATE_URL = `${API_ROOT_URL}/comics/selections/clear`;
 
-export const DELETE_SINGLE_COMIC_BOOK_URL = `${API_ROOT_URL}/comics/\${comicBookId}`;
-export const UNDELETE_SINGLE_COMIC_BOOK_URL = `${API_ROOT_URL}/comics/\${comicBookId}/undelete`;
-export const DELETE_SELECTED_COMIC_BOOKS_URL = `${API_ROOT_URL}/comics/mark/deleted/selected`;
-export const UNDELETE_SELECTED_COMIC_BOOKS_URL = `${API_ROOT_URL}/comics/mark/deleted/selected`;
+export const DELETE_SINGLE_COMIC_URL = `${API_ROOT_URL}/comics/\${comicId}`;
+export const UNDELETE_SINGLE_COMIC_URL = `${API_ROOT_URL}/comics/\${comicId}/undelete`;
+export const DELETE_SELECTED_COMICS_URL = `${API_ROOT_URL}/comics/mark/deleted/selected`;
+export const UNDELETE_SELECTED_COMICS_URL = `${API_ROOT_URL}/comics/mark/deleted/selected`;
 export const SAVE_PAGE_ORDER_URL = `${API_ROOT_URL}/comics/\${id}/pages/order`;
-export const DOWNLOAD_COMIC_BOOK_URL = `${API_ROOT_URL}/comics/\${comicBookId}/download`;
+export const DOWNLOAD_COMIC_URL = `${API_ROOT_URL}/comics/\${comicId}/download`;
 
 export const GET_IMPRINTS_URL = `${API_ROOT_URL}/comics/imprints`;
 export const PAGE_URL_FROM_HASH = `${API_ROOT_URL}/pages/hashes/\${hash}/content`;
 export const MARK_PAGES_DELETED_URL = `${API_ROOT_URL}/pages/deleted`;
 export const MARK_PAGES_UNDELETED_URL = `${API_ROOT_URL}/pages/undeleted`;
 
-export const COMIC_BOOK_UPDATE_TOPIC = `/topic/comic-book.\${id}.update`;
-export const COMIC_BOOK_SELECTION_UPDATE_TOPIC = `${SECURED_PREFIX}/\${email}/topic/comic-book-selection.update`;
+export const COMIC_UPDATE_TOPIC = `/topic/comic-book.\${id}.update`;
+export const COMIC_SELECTION_UPDATE_TOPIC = `${SECURED_PREFIX}/\${email}/topic/comic-book-selection.update`;
 
 export const COMIC_TYPE_SELECTION_OPTIONS: SelectionOption<ComicType>[] = [
   {

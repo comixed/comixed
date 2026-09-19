@@ -38,16 +38,14 @@ public class PublishComicRemovalAction extends AbstractPublishAction<Displayable
   public static final String COMIC_LIST_REMOVAL_TOPIC = "/topic/comic-list.removal";
 
   /** Topic which receives individual comic removals in real time. */
-  public static final String COMIC_BOOK_REMOVAL_TOPIC = "/topic/comic-book.%d.removal";
+  public static final String COMIC_REMOVAL_TOPIC = "/topic/comic-book.%d.removal";
 
   @Override
   public void publish(final DisplayableComic comic) throws PublishingException {
-    log.trace("Publishing comicBook list removal");
+    log.trace("Publishing comic list removal");
     this.doPublish(COMIC_LIST_REMOVAL_TOPIC, comic, View.ComicDetailsView.class);
-    log.trace("Publishing comicBook book removal");
+    log.trace("Publishing comic book removal");
     this.doPublish(
-        String.format(COMIC_BOOK_REMOVAL_TOPIC, comic.getComicDetailId()),
-        comic,
-        View.ComicDetailsView.class);
+        String.format(COMIC_REMOVAL_TOPIC, comic.getComicId()), comic, View.ComicDetailsView.class);
   }
 }

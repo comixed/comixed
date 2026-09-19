@@ -140,7 +140,7 @@ class PageCacheServiceTest {
   }
 
   @Test
-  void addPageToCache_comicBookAdaptorException() throws AdaptorException {
+  void addPageToCache_comicAdaptorException() throws AdaptorException {
     when(page.getHash()).thenReturn(TEST_MISSING_PAGE_HASH);
     when(comicAdaptor.loadPageContent(any(Comic.class), anyInt()))
         .thenThrow(AdaptorException.class);

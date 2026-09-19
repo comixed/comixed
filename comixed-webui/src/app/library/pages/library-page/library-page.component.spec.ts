@@ -68,7 +68,7 @@ import { ConfirmationService } from '@tragically-slick/confirmation';
 import { ComicType } from '@app/comic-books/models/comic-type';
 import { ComicState } from '@app/comic-books/models/comic-state';
 import {
-  COMIC_BOOK_SELECTION_FEATURE_KEY,
+  COMIC_SELECTION_FEATURE_KEY,
   initialState as initialComicBooksSelectionState
 } from '@app/comic-books/reducers/comic-selection.reducer';
 import {
@@ -83,7 +83,7 @@ import { PAGE_SIZE_DEFAULT, QUERY_PARAM_UNREAD_ONLY } from '@app/core';
 import { PREFERENCE_PAGE_SIZE } from '@app/comic-files/comic-file.constants';
 import {
   initialState as initialReadComicBooksState,
-  READ_COMIC_BOOKS_FEATURE_KEY
+  READ_COMICS_FEATURE_KEY
 } from '@app/user/reducers/read-comics.reducer';
 import {
   loadComicsByFilter,
@@ -104,11 +104,11 @@ describe('LibraryPageComponent', () => {
   const initialState = {
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER },
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
-    [COMIC_BOOK_SELECTION_FEATURE_KEY]: initialComicBooksSelectionState,
+    [COMIC_SELECTION_FEATURE_KEY]: initialComicBooksSelectionState,
     [COMIC_LIST_FEATURE_KEY]: initialComicListState,
     [READING_LISTS_FEATURE_KEY]: initialReadingListsState,
     [LIBRARY_PLUGIN_FEATURE_KEY]: initialLibraryPluginState,
-    [READ_COMIC_BOOKS_FEATURE_KEY]: initialReadComicBooksState
+    [READ_COMICS_FEATURE_KEY]: initialReadComicBooksState
   };
 
   let component: LibraryPageComponent;

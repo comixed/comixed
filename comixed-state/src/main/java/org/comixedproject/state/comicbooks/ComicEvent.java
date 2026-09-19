@@ -24,7 +24,7 @@ package org.comixedproject.state.comicbooks;
  * @author Darryl L. Pierce
  */
 public enum ComicEvent {
-  comicBookImported,
+  comicImported,
   comicFileDiscovered,
   comicFileMissing,
   comicFileFound,

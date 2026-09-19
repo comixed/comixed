@@ -43,8 +43,8 @@ import org.springframework.transaction.PlatformTransactionManager;
 @Configuration
 @Log4j2
 public class LoadComicsConfiguration {
-  public static final String LOAD_COMIC_BOOKS_JOB = "loadComicBooksJob";
-  public static final String LOAD_COMIC_BOOKS_JOB_STARTED = "job.load-comic-books.time-started";
+  public static final String LOAD_COMICS_JOB = "loadComicBooksJob";
+  public static final String LOAD_COMICS_JOB_STARTED = "job.load-comic-books.time-started";
 
   @Value("${comixed.batch.load-comic-books.chunk-size:10}")
   private int chunkSize;
@@ -57,12 +57,12 @@ public class LoadComicsConfiguration {
    * @param loadFileContentsStep the load file contents step
    * @return the job
    */
-  @Bean(name = LOAD_COMIC_BOOKS_JOB)
+  @Bean(name = LOAD_COMICS_JOB)
   public Job loadComicBooksJob(
       final JobRepository jobRepository,
       final LoadComicsJobListener jobListener,
       @Qualifier("loadFileContentsStep") final Step loadFileContentsStep) {
-    return new JobBuilder(LOAD_COMIC_BOOKS_JOB, jobRepository)
+    return new JobBuilder(LOAD_COMICS_JOB, jobRepository)
         .listener(jobListener)
         .start(loadFileContentsStep)
         .build();

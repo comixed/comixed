@@ -94,7 +94,7 @@ public class ComiXedUser {
   @CollectionTable(
       name = "read_comic_books_v4",
       joinColumns = @JoinColumn(name = "comixed_user_id"))
-  @Column(name = "comic_detail_id")
+  @Column(name = "comic_id")
   @JsonView(View.UserList.class)
   @Getter
   private Set<Long> readComicBooks = new HashSet<>();

@@ -53,7 +53,7 @@ describe('DeleteComicBooks Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, updating: false },
-        deleteSingleComicBook({ comicBookId: COMIC_ID })
+        deleteSingleComicBook({ comicId: COMIC_ID })
       );
     });
 
@@ -66,7 +66,7 @@ describe('DeleteComicBooks Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, updating: false },
-        undeleteSingleComicBook({ comicBookId: COMIC_ID })
+        undeleteSingleComicBook({ comicId: COMIC_ID })
       );
     });
 

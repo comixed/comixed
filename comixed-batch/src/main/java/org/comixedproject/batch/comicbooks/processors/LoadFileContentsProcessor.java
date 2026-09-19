@@ -59,11 +59,11 @@ public class LoadFileContentsProcessor implements ItemProcessor<Comic, Comic> {
   @Override
   public Comic process(final Comic comic) {
     if (comic.isMissing()) {
-      log.debug("Comic file missing, skipping: id={}", comic.getComicDetailId());
+      log.debug("Comic file missing, skipping: id={}", comic.getComicId());
       return null;
     }
     if (!comic.isLoadingFileContents()) {
-      log.debug("Comic book contents already loaded: id={}", comic.getComicDetailId());
+      log.debug("Comic book contents already loaded: id={}", comic.getComicId());
       return comic;
     }
 
@@ -73,7 +73,7 @@ public class LoadFileContentsProcessor implements ItemProcessor<Comic, Comic> {
       comic.setArchiveType(archiveAdaptor.getArchiveType());
 
       this.comicAdaptor.load(comic);
-      log.trace("Sorting comicBook pages");
+      log.trace("Sorting comic pages");
       this.comicAdaptor.sortPages(comic);
       final File metadataFile =
           new File(this.comicAdaptor.getMetadataFilename(comic.getFilename()));
@@ -114,7 +114,7 @@ public class LoadFileContentsProcessor implements ItemProcessor<Comic, Comic> {
           }
         }
       }
-      log.trace("Returning updated comicBook");
+      log.trace("Returning updated comic");
       return comic;
     } catch (Throwable error) {
       log.error("Error loading comic file content", error);

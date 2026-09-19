@@ -72,7 +72,7 @@ import { ComicListViewComponent } from '@app/comic-books/components/comic-list-v
 import { MatTableModule } from '@angular/material/table';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import {
-  COMIC_BOOK_SELECTION_FEATURE_KEY,
+  COMIC_SELECTION_FEATURE_KEY,
   initialState as initialComicBookSelectionState
 } from '@app/comic-books/reducers/comic-selection.reducer';
 import {
@@ -107,10 +107,10 @@ describe('CollectionDetailComponent', () => {
   const USER = USER_READER;
   const initialState = {
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
-    [COMIC_BOOK_SELECTION_FEATURE_KEY]: initialComicBookSelectionState,
+    [COMIC_SELECTION_FEATURE_KEY]: initialComicBookSelectionState,
     [COMIC_LIST_FEATURE_KEY]: {
       ...initialComicListState,
-      comicBooks: COMIC_LIST
+      comics: COMIC_LIST
     },
     [READING_LISTS_FEATURE_KEY]: initialReadingListsState,
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER },

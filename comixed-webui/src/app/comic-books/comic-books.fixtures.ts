@@ -70,8 +70,7 @@ export const COMIC_TAG_5: ComicTag = {
 };
 
 export const DISPLAYABLE_COMIC_1: DisplayableComic = {
-  comicBookId: 1,
-  comicDetailId: 101,
+  comicId: 1,
   referenceId: '01234',
   filename: '/library/comicbook1.cbz',
   baseFilename: 'comicbook1.cbz',
@@ -100,8 +99,7 @@ export const DISPLAYABLE_COMIC_1: DisplayableComic = {
 };
 
 export const DISPLAYABLE_COMIC_2: DisplayableComic = {
-  comicBookId: 2,
-  comicDetailId: 102,
+  comicId: 2,
   referenceId: '12345',
   filename: '/library/comicbook2.cbz',
   baseFilename: 'comicbook2.cbz',
@@ -130,8 +128,7 @@ export const DISPLAYABLE_COMIC_2: DisplayableComic = {
 };
 
 export const DISPLAYABLE_COMIC_3: DisplayableComic = {
-  comicBookId: 3,
-  comicDetailId: 103,
+  comicId: 3,
   referenceId: '23456',
   filename: '/library/comicbook3.cbz',
   baseFilename: 'comicbook3.cbz',
@@ -160,8 +157,7 @@ export const DISPLAYABLE_COMIC_3: DisplayableComic = {
 };
 
 export const DISPLAYABLE_COMIC_4: DisplayableComic = {
-  comicBookId: 4,
-  comicDetailId: 104,
+  comicId: 4,
   referenceId: '34567',
   filename: '/library/comicbook4.cbz',
   baseFilename: 'comicbook4.cbz',
@@ -190,8 +186,7 @@ export const DISPLAYABLE_COMIC_4: DisplayableComic = {
 };
 
 export const DISPLAYABLE_COMIC_5: DisplayableComic = {
-  comicBookId: 5,
-  comicDetailId: 105,
+  comicId: 5,
   referenceId: '45678',
   filename: '/library/comicbook5.cbz',
   baseFilename: 'comicbook5.cbz',

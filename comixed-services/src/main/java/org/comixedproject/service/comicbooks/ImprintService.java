@@ -38,7 +38,7 @@ public class ImprintService {
   @Autowired private ImprintRepository imprintRepository;
 
   /**
-   * Updates the given comicBook's publisher and imprint if necessary.
+   * Updates the given comic's publisher and imprint if necessary.
    *
    * @param comic the comic
    */

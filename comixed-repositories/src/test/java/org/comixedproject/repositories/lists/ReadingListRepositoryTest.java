@@ -69,7 +69,7 @@ public class ReadingListRepositoryTest {
   private Comic comic2;
 
   @Before
-  void setUp() {
+  public void setUp() {
     reader = userRepository.findById(TEST_USER_ID_1).get();
     comic1 = comicRepository.findById(TEST_COMIC_ID_1).get();
     comic2 = comicRepository.findById(TEST_COMIC_ID_2).get();
@@ -112,8 +112,8 @@ public class ReadingListRepositoryTest {
 
     list.setOwner(reader);
     list.setName(TEST_NEW_LIST_NAME);
-    list.getEntryIds().add(comic1.getComicDetailId());
-    list.getEntryIds().add(comic2.getComicDetailId());
+    list.getEntryIds().add(comic1.getComicId());
+    list.getEntryIds().add(comic2.getComicId());
 
     final ReadingList result = repository.save(list);
 
@@ -126,13 +126,13 @@ public class ReadingListRepositoryTest {
   public void testUpdateReadingList() {
     ReadingList list = repository.getById(TEST_READING_LIST_ID_1);
 
-    list.getEntryIds().add(comic2.getComicDetailId());
+    list.getEntryIds().add(comic2.getComicId());
     repository.save(list);
 
     ReadingList result = repository.getById(list.getReadingListId());
 
     assertEquals(list.getEntryIds().size(), result.getEntryIds().size());
-    assertTrue(result.getEntryIds().contains(comic2.getComicDetailId()));
+    assertTrue(result.getEntryIds().contains(comic2.getComicId()));
   }
 
   @Test
@@ -148,7 +148,7 @@ public class ReadingListRepositoryTest {
 
   @Test
   public void testGetReadingListsWithComicBook() {
-    final List<ReadingList> result = repository.getReadingListsWithComic(comic1.getComicDetailId());
+    final List<ReadingList> result = repository.getReadingListsWithComic(comic1.getComicId());
 
     assertNotNull(result);
   }

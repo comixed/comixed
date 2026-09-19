@@ -36,8 +36,8 @@ export const LOAD_SCRAPING_ISSUE_URL = `${API_ROOT_URL}/metadata/sources/\${sour
 export const SCRAPE_SINGLE_BOOK_COMIC_URL = `${API_ROOT_URL}/metadata/sources/\${sourceId}/comics/single/\${comicId}`;
 export const START_MULTI_BOOK_SCRAPING_URL = `${API_ROOT_URL}/metadata/scraping/selected`;
 export const LOAD_MULTIBOOK_SCRAPING_URL = `${API_ROOT_URL}/metadata/scraping/load`;
-export const REMOVE_MULTI_BOOK_COMIC_URL = `${API_ROOT_URL}/metadata/scraping/\${comicBookId}?pageSize=\${pageSize}`;
-export const SCRAPE_MULTI_BOOK_COMIC_URL = `${API_ROOT_URL}/metadata/sources/\${sourceId}/comics/multi/\${comicBookId}`;
+export const REMOVE_MULTI_BOOK_COMIC_URL = `${API_ROOT_URL}/metadata/scraping/\${comicId}?pageSize=\${pageSize}`;
+export const SCRAPE_MULTI_BOOK_COMIC_URL = `${API_ROOT_URL}/metadata/sources/\${sourceId}/comics/multi/\${comicId}`;
 export const BATCH_SCRAPE_SELECTED_COMICS_URL = `${API_ROOT_URL}/metadata/scraping/selected/batch`;
 
 export const CLEAR_METADATA_CACHE_URL = `${API_ROOT_URL}/metadata/cache`;
@@ -50,12 +50,12 @@ export const LOAD_DUPLICATE_PAGE_DETAIL_URL = `${API_ROOT_URL}/library/pages/dup
 
 export const START_LIBRARY_ORGANIZATION_URL = `${API_ROOT_URL}/library/organize`;
 export const START_ENTIRE_LIBRARY_ORGANIZATION_URL = `${API_ROOT_URL}/library/organize/all`;
-export const CONVERT_SINGLE_COMIC_BOOK_URL = `${API_ROOT_URL}/library/conversion/\${comicBookId}`;
-export const CONVERT_SELECTED_COMIC_BOOKS_URL = `${API_ROOT_URL}/library/conversion/selected`;
-export const RESCAN_SINGLE_COMIC_BOOK_URL = `${API_ROOT_URL}/library/rescan/\${comicBookId}`;
-export const RESCAN_SELECTED_COMIC_BOOKS_URL = `${API_ROOT_URL}/library/rescan/selected`;
-export const UPDATE_SINGLE_COMIC_BOOK_METADATA_URL = `${API_ROOT_URL}/library/metadata/update/\${comicBookId}`;
-export const UPDATE_SELECTED_COMIC_BOOKS_METADATA_URL = `${API_ROOT_URL}/library/metadata/update/selected`;
+export const CONVERT_SINGLE_COMIC_URL = `${API_ROOT_URL}/library/conversion/\${comicId}`;
+export const CONVERT_SELECTED_COMICS_URL = `${API_ROOT_URL}/library/conversion/selected`;
+export const RESCAN_SINGLE_COMIC_URL = `${API_ROOT_URL}/library/rescan/\${comicId}`;
+export const RESCAN_SELECTED_COMICS_URL = `${API_ROOT_URL}/library/rescan/selected`;
+export const UPDATE_SINGLE_COMIC_METADATA_URL = `${API_ROOT_URL}/library/metadata/update/\${comicId}`;
+export const UPDATE_SELECTED_COMICS_METADATA_URL = `${API_ROOT_URL}/library/metadata/update/selected`;
 export const PURGE_LIBRARY_URL = `${API_ROOT_URL}/library/purge`;
 export const EDIT_MULTIPLE_COMICS_URL = `${API_ROOT_URL}/library/comics/edit`;
 export const LOAD_DUPLICATE_COMIC_LIST_URL = `${API_ROOT_URL}/library/duplicates/list`;
