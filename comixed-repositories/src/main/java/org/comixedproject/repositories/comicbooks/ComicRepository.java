@@ -690,7 +690,7 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
   Set<String> getAllComicDetailsByMissingFlag(@Param("missing") boolean missing);
 
   @Query(
-      "SELECT COUNT(c) FROM Comic c WHERE c.comicId IN (SELECT p.comic.comicId FROM ComicPage p WHERE p.hash IS NULL OR LENGTH(p.hash) = 0)")
+      "SELECT c FROM Comic c WHERE c.comicId IN (SELECT p.comic.comicId FROM ComicPage p WHERE p.hash IS NULL OR LENGTH(p.hash) = 0)")
   List<Comic> findComicsWithUnhashedPages(Pageable of);
 
   @Query(
