@@ -18,6 +18,7 @@
 
 package org.comixedproject.service.library;
 
+import static org.comixedproject.model.library.DisplayableComic.FIELD_NAME_COMIC_ID;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -571,17 +572,9 @@ class DisplayableComicServiceTest {
   }
 
   @Test
-  void createSort_noFields() {
-    final Sort result = service.doCreateSort(null, null);
-
-    assertSame(Sort.unsorted(), result);
-  }
-
-  @Test
   void createSort() {
     final String[][] fields =
         new String[][] {
-          {"unknown", "comicId"},
           {"archive-type", "archiveType"},
           {"comic-state", "comicState"},
           {"comic-type", "comicType"},
@@ -591,6 +584,7 @@ class DisplayableComicServiceTest {
           {"issue-number", "sortableIssueNumber"},
           {"page-count", "pageCount"},
           {"added-date", "addedDate"},
+          {"store-date", "storeDate"},
           {"cover-date", "coverDate"},
           {"comic-count", "comicCount"},
           {"tag-value", "value"}
@@ -601,14 +595,44 @@ class DisplayableComicServiceTest {
       Sort result = service.doCreateSort(field[0], "asc");
 
       assertNotNull(result);
-      assertEquals(String.format("%s: ASC", field[1]), result.toString());
+      assertEquals(String.format("%s: ASC,comicId: ASC", field[1]), result.toString());
 
       // descending
       result = service.doCreateSort(field[0], "desc");
 
       assertNotNull(result);
-      assertEquals(String.format("%s: DESC", field[1]), result.toString());
+      assertEquals(String.format("%s: DESC,comicId: DESC", field[1]), result.toString());
     }
+  }
+
+  @Test
+  void createSort_comicId() {
+    // ascending
+    Sort result = service.doCreateSort(FIELD_NAME_COMIC_ID, "asc");
+
+    assertNotNull(result);
+    assertEquals("comicId: ASC", result.toString());
+
+    // descending
+    result = service.doCreateSort(FIELD_NAME_COMIC_ID, "desc");
+
+    assertNotNull(result);
+    assertEquals("comicId: DESC", result.toString());
+  }
+
+  @Test
+  void createSort_noMatch() {
+    // ascending
+    Sort result = service.doCreateSort("", "asc");
+
+    assertNotNull(result);
+    assertEquals("comicId: ASC", result.toString());
+
+    // descending
+    result = service.doCreateSort("", "desc");
+
+    assertNotNull(result);
+    assertEquals("comicId: DESC", result.toString());
   }
 
   @Test

@@ -18,10 +18,7 @@
 
 package org.comixedproject.service.library;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.archives.ArchiveType;
@@ -57,7 +54,23 @@ public class DisplayableComicService {
   @Autowired private ObjectFactory<DisplayableComicExampleBuilder> exampleBuilderObjectFactory;
   @Autowired private ReadingListService readingListService;
 
-  private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+  private Map<String, String> sortFields = new HashMap<>();
+
+  public DisplayableComicService() {
+    this.sortFields.put("archive-type", DisplayableComic.FIELD_NAME_ARCHIVE_TYPE);
+    this.sortFields.put("comic-state", DisplayableComic.FIELD_NAME_COMIC_STATE);
+    this.sortFields.put("comic-type", DisplayableComic.FIELD_NAME_COMIC_TYPE);
+    this.sortFields.put("publisher", DisplayableComic.FIELD_NAME_PUBLISHER);
+    this.sortFields.put("series", DisplayableComic.FIELD_NAME_SERIES);
+    this.sortFields.put("volume", DisplayableComic.FIELD_NAME_VOLUME);
+    this.sortFields.put("issue-number", DisplayableComic.FIELD_NAME_SORTABLE_ISSUE_NUMBER);
+    this.sortFields.put("page-count", DisplayableComic.FIELD_NAME_PAGE_COUNT);
+    this.sortFields.put("added-date", DisplayableComic.FIELD_NAME_ADDED_DATE);
+    this.sortFields.put("cover-date", DisplayableComic.FIELD_NAME_COVER_DATE);
+    this.sortFields.put("comic-count", DisplayableComic.FIELD_NAME_COMIC_COUNT);
+    this.sortFields.put("tag-value", DisplayableComic.FIELD_NAME_TAG_VALUE);
+    this.sortFields.put("store-date", DisplayableComic.FIELD_NAME_STORE_DATE);
+  }
 
   /**
    * Loads comics filtered by the optional fields values provided.
@@ -550,31 +563,19 @@ public class DisplayableComicService {
   }
 
   Sort doCreateSort(final String sortField, final String sortDirection) {
-    if (!StringUtils.hasLength(sortField) || !StringUtils.hasLength(sortDirection)) {
-      return Sort.unsorted();
-    }
-
-    String fieldName;
-    switch (sortField) {
-      case "archive-type" -> fieldName = "archiveType";
-      case "comic-state" -> fieldName = "comicState";
-      case "comic-type" -> fieldName = "comicType";
-      case "publisher", "series", "volume" -> fieldName = sortField;
-      case "issue-number" -> fieldName = "sortableIssueNumber";
-      case "page-count" -> fieldName = "pageCount";
-      case "added-date" -> fieldName = "addedDate";
-      case "cover-date" -> fieldName = "coverDate";
-      case "comic-count" -> fieldName = "comicCount";
-      case "tag-value" -> fieldName = "value";
-      case "store-date" -> fieldName = "storeDate";
-      default -> fieldName = "comicId";
-    }
+    String fieldName = this.sortFields.get(sortField);
+    if (!StringUtils.hasLength(fieldName)) fieldName = DisplayableComic.FIELD_NAME_COMIC_ID;
 
     Sort.Direction direction = Sort.Direction.DESC;
-    if (sortDirection.equals("asc")) {
+    if (StringUtils.hasLength(sortDirection) && (sortDirection.equals("asc"))) {
       direction = Sort.Direction.ASC;
     }
-    return Sort.by(direction, fieldName);
+
+    if (fieldName.equalsIgnoreCase(DisplayableComic.FIELD_NAME_COMIC_ID)) {
+      return Sort.by(direction, fieldName);
+    } else {
+      return Sort.by(direction, fieldName, DisplayableComic.FIELD_NAME_COMIC_ID);
+    }
   }
 
   /**
