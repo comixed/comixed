@@ -550,31 +550,38 @@ public class DisplayableComicService {
   }
 
   Sort doCreateSort(final String sortField, final String sortDirection) {
-    if (!StringUtils.hasLength(sortField) || !StringUtils.hasLength(sortDirection)) {
-      return Sort.unsorted();
-    }
-
     String fieldName;
-    switch (sortField) {
-      case "archive-type" -> fieldName = "archiveType";
-      case "comic-state" -> fieldName = "comicState";
-      case "comic-type" -> fieldName = "comicType";
-      case "publisher", "series", "volume" -> fieldName = sortField;
-      case "issue-number" -> fieldName = "sortableIssueNumber";
-      case "page-count" -> fieldName = "pageCount";
-      case "added-date" -> fieldName = "addedDate";
-      case "cover-date" -> fieldName = "coverDate";
-      case "comic-count" -> fieldName = "comicCount";
-      case "tag-value" -> fieldName = "value";
-      case "store-date" -> fieldName = "storeDate";
-      default -> fieldName = "comicId";
+    if (StringUtils.hasLength(sortField)) {
+      switch (sortField) {
+        case "archive-type" -> fieldName = "archiveType";
+        case "comic-state" -> fieldName = "comicState";
+        case "comic-type" -> fieldName = "comicType";
+        case "publisher", "series", "volume" -> fieldName = sortField;
+        case "issue-number" -> fieldName = "sortableIssueNumber";
+        case "page-count" -> fieldName = "pageCount";
+        case "added-date" -> fieldName = "addedDate";
+        case "cover-date" -> fieldName = "coverDate";
+        case "comic-count" -> fieldName = "comicCount";
+        case "tag-value" -> fieldName = "value";
+        case "store-date" -> fieldName = "storeDate";
+        default -> fieldName = "comicId";
+      }
+    } else {
+      fieldName = "comicId";
     }
 
     Sort.Direction direction = Sort.Direction.DESC;
-    if (sortDirection.equals("asc")) {
-      direction = Sort.Direction.ASC;
+    if (StringUtils.hasLength(sortDirection)) {
+      if (sortDirection.equals("asc")) {
+        direction = Sort.Direction.ASC;
+      }
     }
-    return Sort.by(direction, fieldName);
+
+    if (fieldName.equalsIgnoreCase("comicId")) {
+      return Sort.by(direction, fieldName);
+    } else {
+      return Sort.by(direction, fieldName, "comicId");
+    }
   }
 
   /**
