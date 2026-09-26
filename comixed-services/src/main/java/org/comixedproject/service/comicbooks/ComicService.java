@@ -560,6 +560,7 @@ public class ComicService {
     if (sortDirection.equals("asc")) {
       direction = Sort.Direction.ASC;
     }
+
     return Sort.by(direction, fieldName);
   }
 

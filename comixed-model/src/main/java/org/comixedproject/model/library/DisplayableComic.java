@@ -37,6 +37,21 @@ import org.comixedproject.views.View;
 @Entity
 @Table(name = "displayable_comics_view")
 public class DisplayableComic {
+  public static final String FIELD_NAME_COMIC_ID = "comicId";
+  public static final String FIELD_NAME_STORE_DATE = "storeDate";
+  public static final String FIELD_NAME_TAG_VALUE = "value";
+  public static final String FIELD_NAME_COMIC_COUNT = "comicCount";
+  public static final String FIELD_NAME_COVER_DATE = "coverDate";
+  public static final String FIELD_NAME_ADDED_DATE = "addedDate";
+  public static final String FIELD_NAME_PAGE_COUNT = "pageCount";
+  public static final String FIELD_NAME_SORTABLE_ISSUE_NUMBER = "sortableIssueNumber";
+  public static final String FIELD_NAME_COMIC_TYPE = "comicType";
+  public static final String FIELD_NAME_COMIC_STATE = "comicState";
+  public static final String FIELD_NAME_ARCHIVE_TYPE = "archiveType";
+  public static final String FIELD_NAME_PUBLISHER = "publisher";
+  public static final String FIELD_NAME_SERIES = "series";
+  public static final String FIELD_NAME_VOLUME = "volume";
+
   @Id
   @Column(name = "comic_id")
   @JsonView({View.ComicListView.class, View.DeletedPageList.class})
