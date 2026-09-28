@@ -1,0 +1,46 @@
+<p-card class="cx-width-100p cx-height-100p">
+  <ng-template #header>
+    <p-breadcrumb [model]="trail()" [home]="home" />
+  </ng-template>
+
+  <p-table
+    [value]="seriesListStore.series()"
+    stripedRows
+    [paginator]="true"
+    [rows]="seriesListStore.size()"
+  >
+    <ng-template #header>
+      <tr>
+        <th>{{ "series-list-page.label.series-name" | translate }}</th>
+        <th>{{ "series-list-page.label.publisher" | translate }}</th>
+        <th>{{ "series-list-page.label.volume" | translate }}</th>
+        <th>{{ "series-list-page.label.in-library" | translate }}</th>
+      </tr>
+    </ng-template>
+
+    <ng-template #body let-series>
+      <tr>
+        <td>
+          <a
+            [routerLink]="[
+              '/library/publishers',
+              series.publisher,
+              'series',
+              series.name,
+              series.volume
+            ]"
+          >
+            {{ series.name }}
+          </a>
+        </td>
+        <td>
+          <a [routerLink]="['/library/publishers', series.publisher]">
+            {{ series.publisher }}
+          </a>
+        </td>
+        <td>{{ series.volume }}</td>
+        <td>{{ series.inLibrary }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</p-card>

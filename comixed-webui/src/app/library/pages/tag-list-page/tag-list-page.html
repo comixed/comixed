@@ -1,0 +1,31 @@
+<p-card class="cx-width-100p cx-height-100p">
+  <ng-template #header>
+    <p-breadcrumb [model]="trail()" [home]="home" />
+    <h2>
+      {{
+        "tag-list-page.page-title" | translate: { tagType: tagStore.tagType() }
+      }}
+    </h2>
+  </ng-template>
+
+  <p-table
+    [value]="tagStore.entries()"
+    stripedRows
+    [paginator]="true"
+    [rows]="tagStore.size()"
+  >
+    <ng-template #header>
+      <tr>
+        <th>{{ "tag-list-page.label.tag-value" | translate }}</th>
+        <th>{{ "tag-list-page.label.comic-count" | translate }}</th>
+      </tr>
+    </ng-template>
+
+    <ng-template #body let-tag>
+      <tr>
+        <td>{{ tag.tagValue }}</td>
+        <td>{{ tag.comicCount }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</p-card>

@@ -1,0 +1,6 @@
+@use './variables' as *;
+
+#comic-cover-container {
+  min-width: 600px;
+  width: min(100vw, 600px);
+}
