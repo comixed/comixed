@@ -1,0 +1,33 @@
+<p-card class="cx-width-100p cx-height-100p">
+  <ng-template #header>
+    <p-breadcrumb [model]="trail()" [home]="home" />
+  </ng-template>
+
+  <p-table
+    [value]="publisherList()"
+    [lazy]="true"
+    (onLazyLoad)="onLoad($event)"
+    dataKey="name"
+    [paginator]="true"
+    stripedRows
+    [rows]="10"
+    [totalRecords]="total()"
+    [loading]="loading()"
+  >
+    <ng-template #header>
+      <tr>
+        <th>{{ "publisher-list-page.label.publisher-name" | translate }}</th>
+        <th>{{ "publisher-list-page.label.issue-count" | translate }}</th>
+        <th>{{ "publisher-list-page.label.series-count" | translate }}</th>
+      </tr>
+    </ng-template>
+
+    <ng-template #body let-publisher>
+      <tr>
+        <td>{{ publisher.name }}</td>
+        <td>{{ publisher.issueCount }}</td>
+        <td>{{ publisher.seriesCount }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</p-card>

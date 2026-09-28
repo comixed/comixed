@@ -1,0 +1,19 @@
+#topbar-container {
+  display: flex;
+  flex-direction: row;
+}
+
+#topbar-row {
+  flex-grow: 1;
+
+  button,
+  div {
+    display: inline-block;
+    vertical-align: middle;
+  }
+}
+
+#cx-logo {
+  font-weight: bold;
+  font-size: xx-large;
+}

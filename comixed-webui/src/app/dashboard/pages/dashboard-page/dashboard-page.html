@@ -1,0 +1,87 @@
+<div id="cx-dashboard-container" class="cx-flex-content-container-row">
+  @for (stat of stats(); track stat) {
+    @if (stat === "publisher-stats") {
+      <div class="cx-flex-content-grow-1">
+        <app-collection-statistics
+          [title]="'dashboard.statistics.publishers.title' | translate"
+          [description]="
+            'dashboard.statistics.publishers.description'
+              | translate: { count: libraryStore.publishers().length }
+          "
+          [imageUrl]="'/images/dashboard/publisher-card.png'"
+          [detailUrl]="'/library/publishers'"
+        ></app-collection-statistics>
+      </div>
+    }
+
+    @if (stat === "series-stats") {
+      <div class="cx-flex-content-grow-1">
+        <app-collection-statistics
+          [title]="'dashboard.statistics.series.title' | translate"
+          [description]="
+            'dashboard.statistics.series.description'
+              | translate: { count: libraryStore.series().length }
+          "
+          [imageUrl]="'/images/dashboard/series-card.png'"
+          [detailUrl]="'/library/series'"
+        ></app-collection-statistics>
+      </div>
+    }
+
+    @if (stat === "character-stats") {
+      <div class="cx-flex-content-grow-1">
+        <app-collection-statistics
+          [title]="'dashboard.statistics.characters.title' | translate"
+          [description]="
+            'dashboard.statistics.series.description'
+              | translate: { count: libraryStore.characters().length }
+          "
+          [imageUrl]="'/images/dashboard/character-card.png'"
+          [detailUrl]="'/library/characters'"
+        ></app-collection-statistics>
+      </div>
+    }
+
+    @if (stat === "team-stats") {
+      <div class="cx-flex-content-grow-1">
+        <app-collection-statistics
+          [title]="'dashboard.statistics.teams.title' | translate"
+          [description]="
+            'dashboard.statistics.teams.description'
+              | translate: { count: libraryStore.teams().length }
+          "
+          [imageUrl]="'/images/dashboard/team-card.png'"
+          [detailUrl]="'/library/teams'"
+        ></app-collection-statistics>
+      </div>
+    }
+
+    @if (stat === "location-stats") {
+      <div class="cx-flex-content-grow-1">
+        <app-collection-statistics
+          [title]="'dashboard.statistics.locations.title' | translate"
+          [description]="
+            'dashboard.statistics.locations.description'
+              | translate: { count: libraryStore.locations().length }
+          "
+          [imageUrl]="'/images/dashboard/location-card.png'"
+          [detailUrl]="'/library/locations'"
+        ></app-collection-statistics>
+      </div>
+    }
+
+    @if (stat === "story-stats") {
+      <div class="cx-flex-content-grow-1">
+        <app-collection-statistics
+          [title]="'dashboard.statistics.stories.title' | translate"
+          [description]="
+            'dashboard.statistics.stories.description'
+              | translate: { count: libraryStore.stories().length }
+          "
+          [imageUrl]="'/images/dashboard/story-card.png'"
+          [detailUrl]="'/library/stories'"
+        ></app-collection-statistics>
+      </div>
+    }
+  }
+</div>
