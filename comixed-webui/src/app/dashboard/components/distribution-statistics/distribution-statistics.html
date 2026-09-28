@@ -1,0 +1,9 @@
+<p-card class="cx-width-100p">
+  <ng-template #header>
+    <h3 class="cx-width-100p cx-justify-center cx-no-text-wrap">
+      {{ chartTitle() }}
+    </h3>
+  </ng-template>
+
+  <p-chart type="pie" [data]="chartData()" [options]="options" />
+</p-card>
