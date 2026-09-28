@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2026, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,47 +16,48 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createReducer, on } from '@ngrx/store';
-import {
-  startMessagingSuccess,
-  messagingStopped,
-  restartMessaging,
-  startMessaging,
-  stopMessaging
-} from '@app/messaging/actions/messaging.actions';
+import { createFeature, createReducer, on } from '@ngrx/store';
+import { MessagingActions } from '@app/messaging/actions/messaging.actions';
 
 export const MESSAGING_FEATURE_KEY = 'messaging_state';
 
 export interface MessagingState {
-  busy: boolean;
   started: boolean;
+  starting: boolean;
+  stopping: boolean;
 }
 
-export const initialState: MessagingState = {
-  busy: false,
-  started: false
+export const initialMessagingState: MessagingState = {
+  started: false,
+  starting: false,
+  stopping: false
 };
 
-export const reducer = createReducer(
-  initialState,
-  on(startMessaging, state => ({
+export const messagingReducer = createReducer(
+  initialMessagingState,
+  on(MessagingActions.start, state => ({
     ...state,
-    busy: true,
-    started: false
+    starting: true,
+    stopping: false
   })),
-  on(startMessagingSuccess, state => ({
+  on(MessagingActions.started, state => ({
     ...state,
-    busy: false,
+    starting: false,
     started: true
   })),
-  on(restartMessaging, state => ({
+  on(MessagingActions.stop, state => ({
     ...state,
-    busy: true
+    starting: false,
+    stopping: true
   })),
-  on(stopMessaging, state => ({ ...state, busy: true })),
-  on(messagingStopped, state => ({
+  on(MessagingActions.stopped, state => ({
     ...state,
-    busy: false,
+    stopping: false,
     started: false
   }))
 );
+
+export const messagingFeature = createFeature({
+  name: MESSAGING_FEATURE_KEY,
+  reducer: messagingReducer
+});

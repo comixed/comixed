@@ -1,0 +1,14 @@
+<p-card class="cx-width-100p cx-height-100p">
+  <ng-template #header>
+    <p-breadcrumb [model]="trail()" [home]="home" />
+  </ng-template>
+
+  <app-comic-table
+    [comics]="publisherComicListEntries()"
+    [busy]="publisherComicListBusy()"
+    [rows]="publisherComicListRows()"
+    [first]="publisherComicListFirst()"
+    [total]="publisherComicListTotal()"
+    (loadComics)="onLoad($event)"
+  ></app-comic-table>
+</p-card>

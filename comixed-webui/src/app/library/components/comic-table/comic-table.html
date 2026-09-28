@@ -1,0 +1,73 @@
+<p-table
+  [value]="comicEntries()"
+  [lazy]="true"
+  (onLazyLoad)="loadComics.emit($event)"
+  dataKey="comicId"
+  [paginator]="true"
+  stripedRows
+  [first]="comicListFirst()"
+  [rows]="comicListRows()"
+  [totalRecords]="comicListTotalCount()"
+  [loading]="comicListBusy()"
+>
+  <ng-template #header>
+    <tr>
+      <th>{{ "comic-table.label.thumbnail" | translate }}</th>
+      <th>{{ "comic-table.label.comic-state" | translate }}</th>
+      <th>{{ "comic-table.label.publisher" | translate }}</th>
+      <th>{{ "comic-table.label.series" | translate }}</th>
+      <th>{{ "comic-table.label.volume" | translate }}</th>
+      <th>{{ "comic-table.label.issue-number" | translate }}</th>
+      <th>{{ "comic-table.label.page-count" | translate }}</th>
+      <th>{{ "comic-table.label.cover-date" | translate }}</th>
+      <th>{{ "comic-table.label.store-date" | translate }}</th>
+      <th>{{ "comic-table.label.added-date" | translate }}</th>
+    </tr>
+  </ng-template>
+
+  <ng-template #body let-comic>
+    <tr>
+      <td>
+        <img
+          [src]="comic | comicCoverUrl"
+          class="comic-cover"
+          [alt]="comic.baseFilename"
+        />
+      </td>
+      <td>
+        <fa-icon
+          [icon]="getIconForComicState(comic.comicState)"
+          [pTooltip]="'comic-table.label.state.' + comic.comicState | translate"
+        ></fa-icon>
+      </td>
+      <td>
+        <a [routerLink]="['/library/publishers', comic.publisher]">
+          {{ comic.publisher }}
+        </a>
+      </td>
+      <td>
+        <a
+          [routerLink]="[
+            '/library/publishers',
+            comic.publisher,
+            'series',
+            comic.series,
+            comic.volume
+          ]"
+        >
+          {{ comic.series }}
+        </a>
+      </td>
+      <td>{{ comic.volume }}</td>
+      <td>
+        <a [routerLink]="['/library/comics', comic.comicId]">
+          {{ comic.issueNumber }}
+        </a>
+      </td>
+      <td>{{ comic.pageCount }}</td>
+      <td>{{ comic.coverDate | date: "mediumDate" }}</td>
+      <td>{{ comic.storeDate | date: "mediumDate" }}</td>
+      <td>{{ comic.addedDate | date: "mediumDate" }}</td>
+    </tr>
+  </ng-template>
+</p-table>
