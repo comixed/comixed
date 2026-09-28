@@ -1,0 +1,15 @@
+@use './variables' as *;
+
+.cx-flex-content-container-row {
+  gap: 1rem;
+  justify-content: space-evenly;
+}
+
+p-skeleton {
+  padding: 15px;
+  margin: 15px;
+}
+
+p-date-picker {
+  width: 100%;
+}

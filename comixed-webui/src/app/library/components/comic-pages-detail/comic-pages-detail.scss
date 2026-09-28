@@ -1,0 +1,5 @@
+@use './variables' as *;
+
+img {
+  width: max(350px, calc($cx-portal-width / 10));
+}

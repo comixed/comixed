@@ -1,0 +1,31 @@
+<p-card id="comic-list-page-card" class="cx-width-100p">
+  <ng-template #header>
+    <div class="cx-width-100p cx-justify-center">
+      <p-breadcrumb [model]="trail()" [home]="home" />
+
+      <div class="cx-spacer"></div>
+
+      @if (readState()) {
+        <p-toggle-button
+          id="unread-comic-toggle"
+          [ngModel]="unreadComics()"
+          onIcon="pi pi-circle-on"
+          offIcon="pi pi-circle-off"
+          [onLabel]="'comic-list-page.label.unread-only' | translate"
+          [offLabel]="'comic-list-page.label.read-only' | translate"
+          [pTooltip]="'comic-list-page.tooltip.toggle-unread' | translate"
+          (onChange)="onToggleUnreadOnly($event.checked)"
+        />
+      }
+    </div>
+  </ng-template>
+
+  <app-comic-table
+    [comics]="comicListEntries()"
+    [first]="comicListFirst()"
+    [rows]="comicListRows()"
+    [total]="comicListTotalCount()"
+    [busy]="comicListBusy()"
+    (loadComics)="onLoad($event)"
+  ></app-comic-table>
+</p-card>
