@@ -1,0 +1,32 @@
+<p-card class="cx-width-100 cx-height-100">
+  <ng-template #header>
+    <p-breadcrumb [model]="trail" [home]="home" />
+  </ng-template>
+
+  <p-table
+    [value]="publisherListStore.publishers()"
+    stripedRows
+    [paginator]="true"
+    [rows]="publisherListStore.size()"
+  >
+    <ng-template #header>
+      <tr>
+        <th>{{ "publisher-list-page.label.publisher-name" | translate }}</th>
+        <th>{{ "publisher-list-page.label.issue-count" | translate }}</th>
+        <th>{{ "publisher-list-page.label.series-count" | translate }}</th>
+      </tr>
+    </ng-template>
+
+    <ng-template #body let-publisher>
+      <tr>
+        <td>
+          <a [routerLink]="['/library/publishers', publisher.name]">
+            {{ publisher.name }}
+          </a>
+        </td>
+        <td>{{ publisher.issueCount }}</td>
+        <td>{{ publisher.seriesCount }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</p-card>

@@ -1,0 +1,180 @@
+{
+  "app": {
+    "page-title": "ComiXed: {title}"
+  },
+  "comic-list-page": {
+    "label": {
+      "added-date": "Added",
+      "comic-state": "State",
+      "cover-date": "Cover Date",
+      "issue-number": "Issue #",
+      "page-count": "# Pages",
+      "publisher": "Publisher",
+      "series": "Series",
+      "store-date": "Store Date",
+      "thumbnail": "Cover",
+      "volume": "Volume"
+    },
+    "page-title": "{pageType, select, READ{Read} UNSCRAPED{Unscraped} DUPLICATE{Duplicate} DELETED{Deleted} other{All} } Comics"
+  },
+  "dashboard": {
+    "page-title": "Dashboard",
+    "statistics": {
+      "archive-type": {
+        "title": "Archive Types"
+      },
+      "characters": {
+        "description": "There {count, plural, =1 {is 1 character} other{are # characters}}...",
+        "title": "Characters"
+      },
+      "collections": {
+        "title": "Collections"
+      },
+      "comic-state": {
+        "title": "Comic States"
+      },
+      "locations": {
+        "description": "There {count, plural, =1 {is 1 location} other{# locations}}...",
+        "title": "Locations"
+      },
+      "publishers": {
+        "description": "There {count, plural, =1 {is 1 publisher} other{are # publishers}}...",
+        "title": "Publishers"
+      },
+      "publisher-year": {
+        "title": "Publishers By Year"
+      },
+      "series": {
+        "description": "There {count, plural, =1 {is 1 series} other{are # series}}...",
+        "title": "Series"
+      },
+      "stories": {
+        "description": "There {count, plural, =1 {is 1 story} other{are # stories}}...",
+        "title": "Stories"
+      },
+      "teams": {
+        "description": "There {count, plural, =1 {is 1 team} other{are # teams}}...",
+        "title": "Teams"
+      },
+      "text": {
+        "view-more": "View more detail..."
+      }
+    }
+  },
+  "import-comics-page": {
+    "label": {
+      "10-comics": "10 Comics",
+      "25-comics": "25 Comics",
+      "50-comics": "50 Comics",
+      "100-comics": "100 Comics",
+      "1000-comics": "1000 Comics",
+      "all-comics": "All Comics",
+      "base-filename": "Filename",
+      "directory-input": "Directory",
+      "maximum-input": "Maximum Files To Return",
+      "selected": "#",
+      "size": "File Size"
+    },
+    "page-title": "Import Comics",
+    "placeholder": {
+      "directory-input": "The root directory to search...",
+      "maximum-input": "Select an option..."
+    },
+    "text": {
+      "size": "{size} Mb"
+    },
+    "tooltip": {
+      "import-comics-button": "There {selected, plural, =1{is 1} other{are #}} files selected..."
+    }
+  },
+  "library-statistics-panel": {
+    "segment": {
+      "deleted-comics": "Deleted",
+      "duplicate-comics": "Duplicates",
+      "read-comics": "Read",
+      "total-comics": "Total",
+      "unscraped-comics": "Unscraped"
+    }
+  },
+  "login-page": {
+    "button": {
+      "submit": "Login"
+    },
+    "label": {
+      "email": "Email",
+      "password": "Password"
+    },
+    "page-title": "Login",
+    "placeholder": {
+      "email": "your@address.tld",
+      "password": "your password..."
+    },
+    "title": "Login"
+  },
+  "publisher-detail-page": {
+    "label": {
+      "in-library": "# of Comics",
+      "series-name": "Series Name",
+      "volume": "Volume"
+    },
+    "page-title": "Publisher: {name}"
+  },
+  "publisher-list-page": {
+    "label": {
+      "issue-count": "# Comics",
+      "publisher-name": "Name",
+      "series-count": "# Series"
+    },
+    "page-title": "Publisher List",
+    "text": {
+      "no-publishers-found": "No publishers found..."
+    }
+  },
+  "series-detail-page": {
+    "label": {
+      "cover-date": "Cover Date",
+      "found": "Found",
+      "issue-number": "Issue #",
+      "store-date": "Store Date",
+      "title": "Title"
+    },
+    "page-title": "{name} V{volume}"
+  },
+  "series-list-page": {
+    "label": {
+      "in-library": "# of Comics",
+      "publisher": "Publisher",
+      "series-name": "Series Name",
+      "volume": "Volume"
+    },
+    "page-title": "Series List",
+    "text": {
+      "no-series-found": "No series found..."
+    }
+  },
+  "tag-list-page": {
+    "label": {
+      "comic-count": "# of Comics",
+      "tag-value": "Value"
+    },
+    "page-title": "{tagType, select, CHARACTER{Character} TEAM{Team} LOCATION{Location} STORY{Story} other{Unknown}} List",
+    "text": {
+      "no-tags-found": "No entries found..."
+    }
+  },
+  "tooltip": {
+    "view-details": "View details for {name}..."
+  },
+  "topbar": {
+    "tooltip": {
+      "home-button": "Go to the dashboard...",
+      "import-button": "Import comic files...",
+      "logout-button": "Log out of the server..."
+    }
+  },
+  "welcome": {
+    "first-logged-in": "User since {date}.",
+    "greet-user": "Welcome back {email}!",
+    "last-logged-in": "Last logged in on {date}."
+  }
+}

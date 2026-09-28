@@ -1,0 +1,32 @@
+<p-card class="cx-width-100 cx-height-100">
+  <ng-template #header>
+    <p-breadcrumb [model]="trail" [home]="home" />
+  </ng-template>
+
+  <p-table
+    [value]="seriesDetailStore.issues()"
+    stripedRows
+    [paginator]="true"
+    [rows]="seriesDetailStore.size()"
+  >
+    <ng-template #header>
+      <tr>
+        <th>{{ "series-detail-page.label.issue-number" | translate }}</th>
+        <th>{{ "series-detail-page.label.title" | translate }}</th>
+        <th>{{ "series-detail-page.label.cover-date" | translate }}</th>
+        <th>{{ "series-detail-page.label.store-date" | translate }}</th>
+        <th>{{ "series-detail-page.label.found" | translate }}</th>
+      </tr>
+    </ng-template>
+
+    <ng-template #body let-issue>
+      <tr>
+        <td>{{ issue.issueNumber }}</td>
+        <td>{{ issue.title }}</td>
+        <td>{{ issue.coverDate | date: "mediumDate" }}</td>
+        <td>{{ issue.releaseDate | date: "mediumDate" }}</td>
+        <td>{{ issue.found }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</p-card>
