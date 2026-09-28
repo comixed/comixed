@@ -1,0 +1,31 @@
+<p-card class="cx-width-100p cx-height-100p">
+  <ng-template #header>
+    <h3 class="cx-width-100p cx-justify-center cx-no-text-wrap">
+      {{ chartTitle() }}
+    </h3>
+  </ng-template>
+
+  <div class="chart-container">
+    <p-chart type="bar" [data]="chartData()" [options]="options" />
+  </div>
+
+  <ng-template #footer class="cx-padding-15">
+    <div class="cx-width-100p cx-justify-start">
+      <p-button
+        id="show-all-statistics-button"
+        icon="pi pi-chart-bar"
+        severity="secondary"
+        [pTooltip]="'dashboard.statistics.text.show-details' | translate"
+        (click)="zoom.emit()"
+      ></p-button>
+
+      <p-button
+        id="show-top-statistics-button"
+        icon="pi pi-info-circle"
+        severity="secondary"
+        [pTooltip]="'dashboard.statistics.text.go-to-page' | translate"
+        [routerLink]="chartUrl()"
+      ></p-button>
+    </div>
+  </ng-template>
+</p-card>
