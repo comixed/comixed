@@ -42,7 +42,6 @@ import org.comixedproject.state.comicbooks.ComicStateAdaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Limit;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -89,25 +88,7 @@ public class ComicService {
   @Transactional(readOnly = true)
   public Comic getComic(final long id) throws ComicException {
     log.debug("Getting comic: id={}", id);
-
-    final var result = this.comicRepository.getReferenceById(id);
-    result.setNextIssueId(
-        this.comicRepository.findNextComicIdInSeries(
-            result.getSeries(),
-            result.getVolume(),
-            result.getIssueNumber(),
-            result.getCoverDate(),
-            Limit.of(1)));
-    result.setPreviousIssueId(
-        this.comicRepository.findPreviousComicIdInSeries(
-            result.getSeries(),
-            result.getVolume(),
-            result.getIssueNumber(),
-            result.getCoverDate(),
-            Limit.of(1)));
-
-    log.debug("Returning comic: id={}", result.getComicId());
-    return result;
+    return this.comicRepository.getReferenceById(id);
   }
 
   @Transactional
