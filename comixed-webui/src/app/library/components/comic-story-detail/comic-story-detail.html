@@ -1,0 +1,90 @@
+<p-accordion value="0">
+  <p-accordion-panel value="0">
+    <p-accordion-header>
+      <span>
+        {{ "comic-story-detail.label.characters" | translate }}
+        <p-badge [value]="characterTags().length" />
+      </span>
+    </p-accordion-header>
+    <p-accordion-content>
+      <div class="cx-flex-content-container-row">
+        @for (tag of characterTags(); track tag.type + tag.value) {
+          <div class="cx-flex-content-grow-1">
+            <app-story-detail-card [value]="tag.value"></app-story-detail-card>
+          </div>
+        }
+      </div>
+    </p-accordion-content>
+  </p-accordion-panel>
+  <p-accordion-panel value="1">
+    <p-accordion-header>
+      <span>
+        {{ "comic-story-detail.label.teams" | translate }}
+        <p-badge [value]="teamTags().length" />
+      </span>
+    </p-accordion-header>
+    <p-accordion-content>
+      <div class="cx-flex-content-container-row">
+        @for (tag of teamTags(); track tag.type + tag.value) {
+          <div class="cx-flex-content-grow-1">
+            <app-story-detail-card [value]="tag.value"></app-story-detail-card>
+          </div>
+        }
+      </div>
+    </p-accordion-content>
+  </p-accordion-panel>
+  <p-accordion-panel value="2">
+    <p-accordion-header>
+      <span>
+        {{ "comic-story-detail.label.locations" | translate }}
+        <p-badge [value]="locationTags().length" />
+      </span>
+    </p-accordion-header>
+    <p-accordion-content>
+      <div class="cx-flex-content-container-row">
+        @for (tag of locationTags(); track tag.type + tag.value) {
+          <div class="cx-flex-content-grow-1">
+            <app-story-detail-card [value]="tag.value"></app-story-detail-card>
+          </div>
+        }
+      </div>
+    </p-accordion-content>
+  </p-accordion-panel>
+  <p-accordion-panel value="3">
+    <p-accordion-header>
+      <span>
+        {{ "comic-story-detail.label.stories" | translate }}
+        <p-badge [value]="storyTags().length" />
+      </span>
+    </p-accordion-header>
+    <p-accordion-content>
+      <div class="cx-flex-content-container-row">
+        @for (tag of storyTags(); track tag.type + tag.value) {
+          <div class="cx-flex-content-grow-1">
+            <app-story-detail-card [value]="tag.value"></app-story-detail-card>
+          </div>
+        }
+      </div>
+    </p-accordion-content>
+  </p-accordion-panel>
+  <p-accordion-panel value="4">
+    <p-accordion-header>
+      <span>
+        {{ "comic-story-detail.label.credits" | translate }}
+        <p-badge [value]="creditTags().length" />
+      </span>
+    </p-accordion-header>
+    <p-accordion-content>
+      <div class="cx-flex-content-container-row">
+        @for (tag of creditTags(); track tag.type + tag.value) {
+          <div class="cx-flex-content-grow-1">
+            <app-story-detail-card
+              [type]="tag.type"
+              [value]="tag.value"
+            ></app-story-detail-card>
+          </div>
+        }
+      </div>
+    </p-accordion-content>
+  </p-accordion-panel>
+</p-accordion>

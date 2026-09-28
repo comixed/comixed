@@ -1,0 +1,20 @@
+@use './variables' as *;
+
+#app-topbar-container {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: $cx-topbar-height;
+  z-index: 99;
+}
+
+#app-portal {
+  position: fixed;
+  overflow-y: auto;
+  background-color: transparent;
+  top: 70px;
+  left: 15px;
+  width: $cx-portal-width;
+  height: $cx-portal-height;
+}
