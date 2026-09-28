@@ -25,6 +25,7 @@ import jakarta.servlet.http.HttpSession;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.model.net.plugin.CreatePluginRequest;
 import org.comixedproject.model.net.plugin.UpdatePluginRequest;
@@ -62,7 +63,7 @@ class LibraryPluginControllerTest {
   @Mock private LibraryPlugin savedLibraryPlugin;
   @Mock private Map<String, String> pluginProperties;
   @Mock private HttpSession session;
-  @Mock private List selectedIds;
+  @Mock private Set<Long> selectedIds;
 
   @Captor private ArgumentCaptor<List<Long>> idListArgumentCaptor;
 
@@ -71,7 +72,7 @@ class LibraryPluginControllerTest {
     Mockito.when(principal.getName()).thenReturn(TEST_USER_EMAIL);
     Mockito.when(session.getAttribute(LIBRARY_SELECTIONS)).thenReturn(TEST_ENCODED_IDS);
     Mockito.when(comicSelectionService.decodeSelections(TEST_ENCODED_IDS)).thenReturn(selectedIds);
-    Mockito.when(comicSelectionService.encodeSelections(Mockito.anyList()))
+    Mockito.when(comicSelectionService.encodeSelections(Mockito.anySet()))
         .thenReturn(TEST_REENCODED_IDS);
   }
 
@@ -208,7 +209,7 @@ class LibraryPluginControllerTest {
   void runLibraryPlugin_selectedComics_serviceException() throws LibraryPluginException {
     Mockito.doThrow(LibraryPluginException.class)
         .when(libraryPluginService)
-        .runLibraryPlugin(Mockito.anyLong(), Mockito.anyList());
+        .runLibraryPlugin(Mockito.anyLong(), Mockito.anySet());
 
     assertThrows(
         LibraryPluginException.class,

@@ -19,6 +19,7 @@
 package org.comixedproject.service.library;
 
 import java.util.List;
+import java.util.Set;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.library.DuplicateComic;
 import org.comixedproject.repositories.library.DuplicateComicRepository;
@@ -69,7 +70,7 @@ public class DuplicateComicService {
    *
    * @return the comic book ids
    */
-  public List<Long> getDuplicateComicIds() {
+  public Set<Long> getDuplicateComicIds() {
     return this.duplicateComicRepository.getDuplicateComicIds();
   }
 

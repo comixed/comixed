@@ -1,0 +1,72 @@
+<div class="cx-flex-content-container-row">
+  <div class="cx-flex-content-grow-1">
+    <div class="cx-width-100p">
+      <p-button
+        id="reset-volume-list"
+        icon="pi pi-arrow-left"
+        severity="warn"
+        [pTooltip]="'scraping-volume-table.tooltip.reset-volumes' | translate"
+        (onClick)="onResetVolumes()"
+      />
+    </div>
+    <p-table
+      [value]="scrapingVolumes()"
+      dataKey="id"
+      [paginator]="true"
+      paginatorPosition="both"
+      stripedRows
+      selectionMode="single"
+      [first]="scrapingVolumesFirst()"
+      [rows]="scrapingVolumesRows()"
+      [totalRecords]="scrapingVolumes().length"
+      [loading]="scrapingBusy()"
+      (onRowSelect)="onRowSelect($event.data || null)"
+    >
+      <ng-template #header>
+        <tr>
+          <th>{{ "scraping-volume-table.label.publisher" | translate }}</th>
+          <th>{{ "scraping-volume-table.label.series" | translate }}</th>
+          <th>{{ "scraping-volume-table.label.start-year" | translate }}</th>
+          <th>{{ "scraping-volume-table.label.issue-count" | translate }}</th>
+        </tr>
+      </ng-template>
+
+      <ng-template #body let-volume>
+        <tr [id]="`scraping-volume-${volume.id}`" [pSelectableRow]="volume">
+          <td>{{ volume.publisher }}</td>
+          <td>{{ volume.name }}</td>
+          <td>{{ volume.startYear }}</td>
+          <td>{{ volume.issueCount | number }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  @if (scrapingIssue()) {
+    <p-card id="scraping-issue-card">
+      <ng-template #title>
+        {{ scrapingIssue()! | scrapingIssueTitle }}
+      </ng-template>
+
+      <img
+        [src]="scrapingIssue()?.coverUrl"
+        [alt]="scrapingIssue()! | scrapingIssueTitle"
+      />
+
+      <ng-template #footer>
+        <div class="cx-width-100p cx-justify-end">
+          <p-button
+            id="select-issue-button"
+            icon="pi pi-send"
+            severity="primary"
+            [pTooltip]="
+              'scraping-volume-table.tooltip.select-issue' | translate
+            "
+            [label]="'app.button.select' | translate"
+            (onClick)="issueSelected.emit(scrapingIssue()!)"
+          />
+        </div>
+      </ng-template>
+    </p-card>
+  }
+</div>
