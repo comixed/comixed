@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2020, The ComiXed Project
+ * Copyright (C) 2026, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { ComicFileGroup } from '@app/comic-files/models/comic-file-group';
+import { ComicFileGroup } from '@app/library/models/comic-file-group';
 
 export interface LoadComicFilesResponse {
   groups: ComicFileGroup[];
