@@ -1,0 +1,39 @@
+/*
+ * ComiXed - A digital comic book library management application.
+ * Copyright (C) 2026, The ComiXed Project
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses>
+ */
+
+import { API_ROOT_URL, SECURED_MESSAGING_PREFIX } from '@app/app-constants';
+
+export const AUTHENTICATION_TOKEN_KEY = 'comixed.auth-token';
+
+export const HTTP_AUTHORIZATION_HEADER = 'Authorization';
+export const HTTP_REQUESTED_WITH_HEADER = 'X-Requested-With';
+export const HTTP_XML_REQUEST = 'XMLHttpRequest';
+
+export const ROLE_NAME_READER = 'READER';
+export const ROLE_NAME_ADMIN = 'ADMIN';
+
+export const CHECK_FOR_ADMIN_ACCOUNT_URL = `${API_ROOT_URL}/users/admins/existing`;
+export const CREATE_ADMIN_ACCOUNT_URL = `${API_ROOT_URL}/users/admins`;
+export const LOGIN_PAGE_URL = '/login';
+export const LOAD_USER_URL = `${API_ROOT_URL}/user`;
+export const LOGIN_URL = `${API_ROOT_URL}/token/generate`;
+export const SAVE_USER_PREFERENCE_URL = `${API_ROOT_URL}/user/preferences/\${preferenceName}`;
+
+// messaging
+export const ACCOUNT_UPDATES_TOPIC = `/secured/user/\${email}/user/current`;
+export const COMIC_SELECTION_UPDATE_TOPIC = `${SECURED_MESSAGING_PREFIX}/\${email}/topic/comic-book-selection.update`;

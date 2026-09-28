@@ -1,0 +1,52 @@
+<div class="statistics-container cx-no-text-wrap">
+  <p-button
+    [label]="'library-statistics-panel.segment.total-comics' | translate"
+    [badge]="totalComics().toString()"
+    [routerLink]="['/library/all']"
+    severity="primary"
+  />
+
+  <p-button
+    [label]="'library-statistics-panel.segment.selected-comics' | translate"
+    [badge]="selectedComicEntries().length.toString()"
+    [routerLink]="['/library/read']"
+    severity="secondary"
+  />
+
+  <p-button
+    [label]="'library-statistics-panel.segment.read-comics' | translate"
+    [badge]="readComicIds().length.toString()"
+    [routerLink]="['/library/read']"
+    severity="secondary"
+  />
+
+  <p-button
+    [label]="'library-statistics-panel.segment.unscraped-comics' | translate"
+    [badge]="unscrapedComics().toString()"
+    [routerLink]="['/library/unscraped']"
+    severity="contrast"
+  />
+
+  <p-button
+    [label]="'library-statistics-panel.segment.duplicate-comics' | translate"
+    [badge]="duplicateComics().toString()"
+    [routerLink]="['/library/duplicates']"
+    severity="danger"
+  />
+
+  <p-button
+    [label]="'library-statistics-panel.segment.deleted-comics' | translate"
+    [badge]="deletedComics().toString()"
+    [routerLink]="['/library/deleted']"
+    severity="danger"
+  />
+
+  @if (userIsAdmin()) {
+    <p-button
+      [label]="'library-statistics-panel.segment.batch-processes' | translate"
+      [badge]="batchProcessCount().toString()"
+      [routerLink]="['/admin/processes']"
+      severity="info"
+    />
+  }
+</div>

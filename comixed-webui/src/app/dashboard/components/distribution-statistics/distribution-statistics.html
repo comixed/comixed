@@ -1,0 +1,11 @@
+<p-card class="cx-width-100p">
+  <ng-template #header>
+    <h3 class="cx-width-100p cx-justify-center cx-no-text-wrap">
+      {{ chartTitle() }}
+    </h3>
+  </ng-template>
+
+  <div class="chart-container" style="min-width: 0">
+    <p-chart type="doughnut" [data]="chartData()" [options]="options" />
+  </div>
+</p-card>
