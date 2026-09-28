@@ -1,0 +1,28 @@
+<p-toolbar>
+  <ng-template #start>
+    @if (currentUserStore.isAuthenticated()) {
+      <p-button
+        [pTooltip]="'topbar.tooltip.home-button' | translate"
+        icon="pi pi-home"
+        severity="primary"
+        [routerLink]="['/']"
+      />
+    }
+    &nbsp;
+    <span class="cx-logo">ComiXed</span>
+  </ng-template>
+
+  <ng-template #center>
+    <app-library-statistics-panel></app-library-statistics-panel>
+  </ng-template>
+
+  <ng-template #end>
+    @if (currentUserStore.isAuthenticated()) {
+      <p-button
+        [pTooltip]="'topbar.tooltip.logout-button' | translate"
+        icon="pi pi-sign-out"
+        severity="warn"
+      />
+    }
+  </ng-template>
+</p-toolbar>

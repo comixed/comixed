@@ -1,0 +1,43 @@
+<p-card id="login-form-container" class="cx-centered">
+  <ng-template #title>
+    <h2 class="cx-width-100 cx-justify-center">
+      {{ "login-page.title" | translate }}
+    </h2>
+  </ng-template>
+
+  <form [formGroup]="loginForm">
+    <p-ifta-label>
+      <label for="input-login-email">
+        {{ "login-page.label.email" | translate }}
+      </label>
+      <input
+        id="input-login-email"
+        pInputText
+        type="email"
+        formControlName="email"
+        [placeholder]="'login-page.placeholder.email' | translate"
+      />
+    </p-ifta-label>
+    <p-ifta-label>
+      <label for="input-login-password">
+        {{ "login-page.label.password" | translate }}
+      </label>
+      <input
+        id="input-login-password"
+        pInputText
+        type="password"
+        formControlName="password"
+        [placeholder]="'login-page.placeholder.password' | translate"
+      />
+    </p-ifta-label>
+  </form>
+
+  <ng-template #footer class="cx-justify-center">
+    <p-button
+      icon="pi pi-submit"
+      [label]="'login-page.button.submit' | translate"
+      [disabled]="!loginForm.valid"
+      (click)="onSubmitForm()"
+    ></p-button>
+  </ng-template>
+</p-card>
