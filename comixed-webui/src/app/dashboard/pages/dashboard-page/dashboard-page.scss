@@ -1,0 +1,7 @@
+@use './variables' as *;
+
+.cx-flex-content-container-row {
+  gap: 2rem;
+  margin: $cx-margin-width;
+  justify-content: stretch;
+}

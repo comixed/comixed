@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2022, The ComiXed Project
+ * Copyright (C) 2026, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@ export interface Issue {
   volume: string;
   issueNumber: string;
   title: string;
-  coverDate: number;
   storeDate: number;
+  coverDate: number;
   found: boolean;
 }
