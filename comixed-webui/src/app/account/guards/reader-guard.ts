@@ -21,13 +21,16 @@ import { inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { selectCurrentUserIsReader } from '@app/account/selectors/current-user.selectors';
 import { LoggerService } from '@angular-ru/cdk/logger';
-import { tap } from 'rxjs';
+import { filter, map, take, tap } from 'rxjs';
 
 export const readerGuard: CanActivateFn = () => {
   const logger = inject(LoggerService);
   const store = inject(Store);
 
-  return store
-    .select(selectCurrentUserIsReader)
-    .pipe(tap(isReader => logger.debug('Is reader guard:', isReader)));
+  return store.select(selectCurrentUserIsReader).pipe(
+    filter(status => status.checked),
+    take(1),
+    tap(status => logger.trace('Is reader?', status.passed)),
+    map(status => status.passed)
+  );
 };

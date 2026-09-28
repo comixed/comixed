@@ -19,15 +19,18 @@
 import { CanActivateFn } from '@angular/router';
 import { inject } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
-import { tap } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { selectCurrentUserIsAdmin } from '@app/account/selectors/current-user.selectors';
+import { filter, map, take, tap } from 'rxjs';
 
 export const adminGuard: CanActivateFn = () => {
   const logger = inject(LoggerService);
   const store = inject(Store);
 
-  return store
-    .select(selectCurrentUserIsAdmin)
-    .pipe(tap(isAdmin => logger.debug('Is admin guard:', isAdmin)));
+  return store.select(selectCurrentUserIsAdmin).pipe(
+    filter(status => status.checked),
+    take(1),
+    tap(status => logger.trace('Is admin?', status.passed)),
+    map(status => status.passed)
+  );
 };

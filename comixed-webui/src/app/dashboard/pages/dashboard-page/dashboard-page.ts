@@ -37,11 +37,15 @@ export class DashboardPage {
 
   constructor() {
     this.translateService.onLangChange.subscribe({
-      next: () =>
-        this.titleService.setTitle(
-          this.translateService.instant('dashboard.page-title')
-        )
+      next: () => this.doLoadTranslations()
     });
     this.stats.set(DEFAULT_DASHBOARD_STATS.split('|'));
+    this.doLoadTranslations();
+  }
+
+  private doLoadTranslations() {
+    this.titleService.setTitle(
+      this.translateService.instant('dashboard.page-title')
+    );
   }
 }

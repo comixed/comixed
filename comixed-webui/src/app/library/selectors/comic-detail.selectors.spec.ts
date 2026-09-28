@@ -25,13 +25,19 @@ import {
 import {
   selectComicDetail,
   selectComicDetailLoaded,
+  selectComicDetailPages,
   selectComicDetailTags
 } from '@app/library/selectors/comic-detail.selectors';
-import { COMIC_1, COMIC_TAG_1 } from '@app/library/library-fixtures';
+import {
+  COMIC_1,
+  COMIC_PAGE_1,
+  COMIC_TAG_1
+} from '@app/library/library-fixtures';
 
 describe('CurrentUser Selectors', () => {
   const TEST_COMIC = COMIC_1;
   const TEST_TAGS = [COMIC_TAG_1];
+  const TEST_PAGES = [COMIC_PAGE_1];
 
   let state: ComicDetailState;
 
@@ -84,5 +90,16 @@ describe('CurrentUser Selectors', () => {
         }
       })
     ).toBe(TEST_TAGS);
+  });
+
+  it('should return the pages', () => {
+    expect(
+      selectComicDetailPages({
+        [COMIC_DETAIL_FEATURE_KEY]: {
+          ...initialComicDetailState,
+          pages: TEST_PAGES
+        }
+      })
+    ).toBe(TEST_PAGES);
   });
 });

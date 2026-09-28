@@ -34,6 +34,7 @@ import {
 import {
   selectComicDetail,
   selectComicDetailLoaded,
+  selectComicDetailPages,
   selectComicDetailTags
 } from '@app/library/selectors/comic-detail.selectors';
 import { ComicDetailTrailPipe } from '@app/library/pipes/comic-detail-trail-pipe';
@@ -58,6 +59,7 @@ import { WebSocketService } from '@app/messaging/services/web-socket-service';
 import { LoadComicResponse } from '@app/library/models/net/load-comic-response';
 import { interpolate } from '@app/app-functions';
 import { Comic } from '@app/library/models/comic';
+import { Badge } from '@openng/optimus-ui/badge';
 
 @Component({
   imports: [
@@ -75,7 +77,8 @@ import { Comic } from '@app/library/models/comic';
     ComicPagesDetail,
     ComicStoryDetail,
     ComicMetadataDetail,
-    ComicPublicationDetail
+    ComicPublicationDetail,
+    Badge
   ],
   selector: 'app-comic-detail-page',
   styleUrl: './comic-detail-page.scss',
@@ -92,11 +95,10 @@ export class ComicDetailPage {
   readonly comicTitlePipe = new ComicTitlePipe();
   readonly webSocketService = inject(WebSocketService);
 
-  readonly comicDetailLoading = this.store.selectSignal(
-    selectComicDetailLoaded
-  );
+  readonly loading = this.store.selectSignal(selectComicDetailLoaded);
   readonly comic = this.store.selectSignal(selectComicDetail);
   readonly tags = this.store.selectSignal(selectComicDetailTags);
+  readonly pages = this.store.selectSignal(selectComicDetailPages);
   readonly currentTab = signal('publication');
 
   comicId = 0;

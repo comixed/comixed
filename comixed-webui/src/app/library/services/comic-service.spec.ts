@@ -101,7 +101,9 @@ describe('ComicService', () => {
         issueNumber: TEST_COMIC.issueNumber,
         imprint: TEST_COMIC.imprint,
         sortName: TEST_COMIC.sortName,
-        title: TEST_COMIC.title
+        title: TEST_COMIC.title,
+        coverDate: TEST_COMIC.coverDate,
+        storeDate: TEST_COMIC.storeDate
       })
       .subscribe(response => expect(response).toEqual(serverResponse));
 
@@ -117,7 +119,9 @@ describe('ComicService', () => {
       issueNumber: TEST_COMIC.issueNumber,
       imprint: TEST_COMIC.imprint,
       sortName: TEST_COMIC.sortName,
-      title: TEST_COMIC.title
+      title: TEST_COMIC.title,
+      coverDate: TEST_COMIC.coverDate,
+      storeDate: TEST_COMIC.storeDate
     } as UpdateComicRequest);
     req.flush(serverResponse);
     httpController.verify();

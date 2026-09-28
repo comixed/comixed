@@ -97,36 +97,59 @@
         @if (isLoading()) {
           <p-skeleton id="cover-date-placeholder" />
         } @else {
-          <p-ifta-label>
-            <label for="cover-date-input">
-              {{ "comic-publication-detail.label.cover-date" | translate }}
-            </label>
-            <input
-              id="cover-date-input"
-              formControlName="coverDate"
-              pInputText
-              class="cx-width-100p"
-              readonly
-            />
-          </p-ifta-label>
+          <p-fluid>
+            <div>
+              <label for="cover-date-input">
+                {{ "comic-publication-detail.label.cover-date" | translate }}
+              </label>
+              <p-date-picker
+                formControlName="coverDate"
+                [showIcon]="true"
+                inputId="cover-date-input"
+                [showOnFocus]="false"
+                [showClear]="true"
+              ></p-date-picker>
+            </div>
+          </p-fluid>
         }
       </div>
       <div class="cx-flex-content-grow-1">
         @if (isLoading()) {
           <p-skeleton id="store-date-placeholder" />
         } @else {
-          <p-ifta-label>
-            <label for="store-date-input">
-              {{ "comic-publication-detail.label.store-date" | translate }}
-            </label>
-            <input
-              id="store-date-input"
-              formControlName="storeDate"
-              pInputText
-              class="cx-width-100p"
-              readonly
-            />
-          </p-ifta-label>
+          <p-fluid>
+            <div>
+              <label for="store-date-input">
+                {{ "comic-publication-detail.label.store-date" | translate }}
+              </label>
+              <p-date-picker
+                formControlName="storeDate"
+                [showIcon]="true"
+                inputId="store-date-input"
+                [showOnFocus]="false"
+                [showClear]="true"
+              ></p-date-picker>
+            </div>
+          </p-fluid>
+        }
+      </div>
+      <div class="cx-flex-content-grow-1">
+        @if (isLoading()) {
+          <p-skeleton id="added-date-placeholder" />
+        } @else {
+          <p-fluid>
+            <div>
+              <label for="added-date-input">
+                {{ "comic-publication-detail.label.added-date" | translate }}
+              </label>
+              <p-date-picker
+                formControlName="addedDate"
+                [showIcon]="true"
+                [showOnFocus]="true"
+                inputId="added-date-input"
+              ></p-date-picker>
+            </div>
+          </p-fluid>
         }
       </div>
       <div class="cx-flex-content-grow-2"></div>

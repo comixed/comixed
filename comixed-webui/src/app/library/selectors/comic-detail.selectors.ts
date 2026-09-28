@@ -40,3 +40,8 @@ export const selectComicDetailTags = createSelector(
   selectComicDetailState,
   state => state.tags
 );
+
+export const selectComicDetailPages = createSelector(
+  selectComicDetailState,
+  state => state.pages
+);

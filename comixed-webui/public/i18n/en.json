@@ -43,6 +43,7 @@
   },
   "comic-publication-detail": {
     "label": {
+      "added-date": "Added",
       "cover-date": "Cover Date",
       "imprint": "Imprint",
       "issue-number": "Issue #",

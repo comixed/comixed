@@ -27,6 +27,6 @@ export interface UpdateComicRequest {
   imprint?: string;
   sortName?: string;
   title?: string;
-  coverDate?: number;
-  storeDate?: number;
+  coverDate: number | null;
+  storeDate: number | null;
 }

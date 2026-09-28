@@ -16,12 +16,33 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component } from '@angular/core';
+import { Component, Input, signal } from '@angular/core';
+import { ComicPage } from '@app/library/models/comic-page';
+import { FormsModule } from '@angular/forms';
+import { Comic, NO_COMIC } from '@app/library/models/comic';
+import { Carousel } from '@openng/optimus-ui/carousel';
+import { PageDetailCard } from '@app/library/components/page-detail-card/page-detail-card';
 
 @Component({
-  imports: [],
+  imports: [FormsModule, Carousel, PageDetailCard],
   selector: 'app-comic-pages-detail',
   styleUrl: './comic-pages-detail.scss',
   templateUrl: './comic-pages-detail.html'
 })
-export class ComicPagesDetail {}
+export class ComicPagesDetail {
+  readonly isLoading = signal(false);
+  readonly comicDetail = signal<Comic>(NO_COMIC);
+  readonly comicPages = signal<ComicPage[]>([]);
+
+  @Input() set loading(loading: boolean) {
+    this.isLoading.set(loading);
+  }
+
+  @Input() set comic(comic: Comic) {
+    this.comicDetail.set(comic);
+  }
+
+  @Input() set pages(pages: ComicPage[]) {
+    this.comicPages.set(pages);
+  }
+}

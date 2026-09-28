@@ -27,33 +27,25 @@ import { TranslateService } from '@ngx-translate/core';
 export class ComicDetailTrailPipe implements PipeTransform {
   readonly translateService = inject(TranslateService);
 
-  transform(comic: Comic | null): MenuItem[] {
-    if (!comic) {
-      return [
-        { label: this.translateService.instant('app.text.publisher') },
-        { label: this.translateService.instant('app.text.series') },
-        { label: this.translateService.instant('app.text.issue') }
-      ];
-    } else {
-      return [
-        {
-          label: comic!.publisher || 'Unknown',
-          routerLink: ['/library/publishers', comic!.publisher]
-        },
-        {
-          label: `${comic!.series || 'Unknown'} V${comic!.volume || '????'}`,
-          routerLink: [
-            '/library/publishers',
-            comic!.publisher!,
-            'series',
-            comic!.series,
-            comic!.volume
-          ]
-        },
-        {
-          label: `#${comic!.issueNumber || '??'}`
-        }
-      ];
-    }
+  transform(comic: Comic): MenuItem[] {
+    return [
+      {
+        label: comic!.publisher || 'Unknown',
+        routerLink: ['/library/publishers', comic!.publisher]
+      },
+      {
+        label: `${comic!.series || 'Unknown'} V${comic!.volume || '????'}`,
+        routerLink: [
+          '/library/publishers',
+          comic!.publisher!,
+          'series',
+          comic!.series,
+          comic!.volume
+        ]
+      },
+      {
+        label: `#${comic!.issueNumber || '??'}`
+      }
+    ];
   }
 }

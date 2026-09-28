@@ -17,18 +17,72 @@
  */
 
 import { TestBed } from '@angular/core/testing';
-import { CanActivateFn } from '@angular/router';
+import { provideRouter } from '@angular/router';
 import { adminGuard } from './admin-guard';
+import {
+  CURRENT_USER_FEATURE_KEY,
+  initialCurrentUserState
+} from '@app/account/reducers/current-user.reducer';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
+import { beforeEach } from 'vitest';
+import { USER_ADMIN } from '@app/account/account-fixtures';
+import { Component } from '@angular/core';
+import { RouterTestingHarness } from '@angular/router/testing';
+
+@Component({ template: '<h1>Protected page</h1>' })
+class Protected {}
 
 describe('adminGuard', () => {
-  const executeGuard: CanActivateFn = (...guardParameters) =>
-    TestBed.runInInjectionContext(() => adminGuard(...guardParameters));
+  const initialState = { [CURRENT_USER_FEATURE_KEY]: initialCurrentUserState };
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
+  let store: MockStore;
+  let routerHarness: RouterTestingHarness;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      providers: [
+        provideRouter([
+          {
+            path: 'protected',
+            component: Protected,
+            canActivate: [adminGuard]
+          }
+        ]),
+        provideLogger({ minLevel: LoggerLevel.OFF }),
+        provideMockStore({ initialState })
+      ]
+    });
+
+    store = TestBed.inject(MockStore);
+    routerHarness = await RouterTestingHarness.create();
   });
 
-  it('should be created', () => {
-    expect(executeGuard).toBeTruthy();
+  it('should grant access to an admin', async () => {
+    store.setState({
+      ...initialCurrentUserState,
+      [CURRENT_USER_FEATURE_KEY]: {
+        ...initialCurrentUserState,
+        checked: true,
+        user: USER_ADMIN
+      }
+    });
+    await routerHarness.navigateByUrl('/protected', Protected);
+    expect(routerHarness.routeNativeElement?.textContent).toContain(
+      'Protected'
+    );
+  });
+
+  it('should deny access to a non-admin', async () => {
+    store.setState({
+      ...initialCurrentUserState,
+      [CURRENT_USER_FEATURE_KEY]: {
+        ...initialCurrentUserState,
+        checked: true,
+        user: { ...USER_ADMIN, roles: [] }
+      }
+    });
+    await routerHarness.navigateByUrl('/protected');
+    expect(routerHarness.routeNativeElement).toBeNull();
   });
 });

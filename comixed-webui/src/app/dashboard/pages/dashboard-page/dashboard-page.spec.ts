@@ -50,6 +50,19 @@ describe('DashboardPage', () => {
 
   describe('when the language changes', () => {
     let setTitleSpy: Mock;
+
+    beforeEach(() => {
+      setTitleSpy = vi.spyOn(component.titleService, 'setTitle');
+      component.translateService.use('fr');
+    });
+
+    it('updates the title', () => {
+      expect(setTitleSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('when the language changes', () => {
+    let setTitleSpy: Mock;
     let instantSpy: Mock;
 
     beforeEach(() => {

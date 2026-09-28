@@ -17,17 +17,21 @@
  */
 
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import * as fromCurrentUser from '../reducers/current-user.reducer';
+import {
+  CURRENT_USER_FEATURE_KEY,
+  CurrentUserState
+} from '../reducers/current-user.reducer';
 import { hasRole } from '@app/account/account-functions';
 import {
   ROLE_NAME_ADMIN,
   ROLE_NAME_READER
 } from '@app/account/account-constants';
+import { RoleCheck } from '@app/account/guards/role-check';
 
-export const selectCurrentUserState =
-  createFeatureSelector<fromCurrentUser.CurrentUserState>(
-    fromCurrentUser.CURRENT_USER_FEATURE_KEY
-  );
+const selectCurrentUserState = createFeatureSelector<CurrentUserState>(
+  CURRENT_USER_FEATURE_KEY
+);
+export default selectCurrentUserState;
 
 export const selectCurrentUserLoading = createSelector(
   selectCurrentUserState,
@@ -41,12 +45,22 @@ export const selectCurrentUserAuthenticated = createSelector(
 
 export const selectCurrentUserIsAdmin = createSelector(
   selectCurrentUserState,
-  state => hasRole(state.user?.roles || [], ROLE_NAME_ADMIN)
+  state => {
+    return {
+      checked: state.checked,
+      passed: hasRole(state.user?.roles || [], ROLE_NAME_ADMIN)
+    } as RoleCheck;
+  }
 );
 
 export const selectCurrentUserIsReader = createSelector(
   selectCurrentUserState,
-  state => hasRole(state.user?.roles || [], ROLE_NAME_READER)
+  state => {
+    return {
+      checked: state.checked,
+      passed: hasRole(state.user?.roles || [], ROLE_NAME_READER)
+    } as RoleCheck;
+  }
 );
 
 export const selectCurrentUserReadComicIds = createSelector(

@@ -73,14 +73,14 @@ export const COMIC_1: Comic = {
   previousIssueId: 1002,
   description: 'This is the first issue in our test library',
   pageCount: 28,
-  storeDate: '2026-10-19',
-  coverDate: '2026-10-19',
+  storeDate: new Date().getTime(),
+  coverDate: new Date().getTime(),
   monthPublished: 10,
   yearPublished: 2026,
-  addedDate: '2026-10-19',
+  addedDate: new Date().getTime(),
   referenceId: '1001001',
   unscraped: false,
-  lastModifiedDate: '2026-10-19'
+  lastModifiedDate: new Date().getTime()
 };
 
 export const COMIC_PAGE_1: ComicPage = {

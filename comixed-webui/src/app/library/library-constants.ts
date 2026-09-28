@@ -32,6 +32,7 @@ export const LOAD_COMIC_URL = `${API_ROOT_URL}/comics/\${comicId}`;
 export const GET_COMIC_COVER_URL = `${API_ROOT_URL}/comics/\${id}/cover/content`;
 export const MISSING_COMIC_IMAGE_URL = '/images/library/missing-comic-file.png';
 export const UPDATE_COMIC_URL = `${API_ROOT_URL}/comics/\${id}`;
+export const GET_PAGE_CONTENT_URL = `${API_ROOT_URL}/pages/\${pageId}/content`;
 
 // query parameters
 export const QUERY_PARAM_COMIC_DETAIL_TAB = 'comic-detail-tab';

@@ -22,19 +22,19 @@ import {
   initialCurrentUserState
 } from '../reducers/current-user.reducer';
 import { beforeEach } from 'vitest';
-import {
+import selectCurrentUserState, {
   selectCurrentUserAuthenticated,
   selectCurrentUserIsAdmin,
   selectCurrentUserIsReader,
   selectCurrentUserLoading,
-  selectCurrentUserReadComicIds,
-  selectCurrentUserState
+  selectCurrentUserReadComicIds
 } from '@app/account/selectors/current-user.selectors';
 import { USER_READER } from '@app/account/account-fixtures';
 import {
   ROLE_NAME_ADMIN,
   ROLE_NAME_READER
 } from '@app/account/account-constants';
+import { RoleCheck } from '@app/account/guards/role-check';
 
 describe('CurrentUser Selectors', () => {
   const TEST_USER = USER_READER;
@@ -106,10 +106,14 @@ describe('CurrentUser Selectors', () => {
         selectCurrentUserIsAdmin({
           [CURRENT_USER_FEATURE_KEY]: {
             ...initialCurrentUserState,
-            user: { ...TEST_USER, roles: [{ name: ROLE_NAME_ADMIN }] }
+            checked: true,
+            user: {
+              ...TEST_USER,
+              roles: [{ name: ROLE_NAME_ADMIN }]
+            }
           }
         })
-      ).toBeTruthy();
+      ).toStrictEqual({ checked: true, passed: true } as RoleCheck);
     });
 
     it('should return false when the user is not an admin', () => {
@@ -117,10 +121,11 @@ describe('CurrentUser Selectors', () => {
         selectCurrentUserIsAdmin({
           [CURRENT_USER_FEATURE_KEY]: {
             ...initialCurrentUserState,
+            checked: true,
             user: { ...TEST_USER, roles: [] }
           }
         })
-      ).toBeFalsy();
+      ).toStrictEqual({ checked: true, passed: false } as RoleCheck);
     });
   });
 
@@ -130,10 +135,14 @@ describe('CurrentUser Selectors', () => {
         selectCurrentUserIsReader({
           [CURRENT_USER_FEATURE_KEY]: {
             ...initialCurrentUserState,
-            user: { ...TEST_USER, roles: [{ name: ROLE_NAME_READER }] }
+            checked: true,
+            user: {
+              ...TEST_USER,
+              roles: [{ name: ROLE_NAME_READER }]
+            }
           }
         })
-      ).toBeTruthy();
+      ).toStrictEqual({ checked: true, passed: true } as RoleCheck);
     });
 
     it('should return false when the user is not a reader', () => {
@@ -141,10 +150,11 @@ describe('CurrentUser Selectors', () => {
         selectCurrentUserIsReader({
           [CURRENT_USER_FEATURE_KEY]: {
             ...initialCurrentUserState,
+            checked: true,
             user: { ...TEST_USER, roles: [] }
           }
         })
-      ).toBeFalsy();
+      ).toStrictEqual({ checked: true, passed: false } as RoleCheck);
     });
   });
 

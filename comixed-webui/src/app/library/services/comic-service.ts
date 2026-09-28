@@ -51,6 +51,8 @@ export class ComicService {
     imprint?: string;
     sortName?: string;
     title?: string;
+    coverDate: number | null;
+    storeDate: number | null;
   }): Observable<LoadComicResponse> {
     this.logger.debug('Service: updating one comic:', args);
     return this.client.put<LoadComicResponse>(
@@ -63,7 +65,9 @@ export class ComicService {
         issueNumber: args.issueNumber,
         imprint: args.imprint,
         sortName: args.sortName,
-        title: args.title
+        title: args.title,
+        coverDate: args.coverDate,
+        storeDate: args.storeDate
       } as UpdateComicRequest
     );
   }

@@ -1,6 +1,6 @@
-<p-card class="cx-width-100p">
+<p-card class="cx-width-100p cx-height-100p">
   <ng-template #header>
-    @if (!comicDetailLoading()) {
+    @if (!loading()) {
       <p-breadcrumb [model]="comic() | comicDetailTrail" [home]="home" />
     }
   </ng-template>
@@ -8,16 +8,18 @@
   <h2 class="cx-width-100p cx-justify-center">
     {{ comic() | comicTitle }}
   </h2>
-  <div class="cx-width-100p cx-height-100p cx-flex-content-container-row">
+  <div
+    class="cx-width-100p cx-height-100p cx-height-100p cx-flex-content-container-row"
+  >
     <div id="comic-cover-container">
       @if (comic()) {
         <app-comic-cover
           [comic]="comic()!"
-          [loading]="comicDetailLoading()"
+          [loading]="loading()"
         ></app-comic-cover>
       }
     </div>
-    <div class="cx-flex-content-grow-1">
+    <div class="cx-flex-content-grow-1 cx-scroll-y-auto">
       <p-tabs
         lazy
         scrollable
@@ -33,7 +35,10 @@
             {{ "comic-detail-page.label.story" | translate }}
           </p-tab>
           <p-tab [value]="'pages'">
-            {{ "comic-detail-page.label.pages" | translate }}
+            <span>
+              {{ "comic-detail-page.label.pages" | translate }}
+              <p-badge [value]="pages().length" />
+            </span>
           </p-tab>
           <p-tab [value]="'metadata'">
             {{ "comic-detail-page.label.metadata" | translate }}
@@ -43,7 +48,7 @@
           <p-tabpanel [value]="'publication'">
             <app-comic-publication-detail
               [comic]="comic()"
-              [loading]="comicDetailLoading()"
+              [loading]="loading()"
               (updateComic)="onUpdateComic($event)"
             ></app-comic-publication-detail>
           </p-tabpanel>
@@ -54,7 +59,11 @@
             ></app-comic-story-detail>
           </p-tabpanel>
           <p-tabpanel [value]="'pages'">
-            <app-comic-pages-detail></app-comic-pages-detail>
+            <app-comic-pages-detail
+              [comic]="comic()"
+              [loading]="loading()"
+              [pages]="pages()"
+            ></app-comic-pages-detail>
           </p-tabpanel>
           <p-tabpanel [value]="'metadata'">
             <app-comic-metadata-detail></app-comic-metadata-detail>

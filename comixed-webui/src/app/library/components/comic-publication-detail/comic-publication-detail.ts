@@ -38,6 +38,8 @@ import { InputText } from '@openng/optimus-ui/inputtext';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Button } from '@openng/optimus-ui/button';
 import { Skeleton } from '@openng/optimus-ui/skeleton';
+import { DatePicker } from '@openng/optimus-ui/datepicker';
+import { Fluid } from '@openng/optimus-ui/fluid';
 
 @Component({
   imports: [
@@ -47,7 +49,9 @@ import { Skeleton } from '@openng/optimus-ui/skeleton';
     InputText,
     TranslatePipe,
     Button,
-    Skeleton
+    Skeleton,
+    DatePicker,
+    Fluid
   ],
   selector: 'app-comic-publication-detail',
   styleUrl: './comic-publication-detail.scss',
@@ -68,8 +72,9 @@ export class ComicPublicationDetail {
       series: new FormControl(''),
       volume: new FormControl(''),
       issueNumber: new FormControl(''),
-      coverDate: new FormControl(''),
-      storeDate: new FormControl('')
+      coverDate: new FormControl<Date | null>(null),
+      storeDate: new FormControl<Date | null>(null),
+      addedDate: new FormControl<Date | null>({ value: null, disabled: true })
     });
   }
 
@@ -90,8 +95,15 @@ export class ComicPublicationDetail {
     this.publicationForm.controls['series'].setValue(comic.series);
     this.publicationForm.controls['volume'].setValue(comic.volume);
     this.publicationForm.controls['issueNumber'].setValue(comic.issueNumber);
-    this.publicationForm.controls['coverDate'].setValue(comic.coverDate);
-    this.publicationForm.controls['storeDate'].setValue(comic.storeDate);
+    this.publicationForm.controls['coverDate'].setValue(
+      Number(comic.coverDate) ? new Date(comic.coverDate as number) : null
+    );
+    this.publicationForm.controls['storeDate'].setValue(
+      Number(comic.storeDate) ? new Date(comic.storeDate as number) : null
+    );
+    this.publicationForm.controls['addedDate'].setValue(
+      Number(comic.addedDate) ? new Date(comic.addedDate as number) : null
+    );
   }
 
   onUpdateComic(): void {
@@ -101,7 +113,9 @@ export class ComicPublicationDetail {
       imprint: this.publicationForm.controls['imprint'].value,
       series: this.publicationForm.controls['series'].value,
       volume: this.publicationForm.controls['volume'].value,
-      issueNumber: this.publicationForm.controls['issueNumber'].value
+      issueNumber: this.publicationForm.controls['issueNumber'].value,
+      coverDate: this.publicationForm.controls['coverDate'].value?.getTime(),
+      storeDate: this.publicationForm.controls['storeDate'].value?.getTime()
     };
     this.logger.debug('Update comic button pushed:', comic);
     this.updateComic.emit(comic);

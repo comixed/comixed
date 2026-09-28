@@ -79,7 +79,9 @@ export class ComicDetailEffects {
             volume: action.comic.volume,
             issueNumber: action.comic.issueNumber,
             sortName: action.comic.sortName,
-            title: action.comic.title
+            title: action.comic.title,
+            coverDate: action.comic.coverDate,
+            storeDate: action.comic.storeDate
           })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),

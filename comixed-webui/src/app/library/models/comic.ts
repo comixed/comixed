@@ -40,14 +40,14 @@ export interface Comic {
   previousIssueId?: number;
   description: string;
   pageCount: number;
-  storeDate?: string;
-  coverDate?: string;
+  storeDate: number | null;
+  coverDate: number | null;
   monthPublished?: number;
   yearPublished?: number;
-  addedDate: string;
+  addedDate: number;
   referenceId: string;
   unscraped: boolean;
-  lastModifiedDate: string;
+  lastModifiedDate: number;
 }
 
 export const NO_COMIC: Comic = {
@@ -68,8 +68,10 @@ export const NO_COMIC: Comic = {
   title: '',
   description: '',
   pageCount: 0,
-  addedDate: '',
+  coverDate: null,
+  storeDate: null,
+  addedDate: new Date().getTime(),
   referenceId: '',
   unscraped: true,
-  lastModifiedDate: ''
+  lastModifiedDate: new Date().getTime()
 };

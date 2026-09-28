@@ -17,18 +17,71 @@
  */
 
 import { TestBed } from '@angular/core/testing';
-import { CanActivateFn } from '@angular/router';
-import { readerGuard } from './reader-guard';
+import { USER_READER } from '@app/account/account-fixtures';
+import {
+  CURRENT_USER_FEATURE_KEY,
+  initialCurrentUserState
+} from '@app/account/reducers/current-user.reducer';
+import { RouterTestingHarness } from '@angular/router/testing';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
+import { Component } from '@angular/core';
+import { provideRouter } from '@angular/router';
+import { readerGuard } from '@app/account/guards/reader-guard';
+
+@Component({ template: '<h1>Protected page</h1>' })
+class Protected {}
 
 describe('readerGuard', () => {
-  const executeGuard: CanActivateFn = (...guardParameters) =>
-    TestBed.runInInjectionContext(() => readerGuard(...guardParameters));
+  const initialState = { [CURRENT_USER_FEATURE_KEY]: initialCurrentUserState };
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
+  let store: MockStore;
+  let routerHarness: RouterTestingHarness;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      providers: [
+        provideRouter([
+          {
+            path: 'protected',
+            component: Protected,
+            canActivate: [readerGuard]
+          }
+        ]),
+        provideLogger({ minLevel: LoggerLevel.OFF }),
+        provideMockStore({ initialState })
+      ]
+    });
+
+    store = TestBed.inject(MockStore);
+    routerHarness = await RouterTestingHarness.create();
   });
 
-  it('should be created', () => {
-    expect(executeGuard).toBeTruthy();
+  it('should grant access to a reader', async () => {
+    store.setState({
+      ...initialCurrentUserState,
+      [CURRENT_USER_FEATURE_KEY]: {
+        ...initialCurrentUserState,
+        checked: true,
+        user: USER_READER
+      }
+    });
+    await routerHarness.navigateByUrl('/protected', Protected);
+    expect(routerHarness.routeNativeElement?.textContent).toContain(
+      'Protected'
+    );
+  });
+
+  it('should deny access to a non-reader', async () => {
+    store.setState({
+      ...initialCurrentUserState,
+      [CURRENT_USER_FEATURE_KEY]: {
+        ...initialCurrentUserState,
+        checked: true,
+        user: { ...USER_READER, roles: [] }
+      }
+    });
+    await routerHarness.navigateByUrl('/protected');
+    expect(routerHarness.routeNativeElement).toBeNull();
   });
 });

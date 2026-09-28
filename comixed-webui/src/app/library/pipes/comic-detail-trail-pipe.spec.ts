@@ -20,8 +20,12 @@ import { ComicDetailTrailPipe } from './comic-detail-trail-pipe';
 import { beforeEach } from 'vitest';
 import { TestBed } from '@angular/core/testing';
 import { provideTranslateService } from '@ngx-translate/core';
+import { COMIC_1 } from '@app/library/library-fixtures';
+import { MenuItem } from '@openng/optimus-ui/api';
 
 describe('ComicDetailTrailPipe', () => {
+  const TEST_COMIC = COMIC_1;
+
   let pipe: ComicDetailTrailPipe;
 
   beforeEach(async () => {
@@ -34,5 +38,27 @@ describe('ComicDetailTrailPipe', () => {
 
   it('create an instance', () => {
     expect(pipe).toBeTruthy();
+  });
+
+  describe('transforming a comic', () => {
+    let trail: MenuItem[];
+
+    beforeEach(() => {
+      trail = pipe.transform(TEST_COMIC);
+    });
+
+    it('should show to the publisher', () => {
+      expect(trail[0].label).toStrictEqual(TEST_COMIC.publisher);
+    });
+
+    it('should show to the series', () => {
+      expect(trail[1].label).toStrictEqual(
+        `${TEST_COMIC.series} V${TEST_COMIC.volume}`
+      );
+    });
+
+    it('should show to the issue number', () => {
+      expect(trail[2].label).toStrictEqual(`#${TEST_COMIC.issueNumber}`);
+    });
   });
 });

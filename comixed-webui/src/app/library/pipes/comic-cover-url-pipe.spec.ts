@@ -17,10 +17,31 @@
  */
 
 import { ComicCoverUrlPipe } from './comic-cover-url-pipe';
+import { beforeEach } from 'vitest';
+import { API_ROOT_URL } from '@app/app-constants';
+import { MISSING_COMIC_IMAGE_URL } from '@app/library/library-constants';
+import { COMIC_1 } from '@app/library/library-fixtures';
 
 describe('ComicCoverUrlPipe', () => {
+  const TEST_COMIC = COMIC_1;
+
+  let pipe: ComicCoverUrlPipe;
+
+  beforeEach(() => {
+    pipe = new ComicCoverUrlPipe();
+  });
+
   it('create an instance', () => {
-    const pipe = new ComicCoverUrlPipe();
     expect(pipe).toBeTruthy();
+  });
+
+  it('returns the URL for the comic cover image', () => {
+    expect(pipe.transform(TEST_COMIC)).toEqual(
+      `${API_ROOT_URL}/comics/${TEST_COMIC.comicId}/cover/content`
+    );
+  });
+
+  it('returns the missing image url for null comics', () => {
+    expect(pipe.transform(null)).toEqual(MISSING_COMIC_IMAGE_URL);
   });
 });
