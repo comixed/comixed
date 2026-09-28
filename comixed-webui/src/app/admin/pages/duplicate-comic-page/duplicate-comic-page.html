@@ -1,0 +1,7 @@
+<p-card class="cx-width-100p">
+  <ng-template #header>
+    <p-breadcrumb [model]="trail()" [home]="home" />
+  </ng-template>
+
+  <app-comic-table [comics]="duplicateComicListEntries()"></app-comic-table>
+</p-card>

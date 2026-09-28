@@ -1,0 +1,16 @@
+@if (isAuthenticated()) {
+  <p-menubar id="top-menubar" [model]="menuitems()">
+    <ng-template #end>
+      <span id="cx-logo">ComiXed</span>
+
+      @if (isAuthenticated()) {
+        <p-button
+          id="logout-button"
+          [pTooltip]="'topbar.tooltip.logout-button' | translate"
+          icon="pi pi-sign-out"
+          severity="danger"
+        />
+      }
+    </ng-template>
+  </p-menubar>
+}
