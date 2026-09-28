@@ -18,6 +18,7 @@
 
 package org.comixedproject.batch.listeners;
 
+import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.batch.PublishBatchProcessDetailUpdateAction;
@@ -25,7 +26,11 @@ import org.comixedproject.messaging.comicbooks.PublishProcessComicsStatusAction;
 import org.comixedproject.model.batch.BatchProcessDetail;
 import org.comixedproject.model.messaging.batch.ProcessComicsStatus;
 import org.comixedproject.service.comicbooks.ComicService;
+import org.jspecify.annotations.Nullable;
+import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.job.JobExecution;
+import org.springframework.batch.core.listener.StepExecutionListener;
+import org.springframework.batch.core.step.StepExecution;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -35,14 +40,32 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author Darryl L. Pierce
  */
 @Log4j2
-public abstract class AbstractBatchProcessListener {
+public abstract class AbstractBatchProcessListener implements StepExecutionListener {
   @Autowired private PublishProcessComicsStatusAction publishProcessComicsStatusAction;
   @Autowired private PublishBatchProcessDetailUpdateAction publishBatchProcessDetailUpdateAction;
   @Autowired protected ComicService comicService;
 
+  @Getter private long jobId;
+
+  @Override
+  public void beforeStep(final StepExecution stepExecution) {
+    this.jobId = stepExecution.getJobExecutionId();
+  }
+
+  @Override
+  public @Nullable ExitStatus afterStep(final StepExecution stepExecution) {
+    // nothing to do
+    return null;
+  }
+
   protected void doPublishProcessComicStatus(
-      final boolean active, final String stepName, final long total, final long processed) {
+      final boolean active,
+      final long jobId,
+      final String stepName,
+      final long total,
+      final long processed) {
     final ProcessComicsStatus status = new ProcessComicsStatus();
+    status.setJobId(jobId);
     status.setActive(active);
     status.setStepName(stepName);
     status.setTotal(total);
