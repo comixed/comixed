@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2026, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,104 +16,105 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { initialState, MessagingState, reducer } from './messaging.reducer';
 import {
-  startMessagingSuccess,
-  messagingStopped,
-  restartMessaging,
-  startMessaging,
-  stopMessaging
-} from '@app/messaging/actions/messaging.actions';
+  messagingReducer,
+  initialMessagingState,
+  MessagingState
+} from './messaging.reducer';
+import { beforeEach } from 'vitest';
+import { Action } from '@ngrx/store';
+import { MessagingActions } from '@app/messaging/actions/messaging.actions';
 
 describe('Messaging Reducer', () => {
   let state: MessagingState;
 
   beforeEach(() => {
-    state = { ...initialState };
+    state = { ...initialMessagingState };
   });
 
   describe('the initial state', () => {
     beforeEach(() => {
-      state = reducer({ ...state }, {} as any);
+      state = messagingReducer({ ...state }, {} as Action<string>);
     });
 
-    it('clears the busy flag', () => {
-      expect(state.busy).toBeFalse();
+    it('should not set the started flag', () => {
+      expect(state.started).toBeFalsy();
     });
 
-    it('clears the started flag', () => {
-      expect(state.started).toBeFalse();
+    it('should not set the starting flag', () => {
+      expect(state.starting).toBeFalsy();
+    });
+
+    it('should not set the stopping flag', () => {
+      expect(state.stopping).toBeFalsy();
     });
   });
 
-  describe('starting the messaging system', () => {
+  describe('starting messaging', () => {
     beforeEach(() => {
-      state = reducer(
-        { ...state, busy: true, started: true },
-        startMessaging()
+      state = messagingReducer(
+        { ...state, starting: false, stopping: true },
+        MessagingActions.start()
       );
     });
 
-    it('sets the busy flag', () => {
-      expect(state.busy).toBeTrue();
+    it('should set the starting flag', () => {
+      expect(state.starting).toBeTruthy();
     });
 
-    it('clears the started flag', () => {
-      expect(state.started).toBeFalse();
+    it('should clear the stopping flag', () => {
+      expect(state.stopping).toBeFalsy();
     });
   });
 
-  describe('when the messaging system is started', () => {
+  describe('messaging has started', () => {
     beforeEach(() => {
-      state = reducer(
-        { ...state, busy: true, started: false },
-        startMessagingSuccess()
+      state = messagingReducer(
+        { ...state, starting: true, started: false },
+        MessagingActions.started()
       );
     });
 
-    it('clears the busy flag', () => {
-      expect(state.busy).toBeFalse();
+    it('should clear the starting flag', () => {
+      expect(state.starting).toBeFalsy();
     });
 
-    it('sets the started flag', () => {
-      expect(state.started).toBeTrue();
-    });
-  });
-
-  describe('when restarting the messaging system', () => {
-    beforeEach(() => {
-      state = reducer({ ...state, busy: true }, restartMessaging());
-    });
-
-    it('sets the busy flag', () => {
-      expect(state.busy).toBeTrue();
+    it('should set the started flag', () => {
+      expect(state.started).toBeTruthy();
     });
   });
 
-  describe('stopping the messaging system', () => {
+  describe('stopping messaging', () => {
     beforeEach(() => {
-      state = reducer({ ...state, busy: false }, stopMessaging());
-    });
-
-    it('sets the busy flag', () => {
-      expect(state.busy).toBeTrue();
-    });
-  });
-
-  describe('successfully stopping the messaging subsystem', () => {
-    beforeEach(() => {
-      state = reducer(
-        { ...state, busy: true, started: true },
-        messagingStopped()
+      state = messagingReducer(
+        { ...state, starting: true, stopping: false },
+        MessagingActions.stop()
       );
     });
 
-    it('clears the started flag', () => {
-      expect(state.started).toBeFalse();
+    it('should set the stopping flag', () => {
+      expect(state.stopping).toBeTruthy();
     });
 
-    it('clears the started flag', () => {
-      expect(state.started).toBeFalse();
+    it('should clear the starting flag', () => {
+      expect(state.starting).toBeFalsy();
+    });
+  });
+
+  describe('messaging has stopped', () => {
+    beforeEach(() => {
+      state = messagingReducer(
+        { ...state, started: true, stopping: true },
+        MessagingActions.stopped()
+      );
+    });
+
+    it('should clear the started flag', () => {
+      expect(state.started).toBeFalsy();
+    });
+
+    it('should clear the stopping flag', () => {
+      expect(state.stopping).toBeFalsy();
     });
   });
 });
