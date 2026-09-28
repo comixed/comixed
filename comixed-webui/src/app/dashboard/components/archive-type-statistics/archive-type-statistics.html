@@ -1,0 +1,15 @@
+<mat-card class="cx-width-100 cx-height-100">
+  <mat-card-title>
+    <h3 class="cx-width-100 cx-justify-center cx-no-text-wrap">
+      {{ title }}
+    </h3>
+  </mat-card-title>
+  <mat-card-content>
+    <div class="cx-overflow-x-clip-auto cx-display-block">
+      <ngx-charts-pie-grid
+        [results]="chartData()"
+        [animations]="false"
+      ></ngx-charts-pie-grid>
+    </div>
+  </mat-card-content>
+</mat-card>
