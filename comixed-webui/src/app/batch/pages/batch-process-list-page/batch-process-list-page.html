@@ -1,0 +1,66 @@
+<p-card>
+  <ng-template #header>
+    <div class="cx-width-100p cx-justify-center">
+      <p-breadcrumb [model]="trail()" [home]="home" />
+
+      <div class="cx-spacer"></div>
+
+      <p-button
+        id="delete-completed-processes-button"
+        class="cx-padding-15"
+        icon="pi pi-trash"
+        severity="danger"
+        [loading]="batchProcessListBusy()"
+        [pTooltip]="
+          'batch-process-list-page.tooltip.delete-completed-processes'
+            | translate
+        "
+        (onClick)="onDeleteCompletedProcesses()"
+      />
+    </div>
+  </ng-template>
+
+  <p-table
+    [value]="batchProcessListEntries()"
+    dataKey="jobId"
+    [paginator]="true"
+    stripedRows
+    paginatorPosition="both"
+    [rows]="batchProcessListRows()"
+    [totalRecords]="batchProcessListEntries().length"
+  >
+    <ng-template #header>
+      <tr>
+        <th>{{ "batch-process-list-page.label.job-id" | translate }}</th>
+        <th>{{ "batch-process-list-page.label.job-name" | translate }}</th>
+        <th>{{ "batch-process-list-page.label.running" | translate }}</th>
+        <th>{{ "batch-process-list-page.label.status" | translate }}</th>
+        <th>{{ "batch-process-list-page.label.create-time" | translate }}</th>
+        <th>{{ "batch-process-list-page.label.start-time" | translate }}</th>
+        <th>{{ "batch-process-list-page.label.end-time" | translate }}</th>
+        <th>
+          {{ "batch-process-list-page.label.last-update-time" | translate }}
+        </th>
+        <th>{{ "batch-process-list-page.label.exit-status" | translate }}</th>
+        <th>{{ "batch-process-list-page.label.errors" | translate }}</th>
+      </tr>
+    </ng-template>
+
+    <ng-template #body let-process>
+      <tr>
+        <td>{{ process.jobId }}</td>
+        <td>{{ process.jobName }}</td>
+        <td>{{ process.running }}</td>
+        <td>{{ process.status }}</td>
+        <td>{{ process.createTime | date: "medium" }}</td>
+        <td>{{ process.startTime | date: "medium" }}</td>
+        <td>{{ process.endTime | date: "medium" }}</td>
+        <td>{{ process.lastUpdateTime | date: "medium" }}</td>
+        <td>{{ process.exitStatus }}</td>
+        <td>
+          <pre class="cx-scroll-y-auto">{{ process.errors }}</pre>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</p-card>
