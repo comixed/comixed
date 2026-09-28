@@ -1,0 +1,11 @@
+@use './variables' as *;
+
+#comic-cover-container {
+  float: inline-start;
+  max-height: $cx-portal-height;
+  width: max(25vw, min(400px, 100vw));
+}
+
+.comic-cover {
+  height: 50px;
+}

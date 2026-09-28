@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2026, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,83 +18,53 @@
 
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import {
-  rescanComicsFailure,
-  rescanComicsSuccess,
-  rescanSelectedComics,
-  rescanSingleComic
-} from '../actions/rescan-comics.actions';
+import { RescanComicsActions } from '../actions/rescan-comics.actions';
 import { LoggerService } from '@angular-ru/cdk/logger';
-import { LibraryService } from '@app/library/services/library.service';
+import { ComicService } from '@app/library/services/comic-service';
+import { AlertService } from '@app/services/alert-service';
 import { TranslateService } from '@ngx-translate/core';
-import { AlertService } from '@app/core/services/alert.service';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { catchError, map, of, switchMap, tap } from 'rxjs';
 
 @Injectable()
 export class RescanComicsEffects {
-  logger = inject(LoggerService);
-  actions$ = inject(Actions);
-  libraryService = inject(LibraryService);
-  alertService = inject(AlertService);
-  translateService = inject(TranslateService);
+  readonly logger = inject(LoggerService);
+  readonly comicService = inject(ComicService);
+  readonly alertService = inject(AlertService);
+  readonly translateService = inject(TranslateService);
+  private actions$ = inject(Actions);
 
-  rescanSingleComic$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(rescanSingleComic),
-      tap(action => this.logger.trace('Rescan a single comic book:', action)),
-      switchMap(action =>
-        this.libraryService.rescanSingleComic({ comicId: action.comicId }).pipe(
-          tap(response => this.logger.debug('Response received:', response)),
-          tap(() =>
-            this.alertService.info(
-              this.translateService.instant(
-                'library.rescan-comics.effect-success'
-              )
-            )
-          ),
-          map(() => rescanComicsSuccess()),
-          catchError(error => this.doServiceFailure(error))
-        )
-      ),
-      catchError(error => this.doGeneralFailure(error))
-    );
-  });
   rescanSelectedComics$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(rescanSelectedComics),
-      tap(action => this.logger.trace('Rescan selected comic books:', action)),
+      ofType(RescanComicsActions.rescanSelectedComics),
+      tap(() => this.logger.debug('Rescanning selected comics')),
       switchMap(() =>
-        this.libraryService.rescanSelectedComics().pipe(
-          tap(response => this.logger.debug('Response received:', response)),
+        this.comicService.rescanSelectedComics().pipe(
           tap(() =>
             this.alertService.info(
               this.translateService.instant(
-                'library.rescan-comics.effect-success'
+                'rescan-comics-effects.rescan-selected-comics.service-success'
               )
             )
           ),
-          map(() => rescanComicsSuccess()),
-          catchError(error => this.doServiceFailure(error))
+          map(() => RescanComicsActions.rescanSelectedComicsSuccess()),
+          catchError(error => {
+            this.logger.error('Service failure:', error);
+            this.alertService.error(
+              this.translateService.instant(
+                'rescan-comics-effects.rescan-selected-comics.service-failure'
+              )
+            );
+            return of(RescanComicsActions.rescanSelectedComicsFailure());
+          })
         )
       ),
-      catchError(error => this.doGeneralFailure(error))
+      catchError(error => {
+        this.logger.error('General failure:', error);
+        this.alertService.error(
+          this.translateService.instant('app.effects.genreal-failure')
+        );
+        return of(RescanComicsActions.rescanSelectedComicsFailure());
+      })
     );
   });
-
-  private doServiceFailure(error: any) {
-    this.logger.error('Service failure:', error);
-    this.alertService.error(
-      this.translateService.instant('library.rescan-comics.effect-failure')
-    );
-    return of(rescanComicsFailure());
-  }
-
-  private doGeneralFailure(error: any) {
-    this.logger.error('General failure:', error);
-    this.alertService.error(
-      this.translateService.instant('app.general-effect-failure')
-    );
-    return of(rescanComicsFailure());
-  }
 }

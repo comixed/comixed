@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2026, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,160 +18,96 @@
 
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { Observable, of, throwError } from 'rxjs';
+import { firstValueFrom, Observable, of, throwError } from 'rxjs';
 import { RescanComicsEffects } from './rescan-comics.effects';
-import { LibraryService } from '@app/library/services/library.service';
-import { LoggerModule } from '@angular-ru/cdk/logger';
-import { TranslateModule } from '@ngx-translate/core';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { AlertService } from '@app/core/services/alert.service';
-import {
-  rescanComicsFailure,
-  rescanComicsSuccess,
-  rescanSelectedComics,
-  rescanSingleComic
-} from '@app/library/actions/rescan-comics.actions';
-import { hot } from 'jasmine-marbles';
-import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { ComicService } from '@app/library/services/comic-service';
+import { AlertService } from '@app/services/alert-service';
+import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
+import { MessageService } from '@openng/optimus-ui/api';
+import { provideTranslateService } from '@ngx-translate/core';
+import { expect, vi } from 'vitest';
+import { RescanComicsActions } from '@app/library/actions/rescan-comics.actions';
+import { HttpErrorResponse } from '@angular/common/http';
 
 describe('RescanComicsEffects', () => {
-  const COMIC_ID = 1000;
-
-  let actions$: Observable<any>;
+  let actions$: Observable<unknown>;
   let effects: RescanComicsEffects;
-  let libraryService: jasmine.SpyObj<LibraryService>;
+  let comicService: ComicService;
   let alertService: AlertService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        LoggerModule.forRoot(),
-        TranslateModule.forRoot(),
-        MatSnackBarModule
-      ],
       providers: [
         RescanComicsEffects,
+        provideLogger({ minLevel: LoggerLevel.OFF }),
+        provideTranslateService(),
         provideMockActions(() => actions$),
-        {
-          provide: LibraryService,
-          useValue: {
-            rescanSingleComic: jasmine.createSpy(
-              'LibraryService.rescanSingleComic()'
-            ),
-            rescanSelectedComics: jasmine.createSpy(
-              'LibraryService.rescanSelectedComics()'
-            )
-          }
-        }
+        MessageService,
+        AlertService
       ]
     });
 
     effects = TestBed.inject(RescanComicsEffects);
-    libraryService = TestBed.inject(
-      LibraryService
-    ) as jasmine.SpyObj<LibraryService>;
+    comicService = TestBed.inject(ComicService);
     alertService = TestBed.inject(AlertService);
-    spyOn(alertService, 'info');
-    spyOn(alertService, 'error');
   });
 
   it('should be created', () => {
     expect(effects).toBeTruthy();
   });
 
-  describe('rescanning a single comic book', () => {
-    it('fires an action on success', () => {
-      const serviceResponse = new HttpResponse({ status: 200 });
-      const action = rescanSingleComic({
-        comicId: COMIC_ID
-      });
-      const outcome = rescanComicsSuccess();
+  describe('rescanning selected comics', () => {
+    it('should fire an action on success', async () => {
+      const serviceResponse = undefined;
+      const action = RescanComicsActions.rescanSelectedComics();
+      const outcome = RescanComicsActions.rescanSelectedComicsSuccess();
 
-      actions$ = hot('-a', { a: action });
-      libraryService.rescanSingleComic
-        .withArgs({ comicId: COMIC_ID })
-        .and.returnValue(of(serviceResponse));
+      const rescanSpy = vi
+        .spyOn(comicService, 'rescanSelectedComics')
+        .mockReturnValue(of(serviceResponse));
+      const infoSpy = vi.spyOn(alertService, 'info');
 
-      const expected = hot('-b', { b: outcome });
-      expect(effects.rescanSingleComic$).toBeObservable(expected);
-      expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
+      actions$ = of(action);
+      await expect(
+        firstValueFrom(effects.rescanSelectedComics$)
+      ).resolves.toEqual(outcome);
+      expect(rescanSpy).toHaveBeenCalled();
+      expect(infoSpy).toHaveBeenCalled();
     });
 
-    it('fires an action on service failure', () => {
+    it('should fire an action on service failure', async () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = rescanSingleComic({
-        comicId: COMIC_ID
-      });
-      const outcome = rescanComicsFailure();
+      const action = RescanComicsActions.rescanSelectedComics();
+      const outcome = RescanComicsActions.rescanSelectedComicsFailure();
 
-      actions$ = hot('-a', { a: action });
-      libraryService.rescanSingleComic
-        .withArgs({ comicId: COMIC_ID })
-        .and.returnValue(throwError(serviceResponse));
+      const rescanSpy = vi
+        .spyOn(comicService, 'rescanSelectedComics')
+        .mockReturnValue(throwError(() => serviceResponse));
+      const errorSpy = vi.spyOn(alertService, 'error');
 
-      const expected = hot('-b', { b: outcome });
-      expect(effects.rescanSingleComic$).toBeObservable(expected);
-      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+      actions$ = of(action);
+      await expect(
+        firstValueFrom(effects.rescanSelectedComics$)
+      ).resolves.toEqual(outcome);
+      expect(rescanSpy).toHaveBeenCalled();
+      expect(errorSpy).toHaveBeenCalled();
     });
 
-    it('fires an action on general failure', () => {
-      const action = rescanSingleComic({
-        comicId: COMIC_ID
-      });
-      const outcome = rescanComicsFailure();
+    it('should fire an action on general failure', async () => {
+      const action = RescanComicsActions.rescanSelectedComics();
+      const outcome = RescanComicsActions.rescanSelectedComicsFailure();
 
-      actions$ = hot('-a', { a: action });
-      libraryService.rescanSingleComic
-        .withArgs({ comicId: COMIC_ID })
-        .and.throwError('expected');
+      const rescanSpy = vi
+        .spyOn(comicService, 'rescanSelectedComics')
+        .mockThrow(new Error('Expected'));
+      const errorSpy = vi.spyOn(alertService, 'error');
 
-      const expected = hot('-(b|)', { b: outcome });
-      expect(effects.rescanSingleComic$).toBeObservable(expected);
-      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
-    });
-  });
-
-  describe('rescanning selected comic books', () => {
-    it('fires an action on success', () => {
-      const serviceResponse = new HttpResponse({ status: 200 });
-      const action = rescanSelectedComics();
-      const outcome = rescanComicsSuccess();
-
-      actions$ = hot('-a', { a: action });
-      libraryService.rescanSelectedComics
-        .withArgs()
-        .and.returnValue(of(serviceResponse));
-
-      const expected = hot('-b', { b: outcome });
-      expect(effects.rescanSelectedComics$).toBeObservable(expected);
-      expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
-    });
-
-    it('fires an action on service failure', () => {
-      const serviceResponse = new HttpErrorResponse({});
-      const action = rescanSelectedComics();
-      const outcome = rescanComicsFailure();
-
-      actions$ = hot('-a', { a: action });
-      libraryService.rescanSelectedComics
-        .withArgs()
-        .and.returnValue(throwError(serviceResponse));
-
-      const expected = hot('-b', { b: outcome });
-      expect(effects.rescanSelectedComics$).toBeObservable(expected);
-      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
-    });
-
-    it('fires an action on general failure', () => {
-      const action = rescanSelectedComics();
-      const outcome = rescanComicsFailure();
-
-      actions$ = hot('-a', { a: action });
-      libraryService.rescanSelectedComics.withArgs().and.throwError('expected');
-
-      const expected = hot('-(b|)', { b: outcome });
-      expect(effects.rescanSelectedComics$).toBeObservable(expected);
-      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+      actions$ = of(action);
+      await expect(
+        firstValueFrom(effects.rescanSelectedComics$)
+      ).resolves.toEqual(outcome);
+      expect(rescanSpy).toHaveBeenCalled();
+      expect(errorSpy).toHaveBeenCalled();
     });
   });
 });

@@ -19,6 +19,7 @@
 package org.comixedproject.plugins;
 
 import java.util.List;
+import java.util.Set;
 import org.comixedproject.model.plugin.LibraryPlugin;
 import org.comixedproject.model.plugin.LibraryPluginProperty;
 import org.comixedproject.model.plugin.PluginType;
@@ -75,7 +76,7 @@ public interface PluginRuntime {
    * @param libraryPlugin the libraryPlugin
    * @param comicIds the comic book ids
    */
-  void execute(LibraryPlugin libraryPlugin, List<Long> comicIds);
+  void execute(LibraryPlugin libraryPlugin, Set<Long> comicIds);
 
   /**
    * Defines a property for the plugin runtime.

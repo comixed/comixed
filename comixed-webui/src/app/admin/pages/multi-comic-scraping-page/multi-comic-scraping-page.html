@@ -1,0 +1,95 @@
+<p-card class="cx-width-100p">
+  <ng-template #title>
+    <p-breadcrumb [model]="trail()" [home]="home" />
+  </ng-template>
+
+  @if (multiComicScrapingCurrentComic()) {
+    <div class="cx-width-100p cx-justify-start">
+      <p-button
+        id="go-back-to-comic-list-button"
+        severity="primary"
+        icon="pi pi-backward"
+        [pTooltip]="
+          'multi-comic-scraping-page.tooltip.back-to-comic-list' | translate
+        "
+        (onClick)="onShowComicList()"
+      />
+    </div>
+    <div class="cx-flex-content-container-row">
+      <div id="comic-cover-container">
+        <app-comic-cover
+          [comic]="multiComicScrapingCurrentComic()!"
+          [showActions]="false"
+        ></app-comic-cover>
+      </div>
+      <div class="cx-flex-content-grow-1">
+        <app-comic-metadata-detail
+          id="comic-metadata-detail"
+          [comic]="multiComicScrapingCurrentComic()!"
+          (issueSelected)="onIssueSelected($event)"
+        ></app-comic-metadata-detail>
+      </div>
+    </div>
+  } @else {
+    <p-table
+      id="comic-table"
+      [value]="multiComicScrapingEntries()"
+      dataKey="comicBookId"
+      [paginator]="true"
+      stripedRows
+      paginatorPosition="both"
+      [rows]="multiComicScrapingRows()"
+      [totalRecords]="multiComicScrapingTotal()"
+    >
+      <ng-template #header>
+        <tr>
+          <th>{{ "multi-comic-scraping-page.label.action" | translate }}</th>
+          <th>{{ "multi-comic-scraping-page.label.thumbnail" | translate }}</th>
+          <th>{{ "multi-comic-scraping-page.label.publisher" | translate }}</th>
+          <th>{{ "multi-comic-scraping-page.label.series" | translate }}</th>
+          <th>{{ "multi-comic-scraping-page.label.volume" | translate }}</th>
+          <th>
+            {{ "multi-comic-scraping-page.label.issue-number" | translate }}
+          </th>
+        </tr>
+      </ng-template>
+
+      <ng-template #body let-comic>
+        <tr>
+          <td>
+            <p-button
+              [id]="'scrape-comic-' + comic.comicId.toString()"
+              severity="primary"
+              icon="pi pi-play-circle"
+              [pTooltip]="
+                'multi-comic-scraping-page.tooltip.select-comic' | translate
+              "
+              (onClick)="onSetCurrentComic(comic)"
+            />
+            <p-button
+              [id]="'remove-comic-' + comic.comicId.toString()"
+              severity="danger"
+              icon="pi pi-trash"
+              [pTooltip]="
+                'multi-comic-scraping-page.tooltip.remove-comic' | translate
+              "
+              (onClick)="onRemoveComic(comic)"
+            />
+          </td>
+          <td>
+            <img
+              [src]="comic | comicCoverUrl"
+              class="comic-cover"
+              [alt]="comic.baseFilename"
+            />
+          </td>
+          <td>{{ comic.publisher }}</td>
+          <td>{{ comic.series }}</td>
+          <td>{{ comic.volume }}</td>
+          <td>{{ comic.issueNumber }}</td>
+          <td></td>
+        </tr>
+      </ng-template>
+    </p-table>
+  }
+</p-card>

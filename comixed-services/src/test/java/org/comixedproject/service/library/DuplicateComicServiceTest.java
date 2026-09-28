@@ -21,6 +21,7 @@ package org.comixedproject.service.library;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
 import org.comixedproject.model.library.DuplicateComic;
 import org.comixedproject.repositories.library.DuplicateComicRepository;
@@ -42,7 +43,7 @@ class DuplicateComicServiceTest {
   @Mock private Page<DuplicateComic> duplicateComicPage;
   @Mock private Stream<DuplicateComic> duplicatePageStream;
   @Mock private List<DuplicateComic> duplicatePageList;
-  @Mock private List<Long> duplicateComicIds;
+  @Mock private Set<Long> duplicateComicIds;
 
   @Captor private ArgumentCaptor<PageRequest> pageRequestArgumentCaptor;
 
@@ -90,7 +91,7 @@ class DuplicateComicServiceTest {
   void getDuplicateComicIds() {
     Mockito.when(duplicateComicRepository.getDuplicateComicIds()).thenReturn(duplicateComicIds);
 
-    final List<Long> result = service.getDuplicateComicIds();
+    final Set<Long> result = service.getDuplicateComicIds();
 
     assertNotNull(result);
     assertSame(duplicateComicIds, result);

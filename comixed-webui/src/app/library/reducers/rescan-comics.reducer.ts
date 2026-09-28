@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2026, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,33 +17,35 @@
  */
 
 import { createFeature, createReducer, on } from '@ngrx/store';
-import {
-  rescanComicsFailure,
-  rescanComicsSuccess,
-  rescanSelectedComics,
-  rescanSingleComic
-} from '../actions/rescan-comics.actions';
+import { RescanComicsActions } from '../actions/rescan-comics.actions';
 
 export const RESCAN_COMICS_FEATURE_KEY = 'rescan_comics_state';
 
 export interface RescanComicsState {
-  working: boolean;
+  busy: boolean;
 }
 
-export const initialState: RescanComicsState = {
-  working: false
+export const initialRescanComicsState: RescanComicsState = {
+  busy: false
 };
 
-export const reducer = createReducer(
-  initialState,
-
-  on(rescanSingleComic, state => ({ ...state, working: true })),
-  on(rescanSelectedComics, state => ({ ...state, working: true })),
-  on(rescanComicsSuccess, state => ({ ...state, working: false })),
-  on(rescanComicsFailure, state => ({ ...state, working: false }))
+export const rescanComicsReducer = createReducer(
+  initialRescanComicsState,
+  on(RescanComicsActions.rescanSelectedComics, state => ({
+    ...state,
+    busy: true
+  })),
+  on(RescanComicsActions.rescanSelectedComicsSuccess, state => ({
+    ...state,
+    busy: false
+  })),
+  on(RescanComicsActions.rescanSelectedComicsFailure, state => ({
+    ...state,
+    busy: false
+  }))
 );
 
 export const rescanComicsFeature = createFeature({
   name: RESCAN_COMICS_FEATURE_KEY,
-  reducer
+  reducer: rescanComicsReducer
 });
