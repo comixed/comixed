@@ -1,0 +1,20 @@
+@use './variables' as *;
+
+#app-portal {
+  position: fixed;
+  overflow-y: scroll;
+  background-color: transparent;
+  top: 70px;
+  left: $cx-margin-width;
+  width: $cx-portal-width;
+  height: $cx-portal-height;
+}
+
+footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  height: $cx-footer-height;
+  width: 100%;
+  padding-top: $cx-footer-padding;
+}

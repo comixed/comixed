@@ -25,9 +25,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import io.micrometer.core.annotation.Timed;
 import jakarta.servlet.http.HttpSession;
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.net.admin.ClearImageCacheResponse;
@@ -36,7 +34,10 @@ import org.comixedproject.model.net.comicbooks.EditMultipleComicsRequest;
 import org.comixedproject.model.net.library.PurgeLibraryRequest;
 import org.comixedproject.model.net.library.RemoteLibraryState;
 import org.comixedproject.service.admin.ConfigurationService;
-import org.comixedproject.service.comicbooks.*;
+import org.comixedproject.service.comicbooks.ComicException;
+import org.comixedproject.service.comicbooks.ComicSelectionException;
+import org.comixedproject.service.comicbooks.ComicSelectionService;
+import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.service.library.LibraryException;
 import org.comixedproject.service.library.LibraryService;
 import org.comixedproject.service.library.RemoteLibraryStateService;
@@ -111,7 +112,7 @@ public class LibraryController {
     log.info("Converting single comic book: target={}", comicId, archiveType);
 
     log.trace("Preparing to recreate comic book file");
-    this.libraryService.prepareToRecreate(new ArrayList<>(Arrays.asList(comicId)), archiveType);
+    this.libraryService.prepareToRecreate(new HashSet<>(Arrays.asList(comicId)), archiveType);
   }
 
   /**
@@ -141,7 +142,7 @@ public class LibraryController {
 
     log.trace("Loading comic book selections");
     try {
-      final List<Long> idList =
+      final Set<Long> idList =
           this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
       final ArchiveType archiveType = request.getArchiveType();
 
@@ -173,7 +174,7 @@ public class LibraryController {
   public void organizeLibrary(final HttpSession session, final Principal principal)
       throws Exception {
     final String email = principal.getName();
-    final List<Long> selectedIds =
+    final Set<Long> selectedIds =
         this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
     log.info("Organizing library: email={} count={}", email, selectedIds.size());
     this.libraryService.prepareForOrganization(selectedIds);
@@ -226,7 +227,9 @@ public class LibraryController {
   @Timed(value = "comixed.library.batch.rescan-single")
   public void rescanSingleComic(@PathVariable("comicId") final long comicId) throws Exception {
     log.info("Rescanning single comic book: id={}", comicId);
-    this.comicService.prepareForRescan(Arrays.asList(comicId));
+    final Set<Long> idList = new HashSet<>();
+    idList.add(comicId);
+    this.comicService.prepareForRescan(idList);
   }
 
   /**
@@ -242,7 +245,7 @@ public class LibraryController {
   public void rescanSelectedComics(final HttpSession session, final Principal principal)
       throws Exception {
     final String email = principal.getName();
-    final List<Long> selectedIdList =
+    final Set<Long> selectedIdList =
         this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
     log.info("Rescanning selected comic books: email={}", email);
     this.comicService.prepareForRescan(selectedIdList);
@@ -263,7 +266,9 @@ public class LibraryController {
   public void updateSingleComicMetadata(@PathVariable("comicId") final long comicId)
       throws Exception {
     log.info("Updating the metadata a single comic book: id={}", comicId);
-    this.libraryService.prepareForMetadataUpdate(new ArrayList<>(Arrays.asList(comicId)));
+    final Set<Long> idList = new HashSet<>();
+    idList.add(comicId);
+    this.libraryService.prepareForMetadataUpdate(idList);
   }
 
   /**
@@ -279,10 +284,10 @@ public class LibraryController {
   public void updateSelectedComicsMetadata(final HttpSession session, final Principal principal)
       throws Exception {
     final String email = principal.getName();
-    final List<Long> selectedComicIds =
+    final Set<Long> selectedComicIds =
         this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
     log.info("Updating the metadata for {} comic(s): email={}", selectedComicIds.size(), email);
-    this.libraryService.updateMetadata(new ArrayList<>(selectedComicIds));
+    this.libraryService.updateMetadata(new HashSet<>(selectedComicIds));
     this.comicSelectionService.clearSelectedComics(email, selectedComicIds);
     session.setAttribute(
         LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selectedComicIds));
@@ -313,7 +318,7 @@ public class LibraryController {
   @Timed(value = "comixed.library.edit-comics")
   public void editMultipleComics(@RequestBody() final EditMultipleComicsRequest request)
       throws Exception {
-    final List<Long> ids = request.getIds();
+    final Set<Long> ids = request.getIds();
     log.info("Preparing to update details for {} comic{}", ids.size(), ids.size() == 1 ? "" : "s");
     this.comicService.updateMultipleComics(ids);
     log.trace("Launching update comics batch process");

@@ -19,7 +19,7 @@
 package org.comixedproject.service.library;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Set;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.file.FileAdaptor;
 import org.comixedproject.model.archives.ArchiveType;
@@ -68,7 +68,7 @@ public class LibraryService {
    */
   @Transactional
   @Async
-  public void updateMetadata(final List<Long> ids) {
+  public void updateMetadata(final Set<Long> ids) {
     log.debug("Preparing {} comic book(s) for metadata update", ids.size());
     this.comicService.prepareForMetadataUpdate(ids);
     log.debug("Initiating update batch process");
@@ -81,7 +81,7 @@ public class LibraryService {
    * @param ids the comic book ids
    */
   @Transactional
-  public void prepareForMetadataUpdate(final List<Long> ids) {
+  public void prepareForMetadataUpdate(final Set<Long> ids) {
     this.comicService.prepareForMetadataUpdate(ids);
   }
 
@@ -90,7 +90,7 @@ public class LibraryService {
    *
    * @param ids the comic book ids
    */
-  public void prepareForOrganization(final List<Long> ids) {
+  public void prepareForOrganization(final Set<Long> ids) {
     log.trace("Marking comics to be organized");
     this.comicService.prepareForOrganization(ids);
   }
@@ -107,7 +107,7 @@ public class LibraryService {
    * @param ids the comic ids
    * @param archiveType the target archive type
    */
-  public void prepareToRecreate(final List<Long> ids, final ArchiveType archiveType) {
+  public void prepareToRecreate(final Set<Long> ids, final ArchiveType archiveType) {
     final long started = System.currentTimeMillis();
     log.debug("Preparing to recreate {} comic book file(s)", ids.size());
     this.comicService.prepareForRecreation(ids, archiveType);

@@ -1,0 +1,287 @@
+/*
+ * ComiXed - A digital comic book library management application.
+ * Copyright (C) 2021, The ComiXed Project
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses>
+ */
+
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { DuplicatePageDetailPageComponent } from './duplicate-page-detail-page.component';
+import { LoggerModule } from '@angular-ru/cdk/logger';
+import { ActivatedRoute, provideRouter, Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import {
+  DUPLICATE_PAGE_DETAIL_FEATURE_KEY,
+  initialState as initialDuplicatePageDetailState
+} from '@app/library/reducers/duplicate-page-detail.reducer';
+import { DUPLICATE_PAGE_1 } from '@app/library/library.fixtures';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TitleService } from '@app/core/services/title.service';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatIconModule } from '@angular/material/icon';
+import { ComicPageComponent } from '@app/comic-books/components/comic-page/comic-page.component';
+import { PageHashUrlPipe } from '@app/comic-books/pipes/page-hash-url.pipe';
+import { MatTableModule } from '@angular/material/table';
+import { MatCardModule } from '@angular/material/card';
+import {
+  initialState as initialUserState,
+  USER_FEATURE_KEY
+} from '@app/user/reducers/user.reducer';
+import { USER_ADMIN } from '@app/user/user.fixtures';
+import { loadDuplicatePageDetail } from '@app/library/actions/duplicate-page-detail.actions';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatButtonModule } from '@angular/material/button';
+import {
+  Confirmation,
+  ConfirmationService
+} from '@tragically-slick/confirmation';
+import { BLOCKED_HASH_1 } from '@app/comic-pages/comic-pages.fixtures';
+import { QueryParameterService } from '@app/core/services/query-parameter.service';
+import { MatSortModule } from '@angular/material/sort';
+import { DISPLAYABLE_COMIC_1 } from '@app/comic-books/comic-books.fixtures';
+import {
+  BLOCKED_HASHES_FEATURE_KEY,
+  initialState as initialBlockedHashesState
+} from '@app/comic-pages/reducers/blocked-hashes.reducer';
+import { setBlockedStateForHash } from '@app/comic-pages/actions/blocked-hashes.actions';
+
+describe('DuplicatePageDetailPageComponent', () => {
+  const DUPLICATE_PAGE = DUPLICATE_PAGE_1;
+  const COMIC = DISPLAYABLE_COMIC_1;
+  const BLOCKED_HASH = BLOCKED_HASH_1;
+  const initialState = {
+    [USER_FEATURE_KEY]: { ...initialUserState, user: USER_ADMIN },
+    [DUPLICATE_PAGE_DETAIL_FEATURE_KEY]: {
+      ...initialDuplicatePageDetailState,
+      detail: DUPLICATE_PAGE
+    },
+    [BLOCKED_HASHES_FEATURE_KEY]: initialBlockedHashesState
+  };
+  let component: DuplicatePageDetailPageComponent;
+  let fixture: ComponentFixture<DuplicatePageDetailPageComponent>;
+  let activatedRoute: ActivatedRoute;
+  let router: Router;
+  let store: MockStore<any>;
+  let titleService: TitleService;
+  let setTitleSpy: jasmine.Spy<any>;
+  let translateService: TranslateService;
+  let confirmationService: ConfirmationService;
+
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [
+        LoggerModule.forRoot(),
+        TranslateModule.forRoot(),
+        MatToolbarModule,
+        MatIconModule,
+        MatTableModule,
+        MatCardModule,
+        MatDialogModule,
+        MatTooltipModule,
+        MatButtonModule,
+        MatSortModule,
+        DuplicatePageDetailPageComponent,
+        ComicPageComponent,
+        PageHashUrlPipe
+      ],
+      providers: [
+        provideMockStore({ initialState }),
+        provideRouter([]),
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            params: new BehaviorSubject<any>({} as any)
+          }
+        },
+        ConfirmationService,
+        {
+          provide: QueryParameterService,
+          useValue: {}
+        }
+      ]
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(DuplicatePageDetailPageComponent);
+    component = fixture.componentInstance;
+    activatedRoute = TestBed.inject(ActivatedRoute);
+    router = TestBed.inject(Router);
+    store = TestBed.inject(MockStore);
+    spyOn(store, 'dispatch');
+    titleService = TestBed.inject(TitleService);
+    setTitleSpy = spyOn(titleService, 'setTitle');
+    translateService = TestBed.inject(TranslateService);
+    confirmationService = TestBed.inject(ConfirmationService);
+    fixture.detectChanges();
+  }));
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+
+  it('sets the tab title', () => {
+    expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
+  });
+
+  describe('when the language changes', () => {
+    beforeEach(() => {
+      setTitleSpy.calls.reset();
+      translateService.use('fr');
+    });
+
+    it('should update the tab title', () => {
+      expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
+    });
+  });
+
+  describe('loading the duplicate page detail', () => {
+    beforeEach(() => {
+      (activatedRoute.params as BehaviorSubject<any>).next({
+        hash: DUPLICATE_PAGE.hash
+      });
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        loadDuplicatePageDetail({ hash: DUPLICATE_PAGE.hash })
+      );
+    });
+
+    describe('when the page was not found', () => {
+      beforeEach(() => {
+        spyOn(router, 'navigateByUrl');
+        store.setState({
+          ...initialState,
+          [DUPLICATE_PAGE_DETAIL_FEATURE_KEY]: {
+            ...initialDuplicatePageDetailState,
+            notFound: true
+          }
+        });
+      });
+
+      it('redirects the browser to the list page', () => {
+        expect(router.navigateByUrl).toHaveBeenCalledWith(
+          '/library/pages/duplicates'
+        );
+      });
+    });
+
+    describe('when the page is loaded', () => {
+      beforeEach(() => {
+        store.setState({
+          ...initialState,
+          [DUPLICATE_PAGE_DETAIL_FEATURE_KEY]: {
+            ...initialDuplicatePageDetailState,
+            detail: DUPLICATE_PAGE
+          }
+        });
+      });
+
+      it('sets the detail reference', () => {
+        expect(component.detail).toEqual(DUPLICATE_PAGE);
+      });
+    });
+  });
+
+  describe('setting the blocked state for a page', () => {
+    beforeEach(() => {
+      component.hash$.next(DUPLICATE_PAGE.hash);
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirmation: Confirmation) => confirmation.confirm()
+      );
+    });
+
+    describe('blocking a page', () => {
+      beforeEach(() => {
+        component.onBlockPage();
+      });
+
+      it('confirms with the user', () => {
+        expect(confirmationService.confirm).toHaveBeenCalled();
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          setBlockedStateForHash({
+            hashes: [DUPLICATE_PAGE.hash],
+            blocked: true
+          })
+        );
+      });
+    });
+
+    describe('unblocking a page', () => {
+      beforeEach(() => {
+        component.onUnblockPage();
+      });
+
+      it('confirms with the user', () => {
+        expect(confirmationService.confirm).toHaveBeenCalled();
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          setBlockedStateForHash({
+            hashes: [DUPLICATE_PAGE.hash],
+            blocked: false
+          })
+        );
+      });
+    });
+  });
+
+  describe('loading blocked hashes', () => {
+    beforeEach(() => {
+      component.blockedHashes$.next([]);
+      store.setState({
+        ...initialState,
+        [BLOCKED_HASHES_FEATURE_KEY]: {
+          ...initialBlockedHashesState,
+          entries: [BLOCKED_HASH]
+        }
+      });
+    });
+
+    it('updates the blocked hashes', () => {
+      expect(component.blockedHashes$.value).toEqual([BLOCKED_HASH.hash]);
+    });
+  });
+
+  describe('sorting', () => {
+    it('can sort by publisher', () => {
+      expect(
+        component.dataSource.sortingDataAccessor(COMIC, 'publisher')
+      ).toEqual(COMIC.publisher);
+    });
+
+    it('can sort by series', () => {
+      expect(component.dataSource.sortingDataAccessor(COMIC, 'series')).toEqual(
+        COMIC.series
+      );
+    });
+
+    it('can sort by issue number', () => {
+      expect(
+        component.dataSource.sortingDataAccessor(COMIC, 'issue-number')
+      ).toEqual(COMIC.issueNumber);
+    });
+
+    it('can sort by cover date', () => {
+      expect(
+        component.dataSource.sortingDataAccessor(COMIC, 'cover-date')
+      ).toEqual(COMIC.coverDate);
+    });
+  });
+});

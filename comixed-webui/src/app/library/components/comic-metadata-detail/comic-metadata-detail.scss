@@ -1,0 +1,18 @@
+.scraping-options {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.scraping-options p-select {
+  width: 12rem;
+}
+
+.scraping-options p-ifta-label {
+  margin: 0;
+}
+
+.scraping-options {
+  flex-wrap: nowrap;
+}

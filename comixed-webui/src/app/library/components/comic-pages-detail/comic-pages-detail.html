@@ -1,0 +1,32 @@
+<div class="comic-pages-container">
+  @for (page of comicPages(); track page.comicPageId) {
+    <p-card>
+      <ng-template #header>
+        <div>{{ page.filename }}</div>
+      </ng-template>
+
+      <div class="page-container">
+        <img [src]="page | comicPageUrl" [alt]="page.filename" />
+      </div>
+
+      <ng-template #footer>
+        <div class="cx-width-100p cx-justify-end">
+          <p-button
+            icon="pi pi-trash"
+            severity="danger"
+            [pTooltip]="
+              'comic-pages-detail.tooltip.toggle-page-deletion' | translate
+            "
+          />
+          <p-button
+            icon="pi pi-ban"
+            severity="warn"
+            [pTooltip]="
+              'comic-pages-detail.tooltip.toggle-blocking-hash' | translate
+            "
+          />
+        </div>
+      </ng-template>
+    </p-card>
+  }
+</div>

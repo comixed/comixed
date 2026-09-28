@@ -1,0 +1,629 @@
+{
+  "app": {
+    "button": {
+      "cancel": "Cancel",
+      "confirm": "Confirm",
+      "reset": "Reset",
+      "select": "Select",
+      "submit": "Submit"
+    },
+    "effects": {
+      "general-failure": "A general failure occurred..."
+    },
+    "page-title": "ComiXed: {title}",
+    "text": {
+      "issue": "[issue #]",
+      "loading": "Loading, Please Wait...",
+      "publisher": "[publisher]",
+      "series": "[series]",
+      "version": "ComiXed v{version}",
+      "yes-or-no": "{value, select, true{Yes} other{No}}"
+    }
+  },
+  "batch-process-list-effects": {
+    "delete-completed-batch-processes": {
+      "service-failure": "Failed to delete completed batch processes..."
+    },
+    "load-batch-process-list": {
+      "service-failure": "Failed to load batch processes..."
+    }
+  },
+  "batch-process-list-page": {
+    "delete-completed-processes": {
+      "confirmation-message": "Are you sure you want to delete the completed batches?",
+      "confirmation-title": "Delete Completed Batches"
+    },
+    "label": {
+      "create-time": "Created",
+      "end-time": "Ended",
+      "errors": "Errors",
+      "exit-status": "Exit Status",
+      "job-id": "ID",
+      "job-name": "Name",
+      "last-update-time": "Last Updated",
+      "start-time": "Started",
+      "status": "Status"
+    },
+    "page-title": "Batch Processes",
+    "tab-title": "Batch Processes",
+    "tooltip": {
+      "delete-completed-processes": "Delete completed batch processes"
+    }
+  },
+  "comic-cover": {
+    "button": {
+      "download-file": "Download",
+      "next-issue": "Next Issue",
+      "previous-issue": "Prev Issue"
+    }
+  },
+  "comic-detail-effects": {
+    "load-comic": {
+      "service-failure": "Unable to load comic..."
+    },
+    "save-comic": {
+      "service-failure": "Unable to save changes..."
+    }
+  },
+  "comic-detail-page": {
+    "label": {
+      "metadata": "Metadata",
+      "pages": "Pages",
+      "publication": "Publication",
+      "story": "Story"
+    }
+  },
+  "comic-file-list-effects": {
+    "import": {
+      "service-failure": "Failed to start importing comics..."
+    },
+    "load-from-disk": {
+      "service-failure": "Failed to load comics from path: {directory}"
+    },
+    "load-from-session": {
+      "service-failure": "Failed to load comic files from the session..."
+    },
+    "select-comic-files": {
+      "service-failure": "Failed to update selected comics..."
+    }
+  },
+  "comic-list-effects": {
+    "load-by-filter": {
+      "service-failure": "Unable to load comics..."
+    }
+  },
+  "comic-list-page": {
+    "label": {
+      "read-only": "Read",
+      "unread-only": "Unread"
+    },
+    "page-title": "{pageType, select, SELECTED{Selected} READ{Read} UNSCRAPED{Unscraped} DUPLICATE{Duplicate} DELETED{Deleted} other{All} } Comics",
+    "tooltip": {
+      "toggle-unread": "Toggle showing read/unread comics..."
+    }
+  },
+  "comic-metadata-detail": {
+    "issue-selected": {
+      "confirmation-message": "Are you sure you want to replace the metadata using this issue?",
+      "confirmation-title": "Metadata Issue Selected"
+    },
+    "option": {
+      "100-records": "100 Records",
+      "500-records": "500 Records",
+      "1000-records": "1000 Records",
+      "all-records": "All Records"
+    },
+    "label": {
+      "issue-number": "Issue #",
+      "match-publisher": "Match Publisher",
+      "maximum-records": "Maximum Records To Retrieve",
+      "metadata-source": "Metadata Source",
+      "publisher": "Publisher",
+      "reference-id": "Reference #",
+      "series": "Series",
+      "skip-cache": "Skip Cache",
+      "volume": "Volume"
+    }
+  },
+  "comic-pages-detail": {
+    "tooltip": {
+      "toggle-blocking-hash": "Toggle blocking this page hash",
+      "toggle-page-deletion": "Toggle marking this page for deletion"
+    }
+  },
+  "comic-publication-detail": {
+    "label": {
+      "added-date": "Added",
+      "archive-type": "Archive Type",
+      "comic-state": "Comic State",
+      "comic-type": "Comic Type",
+      "cover-date": "Cover Date",
+      "filename": "Filename",
+      "imprint": "Imprint",
+      "issue-number": "Issue #",
+      "last-modified-date": "Last Modified Date",
+      "notes": "Notes",
+      "publisher": "Publisher",
+      "series": "Series",
+      "store-date": "Store Date",
+      "title": "Title",
+      "volume": "Volume"
+    },
+    "title": {
+      "file-info": "File Details",
+      "publication-info": "Publication Details"
+    }
+  },
+  "comic-story-detail": {
+    "label": {
+      "characters": "Characters",
+      "description": "Description",
+      "credits": "Credits",
+      "locations": "Locations",
+      "stories": "Stories",
+      "teams": "Teams"
+    }
+  },
+  "comic-table": {
+    "label": {
+      "added-date": "Added",
+      "comic-state": "State",
+      "cover-date": "Cover Date",
+      "issue-number": "Issue #",
+      "page-count": "# Pages",
+      "publisher": "Publisher",
+      "series": "Series",
+      "state": {
+        "ADDED": "Comic was added to the library...",
+        "CHANGED": "Comic metadata has changed...",
+        "DELETED": "Comic is marked for deletion...",
+        "DISCOVERED": "Comic was discovered...",
+        "STABLE": "Comic has no changes...",
+        "UNPROCESSED": "Comic has not been processed..."
+      },
+      "store-date": "Store Date",
+      "thumbnail": "Cover",
+      "volume": "Volume"
+    }
+  },
+  "dashboard": {
+    "page-title": "Dashboard",
+    "statistics": {
+      "archive-types": {
+        "title": "Archive Types"
+      },
+      "characters": {
+        "title": "{count, plural, =1{1 Character} other{# Characters}}",
+        "zoom-title": "Top Characters"
+      },
+      "comic-states": {
+        "title": "Comic States"
+      },
+      "locations": {
+        "title": "{count, plural, =1{1 Location} other{# Locations}}",
+        "zoom-title": "Top Locations"
+      },
+      "publishers": {
+        "title": "{count, plural, =1{1 Publisher} other{# Publishers}}",
+        "zoom-title": "Top Publishers"
+      },
+      "series": {
+        "title": "{count, plural, =1{1 Series} other{# Series}}",
+        "zoom-title": "Top Series"
+      },
+      "stories": {
+        "title": "{count, plural, =1{1 Story} other{# Stories}}",
+        "zoom-title": "Top Stories"
+      },
+      "teams": {
+        "title": "{count, plural, =1{1 Team} other{# Teams}}",
+        "zoom-title": "Top Teams"
+      },
+      "text": {
+        "go-to-page": "View the details...",
+        "show-details": "Expand this graph...",
+        "view-more": "View more detail..."
+      }
+    }
+  },
+  "duplicate-comic-effects": {
+    "load": {
+      "service-failure": "Failed to load duplicate comic details..."
+    }
+  },
+  "duplicate-comic-list-page": {
+    "label": {
+      "cover-date": "Cover Date",
+      "duplicate-count": "# of Duplicates",
+      "issue-number": "Issue #",
+      "publisher": "Publisher",
+      "series": "Series",
+      "volume": "Volume"
+    },
+    "page-title": "Duplicate Comics",
+    "trail-title": "Duplicate Comics"
+  },
+  "duplicate-comic-page": {
+    "page-title": "Duplicate: {publisher} {series} V{volume} #{issueNumber}",
+    "trail-title": "{publisher} {series} V{volume} #{issueNumber}"
+  },
+  "existing-admin-account-effects": {
+    "create-admin-account": {
+      "service-failure": "Failed to create admin account: {email}"
+    },
+    "has-existing": {
+      "service-failure": "Failed to check for an existing admin account..."
+    }
+  },
+  "import-comics-page": {
+    "import-comic-files": {
+      "confirmation-message": "Are sure you want to import these files into the library?",
+      "confirmation-title": "Import Comic Files"
+    },
+    "label": {
+      "10-comics": "10 Comics",
+      "25-comics": "25 Comics",
+      "50-comics": "50 Comics",
+      "100-comics": "100 Comics",
+      "1000-comics": "1000 Comics",
+      "all-comics": "All Comics",
+      "base-filename": "Filename",
+      "directory-input": "Directory",
+      "maximum-input": "Maximum Files To Return",
+      "selected": "#",
+      "size": "File Size"
+    },
+    "page-title": "Import Comics",
+    "placeholder": {
+      "directory-input": "The root directory to search...",
+      "maximum-input": "Select an option..."
+    },
+    "text": {
+      "size": "{size} Mb"
+    },
+    "tooltip": {
+      "import-comics-button": "There {selected, plural, =1{is 1} other{are #}} files selected..."
+    }
+  },
+  "initial-account-page": {
+    "create-account": {
+      "confirmation-message": "Are you sure you want to make {email} the admin for this server?",
+      "confirmation-title": "Create Admin Account"
+    },
+    "error": {
+      "password-validation": "The passwords do not match..."
+    },
+    "label": {
+      "email": "The Admin Email",
+      "password": "The Admin Password",
+      "verify-password": "Verify The Admin Password"
+    },
+    "page-title": "Create Admin Account",
+    "placeholder": {
+      "email": "admin@email.tld",
+      "password": "Your password...",
+      "verify-password": "Verify your password..."
+    }
+  },
+  "library-settings-page": {
+    "label": {
+      "create-external-metadata": "Maintain external metadata files for comics",
+      "delete-empty-directories": "Delete empty directories when organizing",
+      "delete-when-purging": "Delete comic files when purging the library",
+      "do-not-recreate-archives": "Never recreate a comic file",
+      "do-not-update-internal-metadata": "Do not update metadata files inside comics",
+      "exclusive-batch-access": "Batch processes have exclusive access to comic files",
+      "file-renaming-rule": "File Naming Rule",
+      "ignore-unscraped-comics": "Ignore unscraped comics when organizing",
+      "manage-blocked-pages": "Maintain a list of blocked page hashes",
+      "page-renaming-rule": "Page Naming Rule",
+      "root-directory": "Library Root Directory",
+      "strip-html-from-metadata": "Strip HTML out of metadata",
+      "variable-name": "Variable Name",
+      "variable-use": "What It Holds"
+    },
+    "page-title": "Library Settings",
+    "placeholder": {
+      "file-renaming-rule": "The rule for naming a comic files...",
+      "page-renaming-rule": "The rule for naming a comic page...",
+      "root-directory": "The top directory for your library..."
+    },
+    "text": {
+      "file-system-settings-title": "File System Settings",
+      "other-settings-title": "Features",
+      "variable-definition-title": "File System Variables"
+    },
+    "trail-title": "Library",
+    "variable": {
+      "comic-renaming-rule-cover-date": "The cover date.",
+      "comic-renaming-rule-imprint": "The imprint name",
+      "comic-renaming-rule-issue": "The issue number",
+      "comic-renaming-rule-issue-with-length": "The issue number padded to the specified length.",
+      "comic-renaming-rule-published-year": "The year of publication.",
+      "comic-renaming-rule-publisher": "The publisher name.",
+      "comic-renaming-rule-series": "The series name",
+      "comic-renaming-rule-title": "The issue title",
+      "comic-renaming-rule-volume": "The volume",
+      "page-renaming-rule-index": "The current page number (ONLY USED FOR PAGE)."
+    }
+  },
+  "library-statistics-panel": {
+    "segment": {
+      "batch-processes": "Processes",
+      "changed-comics": "Changed",
+      "deleted-comics": "Deleted",
+      "duplicate-comics": "Duplicates",
+      "read-comics": "Read",
+      "selected-comics": "Selected",
+      "total-comics": "Total",
+      "unscraped-comics": "Unscraped"
+    }
+  },
+  "login-page": {
+    "label": {
+      "email": "Email",
+      "password": "Password"
+    },
+    "page-title": "Login",
+    "placeholder": {
+      "email": "your@address.tld",
+      "password": "your password..."
+    },
+    "title": "Login"
+  },
+  "metadata-source-list-effects": {
+    "load": {
+      "service-failure": "Failed to load the metadata source list..."
+    },
+    "save": {
+      "service-failure": "Failed to save the metadata source..."
+    }
+  },
+  "metadata-source-list-page": {
+    "label": {
+      "available": "Available?",
+      "preferred": "Preferred?",
+      "source-homepage": "Homepage",
+      "source-name": "Metadata Source Name",
+      "source-version": "Version"
+    },
+    "page-title": "Metadata Source List",
+    "trail-title": "Metadata Sources"
+  },
+  "metadata-source-page": {
+    "edit-trail": "Edit",
+    "label": {
+      "preferred-source": "This is the preferred metadata source.",
+      "properties": "Adaptor Properties",
+      "property-name": "Property Name",
+      "property-value": "Property Value",
+      "source-name": "Source Name:"
+    },
+    "new-trail": "Create",
+    "page-title": "Metadata Source: {sourceName}",
+    "placeholder": {
+      "source-name": "The name of the metadata source adaptor..."
+    },
+    "submit-form": {
+      "confirmation-message": "Are you sure you want to save the changes to this metadata source?",
+      "confirmation-title": "Save {sourceName}"
+    }
+  },
+  "publisher-comic-list-page": {
+    "label": {
+      "series": "Series Name",
+      "volume": "Volume"
+    },
+    "page-title": "{publisherName}: Comic List",
+    "trail-title": "Comic List"
+  },
+  "publisher-list-effects": {
+    "load": {
+      "service-failure": "Failed to load publisher list..."
+    }
+  },
+  "publisher-list-page": {
+    "label": {
+      "issue-count": "# Comics",
+      "publisher-name": "Name",
+      "series-count": "# Series"
+    },
+    "page-title": "Publisher List",
+    "text": {
+      "no-publishers-found": "No publishers found..."
+    },
+    "trail-title": "Publishers"
+  },
+  "publisher-series-list-effects": {
+    "load": {
+      "service-failure": "Failed to load comics for {name}..."
+    }
+  },
+  "publisher-series-list-page": {
+    "label": {
+      "in-library": "# Comics in Library",
+      "series-name": "Series Name",
+      "total-issues": "Total Issues In Series",
+      "volume": "Volume"
+    },
+    "page-title": "{publisherName}: Series List",
+    "trail-title": "Series List"
+  },
+  "read-state-dialog": {
+    "button": {
+      "mark": "Mark Read",
+      "unmark": "Mark Unread"
+    },
+    "message": "Do you want to mark the selected comics as READ or UNREAD?",
+    "title": "Selected Comics Read State"
+  },
+  "scraping-volume-table": {
+    "label": {
+      "issue-count": "# of Issues",
+      "publisher": "Publisher",
+      "series": "Series",
+      "start-year": "Start Year"
+    },
+    "tooltip": {
+      "reset-volumes": "Reset volumes and go back...",
+      "select-issue": "Scrape metadata from this issue..."
+    }
+  },
+  "selected-comic-list-effects": {
+    "select-by-filter": "Failed to set selected state on comics...",
+    "select-by-read-state": "Failed to select comics by read state..."
+  },
+  "selected-comic-toolbar": {
+    "tooltip": {
+      "batch-scrape": "Batch scrape the selected comics...",
+      "deleted-state": "Mark/Unmark selected comics for removal...",
+      "organize": "Organize the selected comics...",
+      "read-state": "Mark selected comics as read/unread...",
+      "recreate": "Recreate the selected comics...",
+      "rescan": "Rescan the selected comics...",
+      "scrape": "Scrape the selected comics...",
+      "update-metadata": "Update the metadata for the selected comics..."
+    }
+  },
+  "series-comic-list-effects": {
+    "clear-selections": {
+      "service-failure": "Failed to clear selections..."
+    },
+    "load": {
+      "service-failure": "Failed to load comics for series {seriesName}..."
+    },
+    "selected-by-read-state": {
+      "service-failure": "Failed to select comics by {readFlag, select, true{read} other{unread}} state..."
+    },
+    "select-comic": {
+      "service-failure": "Failed to selected state on comic..."
+    }
+  },
+  "series-comic-list-page": {
+    "label": {
+      "cover-date": "Cover Date",
+      "in-library": "In Library?",
+      "issue-number": "Issue #",
+      "store-date": "Store Date",
+      "title": "Title"
+    },
+    "page-title": "Series: {name} V{volume}",
+    "trail-title": "{name} V{volume}"
+  },
+  "series-list-effects": {
+    "load-series-list": {
+      "service-failure": "Failed to load series entries..."
+    }
+  },
+  "series-list-page": {
+    "label": {
+      "in-library": "# of Comics",
+      "publisher": "Publisher",
+      "series-name": "Series Name",
+      "volume": "Volume"
+    },
+    "page-title": "Series List",
+    "text": {
+      "no-series-found": "No series found..."
+    },
+    "trail-title": "Series"
+  },
+  "settings": {
+    "trail-title": "Settings"
+  },
+  "single-comic-scraping-effects": {
+    "load-volumes": {
+      "service-failure": "Failed to load scraping volumes..."
+    },
+    "load-issue": {
+      "no-issue-found": "No issue was found using {sourceName}..."
+    },
+    "scrape-comic": {
+      "service-failure": "Failed to scrape comic..."
+    }
+  },
+  "story-detail-card": {
+    "label": {
+      "COLORIST": "Colorist",
+      "COVER": "Cover Artist",
+      "EDITOR": "Editor",
+      "INKER": "Inker",
+      "LETTERER": "Letterer",
+      "OTHER": "Other",
+      "PENCILLER": "Penciller",
+      "WRITER": "Writer"
+    }
+  },
+  "tag-list-effects": {
+    "load": {
+      "service-failure": "Failed to load tag entries..."
+    }
+  },
+  "tag-list-page": {
+    "label": {
+      "comic-count": "# of Comics",
+      "tag-value": "Value"
+    },
+    "page-title": "{tagType, select, CHARACTER{Character} TEAM{Team} LOCATION{Location} STORY{Story} other{Unknown}} List",
+    "text": {
+      "no-tags-found": "No entries found..."
+    },
+    "trail-title": "{tagType, select, CHARACTER{Characters} TEAM{Teams} LOCATION{Locations} STORY{Storys} other{Unknown}}"
+  },
+  "tooltip": {
+    "view-details": "View details for {name}..."
+  },
+  "topbar": {
+    "menu": {
+      "admin": {
+        "import": "Import comics...",
+        "item": "Admin",
+        "settings": {
+          "item": "Settings...",
+          "library": "Library settings...",
+          "metadata": "Metadata settings..."
+        }
+      },
+      "home": {
+        "item": "Home"
+      },
+      "selected-comics": {
+        "batch-scrape": "Batch scrape",
+        "delete": {
+          "item": "Deletion",
+          "mark": "Mark for removal...",
+          "unmark": "Unmark"
+        },
+        "deselect-all": "Clear selections...",
+        "item": "Selected Comics",
+        "organize": "Organize...",
+        "read": {
+          "item": "Read State",
+          "mark-read": "Mark as read",
+          "mark-unread": "Unmark"
+        },
+        "rescan": "Rescan...",
+        "scrape": "Scrape metadata..."
+      }
+    },
+    "tooltip": {
+      "logout-button": "Log out of the server..."
+    }
+  },
+  "user-effects": {
+    "load-user": {
+      "service-failure": "User session expired..."
+    },
+    "login": {
+      "service-failure": "Login was unsuccessful..."
+    },
+    "save-preference": {
+      "service-failure": "Failed to save user preference: {name}..."
+    }
+  },
+  "welcome": {
+    "first-logged-in": "User since {date}.",
+    "greet-user": "Welcome back {email}!",
+    "last-logged-in": "Last logged in on {date}."
+  }
+}

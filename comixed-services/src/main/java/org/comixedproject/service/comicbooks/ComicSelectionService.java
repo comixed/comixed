@@ -18,7 +18,6 @@
 
 package org.comixedproject.service.comicbooks;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -68,7 +67,7 @@ public class ComicSelectionService {
    * @param comicId the incoming comic book id
    */
   public void addComicSelectionForUser(
-      final String email, final List<Long> selections, final Long comicId) {
+      final String email, final Set<Long> selections, final Long comicId) {
     if (!selections.contains(comicId)) {
       log.debug("Adding comic book to selections: {}", comicId);
       selections.add(comicId);
@@ -84,7 +83,7 @@ public class ComicSelectionService {
    * @param comicId the incoming comic book id
    */
   public void removeComicSelectionFromUser(
-      final String email, final List selections, final Long comicId) {
+      final String email, final Set selections, final Long comicId) {
     if (selections.contains(comicId)) {
       log.debug("Removing comic book from selections: {}", comicId);
       selections.remove(comicId);
@@ -110,7 +109,7 @@ public class ComicSelectionService {
    */
   public void selectByFilter(
       final String email,
-      final List selections,
+      final Set selections,
       final Integer coverYear,
       final Integer coverMonth,
       final ArchiveType archiveType,
@@ -151,7 +150,7 @@ public class ComicSelectionService {
    * @param email the user's email
    * @param selections the selected comic book ids
    */
-  public void clearSelectedComics(final String email, final List<Long> selections) {
+  public void clearSelectedComics(final String email, final Set<Long> selections) {
     log.debug("Clearing the selected ids");
     selections.clear();
     log.debug("Publishing cleared out selection update");
@@ -165,15 +164,15 @@ public class ComicSelectionService {
    * @return the decoded selections
    * @throws ComicSelectionException if an error occurs
    */
-  public List<Long> decodeSelections(final Object storeSelections) throws ComicSelectionException {
+  public Set<Long> decodeSelections(final Object storeSelections) throws ComicSelectionException {
     if (storeSelections == null) {
       log.debug("Creating new selection set");
-      return new ArrayList();
+      return new HashSet<>();
     } else {
       try {
         final ListOfIds result =
             this.objectMapper.readValue(storeSelections.toString(), ListOfIds.class);
-        return result.getIds().stream().collect(Collectors.toList());
+        return result.getIds().stream().collect(Collectors.toSet());
       } catch (JacksonException error) {
         throw new ComicSelectionException("failed to load selections from session", error);
       }
@@ -187,7 +186,7 @@ public class ComicSelectionService {
    * @return the encoded selections
    * @throws ComicSelectionException if an error occurs
    */
-  public String encodeSelections(final List<Long> selections) throws ComicSelectionException {
+  public String encodeSelections(final Set<Long> selections) throws ComicSelectionException {
     log.debug("Storing selection set");
     try {
       return this.objectMapper.writeValueAsString(new ListOfIds(new HashSet<>(selections)));
@@ -202,12 +201,12 @@ public class ComicSelectionService {
    * @param email the user's email
    * @param selections the selected ids
    */
-  public void publishSelections(final String email, final List<Long> selections) {
+  public void publishSelections(final String email, final Set<Long> selections) {
     this.doPublishSelectionUpdateForUser(email, selections);
   }
 
   @Async
-  protected void doPublishSelectionUpdateForUser(final String email, final List<Long> selections) {
+  protected void doPublishSelectionUpdateForUser(final String email, final Set<Long> selections) {
     try {
       final ComiXedUser user = this.userService.findByEmail(email);
       this.publishComicSelectionStateAction.publish(new ComicSelectionEvent(user, selections));
@@ -224,7 +223,7 @@ public class ComicSelectionService {
    * @param tagValue the tag value
    */
   public void addByTagTypeAndValue(
-      final List selections, final ComicTagType tagType, final String tagValue) {
+      final Set<Long> selections, final ComicTagType tagType, final String tagValue) {
     selections.addAll(this.displayableComicService.getIdsByTagTypeAndValue(tagType, tagValue));
   }
 
@@ -236,7 +235,7 @@ public class ComicSelectionService {
    * @param tagValue the tag value
    */
   public void removeByTagTypeAndValue(
-      final List selections, final ComicTagType tagType, final String tagValue) {
+      final Set<Long> selections, final ComicTagType tagType, final String tagValue) {
     selections.removeAll(this.displayableComicService.getIdsByTagTypeAndValue(tagType, tagValue));
   }
 

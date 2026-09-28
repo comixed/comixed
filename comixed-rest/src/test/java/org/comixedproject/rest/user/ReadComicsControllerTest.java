@@ -20,14 +20,13 @@ package org.comixedproject.rest.user;
 
 import static org.comixedproject.rest.comicbooks.ComicSelectionController.LIBRARY_SELECTIONS;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 import jakarta.servlet.http.HttpSession;
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import org.comixedproject.service.comicbooks.ComicSelectionException;
 import org.comixedproject.service.comicbooks.ComicSelectionService;
 import org.comixedproject.service.user.ReadComicsException;
@@ -55,14 +54,14 @@ class ReadComicsControllerTest {
   @Mock private HttpSession httpSession;
   @Mock private Principal principal;
 
-  private List selectedIds = new ArrayList();
+  private Set<Long> selectedIds = new HashSet<>();
 
   @BeforeEach
   void setUp() throws ComicSelectionException {
     when(principal.getName()).thenReturn(TEST_EMAIL);
     when(httpSession.getAttribute(LIBRARY_SELECTIONS)).thenReturn(TEST_ENCODED_IDS);
     when(comicSelectionService.decodeSelections(TEST_ENCODED_IDS)).thenReturn(selectedIds);
-    when(comicSelectionService.encodeSelections(anyList())).thenReturn(TEST_REENCODED_IDS);
+    when(comicSelectionService.encodeSelections(anySet())).thenReturn(TEST_REENCODED_IDS);
   }
 
   @Test
@@ -104,7 +103,7 @@ class ReadComicsControllerTest {
   void markSelectedAsRead_serviceThrowsException() throws ReadComicsException {
     doThrow(ReadComicsException.class)
         .when(readComicsService)
-        .markSelectionsAsRead(anyString(), anyList());
+        .markSelectionsAsRead(anyString(), anySet());
 
     assertThrows(
         ReadComicsException.class, () -> controller.markSelectedComicsRead(principal, httpSession));
@@ -112,7 +111,7 @@ class ReadComicsControllerTest {
 
   @Test
   void markSelectedAsRead_selectionExceptionDuringEncode() throws ComicSelectionException {
-    doThrow(ComicSelectionException.class).when(comicSelectionService).encodeSelections(anyList());
+    doThrow(ComicSelectionException.class).when(comicSelectionService).encodeSelections(anySet());
 
     assertThrows(
         ComicSelectionException.class,
@@ -131,7 +130,7 @@ class ReadComicsControllerTest {
   void unmarkSelectedAsRead_serviceThrowsException() throws ReadComicsException {
     doThrow(ReadComicsException.class)
         .when(readComicsService)
-        .unmarkSelectionsAsRead(anyString(), anyList());
+        .unmarkSelectionsAsRead(anyString(), anySet());
 
     assertThrows(
         ReadComicsException.class,
@@ -140,7 +139,7 @@ class ReadComicsControllerTest {
 
   @Test
   void unmarkSelectedAsRead_selectionExceptionDuringEncode() throws ComicSelectionException {
-    doThrow(ComicSelectionException.class).when(comicSelectionService).encodeSelections(anyList());
+    doThrow(ComicSelectionException.class).when(comicSelectionService).encodeSelections(anySet());
 
     assertThrows(
         ComicSelectionException.class,

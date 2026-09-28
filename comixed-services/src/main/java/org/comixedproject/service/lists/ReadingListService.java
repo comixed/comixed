@@ -21,6 +21,7 @@ package org.comixedproject.service.lists;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.csv.CsvAdaptor;
@@ -184,7 +185,7 @@ public class ReadingListService {
    */
   @Transactional
   @Async
-  public void addComicsToList(String email, long id, List<Long> comicIds)
+  public void addComicsToList(String email, long id, Set<Long> comicIds)
       throws ReadingListException {
     final ReadingList readingList = this.doLoadReadingList(id);
     log.trace("Verifying owner: {}", email);
@@ -208,7 +209,7 @@ public class ReadingListService {
    */
   @Transactional
   @Async
-  public void removeComicsFromList(String email, long id, List<Long> comicIds)
+  public void removeComicsFromList(String email, long id, Set<Long> comicIds)
       throws ReadingListException {
     final ReadingList readingList = this.doLoadReadingList(id);
     log.trace("Verifying owner: {}", email);
@@ -335,7 +336,7 @@ public class ReadingListService {
    * @param ids the reading list ids
    * @throws ReadingListException if the user is not the owner of a list or the id is invalid
    */
-  public void deleteReadingLists(final String email, final List<Long> ids)
+  public void deleteReadingLists(final String email, final Set<Long> ids)
       throws ReadingListException {
     ids.forEach(
         id -> {

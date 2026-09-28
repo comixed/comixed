@@ -564,7 +564,7 @@ public class ComicService {
    * @return the ids
    */
   @Transactional
-  public List<Long> getAllIds() {
+  public Set<Long> getAllIds() {
     log.debug("Getting the list of all comic detail ids");
     return this.comicRepository.getAllIds();
   }
@@ -575,7 +575,7 @@ public class ComicService {
    * @param ids the record ids
    */
   @Transactional
-  public void prepareForMetadataUpdate(final List<Long> ids) {
+  public void prepareForMetadataUpdate(final Set<Long> ids) {
     this.comicRepository.prepareForMetadataUpdate(ids);
   }
 
@@ -866,7 +866,7 @@ public class ComicService {
   // update
 
   @Transactional
-  public void markComicsForBatchScraping(final List<Long> ids) {
+  public void markComicsForBatchScraping(final Set<Long> ids) {
     this.comicRepository.prepareForBatchScraping(ids);
   }
 
@@ -877,7 +877,7 @@ public class ComicService {
    * @param archiveType the targe archive type
    */
   @Transactional
-  public void prepareForRecreation(final List<Long> ids, final ArchiveType archiveType) {
+  public void prepareForRecreation(final Set<Long> ids, final ArchiveType archiveType) {
     log.trace("Marking comics for recreation");
     this.comicRepository.markForRecreationById(ids, archiveType);
     this.applicationEventPublisher.publishEvent(RecreateComicFilesEvent.instance);
@@ -906,7 +906,7 @@ public class ComicService {
    * @param comicIds the comics' ids
    * @throws ComicException if comic id is invalid
    */
-  public void updateMultipleComics(final List<Long> comicIds) throws ComicException {
+  public void updateMultipleComics(final Set<Long> comicIds) throws ComicException {
     log.debug("Updating details for {} comic{}", comicIds.size(), comicIds.size() == 1 ? "" : "s");
     for (long comicId : comicIds) {
       log.trace("Loading comic: id={}", comicId);
@@ -922,7 +922,7 @@ public class ComicService {
    *
    * @param comicIdList the comic ids
    */
-  public void prepareForRescan(final List<Long> comicIdList) {
+  public void prepareForRescan(final Set<Long> comicIdList) {
     comicIdList.forEach(
         comicId -> {
           log.trace("Loading comic: id={}", comicId);
@@ -975,7 +975,7 @@ public class ComicService {
    * @throws ComicException if an id is invalid
    */
   @Transactional(rollbackFor = Throwable.class)
-  public void markComicsForBatchMetadataUpdate(final List<Long> ids) throws ComicException {
+  public void markComicsForBatchMetadataUpdate(final Set<Long> ids) throws ComicException {
     for (final Long id : ids) {
       log.trace("Loading comic book: id={}", id);
       final var comic = this.doLoadComic(id);
@@ -1000,7 +1000,7 @@ public class ComicService {
    * @param ids the comic ids
    */
   @Transactional
-  public void prepareForOrganization(final List<Long> ids) {
+  public void prepareForOrganization(final Set<Long> ids) {
     log.trace("Marking comics for organization");
     this.comicRepository.markForOrganizationById(ids);
     this.applicationEventPublisher.publishEvent(OrganizingLibraryEvent.instance);

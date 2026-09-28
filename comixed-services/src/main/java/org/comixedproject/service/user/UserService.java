@@ -21,10 +21,7 @@ package org.comixedproject.service.user;
 import static org.comixedproject.model.user.ComiXedRole.ADMIN_ROLE;
 import static org.comixedproject.model.user.ComiXedRole.READER_ROLE;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -335,7 +332,7 @@ public class UserService {
     }
 
     log.debug("Returning comic ids not read by {}", email);
-    final List<Long> idList = this.comicService.getAllIds();
+    final Set<Long> idList = this.comicService.getAllIds();
     idList.removeAll(user.getReadComics());
     return idList;
   }

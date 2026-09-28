@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2026, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@ import { createFeatureSelector, createSelector } from '@ngrx/store';
 import {
   MESSAGING_FEATURE_KEY,
   MessagingState
-} from '../reducers/messaging.reducer';
+} from '@app/messaging/reducers/messaging.reducer';
 
 const selectMessagingState = createFeatureSelector<MessagingState>(
   MESSAGING_FEATURE_KEY
@@ -28,5 +28,5 @@ const selectMessagingState = createFeatureSelector<MessagingState>(
 
 export const selectMessagingStarted = createSelector(
   selectMessagingState,
-  state => !state.busy && state.started
+  state => !state.starting && state.started
 );
