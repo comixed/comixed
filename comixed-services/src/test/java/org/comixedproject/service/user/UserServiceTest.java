@@ -77,7 +77,7 @@ class UserServiceTest {
   private List<ComiXedUser> userList = new ArrayList<>();
   private List<ComiXedRole> roleList = new ArrayList<>();
   private Set<Long> readComicIdList = new HashSet<>();
-  private List<Long> comicIdList = new ArrayList<>();
+  private Set<Long> comicIdList = new HashSet<>();
 
   @BeforeEach
   void setUp() {

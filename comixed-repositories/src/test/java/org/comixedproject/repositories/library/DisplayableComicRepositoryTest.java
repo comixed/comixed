@@ -22,8 +22,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.comixedproject.model.library.DisplayableComic;
 import org.comixedproject.repositories.RepositoryContext;
 import org.junit.Before;
@@ -52,7 +53,7 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
 public class DisplayableComicRepositoryTest {
   @Autowired private DisplayableComicRepository repository;
 
-  private List<Long> idList = new ArrayList<>();
+  private Set<Long> idList = new HashSet<>();
 
   @Before
   public void setUp() {

@@ -1,0 +1,41 @@
+@use './variables' as *;
+
+.form-section {
+  padding: 1.25rem 0;
+}
+
+.form-section + .form-section {
+  border-top: 1px solid var(--p-content-border-color);
+}
+
+.form-section h3 {
+  margin: 0 0 1.25rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.cx-form-field > p-ifta-label {
+  width: 100%;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+@media (min-width: 1200px) {
+  .form-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cx-form-field-wide {
+    grid-column: auto;
+  }
+}

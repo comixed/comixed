@@ -348,7 +348,7 @@ public class DisplayableComicService {
       final Integer pageIndex,
       final String sortBy,
       final String sortDirection,
-      final List<Long> comicidList) {
+      final Set<Long> comicidList) {
     return this.displayableComicRepository.loadComicsById(
         comicidList, PageRequest.of(pageIndex, pageSize, this.doCreateSort(sortBy, sortDirection)));
   }
@@ -386,7 +386,7 @@ public class DisplayableComicService {
    * @return the ids
    */
   @Transactional
-  public List<Long> getIdsByTagTypeAndValue(final ComicTagType tagType, final String tagValue) {
+  public Set<Long> getIdsByTagTypeAndValue(final ComicTagType tagType, final String tagValue) {
     return this.displayableComicRepository.getIdsByTagTypeAndValue(tagType, tagValue);
   }
 
@@ -397,7 +397,7 @@ public class DisplayableComicService {
    * @return the comic ids
    */
   @Transactional
-  public List<Long> getIdsByPublisher(final String publisher) {
+  public Set<Long> getIdsByPublisher(final String publisher) {
     return this.displayableComicRepository.getIdsByPublisher(publisher);
   }
 
@@ -410,7 +410,7 @@ public class DisplayableComicService {
    * @return the ids
    */
   @Transactional
-  public List<Long> getIdsByPublisherSeriesAndVolume(
+  public Set<Long> getIdsByPublisherSeriesAndVolume(
       final String publisher, final String series, final String volume) {
     return this.displayableComicRepository.getIdsByPublisherSeriesAndVolume(
         publisher, series, volume);
