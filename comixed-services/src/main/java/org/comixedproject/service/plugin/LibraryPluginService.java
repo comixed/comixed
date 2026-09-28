@@ -21,6 +21,7 @@ package org.comixedproject.service.plugin;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.plugin.PublishLibraryPluginUpdateAction;
@@ -101,7 +102,7 @@ public class LibraryPluginService {
    * @return the saved plugin
    * @throws LibraryPluginException if an error occurs
    */
-  @Transactional
+  @Transactional(rollbackFor = LibraryPluginException.class)
   public LibraryPlugin createPlugin(final String pluginLanguage, final String pluginFilename)
       throws LibraryPluginException {
     try {
@@ -140,7 +141,7 @@ public class LibraryPluginService {
    * @return the updated plugin
    * @throws LibraryPluginException if an error occurs
    */
-  @Transactional
+  @Transactional(rollbackFor = LibraryPluginException.class)
   public LibraryPlugin updatePlugin(
       final long id, final boolean adminOnly, final Map<String, String> properties)
       throws LibraryPluginException {
@@ -176,7 +177,7 @@ public class LibraryPluginService {
    * @param id the plugin id
    * @throws LibraryPluginException if an error occurs
    */
-  @Transactional
+  @Transactional(rollbackFor = LibraryPluginException.class)
   public void deletePlugin(final long id) throws LibraryPluginException {
     this.libraryPluginRepository.delete(this.doLoadPlugin(id));
     this.doPublishUpdates();
@@ -189,7 +190,7 @@ public class LibraryPluginService {
    * @param comicId the comic book id
    * @throws LibraryPluginException if an error occurs
    */
-  @Transactional
+  @Transactional(readOnly = true)
   public void runLibraryPlugin(final long pluginId, final Long comicId)
       throws LibraryPluginException {
     try {
@@ -221,8 +222,8 @@ public class LibraryPluginService {
    * @param comicIds the comic book id
    * @throws LibraryPluginException if an error occurs
    */
-  @Transactional
-  public void runLibraryPlugin(final long pluginId, final List<Long> comicIds)
+  @Transactional(rollbackFor = LibraryPluginException.class)
+  public void runLibraryPlugin(final long pluginId, final Set<Long> comicIds)
       throws LibraryPluginException {
     try {
       log.trace("Loading plugin: id={}", pluginId);
