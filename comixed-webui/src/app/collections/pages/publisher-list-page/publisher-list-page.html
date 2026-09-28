@@ -1,0 +1,52 @@
+<div class="cx-padding-15">
+  <mat-paginator
+    [pageIndex]="publisherStore.index()"
+    [pageSize]="publisherStore.size()"
+    showFirstLastButtons="true"
+  ></mat-paginator>
+
+  <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    <ng-container matColumnDef="publisher-name">
+      <mat-header-cell *matHeaderCellDef>
+        {{ "collections.publisher-list-page.label.publisher-name" | translate }}
+      </mat-header-cell>
+      <mat-cell *matCellDef="let entry">
+        <span>
+          {{ entry.name }}
+        </span>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="issue-count">
+      <mat-header-cell *matHeaderCellDef>
+        {{ "collections.publisher-list-page.label.issue-count" | translate }}
+      </mat-header-cell>
+      <mat-cell *matCellDef="let entry">
+        <span>
+          {{ entry.issueCount }}
+        </span>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="series-count">
+      <mat-header-cell *matHeaderCellDef>
+        {{ "collections.publisher-list-page.label.series-count" | translate }}
+      </mat-header-cell>
+      <mat-cell *matCellDef="let entry">
+        <span>
+          {{ entry.seriesCount }}
+        </span>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+    <tr class="mat-row" *matNoDataRow>
+      <td class="mat-cell" colspan="3">
+        {{
+          "collections.publisher-list-page.text.no-publishers-found" | translate
+        }}
+      </td>
+    </tr>
+  </mat-table>
+</div>

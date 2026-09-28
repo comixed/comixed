@@ -1,0 +1,106 @@
+{
+  "app": {
+    "page-title": "ComiXed: {title}"
+  },
+  "collections": {
+    "publisher-list-page": {
+      "label": {
+        "issue-count": "# Comics",
+        "publisher-name": "Name",
+        "series-count": "# Series"
+      },
+      "page-title": "Publisher List",
+      "text": {
+        "no-publishers-found": "No publishers found..."
+      }
+    },
+    "series-list-page": {
+      "label": {
+        "in-library": "# of Comics",
+        "publisher": "Publisher",
+        "series-name": "Series Name",
+        "volume": "Volume"
+      },
+      "text": {
+        "no-series-found": "No series found..."
+      }
+    },
+    "tooltip": {
+      "view-details": "View details for {name}..."
+    }
+  },
+  "dashboard": {
+    "page-title": "Dashboard",
+    "statistics": {
+      "archive-type": {
+        "title": "Archive Types"
+      },
+      "characters": {
+        "description": "There {count, plural, =1 {is 1 character} other{are # characters}}...",
+        "title": "Characters"
+      },
+      "collections": {
+        "title": "Collections"
+      },
+      "comic-state": {
+        "title": "Comic States"
+      },
+      "locations": {
+        "description": "There {count, plural, =1 {is 1 location} other{# locations}}...",
+        "title": "Locations"
+      },
+      "publishers": {
+        "description": "There {count, plural, =1 {is 1 publisher} other{are # publishers}}...",
+        "title": "Publishers"
+      },
+      "publisher-year": {
+        "title": "Publishers By Year"
+      },
+      "series": {
+        "description": "There {count, plural, =1 {is 1 series} other{are # series}}...",
+        "title": "Series"
+      },
+      "stories": {
+        "description": "There {count, plural, =1 {is 1 story} other{are # stories}}...",
+        "title": "Stories"
+      },
+      "teams": {
+        "description": "There {count, plural, =1 {is 1 team} other{are # teams}}...",
+        "title": "Teams"
+      },
+      "text": {
+        "view-more": "View more detail..."
+      }
+    }
+  },
+  "footer": {
+    "segment": {
+      "deleted-comics": "Deleted: {count}",
+      "duplicate-comics": "Duplicates: {count}",
+      "total-comics": "Total: {count}",
+      "unscraped-comics": "Unscraped: {count}"
+    }
+  },
+  "user": {
+    "login-page": {
+      "button": {
+        "submit": "Login"
+      },
+      "label": {
+        "email": "Email",
+        "password": "Password"
+      },
+      "page-title": "Login",
+      "placeholder": {
+        "email": "your@address.tld",
+        "password": "[your password]"
+      },
+      "title": "Please Login"
+    }
+  },
+  "welcome": {
+    "first-logged-in": "User since {date}.",
+    "greet-user": "Welcome back {email}!",
+    "last-logged-in": "Last logged in on {date}."
+  }
+}
