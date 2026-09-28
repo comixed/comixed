@@ -28,10 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.metadata.MetadataAdaptorProvider;
 import org.comixedproject.metadata.MetadataAdaptorRegistry;
@@ -123,7 +120,7 @@ class MetadataServiceTest {
   @Mock private ComicMetadataSource comicMetadataSource;
   @Mock private MetadataAdaptorProvider metadataAdaptorProvider;
   @Mock private Comic comic;
-  @Mock private List<Long> comicIdList;
+  @Mock private Set<Long> comicIdList;
   @Mock private ApplicationEventPublisher applicationEventPublisher;
   @Mock private StoryMetadata storyMetadata;
   @Mock private ScrapedStory scrapedStory;

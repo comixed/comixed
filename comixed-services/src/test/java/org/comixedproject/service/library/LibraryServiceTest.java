@@ -23,7 +23,9 @@ import static org.mockito.Mockito.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.comixedproject.adaptors.file.FileAdaptor;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.batch.UpdateMetadataEvent;
@@ -50,7 +52,7 @@ class LibraryServiceTest {
   @Mock private ApplicationEventPublisher applicationEventPublisher;
 
   private List<Comic> comicList = new ArrayList<>();
-  private List<Long> comicIdList = new ArrayList<>();
+  private Set<Long> comicIdList = new HashSet<>();
 
   @Test
   void ClearImageCache() throws LibraryException, IOException {

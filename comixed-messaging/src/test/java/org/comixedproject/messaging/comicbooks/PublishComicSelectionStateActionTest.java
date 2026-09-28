@@ -21,8 +21,8 @@ package org.comixedproject.messaging.comicbooks;
 import static org.comixedproject.messaging.comicbooks.PublishComicSelectionStateAction.COMIC_SELECTION_UPDATE_TOPIC;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.model.messaging.comicbooks.ComicSelectionEvent;
 import org.comixedproject.model.user.ComiXedUser;
@@ -50,7 +50,7 @@ class PublishComicSelectionStateActionTest {
   @Mock private ObjectWriter objectWriter;
   @Mock private ComiXedUser user;
 
-  private final List<Long> comicIds = new ArrayList<>();
+  private final Set<Long> comicIds = new HashSet<>();
   private ComicSelectionEvent comicSelectionEvent;
 
   @BeforeEach

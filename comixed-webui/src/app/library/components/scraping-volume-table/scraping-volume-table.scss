@@ -1,0 +1,12 @@
+@use './variables' as *;
+
+#selected-volume-cover-image {
+  height: calc($cx-portal-height * 0.5);
+
+  img {
+    padding: 15px;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}

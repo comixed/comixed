@@ -105,7 +105,7 @@ class DisplayableComicControllerTest {
   @Mock private List<Integer> coverMonths;
   @Mock private LoadSelectedComicsRequest selectedRequest;
   @Mock private HttpSession session;
-  @Mock private List<Long> selectedIdList;
+  @Mock private Set<Long> selectedIdList;
   @Mock private Principal principal;
   @Mock private ComiXedUser user;
   @Mock private Set<Long> comicsRead;
@@ -273,7 +273,7 @@ class DisplayableComicControllerTest {
   @Test
   void loadComicsBySelectedState() throws ComicSelectionException {
     when(displayableComicService.loadComicsById(
-            anyInt(), anyInt(), anyString(), anyString(), anyList()))
+            anyInt(), anyInt(), anyString(), anyString(), anySet()))
         .thenReturn(comicList);
 
     final LoadComicsResponse result =
