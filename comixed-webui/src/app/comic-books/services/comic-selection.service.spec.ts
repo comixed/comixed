@@ -57,7 +57,7 @@ import { WebSocketService } from '@app/messaging';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import {
   comicSelectionUpdate,
-  loadComicBookSelections
+  loadComicSelections
 } from '@app/comic-books/actions/comic-book-selection.actions';
 import { SetSelectedByIdRequest } from '@app/comic-books/models/net/set-selected-by-id-request';
 import { SetSelectedByPublisherRequest } from '@app/comic-books/models/net/set-selected-by-publisher-request';
@@ -317,7 +317,7 @@ describe('ComicSelectionService', () => {
     const serverResponse = new HttpResponse({});
 
     service
-      .setDuplicateComicBooksSelectionState({
+      .setDuplicateComicsSelectionState({
         selected: SELECTED
       })
       .subscribe(response => expect(response).toEqual(serverResponse));
@@ -336,7 +336,7 @@ describe('ComicSelectionService', () => {
     const serverResponse = new HttpResponse({});
 
     service
-      .setUnreadComicBooksSelectionState({
+      .setUnreadComicsSelectionState({
         selected: SELECTED,
         unreadOnly: UNREAD_ONLY
       })
@@ -384,7 +384,7 @@ describe('ComicSelectionService', () => {
     });
 
     it('loads the initial list of ids', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(loadComicBookSelections());
+      expect(store.dispatch).toHaveBeenCalledWith(loadComicSelections());
     });
 
     it('subscribes to user updates', () => {

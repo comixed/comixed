@@ -163,7 +163,7 @@ describe('LibraryService', () => {
 
   it('can start rescanning a single comic book', () => {
     service
-      .rescanSingleComicBook({ comicId: COMIC.comicId })
+      .rescanSingleComic({ comicId: COMIC.comicId })
       .subscribe(response => expect(response.status).toEqual(200));
 
     const req = httpMock.expectOne(
@@ -178,7 +178,7 @@ describe('LibraryService', () => {
 
   it('can start rescanning comics', () => {
     service
-      .rescanSelectedComicBooks()
+      .rescanSelectedComics()
       .subscribe(response => expect(response.status).toEqual(200));
 
     const req = httpMock.expectOne(interpolate(RESCAN_SELECTED_COMICS_URL));
@@ -189,7 +189,7 @@ describe('LibraryService', () => {
 
   it('can start updating metadata for a single comic book', () => {
     service
-      .updateSingleComicBookMetadata({ comicId: COMIC.comicId })
+      .updateSingleComicMetadata({ comicId: COMIC.comicId })
       .subscribe(response => expect(response.status).toEqual(200));
 
     const req = httpMock.expectOne(
@@ -204,7 +204,7 @@ describe('LibraryService', () => {
 
   it('can start updating metadata for selected comic books', () => {
     service
-      .updateSelectedComicBooksMetadata()
+      .updateSelectedComicsMetadata()
       .subscribe(response => expect(response.status).toEqual(200));
 
     const req = httpMock.expectOne(
@@ -217,7 +217,7 @@ describe('LibraryService', () => {
 
   it('can convert a single comic book', () => {
     service
-      .convertSingleComicBook({
+      .convertSingleComic({
         id: COMIC.comicId,
         archiveType: ARCHIVE_TYPE
       })
@@ -237,7 +237,7 @@ describe('LibraryService', () => {
 
   it('can convert the selected comic books', () => {
     service
-      .convertSelectedComicBooks({
+      .convertSelectedComics({
         archiveType: ARCHIVE_TYPE
       })
       .subscribe(response => expect(response.status).toEqual(200));

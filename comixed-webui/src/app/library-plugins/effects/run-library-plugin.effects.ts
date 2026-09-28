@@ -22,8 +22,8 @@ import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import {
   runLibraryPluginFailure,
-  runLibraryPluginOnOneComicBook,
-  runLibraryPluginOnSelectedComicBooks,
+  runLibraryPluginOnOneComic,
+  runLibraryPluginOnSelectedComics,
   runLibraryPluginSuccess
 } from '../actions/run-library-plugin.actions';
 import { LoggerService } from '@angular-ru/cdk/logger';
@@ -39,9 +39,9 @@ export class RunLibraryPluginEffects {
   alertService = inject(AlertService);
   translateService = inject(TranslateService);
 
-  runLibraryPluginOnOneComicBook$ = createEffect(() => {
+  runLibraryPluginOnOneComic$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(runLibraryPluginOnOneComicBook),
+      ofType(runLibraryPluginOnOneComic),
       tap(action =>
         this.logger.trace(
           'Running library plugin against one comic book:',
@@ -50,7 +50,7 @@ export class RunLibraryPluginEffects {
       ),
       switchMap(action =>
         this.libraryPluginService
-          .runLibraryPluginOnOneComicBook({
+          .runLibraryPluginOnOneComic({
             plugin: action.plugin,
             comicId: action.comicId
           })
@@ -86,9 +86,9 @@ export class RunLibraryPluginEffects {
       })
     );
   });
-  runLibraryPluginOnSelectedComicBooks$ = createEffect(() => {
+  runLibraryPluginOnSelectedComics$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(runLibraryPluginOnSelectedComicBooks),
+      ofType(runLibraryPluginOnSelectedComics),
       tap(action =>
         this.logger.trace(
           'Running library plugin against selected comic books:',
@@ -97,7 +97,7 @@ export class RunLibraryPluginEffects {
       ),
       switchMap(action =>
         this.libraryPluginService
-          .runLibraryPluginOnSelectedComicBooks({ plugin: action.plugin })
+          .runLibraryPluginOnSelectedComics({ plugin: action.plugin })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
             tap(() =>

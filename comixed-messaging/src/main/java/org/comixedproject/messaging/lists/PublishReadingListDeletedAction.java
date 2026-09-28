@@ -42,6 +42,6 @@ public class PublishReadingListDeletedAction extends AbstractPublishAction<Readi
         readingList.getOwner(),
         READING_LIST_REMOVED_TOPIC,
         readingList,
-        View.ReadingListDetail.class);
+        View.ReadingListView.class);
   }
 }

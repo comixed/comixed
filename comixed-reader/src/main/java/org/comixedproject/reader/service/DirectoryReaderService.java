@@ -228,7 +228,7 @@ public class DirectoryReaderService {
       final String volume,
       final String rootUrl) {
     return this.comicService
-        .getAllComicBooksForPublisherAndSeriesAndVolume(publisher, series, volume, email, unread)
+        .getAllComicsForPublisherAndSeriesAndVolume(publisher, series, volume, email, unread)
         .stream()
         .map(entry -> doCreateDirectoryEntry(entry, rootUrl))
         .toList();

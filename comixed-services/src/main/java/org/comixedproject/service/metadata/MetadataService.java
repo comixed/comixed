@@ -406,8 +406,7 @@ public class MetadataService {
         detail.getMetadata().setReferenceId(trim(issueDetails.getSourceId()));
       }
       detail.setNotes(
-          String.format(
-              "ComicBook metadata scraped using ComiXed & %s.", metadataAdaptor.getSource()));
+          String.format("Comic metadata scraped using ComiXed & %s.", metadataAdaptor.getSource()));
       log.trace("Checking for imprint");
       this.imprintService.update(detail);
       log.trace("Setting the comic metadata source last modified date");
@@ -573,9 +572,9 @@ public class MetadataService {
    * @param ids the comic ids
    */
   @Async
-  public void batchScrapeComicBooks(final List<Long> ids) {
+  public void batchScrapeComics(final List<Long> ids) {
     log.debug("Marking comics for batch scraping");
-    this.comicService.markComicBooksForBatchScraping(ids);
+    this.comicService.markComicsForBatchScraping(ids);
     log.debug("Starting batch scraping process");
     this.applicationEventPublisher.publishEvent(ScrapeMetadataEvent.instance);
   }

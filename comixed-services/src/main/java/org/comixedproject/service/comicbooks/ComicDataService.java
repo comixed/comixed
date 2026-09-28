@@ -69,7 +69,7 @@ public class ComicDataService {
    */
   public ComicDataSet getComic(final long comicId) throws ComicException {
     log.debug("Loading comic: id={}", comicId);
-    return this.doLoadComicBookData(comicId);
+    return this.doLoadComicData(comicId);
   }
 
   /**
@@ -153,7 +153,7 @@ public class ComicDataService {
       throws ComicException {
     log.debug("Updating comic: id={}", comicId);
     try {
-      final Comic comic = this.comicService.getByComicBookId(comicId);
+      final Comic comic = this.comicService.getByComicId(comicId);
 
       log.trace("Updating the comic fields");
 
@@ -183,7 +183,7 @@ public class ComicDataService {
       this.imprintService.update(comic);
 
       this.comicStateAdaptor.fireEvent(comic, ComicEvent.comicMetadataChanged);
-      return this.doLoadComicBookData(comicId);
+      return this.doLoadComicData(comicId);
     } catch (ComicException error) {
       throw new ComicException("Failed to update comic metadata", error);
     }
@@ -195,7 +195,7 @@ public class ComicDataService {
    * @param comicId the comic id
    * @throws ComicException
    */
-  public void deleteComicBook(final long comicId) throws ComicException {
+  public void deleteComic(final long comicId) throws ComicException {
     log.debug("Marking comic for removal: id={}", comicId);
     doFireEvent(comicId, ComicEvent.markComicForRemoval);
   }
@@ -206,7 +206,7 @@ public class ComicDataService {
    * @param comicId the comic id
    * @throws ComicException
    */
-  public void undeleteComicBook(final long comicId) throws ComicException {
+  public void undeleteComic(final long comicId) throws ComicException {
     log.debug("Unmarking comic for removal: id={}", comicId);
     doFireEvent(comicId, ComicEvent.unmarkComicForRemoval);
   }
@@ -218,7 +218,7 @@ public class ComicDataService {
    * @throws ComicException if any of the ids are invalid
    */
   @Transactional(rollbackFor = Exception.class)
-  public void deleteComicBooksById(final List<Long> comicIdList) throws ComicException {
+  public void deleteComicsById(final List<Long> comicIdList) throws ComicException {
     for (int index = 0; index < comicIdList.size(); index++) {
       this.doFireEvent(comicIdList.get(index), ComicEvent.markComicForRemoval);
     }
@@ -230,7 +230,7 @@ public class ComicDataService {
    * @param comicIdList the comic id list
    * @throws ComicException if any of the ids are invalid
    */
-  public void undeleteComicBooksById(final List<Long> comicIdList) throws ComicException {
+  public void undeleteComicsById(final List<Long> comicIdList) throws ComicException {
     for (int index = 0; index < comicIdList.size(); index++) {
       this.doFireEvent(comicIdList.get(index), ComicEvent.unmarkComicForRemoval);
     }
@@ -239,7 +239,7 @@ public class ComicDataService {
   private void doFireEvent(final long comicId, final ComicEvent event) throws ComicException {
     log.debug("Firing comic event: id={} event={}", comicId, event);
     try {
-      final Comic comic = this.comicService.getByComicBookId(comicId);
+      final Comic comic = this.comicService.getByComicId(comicId);
       this.comicStateAdaptor.fireEvent(comic, event);
     } catch (ComicException error) {
       throw new ComicException(
@@ -247,11 +247,11 @@ public class ComicDataService {
     }
   }
 
-  private ComicDataSet doLoadComicBookData(final long comicId) throws ComicException {
+  private ComicDataSet doLoadComicData(final long comicId) throws ComicException {
     return new ComicDataSet(
-        this.displayableComicService.getForComicBookId(comicId),
-        this.comicPageService.getPagesForComicBook(comicId),
-        this.comicMetadataSourceService.getMetadataForComicBook(comicId),
-        this.comicTagService.getTagsForComicBook(comicId));
+        this.displayableComicService.getForComicId(comicId),
+        this.comicPageService.getPagesForComic(comicId),
+        this.comicMetadataSourceService.getMetadataForComic(comicId),
+        this.comicTagService.getTagsForComic(comicId));
   }
 }

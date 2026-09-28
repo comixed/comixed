@@ -34,27 +34,27 @@ public class ComicFile {
   private static int count = 0;
 
   @JsonProperty("id")
-  @JsonView(View.ComicFileList.class)
+  @JsonView(View.ComicFileListView.class)
   @Getter
   private int id = ++count;
 
   @JsonProperty("filename")
-  @JsonView(View.ComicFileList.class)
+  @JsonView(View.ComicFileListView.class)
   @Getter
   private String filename;
 
   @JsonProperty("baseFilename")
-  @JsonView(View.ComicFileList.class)
+  @JsonView(View.ComicFileListView.class)
   @Getter
   private String baseFilename;
 
   @JsonProperty("size")
-  @JsonView(View.ComicFileList.class)
+  @JsonView(View.ComicFileListView.class)
   @Getter
   private long size;
 
   @JsonProperty("selected")
-  @JsonView(View.ComicFileList.class)
+  @JsonView(View.ComicFileListView.class)
   @Getter
   @Setter
   private boolean selected = false;

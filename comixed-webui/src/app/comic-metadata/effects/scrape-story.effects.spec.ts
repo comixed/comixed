@@ -69,11 +69,9 @@ describe('ScrapeStoryEffects', () => {
           provide: ComicScrapingService,
           useValue: {
             loadStoryCandidates: jasmine.createSpy(
-              'ComicBookScrapingservice.loadStoryCandidates{}'
+              'ComicScrapingservice.loadStoryCandidates{}'
             ),
-            scrapeStory: jasmine.createSpy(
-              'ComicBookScrapingservice.scrapeStory{}'
-            )
+            scrapeStory: jasmine.createSpy('ComicScrapingservice.scrapeStory{}')
           }
         },
         AlertService

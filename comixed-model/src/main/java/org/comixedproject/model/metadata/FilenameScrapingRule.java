@@ -42,13 +42,13 @@ public class FilenameScrapingRule {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "filename_scraping_rule_id")
   @JsonProperty("filenameScrapingRuleId")
-  @JsonView(View.FilenameScrapingRuleList.class)
+  @JsonView(View.FilenameScrapingRuleListView.class)
   @Getter
   private Long filenameScrapingRuleId;
 
   @Column(name = "rule_name", length = 25, nullable = false, updatable = true, unique = true)
   @JsonProperty("name")
-  @JsonView(View.FilenameScrapingRuleList.class)
+  @JsonView(View.FilenameScrapingRuleListView.class)
   @NonNull
   @Getter
   @Setter
@@ -56,7 +56,7 @@ public class FilenameScrapingRule {
 
   @Column(name = "rule", length = 256, nullable = false, updatable = true, unique = true)
   @JsonProperty("rule")
-  @JsonView(View.FilenameScrapingRuleList.class)
+  @JsonView(View.FilenameScrapingRuleListView.class)
   @NonNull
   @Getter
   @Setter
@@ -64,7 +64,7 @@ public class FilenameScrapingRule {
 
   @Column(name = "priority", nullable = false, updatable = true, unique = true)
   @JsonProperty("priority")
-  @JsonView(View.FilenameScrapingRuleList.class)
+  @JsonView(View.FilenameScrapingRuleListView.class)
   @NonNull
   @Getter
   @Setter
@@ -72,35 +72,35 @@ public class FilenameScrapingRule {
 
   @Column(name = "series_position", nullable = true, updatable = true)
   @JsonProperty("seriesPosition")
-  @JsonView(View.FilenameScrapingRuleList.class)
+  @JsonView(View.FilenameScrapingRuleListView.class)
   @Getter
   @Setter
   private Integer seriesPosition = 1;
 
   @Column(name = "volume_position", nullable = true, updatable = true)
   @JsonProperty("volumePosition")
-  @JsonView(View.FilenameScrapingRuleList.class)
+  @JsonView(View.FilenameScrapingRuleListView.class)
   @Getter
   @Setter
   private Integer volumePosition = 1;
 
   @Column(name = "issue_number_position", nullable = true, updatable = true)
   @JsonProperty("issueNumberPosition")
-  @JsonView(View.FilenameScrapingRuleList.class)
+  @JsonView(View.FilenameScrapingRuleListView.class)
   @Getter
   @Setter
   private Integer issueNumberPosition = 1;
 
   @Column(name = "cover_date_position", nullable = true, updatable = true)
   @JsonProperty("coverDatePosition")
-  @JsonView(View.FilenameScrapingRuleList.class)
+  @JsonView(View.FilenameScrapingRuleListView.class)
   @Getter
   @Setter
   private Integer coverDatePosition = 1;
 
   @Column(name = "date_format", nullable = true, updatable = true, length = 32)
   @JsonProperty("dateFormat")
-  @JsonView(View.FilenameScrapingRuleList.class)
+  @JsonView(View.FilenameScrapingRuleListView.class)
   @Getter
   @Setter
   private String dateFormat = "";
@@ -109,7 +109,7 @@ public class FilenameScrapingRule {
   @Temporal(TemporalType.TIMESTAMP)
   @JsonProperty("lastModifiedOn")
   @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
-  @JsonView(View.FilenameScrapingRuleList.class)
+  @JsonView(View.FilenameScrapingRuleListView.class)
   @Getter
   @Setter
   private Date lastModifiedOn = new Date();

@@ -47,7 +47,7 @@ public class DeletedPageController {
    * @throws ComicPageException if an error occurs
    */
   @GetMapping(value = "/api/pages/deleted", produces = MediaType.APPLICATION_JSON_VALUE)
-  @JsonView({View.DeletedPageList.class})
+  @JsonView({View.DeletedPageListView.class})
   public List<DeletedPage> loadAll() throws ComicPageException {
     log.info("Loading all deleted pages");
     return this.deletedPageService.loadAll();

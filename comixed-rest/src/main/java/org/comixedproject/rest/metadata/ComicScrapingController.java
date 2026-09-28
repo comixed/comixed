@@ -72,8 +72,8 @@ public class ComicScrapingController {
   private JobOperator jobOperator;
 
   @Autowired
-  @Qualifier("updateComicBookMetadata")
-  private Job updateComicBookMetadata;
+  @Qualifier("updateComicMetadata")
+  private Job updateComicMetadata;
 
   @Autowired private HttpSession httpSession;
 
@@ -185,26 +185,26 @@ public class ComicScrapingController {
     final String email = principal.getName();
     log.info("Starting batch metadata update process: email={}", email);
     @NonNull
-    final List<Long> selectedComicBookIdList =
+    final List<Long> selectedComicIdList =
         this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
     @NonNull final Boolean skipCache = request.getSkipCache();
     log.trace(
         "Marking {} comic book{} for batch metadadata update",
-        selectedComicBookIdList.size(),
-        selectedComicBookIdList.size() == 1 ? "" : "s");
-    this.comicService.markComicBooksForBatchMetadataUpdate(selectedComicBookIdList);
+        selectedComicIdList.size(),
+        selectedComicIdList.size() == 1 ? "" : "s");
+    this.comicService.markComicsForBatchMetadataUpdate(selectedComicIdList);
     log.trace("Launching add comics process");
     this.jobOperator.start(
-        updateComicBookMetadata,
+        updateComicMetadata,
         new JobParametersBuilder()
             .addLong(
                 MetadataProcessConfiguration.PARAM_METADATA_UPDATE_STARTED,
                 System.currentTimeMillis())
             .addString(MetadataProcessConfiguration.PARAM_SKIP_CACHE, String.valueOf(skipCache))
             .toJobParameters());
-    this.comicSelectionService.clearSelectedComicBooks(email, selectedComicBookIdList);
+    this.comicSelectionService.clearSelectedComics(email, selectedComicIdList);
     session.setAttribute(
-        LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selectedComicBookIdList));
+        LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selectedComicIdList));
   }
 
   /** Initiates clearing the metadata cache. */
@@ -279,7 +279,7 @@ public class ComicScrapingController {
       if (!selectedIds.isEmpty()) {
         comicIdList.addAll(selectedIds);
 
-        this.comicSelectionService.clearSelectedComicBooks(email, selectedIds);
+        this.comicSelectionService.clearSelectedComics(email, selectedIds);
         session.setAttribute(
             LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selectedIds));
       }
@@ -367,8 +367,7 @@ public class ComicScrapingController {
 
     try {
       log.debug("Removing comic book from multi-book state");
-      return this.doRemoveComicBook(
-          session, comicId, request.getPageSize(), request.getPageNumber());
+      return this.doRemoveComic(session, comicId, request.getPageSize(), request.getPageNumber());
     } catch (ComicSelectionException error) {
       throw new MetadataException("Failed to remove comic from multi-book state", error);
     }
@@ -395,7 +394,7 @@ public class ComicScrapingController {
       @RequestParam(name = "pageSize", required = true) final int pageSize)
       throws MetadataException {
     try {
-      return this.doRemoveComicDetail(session, comicId, pageSize, 0);
+      return this.doRemoveComic(session, comicId, pageSize, 0);
     } catch (ComicSelectionException error) {
       throw new MetadataException("Failed to remove comic book from multi-book scraping", error);
     }
@@ -419,8 +418,8 @@ public class ComicScrapingController {
     log.info("Preparing to batch scrape selected comic books: email={}", email);
     final List<Long> ids =
         this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
-    this.metadataService.batchScrapeComicBooks(new ArrayList<>(ids));
-    this.comicSelectionService.clearSelectedComicBooks(email, ids);
+    this.metadataService.batchScrapeComics(new ArrayList<>(ids));
+    this.comicSelectionService.clearSelectedComics(email, ids);
     session.setAttribute(LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(ids));
   }
 
@@ -485,13 +484,7 @@ public class ComicScrapingController {
     this.metadataService.scrapeStory(sourceId, referenceId, skipCache);
   }
 
-  private StartMultiBookScrapingResponse doRemoveComicBook(
-      final HttpSession session, final long comicId, final int pageSize, final int pageNumber)
-      throws ComicSelectionException {
-    return this.doRemoveComicDetail(session, comicId, pageSize, pageNumber);
-  }
-
-  private StartMultiBookScrapingResponse doRemoveComicDetail(
+  private StartMultiBookScrapingResponse doRemoveComic(
       final HttpSession session, final long comicId, final int pageSize, final int pageNumber)
       throws ComicSelectionException {
     log.debug("Removing scraped comic book id from multi-book scraping selections: id={}", comicId);

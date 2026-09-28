@@ -43,7 +43,7 @@ import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import {
   COMIC_SELECTION_FEATURE_KEY,
-  initialState as initialComicBookSelectionState
+  initialState as initialComicSelectionState
 } from '@app/comic-books/reducers/comic-selection.reducer';
 import {
   COMIC_LIST_FEATURE_KEY,
@@ -64,7 +64,7 @@ describe('MetadataProcessPageComponent', () => {
   const initialState = {
     [COMIC_LIST_FEATURE_KEY]: initialComicListState,
     [USER_FEATURE_KEY]: initialUserState,
-    [COMIC_SELECTION_FEATURE_KEY]: initialComicBookSelectionState,
+    [COMIC_SELECTION_FEATURE_KEY]: initialComicSelectionState,
     [LIBRARY_PLUGIN_FEATURE_KEY]: initialLibraryPluginInState,
     [METADATA_UPDATE_PROCESS_FEATURE_KEY]: initialMetadataUpdateProcessState
   };
@@ -122,7 +122,7 @@ describe('MetadataProcessPageComponent', () => {
       store.setState({
         ...initialState,
         [COMIC_SELECTION_FEATURE_KEY]: {
-          ...initialComicBookSelectionState,
+          ...initialComicSelectionState,
           ids: IDS
         }
       });

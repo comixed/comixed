@@ -144,7 +144,7 @@ class DisplayableComicControllerTest {
     when(comicService.getComicCount()).thenReturn(TEST_COMIC_COUNT);
     when(principal.getName()).thenReturn(TEST_EMAIL);
     when(comicsRead.size()).thenReturn(TEST_READ_COMIC_COUNT);
-    when(user.getReadComicBooks()).thenReturn(comicsRead);
+    when(user.getReadComics()).thenReturn(comicsRead);
     when(userService.findByEmail(anyString())).thenReturn(user);
   }
 

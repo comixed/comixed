@@ -25,10 +25,10 @@ import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import {
-  updateSelectedComicBooksMetadata,
-  updateSelectedComicBooksMetadataFailure,
-  updateSelectedComicBooksMetadataSuccess,
-  updateSingleComicBookMetadata
+  updateSelectedComicsMetadata,
+  updateSelectedComicsMetadataFailure,
+  updateSelectedComicsMetadataSuccess,
+  updateSingleComicMetadata
 } from '@app/library/actions/update-metadata.actions';
 import { hot } from 'jasmine-marbles';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
@@ -55,11 +55,11 @@ describe('UpdateMetadataEffects', () => {
         {
           provide: LibraryService,
           useValue: {
-            updateSingleComicBookMetadata: jasmine.createSpy(
-              'LibraryService.updateSingleComicBookMetadata()'
+            updateSingleComicMetadata: jasmine.createSpy(
+              'LibraryService.updateSingleComicMetadata()'
             ),
-            updateSelectedComicBooksMetadata: jasmine.createSpy(
-              'LibraryService.updateSelectedComicBooksMetadata()'
+            updateSelectedComicsMetadata: jasmine.createSpy(
+              'LibraryService.updateSelectedComicsMetadata()'
             )
           }
         },
@@ -83,51 +83,51 @@ describe('UpdateMetadataEffects', () => {
   describe('updating the metadata for a single comic book', () => {
     it('fires an action on success', () => {
       const serviceResponse = new HttpResponse({ status: 200 });
-      const action = updateSingleComicBookMetadata({
+      const action = updateSingleComicMetadata({
         comicId: COMIC_ID
       });
-      const outcome = updateSelectedComicBooksMetadataSuccess();
+      const outcome = updateSelectedComicsMetadataSuccess();
 
       actions$ = hot('-a', { a: action });
-      libraryService.updateSingleComicBookMetadata
+      libraryService.updateSingleComicMetadata
         .withArgs({ comicId: COMIC_ID })
         .and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.updateSingleComicBookMetadata$).toBeObservable(expected);
+      expect(effects.updateSingleComicMetadata$).toBeObservable(expected);
       expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = updateSingleComicBookMetadata({
+      const action = updateSingleComicMetadata({
         comicId: COMIC_ID
       });
-      const outcome = updateSelectedComicBooksMetadataFailure();
+      const outcome = updateSelectedComicsMetadataFailure();
 
       actions$ = hot('-a', { a: action });
-      libraryService.updateSingleComicBookMetadata
+      libraryService.updateSingleComicMetadata
         .withArgs({ comicId: COMIC_ID })
         .and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.updateSingleComicBookMetadata$).toBeObservable(expected);
+      expect(effects.updateSingleComicMetadata$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on general failure', () => {
-      const action = updateSingleComicBookMetadata({
+      const action = updateSingleComicMetadata({
         comicId: COMIC_ID
       });
-      const outcome = updateSelectedComicBooksMetadataFailure();
+      const outcome = updateSelectedComicsMetadataFailure();
 
       actions$ = hot('-a', { a: action });
-      libraryService.updateSingleComicBookMetadata
+      libraryService.updateSingleComicMetadata
         .withArgs({ comicId: COMIC_ID })
         .and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
-      expect(effects.updateSingleComicBookMetadata$).toBeObservable(expected);
+      expect(effects.updateSingleComicMetadata$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });
@@ -135,51 +135,45 @@ describe('UpdateMetadataEffects', () => {
   describe('updating the metadata for the selected comic books', () => {
     it('fires an action on success', () => {
       const serviceResponse = new HttpResponse({ status: 200 });
-      const action = updateSelectedComicBooksMetadata();
-      const outcome = updateSelectedComicBooksMetadataSuccess();
+      const action = updateSelectedComicsMetadata();
+      const outcome = updateSelectedComicsMetadataSuccess();
 
       actions$ = hot('-a', { a: action });
-      libraryService.updateSelectedComicBooksMetadata
+      libraryService.updateSelectedComicsMetadata
         .withArgs()
         .and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.updateSelectedComicBooksMetadata$).toBeObservable(
-        expected
-      );
+      expect(effects.updateSelectedComicsMetadata$).toBeObservable(expected);
       expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = updateSelectedComicBooksMetadata();
-      const outcome = updateSelectedComicBooksMetadataFailure();
+      const action = updateSelectedComicsMetadata();
+      const outcome = updateSelectedComicsMetadataFailure();
 
       actions$ = hot('-a', { a: action });
-      libraryService.updateSelectedComicBooksMetadata
+      libraryService.updateSelectedComicsMetadata
         .withArgs()
         .and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.updateSelectedComicBooksMetadata$).toBeObservable(
-        expected
-      );
+      expect(effects.updateSelectedComicsMetadata$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on general failure', () => {
-      const action = updateSelectedComicBooksMetadata();
-      const outcome = updateSelectedComicBooksMetadataFailure();
+      const action = updateSelectedComicsMetadata();
+      const outcome = updateSelectedComicsMetadataFailure();
 
       actions$ = hot('-a', { a: action });
-      libraryService.updateSelectedComicBooksMetadata
+      libraryService.updateSelectedComicsMetadata
         .withArgs()
         .and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
-      expect(effects.updateSelectedComicBooksMetadata$).toBeObservable(
-        expected
-      );
+      expect(effects.updateSelectedComicsMetadata$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });

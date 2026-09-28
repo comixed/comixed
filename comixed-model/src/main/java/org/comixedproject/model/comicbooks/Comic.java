@@ -52,10 +52,10 @@ public class Comic implements StatefulItem<ComicState>, PublicationDetail {
   @Column(name = "comic_id")
   @JsonView({
     View.ComicListView.class,
-    View.DeletedPageList.class,
-    View.LastReadList.class,
-    View.ReadingListDetail.class,
-    View.DuplicatePageList.class
+    View.DeletedPageListView.class,
+    View.LastReadListView.class,
+    View.ReadingListView.class,
+    View.DuplicatePageListView.class
   })
   @Getter
   private Long comicId;
@@ -63,7 +63,7 @@ public class Comic implements StatefulItem<ComicState>, PublicationDetail {
   @OneToMany(mappedBy = "comic", cascade = CascadeType.ALL, orphanRemoval = true)
   @OrderColumn(name = "page_number")
   @JsonProperty("pages")
-  @JsonView({View.ComicListView.class, View.ReadingListDetail.class})
+  @JsonView({View.ComicListView.class, View.ReadingListView.class})
   @Getter
   List<ComicPage> pages = new ArrayList<>();
 
@@ -99,7 +99,7 @@ public class Comic implements StatefulItem<ComicState>, PublicationDetail {
 
   @Column(name = "filename", nullable = false, unique = true, length = 1024)
   @JsonProperty("filename")
-  @JsonView({View.ComicListView.class, View.DeletedPageList.class})
+  @JsonView({View.ComicListView.class, View.DeletedPageListView.class})
   @Getter
   @Setter
   @NonNull
@@ -107,7 +107,7 @@ public class Comic implements StatefulItem<ComicState>, PublicationDetail {
 
   @Column(name = "missing", nullable = false, updatable = true)
   @JsonProperty("missing")
-  @JsonView({View.ComicDetailsView.class})
+  @JsonView({View.ComicView.class})
   @Setter
   private boolean missing = false;
 
@@ -120,10 +120,10 @@ public class Comic implements StatefulItem<ComicState>, PublicationDetail {
   @JsonProperty("archiveType")
   @JsonView({
     View.ComicListView.class,
-    View.DuplicatePageDetail.class,
-    View.ReadingListDetail.class,
-    View.DeletedPageList.class,
-    View.DuplicatePageList.class
+    View.DuplicatePageView.class,
+    View.ReadingListView.class,
+    View.DeletedPageListView.class,
+    View.DuplicatePageListView.class
   })
   @Getter
   @Setter
@@ -139,9 +139,9 @@ public class Comic implements StatefulItem<ComicState>, PublicationDetail {
   @JsonProperty("comicState")
   @JsonView({
     View.ComicListView.class,
-    View.ReadingListDetail.class,
-    View.DeletedPageList.class,
-    View.DuplicatePageList.class
+    View.ReadingListView.class,
+    View.DeletedPageListView.class,
+    View.DuplicatePageListView.class
   })
   @Getter
   @Setter
@@ -152,9 +152,9 @@ public class Comic implements StatefulItem<ComicState>, PublicationDetail {
   @JsonProperty("comicType")
   @JsonView({
     View.ComicListView.class,
-    View.ReadingListDetail.class,
-    View.DeletedPageList.class,
-    View.DuplicatePageList.class
+    View.ReadingListView.class,
+    View.DeletedPageListView.class,
+    View.DuplicatePageListView.class
   })
   @Getter
   @Setter
@@ -164,10 +164,10 @@ public class Comic implements StatefulItem<ComicState>, PublicationDetail {
   @JsonProperty("publisher")
   @JsonView({
     View.ComicListView.class,
-    View.DuplicatePageDetail.class,
-    View.ReadingListDetail.class,
-    View.DeletedPageList.class,
-    View.DuplicatePageList.class
+    View.DuplicatePageView.class,
+    View.ReadingListView.class,
+    View.DeletedPageListView.class,
+    View.DuplicatePageListView.class
   })
   @Getter
   @Setter
@@ -184,10 +184,10 @@ public class Comic implements StatefulItem<ComicState>, PublicationDetail {
   @JsonProperty("series")
   @JsonView({
     View.ComicListView.class,
-    View.DuplicatePageDetail.class,
-    View.ReadingListDetail.class,
-    View.DeletedPageList.class,
-    View.DuplicatePageList.class
+    View.DuplicatePageView.class,
+    View.ReadingListView.class,
+    View.DeletedPageListView.class,
+    View.DuplicatePageListView.class
   })
   @Getter
   @Setter
@@ -197,10 +197,10 @@ public class Comic implements StatefulItem<ComicState>, PublicationDetail {
   @JsonProperty("volume")
   @JsonView({
     View.ComicListView.class,
-    View.DuplicatePageDetail.class,
-    View.ReadingListDetail.class,
-    View.DeletedPageList.class,
-    View.DuplicatePageList.class
+    View.DuplicatePageView.class,
+    View.ReadingListView.class,
+    View.DeletedPageListView.class,
+    View.DuplicatePageListView.class
   })
   @Getter
   @Setter
@@ -210,10 +210,10 @@ public class Comic implements StatefulItem<ComicState>, PublicationDetail {
   @JsonProperty("issueNumber")
   @JsonView({
     View.ComicListView.class,
-    View.DuplicatePageDetail.class,
-    View.ReadingListDetail.class,
-    View.DeletedPageList.class,
-    View.DuplicatePageList.class
+    View.DuplicatePageView.class,
+    View.ReadingListView.class,
+    View.DeletedPageListView.class,
+    View.DuplicatePageListView.class
   })
   @Getter
   private String issueNumber;
@@ -226,14 +226,14 @@ public class Comic implements StatefulItem<ComicState>, PublicationDetail {
 
   @Transient
   @JsonProperty("nextIssueId")
-  @JsonView({View.ComicDetailsView.class})
+  @JsonView({View.ComicView.class})
   @Getter
   @Setter
   private Long nextIssueId;
 
   @Transient
   @JsonProperty("previousIssueId")
-  @JsonView({View.ComicDetailsView.class})
+  @JsonView({View.ComicView.class})
   @Getter
   @Setter
   private Long previousIssueId;
@@ -276,7 +276,7 @@ public class Comic implements StatefulItem<ComicState>, PublicationDetail {
 
   @Column(name = "description", nullable = true, updatable = true, columnDefinition = "text")
   @JsonProperty("description")
-  @JsonView({View.ComicDetailsView.class})
+  @JsonView({View.ComicView.class})
   @Getter
   @Setter
   private String description;
@@ -287,7 +287,7 @@ public class Comic implements StatefulItem<ComicState>, PublicationDetail {
       orphanRemoval = true,
       fetch = FetchType.EAGER)
   @JsonProperty("tags")
-  @JsonView({View.ComicListView.class, View.ReadingListDetail.class})
+  @JsonView({View.ComicListView.class, View.ReadingListView.class})
   @Getter
   private Set<ComicTag> tags = new HashSet<>();
 
@@ -297,10 +297,10 @@ public class Comic implements StatefulItem<ComicState>, PublicationDetail {
   @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
   @JsonView({
     View.ComicListView.class,
-    View.DuplicatePageDetail.class,
-    View.ReadingListDetail.class,
-    View.DeletedPageList.class,
-    View.DuplicatePageList.class
+    View.DuplicatePageView.class,
+    View.ReadingListView.class,
+    View.DeletedPageListView.class,
+    View.DuplicatePageListView.class
   })
   @Getter
   @Setter
@@ -326,7 +326,7 @@ public class Comic implements StatefulItem<ComicState>, PublicationDetail {
   @Temporal(TemporalType.DATE)
   @JsonProperty("storeDate")
   @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
-  @JsonView({View.ComicListView.class, View.ReadingListDetail.class, View.DeletedPageList.class})
+  @JsonView({View.ComicListView.class, View.ReadingListView.class, View.DeletedPageListView.class})
   @Getter
   @Setter
   private Date storeDate;
@@ -337,9 +337,9 @@ public class Comic implements StatefulItem<ComicState>, PublicationDetail {
   @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
   @JsonView({
     View.ComicListView.class,
-    View.DuplicatePageDetail.class,
-    View.ReadingListDetail.class,
-    View.DeletedPageList.class
+    View.DuplicatePageView.class,
+    View.ReadingListView.class,
+    View.DeletedPageListView.class
   })
   @Temporal(TemporalType.TIMESTAMP)
   @Getter
@@ -405,9 +405,9 @@ public class Comic implements StatefulItem<ComicState>, PublicationDetail {
   @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
   @JsonView({
     View.ComicListView.class,
-    View.DuplicatePageDetail.class,
-    View.ReadingListDetail.class,
-    View.DeletedPageList.class
+    View.DuplicatePageView.class,
+    View.ReadingListView.class,
+    View.DeletedPageListView.class
   })
   @Temporal(TemporalType.TIMESTAMP)
   @Getter
@@ -417,7 +417,7 @@ public class Comic implements StatefulItem<ComicState>, PublicationDetail {
   @ElementCollection
   @CollectionTable(name = "read_comic_books_v4", joinColumns = @JoinColumn(name = "comic_id"))
   @Column(name = "comixed_user_id")
-  @JsonView(View.UserList.class)
+  @JsonView(View.UserListView.class)
   @Getter
   private Set<Long> readByUserIds = new HashSet<>();
 

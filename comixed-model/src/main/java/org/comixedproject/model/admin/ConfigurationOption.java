@@ -45,14 +45,14 @@ public class ConfigurationOption {
 
   @Column(name = "option_name", length = 64, updatable = false)
   @JsonProperty("name")
-  @JsonView(View.ConfigurationList.class)
+  @JsonView(View.ConfigurationListView.class)
   @Getter
   @NonNull
   private String name;
 
   @Column(name = "option_value", length = 256, updatable = true)
   @JsonProperty("value")
-  @JsonView(View.ConfigurationList.class)
+  @JsonView(View.ConfigurationListView.class)
   @Getter
   @Setter
   private String value;
@@ -60,7 +60,7 @@ public class ConfigurationOption {
   @Column(name = "last_modified_on", nullable = false, updatable = true)
   @JsonProperty("lastModifiedOn")
   @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
-  @JsonView(View.ConfigurationList.class)
+  @JsonView(View.ConfigurationListView.class)
   @Getter
   @Setter
   private Date lastModifiedOn = new Date();

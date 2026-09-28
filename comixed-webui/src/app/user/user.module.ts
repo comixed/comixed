@@ -50,7 +50,7 @@ import { InitialUserAccountEffects } from '@app/user/effects/initial-user-accoun
 import { CreateAdminPageComponent } from './pages/create-admin-page/create-admin-page.component';
 import { manageUsersFeature } from '@app/user/reducers/manage-users.reducer';
 import { ManageUsersEffects } from '@app/user/effects/manage-users.effects';
-import { readComicBooksFeature } from '@app/user/reducers/read-comics.reducer';
+import { readComicsFeature } from '@app/user/reducers/read-comics.reducer';
 import { ReadComicsEffects } from '@app/user/effects/read-comics.effects';
 
 @NgModule({
@@ -63,7 +63,7 @@ import { ReadComicsEffects } from '@app/user/effects/read-comics.effects';
     StoreModule.forFeature(initialUserAccountFeature),
     StoreModule.forFeature(userFeature),
     StoreModule.forFeature(manageUsersFeature),
-    StoreModule.forFeature(readComicBooksFeature),
+    StoreModule.forFeature(readComicsFeature),
     EffectsModule.forFeature([
       InitialUserAccountEffects,
       UserEffects,

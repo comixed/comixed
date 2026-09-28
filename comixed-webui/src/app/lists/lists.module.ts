@@ -47,7 +47,7 @@ import { DownloadReadingListEffects } from '@app/lists/effects/download-reading-
 import { uploadReadingListFeature } from '@app/lists/reducers/upload-reading-list.reducer';
 import { UploadReadingListEffects } from '@app/lists/effects/upload-reading-list.effects';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { ComicBooksModule } from '@app/comic-books/comic-books.module';
+import { ComicsModule } from '@app/comic-books/comic-books.module';
 
 @NgModule({
   imports: [
@@ -79,7 +79,7 @@ import { ComicBooksModule } from '@app/comic-books/comic-books.module';
     MatInputModule,
     LibraryModule,
     MatCheckboxModule,
-    ComicBooksModule,
+    ComicsModule,
     ReadingListsPageComponent,
     ReadingListDetailPageComponent
   ],

@@ -138,7 +138,7 @@ export class ScrapingIssuesPageComponent implements OnInit {
   multiBookScrapingBusy$ = new BehaviorSubject(false);
   totalComics$ = new BehaviorSubject(0);
   comics$ = new BehaviorSubject<DisplayableComic[]>([]);
-  currentComicBook$ = new BehaviorSubject<DisplayableComic | null>(null);
+  currentComic$ = new BehaviorSubject<DisplayableComic | null>(null);
   metadataSource$ = new BehaviorSubject<MetadataSource | null>(null);
   currentSeries$ = new BehaviorSubject('');
   currentVolume$ = new BehaviorSubject('');
@@ -232,8 +232,8 @@ export class ScrapingIssuesPageComponent implements OnInit {
       .select(selectMultiBookScrapingCurrent)
       .pipe(filter(comic => !!comic))
       .pipe(
-        tap(currentComicBook => {
-          this.currentComicBook$.next(currentComicBook);
+        tap(currentComic => {
+          this.currentComic$.next(currentComic);
           this.scrapingVolumes$.next([]);
           this.currentVolume$.next(null);
         })
@@ -287,7 +287,7 @@ export class ScrapingIssuesPageComponent implements OnInit {
 
   onSelectionChanged(comic: DisplayableComic): void {
     this.logger.trace('Selected comic changed:', comic);
-    this.currentComicBook$.next(comic);
+    this.currentComic$.next(comic);
   }
 
   onScrape(event: MetadataEvent): void {
@@ -313,7 +313,7 @@ export class ScrapingIssuesPageComponent implements OnInit {
     this.popupComic$.next(comic);
   }
 
-  onRemoveComicBook(comic: DisplayableComic) {
+  onRemoveComic(comic: DisplayableComic) {
     this.store.dispatch(
       multiBookScrapingRemoveBook({
         comic: this.comics$.value.find(
@@ -324,7 +324,7 @@ export class ScrapingIssuesPageComponent implements OnInit {
     );
   }
 
-  onSelectComicBook(comic: DisplayableComic): void {
+  onSelectComic(comic: DisplayableComic): void {
     this.logger.debug('Selecting comic book:', comic);
     this.store.dispatch(multiBookScrapingSetCurrentBook({ comic }));
   }

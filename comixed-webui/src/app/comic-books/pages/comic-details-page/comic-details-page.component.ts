@@ -44,23 +44,23 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 import {
   comicLoaded,
-  downloadComicBook,
-  loadComicBook,
+  downloadComic,
+  loadComic,
   savePageOrder
 } from '@app/comic-books/actions/comic-book.actions';
 import {
-  selectComicBookDetail,
-  selectComicBookMetadataSource,
-  selectComicBookPages,
-  selectComicBookTags
+  selectComicDetail,
+  selectComicMetadataSource,
+  selectComicPages,
+  selectComicTags
 } from '@app/comic-books/selectors/comic-book.selectors';
 import { TitleService } from '@app/core/services/title.service';
 import { WebSocketService } from '@app/messaging';
 import { selectMessagingStarted } from '@app/messaging/selectors/messaging.selectors';
-import { updateSingleComicBookMetadata } from '@app/library/actions/update-metadata.actions';
+import { updateSingleComicMetadata } from '@app/library/actions/update-metadata.actions';
 import {
-  deleteSingleComicBook,
-  undeleteSingleComicBook
+  deleteSingleComic,
+  undeleteSingleComic
 } from '@app/comic-books/actions/delete-comic-books.actions';
 import { COMIC_UPDATE_TOPIC } from '@app/comic-books/comic-books.constants';
 import { ComicPage } from '@app/comic-books/models/comic-page';
@@ -68,8 +68,8 @@ import { ConfirmationService } from '@tragically-slick/confirmation';
 import { ComicState } from '@app/comic-books/models/comic-state';
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
-import { markSingleComicBookRead } from '@app/user/actions/read-comic-books.actions';
-import { selectReadComicBooksList } from '@app/user/selectors/read-comic-books.selectors';
+import { markSingleComicRead } from '@app/user/actions/read-comic-books.actions';
+import { selectReadComicsList } from '@app/user/selectors/read-comic-books.selectors';
 import { MatFabButton, MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
@@ -141,7 +141,7 @@ export class ComicDetailsPageComponent implements OnInit, AfterViewInit {
   scrapingSeriesName$ = new BehaviorSubject('');
   scrapingVolume$ = new BehaviorSubject('');
   scrapingIssueNumber$ = new BehaviorSubject('');
-  readComicBookList$ = new BehaviorSubject<number[]>([]);
+  readComicList$ = new BehaviorSubject<number[]>([]);
 
   messagingStarted = false;
   logger = inject(LoggerService);
@@ -162,8 +162,8 @@ export class ComicDetailsPageComponent implements OnInit, AfterViewInit {
       .pipe(
         tap(params => {
           this.comicId$.next(+params.comicId);
-          this.logger.trace('ComicBook id parameter:', params.comicId);
-          this.store.dispatch(loadComicBook({ id: this.comicId$.value }));
+          this.logger.trace('Comic id parameter:', params.comicId);
+          this.store.dispatch(loadComic({ id: this.comicId$.value }));
           this.subscribeToUpdates();
         })
       )
@@ -178,18 +178,18 @@ export class ComicDetailsPageComponent implements OnInit, AfterViewInit {
         )
     });
     this.store
-      .select(selectComicBookDetail)
+      .select(selectComicDetail)
       .pipe(filter(detail => !!detail))
       .subscribe({
         next: detail => this.comic$.next(detail)
       });
-    this.store.select(selectComicBookMetadataSource).subscribe({
+    this.store.select(selectComicMetadataSource).subscribe({
       next: metadataSource => this.metadataSource$.next(metadataSource)
     });
-    this.store.select(selectComicBookPages).subscribe({
+    this.store.select(selectComicPages).subscribe({
       next: pages => this.pages$.next(pages)
     });
-    this.store.select(selectComicBookTags).subscribe({
+    this.store.select(selectComicTags).subscribe({
       next: tags => this.tags$.next(tags)
     });
     this.loadPageTitle();
@@ -201,8 +201,8 @@ export class ComicDetailsPageComponent implements OnInit, AfterViewInit {
     this.skipCache$ = this.store.select(selectUserSkipCache);
     this.matchPublisher$ = this.store.select(selectUserMatchPublisher);
     this.maximumRecords$ = this.store.select(selectUserMaximumRecords);
-    this.store.select(selectReadComicBooksList).subscribe({
-      next: readComicBookList => this.readComicBookList$.next(readComicBookList)
+    this.store.select(selectReadComicsList).subscribe({
+      next: readComicList => this.readComicList$.next(readComicList)
     });
     this.store
       .select(selectScrapingVolumeMetadata)
@@ -224,9 +224,7 @@ export class ComicDetailsPageComponent implements OnInit, AfterViewInit {
   }
 
   get isRead$(): Observable<boolean> {
-    return of(
-      this.readComicBookList$.value.includes(this.comic$.value?.comicId)
-    );
+    return of(this.readComicList$.value.includes(this.comic$.value?.comicId));
   }
 
   get displayPage(): ComicPage {
@@ -276,7 +274,7 @@ export class ComicDetailsPageComponent implements OnInit, AfterViewInit {
   setReadState(read: boolean): void {
     this.logger.debug('Marking comic read status:', read);
     this.store.dispatch(
-      markSingleComicBookRead({
+      markSingleComicRead({
         comicId: this.comic$.value.comicId,
         read
       })
@@ -295,7 +293,7 @@ export class ComicDetailsPageComponent implements OnInit, AfterViewInit {
       confirm: () => {
         this.logger.debug('Updating comic file:', this.comic$.value);
         this.store.dispatch(
-          updateSingleComicBookMetadata({
+          updateSingleComicMetadata({
             comicId: this.comic$.value.comicId
           })
         );
@@ -303,7 +301,7 @@ export class ComicDetailsPageComponent implements OnInit, AfterViewInit {
     });
   }
 
-  onDeleteComicBook(deleted: boolean): void {
+  onDeleteComic(deleted: boolean): void {
     this.logger.trace('Confirming setting comic deleted state');
     this.confirmationService.confirm({
       title: this.translateService.instant(
@@ -318,13 +316,13 @@ export class ComicDetailsPageComponent implements OnInit, AfterViewInit {
         this.logger.trace('Marking comic for deletion');
         if (deleted) {
           this.store.dispatch(
-            deleteSingleComicBook({
+            deleteSingleComic({
               comicId: this.comic$.value.comicId
             })
           );
         } else {
           this.store.dispatch(
-            undeleteSingleComicBook({
+            undeleteSingleComic({
               comicId: this.comic$.value.comicId
             })
           );
@@ -364,9 +362,7 @@ export class ComicDetailsPageComponent implements OnInit, AfterViewInit {
 
   onDownloadComicFile(): void {
     this.logger.debug('Downloading comic file');
-    this.store.dispatch(
-      downloadComicBook({ comicId: this.comic$.value.comicId })
-    );
+    this.store.dispatch(downloadComic({ comicId: this.comic$.value.comicId }));
   }
 
   onPreviousPage(): void {
@@ -396,7 +392,7 @@ export class ComicDetailsPageComponent implements OnInit, AfterViewInit {
     });
     this.logger.trace('Subscribing to comic book updates:', topic);
     this.webSocketService.subscribe<LoadComicResponse>(topic, data => {
-      this.logger.debug('ComicBook book update received:', data);
+      this.logger.debug('Comic book update received:', data);
       this.store.dispatch(
         comicLoaded({
           detail: data.detail,

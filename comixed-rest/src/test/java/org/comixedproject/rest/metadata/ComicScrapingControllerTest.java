@@ -61,7 +61,7 @@ class ComicScrapingControllerTest {
   private static final Long TEST_METADATA_SOURCE_ID = 73L;
   private static final String TEST_REFERENCE_ID = "8675309";
   private static final String TEST_PUBLISHER = "Powerful Publisher";
-  private static final String TEST_SERIES_NAME = "Awesome ComicBook";
+  private static final String TEST_SERIES_NAME = "Awesome Comic";
   private static final Integer TEST_MAX_RECORDS = 37;
   private static final String TEST_VOLUME = "2018";
   private static final String TEST_ISSUE_NUMBER = "15";
@@ -90,7 +90,7 @@ class ComicScrapingControllerTest {
   @Mock private List<Long> selectedIdList;
   @Mock private List multiBookIdList;
   @Mock private JobOperator jobOperator;
-  @Mock private Job updateComicBookMetadata;
+  @Mock private Job updateComicMetadata;
   @Mock private JobExecution jobExecution;
   @Mock private HttpSession session;
   @Mock private Principal principal;
@@ -247,9 +247,7 @@ class ComicScrapingControllerTest {
 
   @Test
   void startBatchMetadataUpdate_comicServiceException() throws Exception {
-    doThrow(ComicException.class)
-        .when(comicService)
-        .markComicBooksForBatchMetadataUpdate(anyList());
+    doThrow(ComicException.class).when(comicService).markComicsForBatchMetadataUpdate(anyList());
 
     assertThrows(
         ComicException.class,
@@ -271,8 +269,8 @@ class ComicScrapingControllerTest {
     assertNotNull(jobParameters);
 
     verify(comicSelectionService).decodeSelections(TEST_ENCODED_SELECTIONS);
-    verify(comicService).markComicBooksForBatchMetadataUpdate(selectedIdList);
-    verify(jobOperator).start(updateComicBookMetadata, jobParameters);
+    verify(comicService).markComicsForBatchMetadataUpdate(selectedIdList);
+    verify(jobOperator).start(updateComicMetadata, jobParameters);
     verify(comicSelectionService).encodeSelections(selectedIdList);
     verify(session).setAttribute(LIBRARY_SELECTIONS, TEST_REENCODED_SELECTIONS);
   }
@@ -408,11 +406,11 @@ class ComicScrapingControllerTest {
 
   @Test
   void removeMultiBookComic() throws MetadataException, ComicSelectionException {
-    final List<DisplayableComic> localComicBookList = new ArrayList<>();
-    localComicBookList.add(displayableComic);
+    final List<DisplayableComic> localComicList = new ArrayList<>();
+    localComicList.add(displayableComic);
     when(displayableComicService.loadComicsById(
             anyInt(), anyInt(), anyString(), anyString(), anyList()))
-        .thenReturn(localComicBookList);
+        .thenReturn(localComicList);
 
     final List<Long> localMultiBookIdList = new ArrayList<>();
     when(comicSelectionService.decodeSelections(TEST_ENCODED_MULTI_BOOKS))
@@ -451,18 +449,18 @@ class ComicScrapingControllerTest {
     controller.batchScrapeSelected(session, principal);
 
     verify(comicSelectionService).decodeSelections(TEST_ENCODED_SELECTIONS);
-    verify(metadataService).batchScrapeComicBooks(localMultiBookIdList);
+    verify(metadataService).batchScrapeComics(localMultiBookIdList);
     verify(comicSelectionService).encodeSelections(localMultiBookIdList);
     verify(session).setAttribute(LIBRARY_SELECTIONS, TEST_REENCODED_SELECTIONS);
   }
 
   @Test
   void scrapeMultiBookComic() throws MetadataException, ComicSelectionException {
-    final List<DisplayableComic> localComicBookList = new ArrayList<>();
-    localComicBookList.add(displayableComic);
+    final List<DisplayableComic> localComicList = new ArrayList<>();
+    localComicList.add(displayableComic);
     when(displayableComicService.loadComicsById(
             anyInt(), anyInt(), anyString(), anyString(), anyList()))
-        .thenReturn(localComicBookList);
+        .thenReturn(localComicList);
 
     final List<Long> localMultiBookIdList = new ArrayList<>();
     when(comicSelectionService.decodeSelections(TEST_ENCODED_MULTI_BOOKS))

@@ -32,14 +32,14 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import { MAXIMUM_SCRAPING_RECORDS_PREFERENCE } from '@app/library/library.constants';
-import { updateComicBook } from '@app/comic-books/actions/comic-book.actions';
+import { updateComic } from '@app/comic-books/actions/comic-book.actions';
 import {
   initialState as initialScrapeMetadataState,
   SCRAPE_METADATA_FEATURE_KEY
 } from '@app/comic-files/reducers/scrape-metadata.reducer';
 import { scrapeMetadataFromFilename } from '@app/comic-files/actions/scrape-metadata.actions';
 import {
-  scrapeSingleComicBook,
+  scrapeSingleComic,
   setAutoSelectExactMatch,
   setChosenMetadataSource,
   setConfirmBeforeScraping
@@ -380,7 +380,7 @@ describe('ComicScrapingComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          updateComicBook({
+          updateComic({
             comicId: COMIC.comicId,
             publisher: COMIC.publisher,
             series: COMIC.series,
@@ -409,7 +409,7 @@ describe('ComicScrapingComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          updateComicBook({
+          updateComic({
             comicId: COMIC.comicId,
             publisher: COMIC.publisher,
             series: COMIC.series,
@@ -563,7 +563,7 @@ describe('ComicScrapingComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        scrapeSingleComicBook({
+        scrapeSingleComic({
           metadataSource: OTHER_METADATA_SOURCE,
           issueId: REFERENCE_ID,
           comic: SCRAPING_COMIC,

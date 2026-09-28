@@ -44,7 +44,7 @@ import {
   saveReadingList
 } from '@app/lists/actions/reading-list-detail.actions';
 import { READING_LIST_3 } from '@app/lists/lists.fixtures';
-import { removeSelectedComicBooksFromReadingList } from '@app/lists/actions/reading-list-entries.actions';
+import { removeSelectedComicsFromReadingList } from '@app/lists/actions/reading-list-entries.actions';
 import {
   initialState as initialMessagingState,
   MESSAGING_FEATURE_KEY
@@ -80,9 +80,9 @@ import { ComicCoverUrlPipe } from '@app/comic-books/pipes/comic-cover-url.pipe';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 import {
   COMIC_SELECTION_FEATURE_KEY,
-  initialState as initialComicBookSelectionState
+  initialState as initialComicSelectionState
 } from '@app/comic-books/reducers/comic-selection.reducer';
-import { setMultipleComicBookByIdSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
+import { setMultipleComicByIdSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
 import {
   initialState as initialLibraryPluginState,
   LIBRARY_PLUGIN_FEATURE_KEY
@@ -92,7 +92,7 @@ import {
   USER_FEATURE_KEY
 } from '@app/user/reducers/user.reducer';
 import {
-  initialState as initialReadComicBooksState,
+  initialState as initialReadComicsState,
   READ_COMICS_FEATURE_KEY
 } from '@app/user/reducers/read-comics.reducer';
 import {
@@ -123,11 +123,11 @@ describe('ReadingListDetailPageComponent', () => {
     [READING_LIST_DETAIL_FEATURE_KEY]: initialReadingListDetailsState,
     [MESSAGING_FEATURE_KEY]: initialMessagingState,
     [DOWNLOAD_READING_LIST_FEATURE_KEY]: initialDownloadReadingListState,
-    [COMIC_SELECTION_FEATURE_KEY]: initialComicBookSelectionState,
+    [COMIC_SELECTION_FEATURE_KEY]: initialComicSelectionState,
     [USER_FEATURE_KEY]: initialUserState,
     [LIBRARY_PLUGIN_FEATURE_KEY]: initialLibraryPluginState,
     [COMIC_LIST_FEATURE_KEY]: initialComicListState,
-    [READ_COMICS_FEATURE_KEY]: initialReadComicBooksState
+    [READ_COMICS_FEATURE_KEY]: initialReadComicsState
   };
 
   let component: ReadingListDetailPageComponent;
@@ -413,7 +413,7 @@ describe('ReadingListDetailPageComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        removeSelectedComicBooksFromReadingList({
+        removeSelectedComicsFromReadingList({
           list: READING_LIST
         })
       );
@@ -529,7 +529,7 @@ describe('ReadingListDetailPageComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        setMultipleComicBookByIdSelectionState({
+        setMultipleComicByIdSelectionState({
           selected: SELECT,
           comicIds: component.selectedIds$.value
         })

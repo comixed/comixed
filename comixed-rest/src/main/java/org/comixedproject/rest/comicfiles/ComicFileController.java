@@ -68,7 +68,7 @@ public class ComicFileController {
    */
   @GetMapping(value = "/api/files/session", produces = MediaType.APPLICATION_JSON_VALUE)
   @Timed(value = "comixed.comic-file.load-comic-files-session")
-  @JsonView(View.ComicFileList.class)
+  @JsonView(View.ComicFileListView.class)
   public LoadComicFilesResponse loadComicFilesFromSession(final HttpSession session)
       throws JacksonException {
     log.info("Loading comic files from user session");
@@ -102,7 +102,7 @@ public class ComicFileController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @Timed(value = "comixed.comic-file.load-comic-files")
-  @JsonView(View.ComicFileList.class)
+  @JsonView(View.ComicFileListView.class)
   public LoadComicFilesResponse loadComicFiles(
       final HttpSession session, @RequestBody() final GetAllComicsUnderRequest request)
       throws IOException {
@@ -169,7 +169,7 @@ public class ComicFileController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @Timed(value = "comixed.comic-file.selection-toggle")
-  @JsonView(View.ComicFileList.class)
+  @JsonView(View.ComicFileListView.class)
   public LoadComicFilesResponse toggleComicFileSelections(
       final HttpSession session, @RequestBody final ToggleComicFileSelectionsRequest request) {
     final List<ComicFileGroup> comicFiles = this.doLoadComicFileSelections(session);

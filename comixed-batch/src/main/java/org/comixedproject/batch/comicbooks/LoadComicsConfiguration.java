@@ -43,7 +43,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 @Configuration
 @Log4j2
 public class LoadComicsConfiguration {
-  public static final String LOAD_COMICS_JOB = "loadComicBooksJob";
+  public static final String LOAD_COMICS_JOB = "loadComicsJob";
   public static final String LOAD_COMICS_JOB_STARTED = "job.load-comic-books.time-started";
 
   @Value("${comixed.batch.load-comic-books.chunk-size:10}")
@@ -58,7 +58,7 @@ public class LoadComicsConfiguration {
    * @return the job
    */
   @Bean(name = LOAD_COMICS_JOB)
-  public Job loadComicBooksJob(
+  public Job loadComicsJob(
       final JobRepository jobRepository,
       final LoadComicsJobListener jobListener,
       @Qualifier("loadFileContentsStep") final Step loadFileContentsStep) {

@@ -108,7 +108,7 @@ public class DuplicatePageService {
       try {
         result
             .getComics()
-            .add(this.displayableComicService.getForComicBookId(page.getComic().getComicId()));
+            .add(this.displayableComicService.getForComicId(page.getComic().getComicId()));
       } catch (ComicException error) {
         throw new DuplicatePageException("Failed to load comic for page", error);
       }

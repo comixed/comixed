@@ -25,7 +25,7 @@ import {
   selectLibraryTotalComicCount,
   selectLibraryUnscrapedComicCount
 } from '@app/library/selectors/library.selectors';
-import { selectComicBookSelectionCount } from '@app/comic-books/selectors/comic-book-selection.selectors';
+import { selectComicSelectionCount } from '@app/comic-books/selectors/comic-book-selection.selectors';
 import { selectBatchProcessList } from '@app/admin/selectors/batch-processes.selectors';
 import { TranslateModule } from '@ngx-translate/core';
 import { isAdmin } from '@app/user/user.functions';
@@ -76,7 +76,7 @@ export class FooterComponent {
         .pipe(tap(deletedComics => this.deletedCount$.next(deletedComics)))
         .subscribe();
       this.store
-        .select(selectComicBookSelectionCount)
+        .select(selectComicSelectionCount)
         .pipe(tap(count => this.selectedCount$.next(count)))
         .subscribe();
       this.store
@@ -87,7 +87,7 @@ export class FooterComponent {
           )
         )
         .subscribe();
-      this.readCount$.next(this.user.readComicBooks.length);
+      this.readCount$.next(this.user.readComics.length);
     } else {
       this.readCount$.next(0);
     }

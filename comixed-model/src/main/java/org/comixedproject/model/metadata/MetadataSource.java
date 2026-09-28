@@ -41,7 +41,7 @@ public class MetadataSource {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "metadata_source_id")
   @JsonProperty("metadataSourceId")
-  @JsonView({View.MetadataSourceList.class, View.ComicDetailsView.class})
+  @JsonView({View.MetadataSourceListView.class, View.ComicView.class})
   @Getter
   private Long metadataSourceId;
 
@@ -53,7 +53,7 @@ public class MetadataSource {
       updatable = true,
       nullable = false)
   @JsonProperty("name")
-  @JsonView({View.MetadataSourceList.class, View.ComicDetailsView.class})
+  @JsonView({View.MetadataSourceListView.class, View.ComicView.class})
   @Getter
   @Setter
   @NonNull
@@ -61,7 +61,7 @@ public class MetadataSource {
 
   @Column(name = "preferred_source", insertable = true, updatable = true, nullable = false)
   @JsonProperty("preferred")
-  @JsonView({View.MetadataSourceList.class, View.ComicDetailsView.class})
+  @JsonView({View.MetadataSourceListView.class, View.ComicView.class})
   @Getter
   @Setter
   @NonNull
@@ -73,27 +73,27 @@ public class MetadataSource {
       orphanRemoval = true,
       fetch = FetchType.EAGER)
   @JsonProperty("properties")
-  @JsonView(View.MetadataSourceList.class)
+  @JsonView(View.MetadataSourceListView.class)
   @Getter
   private Set<MetadataSourceProperty> properties = new HashSet<>();
 
   @Transient
   @JsonProperty("available")
-  @JsonView(View.MetadataSourceList.class)
+  @JsonView(View.MetadataSourceListView.class)
   @Getter
   @Setter
   private boolean available = false;
 
   @Transient
   @JsonProperty("version")
-  @JsonView(View.MetadataSourceList.class)
+  @JsonView(View.MetadataSourceListView.class)
   @Getter
   @Setter
   private String version;
 
   @Transient
   @JsonProperty("homepage")
-  @JsonView(View.MetadataSourceList.class)
+  @JsonView(View.MetadataSourceListView.class)
   @Getter
   @Setter
   private String homepage;

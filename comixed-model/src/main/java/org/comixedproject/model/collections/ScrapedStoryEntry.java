@@ -39,7 +39,7 @@ public class ScrapedStoryEntry {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "scraped_story_entry_id")
   @JsonProperty("scrapedStoryEntryId")
-  @JsonView(View.StoryList.class)
+  @JsonView(View.StoryListView.class)
   @Getter
   private Long scrapedStoryEntryId;
 
@@ -51,35 +51,35 @@ public class ScrapedStoryEntry {
 
   @Column(name = "series", length = 128, nullable = false, updatable = true)
   @JsonProperty("series")
-  @JsonView(View.StoryList.class)
+  @JsonView(View.StoryListView.class)
   @Getter
   @Setter
   private String series;
 
   @Column(name = "volume", length = 4, nullable = false, updatable = true)
   @JsonProperty("volume")
-  @JsonView(View.StoryList.class)
+  @JsonView(View.StoryListView.class)
   @Getter
   @Setter
   private String volume;
 
   @Column(name = "issue_number", length = 16, nullable = false, updatable = false)
   @JsonProperty("issueNumber")
-  @JsonView(View.StoryList.class)
+  @JsonView(View.StoryListView.class)
   @Getter
   @Setter
   private String issueNumber;
 
   @Column(name = "cover_date")
   @JsonProperty("coverDate")
-  @JsonView(View.StoryList.class)
+  @JsonView(View.StoryListView.class)
   @Getter
   @Setter
   private Date coverDate;
 
   @Column(name = "reading_order", nullable = false, updatable = false)
   @JsonProperty("readingOrder")
-  @JsonView(View.StoryList.class)
+  @JsonView(View.StoryListView.class)
   @Getter
   @Setter
   private int readingOrder;

@@ -537,7 +537,7 @@ class ReadingListServiceTest {
   }
 
   @Test
-  void deleteReadingListEntriesForComicBook() {
+  void deleteReadingListEntriesForComic() {
     final List<Long> entries = new ArrayList<>();
     final List<ReadingList> readingListEntries = new ArrayList<>();
     when(readingList.getEntryIds()).thenReturn(entries);
@@ -545,7 +545,7 @@ class ReadingListServiceTest {
 
     when(readingListRepository.getReadingListsWithComic(anyLong())).thenReturn(readingListEntries);
 
-    service.deleteEntriesForComicBook(comic);
+    service.deleteEntriesForComic(comic);
 
     assertTrue(entries.isEmpty());
 

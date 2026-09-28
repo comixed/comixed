@@ -19,10 +19,10 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {
-  convertComicBooksFailure,
-  convertComicBooksSuccess,
-  convertSelectedComicBooks,
-  convertSingleComicBook
+  convertComicsFailure,
+  convertComicsSuccess,
+  convertSelectedComics,
+  convertSingleComic
 } from '../actions/convert-comic-books.actions';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { LibraryService } from '@app/library/services/library.service';
@@ -39,15 +39,15 @@ export class ConvertComicsEffects {
   alertService = inject(AlertService);
   translateService = inject(TranslateService);
 
-  convertSingleComicBook$ = createEffect(() => {
+  convertSingleComic$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(convertSingleComicBook),
+      ofType(convertSingleComic),
       tap(action =>
         this.logger.trace('Converting a single comic book:', action)
       ),
       switchMap(action =>
         this.libraryService
-          .convertSingleComicBook({
+          .convertSingleComic({
             id: action.id,
             archiveType: action.archiveType
           })
@@ -63,7 +63,7 @@ export class ConvertComicsEffects {
                 )
               )
             ),
-            map(() => convertComicBooksSuccess()),
+            map(() => convertComicsSuccess()),
             catchError(error =>
               this.doServiceFailure(
                 error,
@@ -75,15 +75,15 @@ export class ConvertComicsEffects {
       catchError(error => this.doGeneralFailure(error))
     );
   });
-  convertSelectedComicBooks$ = createEffect(() => {
+  convertSelectedComics$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(convertSelectedComicBooks),
+      ofType(convertSelectedComics),
       tap(action =>
         this.logger.trace('Converting selected comic books:', action)
       ),
       switchMap(action =>
         this.libraryService
-          .convertSelectedComicBooks({
+          .convertSelectedComics({
             archiveType: action.archiveType
           })
           .pipe(
@@ -98,7 +98,7 @@ export class ConvertComicsEffects {
                 )
               )
             ),
-            map(() => convertComicBooksSuccess()),
+            map(() => convertComicsSuccess()),
             catchError(error =>
               this.doServiceFailure(
                 error,
@@ -114,7 +114,7 @@ export class ConvertComicsEffects {
   private doServiceFailure(error: any, errorMessage: string) {
     this.logger.error('Service failure:', error);
     this.alertService.error(this.translateService.instant(errorMessage));
-    return of(convertComicBooksFailure());
+    return of(convertComicsFailure());
   }
 
   private doGeneralFailure(error: any) {
@@ -122,6 +122,6 @@ export class ConvertComicsEffects {
     this.alertService.error(
       this.translateService.instant('app.general-effect-failure')
     );
-    return of(convertComicBooksFailure());
+    return of(convertComicsFailure());
   }
 }

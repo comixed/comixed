@@ -55,7 +55,7 @@ public class LibraryPluginProperty {
       updatable = true,
       nullable = false)
   @JsonProperty("name")
-  @JsonView(View.LibraryPluginList.class)
+  @JsonView(View.LibraryPluginListView.class)
   @Getter
   @Setter
   @NonNull
@@ -63,7 +63,7 @@ public class LibraryPluginProperty {
 
   @Column(name = "property_length", insertable = true, updatable = true, nullable = false)
   @JsonProperty("length")
-  @JsonView(View.LibraryPluginList.class)
+  @JsonView(View.LibraryPluginListView.class)
   @Getter
   @Setter
   @NonNull
@@ -71,14 +71,14 @@ public class LibraryPluginProperty {
 
   @Column(name = "property_required", insertable = true, updatable = true, nullable = false)
   @JsonProperty("required")
-  @JsonView(View.LibraryPluginList.class)
+  @JsonView(View.LibraryPluginListView.class)
   @Getter
   @Setter
   private Boolean required = false;
 
   @Column(name = "property_default_value", length = 128, insertable = true, updatable = false)
   @JsonProperty("defaultValue")
-  @JsonView(View.LibraryPluginList.class)
+  @JsonView(View.LibraryPluginListView.class)
   @Getter
   @Setter
   private String defaultValue = "";
@@ -90,7 +90,7 @@ public class LibraryPluginProperty {
       updatable = true,
       nullable = false)
   @JsonProperty("value")
-  @JsonView(View.LibraryPluginList.class)
+  @JsonView(View.LibraryPluginListView.class)
   @Getter
   @Setter
   private String value = "";

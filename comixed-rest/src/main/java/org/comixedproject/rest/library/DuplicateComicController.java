@@ -75,7 +75,7 @@ public class DuplicateComicController {
         this.duplicateComicService.loadDuplicateComicsList(
             pageSize, pageIndex, sortBy, sortDirection);
 
-    final long filterCount = this.duplicateComicService.getDuplicateComicBookCount();
+    final long filterCount = this.duplicateComicService.getDuplicateComicCount();
     return new LoadDuplicateComicsListResponse(comics, filterCount);
   }
 
@@ -91,7 +91,7 @@ public class DuplicateComicController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @Timed(value = "comixed.duplicate-comic.load")
   @PreAuthorize("hasRole('ADMIN')")
-  @JsonView(View.ComicDetailsView.class)
+  @JsonView(View.ComicView.class)
   public LoadComicsResponse loadDuplicateComics(
       @RequestBody() final LoadDuplicateComicsRequest request) {
     final String publisher = request.getPublisher();

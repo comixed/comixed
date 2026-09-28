@@ -43,6 +43,6 @@ public class RemoveDeletedComicsReader extends AbstractComicReader {
   @Override
   protected List<Comic> doLoadComics() {
     log.trace("Loading comics in the DELETED state");
-    return this.comicService.findComicBooksToBePurged(this.chunkSize);
+    return this.comicService.findComicsToBePurged(this.chunkSize);
   }
 }

@@ -20,25 +20,25 @@ import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import {
-  addSingleComicBookSelection,
-  clearComicBookSelectionState,
-  clearComicBookSelectionStateFailed,
+  addSingleComicSelection,
+  clearComicSelectionState,
+  clearComicSelectionStateFailed,
   comicSelectionsLoaded,
   comicSelectionStateCleared,
-  loadComicBookSelections,
-  loadComicBookSelectionsFailed,
-  removeSingleComicBookSelection,
-  setComicBookSelectionByUnreadState,
-  setDuplicateComicBooksSelectionState,
-  setMultipleComicBookByFilterSelectionState,
-  setMultipleComicBookByIdSelectionState,
-  setMultipleComicBookByPublisherSelectionState,
-  setMultipleComicBookByPublisherSeriesAndVolumeSelectionState,
-  setMultipleComicBooksByTagTypeAndValueSelectionState,
-  setMultipleComicBookSelectionStateFailure,
-  setMultipleComicBookSelectionStateSuccess,
-  singleComicBookSelectionFailed,
-  singleComicBookSelectionUpdated
+  loadComicSelections,
+  loadComicSelectionsFailed,
+  removeSingleComicSelection,
+  setComicSelectionByUnreadState,
+  setDuplicateComicsSelectionState,
+  setMultipleComicByFilterSelectionState,
+  setMultipleComicByIdSelectionState,
+  setMultipleComicByPublisherSelectionState,
+  setMultipleComicByPublisherSeriesAndVolumeSelectionState,
+  setMultipleComicsByTagTypeAndValueSelectionState,
+  setMultipleComicSelectionStateFailure,
+  setMultipleComicSelectionStateSuccess,
+  singleComicSelectionFailed,
+  singleComicSelectionUpdated
 } from '../actions/comic-book-selection.actions';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { ComicSelectionService } from '@app/comic-books/services/comic-selection.service';
@@ -53,7 +53,7 @@ export class ComicSelectionEffects {
   comicSelectionService = inject(ComicSelectionService);
   setSelectedByFilter$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(setMultipleComicBookByFilterSelectionState),
+      ofType(setMultipleComicByFilterSelectionState),
       tap(action =>
         this.logger.debug('Selecting multiple comic books by filter:', action)
       ),
@@ -71,7 +71,7 @@ export class ComicSelectionEffects {
           })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
-            map(() => setMultipleComicBookSelectionStateSuccess()),
+            map(() => setMultipleComicSelectionStateSuccess()),
             catchError(error => this.doMultipleSelectedServiceFailure(error))
           )
       ),
@@ -81,7 +81,7 @@ export class ComicSelectionEffects {
 
   setSelectedByTagTypeAndValue$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(setMultipleComicBooksByTagTypeAndValueSelectionState),
+      ofType(setMultipleComicsByTagTypeAndValueSelectionState),
       tap(action =>
         this.logger.debug(
           'Selecting multiple comic books by tag type and value:',
@@ -97,7 +97,7 @@ export class ComicSelectionEffects {
           })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
-            map(() => setMultipleComicBookSelectionStateSuccess()),
+            map(() => setMultipleComicSelectionStateSuccess()),
             catchError(error => this.doMultipleSelectedServiceFailure(error))
           )
       ),
@@ -107,7 +107,7 @@ export class ComicSelectionEffects {
 
   setSelectedById$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(setMultipleComicBookByIdSelectionState),
+      ofType(setMultipleComicByIdSelectionState),
       tap(action =>
         this.logger.debug('Selecting multiple comic books by id:', action)
       ),
@@ -119,7 +119,7 @@ export class ComicSelectionEffects {
           })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
-            map(() => setMultipleComicBookSelectionStateSuccess()),
+            map(() => setMultipleComicSelectionStateSuccess()),
             catchError(error => this.doMultipleSelectedServiceFailure(error))
           )
       ),
@@ -129,7 +129,7 @@ export class ComicSelectionEffects {
 
   setSelectedByPublisher$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(setMultipleComicBookByPublisherSelectionState),
+      ofType(setMultipleComicByPublisherSelectionState),
       tap(action =>
         this.logger.debug(
           'Selecting multiple comic books by publisher:',
@@ -144,7 +144,7 @@ export class ComicSelectionEffects {
           })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
-            map(() => setMultipleComicBookSelectionStateSuccess()),
+            map(() => setMultipleComicSelectionStateSuccess()),
             catchError(error => this.doMultipleSelectedServiceFailure(error))
           )
       ),
@@ -154,7 +154,7 @@ export class ComicSelectionEffects {
 
   setSelectedByPublisherSeriesAndVolume$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(setMultipleComicBookByPublisherSeriesAndVolumeSelectionState),
+      ofType(setMultipleComicByPublisherSeriesAndVolumeSelectionState),
       tap(action =>
         this.logger.debug(
           'Selecting multiple comic books by publisher, series, and volume:',
@@ -171,7 +171,7 @@ export class ComicSelectionEffects {
           })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
-            map(() => setMultipleComicBookSelectionStateSuccess()),
+            map(() => setMultipleComicSelectionStateSuccess()),
             catchError(error => this.doMultipleSelectedServiceFailure(error))
           )
       ),
@@ -179,20 +179,20 @@ export class ComicSelectionEffects {
     );
   });
 
-  setDuplicateComicBooksSelectionState$ = createEffect(() => {
+  setDuplicateComicsSelectionState$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(setDuplicateComicBooksSelectionState),
+      ofType(setDuplicateComicsSelectionState),
       tap(action =>
         this.logger.debug('Selecting all duplicate comic books:', action)
       ),
       switchMap(action =>
         this.comicSelectionService
-          .setDuplicateComicBooksSelectionState({
+          .setDuplicateComicsSelectionState({
             selected: action.selected
           })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
-            map(() => setMultipleComicBookSelectionStateSuccess()),
+            map(() => setMultipleComicSelectionStateSuccess()),
             catchError(error => this.doMultipleSelectedServiceFailure(error))
           )
       ),
@@ -200,21 +200,21 @@ export class ComicSelectionEffects {
     );
   });
 
-  setUnreadComicBooksSelectionState$ = createEffect(() => {
+  setUnreadComicsSelectionState$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(setComicBookSelectionByUnreadState),
+      ofType(setComicSelectionByUnreadState),
       tap(action =>
         this.logger.debug('Selecting comic books by unread state:', action)
       ),
       switchMap(action =>
         this.comicSelectionService
-          .setUnreadComicBooksSelectionState({
+          .setUnreadComicsSelectionState({
             selected: action.selected,
             unreadOnly: action.unreadOnly
           })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
-            map(() => setMultipleComicBookSelectionStateSuccess()),
+            map(() => setMultipleComicSelectionStateSuccess()),
             catchError(error => this.doMultipleSelectedServiceFailure(error))
           )
       ),
@@ -225,7 +225,7 @@ export class ComicSelectionEffects {
   translateService = inject(TranslateService);
   loadSelections$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(loadComicBookSelections),
+      ofType(loadComicSelections),
       tap(() => this.logger.debug('Loading comic book selectsion')),
       switchMap(() =>
         this.comicSelectionService.loadSelections().pipe(
@@ -238,7 +238,7 @@ export class ComicSelectionEffects {
                 'selection.load-selections.effect-failure'
               )
             );
-            return of(loadComicBookSelectionsFailed());
+            return of(loadComicSelectionsFailed());
           })
         )
       ),
@@ -247,13 +247,13 @@ export class ComicSelectionEffects {
         this.alertService.error(
           this.translateService.instant('app.general-effect-failure')
         );
-        return of(loadComicBookSelectionsFailed());
+        return of(loadComicSelectionsFailed());
       })
     );
   });
   addSingleSelection$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(addSingleComicBookSelection),
+      ofType(addSingleComicSelection),
       tap(action => this.logger.debug('Adding a single comic book:', action)),
       switchMap(action =>
         this.comicSelectionService
@@ -262,7 +262,7 @@ export class ComicSelectionEffects {
           })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
-            map(() => singleComicBookSelectionUpdated()),
+            map(() => singleComicSelectionUpdated()),
             catchError(error => {
               this.logger.error('Service failure:', error);
               this.alertService.error(
@@ -270,7 +270,7 @@ export class ComicSelectionEffects {
                   'selection.set-single-state.effect-failure'
                 )
               );
-              return of(singleComicBookSelectionFailed());
+              return of(singleComicSelectionFailed());
             })
           )
       ),
@@ -279,13 +279,13 @@ export class ComicSelectionEffects {
         this.alertService.error(
           this.translateService.instant('app.general-effect-failure')
         );
-        return of(singleComicBookSelectionFailed());
+        return of(singleComicSelectionFailed());
       })
     );
   });
   removeSingleSelection$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(removeSingleComicBookSelection),
+      ofType(removeSingleComicSelection),
       tap(action => this.logger.debug('Removing a single comic book:', action)),
       switchMap(action =>
         this.comicSelectionService
@@ -294,7 +294,7 @@ export class ComicSelectionEffects {
           })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
-            map(() => singleComicBookSelectionUpdated()),
+            map(() => singleComicSelectionUpdated()),
             catchError(error => {
               this.logger.error('Service failure:', error);
               this.alertService.error(
@@ -302,7 +302,7 @@ export class ComicSelectionEffects {
                   'selection.set-single-state.effect-failure'
                 )
               );
-              return of(singleComicBookSelectionFailed());
+              return of(singleComicSelectionFailed());
             })
           )
       ),
@@ -311,13 +311,13 @@ export class ComicSelectionEffects {
         this.alertService.error(
           this.translateService.instant('app.general-effect-failure')
         );
-        return of(singleComicBookSelectionFailed());
+        return of(singleComicSelectionFailed());
       })
     );
   });
   clearSelections$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(clearComicBookSelectionState),
+      ofType(clearComicSelectionState),
       tap(() => this.logger.debug('Clearing comic book selectsion')),
       switchMap(() =>
         this.comicSelectionService.clearSelections().pipe(
@@ -330,7 +330,7 @@ export class ComicSelectionEffects {
                 'selection.clear-selection-state.effect-failure'
               )
             );
-            return of(clearComicBookSelectionStateFailed());
+            return of(clearComicSelectionStateFailed());
           })
         )
       ),
@@ -339,7 +339,7 @@ export class ComicSelectionEffects {
         this.alertService.error(
           this.translateService.instant('app.general-effect-failure')
         );
-        return of(clearComicBookSelectionStateFailed());
+        return of(clearComicSelectionStateFailed());
       })
     );
   });
@@ -351,7 +351,7 @@ export class ComicSelectionEffects {
         'selection.set-multiple-state.effect-failure'
       )
     );
-    return of(setMultipleComicBookSelectionStateFailure());
+    return of(setMultipleComicSelectionStateFailure());
   }
 
   private doMultipleSelectedGeneralFailure(error: any) {
@@ -359,6 +359,6 @@ export class ComicSelectionEffects {
     this.alertService.error(
       this.translateService.instant('app.general-effect-failure')
     );
-    return of(setMultipleComicBookSelectionStateFailure());
+    return of(setMultipleComicSelectionStateFailure());
   }
 }

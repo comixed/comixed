@@ -22,15 +22,15 @@ import {
   reducer
 } from './delete-comics.reducer';
 import {
-  deleteComicBooksFailure,
-  deleteComicBooksSuccess,
-  deleteSelectedComicBooks,
-  deleteSingleComicBook,
-  undeleteSelectedComicBooks,
-  undeleteSingleComicBook
+  deleteComicsFailure,
+  deleteComicsSuccess,
+  deleteSelectedComics,
+  deleteSingleComic,
+  undeleteSelectedComics,
+  undeleteSingleComic
 } from '@app/comic-books/actions/delete-comic-books.actions';
 
-describe('DeleteComicBooks Reducer', () => {
+describe('DeleteComics Reducer', () => {
   const COMIC_ID = 710129;
 
   let state: MarkComicsDeletedState;
@@ -53,7 +53,7 @@ describe('DeleteComicBooks Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, updating: false },
-        deleteSingleComicBook({ comicId: COMIC_ID })
+        deleteSingleComic({ comicId: COMIC_ID })
       );
     });
 
@@ -66,7 +66,7 @@ describe('DeleteComicBooks Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, updating: false },
-        undeleteSingleComicBook({ comicId: COMIC_ID })
+        undeleteSingleComic({ comicId: COMIC_ID })
       );
     });
 
@@ -77,10 +77,7 @@ describe('DeleteComicBooks Reducer', () => {
 
   describe('deleting the selected comic books', () => {
     beforeEach(() => {
-      state = reducer(
-        { ...state, updating: false },
-        deleteSelectedComicBooks()
-      );
+      state = reducer({ ...state, updating: false }, deleteSelectedComics());
     });
 
     it('sets the updating flag', () => {
@@ -90,10 +87,7 @@ describe('DeleteComicBooks Reducer', () => {
 
   describe('undeleting the selected comic books', () => {
     beforeEach(() => {
-      state = reducer(
-        { ...state, updating: false },
-        undeleteSelectedComicBooks()
-      );
+      state = reducer({ ...state, updating: false }, undeleteSelectedComics());
     });
 
     it('sets the updating flag', () => {
@@ -103,7 +97,7 @@ describe('DeleteComicBooks Reducer', () => {
 
   describe('success setting the state', () => {
     beforeEach(() => {
-      state = reducer({ ...state, updating: true }, deleteComicBooksSuccess());
+      state = reducer({ ...state, updating: true }, deleteComicsSuccess());
     });
 
     it('clears the updating flag', () => {
@@ -113,7 +107,7 @@ describe('DeleteComicBooks Reducer', () => {
 
   describe('failure setting the state', () => {
     beforeEach(() => {
-      state = reducer({ ...state, updating: true }, deleteComicBooksFailure());
+      state = reducer({ ...state, updating: true }, deleteComicsFailure());
     });
 
     it('clears the updating flag', () => {

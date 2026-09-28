@@ -18,10 +18,10 @@
 
 import { createFeature, createReducer, on } from '@ngrx/store';
 import {
-  updateSelectedComicBooksMetadataSuccess,
-  updateSelectedComicBooksMetadata,
-  updateSelectedComicBooksMetadataFailure,
-  updateSingleComicBookMetadata
+  updateSelectedComicsMetadataSuccess,
+  updateSelectedComicsMetadata,
+  updateSelectedComicsMetadataFailure,
+  updateSingleComicMetadata
 } from '@app/library/actions/update-metadata.actions';
 
 export const UPDATE_METADATA_FEATURE_KEY = 'update_metadata_state';
@@ -37,13 +37,13 @@ export const initialState: UpdateMetadataState = {
 export const reducer = createReducer(
   initialState,
 
-  on(updateSingleComicBookMetadata, state => ({ ...state, updating: true })),
-  on(updateSelectedComicBooksMetadata, state => ({ ...state, updating: true })),
-  on(updateSelectedComicBooksMetadataSuccess, state => ({
+  on(updateSingleComicMetadata, state => ({ ...state, updating: true })),
+  on(updateSelectedComicsMetadata, state => ({ ...state, updating: true })),
+  on(updateSelectedComicsMetadataSuccess, state => ({
     ...state,
     updating: false
   })),
-  on(updateSelectedComicBooksMetadataFailure, state => ({
+  on(updateSelectedComicsMetadataFailure, state => ({
     ...state,
     updating: false
   }))

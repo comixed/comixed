@@ -57,11 +57,11 @@ import {
 } from '@app/comic-metadata/comic-metadata.fixtures';
 import {
   COMIC_FEATURE_KEY,
-  initialState as initialComicBookState
+  initialState as initialComicState
 } from '@app/comic-books/reducers/comic.reducer';
 import {
   COMIC_SELECTION_FEATURE_KEY,
-  initialState as initialComicBookSelectionState
+  initialState as initialComicSelectionState
 } from '@app/comic-books/reducers/comic-selection.reducer';
 import {
   initialState as initialMultiBookScrapingState,
@@ -95,12 +95,12 @@ describe('ScrapingIssuesPageComponent', () => {
     [LIBRARY_FEATURE_KEY]: { ...initialLibraryState },
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER },
     [SINGLE_BOOK_SCRAPING_FEATURE_KEY]: { ...initialScrapingState },
-    [COMIC_FEATURE_KEY]: { ...initialComicBookState },
+    [COMIC_FEATURE_KEY]: { ...initialComicState },
     [MULTI_BOOK_SCRAPING_FEATURE_KEY]: {
       ...initialMultiBookScrapingState,
       comics: COMICS
     },
-    [COMIC_SELECTION_FEATURE_KEY]: initialComicBookSelectionState
+    [COMIC_SELECTION_FEATURE_KEY]: initialComicSelectionState
   };
 
   let component: ScrapingIssuesPageComponent;
@@ -164,12 +164,12 @@ describe('ScrapingIssuesPageComponent', () => {
 
   describe('when the comic is changed', () => {
     beforeEach(() => {
-      component.currentComicBook$.next(null);
+      component.currentComic$.next(null);
       component.onSelectionChanged(DISPLAYABLE_COMIC);
     });
 
     it('updates the current comic', () => {
-      expect(component.currentComicBook$.value).toBe(DISPLAYABLE_COMIC);
+      expect(component.currentComic$.value).toBe(DISPLAYABLE_COMIC);
     });
   });
 
@@ -219,7 +219,7 @@ describe('ScrapingIssuesPageComponent', () => {
 
   describe('removing a comic book from the queue', () => {
     beforeEach(() => {
-      component.onRemoveComicBook(DISPLAYABLE_COMIC);
+      component.onRemoveComic(DISPLAYABLE_COMIC);
     });
 
     it('fires an action', () => {
@@ -234,7 +234,7 @@ describe('ScrapingIssuesPageComponent', () => {
 
   describe('selecting a different comic book from the queue', () => {
     beforeEach(() => {
-      component.onSelectComicBook(DISPLAYABLE_COMIC);
+      component.onSelectComic(DISPLAYABLE_COMIC);
     });
 
     it('fires an action', () => {
@@ -252,7 +252,7 @@ describe('ScrapingIssuesPageComponent', () => {
         ...initialState,
         [MULTI_BOOK_SCRAPING_FEATURE_KEY]: {
           ...initialState,
-          currentComicBook: DISPLAYABLE_COMIC
+          currentComic: DISPLAYABLE_COMIC
         }
       });
     });

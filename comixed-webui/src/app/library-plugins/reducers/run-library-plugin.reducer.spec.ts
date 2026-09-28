@@ -23,8 +23,8 @@ import {
 } from './run-library-plugin.reducer';
 import {
   runLibraryPluginFailure,
-  runLibraryPluginOnOneComicBook,
-  runLibraryPluginOnSelectedComicBooks,
+  runLibraryPluginOnOneComic,
+  runLibraryPluginOnSelectedComics,
   runLibraryPluginSuccess
 } from '@app/library-plugins/actions/run-library-plugin.actions';
 import { LIBRARY_PLUGIN_4 } from '@app/library-plugins/library-plugins.fixtures';
@@ -54,7 +54,7 @@ describe('RunLibraryPlugin Reducer', () => {
       beforeEach(() => {
         state = reducer(
           { ...state, busy: false },
-          runLibraryPluginOnOneComicBook({
+          runLibraryPluginOnOneComic({
             plugin: PLUGIN,
             comicId: COMIC_ID
           })
@@ -70,7 +70,7 @@ describe('RunLibraryPlugin Reducer', () => {
       beforeEach(() => {
         state = reducer(
           { ...state, busy: false },
-          runLibraryPluginOnSelectedComicBooks({
+          runLibraryPluginOnSelectedComics({
             plugin: PLUGIN
           })
         );

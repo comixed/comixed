@@ -48,7 +48,7 @@ import { scrapeSeriesFeature } from '@app/comic-metadata/reducers/scrape-series.
 import { SeriesScrapingEffects } from '@app/comic-metadata/effects/series-scraping.effects';
 import { singleBookScrapingFeature } from '@app/comic-metadata/reducers/single-book-scraping.reducer';
 import { SingleBookScrapingEffects } from '@app/comic-metadata/effects/single-book-scraping.effects';
-import { ComicBooksModule } from '@app/comic-books/comic-books.module';
+import { ComicsModule } from '@app/comic-books/comic-books.module';
 import { multiBookScrapingFeature } from '@app/comic-metadata/reducers/multi-book-scraping.reducer';
 import { MultiBookScrapingEffects } from '@app/comic-metadata/effects/multi-book-scraping.effects';
 import { ScrapingIssuesPageComponent } from '@app/comic-metadata/pages/scraping-issues-page/scraping-issues-page.component';
@@ -89,7 +89,7 @@ import { ScrapeStoryEffects } from '@app/comic-metadata/effects/scrape-story.eff
     MatCheckboxModule,
     MatPaginatorModule,
     MatCardModule,
-    ComicBooksModule,
+    ComicsModule,
     MatDialogContent,
     MatDialogContainer,
     ScrapingIssuesPageComponent,

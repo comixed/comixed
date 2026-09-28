@@ -50,52 +50,52 @@ import { ReadingList } from '@app/lists/models/reading-list';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import {
-  convertSelectedComicBooks,
-  convertSingleComicBook
+  convertSelectedComics,
+  convertSingleComic
 } from '@app/library/actions/convert-comic-books.actions';
-import { addSelectedComicBooksToReadingList } from '@app/lists/actions/reading-list-entries.actions';
+import { addSelectedComicsToReadingList } from '@app/lists/actions/reading-list-entries.actions';
 import {
-  deleteSelectedComicBooks,
-  deleteSingleComicBook,
-  undeleteSelectedComicBooks,
-  undeleteSingleComicBook
+  deleteSelectedComics,
+  deleteSingleComic,
+  undeleteSelectedComics,
+  undeleteSingleComic
 } from '@app/comic-books/actions/delete-comic-books.actions';
 import { editMultipleComics } from '@app/library/actions/library.actions';
 import { EditMultipleComicsComponent } from '@app/library/components/edit-multiple-comics/edit-multiple-comics.component';
 import { EditMultipleComics } from '@app/library/models/ui/edit-multiple-comics';
 import { MatDialog } from '@angular/material/dialog';
 import {
-  updateSelectedComicBooksMetadata,
-  updateSingleComicBookMetadata
+  updateSelectedComicsMetadata,
+  updateSingleComicMetadata
 } from '@app/library/actions/update-metadata.actions';
 import {
   startEntireLibraryOrganization,
   startLibraryOrganization
 } from '@app/library/actions/organize-library.actions';
 import {
-  rescanSelectedComicBooks,
-  rescanSingleComicBook
+  rescanSelectedComics,
+  rescanSingleComic
 } from '@app/library/actions/rescan-comics.actions';
 import {
-  addSingleComicBookSelection,
-  removeSingleComicBookSelection
+  addSingleComicSelection,
+  removeSingleComicSelection
 } from '@app/comic-books/actions/comic-book-selection.actions';
 import { archiveTypeFromString } from '@app/comic-books/comic-books.functions';
 import { LibraryPlugin } from '@app/library-plugins/models/library-plugin';
 import { selectLibraryPluginList } from '@app/library-plugins/selectors/library-plugin.selectors';
 import { loadLibraryPlugins } from '@app/library-plugins/actions/library-plugin.actions';
 import {
-  runLibraryPluginOnOneComicBook,
-  runLibraryPluginOnSelectedComicBooks
+  runLibraryPluginOnOneComic,
+  runLibraryPluginOnSelectedComics
 } from '@app/library-plugins/actions/run-library-plugin.actions';
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import { PREFERENCE_PAGE_SIZE } from '@app/comic-files/comic-file.constants';
-import { selectComicBookSelectionBusy } from '@app/comic-books/selectors/comic-book-selection.selectors';
+import { selectComicSelectionBusy } from '@app/comic-books/selectors/comic-book-selection.selectors';
 import {
-  markSelectedComicBooksRead,
-  markSingleComicBookRead
+  markSelectedComicsRead,
+  markSingleComicRead
 } from '@app/user/actions/read-comic-books.actions';
-import { batchScrapeComicBooks } from '@app/comic-metadata/actions/multi-book-scraping.actions';
+import { batchScrapeComics } from '@app/comic-metadata/actions/multi-book-scraping.actions';
 import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 import { loadReadingLists } from '@app/lists/actions/reading-lists.actions';
 import {
@@ -221,7 +221,7 @@ export class ComicListViewComponent implements OnInit, AfterViewInit {
       )
       .subscribe();
     this.store
-      .select(selectComicBookSelectionBusy)
+      .select(selectComicSelectionBusy)
       .pipe(tap(busy => this.selectionBusy$.next(busy)))
       .subscribe();
     this.store
@@ -352,12 +352,12 @@ export class ComicListViewComponent implements OnInit, AfterViewInit {
     if (selected) {
       this.logger.debug('Adding comic book selection:', entry.item);
       this.store.dispatch(
-        addSingleComicBookSelection({ comicId: entry.item.comicId })
+        addSingleComicSelection({ comicId: entry.item.comicId })
       );
     } else {
       this.logger.debug('Removing comic book selection:', entry.item);
       this.store.dispatch(
-        removeSingleComicBookSelection({
+        removeSingleComicSelection({
           comicId: entry.item.comicId
         })
       );
@@ -374,7 +374,7 @@ export class ComicListViewComponent implements OnInit, AfterViewInit {
     return !!comic && this.comicsRead.includes(comic.comicId);
   }
 
-  onConvertSingleComicBook(archiveTypeString: string): void {
+  onConvertSingleComic(archiveTypeString: string): void {
     this.confirmationService.confirm({
       title: this.translateService.instant(
         'library.convert-single-comic-book.confirmation-title'
@@ -390,7 +390,7 @@ export class ComicListViewComponent implements OnInit, AfterViewInit {
           archiveTypeString
         );
         this.store.dispatch(
-          convertSingleComicBook({
+          convertSingleComic({
             id: this.selectedComic$.value.comicId,
             archiveType: archiveTypeFromString(archiveTypeString)
           })
@@ -422,7 +422,7 @@ export class ComicListViewComponent implements OnInit, AfterViewInit {
           archiveTypeString
         );
         this.store.dispatch(
-          convertSelectedComicBooks({
+          convertSelectedComics({
             archiveType: archiveTypeFromString(archiveTypeString)
           })
         );
@@ -432,17 +432,17 @@ export class ComicListViewComponent implements OnInit, AfterViewInit {
 
   onAddOneToReadingList(list: ReadingList): void {
     this.logger.debug('Adding selected comic books to reading list:', list);
-    this.store.dispatch(addSelectedComicBooksToReadingList({ list }));
+    this.store.dispatch(addSelectedComicsToReadingList({ list }));
   }
 
   onAddSelectedToReadingList(list: ReadingList): void {
     this.logger.debug('Adding comics to reading list:', list);
-    this.store.dispatch(addSelectedComicBooksToReadingList({ list }));
+    this.store.dispatch(addSelectedComicsToReadingList({ list }));
   }
 
   onMarkOneAsRead(read: boolean): void {
     this.store.dispatch(
-      markSingleComicBookRead({
+      markSingleComicRead({
         comicId: this.selectedComic$.value.comicId,
         read
       })
@@ -450,14 +450,14 @@ export class ComicListViewComponent implements OnInit, AfterViewInit {
   }
 
   onMarkSelectedAsRead(read: boolean): void {
-    this.store.dispatch(markSelectedComicBooksRead({ read }));
+    this.store.dispatch(markSelectedComicsRead({ read }));
   }
 
   onMarkSelectedAsDeleted(deleted: boolean): void {
     if (deleted) {
-      this.store.dispatch(deleteSelectedComicBooks());
+      this.store.dispatch(deleteSelectedComics());
     } else {
-      this.store.dispatch(undeleteSelectedComicBooks());
+      this.store.dispatch(undeleteSelectedComics());
     }
   }
 
@@ -468,13 +468,13 @@ export class ComicListViewComponent implements OnInit, AfterViewInit {
   onMarkOneAsDeleted(deleted: boolean): void {
     if (deleted) {
       this.store.dispatch(
-        deleteSingleComicBook({
+        deleteSingleComic({
           comicId: this.selectedComic$.value.comicId
         })
       );
     } else {
       this.store.dispatch(
-        undeleteSingleComicBook({
+        undeleteSingleComic({
           comicId: this.selectedComic$.value.comicId
         })
       );
@@ -510,7 +510,7 @@ export class ComicListViewComponent implements OnInit, AfterViewInit {
     });
   }
 
-  onOrganizeSelectedComicBooks() {
+  onOrganizeSelectedComics() {
     this.confirmationService.confirm({
       title: this.translateService.instant(
         'library.organization.confirmation-title',
@@ -531,7 +531,7 @@ export class ComicListViewComponent implements OnInit, AfterViewInit {
     this.showComicFilterPopup$.next(true);
   }
 
-  onUpdateSingleComicBookMetadata(comic: DisplayableComic): void {
+  onUpdateSingleComicMetadata(comic: DisplayableComic): void {
     this.confirmationService.confirm({
       title: this.translateService.instant(
         'library.update-metadata.confirmation-title'
@@ -543,13 +543,13 @@ export class ComicListViewComponent implements OnInit, AfterViewInit {
       confirm: () => {
         this.logger.debug('Updating metadata for a single comic book:', comic);
         this.store.dispatch(
-          updateSingleComicBookMetadata({ comicId: comic.comicId })
+          updateSingleComicMetadata({ comicId: comic.comicId })
         );
       }
     });
   }
 
-  onUpdateSelectedComicBooksMetadata(): void {
+  onUpdateSelectedComicsMetadata(): void {
     this.confirmationService.confirm({
       title: this.translateService.instant(
         'library.update-metadata.confirmation-title'
@@ -560,7 +560,7 @@ export class ComicListViewComponent implements OnInit, AfterViewInit {
       ),
       confirm: () => {
         this.logger.debug('Updating metadata for selected comic books');
-        this.store.dispatch(updateSelectedComicBooksMetadata());
+        this.store.dispatch(updateSelectedComicsMetadata());
       }
     });
   }
@@ -591,12 +591,12 @@ export class ComicListViewComponent implements OnInit, AfterViewInit {
       ),
       confirm: () => {
         this.logger.debug('Starting batch scraping comics');
-        this.store.dispatch(batchScrapeComicBooks());
+        this.store.dispatch(batchScrapeComics());
       }
     });
   }
 
-  onRescanSingleComicBook(comic: DisplayableComic): void {
+  onRescanSingleComic(comic: DisplayableComic): void {
     this.confirmationService.confirm({
       title: this.translateService.instant(
         'library.rescan-comics.confirmation-title'
@@ -607,12 +607,12 @@ export class ComicListViewComponent implements OnInit, AfterViewInit {
       ),
       confirm: () => {
         this.logger.debug('Rescanning a single comic book:', comic);
-        this.store.dispatch(rescanSingleComicBook({ comicId: comic.comicId }));
+        this.store.dispatch(rescanSingleComic({ comicId: comic.comicId }));
       }
     });
   }
 
-  onRescanSelectedComicBooks(): void {
+  onRescanSelectedComics(): void {
     this.confirmationService.confirm({
       title: this.translateService.instant(
         'library.rescan-comics.confirmation-title'
@@ -623,12 +623,12 @@ export class ComicListViewComponent implements OnInit, AfterViewInit {
       ),
       confirm: () => {
         this.logger.debug('Rescanning selected comic books');
-        this.store.dispatch(rescanSelectedComicBooks());
+        this.store.dispatch(rescanSelectedComics());
       }
     });
   }
 
-  onRunLibraryPluginSingleOnComicBook(
+  onRunLibraryPluginSingleOnComic(
     plugin: LibraryPlugin,
     comic: DisplayableComic
   ): void {
@@ -648,7 +648,7 @@ export class ComicListViewComponent implements OnInit, AfterViewInit {
           comic.comicId
         );
         this.store.dispatch(
-          runLibraryPluginOnOneComicBook({
+          runLibraryPluginOnOneComic({
             plugin,
             comicId: comic.comicId
           })
@@ -657,7 +657,7 @@ export class ComicListViewComponent implements OnInit, AfterViewInit {
     });
   }
 
-  onRunLibraryPluginOnSelectedComicBooks(plugin: LibraryPlugin): void {
+  onRunLibraryPluginOnSelectedComics(plugin: LibraryPlugin): void {
     this.confirmationService.confirm({
       title: this.translateService.instant(
         'library.run-library-plugin.confirmation-title',
@@ -670,7 +670,7 @@ export class ComicListViewComponent implements OnInit, AfterViewInit {
       confirm: () => {
         this.logger.debug('Running plugin on selected comic books:', plugin);
         this.store.dispatch(
-          runLibraryPluginOnSelectedComicBooks({
+          runLibraryPluginOnSelectedComics({
             plugin
           })
         );

@@ -35,22 +35,22 @@ import org.comixedproject.views.View;
 @AllArgsConstructor
 public class ComicDataSet {
   @JsonProperty("detail")
-  @JsonView(View.ComicDetailsView.class)
+  @JsonView(View.ComicView.class)
   @Getter
   private DisplayableComic comic;
 
   @JsonProperty("pages")
-  @JsonView(View.ComicDetailsView.class)
+  @JsonView(View.ComicView.class)
   @Getter
   private List<ComicPage> pages;
 
   @JsonProperty("metadata")
-  @JsonView(View.ComicDetailsView.class)
+  @JsonView(View.ComicView.class)
   @Getter
   private ComicMetadataSource metadata;
 
   @JsonProperty("tags")
-  @JsonView(View.ComicDetailsView.class)
+  @JsonView(View.ComicView.class)
   @Getter
   private List<ComicTag> tags;
 }

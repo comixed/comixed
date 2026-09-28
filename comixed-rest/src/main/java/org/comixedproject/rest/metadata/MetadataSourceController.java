@@ -50,7 +50,7 @@ public class MetadataSourceController {
   @GetMapping(value = "/api/metadata/sources", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @Timed(value = "comixed.metadata-source.get-all")
-  @JsonView(View.MetadataSourceList.class)
+  @JsonView(View.MetadataSourceListView.class)
   public List<MetadataSource> loadMetadataSources() {
     log.info("Loading metadata source list");
     return this.metadataSourceService.loadMetadataSources();
@@ -69,7 +69,7 @@ public class MetadataSourceController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @Timed(value = "comixed.metadata-source.create")
-  @JsonView(View.MetadataSourceDetail.class)
+  @JsonView(View.MetadataSourceView.class)
   public MetadataSource create(@RequestBody() final UpdateMetadataSourceRequest request)
       throws MetadataSourceException {
     log.info("Saving new metadata source: {}", request.getSourceName());
@@ -87,7 +87,7 @@ public class MetadataSourceController {
   @GetMapping(value = "/api/metadata/sources/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @Timed(value = "comixed.metadata-source.get-one")
-  @JsonView(View.MetadataSourceDetail.class)
+  @JsonView(View.MetadataSourceView.class)
   public MetadataSource getOne(@PathVariable("id") final Long id) throws MetadataSourceException {
     log.info("Getting metadata source: id={}", id);
     return this.metadataSourceService.getById(id);
@@ -107,7 +107,7 @@ public class MetadataSourceController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @Timed(value = "comixed.metadata-source.update")
-  @JsonView(View.MetadataSourceDetail.class)
+  @JsonView(View.MetadataSourceView.class)
   public MetadataSource update(
       @PathVariable("sourceId") final Long sourceId,
       @RequestBody() final UpdateMetadataSourceRequest request)
@@ -127,7 +127,7 @@ public class MetadataSourceController {
   @DeleteMapping(value = "/api/metadata/sources/{id}")
   @PreAuthorize("hasRole('ADMIN')")
   @Timed(value = "comixed.metadata-source.delete")
-  @JsonView(View.MetadataSourceList.class)
+  @JsonView(View.MetadataSourceListView.class)
   public List<MetadataSource> delete(@PathVariable("id") final Long id)
       throws MetadataSourceException {
     log.info("Deleting metadata source: id={}", id);

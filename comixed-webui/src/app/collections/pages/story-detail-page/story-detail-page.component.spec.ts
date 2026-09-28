@@ -33,7 +33,7 @@ import {
 } from '@app/library/reducers/library.reducer';
 import {
   COMIC_SELECTION_FEATURE_KEY,
-  initialState as initialComicBookSelectionState
+  initialState as initialComicSelectionState
 } from '@app/comic-books/reducers/comic-selection.reducer';
 import {
   COMIC_LIST_FEATURE_KEY,
@@ -87,12 +87,12 @@ import {
   QUERY_PARAM_SORT_DIRECTION
 } from '@app/core';
 import { loadComicsForCollection } from '@app/comic-books/actions/comic-list.actions';
-import { setMultipleComicBooksByTagTypeAndValueSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
+import { setMultipleComicsByTagTypeAndValueSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
 import { StoryScrapingComponent } from '@app/collections/components/story-scraping/story-scraping.component';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { SCRAPE_STORY_PARAMETER } from '@app/collections/collections.constants';
 import {
-  initialState as initialReadComicBooksState,
+  initialState as initialReadComicsState,
   READ_COMICS_FEATURE_KEY
 } from '@app/user/reducers/read-comics.reducer';
 
@@ -111,8 +111,8 @@ describe('StoryDetailPageComponent', () => {
   const USER = USER_READER;
   const initialState = {
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
-    [COMIC_SELECTION_FEATURE_KEY]: initialComicBookSelectionState,
-    [READ_COMICS_FEATURE_KEY]: initialReadComicBooksState,
+    [COMIC_SELECTION_FEATURE_KEY]: initialComicSelectionState,
+    [READ_COMICS_FEATURE_KEY]: initialReadComicsState,
     [COMIC_LIST_FEATURE_KEY]: {
       ...initialComicListState,
       comics: COMIC_LIST
@@ -269,7 +269,7 @@ describe('StoryDetailPageComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        setMultipleComicBooksByTagTypeAndValueSelectionState({
+        setMultipleComicsByTagTypeAndValueSelectionState({
           selected: SELECT,
           tagType: TAG_TYPE,
           tagValue: STORY_NAME

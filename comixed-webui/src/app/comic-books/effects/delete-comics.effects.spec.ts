@@ -26,12 +26,12 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import {
-  deleteComicBooksFailure,
-  deleteComicBooksSuccess,
-  deleteSelectedComicBooks,
-  deleteSingleComicBook,
-  undeleteSelectedComicBooks,
-  undeleteSingleComicBook
+  deleteComicsFailure,
+  deleteComicsSuccess,
+  deleteSelectedComics,
+  deleteSingleComic,
+  undeleteSelectedComics,
+  undeleteSingleComic
 } from '@app/comic-books/actions/delete-comic-books.actions';
 import { hot } from 'jasmine-marbles';
 import { DeleteComicsEffects } from '@app/comic-books/effects/delete-comics.effects';
@@ -57,17 +57,17 @@ describe('DeleteComicsEffects', () => {
         {
           provide: ComicService,
           useValue: {
-            deleteSingleComicBook: jasmine.createSpy(
-              'ComicService.deleteSingleComicBook()'
+            deleteSingleComic: jasmine.createSpy(
+              'ComicService.deleteSingleComic()'
             ),
-            undeleteSingleComicBook: jasmine.createSpy(
-              'ComicService.undeleteSingleComicBook()'
+            undeleteSingleComic: jasmine.createSpy(
+              'ComicService.undeleteSingleComic()'
             ),
-            deleteSelectedComicBooks: jasmine.createSpy(
-              'ComicService.deleteSelectedComicBooks()'
+            deleteSelectedComics: jasmine.createSpy(
+              'ComicService.deleteSelectedComics()'
             ),
-            undeleteSelectedComicBooks: jasmine.createSpy(
-              'ComicService.undeleteSelectedComicBooks()'
+            undeleteSelectedComics: jasmine.createSpy(
+              'ComicService.undeleteSelectedComics()'
             )
           }
         },
@@ -89,47 +89,47 @@ describe('DeleteComicsEffects', () => {
   describe('deleting a single comic book', () => {
     it('fires an action on success', () => {
       const serviceResponse = new HttpResponse({ status: 200 });
-      const action = deleteSingleComicBook({
+      const action = deleteSingleComic({
         comicId: COMIC_ID
       });
-      const outcome = deleteComicBooksSuccess();
+      const outcome = deleteComicsSuccess();
 
       actions$ = hot('-a', { a: action });
-      comicService.deleteSingleComicBook.and.returnValue(of(serviceResponse));
+      comicService.deleteSingleComic.and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.deleteSingleComicBook$).toBeObservable(expected);
+      expect(effects.deleteSingleComic$).toBeObservable(expected);
       expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = deleteSingleComicBook({
+      const action = deleteSingleComic({
         comicId: COMIC_ID
       });
-      const outcome = deleteComicBooksFailure();
+      const outcome = deleteComicsFailure();
 
       actions$ = hot('-a', { a: action });
-      comicService.deleteSingleComicBook.and.returnValue(
+      comicService.deleteSingleComic.and.returnValue(
         throwError(serviceResponse)
       );
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.deleteSingleComicBook$).toBeObservable(expected);
+      expect(effects.deleteSingleComic$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on general failure', () => {
-      const action = deleteSingleComicBook({
+      const action = deleteSingleComic({
         comicId: COMIC_ID
       });
-      const outcome = deleteComicBooksFailure();
+      const outcome = deleteComicsFailure();
 
       actions$ = hot('-a', { a: action });
-      comicService.deleteSingleComicBook.and.throwError('expected');
+      comicService.deleteSingleComic.and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
-      expect(effects.deleteSingleComicBook$).toBeObservable(expected);
+      expect(effects.deleteSingleComic$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });
@@ -137,51 +137,51 @@ describe('DeleteComicsEffects', () => {
   describe('undeleting a single comic book', () => {
     it('fires an action on success', () => {
       const serviceResponse = new HttpResponse({ status: 200 });
-      const action = undeleteSingleComicBook({
+      const action = undeleteSingleComic({
         comicId: COMIC_ID
       });
-      const outcome = deleteComicBooksSuccess();
+      const outcome = deleteComicsSuccess();
 
       actions$ = hot('-a', { a: action });
-      comicService.undeleteSingleComicBook
+      comicService.undeleteSingleComic
         .withArgs({ comicId: COMIC_ID })
         .and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.undeleteSingleComicBook$).toBeObservable(expected);
+      expect(effects.undeleteSingleComic$).toBeObservable(expected);
       expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = undeleteSingleComicBook({
+      const action = undeleteSingleComic({
         comicId: COMIC_ID
       });
-      const outcome = deleteComicBooksFailure();
+      const outcome = deleteComicsFailure();
 
       actions$ = hot('-a', { a: action });
-      comicService.undeleteSingleComicBook
+      comicService.undeleteSingleComic
         .withArgs({ comicId: COMIC_ID })
         .and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.undeleteSingleComicBook$).toBeObservable(expected);
+      expect(effects.undeleteSingleComic$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on general failure', () => {
-      const action = undeleteSingleComicBook({
+      const action = undeleteSingleComic({
         comicId: COMIC_ID
       });
-      const outcome = deleteComicBooksFailure();
+      const outcome = deleteComicsFailure();
 
       actions$ = hot('-a', { a: action });
-      comicService.undeleteSingleComicBook
+      comicService.undeleteSingleComic
         .withArgs({ comicId: COMIC_ID })
         .and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
-      expect(effects.undeleteSingleComicBook$).toBeObservable(expected);
+      expect(effects.undeleteSingleComic$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });
@@ -189,45 +189,43 @@ describe('DeleteComicsEffects', () => {
   describe('deleting the selected comic books', () => {
     it('fires an action on success', () => {
       const serviceResponse = new HttpResponse({ status: 200 });
-      const action = deleteSelectedComicBooks();
-      const outcome = deleteComicBooksSuccess();
+      const action = deleteSelectedComics();
+      const outcome = deleteComicsSuccess();
 
       actions$ = hot('-a', { a: action });
-      comicService.deleteSelectedComicBooks
+      comicService.deleteSelectedComics
         .withArgs()
         .and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.deleteSelectedComicBooks$).toBeObservable(expected);
+      expect(effects.deleteSelectedComics$).toBeObservable(expected);
       expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = deleteSelectedComicBooks();
-      const outcome = deleteComicBooksFailure();
+      const action = deleteSelectedComics();
+      const outcome = deleteComicsFailure();
 
       actions$ = hot('-a', { a: action });
-      comicService.deleteSelectedComicBooks
+      comicService.deleteSelectedComics
         .withArgs()
         .and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.deleteSelectedComicBooks$).toBeObservable(expected);
+      expect(effects.deleteSelectedComics$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on general failure', () => {
-      const action = deleteSelectedComicBooks();
-      const outcome = deleteComicBooksFailure();
+      const action = deleteSelectedComics();
+      const outcome = deleteComicsFailure();
 
       actions$ = hot('-a', { a: action });
-      comicService.deleteSelectedComicBooks
-        .withArgs()
-        .and.throwError('expected');
+      comicService.deleteSelectedComics.withArgs().and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
-      expect(effects.deleteSelectedComicBooks$).toBeObservable(expected);
+      expect(effects.deleteSelectedComics$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });
@@ -235,45 +233,43 @@ describe('DeleteComicsEffects', () => {
   describe('undeleting the selected comic books', () => {
     it('fires an action on success', () => {
       const serviceResponse = new HttpResponse({ status: 200 });
-      const action = undeleteSelectedComicBooks();
-      const outcome = deleteComicBooksSuccess();
+      const action = undeleteSelectedComics();
+      const outcome = deleteComicsSuccess();
 
       actions$ = hot('-a', { a: action });
-      comicService.undeleteSelectedComicBooks
+      comicService.undeleteSelectedComics
         .withArgs()
         .and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.undeleteSelectedComicBooks$).toBeObservable(expected);
+      expect(effects.undeleteSelectedComics$).toBeObservable(expected);
       expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = undeleteSelectedComicBooks();
-      const outcome = deleteComicBooksFailure();
+      const action = undeleteSelectedComics();
+      const outcome = deleteComicsFailure();
 
       actions$ = hot('-a', { a: action });
-      comicService.undeleteSelectedComicBooks
+      comicService.undeleteSelectedComics
         .withArgs()
         .and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.undeleteSelectedComicBooks$).toBeObservable(expected);
+      expect(effects.undeleteSelectedComics$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on general failure', () => {
-      const action = undeleteSelectedComicBooks();
-      const outcome = deleteComicBooksFailure();
+      const action = undeleteSelectedComics();
+      const outcome = deleteComicsFailure();
 
       actions$ = hot('-a', { a: action });
-      comicService.undeleteSelectedComicBooks
-        .withArgs()
-        .and.throwError('expected');
+      comicService.undeleteSelectedComics.withArgs().and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
-      expect(effects.undeleteSelectedComicBooks$).toBeObservable(expected);
+      expect(effects.undeleteSelectedComics$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });

@@ -261,7 +261,7 @@ class DirectoryReaderServiceTest {
 
   @Test
   void getAllComicsForPublisherAndSeriesAndVolume() {
-    when(comicService.getAllComicBooksForPublisherAndSeriesAndVolume(
+    when(comicService.getAllComicsForPublisherAndSeriesAndVolume(
             anyString(), anyString(), anyString(), anyString(), anyBoolean()))
         .thenReturn(comicList);
 
@@ -272,13 +272,13 @@ class DirectoryReaderServiceTest {
     assertNotNull(result);
 
     verify(comicService)
-        .getAllComicBooksForPublisherAndSeriesAndVolume(
+        .getAllComicsForPublisherAndSeriesAndVolume(
             TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME, TEST_EMAIL, false);
   }
 
   @Test
   void getAllComicsForPublisherAndSeriesAndVolume_unread() {
-    when(comicService.getAllComicBooksForPublisherAndSeriesAndVolume(
+    when(comicService.getAllComicsForPublisherAndSeriesAndVolume(
             anyString(), anyString(), anyString(), anyString(), anyBoolean()))
         .thenReturn(comicList);
 
@@ -289,7 +289,7 @@ class DirectoryReaderServiceTest {
     assertNotNull(result);
 
     verify(comicService)
-        .getAllComicBooksForPublisherAndSeriesAndVolume(
+        .getAllComicsForPublisherAndSeriesAndVolume(
             TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME, TEST_EMAIL, true);
   }
 

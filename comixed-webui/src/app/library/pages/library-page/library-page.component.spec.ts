@@ -69,11 +69,11 @@ import { ComicType } from '@app/comic-books/models/comic-type';
 import { ComicState } from '@app/comic-books/models/comic-state';
 import {
   COMIC_SELECTION_FEATURE_KEY,
-  initialState as initialComicBooksSelectionState
+  initialState as initialComicsSelectionState
 } from '@app/comic-books/reducers/comic-selection.reducer';
 import {
-  setComicBookSelectionByUnreadState,
-  setMultipleComicBookByFilterSelectionState
+  setComicSelectionByUnreadState,
+  setMultipleComicByFilterSelectionState
 } from '@app/comic-books/actions/comic-book-selection.actions';
 import {
   initialState as initialLibraryPluginState,
@@ -82,7 +82,7 @@ import {
 import { PAGE_SIZE_DEFAULT, QUERY_PARAM_UNREAD_ONLY } from '@app/core';
 import { PREFERENCE_PAGE_SIZE } from '@app/comic-files/comic-file.constants';
 import {
-  initialState as initialReadComicBooksState,
+  initialState as initialReadComicsState,
   READ_COMICS_FEATURE_KEY
 } from '@app/user/reducers/read-comics.reducer';
 import {
@@ -104,11 +104,11 @@ describe('LibraryPageComponent', () => {
   const initialState = {
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER },
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
-    [COMIC_SELECTION_FEATURE_KEY]: initialComicBooksSelectionState,
+    [COMIC_SELECTION_FEATURE_KEY]: initialComicsSelectionState,
     [COMIC_LIST_FEATURE_KEY]: initialComicListState,
     [READING_LISTS_FEATURE_KEY]: initialReadingListsState,
     [LIBRARY_PLUGIN_FEATURE_KEY]: initialLibraryPluginState,
-    [READ_COMICS_FEATURE_KEY]: initialReadComicBooksState
+    [READ_COMICS_FEATURE_KEY]: initialReadComicsState
   };
 
   let component: LibraryPageComponent;
@@ -530,7 +530,7 @@ describe('LibraryPageComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          setComicBookSelectionByUnreadState({
+          setComicSelectionByUnreadState({
             selected: SELECTED,
             unreadOnly: false
           })
@@ -547,7 +547,7 @@ describe('LibraryPageComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          setComicBookSelectionByUnreadState({
+          setComicSelectionByUnreadState({
             selected: SELECTED,
             unreadOnly: true
           })
@@ -562,7 +562,7 @@ describe('LibraryPageComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          setMultipleComicBookByFilterSelectionState({
+          setMultipleComicByFilterSelectionState({
             coverYear: null,
             coverMonth: null,
             archiveType: null,

@@ -41,7 +41,7 @@ import {
   MAXIMUM_SCRAPING_RECORDS_PREFERENCE,
   SKIP_CACHE_PREFERENCE
 } from '@app/library/library.constants';
-import { updateComicBook } from '@app/comic-books/actions/comic-book.actions';
+import { updateComic } from '@app/comic-books/actions/comic-book.actions';
 import { BehaviorSubject } from 'rxjs';
 import {
   resetScrapedMetadata,
@@ -54,7 +54,7 @@ import {
 } from '@app/comic-files/selectors/scrape-metadata.selectors';
 import { tap } from 'rxjs/operators';
 import {
-  scrapeSingleComicBook,
+  scrapeSingleComic,
   setAutoSelectExactMatch,
   setChosenMetadataSource,
   setConfirmBeforeScraping
@@ -344,7 +344,7 @@ export class ComicScrapingComponent implements OnInit {
       confirm: () => {
         this.logger.debug('Saving changes to comic:', this.comic.comicId);
         this.store.dispatch(
-          updateComicBook({
+          updateComic({
             comicId: this.comic.comicId,
             publisher: this.comicForm.controls.publisher.value,
             series: this.comicForm.controls.series.value,
@@ -389,7 +389,7 @@ export class ComicScrapingComponent implements OnInit {
       ),
       confirm: () => {
         this.store.dispatch(
-          scrapeSingleComicBook({
+          scrapeSingleComic({
             comic: this.comic,
             metadataSource: this.metadataSource,
             issueId: referenceId,

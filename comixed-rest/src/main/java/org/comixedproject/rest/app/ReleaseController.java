@@ -49,7 +49,7 @@ public class ReleaseController {
    */
   @GetMapping(value = "/api/app/release/current", produces = MediaType.APPLICATION_JSON_VALUE)
   @Timed(value = "comixed.release.get-current")
-  @JsonView(View.ReleaseDetails.class)
+  @JsonView(View.ReleaseDetailsView.class)
   public BuildDetails getCurrentRelease() throws ParseException {
     log.info("Getting current release details");
     return this.releaseService.getCurrentReleaseDetails();
@@ -62,7 +62,7 @@ public class ReleaseController {
    */
   @GetMapping(value = "/api/app/release/latest", produces = MediaType.APPLICATION_JSON_VALUE)
   @Timed(value = "comixed.release.get-latest")
-  @JsonView(View.ReleaseDetails.class)
+  @JsonView(View.ReleaseDetailsView.class)
   public LatestReleaseDetails getLatestRelease() {
     log.info("Getting latest release details");
     return this.releaseService.getLatestReleaseDetails();

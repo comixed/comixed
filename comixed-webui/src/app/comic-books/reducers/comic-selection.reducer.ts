@@ -18,26 +18,26 @@
 
 import { createFeature, createReducer, on } from '@ngrx/store';
 import {
-  addSingleComicBookSelection,
-  clearComicBookSelectionState,
-  clearComicBookSelectionStateFailed,
+  addSingleComicSelection,
+  clearComicSelectionState,
+  clearComicSelectionStateFailed,
   comicSelectionsLoaded,
   comicSelectionStateCleared,
   comicSelectionUpdate,
-  loadComicBookSelections,
-  loadComicBookSelectionsFailed,
-  removeSingleComicBookSelection,
-  setComicBookSelectionByUnreadState,
-  setDuplicateComicBooksSelectionState,
-  setMultipleComicBookByFilterSelectionState,
-  setMultipleComicBookByIdSelectionState,
-  setMultipleComicBookByPublisherSelectionState,
-  setMultipleComicBookByPublisherSeriesAndVolumeSelectionState,
-  setMultipleComicBooksByTagTypeAndValueSelectionState,
-  setMultipleComicBookSelectionStateFailure,
-  setMultipleComicBookSelectionStateSuccess,
-  singleComicBookSelectionFailed,
-  singleComicBookSelectionUpdated
+  loadComicSelections,
+  loadComicSelectionsFailed,
+  removeSingleComicSelection,
+  setComicSelectionByUnreadState,
+  setDuplicateComicsSelectionState,
+  setMultipleComicByFilterSelectionState,
+  setMultipleComicByIdSelectionState,
+  setMultipleComicByPublisherSelectionState,
+  setMultipleComicByPublisherSeriesAndVolumeSelectionState,
+  setMultipleComicsByTagTypeAndValueSelectionState,
+  setMultipleComicSelectionStateFailure,
+  setMultipleComicSelectionStateSuccess,
+  singleComicSelectionFailed,
+  singleComicSelectionUpdated
 } from '../actions/comic-book-selection.actions';
 
 export const COMIC_SELECTION_FEATURE_KEY = 'comic_book_selection_state';
@@ -54,7 +54,7 @@ export const initialState: ComicSelectionState = {
 
 export const reducer = createReducer(
   initialState,
-  on(loadComicBookSelections, state => ({
+  on(loadComicSelections, state => ({
     ...state,
     busy: true
   })),
@@ -63,66 +63,66 @@ export const reducer = createReducer(
     busy: false,
     ids: action.ids
   })),
-  on(loadComicBookSelectionsFailed, state => ({ ...state, busy: false })),
+  on(loadComicSelectionsFailed, state => ({ ...state, busy: false })),
   on(comicSelectionUpdate, (state, action) => ({
     ...state,
     ids: action.ids
   })),
-  on(clearComicBookSelectionState, state => ({ ...state, busy: true })),
+  on(clearComicSelectionState, state => ({ ...state, busy: true })),
   on(comicSelectionStateCleared, state => ({
     ...state,
     busy: false
   })),
-  on(clearComicBookSelectionStateFailed, state => ({
+  on(clearComicSelectionStateFailed, state => ({
     ...state,
     busy: false
   })),
-  on(addSingleComicBookSelection, state => ({
+  on(addSingleComicSelection, state => ({
     ...state,
     busy: true
   })),
-  on(removeSingleComicBookSelection, state => ({
+  on(removeSingleComicSelection, state => ({
     ...state,
     busy: true
   })),
-  on(singleComicBookSelectionUpdated, state => ({
+  on(singleComicSelectionUpdated, state => ({
     ...state,
     busy: false
   })),
-  on(singleComicBookSelectionFailed, state => ({
+  on(singleComicSelectionFailed, state => ({
     ...state,
     busy: false
   })),
-  on(setMultipleComicBookByFilterSelectionState, state => ({
+  on(setMultipleComicByFilterSelectionState, state => ({
     ...state,
     busy: true
   })),
-  on(setMultipleComicBooksByTagTypeAndValueSelectionState, state => ({
+  on(setMultipleComicsByTagTypeAndValueSelectionState, state => ({
     ...state,
     busy: true
   })),
-  on(setMultipleComicBookByIdSelectionState, state => ({
+  on(setMultipleComicByIdSelectionState, state => ({
     ...state,
     busy: true
   })),
-  on(setMultipleComicBookByPublisherSelectionState, state => ({
+  on(setMultipleComicByPublisherSelectionState, state => ({
     ...state,
     busy: true
   })),
-  on(setMultipleComicBookByPublisherSeriesAndVolumeSelectionState, state => ({
+  on(setMultipleComicByPublisherSeriesAndVolumeSelectionState, state => ({
     ...state,
     busy: true
   })),
-  on(setDuplicateComicBooksSelectionState, state => ({ ...state, busy: true })),
-  on(setMultipleComicBookSelectionStateSuccess, state => ({
+  on(setDuplicateComicsSelectionState, state => ({ ...state, busy: true })),
+  on(setMultipleComicSelectionStateSuccess, state => ({
     ...state,
     busy: false
   })),
-  on(setMultipleComicBookSelectionStateFailure, state => ({
+  on(setMultipleComicSelectionStateFailure, state => ({
     ...state,
     busy: false
   })),
-  on(setComicBookSelectionByUnreadState, state => ({
+  on(setComicSelectionByUnreadState, state => ({
     ...state,
     busy: true
   }))

@@ -37,8 +37,8 @@ import { selectFeatureList } from '@app/admin/selectors/feature-enabled.selector
 import { BLOCKED_PAGES_ENABLED } from '@app/admin/admin.constants';
 import { getFeatureEnabled } from '@app/admin/actions/feature-enabled.actions';
 import { hasFeature, isFeatureEnabled } from '@app/admin';
-import { selectReadComicBooksList } from '@app/user/selectors/read-comic-books.selectors';
-import { selectComicBookSelectionCount } from '@app/comic-books/selectors/comic-book-selection.selectors';
+import { selectReadComicsList } from '@app/user/selectors/read-comic-books.selectors';
+import { selectComicSelectionCount } from '@app/comic-books/selectors/comic-book-selection.selectors';
 import { MatButton } from '@angular/material/button';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { MatIcon } from '@angular/material/icon';
@@ -70,14 +70,14 @@ export class SideNavigationComponent {
   comicsCollapsed$ = new BehaviorSubject(false);
   collectionCollapsed$ = new BehaviorSubject(false);
   readingListsCollapsed$ = new BehaviorSubject(false);
-  totalComicBooks$ = new BehaviorSubject<number>(0);
-  selectedComicBooks$ = new BehaviorSubject<number>(0);
-  unprocessedComicBooks$ = new BehaviorSubject<number>(0);
-  readComicBooks$ = new BehaviorSubject<number>(0);
-  unscrapedComicBooks$ = new BehaviorSubject<number>(0);
-  changedComicBooks$ = new BehaviorSubject<number>(0);
-  deletedComicBooks$ = new BehaviorSubject<number>(0);
-  duplicateComicBooks$ = new BehaviorSubject<number>(0);
+  totalComics$ = new BehaviorSubject<number>(0);
+  selectedComics$ = new BehaviorSubject<number>(0);
+  unprocessedComics$ = new BehaviorSubject<number>(0);
+  readComics$ = new BehaviorSubject<number>(0);
+  unscrapedComics$ = new BehaviorSubject<number>(0);
+  changedComics$ = new BehaviorSubject<number>(0);
+  deletedComics$ = new BehaviorSubject<number>(0);
+  duplicateComics$ = new BehaviorSubject<number>(0);
   readingLists: ReadingList[] = [];
 
   logger = inject(LoggerService);
@@ -103,37 +103,33 @@ export class SideNavigationComponent {
       .subscribe();
     this.store
       .select(selectLibraryTotalComicCount)
-      .pipe(tap(totalComics => this.totalComicBooks$.next(totalComics)))
+      .pipe(tap(totalComics => this.totalComics$.next(totalComics)))
       .subscribe();
     this.store
       .select(selectLibraryUnprocessedComicCount)
       .pipe(
-        tap(unprocessedCount =>
-          this.unprocessedComicBooks$.next(unprocessedCount)
-        )
+        tap(unprocessedCount => this.unprocessedComics$.next(unprocessedCount))
       )
       .subscribe();
     this.store
       .select(selectLibraryUnscrapedComicCount)
-      .pipe(
-        tap(unscrapedCount => this.unscrapedComicBooks$.next(unscrapedCount))
-      )
+      .pipe(tap(unscrapedCount => this.unscrapedComics$.next(unscrapedCount)))
       .subscribe();
     this.store
       .select(selectLibraryChangedComicCount)
-      .pipe(tap(changedCount => this.changedComicBooks$.next(changedCount)))
+      .pipe(tap(changedCount => this.changedComics$.next(changedCount)))
       .subscribe();
     this.store
       .select(selectLibraryDeletedComicCount)
-      .pipe(tap(deletedCount => this.deletedComicBooks$.next(deletedCount)))
+      .pipe(tap(deletedCount => this.deletedComics$.next(deletedCount)))
       .subscribe();
     this.store
-      .select(selectReadComicBooksList)
-      .pipe(tap(comicsRead => this.readComicBooks$.next(comicsRead.length)))
+      .select(selectReadComicsList)
+      .pipe(tap(comicsRead => this.readComics$.next(comicsRead.length)))
       .subscribe();
     this.store
-      .select(selectComicBookSelectionCount)
-      .pipe(tap(selectedCount => this.selectedComicBooks$.next(selectedCount)))
+      .select(selectComicSelectionCount)
+      .pipe(tap(selectedCount => this.selectedComics$.next(selectedCount)))
       .subscribe();
     this.store
       .select(selectUserReadingLists)

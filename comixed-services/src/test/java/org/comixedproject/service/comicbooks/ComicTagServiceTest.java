@@ -41,14 +41,14 @@ class ComicTagServiceTest {
   private List<ComicTag> comicTagList = new ArrayList<>();
 
   @Test
-  void getTagsForComicBook() {
-    Mockito.when(comicTagRepository.getForComicBook(Mockito.anyLong())).thenReturn(comicTagList);
+  void getTagsForComic() {
+    Mockito.when(comicTagRepository.getForComic(Mockito.anyLong())).thenReturn(comicTagList);
 
-    final List<ComicTag> result = service.getTagsForComicBook(TEST_COMIC_ID);
+    final List<ComicTag> result = service.getTagsForComic(TEST_COMIC_ID);
 
     assertNotNull(result);
     assertSame(comicTagList, result);
 
-    Mockito.verify(comicTagRepository, Mockito.times(1)).getForComicBook(TEST_COMIC_ID);
+    Mockito.verify(comicTagRepository, Mockito.times(1)).getForComic(TEST_COMIC_ID);
   }
 }

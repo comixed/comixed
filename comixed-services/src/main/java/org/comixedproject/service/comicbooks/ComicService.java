@@ -92,14 +92,14 @@ public class ComicService {
 
     final var result = this.comicRepository.getReferenceById(id);
     result.setNextIssueId(
-        this.comicRepository.findNextComicBookIdInSeries(
+        this.comicRepository.findNextComicIdInSeries(
             result.getSeries(),
             result.getVolume(),
             result.getIssueNumber(),
             result.getCoverDate(),
             Limit.of(1)));
     result.setPreviousIssueId(
-        this.comicRepository.findPreviousComicBookIdInSeries(
+        this.comicRepository.findPreviousComicIdInSeries(
             result.getSeries(),
             result.getVolume(),
             result.getIssueNumber(),
@@ -305,7 +305,7 @@ public class ComicService {
    * @return the entries
    */
   @Transactional
-  public List<Comic> getAllComicBooksForPublisherAndSeriesAndVolume(
+  public List<Comic> getAllComicsForPublisherAndSeriesAndVolume(
       final String publisher,
       final String series,
       final String volume,
@@ -484,7 +484,7 @@ public class ComicService {
    * @param ids the record ids
    * @return the entries
    */
-  public List<Comic> loadComicDetailListById(final Set<Long> ids) {
+  public List<Comic> loadComicListById(final Set<Long> ids) {
     log.debug("Loading comic details by id: {}", ids);
     return this.comicRepository.findAllById(ids);
   }
@@ -565,8 +565,8 @@ public class ComicService {
   }
 
   @Transactional(readOnly = true)
-  public Comic getByComicBookId(final Long comicId) throws ComicException {
-    final Comic result = this.comicRepository.findByComicBookId(comicId);
+  public Comic getByComicId(final Long comicId) throws ComicException {
+    final Comic result = this.comicRepository.findByComicId(comicId);
     if (result == null)
       throw new ComicException("Comic detail not found for comic book id: " + comicId);
     return result;
@@ -709,7 +709,7 @@ public class ComicService {
    * @return the comic book list
    */
   @Transactional
-  public List<Comic> findComicBooksToBePurged(final int count) {
+  public List<Comic> findComicsToBePurged(final int count) {
     return this.comicRepository.findComicsMarkedForPurging(PageRequest.of(0, count));
   }
 
@@ -790,9 +790,9 @@ public class ComicService {
    * @return the comic book states
    */
   @Transactional
-  public List<RemoteLibrarySegmentState> getComicBooksState() {
+  public List<RemoteLibrarySegmentState> getComicsState() {
     log.trace("Getting the comics state");
-    return this.comicRepository.getComicBooksState();
+    return this.comicRepository.getComicsState();
   }
 
   /**
@@ -801,9 +801,9 @@ public class ComicService {
    * @return the comic book states
    */
   @Transactional
-  public List<RemoteLibrarySegmentState> getComicBookArchiveTypes() {
+  public List<RemoteLibrarySegmentState> getComicArchiveTypes() {
     log.trace("Getting the archive types state");
-    return this.comicRepository.getComicBookArchiveTypes();
+    return this.comicRepository.getComicArchiveTypes();
   }
 
   /**
@@ -885,7 +885,7 @@ public class ComicService {
   // update
 
   @Transactional
-  public void markComicBooksForBatchScraping(final List<Long> ids) {
+  public void markComicsForBatchScraping(final List<Long> ids) {
     this.comicRepository.prepareForBatchScraping(ids);
   }
 
@@ -929,7 +929,7 @@ public class ComicService {
     log.debug("Updating details for {} comic{}", comicIds.size(), comicIds.size() == 1 ? "" : "s");
     for (long comicId : comicIds) {
       log.trace("Loading comic: id={}", comicId);
-      final Comic comic = this.comicRepository.findByComicBookId(comicId);
+      final Comic comic = this.comicRepository.findByComicId(comicId);
       if (Objects.isNull(comic))
         throw new ComicException(String.format("No such comic book to update: id=%d", comicId));
       this.comicStateAdaptor.fireEvent(comic, ComicEvent.prepareComicsForBatchEditing);
@@ -945,9 +945,9 @@ public class ComicService {
     comicIdList.forEach(
         comicId -> {
           log.trace("Loading comic: id={}", comicId);
-          final Comic comic = this.comicRepository.findByComicBookId(comicId);
+          final Comic comic = this.comicRepository.findByComicId(comicId);
           log.trace("Firing event: rescan comic");
-          this.comicStateAdaptor.fireEvent(comic, ComicEvent.rescanComicBookFile);
+          this.comicStateAdaptor.fireEvent(comic, ComicEvent.rescanComicFile);
         });
   }
 
@@ -994,7 +994,7 @@ public class ComicService {
    * @throws ComicException if an id is invalid
    */
   @Transactional(rollbackFor = Throwable.class)
-  public void markComicBooksForBatchMetadataUpdate(final List<Long> ids) throws ComicException {
+  public void markComicsForBatchMetadataUpdate(final List<Long> ids) throws ComicException {
     for (final Long id : ids) {
       log.trace("Loading comic book: id={}", id);
       final var comic = this.doLoadComic(id);
@@ -1034,9 +1034,9 @@ public class ComicService {
 
   /** Marks all comics in the deleted state for purging. */
   @Transactional
-  public void prepareComicBooksForDeleting() {
+  public void prepareComicsForDeleting() {
     log.trace("Marking all deleted comics for purging");
-    this.comicRepository.prepareComicBooksForDeleting();
+    this.comicRepository.prepareComicsForDeleting();
   }
 
   /**
@@ -1078,9 +1078,9 @@ public class ComicService {
    * @return the comic books
    */
   @Transactional
-  public long getUnprocessedComicBookCount() {
+  public long getUnprocessedComicCount() {
     log.debug("Loading unprocessed comic books");
-    return this.comicRepository.getUnprocessedComicBookCount();
+    return this.comicRepository.getUnprocessedComicCount();
   }
 
   /**
@@ -1101,8 +1101,8 @@ public class ComicService {
    * @return the filenames
    */
   @Transactional
-  public Set<String> getAllComicDetailsByMissingFlag(final boolean missing) {
-    return this.comicRepository.getAllComicDetailsByMissingFlag(missing);
+  public Set<String> getAllComicsByMissingFlag(final boolean missing) {
+    return this.comicRepository.getAllComicsByMissingFlag(missing);
   }
 
   /**

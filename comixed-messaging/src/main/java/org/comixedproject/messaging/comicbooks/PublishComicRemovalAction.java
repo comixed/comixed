@@ -43,9 +43,9 @@ public class PublishComicRemovalAction extends AbstractPublishAction<Displayable
   @Override
   public void publish(final DisplayableComic comic) throws PublishingException {
     log.trace("Publishing comic list removal");
-    this.doPublish(COMIC_LIST_REMOVAL_TOPIC, comic, View.ComicDetailsView.class);
+    this.doPublish(COMIC_LIST_REMOVAL_TOPIC, comic, View.ComicView.class);
     log.trace("Publishing comic book removal");
     this.doPublish(
-        String.format(COMIC_REMOVAL_TOPIC, comic.getComicId()), comic, View.ComicDetailsView.class);
+        String.format(COMIC_REMOVAL_TOPIC, comic.getComicId()), comic, View.ComicView.class);
   }
 }

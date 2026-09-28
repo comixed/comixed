@@ -22,10 +22,10 @@ import { LoggerService } from '@angular-ru/cdk/logger';
 import { AlertService } from '@app/core/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
 import {
-  updateSelectedComicBooksMetadata,
-  updateSelectedComicBooksMetadataFailure,
-  updateSelectedComicBooksMetadataSuccess,
-  updateSingleComicBookMetadata
+  updateSelectedComicsMetadata,
+  updateSelectedComicsMetadataFailure,
+  updateSelectedComicsMetadataSuccess,
+  updateSingleComicMetadata
 } from '@app/library/actions/update-metadata.actions';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
@@ -39,9 +39,9 @@ export class UpdateMetadataEffects {
   alertService = inject(AlertService);
   translateService = inject(TranslateService);
 
-  updateSingleComicBookMetadata$ = createEffect(() => {
+  updateSingleComicMetadata$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(updateSingleComicBookMetadata),
+      ofType(updateSingleComicMetadata),
       tap(action =>
         this.logger.debug(
           'Effect: updating metadata for a single comic book:',
@@ -50,7 +50,7 @@ export class UpdateMetadataEffects {
       ),
       switchMap(action =>
         this.libraryService
-          .updateSingleComicBookMetadata({ comicId: action.comicId })
+          .updateSingleComicMetadata({ comicId: action.comicId })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
             tap(() =>
@@ -60,19 +60,19 @@ export class UpdateMetadataEffects {
                 )
               )
             ),
-            map(() => updateSelectedComicBooksMetadataSuccess()),
+            map(() => updateSelectedComicsMetadataSuccess()),
             catchError(error => this.doServiceFailure(error))
           )
       ),
       catchError(error => this.doGeneralFailure(error))
     );
   });
-  updateSelectedComicBooksMetadata$ = createEffect(() => {
+  updateSelectedComicsMetadata$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(updateSelectedComicBooksMetadata),
+      ofType(updateSelectedComicsMetadata),
       tap(action => this.logger.debug('Effect: updating comic info:', action)),
       switchMap(() =>
-        this.libraryService.updateSelectedComicBooksMetadata().pipe(
+        this.libraryService.updateSelectedComicsMetadata().pipe(
           tap(response => this.logger.debug('Response received:', response)),
           tap(() =>
             this.alertService.info(
@@ -81,7 +81,7 @@ export class UpdateMetadataEffects {
               )
             )
           ),
-          map(() => updateSelectedComicBooksMetadataSuccess()),
+          map(() => updateSelectedComicsMetadataSuccess()),
           catchError(error => this.doServiceFailure(error))
         )
       ),
@@ -94,7 +94,7 @@ export class UpdateMetadataEffects {
     this.alertService.error(
       this.translateService.instant('library.update-metadata.effect-failure')
     );
-    return of(updateSelectedComicBooksMetadataFailure());
+    return of(updateSelectedComicsMetadataFailure());
   }
 
   private doGeneralFailure(error: any) {
@@ -103,7 +103,7 @@ export class UpdateMetadataEffects {
       this.alertService.error(
         this.translateService.instant('app.general-effect-failure')
       );
-      return of(updateSelectedComicBooksMetadataFailure());
+      return of(updateSelectedComicsMetadataFailure());
     }
   }
 }

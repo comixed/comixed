@@ -41,6 +41,6 @@ public class PublishDuplicatePageListUpdateAction
   @Override
   public void publish(final DuplicatePageUpdate update) throws PublishingException {
     log.trace("Publishing duplicate page list");
-    this.doPublish(DUPLICATE_PAGE_LIST_UPDATE_TOPIC, update, View.DuplicatePageList.class);
+    this.doPublish(DUPLICATE_PAGE_LIST_UPDATE_TOPIC, update, View.DuplicatePageListView.class);
   }
 }

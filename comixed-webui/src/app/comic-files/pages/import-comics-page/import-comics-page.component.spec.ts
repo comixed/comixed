@@ -56,7 +56,7 @@ import { TitleService } from '@app/core/services/title.service';
 import { MatMenuModule } from '@angular/material/menu';
 import {
   IMPORT_COMICS_FEATURE_KEY,
-  initialState as initialImportComicBooksComicsState
+  initialState as initialImportComicsComicsState
 } from '@app/reducers/import-comics.reducer';
 import {
   Confirmation,
@@ -106,7 +106,7 @@ describe('ImportComicsPageComponent', () => {
   const initialState = {
     [COMIC_FILE_LIST_FEATURE_KEY]: initialComicFileListState,
     [IMPORT_COMIC_FILES_FEATURE_KEY]: initialImportComicFilesState,
-    [IMPORT_COMICS_FEATURE_KEY]: initialImportComicBooksComicsState,
+    [IMPORT_COMICS_FEATURE_KEY]: initialImportComicsComicsState,
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER },
     [FEATURE_ENABLED_FEATURE_KEY]: { ...initialFeatureEnabledState }
   };

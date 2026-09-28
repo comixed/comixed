@@ -19,7 +19,7 @@
 import { createAction, props } from '@ngrx/store';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 
-export const convertSingleComicBook = createAction(
+export const convertSingleComic = createAction(
   '[Convert Comic Books] Convert a single comic book',
   props<{
     id: number;
@@ -27,17 +27,17 @@ export const convertSingleComicBook = createAction(
   }>()
 );
 
-export const convertSelectedComicBooks = createAction(
+export const convertSelectedComics = createAction(
   '[Convert Comic Books] Convert comics',
   props<{
     archiveType: ArchiveType;
   }>()
 );
 
-export const convertComicBooksSuccess = createAction(
+export const convertComicsSuccess = createAction(
   '[Convert Comic Books] Conversion process started'
 );
 
-export const convertComicBooksFailure = createAction(
+export const convertComicsFailure = createAction(
   '[Convert Comic Books] Failed to start converting comics'
 );

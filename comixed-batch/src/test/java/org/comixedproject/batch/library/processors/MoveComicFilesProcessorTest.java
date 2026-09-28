@@ -143,11 +143,11 @@ class MoveComicFilesProcessorTest {
     assertNotNull(comicSourceFile);
     assertSame(comicFile, comicSourceFile);
 
-    File rebuiltComicBookFile = moveFileTargets.get(0);
-    assertNotNull(rebuiltComicBookFile);
-    assertEquals(TEST_REBUILT_FILENAME, rebuiltComicBookFile.getAbsolutePath());
+    File rebuiltComicFile = moveFileTargets.get(0);
+    assertNotNull(rebuiltComicFile);
+    assertEquals(TEST_REBUILT_FILENAME, rebuiltComicFile.getAbsolutePath());
 
-    Mockito.verify(fileAdaptor, Mockito.times(1)).moveFile(comicFile, rebuiltComicBookFile);
+    Mockito.verify(fileAdaptor, Mockito.times(1)).moveFile(comicFile, rebuiltComicFile);
     Mockito.verify(comicFileAdaptor, Mockito.times(1)).standardizeFilename(TEST_REBUILT_FILENAME);
   }
 
@@ -176,11 +176,11 @@ class MoveComicFilesProcessorTest {
     assertNotNull(comicSourceFile);
     assertSame(comicFile, comicSourceFile);
 
-    File rebuiltComicBookFile = moveFileTargets.get(0);
-    assertNotNull(rebuiltComicBookFile);
-    assertEquals(TEST_REBUILT_FILENAME, rebuiltComicBookFile.getAbsolutePath());
+    File rebuiltComicFile = moveFileTargets.get(0);
+    assertNotNull(rebuiltComicFile);
+    assertEquals(TEST_REBUILT_FILENAME, rebuiltComicFile.getAbsolutePath());
 
-    Mockito.verify(fileAdaptor, Mockito.times(1)).moveFile(comicFile, rebuiltComicBookFile);
+    Mockito.verify(fileAdaptor, Mockito.times(1)).moveFile(comicFile, rebuiltComicFile);
     Mockito.verify(comicFileAdaptor, Mockito.times(1)).standardizeFilename(TEST_REBUILT_FILENAME);
   }
 

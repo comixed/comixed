@@ -95,7 +95,7 @@ export class LibraryService {
     } as OrganizeLibraryRequest);
   }
 
-  rescanSingleComicBook(args: { comicId: number }): Observable<any> {
+  rescanSingleComic(args: { comicId: number }): Observable<any> {
     this.logger.trace('Rescan a single comic book:', args);
     return this.http.put(
       interpolate(RESCAN_SINGLE_COMIC_URL, {
@@ -105,12 +105,12 @@ export class LibraryService {
     );
   }
 
-  rescanSelectedComicBooks(): Observable<any> {
+  rescanSelectedComics(): Observable<any> {
     this.logger.trace('Rescan comics');
     return this.http.put(interpolate(RESCAN_SELECTED_COMICS_URL), {});
   }
 
-  updateSingleComicBookMetadata(args: { comicId: number }): Observable<any> {
+  updateSingleComicMetadata(args: { comicId: number }): Observable<any> {
     this.logger.trace('Update metadata for single comic book:', args);
     return this.http.put(
       interpolate(UPDATE_SINGLE_COMIC_METADATA_URL, {
@@ -120,12 +120,12 @@ export class LibraryService {
     );
   }
 
-  updateSelectedComicBooksMetadata(): Observable<any> {
+  updateSelectedComicsMetadata(): Observable<any> {
     this.logger.trace('Update metadata for selected comic books');
     return this.http.put(interpolate(UPDATE_SELECTED_COMICS_METADATA_URL), {});
   }
 
-  convertSingleComicBook(args: {
+  convertSingleComic(args: {
     id: number;
     archiveType: ArchiveType;
   }): Observable<any> {
@@ -140,9 +140,7 @@ export class LibraryService {
     );
   }
 
-  convertSelectedComicBooks(args: {
-    archiveType: ArchiveType;
-  }): Observable<any> {
+  convertSelectedComics(args: { archiveType: ArchiveType }): Observable<any> {
     this.logger.trace('Converting comics:', args);
     return this.http.put(interpolate(CONVERT_SELECTED_COMICS_URL), {
       archiveType: args.archiveType

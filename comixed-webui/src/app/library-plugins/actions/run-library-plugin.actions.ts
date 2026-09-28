@@ -19,7 +19,7 @@
 import { createAction, props } from '@ngrx/store';
 import { LibraryPlugin } from '@app/library-plugins/models/library-plugin';
 
-export const runLibraryPluginOnOneComicBook = createAction(
+export const runLibraryPluginOnOneComic = createAction(
   '[Run Library Plugin] Load a library plugin against one comic book',
   props<{
     plugin: LibraryPlugin;
@@ -27,7 +27,7 @@ export const runLibraryPluginOnOneComicBook = createAction(
   }>()
 );
 
-export const runLibraryPluginOnSelectedComicBooks = createAction(
+export const runLibraryPluginOnSelectedComics = createAction(
   '[Run Library Plugin] Load a library plugin against all selected comic book',
   props<{
     plugin: LibraryPlugin;

@@ -147,7 +147,7 @@ public class ReadingListRepositoryTest {
   }
 
   @Test
-  public void testGetReadingListsWithComicBook() {
+  public void testGetReadingListsWithComic() {
     final List<ReadingList> result = repository.getReadingListsWithComic(comic1.getComicId());
 
     assertNotNull(result);

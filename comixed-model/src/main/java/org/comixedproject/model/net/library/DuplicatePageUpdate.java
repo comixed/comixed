@@ -34,7 +34,7 @@ import org.comixedproject.views.View;
 @AllArgsConstructor
 public class DuplicatePageUpdate {
   @JsonProperty("removed")
-  @JsonView(View.DuplicatePageList.class)
+  @JsonView(View.DuplicatePageListView.class)
   @Getter
   private boolean removed;
 
@@ -43,7 +43,7 @@ public class DuplicatePageUpdate {
   private long total;
 
   @JsonProperty("page")
-  @JsonView(View.DuplicatePageList.class)
+  @JsonView(View.DuplicatePageListView.class)
   @Getter
   private DuplicatePage page;
 }

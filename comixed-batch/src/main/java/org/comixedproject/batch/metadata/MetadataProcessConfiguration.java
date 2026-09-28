@@ -57,17 +57,17 @@ public class MetadataProcessConfiguration {
    * Returns the job bean to perform the batch comic scraping process.
    *
    * @param jobRepository the job repository
-   * @param scrapeComicBook the scrape comic stet
+   * @param scrapeComic the scrape comic stet
    * @return the job
    */
-  @Bean(name = "updateComicBookMetadata")
-  public Job updateComicBookMetadata(
+  @Bean(name = "updateComicMetadata")
+  public Job updateComicMetadata(
       final JobRepository jobRepository,
       final UpdateComicMetadataJobListener jobListener,
-      @Qualifier("scrapeComicBook") final Step scrapeComicBook) {
-    return new JobBuilder("updateComicBookMetadata", jobRepository)
+      @Qualifier("scrapeComic") final Step scrapeComic) {
+    return new JobBuilder("updateComicMetadata", jobRepository)
         .listener(jobListener)
-        .start(scrapeComicBook)
+        .start(scrapeComic)
         .build();
   }
 
@@ -81,15 +81,15 @@ public class MetadataProcessConfiguration {
    * @param writer the step writer
    * @return the step
    */
-  @Bean(name = "scrapeComicBook")
-  public Step scrapeComicBook(
+  @Bean(name = "scrapeComic")
+  public Step scrapeComic(
       final JobRepository jobRepository,
       final PlatformTransactionManager platformTransactionManager,
       final ScrapeComicChunkListener listener,
       final ScrapeComicReader reader,
       final ScrapeComicProcessor processor,
       final ScrapeComicWriter writer) {
-    return new StepBuilder("scrapeComicBook", jobRepository)
+    return new StepBuilder("scrapeComic", jobRepository)
         .<Comic, Comic>chunk(this.chunkSize)
         .transactionManager(platformTransactionManager)
         .reader(reader)

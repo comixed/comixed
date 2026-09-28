@@ -18,12 +18,12 @@
 
 import { createFeature, createReducer, on } from '@ngrx/store';
 import {
-  addComicBooksToReadingListFailure,
-  addComicBooksToReadingListSuccess,
-  addSelectedComicBooksToReadingList,
-  removeComicBooksFromReadingListFailure,
-  removeComicBooksFromReadingListSuccess,
-  removeSelectedComicBooksFromReadingList
+  addComicsToReadingListFailure,
+  addComicsToReadingListSuccess,
+  addSelectedComicsToReadingList,
+  removeComicsFromReadingListFailure,
+  removeComicsFromReadingListSuccess,
+  removeSelectedComicsFromReadingList
 } from '../actions/reading-list-entries.actions';
 
 export const READING_LIST_ENTRIES_FEATURE_KEY = 'reading_list_entries_state';
@@ -39,27 +39,27 @@ export const initialState: ReadingListEntriesState = {
 export const reducer = createReducer(
   initialState,
 
-  on(addSelectedComicBooksToReadingList, state => ({
+  on(addSelectedComicsToReadingList, state => ({
     ...state,
     working: true
   })),
-  on(addComicBooksToReadingListSuccess, state => ({
+  on(addComicsToReadingListSuccess, state => ({
     ...state,
     working: false
   })),
-  on(addComicBooksToReadingListFailure, state => ({
+  on(addComicsToReadingListFailure, state => ({
     ...state,
     working: false
   })),
-  on(removeSelectedComicBooksFromReadingList, state => ({
+  on(removeSelectedComicsFromReadingList, state => ({
     ...state,
     working: true
   })),
-  on(removeComicBooksFromReadingListSuccess, state => ({
+  on(removeComicsFromReadingListSuccess, state => ({
     ...state,
     working: false
   })),
-  on(removeComicBooksFromReadingListFailure, state => ({
+  on(removeComicsFromReadingListFailure, state => ({
     ...state,
     working: false
   }))

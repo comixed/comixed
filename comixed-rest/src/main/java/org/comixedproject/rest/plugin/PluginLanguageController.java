@@ -50,7 +50,7 @@ public class PluginLanguageController {
   @GetMapping(value = "/api/plugins/languages", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @Timed(value = "comixed.plugin-language.get-all")
-  @JsonView(View.PluginLanguageList.class)
+  @JsonView(View.PluginLanguageListView.class)
   public List<PluginLanguage> loadPluginLanguageList() {
     log.info("Loading the list of plugin languages");
     return this.pluginLanguageService.getPluginLanguageList();

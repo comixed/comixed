@@ -62,7 +62,7 @@ class DuplicateComicControllerTest {
             duplicateComicService.loadDuplicateComicsList(
                 Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyString()))
         .thenReturn(duplicateComicList);
-    Mockito.when(duplicateComicService.getDuplicateComicBookCount())
+    Mockito.when(duplicateComicService.getDuplicateComicCount())
         .thenReturn(TEST_DUPLICATE_COMIC_COUNT);
 
     final LoadDuplicateComicsListResponse result =
@@ -77,7 +77,7 @@ class DuplicateComicControllerTest {
     Mockito.verify(duplicateComicService, Mockito.times(1))
         .loadDuplicateComicsList(
             TEST_PAGE_SIZE, TEST_PAGE_INDEX, TEST_SORT_FIELD, TEST_SORT_DIRECTION);
-    Mockito.verify(duplicateComicService, Mockito.times(1)).getDuplicateComicBookCount();
+    Mockito.verify(duplicateComicService, Mockito.times(1)).getDuplicateComicCount();
   }
 
   @Test

@@ -44,13 +44,13 @@ public class ScrapedStory {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "scraped_story_id")
   @JsonProperty("scrapedStoryId")
-  @JsonView(View.StoryList.class)
+  @JsonView(View.StoryListView.class)
   @Getter
   private Long scrapedStoryId;
 
   @Column(name = "story_name", length = 256, nullable = false, updatable = false)
   @JsonProperty("name")
-  @JsonView(View.StoryList.class)
+  @JsonView(View.StoryListView.class)
   @Getter
   @NonNull
   private String name;
@@ -72,7 +72,7 @@ public class ScrapedStory {
 
   @Column(name = "publisher", length = 128, nullable = false, updatable = false)
   @JsonProperty("publisher")
-  @JsonView(View.StoryList.class)
+  @JsonView(View.StoryListView.class)
   @Getter
   @Setter
   @NonNull
@@ -81,7 +81,7 @@ public class ScrapedStory {
   @Column(name = "description")
   @Lob
   @JsonProperty("description")
-  @JsonView(View.StoryDetail.class)
+  @JsonView(View.StoryView.class)
   @Getter
   @Setter
   private String description;
@@ -89,21 +89,21 @@ public class ScrapedStory {
   @OneToMany(mappedBy = "story", cascade = CascadeType.ALL, orphanRemoval = true)
   @OrderColumn(name = "reading_order")
   @JsonProperty("entries")
-  @JsonView(View.StoryList.class)
+  @JsonView(View.StoryListView.class)
   @Getter
   private List<ScrapedStoryEntry> entries = new ArrayList<>();
 
   @Column(name = "created_on", nullable = false, updatable = false)
   @JsonProperty("createdOn")
   @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
-  @JsonView(View.StoryList.class)
+  @JsonView(View.StoryListView.class)
   @Getter
   private Date createdOn = new Date();
 
   @Column(name = "last_modified_on", nullable = false, updatable = true)
   @JsonProperty("modifiedOn")
   @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
-  @JsonView(View.StoryList.class)
+  @JsonView(View.StoryListView.class)
   @Getter
   @Setter
   private Date modifiedOn = new Date();

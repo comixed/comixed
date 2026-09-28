@@ -31,9 +31,9 @@ import {
   loadIssueMetadataFailed,
   loadVolumeMetadata,
   loadVolumeMetadataFailed,
-  scrapeSingleComicBook,
-  scrapeSingleComicBookFailure,
-  scrapeSingleComicBookSuccess,
+  scrapeSingleComic,
+  scrapeSingleComicFailure,
+  scrapeSingleComicSuccess,
   startMetadataUpdateProcess,
   startMetadataUpdateProcessFailure,
   startMetadataUpdateProcessSuccess,
@@ -53,8 +53,8 @@ import {
   SCRAPING_VOLUME_3
 } from '@app/comic-metadata/comic-metadata.fixtures';
 import {
-  clearComicBookSelectionState,
-  removeSingleComicBookSelection
+  clearComicSelectionState,
+  removeSingleComicSelection
 } from '@app/comic-books/actions/comic-book-selection.actions';
 
 describe('SingleBookScrapingEffects', () => {
@@ -241,14 +241,14 @@ describe('SingleBookScrapingEffects', () => {
   describe('scraping a single comic book', () => {
     it('fires an action on success', () => {
       const serviceResponse = new HttpResponse({});
-      const action = scrapeSingleComicBook({
+      const action = scrapeSingleComic({
         metadataSource: METADATA_SOURCE,
         issueId: SCRAPING_ISSUE.id,
         comic: COMIC,
         skipCache: SKIP_CACHE
       });
-      const outcome1 = scrapeSingleComicBookSuccess();
-      const outcome2 = removeSingleComicBookSelection({
+      const outcome1 = scrapeSingleComicSuccess();
+      const outcome2 = removeSingleComicSelection({
         comicId: COMIC.comicId
       });
 
@@ -258,19 +258,19 @@ describe('SingleBookScrapingEffects', () => {
       );
 
       const expected = hot('-(bc)', { b: outcome1, c: outcome2 });
-      expect(effects.scrapeSingleComicBook$).toBeObservable(expected);
+      expect(effects.scrapeSingleComic$).toBeObservable(expected);
       expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = scrapeSingleComicBook({
+      const action = scrapeSingleComic({
         metadataSource: METADATA_SOURCE,
         issueId: SCRAPING_ISSUE.id,
         comic: COMIC,
         skipCache: SKIP_CACHE
       });
-      const outcome = scrapeSingleComicBookFailure();
+      const outcome = scrapeSingleComicFailure();
 
       actions$ = hot('-a', { a: action });
       scrapingService.scrapeSingleBookComic.and.returnValue(
@@ -278,24 +278,24 @@ describe('SingleBookScrapingEffects', () => {
       );
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.scrapeSingleComicBook$).toBeObservable(expected);
+      expect(effects.scrapeSingleComic$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on general failure', () => {
-      const action = scrapeSingleComicBook({
+      const action = scrapeSingleComic({
         metadataSource: METADATA_SOURCE,
         issueId: SCRAPING_ISSUE.id,
         comic: COMIC,
         skipCache: SKIP_CACHE
       });
-      const outcome = scrapeSingleComicBookFailure();
+      const outcome = scrapeSingleComicFailure();
 
       actions$ = hot('-a', { a: action });
       scrapingService.scrapeSingleBookComic.and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
-      expect(effects.scrapeSingleComicBook$).toBeObservable(expected);
+      expect(effects.scrapeSingleComic$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });
@@ -307,7 +307,7 @@ describe('SingleBookScrapingEffects', () => {
         skipCache: SKIP_CACHE
       });
       const outcome1 = startMetadataUpdateProcessSuccess();
-      const outcome2 = clearComicBookSelectionState();
+      const outcome2 = clearComicSelectionState();
 
       actions$ = hot('-a', { a: action });
       scrapingService.startMetadataUpdateProcess

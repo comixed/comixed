@@ -72,15 +72,15 @@ public class RemoteLibraryStateService implements InitializingBean, ComicStateLi
             this.comicService.getComicCount(),
             this.comicService.getUnscrapedComicCount(),
             this.comicService.getDeletedComicCount(),
-            this.duplicateComicService.getDuplicateComicBookCount());
+            this.duplicateComicService.getDuplicateComicCount());
     result.setPublishers(this.comicService.getPublishersState());
     result.setSeries(this.comicService.getSeriesState());
     result.setCharacters(this.comicService.getCharactersState());
     result.setTeams(this.comicService.getTeamsState());
     result.setLocations(this.comicService.getLocationsState());
     result.setStories(this.comicService.getStoriesState());
-    result.setStates(this.comicService.getComicBooksState());
-    result.setArchiveTypes(this.comicService.getComicBookArchiveTypes());
+    result.setStates(this.comicService.getComicsState());
+    result.setArchiveTypes(this.comicService.getComicArchiveTypes());
     result.setByPublisherAndYear(this.comicService.getByPublisherAndYear());
     return result;
   }

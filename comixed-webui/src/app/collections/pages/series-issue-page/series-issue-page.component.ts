@@ -22,8 +22,8 @@ import { Store } from '@ngrx/store';
 import { ActivatedRoute } from '@angular/router';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { setBusyState } from '@app/core/actions/busy.actions';
-import { selectComicBookSelectionIds } from '@app/comic-books/selectors/comic-book-selection.selectors';
-import { setMultipleComicBookByPublisherSeriesAndVolumeSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
+import { selectComicSelectionIds } from '@app/comic-books/selectors/comic-book-selection.selectors';
+import { setMultipleComicByPublisherSeriesAndVolumeSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
 import { TitleService } from '@app/core/services/title.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { selectUser } from '@app/user/selectors/user.selectors';
@@ -96,7 +96,7 @@ export class SeriesIssuePageComponent implements OnInit {
       .pipe(tap(totalComics => this.totalComics$.next(totalComics)))
       .subscribe();
     this.store
-      .select(selectComicBookSelectionIds)
+      .select(selectComicSelectionIds)
       .pipe(tap(selectedIds => this.selectedIds$.next(selectedIds)))
       .subscribe();
     this.store
@@ -111,7 +111,7 @@ export class SeriesIssuePageComponent implements OnInit {
 
   onSelectAll(selected: boolean): void {
     this.store.dispatch(
-      setMultipleComicBookByPublisherSeriesAndVolumeSelectionState({
+      setMultipleComicByPublisherSeriesAndVolumeSelectionState({
         publisher: this.publisherName$.value,
         series: this.seriesName$.value,
         volume: this.volume$.value,

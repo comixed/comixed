@@ -19,12 +19,12 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {
-  addComicBooksToReadingListFailure,
-  addComicBooksToReadingListSuccess,
-  addSelectedComicBooksToReadingList,
-  removeComicBooksFromReadingListFailure,
-  removeComicBooksFromReadingListSuccess,
-  removeSelectedComicBooksFromReadingList
+  addComicsToReadingListFailure,
+  addComicsToReadingListSuccess,
+  addSelectedComicsToReadingList,
+  removeComicsFromReadingListFailure,
+  removeComicsFromReadingListSuccess,
+  removeSelectedComicsFromReadingList
 } from '../actions/reading-list-entries.actions';
 import { AlertService } from '@app/core/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -43,9 +43,9 @@ export class ReadingListEntriesEffects {
   alertService = inject(AlertService);
   translateService = inject(TranslateService);
 
-  addSelectedComicBooksToReadingList$ = createEffect(() => {
+  addSelectedComicsToReadingList$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(addSelectedComicBooksToReadingList),
+      ofType(addSelectedComicsToReadingList),
       tap(action =>
         this.logger.trace(
           'Adding selected comic books to reading list:',
@@ -53,34 +53,32 @@ export class ReadingListEntriesEffects {
         )
       ),
       switchMap(action =>
-        this.readingListService
-          .addSelectedComicBooks({ list: action.list })
-          .pipe(
-            tap(response => this.logger.debug('Response received:', response)),
-            tap(() =>
-              this.alertService.info(
-                this.translateService.instant(
-                  'reading-list-entries.import-comic-files.effect-success',
-                  { name: action.list.name }
-                )
+        this.readingListService.addSelectedComics({ list: action.list }).pipe(
+          tap(response => this.logger.debug('Response received:', response)),
+          tap(() =>
+            this.alertService.info(
+              this.translateService.instant(
+                'reading-list-entries.import-comic-files.effect-success',
+                { name: action.list.name }
               )
-            ),
-            map(() => addComicBooksToReadingListSuccess()),
-            catchError(error => this.doAddingServiceFailure(error))
-          )
+            )
+          ),
+          map(() => addComicsToReadingListSuccess()),
+          catchError(error => this.doAddingServiceFailure(error))
+        )
       ),
       catchError(error => this.doAddingGeneralFailure(error))
     );
   });
-  removeSelectedComicBooksFromReadingList$ = createEffect(() => {
+  removeSelectedComicsFromReadingList$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(removeSelectedComicBooksFromReadingList),
+      ofType(removeSelectedComicsFromReadingList),
       tap(action =>
         this.logger.trace('Removing comics from reading list:', action)
       ),
       switchMap(action =>
         this.readingListService
-          .removeSelectedComicBooks({
+          .removeSelectedComics({
             list: action.list
           })
           .pipe(
@@ -94,7 +92,7 @@ export class ReadingListEntriesEffects {
               )
             ),
             mergeMap((response: ReadingList) => [
-              removeComicBooksFromReadingListSuccess(),
+              removeComicsFromReadingListSuccess(),
               readingListLoaded({ list: response })
             ]),
             catchError(error => {
@@ -104,7 +102,7 @@ export class ReadingListEntriesEffects {
                   'reading-list-entries.remove-comics.effect-failure'
                 )
               );
-              return of(removeComicBooksFromReadingListFailure());
+              return of(removeComicsFromReadingListFailure());
             })
           )
       ),
@@ -113,7 +111,7 @@ export class ReadingListEntriesEffects {
         this.alertService.error(
           this.translateService.instant('app.general-effect-failure')
         );
-        return of(removeComicBooksFromReadingListFailure());
+        return of(removeComicsFromReadingListFailure());
       })
     );
   });
@@ -125,7 +123,7 @@ export class ReadingListEntriesEffects {
         'reading-list-entries.import-comic-files.effect-failure'
       )
     );
-    return of(addComicBooksToReadingListFailure());
+    return of(addComicsToReadingListFailure());
   }
 
   private doAddingGeneralFailure(error: any) {
@@ -133,6 +131,6 @@ export class ReadingListEntriesEffects {
     this.alertService.error(
       this.translateService.instant('app.general-effect-failure')
     );
-    return of(addComicBooksToReadingListFailure());
+    return of(addComicsToReadingListFailure());
   }
 }

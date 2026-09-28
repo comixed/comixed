@@ -33,7 +33,7 @@ import org.comixedproject.model.net.comicbooks.*;
 import org.comixedproject.service.comicbooks.*;
 import org.comixedproject.service.comicpages.ComicPageException;
 import org.comixedproject.service.comicpages.PageCacheService;
-import org.comixedproject.views.View.ComicDetailsView;
+import org.comixedproject.views.View.ComicView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -64,7 +64,7 @@ public class ComicController {
    */
   @GetMapping(value = "/api/comics/{comicId}", produces = MediaType.APPLICATION_JSON_VALUE)
   @Timed(value = "comixed.comic-book.get-one")
-  @JsonView(ComicDetailsView.class)
+  @JsonView(ComicView.class)
   public ComicDataSet getComic(@PathVariable("comicId") long comicId) throws ComicException {
     log.info("Getting comic: id={}", comicId);
     return this.comicDataService.getComic(comicId);
@@ -133,7 +133,7 @@ public class ComicController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @Timed(value = "comixed.comic-book.metadata.update")
-  @JsonView(ComicDetailsView.class)
+  @JsonView(ComicView.class)
   public ComicDataSet updateComic(
       @PathVariable("comicId") long comicId, @RequestBody() UpdateComicRequest request)
       throws ComicException {
@@ -161,10 +161,10 @@ public class ComicController {
    */
   @DeleteMapping(value = "/api/comics/{comicId}", produces = MediaType.APPLICATION_JSON_VALUE)
   @Timed(value = "comixed.comic-book.mark-one.deleted")
-  @JsonView({ComicDetailsView.class})
-  public void deleteComicBook(@PathVariable("comicId") long comicId) throws ComicException {
+  @JsonView({ComicView.class})
+  public void deleteComic(@PathVariable("comicId") long comicId) throws ComicException {
     log.info("Deleting comic book: id={}", comicId);
-    this.comicDataService.deleteComicBook(comicId);
+    this.comicDataService.deleteComic(comicId);
   }
 
   /**
@@ -175,10 +175,10 @@ public class ComicController {
    */
   @PutMapping(value = "/api/comics/{comicId}/undelete", produces = MediaType.APPLICATION_JSON_VALUE)
   @Timed(value = "comixed.comic-book.mark-one.undeleted")
-  @JsonView({ComicDetailsView.class})
-  public void undeleteComicBook(@PathVariable("comicId") long comicId) throws ComicException {
+  @JsonView({ComicView.class})
+  public void undeleteComic(@PathVariable("comicId") long comicId) throws ComicException {
     log.info("Undeleting comic book: id={}", comicId);
-    this.comicDataService.undeleteComicBook(comicId);
+    this.comicDataService.undeleteComic(comicId);
   }
 
   /**
@@ -190,15 +190,15 @@ public class ComicController {
    */
   @DeleteMapping(value = "/api/comics/mark/deleted/selected")
   @Timed(value = "comixed.comics.mark-many.delete-selected")
-  public void deleteSelectedComicBooks(final HttpSession session, final Principal principal)
+  public void deleteSelectedComics(final HttpSession session, final Principal principal)
       throws ComicException {
     try {
       final String email = principal.getName();
       final List<Long> ids =
           this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
       log.info("Deleting multiple comics: email={} ids={}", email, ids.toArray());
-      this.comicDataService.deleteComicBooksById(new ArrayList<>(ids));
-      this.comicSelectionService.clearSelectedComicBooks(email, ids);
+      this.comicDataService.deleteComicsById(new ArrayList<>(ids));
+      this.comicSelectionService.clearSelectedComics(email, ids);
       session.setAttribute(LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(ids));
     } catch (ComicSelectionException error) {
       throw new ComicException("Failed to delete selected comic books", error);
@@ -216,7 +216,7 @@ public class ComicController {
       value = "/api/comics/mark/deleted/selected",
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @Timed(value = "comixed.comics.mark-many.undelete-selected")
-  public void undeleteSelectedComicBooks(final HttpSession session, final Principal principal)
+  public void undeleteSelectedComics(final HttpSession session, final Principal principal)
       throws ComicException {
     try {
       final String email = principal.getName();
@@ -224,8 +224,8 @@ public class ComicController {
           this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
 
       log.info("Undeleting multiple comic: email={} ids={}", email, ids.toArray());
-      this.comicDataService.undeleteComicBooksById(new ArrayList<>(ids));
-      this.comicSelectionService.clearSelectedComicBooks(email, ids);
+      this.comicDataService.undeleteComicsById(new ArrayList<>(ids));
+      this.comicSelectionService.clearSelectedComics(email, ids);
       session.setAttribute(LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(ids));
     } catch (ComicSelectionException error) {
       throw new ComicException("Failed to delete selected comic books", error);

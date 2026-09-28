@@ -33,6 +33,6 @@ public class LoadComicFilesResponse {
   @JsonProperty("groups")
   @Getter
   @Setter
-  @JsonView(View.ComicFileList.class)
+  @JsonView(View.ComicFileListView.class)
   private List<ComicFileGroup> groups = new ArrayList<>();
 }

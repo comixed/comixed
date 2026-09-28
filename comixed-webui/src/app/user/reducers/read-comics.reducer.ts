@@ -18,8 +18,8 @@
 
 import { createFeature, createReducer, on } from '@ngrx/store';
 import {
-  resetReadComicBooks,
-  setReadComicBooks
+  resetReadComics,
+  setReadComics
 } from '@app/user/actions/read-comic-books.actions';
 
 export const READ_COMICS_FEATURE_KEY = 'read_comics_state';
@@ -34,14 +34,14 @@ export const initialState: ReadComicsState = {
 
 export const reducer = createReducer(
   initialState,
-  on(setReadComicBooks, (state, action) => ({
+  on(setReadComics, (state, action) => ({
     ...state,
     entries: action.entries
   })),
-  on(resetReadComicBooks, state => ({ ...state, entries: [] }))
+  on(resetReadComics, state => ({ ...state, entries: [] }))
 );
 
-export const readComicBooksFeature = createFeature({
+export const readComicsFeature = createFeature({
   name: READ_COMICS_FEATURE_KEY,
   reducer
 });

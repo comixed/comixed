@@ -97,7 +97,7 @@ export class ComicService {
    *
    * @param args.comicId the comic book's id
    */
-  deleteSingleComicBook(args: { comicId: number }): Observable<any> {
+  deleteSingleComic(args: { comicId: number }): Observable<any> {
     this.logger.debug('Marking selected comic books as deleted');
     return this.http.delete(
       interpolate(DELETE_SINGLE_COMIC_URL, {
@@ -111,7 +111,7 @@ export class ComicService {
    *
    * @param args.comicId the comic book's id
    */
-  undeleteSingleComicBook(args: { comicId: number }): Observable<any> {
+  undeleteSingleComic(args: { comicId: number }): Observable<any> {
     this.logger.debug('Marking selected comic books as deleted');
     return this.http.put(
       interpolate(UNDELETE_SINGLE_COMIC_URL, {
@@ -124,7 +124,7 @@ export class ComicService {
   /**
    * Marks all selected comic books as deleted
    */
-  deleteSelectedComicBooks(): Observable<any> {
+  deleteSelectedComics(): Observable<any> {
     this.logger.debug('Marking selected comic books as deleted');
     return this.http.delete(interpolate(DELETE_SELECTED_COMICS_URL));
   }
@@ -132,7 +132,7 @@ export class ComicService {
   /**
    * Marks all selected comic books as undeleted.
    */
-  undeleteSelectedComicBooks(): Observable<any> {
+  undeleteSelectedComics(): Observable<any> {
     this.logger.debug('Marking selected comic books as undeleted');
     return this.http.put(interpolate(UNDELETE_SELECTED_COMICS_URL), {});
   }
@@ -167,7 +167,7 @@ export class ComicService {
     );
   }
 
-  downloadComicBook(args: { comicId: number }): Observable<any> {
+  downloadComic(args: { comicId: number }): Observable<any> {
     this.logger.debug('Downloading comic book:', args);
     return this.http.get(
       interpolate(DOWNLOAD_COMIC_URL, {

@@ -69,7 +69,7 @@ class PublishCurrentUserActionTest {
 
     action.publish(user);
 
-    Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.UserDetailsView.class);
+    Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.UserView.class);
     Mockito.verify(objectWriter, Mockito.times(1)).writeValueAsString(user);
     Mockito.verify(messagingTemplate, Mockito.times(1))
         .convertAndSendToUser(

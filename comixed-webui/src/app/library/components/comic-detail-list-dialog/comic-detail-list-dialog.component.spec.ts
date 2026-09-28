@@ -55,7 +55,7 @@ import {
 } from '@app/library-plugins/reducers/library-plugin.reducer';
 import {
   COMIC_SELECTION_FEATURE_KEY,
-  initialState as initialComicBookSelectionState
+  initialState as initialComicSelectionState
 } from '@app/comic-books/reducers/comic-selection.reducer';
 import { provideRouter } from '@angular/router';
 
@@ -67,7 +67,7 @@ describe('ComicDetailListDialogComponent', () => {
   ];
   const initialState = {
     [LIBRARY_PLUGIN_FEATURE_KEY]: initialLibraryPluginState,
-    [COMIC_SELECTION_FEATURE_KEY]: initialComicBookSelectionState
+    [COMIC_SELECTION_FEATURE_KEY]: initialComicSelectionState
   };
 
   let component: ComicDetailListDialogComponent;

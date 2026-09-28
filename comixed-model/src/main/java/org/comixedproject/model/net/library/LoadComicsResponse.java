@@ -35,27 +35,27 @@ import org.comixedproject.views.View;
 @AllArgsConstructor
 public class LoadComicsResponse {
   @JsonProperty("comics")
-  @JsonView(View.ComicDetailsView.class)
+  @JsonView(View.ComicView.class)
   @Getter
   private List<DisplayableComic> comics;
 
   @JsonProperty("coverYears")
-  @JsonView(View.ComicDetailsView.class)
+  @JsonView(View.ComicView.class)
   @Getter
   private List<Integer> coverYears;
 
   @JsonProperty("coverMonths")
-  @JsonView(View.ComicDetailsView.class)
+  @JsonView(View.ComicView.class)
   @Getter
   private List<Integer> coverMonths;
 
   @JsonProperty("totalCount")
-  @JsonView(View.ComicDetailsView.class)
+  @JsonView(View.ComicView.class)
   @Getter
   private long totalCount;
 
   @JsonProperty("filteredCount")
-  @JsonView(View.ComicDetailsView.class)
+  @JsonView(View.ComicView.class)
   @Getter
   private long filteredCount;
 }

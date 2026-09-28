@@ -81,7 +81,7 @@ export const loadIssueMetadataFailed = createAction(
   '[Metadata] Failed to load a scraping issue'
 );
 
-export const scrapeSingleComicBook = createAction(
+export const scrapeSingleComic = createAction(
   '[Metadata] Scrape the details for a comic',
   props<{
     metadataSource: MetadataSource;
@@ -91,11 +91,11 @@ export const scrapeSingleComicBook = createAction(
   }>()
 );
 
-export const scrapeSingleComicBookSuccess = createAction(
+export const scrapeSingleComicSuccess = createAction(
   '[Metadata] The details for a comic were scraped'
 );
 
-export const scrapeSingleComicBookFailure = createAction(
+export const scrapeSingleComicFailure = createAction(
   '[Metadata] Failed to scrape the details for a comic'
 );
 

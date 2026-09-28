@@ -32,7 +32,7 @@ import org.comixedproject.views.View;
 @AllArgsConstructor
 public class PluginLanguage {
   @JsonProperty("name")
-  @JsonView(View.PluginLanguageList.class)
+  @JsonView(View.PluginLanguageListView.class)
   @Getter
   private String name;
 }

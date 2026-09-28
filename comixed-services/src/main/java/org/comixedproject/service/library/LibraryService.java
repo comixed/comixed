@@ -118,7 +118,7 @@ public class LibraryService {
   /** Begins the process of purging comics from the library. */
   @Transactional
   public void prepareForPurging() {
-    this.comicService.prepareComicBooksForDeleting();
+    this.comicService.prepareComicsForDeleting();
     this.applicationEventPublisher.publishEvent(PurgeLibraryEvent.instance);
   }
 }

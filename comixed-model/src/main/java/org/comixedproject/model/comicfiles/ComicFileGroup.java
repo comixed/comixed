@@ -38,13 +38,13 @@ import org.comixedproject.views.View;
 @NoArgsConstructor
 public class ComicFileGroup {
   @JsonProperty("directory")
-  @JsonView(View.ComicFileList.class)
+  @JsonView(View.ComicFileListView.class)
   @NonNull
   @Getter
   private String directory;
 
   @JsonProperty("files")
-  @JsonView(View.ComicFileList.class)
+  @JsonView(View.ComicFileListView.class)
   @Getter
   private List<ComicFile> files = new ArrayList<>();
 }

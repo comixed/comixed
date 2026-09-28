@@ -157,7 +157,7 @@ describe('LibraryPluginService', () => {
 
   it('can run a plugin against a single comic book', () => {
     service
-      .runLibraryPluginOnOneComicBook({
+      .runLibraryPluginOnOneComic({
         plugin: PLUGIN,
         comicId: COMIC_ID
       })
@@ -176,7 +176,7 @@ describe('LibraryPluginService', () => {
 
   it('can run a plugin against all selected comic books', () => {
     service
-      .runLibraryPluginOnSelectedComicBooks({
+      .runLibraryPluginOnSelectedComics({
         plugin: PLUGIN
       })
       .subscribe(response => expect(response.status).toEqual(200));

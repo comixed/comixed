@@ -22,10 +22,10 @@ import {
   RescanComicsState
 } from './rescan-comics.reducer';
 import {
-  rescanComicBooksFailure,
-  rescanComicBooksSuccess,
-  rescanSelectedComicBooks,
-  rescanSingleComicBook
+  rescanComicsFailure,
+  rescanComicsSuccess,
+  rescanSelectedComics,
+  rescanSingleComic
 } from '@app/library/actions/rescan-comics.actions';
 
 describe('RescanComics Reducer', () => {
@@ -51,7 +51,7 @@ describe('RescanComics Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, working: false },
-        rescanSingleComicBook({ comicId: COMIC_ID })
+        rescanSingleComic({ comicId: COMIC_ID })
       );
     });
 
@@ -62,7 +62,7 @@ describe('RescanComics Reducer', () => {
 
   describe('rescanning selected comic books', () => {
     beforeEach(() => {
-      state = reducer({ ...state, working: false }, rescanSelectedComicBooks());
+      state = reducer({ ...state, working: false }, rescanSelectedComics());
     });
 
     it('sets the working flag', () => {
@@ -72,7 +72,7 @@ describe('RescanComics Reducer', () => {
 
   describe('success', () => {
     beforeEach(() => {
-      state = reducer({ ...state, working: true }, rescanComicBooksSuccess());
+      state = reducer({ ...state, working: true }, rescanComicsSuccess());
     });
 
     it('clears the working flag', () => {
@@ -82,7 +82,7 @@ describe('RescanComics Reducer', () => {
 
   describe('failure', () => {
     beforeEach(() => {
-      state = reducer({ ...state, working: true }, rescanComicBooksFailure());
+      state = reducer({ ...state, working: true }, rescanComicsFailure());
     });
 
     it('clears the working flag', () => {

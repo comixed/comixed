@@ -18,28 +18,28 @@
 
 import { createAction, props } from '@ngrx/store';
 
-export const deleteSingleComicBook = createAction(
+export const deleteSingleComic = createAction(
   '[Delete Comic Books] Mark a single comic book as deleted',
   props<{ comicId: number }>()
 );
 
-export const undeleteSingleComicBook = createAction(
+export const undeleteSingleComic = createAction(
   '[Delete Comic Books] Mark a single comic book as undeleted',
   props<{ comicId: number }>()
 );
 
-export const deleteSelectedComicBooks = createAction(
+export const deleteSelectedComics = createAction(
   '[Delete Comic Books] Mark the selected comic books as deleted'
 );
 
-export const undeleteSelectedComicBooks = createAction(
+export const undeleteSelectedComics = createAction(
   '[Delete Comic Books] Mark the selected comic books as undeleted'
 );
 
-export const deleteComicBooksSuccess = createAction(
+export const deleteComicsSuccess = createAction(
   '[Delete Comic Books] Deleted state set'
 );
 
-export const deleteComicBooksFailure = createAction(
+export const deleteComicsFailure = createAction(
   '[Delete Comic Books] Set deleted state failed'
 );

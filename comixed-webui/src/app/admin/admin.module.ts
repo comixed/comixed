@@ -51,7 +51,7 @@ import { ServerRuntimeEffects } from '@app/admin/effects/server-runtime.effects'
 import { MetadataSourceListComponent } from './components/metadata-source-list/metadata-source-list.component';
 import { MetadataSourceDetailComponent } from '@app/admin/components/metadata-source-detail/metadata-source-detail.component';
 import { MatDividerModule } from '@angular/material/divider';
-import { ComicBooksModule } from '@app/comic-books/comic-books.module';
+import { ComicsModule } from '@app/comic-books/comic-books.module';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { metricsFeature } from '@app/admin/reducers/metrics.reducer';
 import { MetricsEffects } from '@app/admin/effects/metrics.effects';
@@ -110,7 +110,7 @@ import { UserAccountsPageComponent } from '@app/admin/pages/user-accounts-page/u
     DragDropModule,
     FlexLayoutModule,
     MatDividerModule,
-    ComicBooksModule,
+    ComicsModule,
     MatCheckboxModule,
     MatSelectModule,
     MatListModule,

@@ -33,7 +33,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 /**
- * <code>ReadingLists</code> represents a list of comics.
+ * <code>ReadingListListView</code> represents a list of comics.
  *
  * @author Darryl L. Pierce
  */
@@ -48,7 +48,7 @@ public class ReadingList implements StatefulItem<ReadingListState> {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "reading_list_id")
   @JsonProperty("readingListId")
-  @JsonView({View.ComicListView.class, View.ReadingLists.class})
+  @JsonView({View.ComicListView.class, View.ReadingListListView.class})
   @Getter
   private Long readingListId;
 
@@ -59,7 +59,7 @@ public class ReadingList implements StatefulItem<ReadingListState> {
       columnDefinition = "VARCHAR(32)")
   @Enumerated(EnumType.STRING)
   @JsonProperty("readingListState")
-  @JsonView({View.ComicListView.class, View.ReadingLists.class})
+  @JsonView({View.ComicListView.class, View.ReadingListListView.class})
   @Getter
   @Setter
   private ReadingListState readingListState = ReadingListState.STABLE;
@@ -73,20 +73,20 @@ public class ReadingList implements StatefulItem<ReadingListState> {
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "owner_id")
   @JsonProperty("owner")
-  @JsonView({View.ComicListView.class, View.ReadingLists.class})
+  @JsonView({View.ComicListView.class, View.ReadingListListView.class})
   @Getter
   @Setter
   private ComiXedUser owner;
 
   @Column(name = "reading_list_name", length = 128)
   @JsonProperty("name")
-  @JsonView({View.ComicListView.class, View.ReadingLists.class})
+  @JsonView({View.ComicListView.class, View.ReadingListListView.class})
   @Getter
   private String name;
 
   @Column(name = "summary", length = 256, nullable = true)
   @JsonProperty("summary")
-  @JsonView({View.ComicListView.class, View.ReadingLists.class})
+  @JsonView({View.ComicListView.class, View.ReadingListListView.class})
   @Getter
   @Setter
   private String summary;
@@ -96,14 +96,14 @@ public class ReadingList implements StatefulItem<ReadingListState> {
       name = "reading_list_entries_v5",
       joinColumns = @JoinColumn(name = "reading_list_id"))
   @Column(name = "comic_id")
-  @JsonView({View.ReadingLists.class})
+  @JsonView({View.ReadingListListView.class})
   @Getter
   private List<Long> entryIds = new ArrayList<>();
 
   @Column(name = "created_on")
   @CreatedDate
   @JsonProperty("createdOn")
-  @JsonView({View.ComicListView.class, View.ReadingLists.class})
+  @JsonView({View.ComicListView.class, View.ReadingListListView.class})
   @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
   @Getter
   @Setter
@@ -112,7 +112,7 @@ public class ReadingList implements StatefulItem<ReadingListState> {
   @Column(name = "last_modified_on")
   @LastModifiedDate
   @JsonProperty("lastModifiedOn")
-  @JsonView({View.ComicListView.class, View.ReadingListDetail.class})
+  @JsonView({View.ComicListView.class, View.ReadingListView.class})
   @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
   @Getter
   @Setter

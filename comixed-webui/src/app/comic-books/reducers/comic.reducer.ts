@@ -20,17 +20,17 @@ import { createFeature, createReducer, on } from '@ngrx/store';
 import {
   comicLoaded,
   comicUpdated,
-  downloadComicBook,
-  downloadComicBookFailure,
-  downloadComicBookSuccess,
-  loadComicBook,
-  loadComicBookFailed,
+  downloadComic,
+  downloadComicFailure,
+  downloadComicSuccess,
+  loadComic,
+  loadComicFailed,
   pageDeletionUpdated,
   pageOrderSaved,
   savePageOrder,
   savePageOrderFailed,
-  updateComicBook,
-  updateComicBookFailed,
+  updateComic,
+  updateComicFailed,
   updatePageDeletion,
   updatePageDeletionFailed
 } from '../actions/comic-book.actions';
@@ -64,7 +64,7 @@ export const initialState: ComicState = {
 export const reducer = createReducer(
   initialState,
 
-  on(loadComicBook, state => ({
+  on(loadComic, state => ({
     ...state,
     detail: null,
     metadata: null,
@@ -79,8 +79,8 @@ export const reducer = createReducer(
     pages: action.pages,
     tags: action.tags
   })),
-  on(loadComicBookFailed, state => ({ ...state, loading: false })),
-  on(updateComicBook, state => ({ ...state, saving: true, saved: false })),
+  on(loadComicFailed, state => ({ ...state, loading: false })),
+  on(updateComic, state => ({ ...state, saving: true, saved: false })),
   on(comicUpdated, (state, action) => {
     if (!!state.detail && state.detail.comicId === action.detail.comicId) {
       return {
@@ -95,7 +95,7 @@ export const reducer = createReducer(
       return state;
     }
   }),
-  on(updateComicBookFailed, state => ({
+  on(updateComicFailed, state => ({
     ...state,
     saving: false,
     saved: false
@@ -106,9 +106,9 @@ export const reducer = createReducer(
   on(savePageOrder, state => ({ ...state, saving: true })),
   on(pageOrderSaved, state => ({ ...state, saving: false })),
   on(savePageOrderFailed, state => ({ ...state, saving: false })),
-  on(downloadComicBook, state => ({ ...state, loading: true })),
-  on(downloadComicBookSuccess, state => ({ ...state, loading: false })),
-  on(downloadComicBookFailure, state => ({ ...state, loading: false }))
+  on(downloadComic, state => ({ ...state, loading: true })),
+  on(downloadComicSuccess, state => ({ ...state, loading: false })),
+  on(downloadComicFailure, state => ({ ...state, loading: false }))
 );
 
 export const comicFeature = createFeature({

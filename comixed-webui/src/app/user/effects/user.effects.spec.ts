@@ -52,11 +52,11 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { TokenService } from '@app/core/services/token.service';
 import { AlertService } from '@app/core/services/alert.service';
 import { provideRouter, Router } from '@angular/router';
-import { setReadComicBooks } from '@app/user/actions/read-comic-books.actions';
+import { setReadComics } from '@app/user/actions/read-comic-books.actions';
 
 describe('UserEffects', () => {
   const LAST_READ_ENTRIES = [READ_COMIC_1, READ_COMIC_2, READ_COMIC_3];
-  const USER = { ...USER_READER, readComicBooks: LAST_READ_ENTRIES };
+  const USER = { ...USER_READER, readComics: LAST_READ_ENTRIES };
   const PASSWORD = 'this!is!my!password';
   const AUTH_TOKEN = 'my!token';
   const PREFERENCE_NAME = 'user.preference';
@@ -116,7 +116,7 @@ describe('UserEffects', () => {
       const serviceResponse = USER;
       const action = loadCurrentUser();
       const outcome1 = loadCurrentUserSuccess({ user: USER });
-      const outcome2 = setReadComicBooks({ entries: LAST_READ_ENTRIES });
+      const outcome2 = setReadComics({ entries: LAST_READ_ENTRIES });
 
       actions$ = hot('-a', { a: action });
       userService.loadCurrentUser.and.returnValue(of(serviceResponse));

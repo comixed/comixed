@@ -35,8 +35,8 @@ import org.springframework.stereotype.Service;
 public class ComicMetadataSourceService {
   @Autowired private ComicMetadataSourceRepository comicMetadataSourceRepository;
 
-  public ComicMetadataSource getMetadataForComicBook(final long id) {
+  public ComicMetadataSource getMetadataForComic(final long id) {
     log.debug("Loading comic metadata source for comic book: id={}", id);
-    return this.comicMetadataSourceRepository.findByComicBookId(id);
+    return this.comicMetadataSourceRepository.findByComicId(id);
   }
 }

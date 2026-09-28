@@ -55,7 +55,7 @@ class PublishDuplicatePageListUpdateActionTest {
 
     action.publish(duplicatePageList);
 
-    Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.DuplicatePageList.class);
+    Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.DuplicatePageListView.class);
     Mockito.verify(objectWriter, Mockito.times(1)).writeValueAsString(duplicatePageList);
     Mockito.verify(messagingTemplate, Mockito.times(1))
         .convertAndSend(

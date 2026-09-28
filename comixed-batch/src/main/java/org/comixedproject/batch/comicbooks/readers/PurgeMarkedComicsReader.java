@@ -42,6 +42,6 @@ public class PurgeMarkedComicsReader extends AbstractComicReader {
   @Override
   protected List<Comic> doLoadComics() {
     log.trace("Loading comics marked for purging");
-    return this.comicService.findComicBooksToBePurged(this.chunkSize);
+    return this.comicService.findComicsToBePurged(this.chunkSize);
   }
 }
