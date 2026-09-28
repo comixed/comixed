@@ -1,0 +1,171 @@
+<form [formGroup]="publicationForm">
+  <p-card>
+    <ng-template #header></ng-template>
+
+    <div class="cx-width-100p cx-flex-content-container-row">
+      <div class="cx-flex-content-grow-1">
+        <p-ifta-label>
+          @if (isLoading()) {
+            <p-skeleton id="publisher-placeholder" />
+          } @else {
+            <label for="publisher-input">
+              {{ "comic-publication-detail.label.publisher" | translate }}
+            </label>
+            <input
+              id="publisher-input"
+              formControlName="publisher"
+              pInputText
+              class="cx-width-100p"
+            />
+          }
+        </p-ifta-label>
+      </div>
+      <div class="cx-flex-content-grow-1">
+        @if (isLoading()) {
+          <p-skeleton id="imprint-placeholder" />
+        } @else {
+          <p-ifta-label>
+            <label for="imprint-input">
+              {{ "comic-publication-detail.label.imprint" | translate }}
+            </label>
+            <input
+              id="imprint-input"
+              formControlName="imprint"
+              pInputText
+              class="cx-width-100p"
+            />
+          </p-ifta-label>
+        }
+      </div>
+    </div>
+    <div class="cx-width-100p cx-flex-content-container-row">
+      <div class="cx-flex-content-grow-1">
+        @if (isLoading()) {
+          <p-skeleton id="series-placeholder" />
+        } @else {
+          <p-ifta-label>
+            <label for="series-input">
+              {{ "comic-publication-detail.label.series" | translate }}
+            </label>
+            <input
+              id="series-input"
+              formControlName="series"
+              pInputText
+              class="cx-width-100p"
+            />
+          </p-ifta-label>
+        }
+      </div>
+      <div class="cx-flex-content-grow-1">
+        @if (isLoading()) {
+          <p-skeleton id="volume-placeholder" />
+        } @else {
+          <p-ifta-label>
+            <label for="volume-input">
+              {{ "comic-publication-detail.label.volume" | translate }}
+            </label>
+            <input
+              id="volume-input"
+              formControlName="volume"
+              pInputText
+              class="cx-width-100p"
+            />
+          </p-ifta-label>
+        }
+      </div>
+      <div class="cx-flex-content-grow-1">
+        @if (isLoading()) {
+          <p-skeleton id="publisher-placeholder" />
+        } @else {
+          <p-ifta-label>
+            <label for="issue-number-input">
+              {{ "comic-publication-detail.label.issue-number" | translate }}
+            </label>
+            <input
+              id="issue-number-input"
+              formControlName="issueNumber"
+              pInputText
+              class="cx-width-100p"
+            />
+          </p-ifta-label>
+        }
+      </div>
+    </div>
+
+    <div class="cx-flex-content-container-row cx-width-100p">
+      <div class="cx-flex-content-grow-1">
+        @if (isLoading()) {
+          <p-skeleton id="cover-date-placeholder" />
+        } @else {
+          <p-fluid>
+            <div>
+              <label for="cover-date-input">
+                {{ "comic-publication-detail.label.cover-date" | translate }}
+              </label>
+              <p-date-picker
+                formControlName="coverDate"
+                [showIcon]="true"
+                inputId="cover-date-input"
+                [showOnFocus]="false"
+                [showClear]="true"
+              ></p-date-picker>
+            </div>
+          </p-fluid>
+        }
+      </div>
+      <div class="cx-flex-content-grow-1">
+        @if (isLoading()) {
+          <p-skeleton id="store-date-placeholder" />
+        } @else {
+          <p-fluid>
+            <div>
+              <label for="store-date-input">
+                {{ "comic-publication-detail.label.store-date" | translate }}
+              </label>
+              <p-date-picker
+                formControlName="storeDate"
+                [showIcon]="true"
+                inputId="store-date-input"
+                [showOnFocus]="false"
+                [showClear]="true"
+              ></p-date-picker>
+            </div>
+          </p-fluid>
+        }
+      </div>
+      <div class="cx-flex-content-grow-1">
+        @if (isLoading()) {
+          <p-skeleton id="added-date-placeholder" />
+        } @else {
+          <p-fluid>
+            <div>
+              <label for="added-date-input">
+                {{ "comic-publication-detail.label.added-date" | translate }}
+              </label>
+              <p-date-picker
+                formControlName="addedDate"
+                [showIcon]="true"
+                [showOnFocus]="true"
+                inputId="added-date-input"
+              ></p-date-picker>
+            </div>
+          </p-fluid>
+        }
+      </div>
+      <div class="cx-flex-content-grow-2"></div>
+    </div>
+
+    <ng-template #footer>
+      <div class="cx-width-100p">
+        <p-button
+          id="save-publication-changes"
+          icon="pi pi-send"
+          severity="primary"
+          [label]="'app.button.submit' | translate"
+          [disabled]="!publicationForm.valid || isLoading()"
+          (onClick)="onUpdateComic()"
+        />
+      </div>
+    </ng-template>
+  </p-card>
+</form>
