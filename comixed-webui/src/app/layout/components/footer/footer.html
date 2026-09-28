@@ -1,0 +1,18 @@
+<p-toolbar>
+  <ng-template #start>
+    {{ "app.text.version" | translate: { version: version() } }}
+  </ng-template>
+
+  <ng-template #center>
+    @if (authenticated()) {
+      <app-library-statistics-panel
+        id="library-statistics"
+        id="library-statistics"
+      ></app-library-statistics-panel>
+    }
+  </ng-template>
+
+  <ng-template #end>
+    <a href="http://www.comixedproject.org">The ComiXed Project.</a>
+  </ng-template>
+</p-toolbar>

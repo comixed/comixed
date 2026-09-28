@@ -46,6 +46,12 @@ public class ProcessComicsStatus {
   @Setter
   private boolean active = true;
 
+  @JsonProperty("jobId")
+  @JsonView(View.GenericObjectView.class)
+  @Getter
+  @Setter
+  private long jobId;
+
   @JsonProperty("stepName")
   @JsonView(View.GenericObjectView.class)
   @Getter

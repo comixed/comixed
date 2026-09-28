@@ -1,0 +1,279 @@
+<form [formGroup]="configurationForm">
+  <p-card class="cx-width-100p">
+    <ng-template #header>
+      <p-breadcrumb [model]="trail()" [home]="home" />
+    </ng-template>
+
+    <div class="cx-width-100p cx-flex-content-container-row">
+      <div class="cx-flex-content-grow-1" style="min-height: 0">
+        <p-card class="cx-width-100p cx-height-100p">
+          <ng-template #header>
+            <h3 class="cx-width-100p cx-justify-center cx-no-text-wrap">
+              {{
+                "library-settings-page.text.variable-definition-title"
+                  | translate
+              }}
+            </h3>
+          </ng-template>
+
+          <p-table
+            [value]="comicVariableOptions"
+            dataKey="label"
+            [paginator]="false"
+            stripedRows
+            [first]="0"
+            [rows]="comicVariableOptions.length"
+            [totalRecords]="comicVariableOptions.length"
+          >
+            <ng-template #header>
+              <tr>
+                <th>
+                  {{ "library-settings-page.label.variable-name" | translate }}
+                </th>
+                <th>
+                  {{ "library-settings-page.label.variable-use" | translate }}
+                </th>
+              </tr>
+            </ng-template>
+
+            <ng-template #body let-option>
+              <tr>
+                <td>
+                  <strong>{{ option.label }}</strong>
+                </td>
+                <td>{{ option.value | translate }}</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </p-card>
+      </div>
+
+      <div class="cx-flex-content-grow-1" style="min-height: 0">
+        <p-card class="cx-width-100p">
+          <ng-template #header>
+            <h3 class="cx-width-100p cx-justify-center cx-no-text-wrap">
+              {{
+                "library-settings-page.text.file-system-settings-title"
+                  | translate
+              }}
+            </h3>
+          </ng-template>
+
+          <div class="cx-form-field">
+            <label for="root-directory-input">
+              {{ "library-settings-page.label.root-directory" | translate }}
+            </label>
+            @if (configurationOptionsBusy()) {
+              <p-skeleton />
+            } @else {
+              <input
+                id="root-directory-input"
+                formControlName="rootDirectory"
+                pInputText
+                [placeholder]="
+                  'library-settings-page.placeholder.root-directory' | translate
+                "
+              />
+            }
+          </div>
+
+          <div class="cx-form-field">
+            <label for="comic-renaming-rule-input">
+              {{ "library-settings-page.label.file-renaming-rule" | translate }}
+            </label>
+            @if (configurationOptionsBusy()) {
+              <p-skeleton />
+            } @else {
+              <input
+                id="comic-renaming-rule-input"
+                formControlName="comicRenamingRule"
+                pInputText
+                [placeholder]="
+                  'library-settings-page.placeholder.file-renaming-rule'
+                    | translate
+                "
+              />
+            }
+          </div>
+
+          <div class="cx-form-field">
+            <label for="page-renaming-rule-input">
+              {{ "library-settings-page.label.page-renaming-rule" | translate }}
+            </label>
+            @if (configurationOptionsBusy()) {
+              <p-skeleton />
+            } @else {
+              <input
+                id="page-renaming-rule-input"
+                formControlName="pageRenamingRule"
+                pInputText
+                [placeholder]="
+                  'library-settings-page.placeholder.page-renaming-rule'
+                    | translate
+                "
+              />
+            }
+          </div>
+        </p-card>
+
+        <p-card class="cx-width-100p">
+          <ng-template #header>
+            <h3 class="cx-width-100p cx-justify-center cx-no-text-wrap">
+              {{
+                "library-settings-page.text.other-settings-title" | translate
+              }}
+            </h3>
+          </ng-template>
+
+          <ul>
+            <li>
+              <p-check-box
+                id="delete-when-purging-input"
+                [binary]="true"
+                [disabled]="configurationOptionsBusy()"
+                formControlName="deleteWhenPurging"
+              />
+              <label for="delete-when-purging-input">
+                {{
+                  "library-settings-page.label.delete-when-purging" | translate
+                }}
+              </label>
+            </li>
+            <li>
+              <p-check-box
+                id="delete-empty-directories-input"
+                [binary]="true"
+                [disabled]="configurationOptionsBusy()"
+                formControlName="deleteEmptyDirectories"
+              />
+              <label for="delete-empty-directories-input">
+                {{
+                  "library-settings-page.label.delete-empty-directories"
+                    | translate
+                }}
+              </label>
+            </li>
+            <li>
+              <p-check-box
+                id="ignore-unscraped-comics-input"
+                [binary]="true"
+                [disabled]="configurationOptionsBusy()"
+                formControlName="ignoreUnscrapedComics"
+              />
+              <label for="ignore-unscraped-comics-input">
+                {{
+                  "library-settings-page.label.ignore-unscraped-comics"
+                    | translate
+                }}
+              </label>
+            </li>
+            <li>
+              <p-check-box
+                id="create-external-metadata-input"
+                [binary]="true"
+                [disabled]="configurationOptionsBusy()"
+                formControlName="createExternalMetadata"
+              />
+              <label for="create-external-metadata-input">
+                {{
+                  "library-settings-page.label.create-external-metadata"
+                    | translate
+                }}
+              </label>
+            </li>
+            <li>
+              <p-check-box
+                id="do-not-update-internal-metadata-input"
+                [binary]="true"
+                [disabled]="configurationOptionsBusy()"
+                formControlName="doNotUpdateInternalMetadata"
+              />
+              <label for="do-not-update-internal-metadata-input">
+                {{
+                  "library-settings-page.label.do-not-update-internal-metadata"
+                    | translate
+                }}
+              </label>
+            </li>
+            <li>
+              <p-check-box
+                id="do-not-recreate-archives-input"
+                [binary]="true"
+                [disabled]="configurationOptionsBusy()"
+                formControlName="doNotRecreateArchives"
+              />
+              <label for="do-not-recreate-archives-input">
+                {{
+                  "library-settings-page.label.do-not-recreate-archives"
+                    | translate
+                }}
+              </label>
+            </li>
+            <li>
+              <p-check-box
+                id="manage-blocked-pages-input"
+                [binary]="true"
+                [disabled]="configurationOptionsBusy()"
+                formControlName="manageBlockedPages"
+              />
+              <label for="manage-blocked-pages-input">
+                {{
+                  "library-settings-page.label.manage-blocked-pages" | translate
+                }}
+              </label>
+            </li>
+            <li>
+              <p-check-box
+                id="strip-html-from-metadata-input"
+                [binary]="true"
+                [disabled]="configurationOptionsBusy()"
+                formControlName="stripHtmlFromMetadata"
+              />
+              <label for="strip-html-from-metadata-input">
+                {{
+                  "library-settings-page.label.strip-html-from-metadata"
+                    | translate
+                }}
+              </label>
+            </li>
+            <li>
+              <p-check-box
+                id="exclusive-batch-access-input"
+                [binary]="true"
+                [disabled]="configurationOptionsBusy()"
+                formControlName="exclusiveBatchAccess"
+              />
+              <label for="exclusive-batch-access-input">
+                {{
+                  "library-settings-page.label.exclusive-batch-access"
+                    | translate
+                }}
+              </label>
+            </li>
+          </ul>
+        </p-card>
+      </div>
+    </div>
+
+    <ng-template #footer>
+      <div class="cx-width-100p cx-padding-15 cx-justify-end">
+        <p-button
+          id="save-configuration-changes"
+          icon="pi pi-send"
+          severity="primary"
+          [label]="'app.button.submit' | translate"
+          [disabled]="!configurationForm.valid || configurationOptionsBusy()"
+          (onClick)="onSaveSettings()"
+        />
+        <p-button
+          id="reset-configuration-changes"
+          icon="pi pi-undo"
+          severity="warn"
+          [label]="'app.button.reset' | translate"
+          [disabled]="!configurationForm.dirty || configurationOptionsBusy()"
+          (onClick)="onResetChanges()"
+        />
+      </div>
+    </ng-template>
+  </p-card>
+</form>

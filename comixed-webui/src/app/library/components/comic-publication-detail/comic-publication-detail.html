@@ -1,0 +1,215 @@
+<form [formGroup]="publicationForm" class="publication-form">
+  <p-card>
+    <section class="form-section">
+      <h3>
+        {{ "comic-publication-detail.title.publication-info" | translate }}
+      </h3>
+      <div class="form-grid">
+        <!-- Publisher -->
+        <div class="form-field">
+          <p-ifta-label>
+            <label for="publisher-input">
+              {{ "comic-publication-detail.label.notes" | translate }}
+            </label>
+            <input
+              id="publisher-input"
+              formControlName="publisher"
+              pInputText
+            />
+          </p-ifta-label>
+        </div>
+
+        <!-- Imprint -->
+        <div class="form-field">
+          <p-ifta-label>
+            <label for="imprint-input">
+              {{ "comic-publication-detail.label.imprint" | translate }}
+            </label>
+            <input id="imprint-input" formControlName="imprint" pInputText />
+          </p-ifta-label>
+        </div>
+
+        <!-- Series -->
+        <div class="form-field">
+          <p-ifta-label>
+            <label for="series-input">
+              {{ "comic-publication-detail.label.series" | translate }}
+            </label>
+            <input id="series-input" formControlName="series" pInputText />
+          </p-ifta-label>
+        </div>
+
+        <!-- Volume -->
+        <div class="form-field">
+          <p-ifta-label>
+            <label for="volume-input">
+              {{ "comic-publication-detail.label.volume" | translate }}
+            </label>
+            <input id="volume-input" formControlName="volume" pInputText />
+          </p-ifta-label>
+        </div>
+
+        <!-- Issue Number -->
+        <div class="form-field">
+          <p-ifta-label>
+            <label for="issue-number-input">
+              {{ "comic-publication-detail.label.issue-number" | translate }}
+            </label>
+            <input
+              id="issue-number-input"
+              formControlName="issueNumber"
+              pInputText
+            />
+          </p-ifta-label>
+        </div>
+
+        <!-- Title -->
+        <div class="form-field form-field-wide">
+          <p-ifta-label>
+            <label for="title-input">
+              {{ "comic-publication-detail.label.title" | translate }}
+            </label>
+            <input id="title-input" formControlName="title" pInputText />
+          </p-ifta-label>
+        </div>
+
+        <div class="form-field">
+          <label for="cover-date-input">
+            {{ "comic-publication-detail.label.cover-date" | translate }}
+          </label>
+          <p-date-picker
+            formControlName="coverDate"
+            inputId="cover-date-input"
+            [showIcon]="true"
+            [showClear]="true"
+          />
+        </div>
+
+        <div class="form-field">
+          <label for="store-date-input">
+            {{ "comic-publication-detail.label.store-date" | translate }}
+          </label>
+          <p-date-picker
+            formControlName="storeDate"
+            inputId="store-date-input"
+            [showIcon]="true"
+            [showClear]="true"
+          />
+        </div>
+      </div>
+    </section>
+
+    <section class="form-section">
+      <h3>{{ "comic-publication-detail.title.file-info" | translate }}</h3>
+      <div class="form-grid">
+        <div class="form-field form-field-wide">
+          <p-ifta-label>
+            <label for="filename-input">
+              {{ "comic-publication-detail.label.filename" | translate }}
+            </label>
+            <input
+              id="filename-input"
+              formControlName="filename"
+              pInputText
+              readonly
+            />
+          </p-ifta-label>
+        </div>
+        <div class="form-field form-field-wide">
+          <p-ifta-label>
+            <label for="notes-input">
+              {{ "comic-publication-detail.label.notes" | translate }}
+            </label>
+            <input
+              id="notes-input"
+              formControlName="notes"
+              pInputTextarea
+              readonly
+            />
+          </p-ifta-label>
+        </div>
+
+        <div class="form-field">
+          <p-ifta-label>
+            <label for="comic-type-input">
+              {{ "comic-publication-detail.label.comic-type" | translate }}
+            </label>
+            <input
+              id="comic-type-input"
+              formControlName="comicType"
+              pInputText
+              readonly
+            />
+          </p-ifta-label>
+        </div>
+
+        <div class="form-field">
+          <p-ifta-label>
+            <label for="archive-type-input">
+              {{ "comic-publication-detail.label.archive-type" | translate }}
+            </label>
+            <input
+              id="archive-type-input"
+              formControlName="archiveType"
+              pInputText
+              readonly
+            />
+          </p-ifta-label>
+        </div>
+
+        <div class="form-field">
+          <p-ifta-label>
+            <label for="comic-state-input">
+              {{ "comic-publication-detail.label.comic-state" | translate }}
+            </label>
+            <input
+              id="comic-state-input"
+              formControlName="comicState"
+              pInputText
+              readonly
+            />
+          </p-ifta-label>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-field">
+          <label for="added-date-input">
+            {{ "comic-publication-detail.label.added-date" | translate }}
+          </label>
+          <p-date-picker
+            formControlName="addedDate"
+            inputId="added-date-input"
+            [showIcon]="true"
+          />
+        </div>
+
+        <div class="form-field">
+          <label for="last-modified-date-input">
+            {{
+              "comic-publication-detail.label.last-modified-date" | translate
+            }}
+          </label>
+          <p-date-picker
+            formControlName="lastModifiedDate"
+            inputId="last-modified-date-input"
+            [showIcon]="true"
+          />
+        </div>
+      </div>
+    </section>
+
+    <ng-template #footer>
+      <div class="form-actions">
+        <p-button
+          id="save-publication-changes"
+          icon="pi pi-save"
+          severity="primary"
+          [label]="'app.button.submit' | translate"
+          [disabled]="!publicationForm.valid || isLoading()"
+          (onClick)="onUpdateComic()"
+        />
+      </div>
+    </ng-template>
+  </p-card>
+</form>
