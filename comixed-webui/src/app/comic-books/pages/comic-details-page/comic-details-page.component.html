@@ -15,7 +15,7 @@
         mat-fab
         color="accent"
         [matTooltip]="'comic-book.tooltip.go-to-previous-comic' | translate"
-        [disabled]="!comic?.previousIssueId"
+        [disabled]="!(comic$ | async)?.previousIssueId"
         [routerLink]="['/comics', (comic$ | async)?.previousIssueId]"
       >
         <mat-icon>arrow_back</mat-icon>
@@ -25,7 +25,7 @@
         class="cx-toolbar-button"
         mat-fab
         color="accent"
-        [disabled]="!comic?.nextIssueId"
+        [disabled]="!(comic$ | async)?.nextIssueId"
         [matTooltip]="'comic-book.tooltip.go-to-next-comic' | translate"
         [routerLink]="['/comics', (comic$ | async)?.nextIssueId]"
       >

@@ -26,5 +26,6 @@
     <include file="/db/migrations/4.0/009_2785_create_the_comics_table.xml"/>
     <include file="/db/migrations/4.0/010_2785_migrate_comic_details_table.xml"/>
     <include file="/db/migrations/4.0/011_2785_recreate_views.xml"/>
+    <include file="/db/migrations/4.0/012_2443_add_next_and_previous_issue_to_displayable_comics_view.xml"/>
 
 </databaseChangeLog>
