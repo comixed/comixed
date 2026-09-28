@@ -53,6 +53,7 @@ public class ComiXedUser {
   @Transient @JsonIgnore private String password;
 
   @Column(name = "password_hash", updatable = true, nullable = false)
+  @JsonIgnore
   @Getter
   @Setter
   private String passwordHash;
