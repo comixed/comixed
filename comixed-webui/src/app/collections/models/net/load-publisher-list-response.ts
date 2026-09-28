@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2024, The ComiXed Project
+ * Copyright (C) 2026, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,6 @@
 import { Publisher } from '@app/collections/models/publisher';
 
 export interface LoadPublisherListResponse {
-  total: number;
   publishers: Publisher[];
+  total: number;
 }
