@@ -1,0 +1,6 @@
+@use './variables' as *;
+
+#comic-cover-container {
+  max-height: $cx-portal-height;
+  width: max(25vw, min(400px, 100vw));
+}
