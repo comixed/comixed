@@ -97,7 +97,7 @@ class DisplayableComicServiceTest {
   @Mock private Stream<DisplayableComic> comicListStream;
   @Mock private List<Integer> yearList;
   @Mock private List<Integer> monthList;
-  @Mock private Set<Long> readComicBookList;
+  @Mock private Set<Long> readComicList;
   @Mock private ComiXedUser user;
   @Mock private ReadingList readingList;
   @Mock private DisplayableComic displayableComic;
@@ -114,7 +114,7 @@ class DisplayableComicServiceTest {
     when(comicListStream.map(Mockito.any(Function.class))).thenReturn(integerStream);
     when(comicList.stream()).thenReturn(comicListStream);
 
-    when(user.getReadComicBooks()).thenReturn(readComicBookList);
+    when(user.getReadComics()).thenReturn(readComicList);
 
     when(readingList.getReadingListId()).thenReturn(TEST_READING_LIST_ID);
     when(readingListService.loadReadingListForUser(Mockito.anyString(), Mockito.anyLong()))
@@ -422,7 +422,7 @@ class DisplayableComicServiceTest {
     assertEquals(TEST_PAGE_INDEX, pageable.getPageNumber());
     assertEquals(TEST_PAGE_SIZE, pageable.getPageSize());
 
-    verify(displayableComicRepository).loadUnreadComics(readComicBookList, pageable);
+    verify(displayableComicRepository).loadUnreadComics(readComicList, pageable);
   }
 
   @Test
@@ -442,7 +442,7 @@ class DisplayableComicServiceTest {
     assertEquals(TEST_PAGE_INDEX, pageable.getPageNumber());
     assertEquals(TEST_PAGE_SIZE, pageable.getPageSize());
 
-    verify(displayableComicRepository).loadReadComics(readComicBookList, pageable);
+    verify(displayableComicRepository).loadReadComics(readComicList, pageable);
   }
 
   @Test
@@ -636,23 +636,23 @@ class DisplayableComicServiceTest {
   }
 
   @Test
-  void getForComicBookId_notFound() {
-    when(displayableComicRepository.getByComicBookId(TEST_COMIC_ID)).thenReturn(null);
+  void getForComicId_notFound() {
+    when(displayableComicRepository.getByComicId(TEST_COMIC_ID)).thenReturn(null);
 
-    assertThrows(ComicException.class, () -> service.getForComicBookId(TEST_COMIC_ID));
+    assertThrows(ComicException.class, () -> service.getForComicId(TEST_COMIC_ID));
 
-    verify(displayableComicRepository).getByComicBookId(TEST_COMIC_ID);
+    verify(displayableComicRepository).getByComicId(TEST_COMIC_ID);
   }
 
   @Test
-  void getForComicBookId() throws ComicException {
-    when(displayableComicRepository.getByComicBookId(TEST_COMIC_ID)).thenReturn(displayableComic);
+  void getForComicId() throws ComicException {
+    when(displayableComicRepository.getByComicId(TEST_COMIC_ID)).thenReturn(displayableComic);
 
-    final DisplayableComic result = service.getForComicBookId(TEST_COMIC_ID);
+    final DisplayableComic result = service.getForComicId(TEST_COMIC_ID);
 
     assertNotNull(result);
     assertSame(displayableComic, result);
 
-    verify(displayableComicRepository).getByComicBookId(TEST_COMIC_ID);
+    verify(displayableComicRepository).getByComicId(TEST_COMIC_ID);
   }
 }

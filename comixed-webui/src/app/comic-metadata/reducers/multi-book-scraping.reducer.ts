@@ -18,9 +18,9 @@
 
 import { createFeature, createReducer, on } from '@ngrx/store';
 import {
-  batchScrapeComicBooks,
-  batchScrapeComicBooksFailure,
-  batchScrapeComicBooksSuccess,
+  batchScrapeComics,
+  batchScrapeComicsFailure,
+  batchScrapeComicsSuccess,
   loadMultiBookScrapingPage,
   loadMultiBookScrapingPageFailure,
   loadMultiBookScrapingPageSuccess,
@@ -48,7 +48,7 @@ export interface MultiBookScrapingState {
   pageSize: number;
   pageNumber: number;
   totalComics: number;
-  currentComicBook: DisplayableComic;
+  currentComic: DisplayableComic;
 }
 
 export const initialState: MultiBookScrapingState = {
@@ -58,10 +58,10 @@ export const initialState: MultiBookScrapingState = {
   pageSize: PAGE_SIZE_DEFAULT,
   pageNumber: 0,
   totalComics: 0,
-  currentComicBook: null
+  currentComic: null
 };
 
-function getCurrentComicBook(comics): DisplayableComic {
+function getCurrentComic(comics): DisplayableComic {
   if (comics?.length > 0) {
     return comics[0];
   }
@@ -86,7 +86,7 @@ export const reducer = createReducer(
     pageNumber: action.pageNumber,
     totalComics: action.totalComics,
     comics: action.comics,
-    currentComicBook: getCurrentComicBook(action.comics),
+    currentComic: getCurrentComic(action.comics),
     status: updateStatus(action.comics)
   })),
   on(startMultiBookScrapingFailure, state => ({
@@ -106,7 +106,7 @@ export const reducer = createReducer(
   on(loadMultiBookScrapingPageFailure, state => ({ ...state, busy: false })),
   on(multiBookScrapingSetCurrentBook, (state, action) => ({
     ...state,
-    currentComicBook: action.comic
+    currentComic: action.comic
   })),
   on(multiBookScrapingRemoveBook, state => ({ ...state, busy: true })),
   on(multiBookScrapingRemoveBookSuccess, (state, action) => ({
@@ -116,7 +116,7 @@ export const reducer = createReducer(
     pageNumber: action.pageNumber,
     totalComics: action.totalComics,
     comics: action.comics,
-    currentComicBook: getCurrentComicBook(action.comics),
+    currentComic: getCurrentComic(action.comics),
     status: updateStatus(action.comics)
   })),
   on(multiBookScrapingRemoveBookFailure, state => ({ ...state, busy: false })),
@@ -128,13 +128,13 @@ export const reducer = createReducer(
     pageNumber: action.pageNumber,
     totalComics: action.totalComics,
     comics: action.comics,
-    currentComicBook: getCurrentComicBook(action.comics),
+    currentComic: getCurrentComic(action.comics),
     status: updateStatus(action.comics)
   })),
   on(multiBookScrapeComicFailure, state => ({ ...state, busy: false })),
-  on(batchScrapeComicBooks, state => ({ ...state, busy: true })),
-  on(batchScrapeComicBooksSuccess, state => ({ ...state, busy: false })),
-  on(batchScrapeComicBooksFailure, state => ({ ...state, busy: false }))
+  on(batchScrapeComics, state => ({ ...state, busy: true })),
+  on(batchScrapeComicsSuccess, state => ({ ...state, busy: false })),
+  on(batchScrapeComicsFailure, state => ({ ...state, busy: false }))
 );
 
 export const multiBookScrapingFeature = createFeature({

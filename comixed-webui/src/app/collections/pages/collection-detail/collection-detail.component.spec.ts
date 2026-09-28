@@ -73,7 +73,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import {
   COMIC_SELECTION_FEATURE_KEY,
-  initialState as initialComicBookSelectionState
+  initialState as initialComicSelectionState
 } from '@app/comic-books/reducers/comic-selection.reducer';
 import {
   QUERY_PARAM_PAGE_INDEX,
@@ -81,7 +81,7 @@ import {
   QUERY_PARAM_SORT_BY,
   QUERY_PARAM_SORT_DIRECTION
 } from '@app/core';
-import { setMultipleComicBooksByTagTypeAndValueSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
+import { setMultipleComicsByTagTypeAndValueSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
 import {
   initialState as initialLibraryPluginState,
   LIBRARY_PLUGIN_FEATURE_KEY
@@ -107,7 +107,7 @@ describe('CollectionDetailComponent', () => {
   const USER = USER_READER;
   const initialState = {
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
-    [COMIC_SELECTION_FEATURE_KEY]: initialComicBookSelectionState,
+    [COMIC_SELECTION_FEATURE_KEY]: initialComicSelectionState,
     [COMIC_LIST_FEATURE_KEY]: {
       ...initialComicListState,
       comics: COMIC_LIST
@@ -361,7 +361,7 @@ describe('CollectionDetailComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        setMultipleComicBooksByTagTypeAndValueSelectionState({
+        setMultipleComicsByTagTypeAndValueSelectionState({
           selected: SELECT,
           tagType: TAG_TYPE,
           tagValue: TAG_VALUE

@@ -28,7 +28,7 @@ import {
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Store } from '@ngrx/store';
-import { updateComicBook } from '@app/comic-books/actions/comic-book.actions';
+import { updateComic } from '@app/comic-books/actions/comic-book.actions';
 import { BehaviorSubject, filter, tap } from 'rxjs';
 import { SelectionOption } from '@app/core/models/ui/selection-option';
 import { Imprint } from '@app/comic-books/models/imprint';
@@ -219,7 +219,7 @@ export class ComicDetailEditComponent implements OnInit {
       confirm: () => {
         this.logger.debug('Saving changes to comic:', this.comic);
         this.store.dispatch(
-          updateComicBook({
+          updateComic({
             comicId: this.comic.comicId,
             comicType: this.comicForm.controls.comicType.value,
             publisher: this.comicForm.controls.publisher.value,

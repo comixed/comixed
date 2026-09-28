@@ -55,13 +55,13 @@ import { loadVolumeMetadata } from '@app/comic-metadata/actions/single-book-scra
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 import {
   COMIC_FEATURE_KEY,
-  initialState as initialComicBookState
+  initialState as initialComicState
 } from '@app/comic-books/reducers/comic.reducer';
 import { TitleService } from '@app/core/services/title.service';
-import { updateSingleComicBookMetadata } from '@app/library/actions/update-metadata.actions';
+import { updateSingleComicMetadata } from '@app/library/actions/update-metadata.actions';
 import {
-  deleteSingleComicBook,
-  undeleteSingleComicBook
+  deleteSingleComic,
+  undeleteSingleComic
 } from '@app/comic-books/actions/delete-comic-books.actions';
 import {
   initialState as initialMessagingState,
@@ -73,7 +73,7 @@ import { COMIC_UPDATE_TOPIC } from '@app/comic-books/comic-books.constants';
 import { interpolate } from '@app/core';
 import {
   comicLoaded,
-  downloadComicBook,
+  downloadComic,
   savePageOrder
 } from '@app/comic-books/actions/comic-book.actions';
 import { ComicPageUrlPipe } from '@app/comic-books/pipes/comic-page-url.pipe';
@@ -87,9 +87,9 @@ import {
 } from '@tragically-slick/confirmation';
 import { ComicState } from '@app/comic-books/models/comic-state';
 import { METADATA_SOURCE_1 } from '@app/comic-metadata/comic-metadata.fixtures';
-import { markSingleComicBookRead } from '@app/user/actions/read-comic-books.actions';
+import { markSingleComicRead } from '@app/user/actions/read-comic-books.actions';
 import {
-  initialState as initialReadComicBooksState,
+  initialState as initialReadComicsState,
   READ_COMICS_FEATURE_KEY
 } from '@app/user/reducers/read-comics.reducer';
 import {
@@ -131,9 +131,9 @@ describe('ComicDetailsPageComponent', () => {
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER },
     [SINGLE_BOOK_SCRAPING_FEATURE_KEY]: { ...initialScrapingState },
-    [COMIC_FEATURE_KEY]: { ...initialComicBookState },
+    [COMIC_FEATURE_KEY]: { ...initialComicState },
     [MESSAGING_FEATURE_KEY]: { ...initialMessagingState },
-    [READ_COMICS_FEATURE_KEY]: { ...initialReadComicBooksState },
+    [READ_COMICS_FEATURE_KEY]: { ...initialReadComicsState },
     [IMPRINT_LIST_FEATURE_KEY]: { ...initialImprintListState }
   };
 
@@ -210,7 +210,7 @@ describe('ComicDetailsPageComponent', () => {
       store.setState({
         ...initialState,
         [COMIC_FEATURE_KEY]: {
-          ...initialComicBookState,
+          ...initialComicState,
           detail: DETAIL
         }
       });
@@ -298,7 +298,7 @@ describe('ComicDetailsPageComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          markSingleComicBookRead({
+          markSingleComicRead({
             comicId: DETAIL.comicId,
             read: true
           })
@@ -313,7 +313,7 @@ describe('ComicDetailsPageComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          markSingleComicBookRead({
+          markSingleComicRead({
             comicId: DETAIL.comicId,
             read: false
           })
@@ -337,7 +337,7 @@ describe('ComicDetailsPageComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        updateSingleComicBookMetadata({ comicId: DETAIL.comicId })
+        updateSingleComicMetadata({ comicId: DETAIL.comicId })
       );
     });
   });
@@ -353,7 +353,7 @@ describe('ComicDetailsPageComponent', () => {
         store.setState({
           ...initialState,
           [READ_COMICS_FEATURE_KEY]: {
-            ...initialReadComicBooksState,
+            ...initialReadComicsState,
             entries: [READ_COMIC_ENTRY]
           }
         });
@@ -369,7 +369,7 @@ describe('ComicDetailsPageComponent', () => {
         store.setState({
           ...initialState,
           [READ_COMICS_FEATURE_KEY]: {
-            ...initialReadComicBooksState,
+            ...initialReadComicsState,
             entries: []
           }
         });
@@ -391,7 +391,7 @@ describe('ComicDetailsPageComponent', () => {
 
     describe('deleting the comic book', () => {
       beforeEach(() => {
-        component.onDeleteComicBook(true);
+        component.onDeleteComic(true);
       });
 
       it('confirms with the user', () => {
@@ -400,14 +400,14 @@ describe('ComicDetailsPageComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          deleteSingleComicBook({ comicId: DETAIL.comicId })
+          deleteSingleComic({ comicId: DETAIL.comicId })
         );
       });
     });
 
     describe('undeleting the comic book', () => {
       beforeEach(() => {
-        component.onDeleteComicBook(false);
+        component.onDeleteComic(false);
       });
 
       it('confirms with the user', () => {
@@ -416,7 +416,7 @@ describe('ComicDetailsPageComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          undeleteSingleComicBook({ comicId: DETAIL.comicId })
+          undeleteSingleComic({ comicId: DETAIL.comicId })
         );
       });
     });
@@ -551,7 +551,7 @@ describe('ComicDetailsPageComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        downloadComicBook({ comicId: DETAIL.comicId })
+        downloadComic({ comicId: DETAIL.comicId })
       );
     });
   });

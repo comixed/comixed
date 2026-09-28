@@ -18,10 +18,10 @@
 
 import { COMIC_FEATURE_KEY, ComicState } from '../reducers/comic.reducer';
 import {
-  selectComicBookDetail,
-  selectComicBookMetadataSource,
-  selectComicBookPages,
-  selectComicBookTags
+  selectComicDetail,
+  selectComicMetadataSource,
+  selectComicPages,
+  selectComicTags
 } from './comic-book.selectors';
 import {
   COMIC_METADATA_SOURCE_1,
@@ -39,7 +39,7 @@ import {
   PAGE_4
 } from '@app/comic-pages/comic-pages.fixtures';
 
-describe('ComicBook Selectors', () => {
+describe('Comic Selectors', () => {
   let state: ComicState;
 
   beforeEach(() => {
@@ -55,26 +55,24 @@ describe('ComicBook Selectors', () => {
   });
 
   it('selects the comic book', () => {
-    expect(selectComicBookDetail({ [COMIC_FEATURE_KEY]: state })).toEqual(
+    expect(selectComicDetail({ [COMIC_FEATURE_KEY]: state })).toEqual(
       state.detail
     );
   });
 
   it('selects the metadata source', () => {
-    expect(
-      selectComicBookMetadataSource({ [COMIC_FEATURE_KEY]: state })
-    ).toEqual(state.metadata.metadataSource);
+    expect(selectComicMetadataSource({ [COMIC_FEATURE_KEY]: state })).toEqual(
+      state.metadata.metadataSource
+    );
   });
 
   it('selects the pages', () => {
-    expect(selectComicBookPages({ [COMIC_FEATURE_KEY]: state })).toEqual(
+    expect(selectComicPages({ [COMIC_FEATURE_KEY]: state })).toEqual(
       state.pages
     );
   });
 
   it('selects the tags', () => {
-    expect(selectComicBookTags({ [COMIC_FEATURE_KEY]: state })).toEqual(
-      state.tags
-    );
+    expect(selectComicTags({ [COMIC_FEATURE_KEY]: state })).toEqual(state.tags);
   });
 });

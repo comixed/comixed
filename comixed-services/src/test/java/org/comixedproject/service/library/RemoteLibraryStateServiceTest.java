@@ -68,15 +68,15 @@ class RemoteLibraryStateServiceTest {
   void setUp() {
     when(comicService.getComicCount()).thenReturn(TEST_COMIC_COUNT);
     when(comicService.getDeletedComicCount()).thenReturn(TEST_DELETED_COMIC_COUNT);
-    when(duplicateComicService.getDuplicateComicBookCount()).thenReturn(TEST_DUPLICATE_COMIC_COUNT);
+    when(duplicateComicService.getDuplicateComicCount()).thenReturn(TEST_DUPLICATE_COMIC_COUNT);
     when(comicService.getPublishersState()).thenReturn(publisherState);
     when(comicService.getSeriesState()).thenReturn(seriesState);
     when(comicService.getCharactersState()).thenReturn(charactersState);
     when(comicService.getTeamsState()).thenReturn(teamsState);
     when(comicService.getLocationsState()).thenReturn(locationsState);
     when(comicService.getStoriesState()).thenReturn(storiesState);
-    when(comicService.getComicBooksState()).thenReturn(comicsState);
-    when(comicService.getComicBookArchiveTypes()).thenReturn(archiveTypeState);
+    when(comicService.getComicsState()).thenReturn(comicsState);
+    when(comicService.getComicArchiveTypes()).thenReturn(archiveTypeState);
     when(comicService.getByPublisherAndYear()).thenReturn(byPublisherAndYear);
   }
 
@@ -151,8 +151,8 @@ class RemoteLibraryStateServiceTest {
     verify(comicService).getTeamsState();
     verify(comicService).getLocationsState();
     verify(comicService).getStoriesState();
-    verify(comicService).getComicBooksState();
-    verify(comicService).getComicBookArchiveTypes();
+    verify(comicService).getComicsState();
+    verify(comicService).getComicArchiveTypes();
     verify(comicService).getByPublisherAndYear();
   }
 }

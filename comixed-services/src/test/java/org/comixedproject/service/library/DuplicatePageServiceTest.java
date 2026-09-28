@@ -96,12 +96,12 @@ class DuplicatePageServiceTest {
     when(comicPageRepository.findByHash(anyString())).thenReturn(comicPageList);
     when(comicPage.getComic()).thenReturn(comic);
     when(comic.getComicId()).thenReturn(TEST_COMIC_ID);
-    when(displayableComicService.getForComicBookId(anyLong())).thenThrow(ComicException.class);
+    when(displayableComicService.getForComicId(anyLong())).thenThrow(ComicException.class);
 
     assertThrows(DuplicatePageException.class, () -> service.getForHash(TEST_PAGE_HASH));
 
     verify(comicPageRepository).findByHash(TEST_PAGE_HASH);
-    verify(displayableComicService).getForComicBookId(TEST_COMIC_ID);
+    verify(displayableComicService).getForComicId(TEST_COMIC_ID);
   }
 
   @Test
@@ -111,7 +111,7 @@ class DuplicatePageServiceTest {
     when(comicPageRepository.findByHash(anyString())).thenReturn(comicPageList);
     when(comicPage.getComic()).thenReturn(comic);
     when(comic.getComicId()).thenReturn(TEST_COMIC_ID);
-    when(displayableComicService.getForComicBookId(anyLong())).thenReturn(displayableComic);
+    when(displayableComicService.getForComicId(anyLong())).thenReturn(displayableComic);
 
     final DuplicatePage result = service.getForHash(TEST_PAGE_HASH);
 
@@ -120,7 +120,7 @@ class DuplicatePageServiceTest {
     assertTrue(result.getComics().contains(displayableComic));
 
     verify(comicPageRepository).findByHash(TEST_PAGE_HASH);
-    verify(displayableComicService).getForComicBookId(TEST_COMIC_ID);
+    verify(displayableComicService).getForComicId(TEST_COMIC_ID);
   }
 
   @Test

@@ -40,7 +40,7 @@ public abstract class AbstractBatchProcessListener {
   @Autowired private PublishBatchProcessDetailUpdateAction publishBatchProcessDetailUpdateAction;
   @Autowired protected ComicService comicService;
 
-  protected void doPublishProcessComicBookStatus(
+  protected void doPublishProcessComicStatus(
       final boolean active, final String stepName, final long total, final long processed) {
     final ProcessComicsStatus status = new ProcessComicsStatus();
     status.setActive(active);

@@ -138,7 +138,7 @@ public class ComicSelectionController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('READER')")
   @Timed(value = "comixed.comic-book.selections.add-by-filter")
-  public void selectComicBooksByFilter(
+  public void selectComicsByFilter(
       final HttpSession session,
       final Principal principal,
       @RequestBody() final MultipleComicsSelectionRequest request)
@@ -176,7 +176,7 @@ public class ComicSelectionController {
   @PutMapping(value = "/api/comics/selections/tag/{tagType}/{tagValue}")
   @PreAuthorize("hasRole('READER')")
   @Timed(value = "comixed.comic-book.selections.add-by-tag-type-and-value")
-  public void addComicBooksByTagTypeAndValue(
+  public void addComicsByTagTypeAndValue(
       final HttpSession session,
       final Principal principal,
       @PathVariable("tagType") final ComicTagType tagType,
@@ -209,7 +209,7 @@ public class ComicSelectionController {
   @DeleteMapping(value = "/api/comics/selections/tag/{tagType}/{tagValue}")
   @PreAuthorize("hasRole('READER')")
   @Timed(value = "comixed.comic-book.selections.remove-by-tag-type-and-value")
-  public void removeComicBooksByTagTypeAndValue(
+  public void removeComicsByTagTypeAndValue(
       final HttpSession session,
       final Principal principal,
       @PathVariable("tagType") final ComicTagType tagType,
@@ -242,7 +242,7 @@ public class ComicSelectionController {
   @PostMapping(value = "/api/comics/selections/ids")
   @PreAuthorize("hasRole('READER')")
   @Timed(value = "comixed.comic-book.selections.add-or-remove-by-id")
-  public void addComicBookSelectionsById(
+  public void addComicSelectionsById(
       final HttpSession session,
       final Principal principal,
       @RequestBody() final AddComicSelectionsByIdRequest request)
@@ -275,7 +275,7 @@ public class ComicSelectionController {
   @PostMapping(value = "/api/comics/selections/publisher")
   @PreAuthorize("hasRole('READER')")
   @Timed(value = "comixed.comic-book.selections.add-or-remove-by-id")
-  public void addComicBookSelectionsByPublisher(
+  public void addComicSelectionsByPublisher(
       final HttpSession session,
       final Principal principal,
       @RequestBody() final AddComicSelectionsByPublisherRequest request)
@@ -315,7 +315,7 @@ public class ComicSelectionController {
   @PostMapping(value = "/api/comics/selections/series")
   @PreAuthorize("hasRole('READER')")
   @Timed(value = "comixed.comic-book.selections.add-or-remove-by-id")
-  public void addComicBookSelectionsByPublisherSeriesVolume(
+  public void addComicSelectionsByPublisherSeriesVolume(
       final HttpSession session,
       final Principal principal,
       @RequestBody() final AddComicSelectionsByPublisherSeriesVolumeRequest request)
@@ -361,7 +361,7 @@ public class ComicSelectionController {
   @PostMapping(value = "/api/comics/selections/duplicates")
   @PreAuthorize("hasRole('READER')")
   @Timed(value = "comixed.comic-book.selections.add-or-remove-by-id")
-  public void addDuplicateComicBooksSelection(
+  public void addDuplicateComicsSelection(
       final HttpSession session,
       final Principal principal,
       @RequestBody() final DuplicateComicsSelectionRequest request)
@@ -398,7 +398,7 @@ public class ComicSelectionController {
   @PostMapping(value = "/api/comics/selections/unread", consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('READER')")
   @Timed(value = "comixed.comic-book.selections.add-by-unread-state")
-  public void addUnreadComicBooksSelection(
+  public void addUnreadComicsSelection(
       final HttpSession session,
       final Principal principal,
       @RequestBody() final UnreadComicsSelectionRequest request)
@@ -440,7 +440,7 @@ public class ComicSelectionController {
     final List<Long> selections =
         this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
     log.info("Clearing comic selections for {}", email);
-    this.comicSelectionService.clearSelectedComicBooks(email, selections);
+    this.comicSelectionService.clearSelectedComics(email, selections);
     session.setAttribute(
         LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selections));
   }

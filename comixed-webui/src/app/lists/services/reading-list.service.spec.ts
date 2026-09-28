@@ -174,7 +174,7 @@ describe('ReadingListService', () => {
   it('can add selected comic books to a reading list', () => {
     const serverResponse = new HttpResponse({ status: 200 });
     service
-      .addSelectedComicBooks({
+      .addSelectedComics({
         list: READING_LIST
       })
       .subscribe(response => expect(response).toBe(serverResponse));
@@ -191,7 +191,7 @@ describe('ReadingListService', () => {
 
   it('can remove selected comic books from a reading list', () => {
     service
-      .removeSelectedComicBooks({
+      .removeSelectedComics({
         list: READING_LIST
       })
       .subscribe(response => expect(response).toEqual(READING_LIST));

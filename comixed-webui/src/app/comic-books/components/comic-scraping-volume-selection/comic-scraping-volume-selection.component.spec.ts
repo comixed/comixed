@@ -42,7 +42,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { VolumeMetadata } from '@app/comic-metadata/models/volume-metadata';
 import {
   resetMetadataState,
-  scrapeSingleComicBook
+  scrapeSingleComic
 } from '@app/comic-metadata/actions/single-book-scraping.actions';
 import { SortableListItem } from '@app/core/models/ui/sortable-list-item';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -321,7 +321,7 @@ describe('ComicScrapingVolumeSelectionComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          scrapeSingleComicBook({
+          scrapeSingleComic({
             metadataSource: METADATA_SOURCE,
             issueId: SCRAPING_ISSUE.id,
             comic: COMIC,

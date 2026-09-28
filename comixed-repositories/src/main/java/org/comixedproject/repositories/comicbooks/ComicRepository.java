@@ -59,7 +59,7 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
    * @return the cover dates
    */
   @Query(
-      "SELECT DISTINCT d.coverDate FROM Comic d WHERE d.coverDate IS NOT NULL AND d.comicId NOT IN (SELECT rcb FROM ComiXedUser u INNER JOIN u.readComicBooks rcb WHERE u.email = :email)")
+      "SELECT DISTINCT d.coverDate FROM Comic d WHERE d.coverDate IS NOT NULL AND d.comicId NOT IN (SELECT rcb FROM ComiXedUser u INNER JOIN u.readComics rcb WHERE u.email = :email)")
   Set<Date> getAllUnreadCoverDates(@Param("email") String email);
 
   /**
@@ -71,7 +71,7 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
   Set<Date> getAllCoverDates();
 
   @Query(
-      "SELECT d FROM Comic d WHERE d.coverDate IS NOT NULL AND d.coverDate = :coverDate AND d.comicId NOT IN (SELECT rcb FROM ComiXedUser u INNER JOIN u.readComicBooks rcb WHERE u.email = :email)")
+      "SELECT d FROM Comic d WHERE d.coverDate IS NOT NULL AND d.coverDate = :coverDate AND d.comicId NOT IN (SELECT rcb FROM ComiXedUser u INNER JOIN u.readComics rcb WHERE u.email = :email)")
   List<Comic> getAllUnreadComicsForCoverDate(
       @Param("coverDate") Date coverDate, @Param("email") String email);
 
@@ -85,7 +85,7 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
    * @return the publishers
    */
   @Query(
-      "SELECT DISTINCT d.publisher FROM Comic d WHERE d.publisher IS NOT NULL AND LENGTH(d.publisher) > 0 AND d.comicId NOT IN (SELECT rcb FROM ComiXedUser u INNER JOIN u.readComicBooks rcb WHERE u.email = :email)")
+      "SELECT DISTINCT d.publisher FROM Comic d WHERE d.publisher IS NOT NULL AND LENGTH(d.publisher) > 0 AND d.comicId NOT IN (SELECT rcb FROM ComiXedUser u INNER JOIN u.readComics rcb WHERE u.email = :email)")
   Set<String> getAllUnreadPublishers(@Param("email") String email);
 
   /**
@@ -106,7 +106,7 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
    * @return the series
    */
   @Query(
-      "SELECT DISTINCT d.series FROM Comic d WHERE d.publisher = :publisher AND d.series IS NOT NULL AND d.comicId NOT IN (SELECT rcb FROM ComiXedUser u INNER JOIN u.readComicBooks rcb WHERE u.email = :email)")
+      "SELECT DISTINCT d.series FROM Comic d WHERE d.publisher = :publisher AND d.series IS NOT NULL AND d.comicId NOT IN (SELECT rcb FROM ComiXedUser u INNER JOIN u.readComics rcb WHERE u.email = :email)")
   Set<String> getAllUnreadSeriesForPublisher(
       @Param("publisher") String publisher, @Param("email") String email);
 
@@ -130,7 +130,7 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
    * @return the volumes
    */
   @Query(
-      "SELECT DISTINCT d.volume FROM Comic d WHERE d.publisher = :publisher AND d.series = :series AND d.series IS NOT NULL AND d.comicId NOT IN (SELECT rcb FROM ComiXedUser u INNER JOIN u.readComicBooks rcb WHERE u.email = :email)")
+      "SELECT DISTINCT d.volume FROM Comic d WHERE d.publisher = :publisher AND d.series = :series AND d.series IS NOT NULL AND d.comicId NOT IN (SELECT rcb FROM ComiXedUser u INNER JOIN u.readComics rcb WHERE u.email = :email)")
   Set<String> getAllUnreadVolumesForPublisherAndSeries(
       @Param("publisher") String publisher,
       @Param("series") String series,
@@ -155,7 +155,7 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
    * @return the series
    */
   @Query(
-      "SELECT DISTINCT d.series FROM Comic d WHERE d.series IS NOT NULL AND LENGTH(d.series) > 0 AND d.comicId NOT IN (SELECT rcb FROM ComiXedUser u INNER JOIN u.readComicBooks rcb WHERE u.email = :email)")
+      "SELECT DISTINCT d.series FROM Comic d WHERE d.series IS NOT NULL AND LENGTH(d.series) > 0 AND d.comicId NOT IN (SELECT rcb FROM ComiXedUser u INNER JOIN u.readComics rcb WHERE u.email = :email)")
   Set<String> getAllUnreadSeries(@Param("email") String email);
 
   /**
@@ -176,7 +176,7 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
    * @return the volumes
    */
   @Query(
-      "SELECT DISTINCT d.publisher FROM Comic d WHERE d.series = :series AND d.publisher IS NOT NULL AND d.comicId NOT IN (SELECT rcb FROM ComiXedUser u INNER JOIN u.readComicBooks rcb WHERE u.email = :email)")
+      "SELECT DISTINCT d.publisher FROM Comic d WHERE d.series = :series AND d.publisher IS NOT NULL AND d.comicId NOT IN (SELECT rcb FROM ComiXedUser u INNER JOIN u.readComics rcb WHERE u.email = :email)")
   Set<String> getAllUnreadPublishersForSeries(
       @Param("series") String series, @Param("email") String email);
 
@@ -201,7 +201,7 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
    * @return the matching records
    */
   @Query(
-      "SELECT d FROM Comic d WHERE d.publisher = :publisher AND d.series = :series AND d.volume = :volume AND d.comicId NOT IN (SELECT rcb FROM ComiXedUser u INNER JOIN u.readComicBooks rcb WHERE u.email = :email) ORDER BY d.coverDate")
+      "SELECT d FROM Comic d WHERE d.publisher = :publisher AND d.series = :series AND d.volume = :volume AND d.comicId NOT IN (SELECT rcb FROM ComiXedUser u INNER JOIN u.readComics rcb WHERE u.email = :email) ORDER BY d.coverDate")
   List<Comic> getAllUnreadForPublisherAndSeriesAndVolume(
       @Param("publisher") String publisher,
       @Param("series") String series,
@@ -231,7 +231,7 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
    * @return the matching records
    */
   @Query(
-      "SELECT DISTINCT t.value FROM ComicTag t WHERE t.type = :tagType AND t.comic.comicId NOT IN (SELECT rcb FROM ComiXedUser u INNER JOIN u.readComicBooks rcb WHERE u.email = :email)")
+      "SELECT DISTINCT t.value FROM ComicTag t WHERE t.type = :tagType AND t.comic.comicId NOT IN (SELECT rcb FROM ComiXedUser u INNER JOIN u.readComics rcb WHERE u.email = :email)")
   Set<String> getAllUnreadValuesForTagType(
       @Param("tagType") ComicTagType tagType, @Param("email") String email);
 
@@ -251,7 +251,7 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
    * @return the matching years
    */
   @Query(
-      "SELECT DISTINCT YEAR(d.coverDate) FROM Comic d WHERE d.coverDate IS NOT NULL AND d.comicId NOT IN (SELECT rcb FROM ComiXedUser u INNER JOIN u.readComicBooks rcb WHERE u.email = :email)")
+      "SELECT DISTINCT YEAR(d.coverDate) FROM Comic d WHERE d.coverDate IS NOT NULL AND d.comicId NOT IN (SELECT rcb FROM ComiXedUser u INNER JOIN u.readComics rcb WHERE u.email = :email)")
   Set<Integer> getAllUnreadYears(@Param("email") String email);
 
   /**
@@ -270,7 +270,7 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
    * @return the matching weeks
    */
   @Query(
-      "SELECT DISTINCT d.coverDate FROM Comic d WHERE d.coverDate IS NOT NULL AND year(d.coverDate) = :year AND d.comicId NOT IN (SELECT rcb FROM ComiXedUser u INNER JOIN u.readComicBooks rcb WHERE u.email = :email)")
+      "SELECT DISTINCT d.coverDate FROM Comic d WHERE d.coverDate IS NOT NULL AND year(d.coverDate) = :year AND d.comicId NOT IN (SELECT rcb FROM ComiXedUser u INNER JOIN u.readComics rcb WHERE u.email = :email)")
   Set<Date> getAllUnreadWeeksForYear(@Param("year") int year, @Param("email") String email);
 
   /**
@@ -292,7 +292,7 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
    * @return the matching records
    */
   @Query(
-      "SELECT d FROM Comic d WHERE d.coverDate IS NOT NULL AND d.coverDate IS NOT NULL AND d.coverDate >= :startDate AND d.coverDate <= :endDate AND d.comicId NOT IN (SELECT rcb FROM ComiXedUser u INNER JOIN u.readComicBooks rcb WHERE u.email = :email)")
+      "SELECT d FROM Comic d WHERE d.coverDate IS NOT NULL AND d.coverDate IS NOT NULL AND d.coverDate >= :startDate AND d.coverDate <= :endDate AND d.comicId NOT IN (SELECT rcb FROM ComiXedUser u INNER JOIN u.readComics rcb WHERE u.email = :email)")
   List<Comic> getAllUnreadForYearAndWeek(
       @Param("startDate") Date startDate,
       @Param("endDate") Date endDate,
@@ -323,7 +323,7 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
    * @return the matching comics
    */
   @Query(
-      "SELECT d FROM Comic d WHERE d IN (SELECT t.comic FROM ComicTag t WHERE t.type = :tagType AND t.value = :tagValue) AND d.comicId NOT IN (SELECT rcb FROM ComiXedUser u INNER JOIN u.readComicBooks rcb WHERE u.email = :email)")
+      "SELECT d FROM Comic d WHERE d IN (SELECT t.comic FROM ComicTag t WHERE t.type = :tagType AND t.value = :tagValue) AND d.comicId NOT IN (SELECT rcb FROM ComiXedUser u INNER JOIN u.readComics rcb WHERE u.email = :email)")
   List<Comic> getAllUnreadComicsForTagType(
       @Param("tagType") ComicTagType tagType,
       @Param("tagValue") String tagValue,
@@ -376,7 +376,7 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
       @Param("tagType") ComicTagType tag, @Param("filterText") String filterText);
 
   @Query("SELECT d FROM Comic d WHERE d.comicId = :comicId")
-  Comic findByComicBookId(@Param("comicId") Long comicId);
+  Comic findByComicId(@Param("comicId") Long comicId);
 
   /**
    * Checks if an existing entry has the provided filename.
@@ -561,7 +561,7 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
    * @return the list of comic books
    */
   @Query("SELECT COUNT(b) FROM Comic b WHERE b.loadingFileContents IS TRUE")
-  long getUnprocessedComicBookCount();
+  long getUnprocessedComicCount();
 
   @Query("SELECT COUNT(c) FROM Comic c WHERE c.updatingMetadata IS TRUE")
   long getUpdateMetadataCount();
@@ -569,7 +569,7 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
   /** Sets the purging flag for all comics int he DELETED state. */
   @Modifying
   @Query("UPDATE Comic c SET c.purging = true WHERE c.state = 'DELETED'")
-  void prepareComicBooksForDeleting();
+  void prepareComicsForDeleting();
 
   /**
    * Clears the organizing flag for the specified comic book.
@@ -619,12 +619,12 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
 
   @Query(
       "SELECT c.comicId FROM Comic c WHERE c.series = :series AND c.volume = :volume AND c.issueNumber <> :issueNumber AND c.coverDate > :coverDate ORDER BY c.coverDate, c.issueNumber ASC")
-  Long findNextComicBookIdInSeries(
+  Long findNextComicIdInSeries(
       String series, String volume, String issueNumber, Date coverDate, Limit of);
 
   @Query(
       "SELECT c.comicId FROM Comic c WHERE c.series = :series AND c.volume = :volume AND c.issueNumber <> :issueNumber AND c.coverDate < :coverDate ORDER BY c.coverDate, c.issueNumber ASC")
-  Long findPreviousComicBookIdInSeries(
+  Long findPreviousComicIdInSeries(
       String series, String volume, String issueNumber, Date coverDate, Limit of);
 
   @Query(
@@ -660,11 +660,11 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
 
   @Query(
       "SELECT new org.comixedproject.model.net.library.RemoteLibrarySegmentState(TRIM(CAST(d.state AS string)), COUNT(d)) FROM Comic d GROUP BY d.state")
-  List<RemoteLibrarySegmentState> getComicBooksState();
+  List<RemoteLibrarySegmentState> getComicsState();
 
   @Query(
       "SELECT new org.comixedproject.model.net.library.RemoteLibrarySegmentState(TRIM(CAST(d.archiveType AS string)), COUNT(d)) FROM Comic d GROUP BY d.archiveType")
-  List<RemoteLibrarySegmentState> getComicBookArchiveTypes();
+  List<RemoteLibrarySegmentState> getComicArchiveTypes();
 
   @Query(
       "SELECT new org.comixedproject.model.net.library.PublisherAndYearSegment(d.publisher, YEAR(d.coverDate), COUNT(d)) FROM Comic d WHERE d.publisher IS NOT NULL AND d.coverDate IS NOT NULL GROUP BY d.publisher, YEAR(d.coverDate)")
@@ -687,7 +687,7 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
   long getUnscrapedComicCount();
 
   @Query("SELECT d.filename FROM Comic d WHERE d.missing = :missing")
-  Set<String> getAllComicDetailsByMissingFlag(@Param("missing") boolean missing);
+  Set<String> getAllComicsByMissingFlag(@Param("missing") boolean missing);
 
   @Query(
       "SELECT c FROM Comic c WHERE c.comicId IN (SELECT p.comic.comicId FROM ComicPage p WHERE p.hash IS NULL OR LENGTH(p.hash) = 0)")

@@ -76,7 +76,7 @@ import {
 } from '@app/reducers/dark-theme.reducer';
 import {
   COMIC_SELECTION_FEATURE_KEY,
-  initialState as initialComicBookSelectionState
+  initialState as initialComicSelectionState
 } from '@app/comic-books/reducers/comic-selection.reducer';
 import {
   FEATURE_ENABLED_FEATURE_KEY,
@@ -84,7 +84,7 @@ import {
 } from '@app/admin/reducers/feature-enabled.reducer';
 import { BusyIcon } from '@app/core/actions/busy.actions';
 import {
-  initialState as initialReadComicBooksState,
+  initialState as initialReadComicsState,
   READ_COMICS_FEATURE_KEY
 } from '@app/user/reducers/read-comics.reducer';
 import { Subscription } from 'rxjs';
@@ -109,10 +109,10 @@ describe('AppComponent', () => {
     [BUSY_FEATURE_KEY]: initialBusyState,
     [MESSAGING_FEATURE_KEY]: initialMessagingState,
     [IMPORT_COMICS_FEATURE_KEY]: initialImportCountState,
-    [READ_COMICS_FEATURE_KEY]: initialReadComicBooksState,
+    [READ_COMICS_FEATURE_KEY]: initialReadComicsState,
     [READING_LISTS_FEATURE_KEY]: initialReadingListsState,
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
-    [COMIC_SELECTION_FEATURE_KEY]: initialComicBookSelectionState,
+    [COMIC_SELECTION_FEATURE_KEY]: initialComicSelectionState,
     [DARK_THEME_FEATURE_KEY]: initialDarkThemeState,
     [FEATURE_ENABLED_FEATURE_KEY]: { ...initialFeatureEnabledState },
     [BATCH_PROCESSES_FEATURE_KEY]: initialBatchProcessesState,

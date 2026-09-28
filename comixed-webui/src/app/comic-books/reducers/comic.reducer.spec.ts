@@ -30,17 +30,17 @@ import {
 import {
   comicLoaded,
   comicUpdated,
-  downloadComicBook,
-  downloadComicBookFailure,
-  downloadComicBookSuccess,
-  loadComicBook,
-  loadComicBookFailed,
+  downloadComic,
+  downloadComicFailure,
+  downloadComicSuccess,
+  loadComic,
+  loadComicFailed,
   pageDeletionUpdated,
   pageOrderSaved,
   savePageOrder,
   savePageOrderFailed,
-  updateComicBook,
-  updateComicBookFailed,
+  updateComic,
+  updateComicFailed,
   updatePageDeletion,
   updatePageDeletionFailed
 } from '@app/comic-books/actions/comic-book.actions';
@@ -51,7 +51,7 @@ import {
   PAGE_4
 } from '@app/comic-pages/comic-pages.fixtures';
 
-describe('ComicBook Reducer', () => {
+describe('Comic Reducer', () => {
   const DETAIL = DISPLAYABLE_COMIC_1;
   const METADATA = COMIC_METADATA_SOURCE_1;
   const PAGES = [PAGE_1, PAGE_2, PAGE_3, PAGE_4];
@@ -115,7 +115,7 @@ describe('ComicBook Reducer', () => {
           pages: PAGES,
           loading: false
         },
-        loadComicBook({ id: DETAIL.comicId })
+        loadComic({ id: DETAIL.comicId })
       );
     });
 
@@ -178,7 +178,7 @@ describe('ComicBook Reducer', () => {
 
     describe('failure', () => {
       beforeEach(() => {
-        state = reducer({ ...state, loading: true }, loadComicBookFailed());
+        state = reducer({ ...state, loading: true }, loadComicFailed());
       });
 
       it('clears the loading flag', () => {
@@ -191,7 +191,7 @@ describe('ComicBook Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, saving: false, saved: true },
-        updateComicBook({
+        updateComic({
           comicId: DETAIL.comicId,
           publisher: DETAIL.publisher,
           series: DETAIL.series,
@@ -307,7 +307,7 @@ describe('ComicBook Reducer', () => {
       beforeEach(() => {
         state = reducer(
           { ...state, saving: true, saved: true },
-          updateComicBookFailed()
+          updateComicFailed()
         );
       });
 
@@ -394,7 +394,7 @@ describe('ComicBook Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, loading: false },
-        downloadComicBook({ comicId: DETAIL.comicId })
+        downloadComic({ comicId: DETAIL.comicId })
       );
     });
 
@@ -404,10 +404,7 @@ describe('ComicBook Reducer', () => {
 
     describe('success', () => {
       beforeEach(() => {
-        state = reducer(
-          { ...state, loading: true },
-          downloadComicBookSuccess()
-        );
+        state = reducer({ ...state, loading: true }, downloadComicSuccess());
       });
 
       it('clears the loading flag', () => {
@@ -417,10 +414,7 @@ describe('ComicBook Reducer', () => {
 
     describe('failure', () => {
       beforeEach(() => {
-        state = reducer(
-          { ...state, loading: true },
-          downloadComicBookFailure()
-        );
+        state = reducer({ ...state, loading: true }, downloadComicFailure());
       });
 
       it('clears the loading flag', () => {

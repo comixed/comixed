@@ -42,11 +42,9 @@ public class PublishStoryListUpdateAction extends AbstractPublishAction<ScrapedS
   @Override
   public void publish(final ScrapedStory story) throws PublishingException {
     log.trace("Publishing story list update");
-    this.doPublish(STORY_LIST_UPDATE_TOPIC, story, View.StoryList.class);
+    this.doPublish(STORY_LIST_UPDATE_TOPIC, story, View.StoryListView.class);
     log.trace("Publishing story update");
     this.doPublish(
-        String.format(STORY_UPDATE_TOPIC, story.getScrapedStoryId()),
-        story,
-        View.StoryDetail.class);
+        String.format(STORY_UPDATE_TOPIC, story.getScrapedStoryId()), story, View.StoryView.class);
   }
 }

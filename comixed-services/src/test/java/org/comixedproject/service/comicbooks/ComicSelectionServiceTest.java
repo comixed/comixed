@@ -279,10 +279,10 @@ class ComicSelectionServiceTest {
   }
 
   @Test
-  void clearSelectedComicBooks() throws PublishingException {
+  void clearSelectedComics() throws PublishingException {
     for (long id = 0; id < 1000L; id++) selectedIds.add(id);
 
-    service.clearSelectedComicBooks(TEST_EMAIL, selectedIds);
+    service.clearSelectedComics(TEST_EMAIL, selectedIds);
 
     assertTrue(selectedIds.isEmpty());
 

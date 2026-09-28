@@ -167,7 +167,7 @@ public class PageCacheService {
 
   public ResponseEntity<byte[]> getCoverPageContent(
       final long comicId, final String missingFilename) throws ComicPageException {
-    final Long pageId = this.comicPageService.getPageIdForComicBookCover(comicId);
+    final Long pageId = this.comicPageService.getPageIdForComicCover(comicId);
     if (pageId != null) {
       log.debug("Loading cover content by page id: id={}", pageId);
       return this.getPageContent(pageId, missingFilename);

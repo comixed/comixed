@@ -103,7 +103,7 @@ class IssueServiceTest {
             issueRepository.getAll(Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
         .thenReturn(new ArrayList<>());
     Mockito.when(
-            comicService.getAllComicBooksForPublisherAndSeriesAndVolume(
+            comicService.getAllComicsForPublisherAndSeriesAndVolume(
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.anyString(),
@@ -123,7 +123,7 @@ class IssueServiceTest {
     Mockito.verify(issueRepository, Mockito.times(1))
         .getAll(TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME);
     Mockito.verify(comicService, Mockito.times(1))
-        .getAllComicBooksForPublisherAndSeriesAndVolume(
+        .getAllComicsForPublisherAndSeriesAndVolume(
             TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME, "", false);
   }
 

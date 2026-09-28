@@ -35,7 +35,7 @@ import org.comixedproject.views.View;
 @AllArgsConstructor
 public class SaveConfigurationOptionsResponse {
   @JsonProperty("options")
-  @JsonView(View.ConfigurationList.class)
+  @JsonView(View.ConfigurationListView.class)
   @Getter
   private List<ConfigurationOption> options;
 }

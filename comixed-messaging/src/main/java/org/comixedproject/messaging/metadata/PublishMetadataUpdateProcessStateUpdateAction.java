@@ -43,6 +43,6 @@ public class PublishMetadataUpdateProcessStateUpdateAction
   public void publish(final MetadataUpdateProcessUpdate payload) throws PublishingException {
     log.debug("Publishing scrape comic book step update");
     this.doPublish(
-        METADATA_UPDATE_PROCESS_UPDATE_TOPIC, payload, View.MetadataUpdateProcessState.class);
+        METADATA_UPDATE_PROCESS_UPDATE_TOPIC, payload, View.MetadataUpdateProcessStateView.class);
   }
 }

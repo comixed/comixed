@@ -63,18 +63,18 @@ class LibraryScannerServiceTest {
   @Mock private Path keyWatchablePath;
   @Mock private Path resolvedPath;
 
-  private Set<String> missingComicDetailSet = new HashSet<>();
-  private Set<String> notMissingComicDetailSet = new HashSet<>();
+  private Set<String> missingComicSet = new HashSet<>();
+  private Set<String> notMissingComicSet = new HashSet<>();
 
   @BeforeEach
   void setUp() {
     when(configurationService.getOptionValue(anyString())).thenReturn(TEST_ROOT_DIRECTORY);
-    missingComicDetailSet.add(TEST_COMIC_FILENAME);
-    missingComicDetailSet.add(TEST_MISSING_COMIC_FILENAME);
-    when(comicService.getAllComicDetailsByMissingFlag(true)).thenReturn(missingComicDetailSet);
-    notMissingComicDetailSet.add(TEST_COMIC_FILENAME);
-    notMissingComicDetailSet.add(TEST_MISSING_COMIC_FILENAME);
-    when(comicService.getAllComicDetailsByMissingFlag(false)).thenReturn(notMissingComicDetailSet);
+    missingComicSet.add(TEST_COMIC_FILENAME);
+    missingComicSet.add(TEST_MISSING_COMIC_FILENAME);
+    when(comicService.getAllComicsByMissingFlag(true)).thenReturn(missingComicSet);
+    notMissingComicSet.add(TEST_COMIC_FILENAME);
+    notMissingComicSet.add(TEST_MISSING_COMIC_FILENAME);
+    when(comicService.getAllComicsByMissingFlag(false)).thenReturn(notMissingComicSet);
     when(resolvedPath.toString()).thenReturn(TEST_COMIC_FILENAME);
     when(keyWatchablePath.resolve(any(Path.class))).thenReturn(resolvedPath);
     when(key.watchable()).thenReturn(keyWatchablePath);

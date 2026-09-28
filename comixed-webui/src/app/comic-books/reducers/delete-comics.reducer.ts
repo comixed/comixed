@@ -18,12 +18,12 @@
 
 import { createFeature, createReducer, on } from '@ngrx/store';
 import {
-  deleteComicBooksFailure,
-  deleteComicBooksSuccess,
-  deleteSelectedComicBooks,
-  deleteSingleComicBook,
-  undeleteSelectedComicBooks,
-  undeleteSingleComicBook
+  deleteComicsFailure,
+  deleteComicsSuccess,
+  deleteSelectedComics,
+  deleteSingleComic,
+  undeleteSelectedComics,
+  undeleteSingleComic
 } from '../actions/delete-comic-books.actions';
 
 export const MARK_COMICS_DELETED_FEATURE_KEY = 'mark_comics_deleted_state';
@@ -37,12 +37,12 @@ export const initialState: MarkComicsDeletedState = { updating: false };
 export const reducer = createReducer(
   initialState,
 
-  on(deleteSingleComicBook, state => ({ ...state, updating: true })),
-  on(undeleteSingleComicBook, state => ({ ...state, updating: true })),
-  on(deleteSelectedComicBooks, state => ({ ...state, updating: true })),
-  on(undeleteSelectedComicBooks, state => ({ ...state, updating: true })),
-  on(deleteComicBooksSuccess, state => ({ ...state, updating: false })),
-  on(deleteComicBooksFailure, state => ({ ...state, updating: false }))
+  on(deleteSingleComic, state => ({ ...state, updating: true })),
+  on(undeleteSingleComic, state => ({ ...state, updating: true })),
+  on(deleteSelectedComics, state => ({ ...state, updating: true })),
+  on(undeleteSelectedComics, state => ({ ...state, updating: true })),
+  on(deleteComicsSuccess, state => ({ ...state, updating: false })),
+  on(deleteComicsFailure, state => ({ ...state, updating: false }))
 );
 
 export const markComicsDeletedFeature = createFeature({

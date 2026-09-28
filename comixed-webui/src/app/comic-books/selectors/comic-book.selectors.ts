@@ -19,25 +19,24 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { COMIC_FEATURE_KEY, ComicState } from '../reducers/comic.reducer';
 
-const selectComicBookState =
-  createFeatureSelector<ComicState>(COMIC_FEATURE_KEY);
+const selectComicState = createFeatureSelector<ComicState>(COMIC_FEATURE_KEY);
 
-export const selectComicBookDetail = createSelector(
-  selectComicBookState,
+export const selectComicDetail = createSelector(
+  selectComicState,
   state => state.detail
 );
 
-export const selectComicBookMetadataSource = createSelector(
-  selectComicBookState,
+export const selectComicMetadataSource = createSelector(
+  selectComicState,
   state => state.metadata?.metadataSource
 );
 
-export const selectComicBookPages = createSelector(
-  selectComicBookState,
+export const selectComicPages = createSelector(
+  selectComicState,
   state => state.pages
 );
 
-export const selectComicBookTags = createSelector(
-  selectComicBookState,
+export const selectComicTags = createSelector(
+  selectComicState,
   state => state.tags
 );

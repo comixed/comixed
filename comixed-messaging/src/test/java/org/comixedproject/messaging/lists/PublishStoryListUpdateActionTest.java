@@ -69,7 +69,7 @@ class PublishStoryListUpdateActionTest {
 
     action.publish(story);
 
-    Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.StoryList.class);
+    Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.StoryListView.class);
     Mockito.verify(objectWriter, Mockito.times(2)).writeValueAsString(story);
     Mockito.verify(messagingTemplate, Mockito.times(1))
         .convertAndSend(PublishStoryListUpdateAction.STORY_LIST_UPDATE_TOPIC, TEST_STORY_AS_JSON);

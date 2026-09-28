@@ -23,8 +23,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { DISPLAYABLE_COMIC_4 } from '@app/comic-books/comic-books.fixtures';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import {
-  deleteSingleComicBook,
-  undeleteSingleComicBook
+  deleteSingleComic,
+  undeleteSingleComic
 } from '@app/comic-books/actions/delete-comic-books.actions';
 import { provideRouter, Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -72,7 +72,7 @@ describe('ComicGridItemComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        deleteSingleComicBook({ comicId: COMIC.comicId })
+        deleteSingleComic({ comicId: COMIC.comicId })
       );
     });
   });
@@ -84,7 +84,7 @@ describe('ComicGridItemComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        undeleteSingleComicBook({ comicId: COMIC.comicId })
+        undeleteSingleComic({ comicId: COMIC.comicId })
       );
     });
   });

@@ -39,6 +39,6 @@ public class PublishCurrentUserAction extends AbstractPublishAction<ComiXedUser>
   @Override
   public void publish(final ComiXedUser user) throws PublishingException {
     log.trace("Publishing current user update");
-    this.doPublishToUser(user, CURRENT_USER_UPDATE_TOPIC, user, View.UserDetailsView.class);
+    this.doPublishToUser(user, CURRENT_USER_UPDATE_TOPIC, user, View.UserView.class);
   }
 }

@@ -179,7 +179,7 @@ class LibraryPluginControllerTest {
 
     assertThrows(
         LibraryPluginException.class,
-        () -> controller.runLibraryPluginOnOneComicBook(TEST_PLUGIN_ID, TEST_COMIC_ID));
+        () -> controller.runLibraryPluginOnOneComic(TEST_PLUGIN_ID, TEST_COMIC_ID));
   }
 
   @Test
@@ -188,41 +188,40 @@ class LibraryPluginControllerTest {
         .when(libraryPluginService)
         .runLibraryPlugin(Mockito.anyLong(), Mockito.anyLong());
 
-    controller.runLibraryPluginOnOneComicBook(TEST_PLUGIN_ID, TEST_COMIC_ID);
+    controller.runLibraryPluginOnOneComic(TEST_PLUGIN_ID, TEST_COMIC_ID);
 
     Mockito.verify(libraryPluginService, Mockito.times(1))
         .runLibraryPlugin(TEST_PLUGIN_ID, TEST_COMIC_ID);
   }
 
   @Test
-  void runLibraryPlugin_selectedComicBooks_selectionDecodingException()
-      throws ComicSelectionException {
+  void runLibraryPlugin_selectedComics_selectionDecodingException() throws ComicSelectionException {
     Mockito.when(comicSelectionService.decodeSelections(TEST_ENCODED_IDS))
         .thenThrow(ComicSelectionException.class);
 
     assertThrows(
         LibraryPluginException.class,
-        () -> controller.runLibraryPluginOnSelectedComicBooks(session, principal, TEST_PLUGIN_ID));
+        () -> controller.runLibraryPluginOnSelectedComics(session, principal, TEST_PLUGIN_ID));
   }
 
   @Test
-  void runLibraryPlugin_selectedComicBooks_serviceException() throws LibraryPluginException {
+  void runLibraryPlugin_selectedComics_serviceException() throws LibraryPluginException {
     Mockito.doThrow(LibraryPluginException.class)
         .when(libraryPluginService)
         .runLibraryPlugin(Mockito.anyLong(), Mockito.anyList());
 
     assertThrows(
         LibraryPluginException.class,
-        () -> controller.runLibraryPluginOnSelectedComicBooks(session, principal, TEST_PLUGIN_ID));
+        () -> controller.runLibraryPluginOnSelectedComics(session, principal, TEST_PLUGIN_ID));
   }
 
   @Test
-  void runLibraryPlugin_selectedComicBooks() throws LibraryPluginException {
-    controller.runLibraryPluginOnSelectedComicBooks(session, principal, TEST_PLUGIN_ID);
+  void runLibraryPlugin_selectedComics() throws LibraryPluginException {
+    controller.runLibraryPluginOnSelectedComics(session, principal, TEST_PLUGIN_ID);
 
     Mockito.verify(libraryPluginService, Mockito.times(1))
         .runLibraryPlugin(TEST_PLUGIN_ID, selectedIds);
     Mockito.verify(comicSelectionService, Mockito.times(1))
-        .clearSelectedComicBooks(TEST_USER_EMAIL, selectedIds);
+        .clearSelectedComics(TEST_USER_EMAIL, selectedIds);
   }
 }

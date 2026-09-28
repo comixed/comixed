@@ -26,85 +26,85 @@ import lombok.Setter;
 import org.comixedproject.views.View;
 
 /**
- * <code>ReleaseDetails</code> holds the know details for the currently running build.
+ * <code>ReleaseDetailsView</code> holds the know details for the currently running build.
  *
  * @author Darryl L. Pierce
  */
 public class BuildDetails {
   @JsonProperty("branch")
-  @JsonView(View.ReleaseDetails.class)
+  @JsonView(View.ReleaseDetailsView.class)
   @Getter
   @Setter
   private String branch;
 
   @JsonProperty("buildTime")
-  @JsonView(View.ReleaseDetails.class)
+  @JsonView(View.ReleaseDetailsView.class)
   @Getter
   @Setter
   private Date buildTime;
 
   @JsonProperty("buildHost")
-  @JsonView(View.ReleaseDetails.class)
+  @JsonView(View.ReleaseDetailsView.class)
   @Getter
   @Setter
   private String buildHost;
 
   @JsonProperty("buildVersion")
-  @JsonView(View.ReleaseDetails.class)
+  @JsonView(View.ReleaseDetailsView.class)
   @Getter
   @Setter
   private String buildVersion;
 
   @JsonProperty("commitTime")
-  @JsonView(View.ReleaseDetails.class)
+  @JsonView(View.ReleaseDetailsView.class)
   @Getter
   @Setter
   private Date commitTime;
 
   @JsonProperty("dirty")
-  @JsonView(View.ReleaseDetails.class)
+  @JsonView(View.ReleaseDetailsView.class)
   @Getter
   @Setter
   private boolean dirty;
 
   @JsonProperty("remoteOriginURL")
-  @JsonView(View.ReleaseDetails.class)
+  @JsonView(View.ReleaseDetailsView.class)
   @Getter
   @Setter
   private String remoteOriginURL;
 
   @JsonProperty("jdbcUrl")
-  @JsonView(View.ReleaseDetails.class)
+  @JsonView(View.ReleaseDetailsView.class)
   @Getter
   @Setter
   private String jdbcUrl;
 
   @JsonProperty("javaVersion")
-  @JsonView(View.ReleaseDetails.class)
+  @JsonView(View.ReleaseDetailsView.class)
   @Getter
   @Setter
   private String javaVersion;
 
   @JsonProperty("javaVendor")
-  @JsonView(View.ReleaseDetails.class)
+  @JsonView(View.ReleaseDetailsView.class)
   @Getter
   @Setter
   private String javaVendor;
 
   @JsonProperty("osName")
-  @JsonView(View.ReleaseDetails.class)
+  @JsonView(View.ReleaseDetailsView.class)
   @Getter
   @Setter
   private String osName;
 
   @JsonProperty("osArch")
-  @JsonView(View.ReleaseDetails.class)
+  @JsonView(View.ReleaseDetailsView.class)
   @Getter
   @Setter
   private String osArch;
 
   @JsonProperty("osVersion")
-  @JsonView(View.ReleaseDetails.class)
+  @JsonView(View.ReleaseDetailsView.class)
   @Getter
   @Setter
   private String osVersion;

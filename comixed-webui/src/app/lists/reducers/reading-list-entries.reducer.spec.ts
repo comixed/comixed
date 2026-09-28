@@ -23,12 +23,12 @@ import {
 } from './reading-list-entries.reducer';
 import { READING_LIST_3 } from '@app/lists/lists.fixtures';
 import {
-  addComicBooksToReadingListFailure,
-  addComicBooksToReadingListSuccess,
-  addSelectedComicBooksToReadingList,
-  removeComicBooksFromReadingListFailure,
-  removeComicBooksFromReadingListSuccess,
-  removeSelectedComicBooksFromReadingList
+  addComicsToReadingListFailure,
+  addComicsToReadingListSuccess,
+  addSelectedComicsToReadingList,
+  removeComicsFromReadingListFailure,
+  removeComicsFromReadingListSuccess,
+  removeSelectedComicsFromReadingList
 } from '@app/lists/actions/reading-list-entries.actions';
 
 describe('ReadingListEntries Reducer', () => {
@@ -54,7 +54,7 @@ describe('ReadingListEntries Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, working: false },
-        addSelectedComicBooksToReadingList({ list: READING_LIST })
+        addSelectedComicsToReadingList({ list: READING_LIST })
       );
     });
 
@@ -66,7 +66,7 @@ describe('ReadingListEntries Reducer', () => {
       beforeEach(() => {
         state = reducer(
           { ...state, working: true },
-          addComicBooksToReadingListSuccess()
+          addComicsToReadingListSuccess()
         );
       });
 
@@ -79,7 +79,7 @@ describe('ReadingListEntries Reducer', () => {
       beforeEach(() => {
         state = reducer(
           { ...state, working: true },
-          addComicBooksToReadingListFailure()
+          addComicsToReadingListFailure()
         );
       });
 
@@ -93,7 +93,7 @@ describe('ReadingListEntries Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, working: false },
-        removeSelectedComicBooksFromReadingList({
+        removeSelectedComicsFromReadingList({
           list: READING_LIST
         })
       );
@@ -107,7 +107,7 @@ describe('ReadingListEntries Reducer', () => {
       beforeEach(() => {
         state = reducer(
           { ...state, working: true },
-          removeComicBooksFromReadingListSuccess()
+          removeComicsFromReadingListSuccess()
         );
       });
 
@@ -120,7 +120,7 @@ describe('ReadingListEntries Reducer', () => {
       beforeEach(() => {
         state = reducer(
           { ...state, working: true },
-          removeComicBooksFromReadingListFailure()
+          removeComicsFromReadingListFailure()
         );
       });
 

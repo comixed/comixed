@@ -65,7 +65,7 @@ public class LibraryPluginController {
   @GetMapping(value = "/api/plugins", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasAnyRole('READER', 'ADMIN')")
   @Timed(value = "comixed.plugins.get-all")
-  @JsonView(View.LibraryPluginList.class)
+  @JsonView(View.LibraryPluginListView.class)
   public List<LibraryPlugin> getAllPlugins(final Principal principal)
       throws LibraryPluginException {
     final String email = principal.getName();
@@ -86,7 +86,7 @@ public class LibraryPluginController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @Timed(value = "comixed.plugins.create")
-  @JsonView(View.LibraryPluginList.class)
+  @JsonView(View.LibraryPluginListView.class)
   public LibraryPlugin createPlugin(@RequestBody final CreatePluginRequest request)
       throws LibraryPluginException {
     @NonNull final String filename = request.getFilename();
@@ -109,7 +109,7 @@ public class LibraryPluginController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @Timed(value = "comixed.plugins.update")
-  @JsonView(View.LibraryPluginList.class)
+  @JsonView(View.LibraryPluginListView.class)
   public LibraryPlugin updatePlugin(
       @PathVariable("pluginId") final long id, @RequestBody() final UpdatePluginRequest request)
       throws LibraryPluginException {
@@ -129,7 +129,7 @@ public class LibraryPluginController {
   @DeleteMapping(value = "/api/plugins/{pluginId}")
   @PreAuthorize("hasRole('ADMIN')")
   @Timed(value = "comixed.plugins.delete")
-  @JsonView(View.LibraryPluginList.class)
+  @JsonView(View.LibraryPluginListView.class)
   public void deletePlugin(@PathVariable("pluginId") final long id) throws LibraryPluginException {
     log.info("Deleting plugin: id={}", id);
     this.libraryPluginService.deletePlugin(id);
@@ -144,7 +144,7 @@ public class LibraryPluginController {
    */
   @PostMapping(value = "/api/plugins/{pluginId}/comics/{comicId}")
   @Timed(value = "comixed.plugins.run-single-comic-book")
-  public void runLibraryPluginOnOneComicBook(
+  public void runLibraryPluginOnOneComic(
       @PathVariable("pluginId") final long pluginId, @PathVariable("comicId") final Long comicId)
       throws LibraryPluginException {
     log.info(
@@ -162,20 +162,20 @@ public class LibraryPluginController {
    */
   @PostMapping(value = "/api/plugins/{pluginId}/comics/selected")
   @Timed(value = "comixed.plugins.run-selected-comic-books")
-  public void runLibraryPluginOnSelectedComicBooks(
+  public void runLibraryPluginOnSelectedComics(
       final HttpSession session,
       final Principal principal,
       @PathVariable("pluginId") final long pluginId)
       throws LibraryPluginException {
     try {
       final String email = principal.getName();
-      final List<Long> selectedComicBookIdList =
+      final List<Long> selectedComicIdList =
           this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
       log.info("Running plugin on selected comic books: email={} plugin id={}", email, pluginId);
-      this.libraryPluginService.runLibraryPlugin(pluginId, selectedComicBookIdList);
-      this.comicSelectionService.clearSelectedComicBooks(email, selectedComicBookIdList);
+      this.libraryPluginService.runLibraryPlugin(pluginId, selectedComicIdList);
+      this.comicSelectionService.clearSelectedComics(email, selectedComicIdList);
       session.setAttribute(
-          LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selectedComicBookIdList));
+          LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selectedComicIdList));
     } catch (ComicSelectionException error) {
       throw new LibraryPluginException("Failed to run plugin against selected comic books", error);
     }

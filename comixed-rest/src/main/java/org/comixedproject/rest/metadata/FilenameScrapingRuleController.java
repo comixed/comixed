@@ -56,7 +56,7 @@ public class FilenameScrapingRuleController {
   @GetMapping(value = "/api/admin/scraping/rules", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @Timed(value = "comixed.scraping-rules.get-all")
-  @JsonView(View.FilenameScrapingRuleList.class)
+  @JsonView(View.FilenameScrapingRuleListView.class)
   public List<FilenameScrapingRule> loadRules() {
     log.info("Loading all filename scraping rules");
     return this.filenameScrapingRuleService.loadRules();
@@ -74,7 +74,7 @@ public class FilenameScrapingRuleController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @Timed(value = "comixed.scraping-rules.save")
-  @JsonView(View.FilenameScrapingRuleList.class)
+  @JsonView(View.FilenameScrapingRuleListView.class)
   public List<FilenameScrapingRule> saveRules(
       @RequestBody() final List<FilenameScrapingRule> rules) {
     log.info("Saving filename scraping rules");
@@ -104,7 +104,7 @@ public class FilenameScrapingRuleController {
   @PostMapping(
       value = "/api/admin/scraping/rules/file",
       produces = MediaType.APPLICATION_JSON_VALUE)
-  @JsonView(View.FilenameScrapingRuleList.class)
+  @JsonView(View.FilenameScrapingRuleListView.class)
   @PreAuthorize("hasRole('ADMIN')")
   @Timed(value = "comixed.blocked-hash.upload")
   public List<FilenameScrapingRule> uploadFile(final MultipartFile file) throws IOException {

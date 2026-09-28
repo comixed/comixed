@@ -27,8 +27,7 @@ import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.model.comicbooks.ComicType;
 
 /**
- * <code>SingleComicBookSelectionRequest</code> contains a comic book id and the desired selected
- * state.
+ * <code>SingleComicSelectionRequest</code> contains a comic book id and the desired selected state.
  *
  * @author Darryl L. Pierce
  */

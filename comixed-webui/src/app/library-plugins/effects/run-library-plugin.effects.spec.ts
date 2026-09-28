@@ -25,8 +25,8 @@ import { LIBRARY_PLUGIN_4 } from '@app/library-plugins/library-plugins.fixtures'
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import {
   runLibraryPluginFailure,
-  runLibraryPluginOnOneComicBook,
-  runLibraryPluginOnSelectedComicBooks,
+  runLibraryPluginOnOneComic,
+  runLibraryPluginOnSelectedComics,
   runLibraryPluginSuccess
 } from '@app/library-plugins/actions/run-library-plugin.actions';
 import { hot } from 'jasmine-marbles';
@@ -57,11 +57,11 @@ describe('RunLibraryPluginEffects', () => {
         {
           provide: LibraryPluginService,
           useValue: {
-            runLibraryPluginOnOneComicBook: jasmine.createSpy(
-              'LibraryPluginService.runLibraryPluginOnOneComicBook()'
+            runLibraryPluginOnOneComic: jasmine.createSpy(
+              'LibraryPluginService.runLibraryPluginOnOneComic()'
             ),
-            runLibraryPluginOnSelectedComicBooks: jasmine.createSpy(
-              'LibraryPluginService.runLibraryPluginOnSelectedComicBooks()'
+            runLibraryPluginOnSelectedComics: jasmine.createSpy(
+              'LibraryPluginService.runLibraryPluginOnSelectedComics()'
             )
           }
         },
@@ -85,14 +85,14 @@ describe('RunLibraryPluginEffects', () => {
   describe('running a plugin against once comic book', () => {
     it('fires an action on success', () => {
       const serviceResponse = new HttpResponse({ status: 200 });
-      const action = runLibraryPluginOnOneComicBook({
+      const action = runLibraryPluginOnOneComic({
         plugin: PLUGIN,
         comicId: COMIC_ID
       });
       const outcome = runLibraryPluginSuccess();
 
       actions$ = hot('-a', { a: action });
-      libraryPluginService.runLibraryPluginOnOneComicBook
+      libraryPluginService.runLibraryPluginOnOneComic
         .withArgs({
           plugin: PLUGIN,
           comicId: COMIC_ID
@@ -100,20 +100,20 @@ describe('RunLibraryPluginEffects', () => {
         .and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.runLibraryPluginOnOneComicBook$).toBeObservable(expected);
+      expect(effects.runLibraryPluginOnOneComic$).toBeObservable(expected);
       expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = runLibraryPluginOnOneComicBook({
+      const action = runLibraryPluginOnOneComic({
         plugin: PLUGIN,
         comicId: COMIC_ID
       });
       const outcome = runLibraryPluginFailure();
 
       actions$ = hot('-a', { a: action });
-      libraryPluginService.runLibraryPluginOnOneComicBook
+      libraryPluginService.runLibraryPluginOnOneComic
         .withArgs({
           plugin: PLUGIN,
           comicId: COMIC_ID
@@ -121,19 +121,19 @@ describe('RunLibraryPluginEffects', () => {
         .and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.runLibraryPluginOnOneComicBook$).toBeObservable(expected);
+      expect(effects.runLibraryPluginOnOneComic$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on general failure', () => {
-      const action = runLibraryPluginOnOneComicBook({
+      const action = runLibraryPluginOnOneComic({
         plugin: PLUGIN,
         comicId: COMIC_ID
       });
       const outcome = runLibraryPluginFailure();
 
       actions$ = hot('-a', { a: action });
-      libraryPluginService.runLibraryPluginOnOneComicBook
+      libraryPluginService.runLibraryPluginOnOneComic
         .withArgs({
           plugin: PLUGIN,
           comicId: COMIC_ID
@@ -141,7 +141,7 @@ describe('RunLibraryPluginEffects', () => {
         .and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
-      expect(effects.runLibraryPluginOnOneComicBook$).toBeObservable(expected);
+      expect(effects.runLibraryPluginOnOneComic$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });
@@ -149,16 +149,16 @@ describe('RunLibraryPluginEffects', () => {
   describe('running a plugin against selected comic books', () => {
     it('fires an action on success', () => {
       const serviceResponse = new HttpResponse({ status: 200 });
-      const action = runLibraryPluginOnSelectedComicBooks({ plugin: PLUGIN });
+      const action = runLibraryPluginOnSelectedComics({ plugin: PLUGIN });
       const outcome = runLibraryPluginSuccess();
 
       actions$ = hot('-a', { a: action });
-      libraryPluginService.runLibraryPluginOnSelectedComicBooks
+      libraryPluginService.runLibraryPluginOnSelectedComics
         .withArgs({ plugin: PLUGIN })
         .and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.runLibraryPluginOnSelectedComicBooks$).toBeObservable(
+      expect(effects.runLibraryPluginOnSelectedComics$).toBeObservable(
         expected
       );
       expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
@@ -166,32 +166,32 @@ describe('RunLibraryPluginEffects', () => {
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = runLibraryPluginOnSelectedComicBooks({ plugin: PLUGIN });
+      const action = runLibraryPluginOnSelectedComics({ plugin: PLUGIN });
       const outcome = runLibraryPluginFailure();
 
       actions$ = hot('-a', { a: action });
-      libraryPluginService.runLibraryPluginOnSelectedComicBooks
+      libraryPluginService.runLibraryPluginOnSelectedComics
         .withArgs({ plugin: PLUGIN })
         .and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.runLibraryPluginOnSelectedComicBooks$).toBeObservable(
+      expect(effects.runLibraryPluginOnSelectedComics$).toBeObservable(
         expected
       );
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on general failure', () => {
-      const action = runLibraryPluginOnSelectedComicBooks({ plugin: PLUGIN });
+      const action = runLibraryPluginOnSelectedComics({ plugin: PLUGIN });
       const outcome = runLibraryPluginFailure();
 
       actions$ = hot('-a', { a: action });
-      libraryPluginService.runLibraryPluginOnSelectedComicBooks
+      libraryPluginService.runLibraryPluginOnSelectedComics
         .withArgs({ plugin: PLUGIN })
         .and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
-      expect(effects.runLibraryPluginOnSelectedComicBooks$).toBeObservable(
+      expect(effects.runLibraryPluginOnSelectedComics$).toBeObservable(
         expected
       );
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));

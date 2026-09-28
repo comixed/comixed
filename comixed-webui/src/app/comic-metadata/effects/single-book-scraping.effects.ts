@@ -27,9 +27,9 @@ import {
   loadIssueMetadataFailed,
   loadVolumeMetadata,
   loadVolumeMetadataFailed,
-  scrapeSingleComicBook,
-  scrapeSingleComicBookFailure,
-  scrapeSingleComicBookSuccess,
+  scrapeSingleComic,
+  scrapeSingleComicFailure,
+  scrapeSingleComicSuccess,
   startMetadataUpdateProcess,
   startMetadataUpdateProcessFailure,
   startMetadataUpdateProcessSuccess,
@@ -44,8 +44,8 @@ import { AlertService } from '@app/core/services/alert.service';
 import { of } from 'rxjs';
 import { IssueMetadata } from '@app/comic-metadata/models/issue-metadata';
 import {
-  clearComicBookSelectionState,
-  removeSingleComicBookSelection
+  clearComicSelectionState,
+  removeSingleComicSelection
 } from '@app/comic-books/actions/comic-book-selection.actions';
 
 @Injectable()
@@ -134,9 +134,9 @@ export class SingleBookScrapingEffects {
       })
     );
   });
-  scrapeSingleComicBook$ = createEffect(() => {
+  scrapeSingleComic$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(scrapeSingleComicBook),
+      ofType(scrapeSingleComic),
       tap(action => this.logger.debug('Effect: scrape comic:', action)),
       switchMap(action =>
         this.metadataService
@@ -156,8 +156,8 @@ export class SingleBookScrapingEffects {
               )
             ),
             mergeMap(() => [
-              scrapeSingleComicBookSuccess(),
-              removeSingleComicBookSelection({
+              scrapeSingleComicSuccess(),
+              removeSingleComicSelection({
                 comicId: action.comic.comicId
               })
             ]),
@@ -168,7 +168,7 @@ export class SingleBookScrapingEffects {
                   'scraping.scrape-comic.effect-failure'
                 )
               );
-              return of(scrapeSingleComicBookFailure());
+              return of(scrapeSingleComicFailure());
             })
           )
       ),
@@ -177,7 +177,7 @@ export class SingleBookScrapingEffects {
         this.alertService.error(
           this.translateService.instant('app.general-effect-failure')
         );
-        return of(scrapeSingleComicBookFailure());
+        return of(scrapeSingleComicFailure());
       })
     );
   });
@@ -203,7 +203,7 @@ export class SingleBookScrapingEffects {
             ),
             mergeMap(() => [
               startMetadataUpdateProcessSuccess(),
-              clearComicBookSelectionState()
+              clearComicSelectionState()
             ]),
             catchError(error => {
               this.logger.error('Service failure:', error);

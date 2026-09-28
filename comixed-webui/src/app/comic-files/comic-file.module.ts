@@ -42,7 +42,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatCardModule } from '@angular/material/card';
 import { LibraryModule } from '@app/library/library.module';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { ComicBooksModule } from '@app/comic-books/comic-books.module';
+import { ComicsModule } from '@app/comic-books/comic-books.module';
 import { scrapeMetadataFeature } from '@app/comic-files/reducers/scrape-metadata.reducer';
 import { ScrapeMetadataEffects } from '@app/comic-files/effects/scrape-metadata.effects';
 import { MatMenuModule } from '@angular/material/menu';
@@ -80,7 +80,7 @@ import { ProcessComicsService } from '@app/comic-books/services/process-comics.s
     MatCardModule,
     LibraryModule,
     MatProgressBarModule,
-    ComicBooksModule,
+    ComicsModule,
     FlexLayoutModule,
     MatMenuModule,
     MatPaginatorModule,

@@ -69,7 +69,7 @@ public class DeletedPageService {
         result
             .get(deletedPageAndComic.getHash())
             .getComics()
-            .add(this.displayableComicService.getForComicBookId(deletedPageAndComic.getComicId()));
+            .add(this.displayableComicService.getForComicId(deletedPageAndComic.getComicId()));
       } catch (ComicException error) {
         throw new ComicPageException("Failed to load parent comic", error);
       }

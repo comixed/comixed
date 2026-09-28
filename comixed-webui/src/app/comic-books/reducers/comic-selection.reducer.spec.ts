@@ -22,26 +22,26 @@ import {
   reducer
 } from './comic-selection.reducer';
 import {
-  addSingleComicBookSelection,
-  clearComicBookSelectionState,
-  clearComicBookSelectionStateFailed,
+  addSingleComicSelection,
+  clearComicSelectionState,
+  clearComicSelectionStateFailed,
   comicSelectionsLoaded,
   comicSelectionStateCleared,
   comicSelectionUpdate,
-  loadComicBookSelections,
-  loadComicBookSelectionsFailed,
-  removeSingleComicBookSelection,
-  setComicBookSelectionByUnreadState,
-  setDuplicateComicBooksSelectionState,
-  setMultipleComicBookByFilterSelectionState,
-  setMultipleComicBookByIdSelectionState,
-  setMultipleComicBookByPublisherSelectionState,
-  setMultipleComicBookByPublisherSeriesAndVolumeSelectionState,
-  setMultipleComicBooksByTagTypeAndValueSelectionState,
-  setMultipleComicBookSelectionStateFailure,
-  setMultipleComicBookSelectionStateSuccess,
-  singleComicBookSelectionFailed,
-  singleComicBookSelectionUpdated
+  loadComicSelections,
+  loadComicSelectionsFailed,
+  removeSingleComicSelection,
+  setComicSelectionByUnreadState,
+  setDuplicateComicsSelectionState,
+  setMultipleComicByFilterSelectionState,
+  setMultipleComicByIdSelectionState,
+  setMultipleComicByPublisherSelectionState,
+  setMultipleComicByPublisherSeriesAndVolumeSelectionState,
+  setMultipleComicsByTagTypeAndValueSelectionState,
+  setMultipleComicSelectionStateFailure,
+  setMultipleComicSelectionStateSuccess,
+  singleComicSelectionFailed,
+  singleComicSelectionUpdated
 } from '@app/comic-books/actions/comic-book-selection.actions';
 import {
   DISPLAYABLE_COMIC_1,
@@ -56,7 +56,7 @@ import { ComicState } from '@app/comic-books/models/comic-state';
 import { PUBLISHER_1, SERIES_1 } from '@app/collections/collections.fixtures';
 import { ComicTagType } from '@app/comic-books/models/comic-tag-type';
 
-describe('ComicBookSelection Reducer', () => {
+describe('ComicSelection Reducer', () => {
   const COVER_YEAR = Math.random() * 100 + 1900;
   const COVER_MONTH = Math.random() * 12;
   const ARCHIVE_TYPE = ArchiveType.CB7;
@@ -102,7 +102,7 @@ describe('ComicBookSelection Reducer', () => {
 
   describe('loading the initial set of comic book selections', () => {
     beforeEach(() => {
-      state = reducer({ ...state, busy: false }, loadComicBookSelections());
+      state = reducer({ ...state, busy: false }, loadComicSelections());
     });
 
     it('sets the busy flag', () => {
@@ -128,10 +128,7 @@ describe('ComicBookSelection Reducer', () => {
 
     describe('failure', () => {
       beforeEach(() => {
-        state = reducer(
-          { ...state, busy: true },
-          loadComicBookSelectionsFailed()
-        );
+        state = reducer({ ...state, busy: true }, loadComicSelectionsFailed());
       });
 
       it('clears the busy flag', () => {
@@ -155,10 +152,7 @@ describe('ComicBookSelection Reducer', () => {
 
   describe('clearing the comic book selection state', () => {
     beforeEach(() => {
-      state = reducer(
-        { ...state, busy: false },
-        clearComicBookSelectionState()
-      );
+      state = reducer({ ...state, busy: false }, clearComicSelectionState());
     });
 
     it('sets the busy flag', () => {
@@ -182,7 +176,7 @@ describe('ComicBookSelection Reducer', () => {
       beforeEach(() => {
         state = reducer(
           { ...state, ids: IDS, busy: true },
-          clearComicBookSelectionStateFailed()
+          clearComicSelectionStateFailed()
         );
       });
 
@@ -196,7 +190,7 @@ describe('ComicBookSelection Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, busy: false },
-        addSingleComicBookSelection({
+        addSingleComicSelection({
           comicId: IDS[0]
         })
       );
@@ -208,7 +202,7 @@ describe('ComicBookSelection Reducer', () => {
 
     describe('success', () => {
       beforeEach(() => {
-        state = reducer({ ...state }, singleComicBookSelectionUpdated());
+        state = reducer({ ...state }, singleComicSelectionUpdated());
       });
 
       it('clears the busy flag', () => {
@@ -218,7 +212,7 @@ describe('ComicBookSelection Reducer', () => {
 
     describe('failure', () => {
       beforeEach(() => {
-        state = reducer({ ...state }, singleComicBookSelectionFailed());
+        state = reducer({ ...state }, singleComicSelectionFailed());
       });
 
       it('clears the busy flag', () => {
@@ -231,7 +225,7 @@ describe('ComicBookSelection Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, busy: false },
-        removeSingleComicBookSelection({
+        removeSingleComicSelection({
           comicId: IDS[0]
         })
       );
@@ -243,7 +237,7 @@ describe('ComicBookSelection Reducer', () => {
 
     describe('success', () => {
       beforeEach(() => {
-        state = reducer({ ...state }, singleComicBookSelectionUpdated());
+        state = reducer({ ...state }, singleComicSelectionUpdated());
       });
 
       it('clears the busy flag', () => {
@@ -253,7 +247,7 @@ describe('ComicBookSelection Reducer', () => {
 
     describe('failure', () => {
       beforeEach(() => {
-        state = reducer({ ...state }, singleComicBookSelectionFailed());
+        state = reducer({ ...state }, singleComicSelectionFailed());
       });
 
       it('clears the busy flag', () => {
@@ -266,7 +260,7 @@ describe('ComicBookSelection Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, busy: false },
-        setMultipleComicBookByFilterSelectionState({
+        setMultipleComicByFilterSelectionState({
           coverYear: COVER_YEAR,
           coverMonth: COVER_MONTH,
           archiveType: ARCHIVE_TYPE,
@@ -288,7 +282,7 @@ describe('ComicBookSelection Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, busy: false },
-        setMultipleComicBooksByTagTypeAndValueSelectionState({
+        setMultipleComicsByTagTypeAndValueSelectionState({
           tagType: TAG_TYPE,
           tagValue: TAG_VALUE,
           selected: SELECTED
@@ -305,7 +299,7 @@ describe('ComicBookSelection Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, busy: false },
-        setMultipleComicBookByIdSelectionState({
+        setMultipleComicByIdSelectionState({
           selected: SELECTED,
           comicIds: IDS
         })
@@ -321,7 +315,7 @@ describe('ComicBookSelection Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, busy: false },
-        setMultipleComicBookByPublisherSelectionState({
+        setMultipleComicByPublisherSelectionState({
           selected: SELECTED,
           publisher: PUBLISHER
         })
@@ -337,7 +331,7 @@ describe('ComicBookSelection Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, busy: false },
-        setMultipleComicBookByPublisherSeriesAndVolumeSelectionState({
+        setMultipleComicByPublisherSeriesAndVolumeSelectionState({
           selected: SELECTED,
           publisher: PUBLISHER,
           series: SERIES,
@@ -355,7 +349,7 @@ describe('ComicBookSelection Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, busy: false },
-        setDuplicateComicBooksSelectionState({
+        setDuplicateComicsSelectionState({
           selected: SELECTED
         })
       );
@@ -370,7 +364,7 @@ describe('ComicBookSelection Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, busy: false },
-        setComicBookSelectionByUnreadState({
+        setComicSelectionByUnreadState({
           selected: SELECTED,
           unreadOnly: UNREAD_STATE
         })
@@ -386,7 +380,7 @@ describe('ComicBookSelection Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, busy: true },
-        setMultipleComicBookSelectionStateSuccess()
+        setMultipleComicSelectionStateSuccess()
       );
     });
 
@@ -399,7 +393,7 @@ describe('ComicBookSelection Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, busy: true },
-        setMultipleComicBookSelectionStateFailure()
+        setMultipleComicSelectionStateFailure()
       );
     });
 

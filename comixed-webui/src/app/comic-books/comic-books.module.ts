@@ -20,7 +20,7 @@ import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
-import { ComicBooksRouting } from './comic-books.routing';
+import { ComicsRouting } from './comic-books.routing';
 import { ComicScrapingComponent } from './components/comic-scraping/comic-scraping.component';
 import { ComicDetailEditComponent } from './components/comic-detail-edit/comic-detail-edit.component';
 import { ComicPagesComponent } from './components/comic-pages/comic-pages.component';
@@ -78,7 +78,7 @@ import { ComicDetailCoverUrlPipe } from '@app/comic-books/pipes/comic-detail-cov
 @NgModule({
   imports: [
     CommonModule,
-    ComicBooksRouting,
+    ComicsRouting,
     StoreModule.forFeature(comicFeature),
     StoreModule.forFeature(imprintListFeature),
     StoreModule.forFeature(markComicsDeletedFeature),
@@ -151,10 +151,10 @@ import { ComicDetailCoverUrlPipe } from '@app/comic-books/pipes/comic-detail-cov
     ComicDetailCoverUrlPipe
   ]
 })
-export class ComicBooksModule {
-  static forRoot(): ModuleWithProviders<ComicBooksModule> {
+export class ComicsModule {
+  static forRoot(): ModuleWithProviders<ComicsModule> {
     return {
-      ngModule: ComicBooksModule,
+      ngModule: ComicsModule,
       providers: [ComicTitlePipe]
     };
   }

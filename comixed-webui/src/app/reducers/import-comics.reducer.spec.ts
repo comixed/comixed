@@ -23,7 +23,7 @@ import {
 } from './import-comics.reducer';
 import { importComicsUpdate } from '@app/actions/import-comics.actions';
 
-describe('ImportComicBooks Reducer', () => {
+describe('ImportComics Reducer', () => {
   const STEP_NAME = 'step-name';
   const PROCESSING_TOTAL = 73;
   const PROCESSING_PROCESSED = 37;

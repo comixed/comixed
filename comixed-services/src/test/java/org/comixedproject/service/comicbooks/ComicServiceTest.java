@@ -347,13 +347,13 @@ class ComicServiceTest {
   }
 
   @Test
-  void getAllComicBooksForPublisherAndSeriesAndVolume_withUnread() {
+  void getAllComicsForPublisherAndSeriesAndVolume_withUnread() {
     when(comicRepository.getAllUnreadForPublisherAndSeriesAndVolume(
             anyString(), anyString(), anyString(), anyString()))
         .thenReturn(comicList);
 
     final List<Comic> result =
-        service.getAllComicBooksForPublisherAndSeriesAndVolume(
+        service.getAllComicsForPublisherAndSeriesAndVolume(
             TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME, TEST_EMAIL, true);
 
     assertNotNull(result);
@@ -365,13 +365,13 @@ class ComicServiceTest {
   }
 
   @Test
-  void getAllComicBooksForPublisherAndSeriesAndVolume() {
+  void getAllComicsForPublisherAndSeriesAndVolume() {
     when(comicRepository.getAllForPublisherAndSeriesAndVolume(
             anyString(), anyString(), anyString()))
         .thenReturn(comicList);
 
     final List<Comic> result =
-        service.getAllComicBooksForPublisherAndSeriesAndVolume(
+        service.getAllComicsForPublisherAndSeriesAndVolume(
             TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME, TEST_EMAIL, false);
 
     assertNotNull(result);
@@ -546,10 +546,10 @@ class ComicServiceTest {
   }
 
   @Test
-  void loadComicDetailsById() {
+  void loadComicsById() {
     when(comicRepository.findAllById(anySet())).thenReturn(comicList);
 
-    final List<Comic> result = service.loadComicDetailListById(comicIdSet);
+    final List<Comic> result = service.loadComicListById(comicIdSet);
 
     assertNotNull(result);
     assertSame(comicList, result);
@@ -882,7 +882,7 @@ class ComicServiceTest {
     when(comicRepository.findComicsMarkedForPurging(pageableArgumentCaptor.capture()))
         .thenReturn(comicList);
 
-    final List<Comic> result = service.findComicBooksToBePurged(TEST_MAXIMUM_COMICS);
+    final List<Comic> result = service.findComicsToBePurged(TEST_MAXIMUM_COMICS);
 
     assertNotNull(result);
     assertSame(comicList, result);
@@ -980,27 +980,27 @@ class ComicServiceTest {
   }
 
   @Test
-  void getComicBooksState() {
-    when(comicRepository.getComicBooksState()).thenReturn(librarySegmentList);
+  void getComicsState() {
+    when(comicRepository.getComicsState()).thenReturn(librarySegmentList);
 
-    final List<RemoteLibrarySegmentState> result = service.getComicBooksState();
+    final List<RemoteLibrarySegmentState> result = service.getComicsState();
 
     assertNotNull(result);
     assertSame(librarySegmentList, result);
 
-    verify(comicRepository).getComicBooksState();
+    verify(comicRepository).getComicsState();
   }
 
   @Test
-  void getComicBookArchiveTypes() {
-    when(comicRepository.getComicBookArchiveTypes()).thenReturn(librarySegmentList);
+  void getComicArchiveTypes() {
+    when(comicRepository.getComicArchiveTypes()).thenReturn(librarySegmentList);
 
-    final List<RemoteLibrarySegmentState> result = service.getComicBookArchiveTypes();
+    final List<RemoteLibrarySegmentState> result = service.getComicArchiveTypes();
 
     assertNotNull(result);
     assertSame(librarySegmentList, result);
 
-    verify(comicRepository).getComicBookArchiveTypes();
+    verify(comicRepository).getComicArchiveTypes();
   }
 
   @Test
@@ -1016,7 +1016,7 @@ class ComicServiceTest {
   }
 
   @Test
-  void getDeletedComicBookCount() {
+  void getDeletedComicCount() {
     when(comicRepository.findForStateCount(any())).thenReturn(TEST_TOTAL_COMIC_COUNT);
 
     final long result = service.getDeletedComicCount();
@@ -1077,7 +1077,7 @@ class ComicServiceTest {
   }
 
   @Test
-  void getComicBookCount() {
+  void getComicCount() {
     when(comicRepository.count()).thenReturn(TEST_TOTAL_COMIC_COUNT);
 
     final long result = service.getComicCount();
@@ -1100,8 +1100,8 @@ class ComicServiceTest {
   }
 
   @Test
-  void markComicBooksForBatchScraping() {
-    service.markComicBooksForBatchScraping(idList);
+  void markComicsForBatchScraping() {
+    service.markComicsForBatchScraping(idList);
 
     verify(comicRepository).prepareForBatchScraping(idList);
   }
@@ -1139,7 +1139,7 @@ class ComicServiceTest {
   void updateMultipleComics_invalidId() {
     idList.add(TEST_COMIC_ID);
 
-    when(comicRepository.findByComicBookId(Mockito.anyLong())).thenReturn(null);
+    when(comicRepository.findByComicId(Mockito.anyLong())).thenReturn(null);
 
     assertThrows(ComicException.class, () -> service.updateMultipleComics(idList));
   }
@@ -1148,7 +1148,7 @@ class ComicServiceTest {
   void updateMultipleComics() throws ComicException {
     idList.add(TEST_COMIC_ID);
 
-    when(comicRepository.findByComicBookId(Mockito.anyLong())).thenReturn(comic);
+    when(comicRepository.findByComicId(Mockito.anyLong())).thenReturn(comic);
 
     service.updateMultipleComics(idList);
 
@@ -1273,7 +1273,7 @@ class ComicServiceTest {
 
     when(comicRepository.getReferenceById(anyLong())).thenReturn(null);
 
-    assertThrows(ComicException.class, () -> service.markComicBooksForBatchMetadataUpdate(idList));
+    assertThrows(ComicException.class, () -> service.markComicsForBatchMetadataUpdate(idList));
   }
 
   @Test
@@ -1282,7 +1282,7 @@ class ComicServiceTest {
 
     when(comicRepository.getReferenceById(anyLong())).thenReturn(comic);
 
-    service.markComicBooksForBatchMetadataUpdate(idList);
+    service.markComicsForBatchMetadataUpdate(idList);
 
     verify(comicRepository).getReferenceById(TEST_COMIC_ID);
     verify(comic).setBatchUpdatingMetadata(true);
@@ -1308,9 +1308,9 @@ class ComicServiceTest {
 
   @Test
   void findAllComicsMarkedForDeletion() {
-    service.prepareComicBooksForDeleting();
+    service.prepareComicsForDeleting();
 
-    verify(comicRepository).prepareComicBooksForDeleting();
+    verify(comicRepository).prepareComicsForDeleting();
   }
 
   @Test
@@ -1423,14 +1423,14 @@ class ComicServiceTest {
   }
 
   @Test
-  void getUnprocessedComicBookCount() {
-    when(comicRepository.getUnprocessedComicBookCount()).thenReturn(TEST_TOTAL_COMIC_COUNT);
+  void getUnprocessedComicCount() {
+    when(comicRepository.getUnprocessedComicCount()).thenReturn(TEST_TOTAL_COMIC_COUNT);
 
-    final long result = service.getUnprocessedComicBookCount();
+    final long result = service.getUnprocessedComicCount();
 
     assertEquals(TEST_TOTAL_COMIC_COUNT, result);
 
-    verify(comicRepository).getUnprocessedComicBookCount();
+    verify(comicRepository).getUnprocessedComicCount();
   }
 
   @Test
@@ -1445,27 +1445,27 @@ class ComicServiceTest {
   }
 
   @Test
-  void getAllComicDetails_missingFiles() {
-    when(comicRepository.getAllComicDetailsByMissingFlag(true)).thenReturn(comicFilenameList);
+  void getAllComics_missingFiles() {
+    when(comicRepository.getAllComicsByMissingFlag(true)).thenReturn(comicFilenameList);
 
-    final Set<String> result = service.getAllComicDetailsByMissingFlag(true);
+    final Set<String> result = service.getAllComicsByMissingFlag(true);
 
     assertNotNull(result);
     assertSame(comicFilenameList, result);
 
-    verify(comicRepository).getAllComicDetailsByMissingFlag(true);
+    verify(comicRepository).getAllComicsByMissingFlag(true);
   }
 
   @Test
-  void getAllComicDetails_notMissingFiles() {
-    when(comicRepository.getAllComicDetailsByMissingFlag(false)).thenReturn(comicFilenameList);
+  void getAllComics_notMissingFiles() {
+    when(comicRepository.getAllComicsByMissingFlag(false)).thenReturn(comicFilenameList);
 
-    final Set<String> result = service.getAllComicDetailsByMissingFlag(false);
+    final Set<String> result = service.getAllComicsByMissingFlag(false);
 
     assertNotNull(result);
     assertSame(comicFilenameList, result);
 
-    verify(comicRepository).getAllComicDetailsByMissingFlag(false);
+    verify(comicRepository).getAllComicsByMissingFlag(false);
   }
 
   @Test

@@ -67,7 +67,7 @@ public class BlockedHashController {
    */
   @GetMapping(value = "/api/pages/blocked", produces = MediaType.APPLICATION_JSON_VALUE)
   @Timed(value = "comixed.blocked-hash.get-all")
-  @JsonView(View.BlockedHashList.class)
+  @JsonView(View.BlockedHashListView.class)
   public List<BlockedHash> getAll() {
     log.info("Load all blocked pages");
     return this.blockedHashService.getAll();
@@ -97,7 +97,7 @@ public class BlockedHashController {
    * @throws DuplicatePageException if an error occurs
    */
   @PutMapping(value = "/api/pages/blocked/{hash}")
-  @JsonView(View.BlockedHashDetail.class)
+  @JsonView(View.BlockedHashView.class)
   @Timed(value = "comixed.blocked-hash.update")
   @PreAuthorize("hasRole('ADMIN')")
   public BlockedHash updateBlockedPage(
@@ -192,7 +192,7 @@ public class BlockedHashController {
    * @throws IOException if a file exception occurs
    */
   @PostMapping(value = "/api/pages/blocked/file", produces = MediaType.APPLICATION_JSON_VALUE)
-  @JsonView(View.BlockedHashList.class)
+  @JsonView(View.BlockedHashListView.class)
   @PreAuthorize("hasRole('ADMIN')")
   @Timed(value = "comixed.blocked-hash.upload")
   public List<BlockedHash> uploadFile(final MultipartFile file)
@@ -211,7 +211,7 @@ public class BlockedHashController {
       value = "/api/pages/blocked/delete",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
-  @JsonView(View.BlockedHashList.class)
+  @JsonView(View.BlockedHashListView.class)
   @PreAuthorize("hasRole('ADMIN')")
   @Timed(value = "comixed.blocked-hash.delete-pages")
   public List<String> deleteBlockedPages(@RequestBody() final DeleteBlockedPagesRequest request) {

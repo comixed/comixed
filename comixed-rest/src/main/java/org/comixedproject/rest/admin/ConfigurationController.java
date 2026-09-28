@@ -53,7 +53,7 @@ public class ConfigurationController {
   @GetMapping(value = "/api/admin/config", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @Timed(value = "comixed.configuration.get-all")
-  @JsonView(View.ConfigurationList.class)
+  @JsonView(View.ConfigurationListView.class)
   public List<ConfigurationOption> getAll() {
     log.info("Getting all configuration options");
     return this.configurationService.getAll();
@@ -72,7 +72,7 @@ public class ConfigurationController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @Timed(value = "comixed.configuration.save")
-  @JsonView(View.ConfigurationList.class)
+  @JsonView(View.ConfigurationListView.class)
   public SaveConfigurationOptionsResponse saveOptions(
       @RequestBody() final SaveConfigurationOptionsRequest request)
       throws ConfigurationOptionException {

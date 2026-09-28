@@ -34,7 +34,7 @@ import org.comixedproject.views.View;
 @AllArgsConstructor
 public class SaveUserPreferenceResponse extends ComiXedUser {
   @JsonProperty("user")
-  @JsonView(View.UserDetailsView.class)
+  @JsonView(View.UserView.class)
   @Getter
   private ComiXedUser user;
 }

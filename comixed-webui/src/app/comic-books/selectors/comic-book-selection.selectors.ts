@@ -22,20 +22,21 @@ import {
   ComicSelectionState
 } from '../reducers/comic-selection.reducer';
 
-const selectComicBookSelectionState =
-  createFeatureSelector<ComicSelectionState>(COMIC_SELECTION_FEATURE_KEY);
+const selectComicSelectionState = createFeatureSelector<ComicSelectionState>(
+  COMIC_SELECTION_FEATURE_KEY
+);
 
-export const selectComicBookSelectionBusy = createSelector(
-  selectComicBookSelectionState,
+export const selectComicSelectionBusy = createSelector(
+  selectComicSelectionState,
   state => state.busy
 );
 
-export const selectComicBookSelectionIds = createSelector(
-  selectComicBookSelectionState,
+export const selectComicSelectionIds = createSelector(
+  selectComicSelectionState,
   state => state.ids
 );
 
-export const selectComicBookSelectionCount = createSelector(
-  selectComicBookSelectionState,
+export const selectComicSelectionCount = createSelector(
+  selectComicSelectionState,
   state => state.ids.length
 );

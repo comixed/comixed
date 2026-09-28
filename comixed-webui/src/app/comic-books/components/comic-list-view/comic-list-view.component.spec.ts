@@ -38,21 +38,21 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
 import {
-  convertSelectedComicBooks,
-  convertSingleComicBook
+  convertSelectedComics,
+  convertSingleComic
 } from '@app/library/actions/convert-comic-books.actions';
 import { archiveTypeFromString } from '@app/comic-books/comic-books.functions';
 import { READING_LIST_1 } from '@app/lists/lists.fixtures';
-import { addSelectedComicBooksToReadingList } from '@app/lists/actions/reading-list-entries.actions';
+import { addSelectedComicsToReadingList } from '@app/lists/actions/reading-list-entries.actions';
 import {
   Confirmation,
   ConfirmationService
 } from '@tragically-slick/confirmation';
 import {
-  deleteSelectedComicBooks,
-  deleteSingleComicBook,
-  undeleteSelectedComicBooks,
-  undeleteSingleComicBook
+  deleteSelectedComics,
+  deleteSingleComic,
+  undeleteSelectedComics,
+  undeleteSingleComic
 } from '@app/comic-books/actions/delete-comic-books.actions';
 import { editMultipleComics } from '@app/library/actions/library.actions';
 import { BehaviorSubject, of } from 'rxjs';
@@ -65,20 +65,20 @@ import { QueryParameterService } from '@app/core/services/query-parameter.servic
 import { CoverDateFilter } from '@app/comic-books/models/ui/cover-date-filter';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import {
-  updateSelectedComicBooksMetadata,
-  updateSingleComicBookMetadata
+  updateSelectedComicsMetadata,
+  updateSingleComicMetadata
 } from '@app/library/actions/update-metadata.actions';
 import {
   startEntireLibraryOrganization,
   startLibraryOrganization
 } from '@app/library/actions/organize-library.actions';
 import {
-  rescanSelectedComicBooks,
-  rescanSingleComicBook
+  rescanSelectedComics,
+  rescanSingleComic
 } from '@app/library/actions/rescan-comics.actions';
 import {
-  addSingleComicBookSelection,
-  removeSingleComicBookSelection
+  addSingleComicSelection,
+  removeSingleComicSelection
 } from '@app/comic-books/actions/comic-book-selection.actions';
 import {
   initialState as initialLibraryPluginState,
@@ -90,22 +90,22 @@ import {
   LIBRARY_PLUGIN_4
 } from '@app/library-plugins/library-plugins.fixtures';
 import {
-  runLibraryPluginOnOneComicBook,
-  runLibraryPluginOnSelectedComicBooks
+  runLibraryPluginOnOneComic,
+  runLibraryPluginOnSelectedComics
 } from '@app/library-plugins/actions/run-library-plugin.actions';
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import { PREFERENCE_PAGE_SIZE } from '@app/comic-files/comic-file.constants';
 import { READ_COMIC_1 } from '@app/user/user.fixtures';
 import {
-  markSelectedComicBooksRead,
-  markSingleComicBookRead
+  markSelectedComicsRead,
+  markSingleComicRead
 } from '@app/user/actions/read-comic-books.actions';
-import { batchScrapeComicBooks } from '@app/comic-metadata/actions/multi-book-scraping.actions';
+import { batchScrapeComics } from '@app/comic-metadata/actions/multi-book-scraping.actions';
 import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 import { QUERY_PARAM_COMICS_AS_GRID } from '@app/core';
 import {
   COMIC_SELECTION_FEATURE_KEY,
-  initialState as initialComicBookSelectionState
+  initialState as initialComicSelectionState
 } from '@app/comic-books/reducers/comic-selection.reducer';
 import { PluginType } from '@app/library-plugins/models/plugin-type';
 
@@ -133,7 +133,7 @@ describe('ComicListViewComponent', () => {
   const PLUGIN = LIBRARY_PLUGIN_4;
   const initialState = {
     [LIBRARY_PLUGIN_FEATURE_KEY]: initialLibraryPluginState,
-    [COMIC_SELECTION_FEATURE_KEY]: initialComicBookSelectionState
+    [COMIC_SELECTION_FEATURE_KEY]: initialComicSelectionState
   };
 
   let component: ComicListViewComponent;
@@ -298,7 +298,7 @@ describe('ComicListViewComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          addSingleComicBookSelection({
+          addSingleComicSelection({
             comicId: ENTRY.item.comicId
           })
         );
@@ -312,7 +312,7 @@ describe('ComicListViewComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          removeSingleComicBookSelection({
+          removeSingleComicSelection({
             comicId: ENTRY.item.comicId
           })
         );
@@ -477,7 +477,7 @@ describe('ComicListViewComponent', () => {
         spyOn(confirmationService, 'confirm').and.callFake(
           (confirmation: Confirmation) => confirmation.confirm()
         );
-        component.onConvertSingleComicBook(ARCHIVE_TYPE);
+        component.onConvertSingleComic(ARCHIVE_TYPE);
       });
 
       it('confirms with the user', () => {
@@ -486,7 +486,7 @@ describe('ComicListViewComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          convertSingleComicBook({
+          convertSingleComic({
             id: COMIC.comicId,
             archiveType: archiveTypeFromString(ARCHIVE_TYPE)
           })
@@ -508,7 +508,7 @@ describe('ComicListViewComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          convertSelectedComicBooks({
+          convertSelectedComics({
             archiveType: archiveTypeFromString(ARCHIVE_TYPE)
           })
         );
@@ -522,7 +522,7 @@ describe('ComicListViewComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          addSelectedComicBooksToReadingList({
+          addSelectedComicsToReadingList({
             list: READING_LIST
           })
         );
@@ -536,7 +536,7 @@ describe('ComicListViewComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          addSelectedComicBooksToReadingList({
+          addSelectedComicsToReadingList({
             list: READING_LIST
           })
         );
@@ -550,7 +550,7 @@ describe('ComicListViewComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          markSingleComicBookRead({
+          markSingleComicRead({
             comicId: COMIC.comicId,
             read: true
           })
@@ -565,7 +565,7 @@ describe('ComicListViewComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          markSingleComicBookRead({
+          markSingleComicRead({
             comicId: COMIC.comicId,
             read: false
           })
@@ -580,7 +580,7 @@ describe('ComicListViewComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          markSelectedComicBooksRead({ read: true })
+          markSelectedComicsRead({ read: true })
         );
       });
     });
@@ -592,7 +592,7 @@ describe('ComicListViewComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          markSelectedComicBooksRead({ read: false })
+          markSelectedComicsRead({ read: false })
         );
       });
     });
@@ -605,7 +605,7 @@ describe('ComicListViewComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          deleteSingleComicBook({ comicId: COMIC.comicId })
+          deleteSingleComic({ comicId: COMIC.comicId })
         );
       });
     });
@@ -618,7 +618,7 @@ describe('ComicListViewComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          undeleteSingleComicBook({ comicId: COMIC.comicId })
+          undeleteSingleComic({ comicId: COMIC.comicId })
         );
       });
     });
@@ -629,7 +629,7 @@ describe('ComicListViewComponent', () => {
       });
 
       it('fires an action', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(deleteSelectedComicBooks());
+        expect(store.dispatch).toHaveBeenCalledWith(deleteSelectedComics());
       });
     });
 
@@ -639,9 +639,7 @@ describe('ComicListViewComponent', () => {
       });
 
       it('fires an action', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(
-          undeleteSelectedComicBooks()
-        );
+        expect(store.dispatch).toHaveBeenCalledWith(undeleteSelectedComics());
       });
     });
   });
@@ -719,7 +717,7 @@ describe('ComicListViewComponent', () => {
       spyOn(confirmationService, 'confirm').and.callFake(
         (confirmation: Confirmation) => confirmation.confirm()
       );
-      component.onOrganizeSelectedComicBooks();
+      component.onOrganizeSelectedComics();
     });
 
     it('confirms with the user', () => {
@@ -804,7 +802,7 @@ describe('ComicListViewComponent', () => {
       spyOn(confirmationService, 'confirm').and.callFake(confirmation =>
         confirmation.confirm()
       );
-      component.onUpdateSingleComicBookMetadata(COMIC);
+      component.onUpdateSingleComicMetadata(COMIC);
     });
 
     it('confirms with the user', () => {
@@ -813,7 +811,7 @@ describe('ComicListViewComponent', () => {
 
     it('fires a message', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        updateSingleComicBookMetadata({ comicId: COMIC.comicId })
+        updateSingleComicMetadata({ comicId: COMIC.comicId })
       );
     });
   });
@@ -823,7 +821,7 @@ describe('ComicListViewComponent', () => {
       spyOn(confirmationService, 'confirm').and.callFake(confirmation =>
         confirmation.confirm()
       );
-      component.onUpdateSelectedComicBooksMetadata();
+      component.onUpdateSelectedComicsMetadata();
     });
 
     it('confirms with the user', () => {
@@ -832,7 +830,7 @@ describe('ComicListViewComponent', () => {
 
     it('fires a message', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        updateSelectedComicBooksMetadata()
+        updateSelectedComicsMetadata()
       );
     });
   });
@@ -869,7 +867,7 @@ describe('ComicListViewComponent', () => {
     });
 
     it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(batchScrapeComicBooks());
+      expect(store.dispatch).toHaveBeenCalledWith(batchScrapeComics());
     });
   });
 
@@ -882,7 +880,7 @@ describe('ComicListViewComponent', () => {
 
     describe('rescanning a single comic book', () => {
       beforeEach(() => {
-        component.onRescanSingleComicBook(COMIC);
+        component.onRescanSingleComic(COMIC);
       });
 
       it('confirms with the user', () => {
@@ -891,14 +889,14 @@ describe('ComicListViewComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          rescanSingleComicBook({ comicId: COMIC.comicId })
+          rescanSingleComic({ comicId: COMIC.comicId })
         );
       });
     });
 
     describe('rescanning selected comic books', () => {
       beforeEach(() => {
-        component.onRescanSelectedComicBooks();
+        component.onRescanSelectedComics();
       });
 
       it('confirms with the user', () => {
@@ -906,7 +904,7 @@ describe('ComicListViewComponent', () => {
       });
 
       it('fires an action', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(rescanSelectedComicBooks());
+        expect(store.dispatch).toHaveBeenCalledWith(rescanSelectedComics());
       });
     });
   });
@@ -920,12 +918,12 @@ describe('ComicListViewComponent', () => {
 
     describe('on a single comic book', () => {
       beforeEach(() => {
-        component.onRunLibraryPluginSingleOnComicBook(PLUGIN, COMIC);
+        component.onRunLibraryPluginSingleOnComic(PLUGIN, COMIC);
       });
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          runLibraryPluginOnOneComicBook({
+          runLibraryPluginOnOneComic({
             plugin: PLUGIN,
             comicId: COMIC.comicId
           })
@@ -935,12 +933,12 @@ describe('ComicListViewComponent', () => {
 
     describe('on selected comic books', () => {
       beforeEach(() => {
-        component.onRunLibraryPluginOnSelectedComicBooks(PLUGIN);
+        component.onRunLibraryPluginOnSelectedComics(PLUGIN);
       });
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          runLibraryPluginOnSelectedComicBooks({
+          runLibraryPluginOnSelectedComics({
             plugin: PLUGIN
           })
         );

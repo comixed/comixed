@@ -214,15 +214,15 @@ public class ComicAdaptor {
       final String targetDirectory = comic.getFile().getAbsoluteFile().getParent();
       this.fileAdaptor.moveFile(comic.getFile(), new File(temporaryDeleteFilename));
       log.trace("Replacing original file");
-      final String newComicDetailFilename =
+      final String newComicFilename =
           this.comicFileAdaptor.findAvailableFilename(
               comic.getFilename(),
               targetDirectory + File.separator + FilenameUtils.getBaseName(comic.getFilename()),
               0,
               targetArchiveType.getExtension());
-      log.trace("Updating filename: {}", newComicDetailFilename);
-      comic.setFilename(newComicDetailFilename);
-      log.trace("Moving file: {} => {}", temporaryFilename, newComicDetailFilename);
+      log.trace("Updating filename: {}", newComicFilename);
+      comic.setFilename(newComicFilename);
+      log.trace("Moving file: {} => {}", temporaryFilename, newComicFilename);
       this.fileAdaptor.moveFile(new File(temporaryFilename), comic.getFile());
       log.trace("Assigning archive type to comic book: {}", targetArchiveType);
       comic.setArchiveType(targetArchiveType);

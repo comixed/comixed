@@ -68,7 +68,7 @@ public class OrganizeLibraryConfiguration {
    * Returns a library organization job bean.
    *
    * @param jobRepository the job repository
-   * @param removeDeletedComicBooksStep the delete comics step
+   * @param removeDeletedComicsStep the delete comics step
    * @param moveComicFilesStep the move comics step
    * @param deleteEmptyDirectoriesStep the delete empty directories step
    * @return the job
@@ -77,12 +77,12 @@ public class OrganizeLibraryConfiguration {
   public Job organizeLibraryJob(
       final JobRepository jobRepository,
       final OrganizeLibraryJobListener listener,
-      @Qualifier("removeDeletedComicBooksStep") final Step removeDeletedComicBooksStep,
+      @Qualifier("removeDeletedComicsStep") final Step removeDeletedComicsStep,
       @Qualifier("moveComicFilesStep") final Step moveComicFilesStep,
       @Qualifier("deleteEmptyDirectoriesStep") final Step deleteEmptyDirectoriesStep) {
     return new JobBuilder(ORGANIZE_LIBRARY_JOB, jobRepository)
         .listener(listener)
-        .start(removeDeletedComicBooksStep)
+        .start(removeDeletedComicsStep)
         .next(moveComicFilesStep)
         .next(deleteEmptyDirectoriesStep)
         .build();
@@ -98,15 +98,15 @@ public class OrganizeLibraryConfiguration {
    * @param writer the writer
    * @return the step
    */
-  @Bean(name = "removeDeletedComicBooksStep")
-  public Step removeDeletedComicBooksStep(
+  @Bean(name = "removeDeletedComicsStep")
+  public Step removeDeletedComicsStep(
       final JobRepository jobRepository,
       final PlatformTransactionManager platformTransactionManager,
       final RemoveDeletedComicsReader reader,
       final RemoveDeletedComicsProcessor processor,
       final RemoveDeletedComicsWriter writer,
       final RemoveDeletedComicsChunkListener listener) {
-    return new StepBuilder("removeDeletedComicBooksStep", jobRepository)
+    return new StepBuilder("removeDeletedComicsStep", jobRepository)
         .<Comic, Comic>chunk(this.chunkSize)
         .transactionManager(platformTransactionManager)
         .reader(reader)

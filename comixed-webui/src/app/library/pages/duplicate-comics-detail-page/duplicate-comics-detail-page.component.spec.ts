@@ -32,7 +32,7 @@ import {
 } from '@app/comic-books/reducers/comic-list.reducer';
 import {
   COMIC_SELECTION_FEATURE_KEY,
-  initialState as initialComicBookSelectionState
+  initialState as initialComicSelectionState
 } from '@app/comic-books/reducers/comic-selection.reducer';
 import { DUPLICATE_COMIC_1 } from '@app/library/library.fixtures';
 import {
@@ -45,7 +45,7 @@ describe('DuplicateComicsDetailPageComponent', () => {
   const initialState = {
     [DUPLICATE_COMICS_FEATURE_KEY]: initialDuplicateComicsState,
     [COMIC_LIST_FEATURE_KEY]: initialComicListState,
-    [COMIC_SELECTION_FEATURE_KEY]: initialComicBookSelectionState,
+    [COMIC_SELECTION_FEATURE_KEY]: initialComicSelectionState,
     [LIBRARY_PLUGIN_FEATURE_KEY]: initialLibraryPluginState
   };
 

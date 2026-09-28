@@ -26,10 +26,10 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AlertService } from '@app/core/services/alert.service';
 import {
-  rescanComicBooksFailure,
-  rescanComicBooksSuccess,
-  rescanSelectedComicBooks,
-  rescanSingleComicBook
+  rescanComicsFailure,
+  rescanComicsSuccess,
+  rescanSelectedComics,
+  rescanSingleComic
 } from '@app/library/actions/rescan-comics.actions';
 import { hot } from 'jasmine-marbles';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
@@ -55,11 +55,11 @@ describe('RescanComicsEffects', () => {
         {
           provide: LibraryService,
           useValue: {
-            rescanSingleComicBook: jasmine.createSpy(
-              'LibraryService.rescanSingleComicBook()'
+            rescanSingleComic: jasmine.createSpy(
+              'LibraryService.rescanSingleComic()'
             ),
-            rescanSelectedComicBooks: jasmine.createSpy(
-              'LibraryService.rescanSelectedComicBooks()'
+            rescanSelectedComics: jasmine.createSpy(
+              'LibraryService.rescanSelectedComics()'
             )
           }
         }
@@ -82,51 +82,51 @@ describe('RescanComicsEffects', () => {
   describe('rescanning a single comic book', () => {
     it('fires an action on success', () => {
       const serviceResponse = new HttpResponse({ status: 200 });
-      const action = rescanSingleComicBook({
+      const action = rescanSingleComic({
         comicId: COMIC_ID
       });
-      const outcome = rescanComicBooksSuccess();
+      const outcome = rescanComicsSuccess();
 
       actions$ = hot('-a', { a: action });
-      libraryService.rescanSingleComicBook
+      libraryService.rescanSingleComic
         .withArgs({ comicId: COMIC_ID })
         .and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.rescanSingleComicBook$).toBeObservable(expected);
+      expect(effects.rescanSingleComic$).toBeObservable(expected);
       expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = rescanSingleComicBook({
+      const action = rescanSingleComic({
         comicId: COMIC_ID
       });
-      const outcome = rescanComicBooksFailure();
+      const outcome = rescanComicsFailure();
 
       actions$ = hot('-a', { a: action });
-      libraryService.rescanSingleComicBook
+      libraryService.rescanSingleComic
         .withArgs({ comicId: COMIC_ID })
         .and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.rescanSingleComicBook$).toBeObservable(expected);
+      expect(effects.rescanSingleComic$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on general failure', () => {
-      const action = rescanSingleComicBook({
+      const action = rescanSingleComic({
         comicId: COMIC_ID
       });
-      const outcome = rescanComicBooksFailure();
+      const outcome = rescanComicsFailure();
 
       actions$ = hot('-a', { a: action });
-      libraryService.rescanSingleComicBook
+      libraryService.rescanSingleComic
         .withArgs({ comicId: COMIC_ID })
         .and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
-      expect(effects.rescanSingleComicBook$).toBeObservable(expected);
+      expect(effects.rescanSingleComic$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });
@@ -134,45 +134,43 @@ describe('RescanComicsEffects', () => {
   describe('rescanning selected comic books', () => {
     it('fires an action on success', () => {
       const serviceResponse = new HttpResponse({ status: 200 });
-      const action = rescanSelectedComicBooks();
-      const outcome = rescanComicBooksSuccess();
+      const action = rescanSelectedComics();
+      const outcome = rescanComicsSuccess();
 
       actions$ = hot('-a', { a: action });
-      libraryService.rescanSelectedComicBooks
+      libraryService.rescanSelectedComics
         .withArgs()
         .and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.rescanSelectedComicBooks$).toBeObservable(expected);
+      expect(effects.rescanSelectedComics$).toBeObservable(expected);
       expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = rescanSelectedComicBooks();
-      const outcome = rescanComicBooksFailure();
+      const action = rescanSelectedComics();
+      const outcome = rescanComicsFailure();
 
       actions$ = hot('-a', { a: action });
-      libraryService.rescanSelectedComicBooks
+      libraryService.rescanSelectedComics
         .withArgs()
         .and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.rescanSelectedComicBooks$).toBeObservable(expected);
+      expect(effects.rescanSelectedComics$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on general failure', () => {
-      const action = rescanSelectedComicBooks();
-      const outcome = rescanComicBooksFailure();
+      const action = rescanSelectedComics();
+      const outcome = rescanComicsFailure();
 
       actions$ = hot('-a', { a: action });
-      libraryService.rescanSelectedComicBooks
-        .withArgs()
-        .and.throwError('expected');
+      libraryService.rescanSelectedComics.withArgs().and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
-      expect(effects.rescanSelectedComicBooks$).toBeObservable(expected);
+      expect(effects.rescanSelectedComics$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });

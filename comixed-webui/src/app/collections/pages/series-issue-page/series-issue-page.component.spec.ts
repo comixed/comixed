@@ -37,9 +37,9 @@ import { ComicType } from '@app/comic-books/models/comic-type';
 import { PAGE_SIZE_DEFAULT, QUERY_PARAM_PAGE_INDEX } from '@app/core';
 import {
   COMIC_SELECTION_FEATURE_KEY,
-  initialState as initialComicBookSelectionState
+  initialState as initialComicSelectionState
 } from '@app/comic-books/reducers/comic-selection.reducer';
-import { setMultipleComicBookByPublisherSeriesAndVolumeSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
+import { setMultipleComicByPublisherSeriesAndVolumeSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
 import { TitleService } from '@app/core/services/title.service';
 import {
   initialState as initialUserState,
@@ -61,7 +61,7 @@ describe('SeriesIssuePageComponent', () => {
   const VOLUME = '2024';
   const initialState = {
     [COMIC_LIST_FEATURE_KEY]: initialComicListState,
-    [COMIC_SELECTION_FEATURE_KEY]: initialComicBookSelectionState,
+    [COMIC_SELECTION_FEATURE_KEY]: initialComicSelectionState,
     [USER_FEATURE_KEY]: initialUserState,
     [LIBRARY_PLUGIN_FEATURE_KEY]: initialLibraryPluginState
   };
@@ -193,7 +193,7 @@ describe('SeriesIssuePageComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          setMultipleComicBookByPublisherSeriesAndVolumeSelectionState({
+          setMultipleComicByPublisherSeriesAndVolumeSelectionState({
             publisher: PUBLISHER_NAME,
             series: SERIES_NAME,
             volume: VOLUME,
@@ -210,7 +210,7 @@ describe('SeriesIssuePageComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          setMultipleComicBookByPublisherSeriesAndVolumeSelectionState({
+          setMultipleComicByPublisherSeriesAndVolumeSelectionState({
             publisher: PUBLISHER_NAME,
             series: SERIES_NAME,
             volume: VOLUME,

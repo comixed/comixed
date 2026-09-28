@@ -30,7 +30,7 @@ public enum ComicEvent {
   comicFileFound,
   comicFileContentsLoaded,
   comicPageHashesLoaded,
-  rescanComicBookFile,
+  rescanComicFile,
   comicMetadataChanged,
   prepareComicsForBatchEditing,
   comicMetadataSaved,

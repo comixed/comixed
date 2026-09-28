@@ -100,7 +100,7 @@ public class DisplayableComicController implements InitializingBean, ComicStateL
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @Timed(value = "comixed.comic-book.load-filtered")
   @PreAuthorize("hasRole('READER')")
-  @JsonView(View.ComicDetailsView.class)
+  @JsonView(View.ComicView.class)
   public LoadComicsResponse loadComicsByFilter(
       @RequestBody() final LoadComicsByFilterRequest request) {
     log.info("Loading comics: {}", request);
@@ -185,7 +185,7 @@ public class DisplayableComicController implements InitializingBean, ComicStateL
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @Timed(value = "comixed.comic-book.load")
   @PreAuthorize("hasRole('READER')")
-  @JsonView(View.ComicDetailsView.class)
+  @JsonView(View.ComicView.class)
   public LoadComicsResponse loadComicsBySelectedState(
       final HttpSession session, @RequestBody() final LoadSelectedComicsRequest request)
       throws ComicSelectionException {
@@ -219,7 +219,7 @@ public class DisplayableComicController implements InitializingBean, ComicStateL
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @Timed(value = "comixed.comic-book.load-for-collection")
   @PreAuthorize("hasRole('READER')")
-  @JsonView(View.ComicDetailsView.class)
+  @JsonView(View.ComicView.class)
   public LoadComicsResponse loadComicsByTagTypeAndValue(
       @RequestBody() final LoadComicsForCollectionRequest request,
       @PathVariable("tagType") final ComicTagType tagType,
@@ -264,7 +264,7 @@ public class DisplayableComicController implements InitializingBean, ComicStateL
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @Timed(value = "comixed.comic-book.load-unread")
   @PreAuthorize("hasRole('READER')")
-  @JsonView(View.ComicDetailsView.class)
+  @JsonView(View.ComicView.class)
   public LoadComicsResponse loadUnreadComics(
       final Principal principal, @RequestBody() final LoadComicsByReadStateRequest request)
       throws ComiXedUserException {
@@ -279,7 +279,7 @@ public class DisplayableComicController implements InitializingBean, ComicStateL
         this.displayableComicService.loadUnreadComics(
             user, pageSize, pageIndex, sortBy, sortDirection);
     final long comicCount = this.comicService.getComicCount();
-    final long filteredCount = comicCount - user.getReadComicBooks().size();
+    final long filteredCount = comicCount - user.getReadComics().size();
     return new LoadComicsResponse(
         comics, Collections.emptyList(), Collections.emptyList(), filteredCount, filteredCount);
   }
@@ -297,7 +297,7 @@ public class DisplayableComicController implements InitializingBean, ComicStateL
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @Timed(value = "comixed.comic-book.load-unread")
   @PreAuthorize("hasRole('READER')")
-  @JsonView(View.ComicDetailsView.class)
+  @JsonView(View.ComicView.class)
   public LoadComicsResponse loadReadComics(
       final Principal principal, @RequestBody() final LoadComicsByReadStateRequest request)
       throws ComiXedUserException {
@@ -311,7 +311,7 @@ public class DisplayableComicController implements InitializingBean, ComicStateL
     final List<DisplayableComic> comics =
         this.displayableComicService.loadReadComics(
             user, pageSize, pageIndex, sortBy, sortDirection);
-    final long filteredCount = user.getReadComicBooks().size();
+    final long filteredCount = user.getReadComics().size();
     return new LoadComicsResponse(
         comics, Collections.emptyList(), Collections.emptyList(), filteredCount, filteredCount);
   }
@@ -332,7 +332,7 @@ public class DisplayableComicController implements InitializingBean, ComicStateL
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @Timed(value = "comixed.comic-book.load-for-reading-list")
   @PreAuthorize("hasRole('READER')")
-  @JsonView(View.ComicDetailsView.class)
+  @JsonView(View.ComicView.class)
   public LoadComicsResponse loadComicsForList(
       final Principal principal,
       @RequestBody() final LoadComicForListRequest request,

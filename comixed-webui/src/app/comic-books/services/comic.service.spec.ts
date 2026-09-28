@@ -130,7 +130,7 @@ describe('ComicService', () => {
 
   it('can delete a single comic book', () => {
     service
-      .deleteSingleComicBook({ comicId: COMIC.comicId })
+      .deleteSingleComic({ comicId: COMIC.comicId })
       .subscribe(response => expect(response.status).toEqual(200));
 
     const req = httpMock.expectOne(
@@ -144,7 +144,7 @@ describe('ComicService', () => {
 
   it('can undelete a single comic book', () => {
     service
-      .undeleteSingleComicBook({ comicId: COMIC.comicId })
+      .undeleteSingleComic({ comicId: COMIC.comicId })
       .subscribe(response => expect(response.status).toEqual(200));
 
     const req = httpMock.expectOne(
@@ -159,7 +159,7 @@ describe('ComicService', () => {
 
   it('can delete the selected comic books', () => {
     service
-      .deleteSelectedComicBooks()
+      .deleteSelectedComics()
       .subscribe(response => expect(response.status).toEqual(200));
 
     const req = httpMock.expectOne(interpolate(DELETE_SELECTED_COMICS_URL));
@@ -169,7 +169,7 @@ describe('ComicService', () => {
 
   it('can undelete the selected comic books', () => {
     service
-      .undeleteSelectedComicBooks()
+      .undeleteSelectedComics()
       .subscribe(response => expect(response.status).toEqual(200));
 
     const req = httpMock.expectOne(interpolate(UNDELETE_SELECTED_COMICS_URL));
@@ -232,7 +232,7 @@ describe('ComicService', () => {
 
   it('can download a comic book file', () => {
     service
-      .downloadComicBook({ comicId: COMIC.comicId })
+      .downloadComic({ comicId: COMIC.comicId })
       .subscribe(response => expect(response).toEqual(DOWNLOAD_COMIC));
 
     const req = httpMock.expectOne(

@@ -45,48 +45,48 @@ class ReadComicsServiceTest {
   @InjectMocks private ReadComicsService service;
   @Mock private UserService userService;
   @Mock private ComiXedUser user;
-  @Mock private Set<Long> readComicBookList;
+  @Mock private Set<Long> readComicList;
 
   private List<Long> comicIdList = new ArrayList<>();
 
   @BeforeEach
   void setUp() throws ComiXedUserException {
-    when(user.getReadComicBooks()).thenReturn(readComicBookList);
+    when(user.getReadComics()).thenReturn(readComicList);
     when(userService.findByEmail(anyString())).thenReturn(user);
   }
 
   @Test
-  void markComicBookAsRead_noSuchUser() throws ComiXedUserException {
+  void markComicAsRead_noSuchUser() throws ComiXedUserException {
     when(userService.findByEmail(anyString())).thenThrow(ComiXedUserException.class);
 
     assertThrows(
-        ReadComicsException.class, () -> service.markComicBookAsRead(TEST_EMAIL, TEST_COMIC_ID));
+        ReadComicsException.class, () -> service.markComicAsRead(TEST_EMAIL, TEST_COMIC_ID));
   }
 
   @Test
-  void markComicBookAsRead() throws ReadComicsException, ComiXedUserException {
-    service.markComicBookAsRead(TEST_EMAIL, TEST_COMIC_ID);
+  void markComicAsRead() throws ReadComicsException, ComiXedUserException {
+    service.markComicAsRead(TEST_EMAIL, TEST_COMIC_ID);
 
     verify(userService).findByEmail(TEST_EMAIL);
-    verify(user).getReadComicBooks();
-    verify(readComicBookList).add(TEST_COMIC_ID);
+    verify(user).getReadComics();
+    verify(readComicList).add(TEST_COMIC_ID);
   }
 
   @Test
-  void unmarkComicBookAsRead_noSuchUser() throws ComiXedUserException {
+  void unmarkComicAsRead_noSuchUser() throws ComiXedUserException {
     when(userService.findByEmail(anyString())).thenThrow(ComiXedUserException.class);
 
     assertThrows(
-        ReadComicsException.class, () -> service.unmarkComicBookAsRead(TEST_EMAIL, TEST_COMIC_ID));
+        ReadComicsException.class, () -> service.unmarkComicAsRead(TEST_EMAIL, TEST_COMIC_ID));
   }
 
   @Test
-  void unmarkComicBookAsRead() throws ReadComicsException, ComiXedUserException {
-    service.unmarkComicBookAsRead(TEST_EMAIL, TEST_COMIC_ID);
+  void unmarkComicAsRead() throws ReadComicsException, ComiXedUserException {
+    service.unmarkComicAsRead(TEST_EMAIL, TEST_COMIC_ID);
 
     verify(userService).findByEmail(TEST_EMAIL);
-    verify(user).getReadComicBooks();
-    verify(readComicBookList).remove(TEST_COMIC_ID);
+    verify(user).getReadComics();
+    verify(readComicList).remove(TEST_COMIC_ID);
   }
 
   @Test
@@ -94,8 +94,8 @@ class ReadComicsServiceTest {
     service.markSelectionsAsRead(TEST_EMAIL, comicIdList);
 
     verify(userService).findByEmail(TEST_EMAIL);
-    verify(user).getReadComicBooks();
-    verify(readComicBookList).addAll(comicIdList);
+    verify(user).getReadComics();
+    verify(readComicList).addAll(comicIdList);
   }
 
   @Test
@@ -111,7 +111,7 @@ class ReadComicsServiceTest {
     service.unmarkSelectionsAsRead(TEST_EMAIL, comicIdList);
 
     verify(userService).findByEmail(TEST_EMAIL);
-    verify(user).getReadComicBooks();
-    verify(readComicBookList).removeAll(comicIdList);
+    verify(user).getReadComics();
+    verify(readComicList).removeAll(comicIdList);
   }
 }

@@ -43,7 +43,7 @@ import {
 } from '@app/comic-pages/reducers/delete-blocked-pages.reducer';
 import { DeleteBlockedPagesEffects } from '@app/comic-pages/effects/delete-blocked-pages.effects';
 import { DeletedPageListPageComponent } from './pages/deleted-page-list-page/deleted-page-list-page.component';
-import { ComicBooksModule } from '@app/comic-books/comic-books.module';
+import { ComicsModule } from '@app/comic-books/comic-books.module';
 import { MatSortModule } from '@angular/material/sort';
 import { MatDividerModule } from '@angular/material/divider';
 import {
@@ -84,7 +84,7 @@ import { HashSelectionEffects } from '@app/comic-pages/effects/hash-selection.ef
     MatIconModule,
     MatButtonModule,
     MatTooltipModule,
-    ComicBooksModule,
+    ComicsModule,
     MatSortModule,
     MatDividerModule,
     BlockedHashListPageComponent,

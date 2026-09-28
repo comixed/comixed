@@ -331,12 +331,12 @@ public class UserService {
     final ComiXedUser user = this.doGetByEmail(email);
     if (!unread) {
       log.debug("Returning comic ids read by {}", email);
-      return user.getReadComicBooks();
+      return user.getReadComics();
     }
 
     log.debug("Returning comic ids not read by {}", email);
     final List<Long> idList = this.comicService.getAllIds();
-    idList.removeAll(user.getReadComicBooks());
+    idList.removeAll(user.getReadComics());
     return idList;
   }
 

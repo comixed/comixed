@@ -32,7 +32,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 /**
- * <code>UpdateComicBooksProcess</code> updates the details for comic books.
+ * <code>UpdateComicsProcess</code> updates the details for comic books.
  *
  * @author Darryl L. Pierce
  */

@@ -57,7 +57,7 @@ public class TagController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('READER')")
   @Timed(value = "comixed.collection.load-collection-list")
-  @JsonView(View.CollectionEntryList.class)
+  @JsonView(View.CollectionEntryListView.class)
   public LoadComicsForCollectionResponse loadCollectionList(
       @RequestBody final LoadComicsForCollectionRequest request,
       @PathVariable("tagType") final ComicTagType tagType) {

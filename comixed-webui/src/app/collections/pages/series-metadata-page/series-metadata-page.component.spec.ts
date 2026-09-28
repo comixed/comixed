@@ -200,12 +200,12 @@ describe('SeriesMetadataPageComponent', () => {
     });
 
     it('returns a value when the issue is found', () => {
-      expect(component.getComicBookIdForRow(ISSUE)).toEqual(COMIC.comicId);
+      expect(component.getComicIdForRow(ISSUE)).toEqual(COMIC.comicId);
     });
 
     it('returns a null when the issue is not found', () => {
       expect(
-        component.getComicBookIdForRow({
+        component.getComicIdForRow({
           ...ISSUE,
           publisher: COMIC.publisher.substr(1)
         })

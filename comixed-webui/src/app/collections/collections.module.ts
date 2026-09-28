@@ -25,7 +25,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { TranslateModule } from '@ngx-translate/core';
 import { LibraryModule } from '@app/library/library.module';
-import { ComicBooksModule } from '@app/comic-books/comic-books.module';
+import { ComicsModule } from '@app/comic-books/comic-books.module';
 import { SeriesListPageComponent } from './pages/series-list-page/series-list-page.component';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { StoreModule } from '@ngrx/store';
@@ -71,7 +71,7 @@ import { StoryDetailPageComponent } from '@app/collections/pages/story-detail-pa
     MatTableModule,
     MatSortModule,
     LibraryModule,
-    ComicBooksModule,
+    ComicsModule,
     MatPaginatorModule,
     MatButtonModule,
     MatTooltipModule,

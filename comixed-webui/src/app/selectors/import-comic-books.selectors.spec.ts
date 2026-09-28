@@ -22,7 +22,7 @@ import {
 } from '../reducers/import-comics.reducer';
 import { selectImportComicBatches } from './import-comic-books.selectors';
 
-describe('ImportComicBooks Selectors', () => {
+describe('ImportComics Selectors', () => {
   let state: ImportComicsState;
 
   beforeEach(() => {

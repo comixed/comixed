@@ -44,7 +44,7 @@ import { selectMessagingStarted } from '@app/messaging/selectors/messaging.selec
 import { WebSocketService } from '@app/messaging';
 import {
   comicSelectionUpdate,
-  loadComicBookSelections
+  loadComicSelections
 } from '@app/comic-books/actions/comic-book-selection.actions';
 import { SetSelectedByIdRequest } from '@app/comic-books/models/net/set-selected-by-id-request';
 import { SetSelectedByPublisherRequest } from '@app/comic-books/models/net/set-selected-by-publisher-request';
@@ -199,7 +199,7 @@ export class ComicSelectionService {
     );
   }
 
-  setDuplicateComicBooksSelectionState(args: {
+  setDuplicateComicsSelectionState(args: {
     selected: boolean;
   }): Observable<any> {
     this.logger.debug('Selecting duplicate comic books:', args);
@@ -208,7 +208,7 @@ export class ComicSelectionService {
     } as DuplicateComicsSelectionRequest);
   }
 
-  setUnreadComicBooksSelectionState(args: {
+  setUnreadComicsSelectionState(args: {
     selected: boolean;
     unreadOnly: boolean;
   }): Observable<any> {
@@ -241,7 +241,7 @@ export class ComicSelectionService {
         }
       );
       this.logger.debug('Loading the initial set of ids');
-      this.store.dispatch(loadComicBookSelections());
+      this.store.dispatch(loadComicSelections());
     }
   }
 }

@@ -64,7 +64,7 @@ class PublishLibraryPluginUpdateActionTest {
 
     action.publish(update);
 
-    Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.LibraryPluginList.class);
+    Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.LibraryPluginListView.class);
     Mockito.verify(objectWriter, Mockito.times(1)).writeValueAsString(update);
     Mockito.verify(messagingTemplate, Mockito.times(1))
         .convertAndSend(

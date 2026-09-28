@@ -22,10 +22,10 @@ import {
   UpdateMetadataState
 } from './update-metadata.reducer';
 import {
-  updateSelectedComicBooksMetadata,
-  updateSelectedComicBooksMetadataFailure,
-  updateSelectedComicBooksMetadataSuccess,
-  updateSingleComicBookMetadata
+  updateSelectedComicsMetadata,
+  updateSelectedComicsMetadataFailure,
+  updateSelectedComicsMetadataSuccess,
+  updateSingleComicMetadata
 } from '@app/library/actions/update-metadata.actions';
 
 describe('UpdateMetadata Reducer', () => {
@@ -51,7 +51,7 @@ describe('UpdateMetadata Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, updating: false },
-        updateSingleComicBookMetadata({ comicId: COMIC_ID })
+        updateSingleComicMetadata({ comicId: COMIC_ID })
       );
     });
 
@@ -64,7 +64,7 @@ describe('UpdateMetadata Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, updating: false },
-        updateSelectedComicBooksMetadata()
+        updateSelectedComicsMetadata()
       );
     });
 
@@ -77,7 +77,7 @@ describe('UpdateMetadata Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, updating: true },
-        updateSelectedComicBooksMetadataSuccess()
+        updateSelectedComicsMetadataSuccess()
       );
     });
 
@@ -90,7 +90,7 @@ describe('UpdateMetadata Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, updating: true },
-        updateSelectedComicBooksMetadataFailure()
+        updateSelectedComicsMetadataFailure()
       );
     });
 

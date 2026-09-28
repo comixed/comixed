@@ -60,12 +60,12 @@ public class ReadComicsController {
   @PutMapping(value = "/api/user/read/{comicId}", consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('READER')")
   @Timed("comixed.read-comic-books.mark-single")
-  public void markSingleComicBookRead(
+  public void markSingleComicRead(
       final Principal principal, @PathVariable("comicId") final long comicId)
       throws ReadComicsException {
     final String email = principal.getName();
     log.info("Marking a single comic book as read by {}: id={}", email, comicId);
-    this.readComicsService.markComicBookAsRead(email, comicId);
+    this.readComicsService.markComicAsRead(email, comicId);
   }
 
   /**
@@ -78,12 +78,12 @@ public class ReadComicsController {
   @DeleteMapping(value = "/api/user/read/{comicId}")
   @PreAuthorize("hasRole('READER')")
   @Timed("comixed.read-comic-books.unmark-single")
-  public void unmarkSingleComicBookRead(
+  public void unmarkSingleComicRead(
       final Principal principal, @PathVariable("comicId") final long comicId)
       throws ReadComicsException {
     final String email = principal.getName();
     log.info("Unmarking a single comic book as read by {}: id={}", email, comicId);
-    this.readComicsService.unmarkComicBookAsRead(email, comicId);
+    this.readComicsService.unmarkComicAsRead(email, comicId);
   }
 
   /**
@@ -97,14 +97,14 @@ public class ReadComicsController {
   @PutMapping(value = "/api/user/read/selected", consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('READER')")
   @Timed("comixed.read-comic-books.mark-selected")
-  public void markSelectedComicBooksRead(final Principal principal, final HttpSession httpSession)
+  public void markSelectedComicsRead(final Principal principal, final HttpSession httpSession)
       throws ComicSelectionException, ReadComicsException {
     final String email = principal.getName();
     log.info("Marking selected comic books as read by {}", email);
     final List<Long> selectedIds =
         this.comicSelectionService.decodeSelections(httpSession.getAttribute(LIBRARY_SELECTIONS));
     this.readComicsService.markSelectionsAsRead(email, new ArrayList<>(selectedIds));
-    this.comicSelectionService.clearSelectedComicBooks(email, new ArrayList<>(selectedIds));
+    this.comicSelectionService.clearSelectedComics(email, new ArrayList<>(selectedIds));
     httpSession.setAttribute(
         LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selectedIds));
   }
@@ -120,14 +120,14 @@ public class ReadComicsController {
   @DeleteMapping(value = "/api/user/read/selected")
   @PreAuthorize("hasRole('READER')")
   @Timed("comixed.read-comic-books.mark-selected")
-  public void unmarkSelectedComicBooksRead(final Principal principal, final HttpSession httpSession)
+  public void unmarkSelectedComicsRead(final Principal principal, final HttpSession httpSession)
       throws ComicSelectionException, ReadComicsException {
     final String email = principal.getName();
     log.info("Unmarking selected comic books as read by {}", email);
     final List<Long> selectedIds =
         this.comicSelectionService.decodeSelections(httpSession.getAttribute(LIBRARY_SELECTIONS));
     this.readComicsService.unmarkSelectionsAsRead(email, new ArrayList<>(selectedIds));
-    this.comicSelectionService.clearSelectedComicBooks(email, selectedIds);
+    this.comicSelectionService.clearSelectedComics(email, selectedIds);
     httpSession.setAttribute(
         LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selectedIds));
   }

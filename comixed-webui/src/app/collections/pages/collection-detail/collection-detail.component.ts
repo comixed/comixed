@@ -28,8 +28,8 @@ import { TitleService } from '@app/core/services/title.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { SHOW_COMIC_COVERS_PREFERENCE } from '@app/library/library.constants';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
-import { selectComicBookSelectionIds } from '@app/comic-books/selectors/comic-book-selection.selectors';
-import { setMultipleComicBooksByTagTypeAndValueSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
+import { selectComicSelectionIds } from '@app/comic-books/selectors/comic-book-selection.selectors';
+import { setMultipleComicsByTagTypeAndValueSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { loadComicsForCollection } from '@app/comic-books/actions/comic-list.actions';
 import {
@@ -140,7 +140,7 @@ export class CollectionDetailComponent implements OnInit {
       )
       .subscribe();
     this.store
-      .select(selectComicBookSelectionIds)
+      .select(selectComicSelectionIds)
       .pipe(tap(selectedIds => this.selectedIds$.next(selectedIds)))
       .subscribe();
     this.store
@@ -161,7 +161,7 @@ export class CollectionDetailComponent implements OnInit {
       `Marking comic books as ${selected ? 'selected' : 'deselected'}`
     );
     this.store.dispatch(
-      setMultipleComicBooksByTagTypeAndValueSelectionState({
+      setMultipleComicsByTagTypeAndValueSelectionState({
         tagType: this.tagType,
         tagValue: this.tagValue,
         selected

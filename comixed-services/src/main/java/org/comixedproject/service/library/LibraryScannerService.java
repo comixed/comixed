@@ -221,7 +221,7 @@ public class LibraryScannerService implements InitializingBean, ConfigurationCha
         this.active = true;
         log.info("Updating currently missing comics");
         this.comicService
-            .getAllComicDetailsByMissingFlag(true)
+            .getAllComicsByMissingFlag(true)
             .forEach(
                 filename -> {
                   final File file = new File(filename);
@@ -232,7 +232,7 @@ public class LibraryScannerService implements InitializingBean, ConfigurationCha
                 });
         log.info("Scanning remaining comics");
         this.comicService
-            .getAllComicDetailsByMissingFlag(false)
+            .getAllComicsByMissingFlag(false)
             .forEach(
                 filename -> {
                   final File file = new File(filename);

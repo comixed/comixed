@@ -19,12 +19,12 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {
-  deleteComicBooksFailure,
-  deleteComicBooksSuccess,
-  deleteSelectedComicBooks,
-  deleteSingleComicBook,
-  undeleteSelectedComicBooks,
-  undeleteSingleComicBook
+  deleteComicsFailure,
+  deleteComicsSuccess,
+  deleteSelectedComics,
+  deleteSingleComic,
+  undeleteSelectedComics,
+  undeleteSingleComic
 } from '../actions/delete-comic-books.actions';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { ComicService } from '@app/comic-books/services/comic.service';
@@ -41,15 +41,15 @@ export class DeleteComicsEffects {
   alertService = inject(AlertService);
   translateService = inject(TranslateService);
 
-  deleteSingleComicBook$ = createEffect(() => {
+  deleteSingleComic$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(deleteSingleComicBook),
+      ofType(deleteSingleComic),
       tap(action =>
         this.logger.trace('Effect: delete a single comic book:', action)
       ),
       switchMap(action =>
         this.comicService
-          .deleteSingleComicBook({
+          .deleteSingleComic({
             comicId: action.comicId
           })
           .pipe(
@@ -62,7 +62,7 @@ export class DeleteComicsEffects {
                 )
               )
             ),
-            map(() => deleteComicBooksSuccess()),
+            map(() => deleteComicsSuccess()),
             catchError(error => this.doServiceFailure(error, true))
           )
       ),
@@ -71,68 +71,18 @@ export class DeleteComicsEffects {
         this.alertService.error(
           this.translateService.instant('app.general-effect-failure')
         );
-        return of(deleteComicBooksFailure());
+        return of(deleteComicsFailure());
       })
     );
   });
-  undeleteSingleComicBook$ = createEffect(() => {
+  undeleteSingleComic$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(undeleteSingleComicBook),
+      ofType(undeleteSingleComic),
       tap(action =>
         this.logger.trace('Effect: undelete a single comic book:', action)
       ),
       switchMap(action =>
-        this.comicService
-          .undeleteSingleComicBook({ comicId: action.comicId })
-          .pipe(
-            tap(response => this.logger.trace('Response received:', response)),
-            tap(() =>
-              this.alertService.info(
-                this.translateService.instant(
-                  'comic-book.mark-as-deleted.effect-success',
-                  { deleted: false }
-                )
-              )
-            ),
-            map(() => deleteComicBooksSuccess()),
-            catchError(error => this.doServiceFailure(error, false))
-          )
-      ),
-      catchError(error => this.doGeneralFailure(error))
-    );
-  });
-  deleteSelectedComicBooks$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(deleteSelectedComicBooks),
-      tap(action =>
-        this.logger.trace('Effect: deleting selected comic books:', action)
-      ),
-      switchMap(() =>
-        this.comicService.deleteSelectedComicBooks().pipe(
-          tap(response => this.logger.trace('Response received:', response)),
-          tap(() =>
-            this.alertService.info(
-              this.translateService.instant(
-                'comic-book.mark-as-deleted.effect-success',
-                { deleted: true }
-              )
-            )
-          ),
-          map(() => deleteComicBooksSuccess()),
-          catchError(error => this.doServiceFailure(error, true))
-        )
-      ),
-      catchError(error => this.doGeneralFailure(error))
-    );
-  });
-  undeleteSelectedComicBooks$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(undeleteSelectedComicBooks),
-      tap(action =>
-        this.logger.trace('Effect: undeleted selected comic books:', action)
-      ),
-      switchMap(() =>
-        this.comicService.undeleteSelectedComicBooks().pipe(
+        this.comicService.undeleteSingleComic({ comicId: action.comicId }).pipe(
           tap(response => this.logger.trace('Response received:', response)),
           tap(() =>
             this.alertService.info(
@@ -142,7 +92,55 @@ export class DeleteComicsEffects {
               )
             )
           ),
-          map(() => deleteComicBooksSuccess()),
+          map(() => deleteComicsSuccess()),
+          catchError(error => this.doServiceFailure(error, false))
+        )
+      ),
+      catchError(error => this.doGeneralFailure(error))
+    );
+  });
+  deleteSelectedComics$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(deleteSelectedComics),
+      tap(action =>
+        this.logger.trace('Effect: deleting selected comic books:', action)
+      ),
+      switchMap(() =>
+        this.comicService.deleteSelectedComics().pipe(
+          tap(response => this.logger.trace('Response received:', response)),
+          tap(() =>
+            this.alertService.info(
+              this.translateService.instant(
+                'comic-book.mark-as-deleted.effect-success',
+                { deleted: true }
+              )
+            )
+          ),
+          map(() => deleteComicsSuccess()),
+          catchError(error => this.doServiceFailure(error, true))
+        )
+      ),
+      catchError(error => this.doGeneralFailure(error))
+    );
+  });
+  undeleteSelectedComics$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(undeleteSelectedComics),
+      tap(action =>
+        this.logger.trace('Effect: undeleted selected comic books:', action)
+      ),
+      switchMap(() =>
+        this.comicService.undeleteSelectedComics().pipe(
+          tap(response => this.logger.trace('Response received:', response)),
+          tap(() =>
+            this.alertService.info(
+              this.translateService.instant(
+                'comic-book.mark-as-deleted.effect-success',
+                { deleted: false }
+              )
+            )
+          ),
+          map(() => deleteComicsSuccess()),
           catchError(error => this.doServiceFailure(error, false))
         )
       ),
@@ -158,7 +156,7 @@ export class DeleteComicsEffects {
         { deleted }
       )
     );
-    return of(deleteComicBooksFailure());
+    return of(deleteComicsFailure());
   }
 
   private doGeneralFailure(error: any) {
@@ -166,6 +164,6 @@ export class DeleteComicsEffects {
     this.alertService.error(
       this.translateService.instant('app.general-effect-failure')
     );
-    return of(deleteComicBooksFailure());
+    return of(deleteComicsFailure());
   }
 }

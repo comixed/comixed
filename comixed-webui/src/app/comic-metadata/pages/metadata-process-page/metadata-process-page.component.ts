@@ -28,8 +28,8 @@ import {
   selectMetadataUpdateProgress
 } from '@app/comic-metadata/selectors/metadata-update-process.selectors';
 import { tap } from 'rxjs/operators';
-import { selectComicBookSelectionIds } from '@app/comic-books/selectors/comic-book-selection.selectors';
-import { loadComicBookSelections } from '@app/comic-books/actions/comic-book-selection.actions';
+import { selectComicSelectionIds } from '@app/comic-books/selectors/comic-book-selection.selectors';
+import { loadComicSelections } from '@app/comic-books/actions/comic-book-selection.actions';
 import { loadComicsById } from '@app/comic-books/actions/comic-list.actions';
 import {
   selectComicCoverMonths,
@@ -75,7 +75,7 @@ export class MetadataProcessPageComponent implements AfterViewInit {
       .pipe(tap(() => this.loadTranslations()))
       .subscribe();
     this.store
-      .select(selectComicBookSelectionIds)
+      .select(selectComicSelectionIds)
       .pipe(
         tap(ids => {
           this.selectedIds$.next(ids);
@@ -107,7 +107,7 @@ export class MetadataProcessPageComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.logger.trace('Loading the selected comic book id list');
-    this.store.dispatch(loadComicBookSelections());
+    this.store.dispatch(loadComicSelections());
     this.loadTranslations();
   }
 

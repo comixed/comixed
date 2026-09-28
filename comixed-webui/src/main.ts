@@ -28,7 +28,7 @@ import { HttpInterceptor } from '@app/interceptors/http.interceptor';
 import { AdminModule } from '@app/admin/admin.module';
 import { MessagingModule } from '@app/messaging/messaging.module';
 import { UserModule } from '@app/user/user.module';
-import { ComicBooksModule } from '@app/comic-books/comic-books.module';
+import { ComicsModule } from '@app/comic-books/comic-books.module';
 import { ComicFileModule } from '@app/comic-files/comic-file.module';
 import { LibraryModule } from '@app/library/library.module';
 import { ComicPagesModule } from '@app/comic-pages/comic-pages.module';
@@ -87,7 +87,7 @@ bootstrapApplication(AppComponent, {
       MessagingModule,
       UserModule,
       DashboardModule,
-      ComicBooksModule.forRoot(),
+      ComicsModule.forRoot(),
       ComicFileModule,
       LibraryModule,
       ComicPagesModule,

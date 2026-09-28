@@ -42,7 +42,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { updateComicBook } from '@app/comic-books/actions/comic-book.actions';
+import { updateComic } from '@app/comic-books/actions/comic-book.actions';
 import {
   IMPRINT_LIST_FEATURE_KEY,
   initialState as initialImprintState
@@ -216,7 +216,7 @@ describe('ComicDetailEditComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        updateComicBook({
+        updateComic({
           comicId: COMIC.comicId,
           comicType: COMIC.comicType,
           publisher: COMIC.publisher,

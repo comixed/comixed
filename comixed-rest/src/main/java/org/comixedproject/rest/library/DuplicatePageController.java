@@ -55,7 +55,7 @@ public class DuplicatePageController {
       value = "/api/library/pages/duplicates",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
-  @JsonView(View.DuplicatePageList.class)
+  @JsonView(View.DuplicatePageListView.class)
   @PreAuthorize("hasRole('ADMIN')")
   @Timed(value = "comixed.duplicate-page.get-all")
   public LoadDuplicatePageListResponse getDuplicatePageList(
@@ -86,7 +86,7 @@ public class DuplicatePageController {
   @GetMapping(
       value = "/api/library/pages/duplicates/{hash}",
       produces = MediaType.APPLICATION_JSON_VALUE)
-  @JsonView(View.DuplicatePageDetail.class)
+  @JsonView(View.DuplicatePageView.class)
   @PreAuthorize("hasRole('ADMIN')")
   @Timed(value = "comixed.duplicate-page.get-for-hash")
   public DuplicatePage getForHash(@PathVariable("hash") final String hash)

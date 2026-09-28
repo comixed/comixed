@@ -20,7 +20,7 @@ import {
   READ_COMICS_FEATURE_KEY,
   ReadComicsState
 } from '../reducers/read-comics.reducer';
-import { selectReadComicBooksList } from './read-comic-books.selectors';
+import { selectReadComicsList } from './read-comic-books.selectors';
 
 import {
   READ_COMIC_1,
@@ -30,7 +30,7 @@ import {
   READ_COMIC_5
 } from '@app/user/user.fixtures';
 
-describe('ReadComicBooks Selectors', () => {
+describe('ReadComics Selectors', () => {
   const READ_COMICS = [
     READ_COMIC_1,
     READ_COMIC_2,
@@ -47,7 +47,7 @@ describe('ReadComicBooks Selectors', () => {
 
   it('returns the list of read comic book ids', () => {
     expect(
-      selectReadComicBooksList({
+      selectReadComicsList({
         [READ_COMICS_FEATURE_KEY]: state
       })
     ).toEqual(state.entries);

@@ -31,9 +31,9 @@ import {
 } from '@app/comic-books/comic-books.fixtures';
 import { ScrapeMultiBookComicResponse } from '@app/comic-metadata/models/net/scrape-multi-book-comic-response';
 import {
-  batchScrapeComicBooks,
-  batchScrapeComicBooksFailure,
-  batchScrapeComicBooksSuccess,
+  batchScrapeComics,
+  batchScrapeComicsFailure,
+  batchScrapeComicsSuccess,
   loadMultiBookScrapingPage,
   loadMultiBookScrapingPageFailure,
   loadMultiBookScrapingPageSuccess,
@@ -103,8 +103,8 @@ describe('MultiBookScrapingEffects', () => {
             scrapeMultiBookComic: jasmine.createSpy(
               'ComicScrapingService.scrapeMultiBookComic()'
             ),
-            batchScrapeComicBooks: jasmine.createSpy(
-              'ComicScrapingService.batchScrapeComicBooks()'
+            batchScrapeComics: jasmine.createSpy(
+              'ComicScrapingService.batchScrapeComics()'
             )
           }
         },
@@ -419,43 +419,43 @@ describe('MultiBookScrapingEffects', () => {
   describe('batch scraping comic books', () => {
     it('fires an action on success', () => {
       const serviceResponse = new HttpResponse({ status: 200 });
-      const action = batchScrapeComicBooks();
-      const outcome = batchScrapeComicBooksSuccess();
+      const action = batchScrapeComics();
+      const outcome = batchScrapeComicsSuccess();
 
       actions$ = hot('-a', { a: action });
-      comicScrapingService.batchScrapeComicBooks.and.returnValue(
+      comicScrapingService.batchScrapeComics.and.returnValue(
         of(serviceResponse)
       );
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.batchScrapeComicBooks$).toBeObservable(expected);
+      expect(effects.batchScrapeComics$).toBeObservable(expected);
       expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = batchScrapeComicBooks();
-      const outcome = batchScrapeComicBooksFailure();
+      const action = batchScrapeComics();
+      const outcome = batchScrapeComicsFailure();
 
       actions$ = hot('-a', { a: action });
-      comicScrapingService.batchScrapeComicBooks.and.returnValue(
+      comicScrapingService.batchScrapeComics.and.returnValue(
         throwError(serviceResponse)
       );
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.batchScrapeComicBooks$).toBeObservable(expected);
+      expect(effects.batchScrapeComics$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on general failure', () => {
-      const action = batchScrapeComicBooks();
-      const outcome = batchScrapeComicBooksFailure();
+      const action = batchScrapeComics();
+      const outcome = batchScrapeComicsFailure();
 
       actions$ = hot('-a', { a: action });
-      comicScrapingService.batchScrapeComicBooks.and.throwError('expected');
+      comicScrapingService.batchScrapeComics.and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
-      expect(effects.batchScrapeComicBooks$).toBeObservable(expected);
+      expect(effects.batchScrapeComics$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });

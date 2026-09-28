@@ -54,154 +54,154 @@ public class DisplayableComic {
 
   @Id
   @Column(name = "comic_id")
-  @JsonView({View.ComicListView.class, View.DeletedPageList.class})
+  @JsonView({View.ComicListView.class, View.DeletedPageListView.class})
   @Getter
   private Long comicId;
 
   @Column(name = "reference_id")
-  @JsonView({View.ComicListView.class, View.DeletedPageList.class})
+  @JsonView({View.ComicListView.class, View.DeletedPageListView.class})
   @Getter
   private String referenceId;
 
   @Column(name = "filename")
-  @JsonView({View.ComicDetailsView.class})
+  @JsonView({View.ComicView.class})
   @Getter
   private String filename;
 
   @Column(name = "archive_type", columnDefinition = "VARCHAR(4)")
-  @JsonView({View.ComicDetailsView.class})
+  @JsonView({View.ComicView.class})
   @Enumerated(EnumType.STRING)
   @Getter
   @Setter
   private ArchiveType archiveType;
 
   @Column(name = "comic_state", columnDefinition = "VARCHAR(64)")
-  @JsonView({View.ComicDetailsView.class})
+  @JsonView({View.ComicView.class})
   @Enumerated(EnumType.STRING)
   @Getter
   @Setter
   private ComicState comicState;
 
   @Column(name = "is_unscraped")
-  @JsonView({View.ComicDetailsView.class})
+  @JsonView({View.ComicView.class})
   @Getter
   @Setter
   private Boolean unscraped;
 
   @Column(name = "is_missing")
-  @JsonView({View.ComicDetailsView.class})
+  @JsonView({View.ComicView.class})
   @Getter
   @Setter
   private Boolean missing;
 
   @Column(name = "comic_type", columnDefinition = "VARCHAR(32)")
-  @JsonView({View.ComicDetailsView.class})
+  @JsonView({View.ComicView.class})
   @Enumerated(EnumType.STRING)
   @Getter
   @Setter
   private ComicType comicType;
 
   @Column(name = "sort_Name")
-  @JsonView({View.ComicDetailsView.class})
+  @JsonView({View.ComicView.class})
   @Getter
   @Setter
   private String sortName;
 
   @Column(name = "publisher")
-  @JsonView({View.ComicListView.class, View.DeletedPageList.class})
+  @JsonView({View.ComicListView.class, View.DeletedPageListView.class})
   @Getter
   @Setter
   private String publisher;
 
   @Column(name = "imprint")
-  @JsonView({View.ComicListView.class, View.DeletedPageList.class})
+  @JsonView({View.ComicListView.class, View.DeletedPageListView.class})
   @Getter
   @Setter
   private String imprint;
 
   @Column(name = "series")
-  @JsonView({View.ComicListView.class, View.DeletedPageList.class})
+  @JsonView({View.ComicListView.class, View.DeletedPageListView.class})
   @Getter
   @Setter
   private String series;
 
   @Column(name = "volume")
-  @JsonView({View.ComicListView.class, View.DeletedPageList.class})
+  @JsonView({View.ComicListView.class, View.DeletedPageListView.class})
   @Getter
   @Setter
   private String volume;
 
   @Column(name = "issue_number")
-  @JsonView({View.ComicListView.class, View.DeletedPageList.class})
+  @JsonView({View.ComicListView.class, View.DeletedPageListView.class})
   @Getter
   private String issueNumber;
 
   @Column(name = "sortable_issue_number")
-  @JsonView({View.ComicDetailsView.class})
+  @JsonView({View.ComicView.class})
   @Getter
   private String sortableIssueNumber;
 
   @Column(name = "title")
-  @JsonView({View.ComicDetailsView.class})
+  @JsonView({View.ComicView.class})
   @Getter
   @Setter
   private String title;
 
   @Column(name = "notes")
-  @JsonView({View.ComicDetailsView.class})
+  @JsonView({View.ComicView.class})
   @Getter
   @Setter
   private String notes;
 
   @Column(name = "description")
-  @JsonView({View.ComicDetailsView.class})
+  @JsonView({View.ComicView.class})
   @Getter
   @Setter
   private String description;
 
   @Column(name = "page_count")
-  @JsonView({View.ComicDetailsView.class})
+  @JsonView({View.ComicView.class})
   @Getter
   @Setter
   private Integer pageCount;
 
   @Column(name = "cover_date")
-  @JsonView({View.ComicDetailsView.class})
+  @JsonView({View.ComicView.class})
   @Getter
   @Setter
   private Date coverDate;
 
   @Column(name = "month_published")
-  @JsonView({View.ComicDetailsView.class})
+  @JsonView({View.ComicView.class})
   @Getter
   @Setter
   private Integer monthPublished;
 
   @Column(name = "year_published")
-  @JsonView({View.ComicDetailsView.class})
+  @JsonView({View.ComicView.class})
   @Getter
   @Setter
   private Integer yearPublished;
 
   @Column(name = "store_date")
-  @JsonView({View.ComicDetailsView.class})
+  @JsonView({View.ComicView.class})
   @Getter
   private Date storeDate;
 
   @Column(name = "added_date")
-  @JsonView({View.ComicDetailsView.class})
+  @JsonView({View.ComicView.class})
   @Getter
   @Setter
   private Date addedDate;
 
   @Column(name = "last_modified_date")
-  @JsonView({View.ComicDetailsView.class})
+  @JsonView({View.ComicView.class})
   @Getter
   @Setter
   private Date lastModifiedDate;
 
   @Transient
-  @JsonView({View.ComicListView.class, View.DeletedPageList.class})
+  @JsonView({View.ComicListView.class, View.DeletedPageListView.class})
   public String getBaseFilename() {
     return FilenameUtils.getName(this.filename);
   }

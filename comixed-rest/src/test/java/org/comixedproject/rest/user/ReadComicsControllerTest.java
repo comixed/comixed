@@ -66,39 +66,38 @@ class ReadComicsControllerTest {
   }
 
   @Test
-  void markComicBookAsRead_serviceThrowsException() throws ReadComicsException {
+  void markComicAsRead_serviceThrowsException() throws ReadComicsException {
     doThrow(ReadComicsException.class)
         .when(readComicsService)
-        .markComicBookAsRead(anyString(), anyLong());
+        .markComicAsRead(anyString(), anyLong());
+
+    assertThrows(
+        ReadComicsException.class, () -> controller.markSingleComicRead(principal, TEST_COMIC_ID));
+  }
+
+  @Test
+  void markComicAsRead() throws ReadComicsException {
+    controller.markSingleComicRead(principal, TEST_COMIC_ID);
+
+    verify(readComicsService).markComicAsRead(TEST_EMAIL, TEST_COMIC_ID);
+  }
+
+  @Test
+  void umnarkComicAsRead_serviceThrowsException() throws ReadComicsException {
+    doThrow(ReadComicsException.class)
+        .when(readComicsService)
+        .unmarkComicAsRead(anyString(), anyLong());
 
     assertThrows(
         ReadComicsException.class,
-        () -> controller.markSingleComicBookRead(principal, TEST_COMIC_ID));
+        () -> controller.unmarkSingleComicRead(principal, TEST_COMIC_ID));
   }
 
   @Test
-  void markComicBookAsRead() throws ReadComicsException {
-    controller.markSingleComicBookRead(principal, TEST_COMIC_ID);
+  void unmarkComicAsRead() throws ReadComicsException {
+    controller.unmarkSingleComicRead(principal, TEST_COMIC_ID);
 
-    verify(readComicsService).markComicBookAsRead(TEST_EMAIL, TEST_COMIC_ID);
-  }
-
-  @Test
-  void umnarkComicBookAsRead_serviceThrowsException() throws ReadComicsException {
-    doThrow(ReadComicsException.class)
-        .when(readComicsService)
-        .unmarkComicBookAsRead(anyString(), anyLong());
-
-    assertThrows(
-        ReadComicsException.class,
-        () -> controller.unmarkSingleComicBookRead(principal, TEST_COMIC_ID));
-  }
-
-  @Test
-  void unmarkComicBookAsRead() throws ReadComicsException {
-    controller.unmarkSingleComicBookRead(principal, TEST_COMIC_ID);
-
-    verify(readComicsService).unmarkComicBookAsRead(TEST_EMAIL, TEST_COMIC_ID);
+    verify(readComicsService).unmarkComicAsRead(TEST_EMAIL, TEST_COMIC_ID);
   }
 
   @Test
@@ -108,8 +107,7 @@ class ReadComicsControllerTest {
         .markSelectionsAsRead(anyString(), anyList());
 
     assertThrows(
-        ReadComicsException.class,
-        () -> controller.markSelectedComicBooksRead(principal, httpSession));
+        ReadComicsException.class, () -> controller.markSelectedComicsRead(principal, httpSession));
   }
 
   @Test
@@ -118,15 +116,15 @@ class ReadComicsControllerTest {
 
     assertThrows(
         ComicSelectionException.class,
-        () -> controller.markSelectedComicBooksRead(principal, httpSession));
+        () -> controller.markSelectedComicsRead(principal, httpSession));
   }
 
   @Test
   void markSelectedAsRead() throws ReadComicsException, ComicSelectionException {
-    controller.markSelectedComicBooksRead(principal, httpSession);
+    controller.markSelectedComicsRead(principal, httpSession);
 
     verify(readComicsService).markSelectionsAsRead(TEST_EMAIL, selectedIds);
-    verify(comicSelectionService).clearSelectedComicBooks(TEST_EMAIL, selectedIds);
+    verify(comicSelectionService).clearSelectedComics(TEST_EMAIL, selectedIds);
   }
 
   @Test
@@ -137,7 +135,7 @@ class ReadComicsControllerTest {
 
     assertThrows(
         ReadComicsException.class,
-        () -> controller.unmarkSelectedComicBooksRead(principal, httpSession));
+        () -> controller.unmarkSelectedComicsRead(principal, httpSession));
   }
 
   @Test
@@ -146,14 +144,14 @@ class ReadComicsControllerTest {
 
     assertThrows(
         ComicSelectionException.class,
-        () -> controller.unmarkSelectedComicBooksRead(principal, httpSession));
+        () -> controller.unmarkSelectedComicsRead(principal, httpSession));
   }
 
   @Test
   void unmarkSelectedAsRead() throws ReadComicsException, ComicSelectionException {
-    controller.unmarkSelectedComicBooksRead(principal, httpSession);
+    controller.unmarkSelectedComicsRead(principal, httpSession);
 
     verify(readComicsService).unmarkSelectionsAsRead(TEST_EMAIL, selectedIds);
-    verify(comicSelectionService).clearSelectedComicBooks(TEST_EMAIL, selectedIds);
+    verify(comicSelectionService).clearSelectedComics(TEST_EMAIL, selectedIds);
   }
 }

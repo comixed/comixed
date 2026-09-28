@@ -472,7 +472,7 @@ public class DisplayableComicService {
       final String sortBy,
       final String sortDirection) {
     return this.displayableComicRepository.loadUnreadComics(
-        user.getReadComicBooks(),
+        user.getReadComics(),
         PageRequest.of(pageIndex, pageSize, this.doCreateSort(sortBy, sortDirection)));
   }
 
@@ -494,7 +494,7 @@ public class DisplayableComicService {
       final String sortBy,
       final String sortDirection) {
     return this.displayableComicRepository.loadReadComics(
-        user.getReadComicBooks(),
+        user.getReadComics(),
         PageRequest.of(pageIndex, pageSize, this.doCreateSort(sortBy, sortDirection)));
   }
 
@@ -637,9 +637,9 @@ public class DisplayableComicService {
    * @param id the comic book id
    * @return the displayable comic
    */
-  public DisplayableComic getForComicBookId(final long id) throws ComicException {
+  public DisplayableComic getForComicId(final long id) throws ComicException {
     log.debug("Loading displayable comic book: comic book id={}", id);
-    final DisplayableComic result = this.displayableComicRepository.getByComicBookId(id);
+    final DisplayableComic result = this.displayableComicRepository.getByComicId(id);
     if (Objects.isNull(result))
       throw new ComicException(String.format("No such comic books: id=%d", id));
     return result;

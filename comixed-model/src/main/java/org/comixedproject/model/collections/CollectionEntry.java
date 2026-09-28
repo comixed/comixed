@@ -34,7 +34,7 @@ import org.comixedproject.views.View;
  */
 @Entity
 @Table(name = "collections_view")
-@JsonView(View.CollectionEntryList.class)
+@JsonView(View.CollectionEntryListView.class)
 @NoArgsConstructor
 public class CollectionEntry {
   @EmbeddedId @Getter private CollectionEntryId id;

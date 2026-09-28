@@ -29,8 +29,8 @@ import {
 } from '@app/comic-books/selectors/comic-list.selectors';
 import { ComicListViewComponent } from '@app/comic-books/components/comic-list-view/comic-list-view.component';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
-import { selectComicBookSelectionIds } from '@app/comic-books/selectors/comic-book-selection.selectors';
-import { loadComicBookSelections } from '@app/comic-books/actions/comic-book-selection.actions';
+import { selectComicSelectionIds } from '@app/comic-books/selectors/comic-book-selection.selectors';
+import { loadComicSelections } from '@app/comic-books/actions/comic-book-selection.actions';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
@@ -100,14 +100,14 @@ export class DuplicateComicsDetailPageComponent implements OnInit {
       .pipe(tap(comicList => this.comics$.next(comicList)))
       .subscribe();
     this.store
-      .select(selectComicBookSelectionIds)
+      .select(selectComicSelectionIds)
       .pipe(tap(ids => this.selectedIds$.next(ids)))
       .subscribe();
   }
 
   ngOnInit(): void {
     this.logger.debug('Loading selected ids');
-    this.store.dispatch(loadComicBookSelections());
+    this.store.dispatch(loadComicSelections());
   }
 
   private doLoadComicDetails() {

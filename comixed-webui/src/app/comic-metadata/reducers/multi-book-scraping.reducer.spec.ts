@@ -29,9 +29,9 @@ import {
   DISPLAYABLE_COMIC_5
 } from '@app/comic-books/comic-books.fixtures';
 import {
-  batchScrapeComicBooks,
-  batchScrapeComicBooksFailure,
-  batchScrapeComicBooksSuccess,
+  batchScrapeComics,
+  batchScrapeComicsFailure,
+  batchScrapeComicsSuccess,
   loadMultiBookScrapingPage,
   loadMultiBookScrapingPageFailure,
   loadMultiBookScrapingPageSuccess,
@@ -103,7 +103,7 @@ describe('MultiBookScraping Reducer', () => {
     });
 
     it('has no current comic book', () => {
-      expect(state.currentComicBook).toBeNull();
+      expect(state.currentComic).toBeNull();
     });
   });
 
@@ -129,7 +129,7 @@ describe('MultiBookScraping Reducer', () => {
             pageNumber: 0,
             totalComics: 0,
             comics: [],
-            currentComicBook: null
+            currentComic: null
           },
           startMultiBookScrapingSuccess({
             comics: COMICS,
@@ -165,7 +165,7 @@ describe('MultiBookScraping Reducer', () => {
       });
 
       it('sets the current  comic detail', () => {
-        expect(state.currentComicBook).toEqual(COMICS[0]);
+        expect(state.currentComic).toEqual(COMICS[0]);
       });
 
       describe('when there are no comic books', () => {
@@ -302,13 +302,13 @@ describe('MultiBookScraping Reducer', () => {
 
     beforeEach(() => {
       state = reducer(
-        { ...state, currentComicBook: OLD_CURRENT },
+        { ...state, currentComic: OLD_CURRENT },
         multiBookScrapingSetCurrentBook({ comic: NEW_CURRENT })
       );
     });
 
     it('updates the current comic book', () => {
-      expect(state.currentComicBook).toBe(NEW_CURRENT);
+      expect(state.currentComic).toBe(NEW_CURRENT);
     });
   });
 
@@ -340,7 +340,7 @@ describe('MultiBookScraping Reducer', () => {
             pageNumber: 0,
             totalComics: 0,
             comics: COMICS,
-            currentComicBook: null
+            currentComic: null
           },
           multiBookScrapingRemoveBookSuccess({
             comics: UPDATED_COMICS,
@@ -372,7 +372,7 @@ describe('MultiBookScraping Reducer', () => {
       });
 
       it('sets the current  comic detail', () => {
-        expect(state.currentComicBook).toEqual(UPDATED_COMICS[0]);
+        expect(state.currentComic).toEqual(UPDATED_COMICS[0]);
       });
 
       describe('when it was the last comic book', () => {
@@ -453,7 +453,7 @@ describe('MultiBookScraping Reducer', () => {
             pageNumber: 0,
             totalComics: 0,
             comics: COMICS,
-            currentComicBook: null
+            currentComic: null
           },
           multiBookScrapeComicSuccess({
             comics: UPDATED_COMICS,
@@ -485,7 +485,7 @@ describe('MultiBookScraping Reducer', () => {
       });
 
       it('sets the current  comic detail', () => {
-        expect(state.currentComicBook).toEqual(UPDATED_COMICS[0]);
+        expect(state.currentComic).toEqual(UPDATED_COMICS[0]);
       });
 
       describe('when it was the last comic book', () => {
@@ -538,7 +538,7 @@ describe('MultiBookScraping Reducer', () => {
 
   describe('batch scraping comic books', () => {
     beforeEach(() => {
-      state = reducer({ ...state, busy: false }, batchScrapeComicBooks());
+      state = reducer({ ...state, busy: false }, batchScrapeComics());
     });
 
     it('sets the busy flag', () => {
@@ -547,10 +547,7 @@ describe('MultiBookScraping Reducer', () => {
 
     describe('success', () => {
       beforeEach(() => {
-        state = reducer(
-          { ...state, busy: true },
-          batchScrapeComicBooksSuccess()
-        );
+        state = reducer({ ...state, busy: true }, batchScrapeComicsSuccess());
       });
 
       it('clears the busy flag', () => {
@@ -560,10 +557,7 @@ describe('MultiBookScraping Reducer', () => {
 
     describe('failure', () => {
       beforeEach(() => {
-        state = reducer(
-          { ...state, busy: true },
-          batchScrapeComicBooksFailure()
-        );
+        state = reducer({ ...state, busy: true }, batchScrapeComicsFailure());
       });
 
       it('clears the busy flag', () => {

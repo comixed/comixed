@@ -46,7 +46,7 @@ import { SaveCurrentUserRequest } from '@app/user/models/net/save-current-user-r
 import { SaveUserPreferenceRequest } from '@app/user/models/net/save-user-preference-request';
 import { CreateAccountRequest } from '@app/user/models/net/create-account-request';
 import { CreateUserAccountRequest } from '@app/user/models/net/create-user-account-request';
-import { setReadComicBooks } from '@app/user/actions/read-comic-books.actions';
+import { setReadComics } from '@app/user/actions/read-comic-books.actions';
 import { selectUser } from '@app/user/selectors/user.selectors';
 
 /**
@@ -207,9 +207,7 @@ export class UserService {
       this.webSocketService.subscribe<User>(topic, user => {
         this.logger.debug('Received user update:', user);
         this.store.dispatch(loadCurrentUserSuccess({ user }));
-        this.store.dispatch(
-          setReadComicBooks({ entries: user.readComicBooks })
-        );
+        this.store.dispatch(setReadComics({ entries: user.readComics }));
       });
     }
   }

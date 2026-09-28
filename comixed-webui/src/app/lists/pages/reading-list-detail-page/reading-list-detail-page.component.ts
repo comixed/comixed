@@ -42,7 +42,7 @@ import {
 } from '@angular/forms';
 import { filter, tap } from 'rxjs/operators';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { removeSelectedComicBooksFromReadingList } from '@app/lists/actions/reading-list-entries.actions';
+import { removeSelectedComicsFromReadingList } from '@app/lists/actions/reading-list-entries.actions';
 import { selectMessagingStarted } from '@app/messaging/selectors/messaging.selectors';
 import {
   READING_LIST_REMOVAL_TOPIC,
@@ -55,10 +55,10 @@ import {
 } from '@app/lists/actions/reading-lists.actions';
 import { TitleService } from '@app/core/services/title.service';
 import { ConfirmationService } from '@tragically-slick/confirmation';
-import { selectComicBookSelectionIds } from '@app/comic-books/selectors/comic-book-selection.selectors';
-import { setMultipleComicBookByIdSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
+import { selectComicSelectionIds } from '@app/comic-books/selectors/comic-book-selection.selectors';
+import { setMultipleComicByIdSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
-import { selectReadComicBooksList } from '@app/user/selectors/read-comic-books.selectors';
+import { selectReadComicsList } from '@app/user/selectors/read-comic-books.selectors';
 import {
   loadComicsForReadingList,
   resetComicList
@@ -182,7 +182,7 @@ export class ReadingListDetailPageComponent {
       .pipe(tap(comics => this.comics$.next(comics)))
       .subscribe();
     this.store
-      .select(selectComicBookSelectionIds)
+      .select(selectComicSelectionIds)
       .pipe(
         tap(selections => {
           this.selectedIds$.next(selections);
@@ -190,7 +190,7 @@ export class ReadingListDetailPageComponent {
       )
       .subscribe();
     this.store
-      .select(selectReadComicBooksList)
+      .select(selectReadComicsList)
       .pipe(tap(comicsRead => this.comicsRead$.next(comicsRead)))
       .subscribe();
     this.store
@@ -275,7 +275,7 @@ export class ReadingListDetailPageComponent {
       confirm: () => {
         this.logger.trace('Firing action: remove comics from reading list');
         this.store.dispatch(
-          removeSelectedComicBooksFromReadingList({
+          removeSelectedComicsFromReadingList({
             list: this.readingList
           })
         );
@@ -307,7 +307,7 @@ export class ReadingListDetailPageComponent {
   onSelectAll(selected: boolean): void {
     this.logger.debug('Selecting all comics in reading list');
     this.store.dispatch(
-      setMultipleComicBookByIdSelectionState({
+      setMultipleComicByIdSelectionState({
         selected,
         comicIds: this.readingList.entryIds
       })

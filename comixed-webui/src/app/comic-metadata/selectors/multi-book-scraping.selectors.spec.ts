@@ -56,7 +56,7 @@ describe('MultiBookScraping Selectors', () => {
       pageNumber: Math.floor(Math.random() * 10),
       totalComics: Math.floor(Math.random() * 100),
       comics: COMICS,
-      currentComicBook: CURRENT_COMIC
+      currentComic: CURRENT_COMIC
     };
   });
 
@@ -89,6 +89,6 @@ describe('MultiBookScraping Selectors', () => {
       selectMultiBookScrapingCurrent({
         [MULTI_BOOK_SCRAPING_FEATURE_KEY]: state
       })
-    ).toEqual(state.currentComicBook);
+    ).toEqual(state.currentComic);
   });
 });

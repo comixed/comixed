@@ -29,10 +29,10 @@ import { DISPLAYABLE_COMIC_1 } from '@app/comic-books/comic-books.fixtures';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import {
-  convertComicBooksFailure,
-  convertComicBooksSuccess,
-  convertSelectedComicBooks,
-  convertSingleComicBook
+  convertComicsFailure,
+  convertComicsSuccess,
+  convertSelectedComics,
+  convertSingleComic
 } from '@app/library/actions/convert-comic-books.actions';
 import { hot } from 'jasmine-marbles';
 
@@ -58,11 +58,11 @@ describe('ConvertComicsEffects', () => {
         {
           provide: LibraryService,
           useValue: {
-            convertSingleComicBook: jasmine.createSpy(
-              'LibraryService.convertSingleComicBook()'
+            convertSingleComic: jasmine.createSpy(
+              'LibraryService.convertSingleComic()'
             ),
-            convertSelectedComicBooks: jasmine.createSpy(
-              'LibraryService.convertSelectedComicBooks()'
+            convertSelectedComics: jasmine.createSpy(
+              'LibraryService.convertSelectedComics()'
             )
           }
         },
@@ -86,14 +86,14 @@ describe('ConvertComicsEffects', () => {
   describe('converting a single comic book', () => {
     it('fires an action on success', () => {
       const serviceResponse = new HttpResponse({ status: 200 });
-      const action = convertSingleComicBook({
+      const action = convertSingleComic({
         id: ID,
         archiveType: ARCHIVE_TYPE
       });
-      const outcome = convertComicBooksSuccess();
+      const outcome = convertComicsSuccess();
 
       actions$ = hot('-a', { a: action });
-      libraryService.convertSingleComicBook
+      libraryService.convertSingleComic
         .withArgs({
           id: ID,
           archiveType: ARCHIVE_TYPE
@@ -101,20 +101,20 @@ describe('ConvertComicsEffects', () => {
         .and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.convertSingleComicBook$).toBeObservable(expected);
+      expect(effects.convertSingleComic$).toBeObservable(expected);
       expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = convertSingleComicBook({
+      const action = convertSingleComic({
         id: ID,
         archiveType: ARCHIVE_TYPE
       });
-      const outcome = convertComicBooksFailure();
+      const outcome = convertComicsFailure();
 
       actions$ = hot('-a', { a: action });
-      libraryService.convertSingleComicBook
+      libraryService.convertSingleComic
         .withArgs({
           id: ID,
           archiveType: ARCHIVE_TYPE
@@ -122,19 +122,19 @@ describe('ConvertComicsEffects', () => {
         .and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.convertSingleComicBook$).toBeObservable(expected);
+      expect(effects.convertSingleComic$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on general failure', () => {
-      const action = convertSingleComicBook({
+      const action = convertSingleComic({
         id: ID,
         archiveType: ARCHIVE_TYPE
       });
-      const outcome = convertComicBooksFailure();
+      const outcome = convertComicsFailure();
 
       actions$ = hot('-a', { a: action });
-      libraryService.convertSingleComicBook
+      libraryService.convertSingleComic
         .withArgs({
           id: ID,
           archiveType: ARCHIVE_TYPE
@@ -142,7 +142,7 @@ describe('ConvertComicsEffects', () => {
         .and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
-      expect(effects.convertSingleComicBook$).toBeObservable(expected);
+      expect(effects.convertSingleComic$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });
@@ -150,57 +150,57 @@ describe('ConvertComicsEffects', () => {
   describe('converting selected comic books', () => {
     it('fires an action on success', () => {
       const serviceResponse = new HttpResponse({ status: 200 });
-      const action = convertSelectedComicBooks({
+      const action = convertSelectedComics({
         archiveType: ARCHIVE_TYPE
       });
-      const outcome = convertComicBooksSuccess();
+      const outcome = convertComicsSuccess();
 
       actions$ = hot('-a', { a: action });
-      libraryService.convertSelectedComicBooks
+      libraryService.convertSelectedComics
         .withArgs({
           archiveType: ARCHIVE_TYPE
         })
         .and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.convertSelectedComicBooks$).toBeObservable(expected);
+      expect(effects.convertSelectedComics$).toBeObservable(expected);
       expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = convertSelectedComicBooks({
+      const action = convertSelectedComics({
         archiveType: ARCHIVE_TYPE
       });
-      const outcome = convertComicBooksFailure();
+      const outcome = convertComicsFailure();
 
       actions$ = hot('-a', { a: action });
-      libraryService.convertSelectedComicBooks
+      libraryService.convertSelectedComics
         .withArgs({
           archiveType: ARCHIVE_TYPE
         })
         .and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.convertSelectedComicBooks$).toBeObservable(expected);
+      expect(effects.convertSelectedComics$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on general failure', () => {
-      const action = convertSelectedComicBooks({
+      const action = convertSelectedComics({
         archiveType: ARCHIVE_TYPE
       });
-      const outcome = convertComicBooksFailure();
+      const outcome = convertComicsFailure();
 
       actions$ = hot('-a', { a: action });
-      libraryService.convertSelectedComicBooks
+      libraryService.convertSelectedComics
         .withArgs({
           archiveType: ARCHIVE_TYPE
         })
         .and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
-      expect(effects.convertSelectedComicBooks$).toBeObservable(expected);
+      expect(effects.convertSelectedComics$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });

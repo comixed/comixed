@@ -310,9 +310,9 @@ public class ComicPageService {
    * @return the page id, or null if not found
    */
   @Transactional
-  public Long getPageIdForComicBookCover(final long comicId) {
+  public Long getPageIdForComicCover(final long comicId) {
     log.debug("Retrieving first page id for comic book: id={}", comicId);
-    return this.comicPageRepository.getPageIdForComicBookCover(comicId);
+    return this.comicPageRepository.getPageIdForComicCover(comicId);
   }
 
   /**
@@ -377,8 +377,8 @@ public class ComicPageService {
    * @return the pages
    */
   @Transactional(readOnly = true)
-  public List<ComicPage> getPagesForComicBook(final long id) {
+  public List<ComicPage> getPagesForComic(final long id) {
     log.debug("Loading all pages for comic book: id={}", id);
-    return this.comicPageRepository.getAllPagesForComicBook(id);
+    return this.comicPageRepository.getAllPagesForComic(id);
   }
 }

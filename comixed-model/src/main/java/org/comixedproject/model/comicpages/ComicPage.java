@@ -42,7 +42,7 @@ public class ComicPage {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "comic_page_id")
   @JsonProperty("comicPageId")
-  @JsonView({View.ComicDetailsView.class})
+  @JsonView({View.ComicView.class})
   @Getter
   private Long comicPageId;
 
@@ -80,7 +80,7 @@ public class ComicPage {
 
   @Column(name = "page_number", nullable = false, updatable = true)
   @JsonProperty("pageNumber")
-  @JsonView({View.ComicDetailsView.class})
+  @JsonView({View.ComicView.class})
   @Getter
   @Setter
   @NonNull
@@ -88,7 +88,7 @@ public class ComicPage {
 
   @Column(name = "width", nullable = false, updatable = true)
   @JsonProperty("width")
-  @JsonView({View.ComicDetailsView.class})
+  @JsonView({View.ComicView.class})
   @Getter
   @Setter
   @NonNull
@@ -96,7 +96,7 @@ public class ComicPage {
 
   @Column(name = "height", nullable = false, updatable = true)
   @JsonProperty("height")
-  @JsonView({View.ComicDetailsView.class})
+  @JsonView({View.ComicView.class})
   @Getter
   @Setter
   @NonNull
@@ -122,14 +122,14 @@ public class ComicPage {
    */
   @Transient
   @JsonProperty("index")
-  @JsonView({View.ComicDetailsView.class})
+  @JsonView({View.ComicView.class})
   public int getIndex() {
     return this.comic.getIndexFor(this);
   }
 
   @Transient
   @JsonProperty("deleted")
-  @JsonView({View.ComicDetailsView.class})
+  @JsonView({View.ComicView.class})
   public boolean isDeleted() {
     return pageType == ComicPageType.DELETED;
   }

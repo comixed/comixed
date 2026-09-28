@@ -56,7 +56,7 @@ class ProcessUnhashedComicsChunkListenerTest {
   @Mock private JobInstance jobInstance;
   @Mock private JobExecution jobExecution;
 
-  @Captor private ArgumentCaptor<ProcessComicsStatus> publishComicBooksStatusArgumentCaptor;
+  @Captor private ArgumentCaptor<ProcessComicsStatus> publishComicsStatusArgumentCaptor;
   @Captor private ArgumentCaptor<BatchProcessDetail> batchProcessDetailArgumentCaptor;
 
   @BeforeEach
@@ -73,7 +73,7 @@ class ProcessUnhashedComicsChunkListenerTest {
     when(comicService.hasComicsWithUnhashedPages()).thenReturn(true);
     doNothing()
         .when(publishProcessComicsStatusAction)
-        .publish(publishComicBooksStatusArgumentCaptor.capture());
+        .publish(publishComicsStatusArgumentCaptor.capture());
     doNothing()
         .when(publishBatchProcessDetailUpdateAction)
         .publish(batchProcessDetailArgumentCaptor.capture());
@@ -104,7 +104,7 @@ class ProcessUnhashedComicsChunkListenerTest {
   }
 
   private void doCommonChecks() throws PublishingException {
-    final ProcessComicsStatus status = publishComicBooksStatusArgumentCaptor.getValue();
+    final ProcessComicsStatus status = publishComicsStatusArgumentCaptor.getValue();
 
     assertNotNull(status);
     assertTrue(status.isActive());

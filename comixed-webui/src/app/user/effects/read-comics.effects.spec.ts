@@ -22,10 +22,10 @@ import { Observable, of, throwError } from 'rxjs';
 
 import { ReadComicsEffects } from './read-comics.effects';
 import {
-  markSelectedComicBooksRead,
-  markSelectedComicBooksReadFailed,
-  markSelectedComicBooksReadSuccess,
-  markSingleComicBookRead
+  markSelectedComicsRead,
+  markSelectedComicsReadFailed,
+  markSelectedComicsReadSuccess,
+  markSingleComicRead
 } from '@app/user/actions/read-comic-books.actions';
 import { hot } from 'jasmine-marbles';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
@@ -41,7 +41,7 @@ describe('ReadComicsEffects', () => {
 
   let actions$: Observable<any>;
   let effects: ReadComicsEffects;
-  let readComicBooksService: jasmine.SpyObj<ReadComicsService>;
+  let readComicsService: jasmine.SpyObj<ReadComicsService>;
   let alertService: AlertService;
 
   beforeEach(() => {
@@ -66,7 +66,7 @@ describe('ReadComicsEffects', () => {
     });
 
     effects = TestBed.inject(ReadComicsEffects);
-    readComicBooksService = TestBed.inject(
+    readComicsService = TestBed.inject(
       ReadComicsService
     ) as jasmine.SpyObj<ReadComicsService>;
     alertService = TestBed.inject(AlertService);
@@ -81,54 +81,54 @@ describe('ReadComicsEffects', () => {
   describe('updating the read state of a single comic book', () => {
     it('fires an action on success', () => {
       const serviceResponse = new HttpResponse({ status: 200 });
-      const action = markSingleComicBookRead({
+      const action = markSingleComicRead({
         comicId: COMIC.comicId,
         read: READ
       });
-      const outcome = markSelectedComicBooksReadSuccess();
+      const outcome = markSelectedComicsReadSuccess();
 
       actions$ = hot('-a', { a: action });
-      readComicBooksService.setSingleReadState
+      readComicsService.setSingleReadState
         .withArgs({ comicId: COMIC.comicId, read: READ })
         .and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.setSingleComicBookReadState$).toBeObservable(expected);
+      expect(effects.setSingleComicReadState$).toBeObservable(expected);
       expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = markSingleComicBookRead({
+      const action = markSingleComicRead({
         comicId: COMIC.comicId,
         read: READ
       });
-      const outcome = markSelectedComicBooksReadFailed();
+      const outcome = markSelectedComicsReadFailed();
 
       actions$ = hot('-a', { a: action });
-      readComicBooksService.setSingleReadState
+      readComicsService.setSingleReadState
         .withArgs({ comicId: COMIC.comicId, read: READ })
         .and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.setSingleComicBookReadState$).toBeObservable(expected);
+      expect(effects.setSingleComicReadState$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on general failure', () => {
-      const action = markSingleComicBookRead({
+      const action = markSingleComicRead({
         comicId: COMIC.comicId,
         read: READ
       });
-      const outcome = markSelectedComicBooksReadFailed();
+      const outcome = markSelectedComicsReadFailed();
 
       actions$ = hot('-a', { a: action });
-      readComicBooksService.setSingleReadState
+      readComicsService.setSingleReadState
         .withArgs({ comicId: COMIC.comicId, read: READ })
         .and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
-      expect(effects.setSingleComicBookReadState$).toBeObservable(expected);
+      expect(effects.setSingleComicReadState$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });
@@ -136,51 +136,51 @@ describe('ReadComicsEffects', () => {
   describe('updating the read state of selected comic books', () => {
     it('fires an action on success', () => {
       const serviceResponse = new HttpResponse({ status: 200 });
-      const action = markSelectedComicBooksRead({
+      const action = markSelectedComicsRead({
         read: READ
       });
-      const outcome = markSelectedComicBooksReadSuccess();
+      const outcome = markSelectedComicsReadSuccess();
 
       actions$ = hot('-a', { a: action });
-      readComicBooksService.setSelectedReadState
+      readComicsService.setSelectedReadState
         .withArgs({ read: READ })
         .and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.setSelectedComicBooksReadState$).toBeObservable(expected);
+      expect(effects.setSelectedComicsReadState$).toBeObservable(expected);
       expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = markSelectedComicBooksRead({
+      const action = markSelectedComicsRead({
         read: READ
       });
-      const outcome = markSelectedComicBooksReadFailed();
+      const outcome = markSelectedComicsReadFailed();
 
       actions$ = hot('-a', { a: action });
-      readComicBooksService.setSelectedReadState
+      readComicsService.setSelectedReadState
         .withArgs({ read: READ })
         .and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.setSelectedComicBooksReadState$).toBeObservable(expected);
+      expect(effects.setSelectedComicsReadState$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on general failure', () => {
-      const action = markSelectedComicBooksRead({
+      const action = markSelectedComicsRead({
         read: READ
       });
-      const outcome = markSelectedComicBooksReadFailed();
+      const outcome = markSelectedComicsReadFailed();
 
       actions$ = hot('-a', { a: action });
-      readComicBooksService.setSelectedReadState
+      readComicsService.setSelectedReadState
         .withArgs({ read: READ })
         .and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
-      expect(effects.setSelectedComicBooksReadState$).toBeObservable(expected);
+      expect(effects.setSelectedComicsReadState$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });

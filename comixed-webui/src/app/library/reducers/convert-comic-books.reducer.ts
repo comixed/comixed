@@ -18,10 +18,10 @@
 
 import { createFeature, createReducer, on } from '@ngrx/store';
 import {
-  convertComicBooksFailure,
-  convertComicBooksSuccess,
-  convertSelectedComicBooks,
-  convertSingleComicBook
+  convertComicsFailure,
+  convertComicsSuccess,
+  convertSelectedComics,
+  convertSingleComic
 } from '../actions/convert-comic-books.actions';
 
 export const CONVERT_COMICS_FEATURE_KEY = 'convert_comics_state';
@@ -37,13 +37,13 @@ export const initialState: ConvertComicsState = {
 export const reducer = createReducer(
   initialState,
 
-  on(convertSingleComicBook, state => ({ ...state, converting: true })),
-  on(convertSelectedComicBooks, state => ({ ...state, converting: true })),
-  on(convertComicBooksSuccess, state => ({ ...state, converting: false })),
-  on(convertComicBooksFailure, state => ({ ...state, converting: false }))
+  on(convertSingleComic, state => ({ ...state, converting: true })),
+  on(convertSelectedComics, state => ({ ...state, converting: true })),
+  on(convertComicsSuccess, state => ({ ...state, converting: false })),
+  on(convertComicsFailure, state => ({ ...state, converting: false }))
 );
 
-export const convertComicBooksFeature = createFeature({
+export const convertComicsFeature = createFeature({
   name: CONVERT_COMICS_FEATURE_KEY,
   reducer
 });

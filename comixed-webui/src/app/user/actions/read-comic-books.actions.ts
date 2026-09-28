@@ -18,18 +18,18 @@
 
 import { createAction, props } from '@ngrx/store';
 
-export const setReadComicBooks = createAction(
+export const setReadComics = createAction(
   '[Read Comic Books] Set the list of read comic books',
   props<{
     entries: number[];
   }>()
 );
 
-export const resetReadComicBooks = createAction(
+export const resetReadComics = createAction(
   '[Read Comic Books] Resets the list of read comic books'
 );
 
-export const markSingleComicBookRead = createAction(
+export const markSingleComicRead = createAction(
   '[Comic Book Read State] Update the read state for a single comic book',
   props<{
     comicId: number;
@@ -37,15 +37,15 @@ export const markSingleComicBookRead = createAction(
   }>()
 );
 
-export const markSelectedComicBooksRead = createAction(
+export const markSelectedComicsRead = createAction(
   '[Comic Book Read State] Update the read state for selected comic books',
   props<{ read: boolean }>()
 );
 
-export const markSelectedComicBooksReadSuccess = createAction(
+export const markSelectedComicsReadSuccess = createAction(
   '[Comic Book Read State] The read state for comic books were updated'
 );
 
-export const markSelectedComicBooksReadFailed = createAction(
+export const markSelectedComicsReadFailed = createAction(
   '[Comic Book Read State] Failed to update the read state for comic books'
 );
