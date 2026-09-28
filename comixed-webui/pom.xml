@@ -41,7 +41,7 @@
             </goals>
             <phase>initialize</phase>
             <configuration>
-              <nodeVersion>v22.13.0</nodeVersion>
+              <nodeVersion>v26.0.0</nodeVersion>
               <pnpmVersion>v10.34.5</pnpmVersion>
             </configuration>
           </execution>

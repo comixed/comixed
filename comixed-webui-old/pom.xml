@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.comixedproject</groupId>
+    <artifactId>comixed</artifactId>
+    <version>4.0.0-beta.1</version>
+  </parent>
+  <groupId>org.comixedproject</groupId>
+  <artifactId>comixed-webui</artifactId>
+  <name>comixed-webui</name>
+  <url>http://www.comixedproject.org</url>
+  <properties>
+    <sonar.sources>./src</sonar.sources>
+    <sonar.test.inclusions>**/*spec.ts</sonar.test.inclusions>
+    <sonar.javascript.lcov.reportPaths>coverage/lcov.info</sonar.javascript.lcov.reportPaths>
+  </properties>
+  <build>
+    <resources>
+      <resource>
+        <directory>target/dist</directory>
+        <targetPath>static</targetPath>
+      </resource>
+    </resources>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-install-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>com.github.eirslett</groupId>
+        <artifactId>frontend-maven-plugin</artifactId>
+        <version>2.0.2</version>
+        <executions>
+          <execution>
+            <id>Install node and pnpm</id>
+            <goals>
+              <goal>install-node-and-pnpm</goal>
+            </goals>
+            <phase>initialize</phase>
+            <configuration>
+              <nodeVersion>v22.13.0</nodeVersion>
+              <pnpmVersion>v10.34.5</pnpmVersion>
+            </configuration>
+          </execution>
+          <execution>
+            <id>Install pnpm dependencies</id>
+            <goals>
+              <goal>pnpm</goal>
+            </goals>
+            <phase>initialize</phase>
+            <configuration>
+              <arguments>install</arguments>
+            </configuration>
+          </execution>
+          <execution>
+            <id>pnpm lint</id>
+            <goals>
+              <goal>pnpm</goal>
+            </goals>
+            <phase>process-sources</phase>
+            <configuration>
+              <arguments>lint</arguments>
+            </configuration>
+          </execution>
+          <execution>
+            <id>Build the frontend code</id>
+            <goals>
+              <goal>pnpm</goal>
+            </goals>
+            <phase>prepare-package</phase>
+            <configuration>
+              <arguments>build --configuration production</arguments>
+            </configuration>
+          </execution>
+          <execution>
+            <id>Angular tests</id>
+            <goals>
+              <goal>pnpm</goal>
+            </goals>
+            <phase>test</phase>
+            <configuration>
+              <arguments>run test</arguments>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

@@ -1,0 +1,51 @@
+{
+  "dashboard": {
+    "statistics": {
+      "character": {
+        "title": "Characters"
+      },
+      "comic-state": {
+        "title": "Comics By State"
+      },
+      "location": {
+        "title": "Locations"
+      },
+      "publisher": {
+        "title": "Publishers"
+      },
+      "publisher-year": {
+        "title": "Publisher By Year"
+      },
+      "series": {
+        "title": "Series"
+      },
+      "story": {
+        "title": "Stories"
+      },
+      "team": {
+        "title": "Teams"
+      }
+    }
+  },
+  "user": {
+    "login-page": {
+      "button": {
+        "submit": "Login"
+      },
+      "label": {
+        "email": "Email",
+        "password": "Password"
+      },
+      "placeholder": {
+        "email": "your@address.tld",
+        "password": "[your password]"
+      },
+      "title": "Please Login"
+    }
+  },
+  "welcome": {
+    "first-logged-in": "User since {date}.",
+    "greet-user": "Welcome back {email}!",
+    "last-logged-in": "Last logged in on {date}."
+  }
+}

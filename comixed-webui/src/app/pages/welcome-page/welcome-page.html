@@ -1,0 +1,21 @@
+@if (userLoaded()) {
+  <div id="welcome-box" class="cx-centered cx-content-container">
+    <strong>
+      <p>{{ "welcome.greet-user" | translate: { email: user()?.email } }}</p>
+    </strong>
+
+    <p>
+      {{
+        "welcome.first-logged-in"
+          | translate: { date: user()?.firstLoginDate || 0 | date: "medium" }
+      }}
+    </p>
+
+    <p>
+      {{
+        "welcome.last-logged-in"
+          | translate: { date: user()?.lastLoginDate || 0 | date: "medium" }
+      }}
+    </p>
+  </div>
+}
