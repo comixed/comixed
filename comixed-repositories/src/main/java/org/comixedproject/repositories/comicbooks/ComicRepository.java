@@ -29,7 +29,6 @@ import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.model.comicbooks.ComicTagType;
 import org.comixedproject.model.net.library.PublisherAndYearSegment;
 import org.comixedproject.model.net.library.RemoteLibrarySegmentState;
-import org.springframework.data.domain.Limit;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -616,16 +615,6 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
       @Param("series") String series,
       @Param("volume") String volume,
       @Param("issueNumber") String issueNumber);
-
-  @Query(
-      "SELECT c.comicId FROM Comic c WHERE c.series = :series AND c.volume = :volume AND c.issueNumber <> :issueNumber AND c.coverDate > :coverDate ORDER BY c.coverDate, c.issueNumber ASC")
-  Long findNextComicIdInSeries(
-      String series, String volume, String issueNumber, Date coverDate, Limit of);
-
-  @Query(
-      "SELECT c.comicId FROM Comic c WHERE c.series = :series AND c.volume = :volume AND c.issueNumber <> :issueNumber AND c.coverDate < :coverDate ORDER BY c.coverDate, c.issueNumber ASC")
-  Long findPreviousComicIdInSeries(
-      String series, String volume, String issueNumber, Date coverDate, Limit of);
 
   @Query(
       "SELECT DISTINCT d.publisher FROM Comic d WHERE d.comicId IN (SELECT t.comic.comicId FROM ComicTag t WHERE t.type = 'STORY' AND t.value = :name)")

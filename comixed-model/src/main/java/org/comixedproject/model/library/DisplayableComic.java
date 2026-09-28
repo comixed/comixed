@@ -63,6 +63,16 @@ public class DisplayableComic {
   @Getter
   private String referenceId;
 
+  @Column(name = "previous_issue_id")
+  @JsonView({View.ComicListView.class, View.DeletedPageListView.class})
+  @Getter
+  private Long previousIssueId;
+
+  @Column(name = "next_issue_id")
+  @JsonView({View.ComicListView.class, View.DeletedPageListView.class})
+  @Getter
+  private Long nextIssueId;
+
   @Column(name = "filename")
   @JsonView({View.ComicView.class})
   @Getter
