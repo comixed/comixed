@@ -1,0 +1,313 @@
+{
+  "app": {
+    "button": {
+      "submit": "Submit"
+    },
+    "effects": {
+      "general-failure": "A general failure occurred..."
+    },
+    "page-title": "ComiXed: {title}",
+    "text": {
+      "issue": "[issue #]",
+      "loading": "Loading, Please Wait...",
+      "publisher": "[publisher]",
+      "series": "[series]"
+    }
+  },
+  "comic-detail-effects": {
+    "load-comic": {
+      "service-failure": "Unable to load comic..."
+    },
+    "save-comic": {
+      "service-failure": "Unable to save changes..."
+    }
+  },
+  "comic-detail-page": {
+    "label": {
+      "metadata": "Metadata",
+      "pages": "Pages",
+      "publication": "Publication",
+      "story": "Story"
+    }
+  },
+  "comic-cover": {
+    "button": {
+      "download-file": "Download",
+      "next-issue": "Next Issue",
+      "previous-issue": "Prev Issue"
+    }
+  },
+  "comic-file-list-effects": {
+    "import": {
+      "service-failure": "Failed to start importing comics..."
+    },
+    "load-from-disk": {
+      "service-failure": "Failed to load comics from path: {directory}"
+    },
+    "load-from-session": {
+      "service-failure": "Failed to load comic files from the session..."
+    },
+    "select-comic-files": {
+      "service-failure": "Failed to update selected comics..."
+    }
+  },
+  "comic-list-effects": {
+    "load-by-filter": {
+      "service-failure": "Unable to load comics..."
+    }
+  },
+  "comic-list-page": {
+    "page-title": "{pageType, select, READ{Read} UNSCRAPED{Unscraped} DUPLICATE{Duplicate} DELETED{Deleted} other{All} } Comics"
+  },
+  "comic-pages-detail": {
+    "label": {
+      "blocked": "Blocked",
+      "dimensions": "Dimensions",
+      "filename": "Filename",
+      "hash": "File Hash",
+      "page-number": "Page #",
+      "page-type": "Page Type"
+    }
+  },
+  "comic-publication-detail": {
+    "label": {
+      "added-date": "Added",
+      "cover-date": "Cover Date",
+      "imprint": "Imprint",
+      "issue-number": "Issue #",
+      "publisher": "Publisher",
+      "series": "Series",
+      "store-date": "Store Date",
+      "volume": "Volume"
+    }
+  },
+  "comic-story-detail": {
+    "label": {
+      "characters": "Characters",
+      "credits": "Credits",
+      "locations": "Locations",
+      "stories": "Stories",
+      "teams": "Teams"
+    }
+  },
+  "comic-table": {
+    "label": {
+      "added-date": "Added",
+      "comic-state": "State",
+      "cover-date": "Cover Date",
+      "issue-number": "Issue #",
+      "page-count": "# Pages",
+      "publisher": "Publisher",
+      "series": "Series",
+      "state": {
+        "ADDED": "Comic was added to the library...",
+        "CHANGED": "Comic metadata has changed...",
+        "DELETED": "Comic is marked for deletion...",
+        "DISCOVERED": "Comic was discovered...",
+        "STABLE": "Comic has no changes...",
+        "UNPROCESSED": "Comic has not been processed..."
+      },
+      "store-date": "Store Date",
+      "thumbnail": "Cover",
+      "volume": "Volume"
+    }
+  },
+  "dashboard": {
+    "page-title": "Dashboard",
+    "statistics": {
+      "archive-type": {
+        "title": "Archive Types"
+      },
+      "characters": {
+        "description": "There {count, plural, =1 {is 1 character} other{are # characters}}...",
+        "title": "Characters"
+      },
+      "locations": {
+        "description": "There {count, plural, =1 {is 1 location} other{# locations}}...",
+        "title": "Locations"
+      },
+      "publishers": {
+        "description": "There {count, plural, =1 {is 1 publisher} other{are # publishers}}...",
+        "title": "Publishers"
+      },
+      "series": {
+        "description": "There {count, plural, =1 {is 1 series} other{are # series}}...",
+        "title": "Series"
+      },
+      "stories": {
+        "description": "There {count, plural, =1 {is 1 story} other{are # stories}}...",
+        "title": "Stories"
+      },
+      "teams": {
+        "description": "There {count, plural, =1 {is 1 team} other{are # teams}}...",
+        "title": "Teams"
+      },
+      "text": {
+        "view-more": "View more detail..."
+      }
+    }
+  },
+  "import-comics-page": {
+    "label": {
+      "10-comics": "10 Comics",
+      "25-comics": "25 Comics",
+      "50-comics": "50 Comics",
+      "100-comics": "100 Comics",
+      "1000-comics": "1000 Comics",
+      "all-comics": "All Comics",
+      "base-filename": "Filename",
+      "directory-input": "Directory",
+      "maximum-input": "Maximum Files To Return",
+      "selected": "#",
+      "size": "File Size"
+    },
+    "page-title": "Import Comics",
+    "placeholder": {
+      "directory-input": "The root directory to search...",
+      "maximum-input": "Select an option..."
+    },
+    "text": {
+      "size": "{size} Mb"
+    },
+    "tooltip": {
+      "import-comics-button": "There {selected, plural, =1{is 1} other{are #}} files selected..."
+    }
+  },
+  "initial-account-page": {
+    "error": {
+      "password-validation": "The passwords do not match..."
+    },
+    "label": {
+      "email": "The Admin Email",
+      "password": "The Admin Password",
+      "verify-password": "Verify The Admin Password"
+    },
+    "page-title": "Create Admin Account",
+    "placeholder": {
+      "email": "admin@email.tld",
+      "password": "Your password...",
+      "verify-password": "Verify your password..."
+    }
+  },
+  "library-statistics-panel": {
+    "segment": {
+      "deleted-comics": "Deleted",
+      "duplicate-comics": "Duplicates",
+      "read-comics": "Read",
+      "total-comics": "Total",
+      "unscraped-comics": "Unscraped"
+    }
+  },
+  "login-page": {
+    "label": {
+      "email": "Email",
+      "password": "Password"
+    },
+    "page-title": "Login",
+    "placeholder": {
+      "email": "your@address.tld",
+      "password": "your password..."
+    },
+    "title": "Login"
+  },
+  "publisher-comic-list-page": {
+    "label": {
+      "series": "Series Name",
+      "volume": "Volume"
+    },
+    "page-title": "{publisherName}: Comic List",
+    "trail-title": "Comic List"
+  },
+  "publisher-list-effects": {
+    "load": {
+      "service-failure": "Failed to load publisher list..."
+    }
+  },
+  "publisher-list-page": {
+    "label": {
+      "issue-count": "# Comics",
+      "publisher-name": "Name",
+      "series-count": "# Series"
+    },
+    "page-title": "Publisher List",
+    "text": {
+      "no-publishers-found": "No publishers found..."
+    },
+    "trail-title": "Publishers"
+  },
+  "publisher-series-list-page": {
+    "label": {
+      "in-library": "# Comics in Library",
+      "series-name": "Series Name",
+      "total-issues": "Total Issues In Series",
+      "volume": "Volume"
+    },
+    "page-title": "{publisherName}: Series List",
+    "trail-title": "Series List"
+  },
+  "series-detail-page": {
+    "label": {
+      "cover-date": "Cover Date",
+      "found": "Found",
+      "issue-number": "Issue #",
+      "store-date": "Store Date",
+      "title": "Title"
+    },
+    "page-title": "Series: {name} V{volume}",
+    "trail-title": "{name} V{volume}"
+  },
+  "series-list-effects": {
+    "load-series-list": {
+      "service-failure": "Failed to load series entries..."
+    }
+  },
+  "series-list-page": {
+    "label": {
+      "in-library": "# of Comics",
+      "publisher": "Publisher",
+      "series-name": "Series Name",
+      "volume": "Volume"
+    },
+    "page-title": "Series List",
+    "text": {
+      "no-series-found": "No series found..."
+    },
+    "trail-title": "Series"
+  },
+  "tag-list-page": {
+    "label": {
+      "comic-count": "# of Comics",
+      "tag-value": "Value"
+    },
+    "page-title": "{tagType, select, CHARACTER{Character} TEAM{Team} LOCATION{Location} STORY{Story} other{Unknown}} List",
+    "text": {
+      "no-tags-found": "No entries found..."
+    }
+  },
+  "tooltip": {
+    "view-details": "View details for {name}..."
+  },
+  "topbar": {
+    "tooltip": {
+      "home-button": "Go to the dashboard...",
+      "import-button": "Import comic files...",
+      "logout-button": "Log out of the server..."
+    }
+  },
+  "user-effects": {
+    "load-user": {
+      "service-failure": "User session expired..."
+    },
+    "login": {
+      "service-failure": "Login was unsuccessful..."
+    },
+    "save-preference": {
+      "service-failure": "Failed to save user preference: {name}..."
+    }
+  },
+  "welcome": {
+    "first-logged-in": "User since {date}.",
+    "greet-user": "Welcome back {email}!",
+    "last-logged-in": "Last logged in on {date}."
+  }
+}
