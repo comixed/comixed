@@ -1,0 +1,33 @@
+<p-card class="cx-width-100p cx-height-100p">
+  <ng-template #header>
+    <h3 class="cx-width-100p cx-justify-center cx-no-text-wrap">
+      {{ title }}
+    </h3>
+    <img
+      [src]="imageUrl"
+      [pTooltip]="'dashboard.statistics.text.view-more' | translate"
+      [routerLink]="detailUrl"
+      alt="imageAlt"
+      style="float: inline-end; height: 75px"
+    />
+  </ng-template>
+
+  {{ description }}
+
+  <ng-template #footer class="cx-padding-15">
+    <div class="cx-width-100p cx-justify-start">
+      <p-button
+        icon="pi pi-chart-bar"
+        severity="secondary"
+        [pTooltip]="'dashboard.statistics.text.show-details' | translate"
+        (click)="zoom.emit(0)"
+      ></p-button>
+      <p-button
+        icon="pi pi-chart-scatter"
+        severity="secondary"
+        [pTooltip]="'dashboard.statistics.text.show-top' | translate"
+        (click)="zoom.emit(10)"
+      ></p-button>
+    </div>
+  </ng-template>
+</p-card>
