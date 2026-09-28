@@ -1,0 +1,129 @@
+@if (zoomedStatistics().length > 0) {
+  <app-zoomed-statistics
+    class="cx-width-75p cx-height-75p cx-centered"
+    id="collection-graph"
+    [segment]="zoomedStatistics()"
+    [title]="zoomedTitle() | translate"
+    (unzoom)="onUnzoom()"
+  ></app-zoomed-statistics>
+} @else {
+  <div id="cx-dashboard-container" class="cx-flex-content-container-row">
+    @for (stat of stats(); track stat) {
+      @if (stat === "publisher-stats") {
+        <div class="cx-flex-content-grow-0">
+          <app-collection-statistics
+            id="publisher-statistics"
+            [title]="
+              'dashboard.statistics.publishers.title'
+                | translate: { count: publishers().length }
+            "
+            [data]="publishers()"
+            [url]="'/library/publishers'"
+            (zoom)="
+              onZoom(publishers(), 'dashboard.statistics.publishers.zoom-title')
+            "
+          ></app-collection-statistics>
+        </div>
+      }
+
+      @if (stat === "series-stats") {
+        <div class="cx-flex-content-grow-0">
+          <app-collection-statistics
+            id="series-statistics"
+            [title]="
+              'dashboard.statistics.series.title'
+                | translate: { count: series().length }
+            "
+            [data]="series()"
+            [url]="'/library/series'"
+            (zoom)="onZoom(series(), 'dashboard.statistics.series.zoom-title')"
+          ></app-collection-statistics>
+        </div>
+      }
+
+      @if (stat === "character-stats") {
+        <div class="cx-flex-content-grow-0">
+          <app-collection-statistics
+            id="character-statistics"
+            [title]="
+              'dashboard.statistics.characters.title'
+                | translate: { count: characters().length }
+            "
+            [data]="characters()"
+            [url]="'/library/characters'"
+            (zoom)="
+              onZoom(characters(), 'dashboard.statistics.characters.zoom-title')
+            "
+          ></app-collection-statistics>
+        </div>
+      }
+
+      @if (stat === "team-stats") {
+        <div class="cx-flex-content-grow-0">
+          <app-collection-statistics
+            id="team-statistics"
+            [title]="
+              'dashboard.statistics.teams.title'
+                | translate: { count: teams().length }
+            "
+            [data]="teams()"
+            [url]="'/library/teams'"
+            (zoom)="onZoom(teams(), 'dashboard.statistics.teams.zoom-title')"
+          ></app-collection-statistics>
+        </div>
+      }
+
+      @if (stat === "location-stats") {
+        <div class="cx-flex-content-grow-0">
+          <app-collection-statistics
+            id="location-statistics"
+            [title]="
+              'dashboard.statistics.locations.title'
+                | translate: { count: locations().length }
+            "
+            [data]="locations()"
+            [url]="'/library/locations'"
+            (zoom)="
+              onZoom(locations(), 'dashboard.statistics.locations.zoom-title')
+            "
+          ></app-collection-statistics>
+        </div>
+      }
+
+      @if (stat === "story-stats") {
+        <div class="cx-flex-content-grow-0">
+          <app-collection-statistics
+            id="story-statistics"
+            [title]="
+              'dashboard.statistics.stories.title'
+                | translate: { count: stories().length }
+            "
+            [data]="stories()"
+            [url]="'/library/stories'"
+            (zoom)="
+              onZoom(stories(), 'dashboard.statistics.stories.zoom-title')
+            "
+          ></app-collection-statistics>
+        </div>
+      }
+
+      @if (stat === "comic-state-stats") {
+        <div class="cx-flex-content-grow-0">
+          <app-distribution-statistics
+            [title]="'dashboard.statistics.comic-states.title' | translate"
+            [data]="comicStates()"
+          ></app-distribution-statistics>
+        </div>
+      }
+
+      @if (stat === "archive-type-stats") {
+        <div class="cx-flex-content-grow-0">
+          <app-distribution-statistics
+            [title]="'dashboard.statistics.archive-types.title' | translate"
+            [data]="archiveTypes()"
+          ></app-distribution-statistics>
+        </div>
+      }
+    }
+  </div>
+}

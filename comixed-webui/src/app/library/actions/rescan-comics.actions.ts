@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2026, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,23 +16,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createAction, props } from '@ngrx/store';
+import { createActionGroup, emptyProps } from '@ngrx/store';
 
-export const rescanSingleComic = createAction(
-  '[Rescan Comic Books] Rescan a single comic book',
-  props<{
-    comicId: number;
-  }>()
-);
-
-export const rescanSelectedComics = createAction(
-  '[Rescan Comic Books] Rescan selected comic books'
-);
-
-export const rescanComicsSuccess = createAction(
-  '[Rescan Comic Books] Rescanning comic books has started'
-);
-
-export const rescanComicsFailure = createAction(
-  '[Rescan Comic Books] Failed to start rescanning comic books'
-);
+export const RescanComicsActions = createActionGroup({
+  source: 'Rescan Comics',
+  events: {
+    RescanSelectedComics: emptyProps(),
+    RescanSelectedComicsSuccess: emptyProps(),
+    RescanSelectedComicsFailure: emptyProps()
+  }
+});

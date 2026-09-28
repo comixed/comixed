@@ -28,7 +28,9 @@ import static org.mockito.Mockito.*;
 import jakarta.servlet.http.HttpSession;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.metadata.MetadataException;
 import org.comixedproject.metadata.model.IssueMetadata;
@@ -87,8 +89,8 @@ class ComicScrapingControllerTest {
   @Mock private List<VolumeMetadata> comicVolumeList;
   @Mock private IssueMetadata comicIssue;
   @Mock private DisplayableComic displayableComic;
-  @Mock private List<Long> selectedIdList;
-  @Mock private List multiBookIdList;
+  @Mock private Set<Long> selectedIdList;
+  @Mock private Set<Long> multiBookIdList;
   @Mock private JobOperator jobOperator;
   @Mock private Job updateComicMetadata;
   @Mock private JobExecution jobExecution;
@@ -247,7 +249,7 @@ class ComicScrapingControllerTest {
 
   @Test
   void startBatchMetadataUpdate_comicServiceException() throws Exception {
-    doThrow(ComicException.class).when(comicService).markComicsForBatchMetadataUpdate(anyList());
+    doThrow(ComicException.class).when(comicService).markComicsForBatchMetadataUpdate(anySet());
 
     assertThrows(
         ComicException.class,
@@ -331,7 +333,7 @@ class ComicScrapingControllerTest {
   void startMultiBookScraping_hasSelections() throws MetadataException, ComicSelectionException {
     when(selectedIdList.isEmpty()).thenReturn(false);
     when(displayableComicService.loadComicsById(
-            anyInt(), anyInt(), anyString(), anyString(), anyList()))
+            anyInt(), anyInt(), anyString(), anyString(), anySet()))
         .thenReturn(displayableComicList);
 
     final StartMultiBookScrapingResponse result =
@@ -352,7 +354,7 @@ class ComicScrapingControllerTest {
   void startMultiBookScraping_noSelections() throws MetadataException, ComicSelectionException {
     when(selectedIdList.isEmpty()).thenReturn(true);
     when(displayableComicService.loadComicsById(
-            anyInt(), anyInt(), anyString(), anyString(), anyList()))
+            anyInt(), anyInt(), anyString(), anyString(), anySet()))
         .thenReturn(displayableComicList);
 
     final StartMultiBookScrapingResponse result =
@@ -372,7 +374,7 @@ class ComicScrapingControllerTest {
   @Test
   void loadMultiBookScrapingPage() throws ComicSelectionException {
     when(displayableComicService.loadComicsById(
-            anyInt(), anyInt(), anyString(), anyString(), anyList()))
+            anyInt(), anyInt(), anyString(), anyString(), anySet()))
         .thenReturn(displayableComicList);
 
     final LoadMultiBookScrapingResponse result =
@@ -409,13 +411,13 @@ class ComicScrapingControllerTest {
     final List<DisplayableComic> localComicList = new ArrayList<>();
     localComicList.add(displayableComic);
     when(displayableComicService.loadComicsById(
-            anyInt(), anyInt(), anyString(), anyString(), anyList()))
+            anyInt(), anyInt(), anyString(), anyString(), anySet()))
         .thenReturn(localComicList);
 
-    final List<Long> localMultiBookIdList = new ArrayList<>();
+    final Set<Long> localMultiBookIdList = new HashSet<>();
     when(comicSelectionService.decodeSelections(TEST_ENCODED_MULTI_BOOKS))
         .thenReturn(localMultiBookIdList);
-    when(comicSelectionService.encodeSelections(anyList())).thenReturn(TEST_REENCODED_MULTI_BOOKS);
+    when(comicSelectionService.encodeSelections(anySet())).thenReturn(TEST_REENCODED_MULTI_BOOKS);
 
     final StartMultiBookScrapingResponse result =
         controller.removeMultiBookComic(session, TEST_COMIC_ID, TEST_PAGE_SIZE);
@@ -440,11 +442,11 @@ class ComicScrapingControllerTest {
 
   @Test
   void batchScrapeSelected() throws ComicSelectionException {
-    final List<Long> localMultiBookIdList = new ArrayList<>();
+    final Set<Long> localMultiBookIdList = new HashSet<>();
     when(session.getAttribute(LIBRARY_SELECTIONS)).thenReturn(TEST_ENCODED_SELECTIONS);
     when(comicSelectionService.decodeSelections(TEST_ENCODED_SELECTIONS))
         .thenReturn(localMultiBookIdList);
-    when(comicSelectionService.encodeSelections(anyList())).thenReturn(TEST_REENCODED_SELECTIONS);
+    when(comicSelectionService.encodeSelections(anySet())).thenReturn(TEST_REENCODED_SELECTIONS);
 
     controller.batchScrapeSelected(session, principal);
 
@@ -459,13 +461,13 @@ class ComicScrapingControllerTest {
     final List<DisplayableComic> localComicList = new ArrayList<>();
     localComicList.add(displayableComic);
     when(displayableComicService.loadComicsById(
-            anyInt(), anyInt(), anyString(), anyString(), anyList()))
+            anyInt(), anyInt(), anyString(), anyString(), anySet()))
         .thenReturn(localComicList);
 
-    final List<Long> localMultiBookIdList = new ArrayList<>();
+    final Set<Long> localMultiBookIdList = new HashSet<>();
     when(comicSelectionService.decodeSelections(TEST_ENCODED_MULTI_BOOKS))
         .thenReturn(localMultiBookIdList);
-    when(comicSelectionService.encodeSelections(anyList())).thenReturn(TEST_REENCODED_MULTI_BOOKS);
+    when(comicSelectionService.encodeSelections(anySet())).thenReturn(TEST_REENCODED_MULTI_BOOKS);
 
     final StartMultiBookScrapingResponse result =
         controller.scrapeMultiBookComic(

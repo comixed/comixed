@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2026, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,76 +17,67 @@
  */
 
 import {
-  initialState,
-  reducer,
+  initialRescanComicsState,
+  rescanComicsReducer,
   RescanComicsState
 } from './rescan-comics.reducer';
-import {
-  rescanComicsFailure,
-  rescanComicsSuccess,
-  rescanSelectedComics,
-  rescanSingleComic
-} from '@app/library/actions/rescan-comics.actions';
+import { beforeEach } from 'vitest';
+import { Action } from '@ngrx/store';
+import { RescanComicsActions } from '@app/library/actions/rescan-comics.actions';
 
 describe('RescanComics Reducer', () => {
-  const COMIC_ID = 1000;
-
   let state: RescanComicsState;
 
   beforeEach(() => {
-    state = { ...initialState };
+    state = { ...initialRescanComicsState };
   });
 
   describe('the initial state', () => {
     beforeEach(() => {
-      state = reducer({ ...state }, {} as any);
+      state = rescanComicsReducer({ ...state }, {} as Action<string>);
     });
 
-    it('clears the working flag', () => {
-      expect(state.working).toBeFalse();
+    it('should not set the busy flag', () => {
+      expect(state.busy).toBeFalsy();
     });
   });
 
-  describe('rescanning a single comic book', () => {
+  describe('rescanning the selected comics', () => {
     beforeEach(() => {
-      state = reducer(
-        { ...state, working: false },
-        rescanSingleComic({ comicId: COMIC_ID })
+      state = rescanComicsReducer(
+        { ...state, busy: false },
+        RescanComicsActions.rescanSelectedComics()
       );
     });
 
-    it('sets the working flag', () => {
-      expect(state.working).toBeTrue();
-    });
-  });
-
-  describe('rescanning selected comic books', () => {
-    beforeEach(() => {
-      state = reducer({ ...state, working: false }, rescanSelectedComics());
+    it('should set the busy flag', () => {
+      expect(state.busy).toBeTruthy();
     });
 
-    it('sets the working flag', () => {
-      expect(state.working).toBeTrue();
-    });
-  });
+    describe('success', () => {
+      beforeEach(() => {
+        state = rescanComicsReducer(
+          { ...state, busy: true },
+          RescanComicsActions.rescanSelectedComicsSuccess()
+        );
+      });
 
-  describe('success', () => {
-    beforeEach(() => {
-      state = reducer({ ...state, working: true }, rescanComicsSuccess());
-    });
-
-    it('clears the working flag', () => {
-      expect(state.working).toBeFalse();
-    });
-  });
-
-  describe('failure', () => {
-    beforeEach(() => {
-      state = reducer({ ...state, working: true }, rescanComicsFailure());
+      it('should clear the busy flag', () => {
+        expect(state.busy).toBeFalsy();
+      });
     });
 
-    it('clears the working flag', () => {
-      expect(state.working).toBeFalse();
+    describe('failure', () => {
+      beforeEach(() => {
+        state = rescanComicsReducer(
+          { ...state, busy: true },
+          RescanComicsActions.rescanSelectedComicsFailure()
+        );
+      });
+
+      it('should clear the busy flag', () => {
+        expect(state.busy).toBeFalsy();
+      });
     });
   });
 });

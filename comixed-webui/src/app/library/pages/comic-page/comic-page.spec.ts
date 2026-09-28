@@ -1,0 +1,254 @@
+/*
+ * ComiXed - A digital comic book library management application.
+ * Copyright (C) 2026, The ComiXed Project
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses>
+ */
+
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
+import { provideTranslateService } from '@ngx-translate/core';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import {
+  COMIC_DETAIL_FEATURE_KEY,
+  initialComicDetailState
+} from '@app/library/reducers/comic-detail.reducer';
+import { provideRouter } from '@angular/router';
+import { QueryParameterService } from '@app/layout/services/query-parameter.service';
+import { beforeEach, Mock } from 'vitest';
+import { QUERY_PARAM_COMIC_DETAIL_TAB } from '@app/library/library-constants';
+import { COMIC_1 } from '@app/library/library-fixtures';
+import { ComicDetailAction } from '@app/library/actions/comic-detail.actions';
+import { TitleService } from '@app/layout/services/title-service';
+import { ComicPage } from '@app/library/pages/comic-page/comic-page';
+import {
+  initialSingleComicScrapingState,
+  SINGLE_COMIC_SCRAPING_FEATURE_KEY
+} from '@app/metadata/reducers/single-comic-scraping.reducer';
+import {
+  initialMetadataSourceListState,
+  METADATA_SOURCE_LIST_FEATURE_KEY
+} from '@app/metadata/reducers/metadata-source-list.reducer';
+import { Confirmation, ConfirmationService } from '@openng/optimus-ui/api';
+import {
+  initialScrapeFilenameState,
+  SCRAPE_FILENAME_FEATURE_KEY
+} from '@app/metadata/reducers/scrape-filename.reducer';
+import {
+  initialUserState,
+  USER_FEATURE_KEY
+} from '@app/account/reducers/user.reducer';
+import { ComicRemovalActions } from '@app/library/actions/comic-removal.actions';
+import { ScrapingIssueSelectedEvent } from '@app/library/models/ux/scraping-issue-selected-event';
+import { By } from '@angular/platform-browser';
+import {
+  METADATA_SOURCE_2,
+  SCRAPING_ISSUE_1
+} from '@app/metadata/metadata-fixtures';
+import { USER_ADMIN } from '@app/account/account-fixtures';
+import { SingleComicScrapingActions } from '@app/metadata/actions/single-comic-scraping.actions';
+
+describe('ComicPage', () => {
+  const TEST_COMIC = COMIC_1;
+  const TEST_METADATA_SOURCE = METADATA_SOURCE_2;
+  const TEST_SCRAPING_ISSUE = SCRAPING_ISSUE_1;
+  const TEST_SKIP_CACHE = Math.random() > 0.5;
+  const initialState = {
+    [USER_FEATURE_KEY]: initialUserState,
+    [COMIC_DETAIL_FEATURE_KEY]: {
+      ...initialComicDetailState,
+      comic: TEST_COMIC
+    },
+    [METADATA_SOURCE_LIST_FEATURE_KEY]: initialMetadataSourceListState,
+    [SINGLE_COMIC_SCRAPING_FEATURE_KEY]: initialSingleComicScrapingState,
+    [SCRAPE_FILENAME_FEATURE_KEY]: initialScrapeFilenameState
+  };
+
+  let component: ComicPage;
+  let fixture: ComponentFixture<ComicPage>;
+  let store: MockStore;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [ComicPage],
+      providers: [
+        provideLogger({ minLevel: LoggerLevel.OFF }),
+        provideTranslateService(),
+        provideRouter([{ path: '*', redirectTo: '' }]),
+        provideMockStore({ initialState }),
+        QueryParameterService,
+        TitleService,
+        ConfirmationService
+      ]
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(ComicPage);
+    component = fixture.componentInstance;
+    store = TestBed.inject(MockStore);
+    await fixture.whenStable();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+
+  describe('when the language changes', () => {
+    let setTitleSpy: Mock;
+
+    beforeEach(() => {
+      setTitleSpy = vi.spyOn(component.titleService, 'setTitle');
+      component.translateService.use('fr');
+    });
+
+    it('should update the tab title', () => {
+      expect(setTitleSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('changing tabs', () => {
+    const TEST_TAB_NAME = 'test-tab';
+
+    let updateQueryParamSpy: Mock;
+
+    beforeEach(() => {
+      updateQueryParamSpy = vi.spyOn(
+        component.queryParameterService,
+        'updateQueryParam'
+      );
+      component.onTabChanged(TEST_TAB_NAME);
+    });
+
+    it('updates the tab parameter', () => {
+      expect(updateQueryParamSpy).toHaveBeenCalledWith([
+        { name: QUERY_PARAM_COMIC_DETAIL_TAB, value: TEST_TAB_NAME }
+      ]);
+    });
+  });
+
+  describe('updating the comic', () => {
+    const TEST_COMIC = COMIC_1;
+    let dispatchSpy: Mock;
+
+    beforeEach(() => {
+      dispatchSpy = vi.spyOn(component.store, 'dispatch');
+      component.onUpdateComic(TEST_COMIC);
+    });
+
+    it('dispatches an action', () => {
+      expect(dispatchSpy).toHaveBeenCalledWith(
+        ComicDetailAction.save({ comic: TEST_COMIC })
+      );
+    });
+  });
+
+  describe('marking a comic for removal', () => {
+    let confirmSpy: Mock;
+    let dispatchSpy: Mock;
+
+    beforeEach(() => {
+      confirmSpy = vi
+        .spyOn(component.confirmationService, 'confirm')
+        .mockImplementation((confirm: Confirmation) => {
+          confirm.accept?.();
+          return component.confirmationService;
+        });
+      dispatchSpy = vi.spyOn(store, 'dispatch');
+      component.onMarkForRemoval(true);
+    });
+
+    it('should confirm with the user', () => {
+      expect(confirmSpy).toHaveBeenCalled();
+    });
+
+    it('should dispatch an action to remove the comic', () => {
+      expect(dispatchSpy).toHaveBeenCalledWith(
+        ComicRemovalActions.markOneForRemoval({ comic: TEST_COMIC })
+      );
+    });
+  });
+
+  describe('unmarking a comic for removal', () => {
+    let confirmSpy: Mock;
+    let dispatchSpy: Mock;
+
+    beforeEach(() => {
+      confirmSpy = vi
+        .spyOn(component.confirmationService, 'confirm')
+        .mockImplementation((confirm: Confirmation) => {
+          confirm.accept?.();
+          return component.confirmationService;
+        });
+      dispatchSpy = vi.spyOn(store, 'dispatch');
+      component.onMarkForRemoval(false);
+    });
+
+    it('should confirm with the user', () => {
+      expect(confirmSpy).toHaveBeenCalled();
+    });
+
+    it('should dispatch an action to remove the comic', () => {
+      expect(dispatchSpy).toHaveBeenCalledWith(
+        ComicRemovalActions.unmarkOneForRemoval({ comic: TEST_COMIC })
+      );
+    });
+  });
+
+  describe('when a scraping issue is selected', () => {
+    let confirmSpy: Mock;
+    let event: ScrapingIssueSelectedEvent;
+    let dispatchSpy: Mock;
+
+    beforeEach(() => {
+      store.setState({
+        ...initialState,
+        [USER_FEATURE_KEY]: { ...initialUserState, user: USER_ADMIN }
+      });
+      component.currentTab.set('metadata');
+      fixture.detectChanges();
+      confirmSpy = vi
+        .spyOn(component.confirmationService, 'confirm')
+        .mockImplementation((confirm: Confirmation) => {
+          confirm.accept?.();
+          return component.confirmationService;
+        });
+      dispatchSpy = vi.spyOn(store, 'dispatch');
+      const child = fixture.debugElement.query(
+        By.css('#comic-metadata-detail')
+      );
+      expect(child).not.toBeNull();
+      event = {
+        metadataSource: TEST_METADATA_SOURCE,
+        issue: TEST_SCRAPING_ISSUE,
+        skipCache: TEST_SKIP_CACHE
+      };
+      child.triggerEventHandler('issueSelected', event);
+      fixture.detectChanges();
+    });
+
+    it('confirms with the user', () => {
+      expect(confirmSpy).toHaveBeenCalled();
+    });
+
+    it('should dispatch an action to scrape the comic', () => {
+      expect(dispatchSpy).toHaveBeenCalledWith(
+        SingleComicScrapingActions.scrapeComic({
+          metadataSource: TEST_METADATA_SOURCE,
+          issueId: TEST_SCRAPING_ISSUE.id,
+          comic: TEST_COMIC,
+          skipCache: TEST_SKIP_CACHE
+        })
+      );
+    });
+  });
+});
