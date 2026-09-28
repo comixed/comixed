@@ -1,0 +1,62 @@
+<div class="statistics-container cx-no-text-wrap">
+  <p-button
+    id="mark-selected-read"
+    severity="primary"
+    icon="pi pi-bookmark-fill"
+    [pTooltip]="'selected-comic-toolbar.tooltip.read-state' | translate"
+    [disabled]="selectedComicCount() === 0"
+    (click)="onMarkSelectedRead()"
+  />
+
+  @if (isAdmin().checked) {
+    <p-button
+      id="scrape-selected"
+      severity="help"
+      icon="pi pi-cloud"
+      [pTooltip]="'selected-comic-toolbar.tooltip.scrape' | translate"
+      [disabled]="selectedComicCount() === 0"
+    />
+    <p-button
+      id="recreate-selected"
+      severity="danger"
+      icon="pi pi-file-plus"
+      [pTooltip]="'selected-comic-toolbar.tooltip.recreate' | translate"
+      [disabled]="selectedComicCount() === 0"
+    />
+    <p-button
+      id="rescan-selected"
+      severity="info"
+      icon="pi pi-barcode"
+      [pTooltip]="'selected-comic-toolbar.tooltip.rescan' | translate"
+      [disabled]="selectedComicCount() === 0"
+    />
+    <p-button
+      id="batch-scrape-selected"
+      severity="info"
+      icon="pi pi-spinner-dotted"
+      [pTooltip]="'selected-comic-toolbar.tooltip.batch-scrape' | translate"
+      [disabled]="selectedComicCount() === 0"
+    />
+    <p-button
+      id="update-selected-metadata"
+      severity="warn"
+      icon="pi pi-sync"
+      [pTooltip]="'selected-comic-toolbar.tooltip.update-metadata' | translate"
+      [disabled]="selectedComicCount() === 0"
+    />
+    <p-button
+      id="organize-selected"
+      severity="warn"
+      icon="pi pi-sort"
+      [pTooltip]="'selected-comic-toolbar.tooltip.organize' | translate"
+      [disabled]="selectedComicCount() === 0"
+    />
+    <p-button
+      id="mark-selected-for-deletion"
+      severity="danger"
+      icon="pi pi-trash"
+      [pTooltip]="'selected-comic-toolbar.tooltip.deleted-state' | translate"
+      [disabled]="selectedComicCount() === 0"
+    />
+  }
+</div>

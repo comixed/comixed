@@ -1,0 +1,6 @@
+<p-card>
+  <ng-template #title>{{ cardValue() }}</ng-template>
+  @if (cardType().length > 0) {
+    <ng-template #subtitle>{{ cardType() }}</ng-template>
+  }
+</p-card>
