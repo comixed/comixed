@@ -1,0 +1,10 @@
+<p-carousel
+  [value]="comicPages()"
+  [circular]="true"
+  [numVisible]="3"
+  [numScroll]="1"
+>
+  <ng-template let-page #item>
+    <app-page-detail-card [page]="page" />
+  </ng-template>
+</p-carousel>

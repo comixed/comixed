@@ -1,0 +1,11 @@
+<p-card>
+  <ng-template #title>{{ page.filename }}</ng-template>
+
+  <div class="comic-page-container">
+    <img
+      [src]="page | comicPageUrl"
+      [alt]="page.filename"
+      class="comic-page-image"
+    />
+  </div>
+</p-card>
