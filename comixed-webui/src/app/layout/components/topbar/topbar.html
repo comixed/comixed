@@ -1,0 +1,30 @@
+<div id="topbar-row">
+  <span class="cx-logo">ComiXed</span>
+
+  <div class="cx-spacer"></div>
+
+  @if (currentUserStore.isAuthenticated()) {
+    <button
+      id="dashboard-button"
+      mat-icon-button
+      aria-label="Go to dashboard"
+      routerLink="/dashboard"
+    >
+      <mat-icon>dashboard</mat-icon>
+    </button>
+  }
+
+  <button
+    id="dark-mode-button"
+    mat-icon-button
+    aria-label="Toggle Dark Mode"
+    color="accent"
+    (click)="appStore.toggleDarkMode()"
+  >
+    @if (appStore.darkMode()) {
+      <mat-icon>light_mode</mat-icon>
+    } @else {
+      <mat-icon>dark_mode</mat-icon>
+    }
+  </button>
+</div>

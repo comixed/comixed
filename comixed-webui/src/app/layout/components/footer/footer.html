@@ -1,0 +1,21 @@
+<mat-toolbar>
+  @if (currentUserStore.isAuthenticated()) {
+    [{{
+      "footer.segment.total-comics"
+        | translate: { count: libraryStore.totalComics() }
+    }}] [{{
+      "footer.segment.unscraped-comics"
+        | translate: { count: libraryStore.unscrapedComics() }
+    }}] [{{
+      "footer.segment.duplicate-comics"
+        | translate: { count: libraryStore.duplicateComics() }
+    }}] [{{
+      "footer.segment.deleted-comics"
+        | translate: { count: libraryStore.deletedComics() }
+    }}]
+  }
+
+  <div class="cx-spacer"></div>
+
+  Copyright &copy; 2017-2026, The ComiXed Project.
+</mat-toolbar>

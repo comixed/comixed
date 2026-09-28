@@ -1,0 +1,30 @@
+/*
+ * ComiXed - A digital comic book library management application.
+ * Copyright (C) 2026, The ComiXed Project
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses>
+ */
+
+import { API_ROOT_URL } from '@app/app-constants';
+
+export const LOGIN_PAGE_URL = '/login';
+
+export const LOAD_CURRENT_USER_URL = `${API_ROOT_URL}/user`;
+export const LOGIN_URL = `${API_ROOT_URL}/token/generate`;
+
+export const AUTHENTICATION_TOKEN_KEY = 'comixed.auth-token';
+
+export const HTTP_AUTHORIZATION_HEADER = 'Authorization';
+export const HTTP_REQUESTED_WITH_HEADER = 'X-Requested-With';
+export const HTTP_XML_REQUEST = 'XMLHttpRequest';

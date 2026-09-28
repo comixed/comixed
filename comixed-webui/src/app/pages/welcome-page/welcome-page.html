@@ -1,0 +1,27 @@
+@if (currentUserStore.isAuthenticated()) {
+  <div id="welcome-box" class="cx-centered cx-content-container">
+    <strong>
+      <p>
+        {{
+          "welcome.greet-user" | translate: { email: currentUserStore.email() }
+        }}
+      </p>
+    </strong>
+
+    <p>
+      {{
+        "welcome.first-logged-in"
+          | translate
+            : { date: currentUserStore.firstLoginDate() | date: "medium" }
+      }}
+    </p>
+
+    <p>
+      {{
+        "welcome.last-logged-in"
+          | translate
+            : { date: currentUserStore.lastLoginDate() | date: "medium" }
+      }}
+    </p>
+  </div>
+}

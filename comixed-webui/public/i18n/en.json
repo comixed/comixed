@@ -1,0 +1,62 @@
+{
+  "dashboard": {
+    "statistics": {
+      "archive-type": {
+        "title": "Archive Types"
+      },
+      "character": {
+        "title": "{count, plural, =1 {1 Character} other{# Characters}}"
+      },
+      "comic-state": {
+        "title": "Comic States"
+      },
+      "location": {
+        "title": "{count, plural, =1 {1 Location} other{# Locations}}"
+      },
+      "publisher": {
+        "title": "{count, plural, =1 {1 Publisher} other{# Publishers}}"
+      },
+      "publisher-year": {
+        "title": "Publishers By Year"
+      },
+      "series": {
+        "title": "{count, plural, =1 {1 Series} other{# Series}}"
+      },
+      "story": {
+        "title": "{count, plural, =1 {1 Story} other{# Stories}}"
+      },
+      "team": {
+        "title": "{count, plural, =1 {1 Team} other{# Teams}}"
+      }
+    }
+  },
+  "footer": {
+    "segment": {
+      "deleted-comics": "Deleted: {count}",
+      "duplicate-comics": "Duplicates: {count}",
+      "total-comics": "Total: {count}",
+      "unscraped-comics": "Unscraped: {count}"
+    }
+  },
+  "user": {
+    "login-page": {
+      "button": {
+        "submit": "Login"
+      },
+      "label": {
+        "email": "Email",
+        "password": "Password"
+      },
+      "placeholder": {
+        "email": "your@address.tld",
+        "password": "[your password]"
+      },
+      "title": "Please Login"
+    }
+  },
+  "welcome": {
+    "first-logged-in": "User since {date}.",
+    "greet-user": "Welcome back {email}!",
+    "last-logged-in": "Last logged in on {date}."
+  }
+}

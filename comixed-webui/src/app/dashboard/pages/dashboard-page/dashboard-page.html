@@ -1,0 +1,92 @@
+<div id="cx-dashboard-container" class="cx-flex-content-container-row">
+  @for (stat of stats(); track stat) {
+    @if (stat === "publisher-list") {
+      <div class="cx-flex-content-grow-1">
+        <app-collection-statistics
+          [title]="
+            'dashboard.statistics.publisher.title'
+              | translate: { count: libraryStore.publishers().length }
+          "
+          [statistics]="libraryStore.publishers()"
+        ></app-collection-statistics>
+      </div>
+    }
+    @if (stat === "series-list") {
+      <div class="cx-flex-content-grow-1">
+        <app-collection-statistics
+          [title]="
+            'dashboard.statistics.series.title'
+              | translate: { count: libraryStore.series().length }
+          "
+          [statistics]="libraryStore.series()"
+        ></app-collection-statistics>
+      </div>
+    }
+    @if (stat === "character-list") {
+      <div class="cx-flex-content-grow-1">
+        <app-collection-statistics
+          [title]="
+            'dashboard.statistics.character.title'
+              | translate: { count: libraryStore.characters().length }
+          "
+          [statistics]="libraryStore.characters()"
+        ></app-collection-statistics>
+      </div>
+    }
+    @if (stat === "team-list") {
+      <app-collection-statistics
+        [title]="
+          'dashboard.statistics.team.title'
+            | translate: { count: libraryStore.teams().length }
+        "
+        [statistics]="libraryStore.teams()"
+      ></app-collection-statistics>
+    }
+    @if (stat === "location-list") {
+      <div class="cx-flex-content-grow-1">
+        <app-collection-statistics
+          [title]="
+            'dashboard.statistics.location.title'
+              | translate: { count: libraryStore.locations().length }
+          "
+          [statistics]="libraryStore.locations()"
+        ></app-collection-statistics>
+      </div>
+    }
+    @if (stat === "story-list") {
+      <div class="cx-flex-content-grow-1">
+        <app-collection-statistics
+          [title]="
+            'dashboard.statistics.story.title'
+              | translate: { count: libraryStore.stories().length }
+          "
+          [statistics]="libraryStore.stories()"
+        ></app-collection-statistics>
+      </div>
+    }
+    @if (stat === "state-list") {
+      <div class="cx-flex-content-grow-1">
+        <app-comic-state-statistics
+          [title]="'dashboard.statistics.comic-state.title' | translate"
+          [statistics]="libraryStore.states()"
+        ></app-comic-state-statistics>
+      </div>
+    }
+    @if (stat === "archive-list") {
+      <div class="cx-flex-content-grow-1">
+        <app-archive-type-statistics
+          [title]="'dashboard.statistics.archive-type.title' | translate"
+          [statistics]="libraryStore.archiveTypes()"
+        ></app-archive-type-statistics>
+      </div>
+    }
+    @if (stat === "by-publisher-and-year-list") {
+      <div class="cx-flex-content-grow-2">
+        <app-publisher-year-statistics
+          [title]="'dashboard.statistics.publisher-year.title' | translate"
+          [statistics]="libraryStore.byPublisherAndYear()"
+        ></app-publisher-year-statistics>
+      </div>
+    }
+  }
+</div>

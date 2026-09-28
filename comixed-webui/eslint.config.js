@@ -1,15 +1,18 @@
+// @ts-check
 const eslint = require('@eslint/js');
+const { defineConfig } = require('eslint/config');
 const tseslint = require('typescript-eslint');
 const angular = require('angular-eslint');
+const ngrx = require('@ngrx/eslint-plugin');
 
-module.exports = tseslint.config(
+module.exports = defineConfig([
   {
-    files: ['src/app/**/*.ts'],
+    files: ['**/*.ts'],
     extends: [
       eslint.configs.recommended,
-      ...tseslint.configs.recommended,
-      ...tseslint.configs.stylistic,
-      ...angular.configs.tsRecommended
+      tseslint.configs.recommended,
+      tseslint.configs.stylistic,
+      angular.configs.tsRecommended
     ],
     processor: angular.processInlineTemplates,
     rules: {
@@ -28,17 +31,15 @@ module.exports = tseslint.config(
           prefix: 'app',
           style: 'kebab-case'
         }
-      ],
-      '@typescript-eslint/no-explicit-any': 'off',
-      '@typescript-eslint/no-extra-non-null-assertion': 'off'
+      ]
     }
   },
   {
-    files: ['src/app/**/*.html'],
+    files: ['**/*.html'],
     extends: [
-      ...angular.configs.templateRecommended,
-      ...angular.configs.templateAccessibility
+      angular.configs.templateRecommended,
+      angular.configs.templateAccessibility
     ],
     rules: {}
   }
-);
+]);

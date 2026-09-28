@@ -1,0 +1,8 @@
+@use '@angular/material' as mat;
+
+#welcome-box {
+  padding: 50px;
+  position: absolute;
+  width: min(500px, 50vw);
+  height: min(500px, 50vh);
+}

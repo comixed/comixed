@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2022, The ComiXed Project
+ * Copyright (C) 2026, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,21 +16,21 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { RemoteLibrarySegmentState } from '@app/library/models/net/remote-library-segment-state';
-import { ByPublisherAndYearSegment } from '@app/library/models/net/by-publisher-and-year-segment';
+import { RemoteLibrarySegment } from '@app/library/models/net/remote-library-segment';
+import { PublisherAndYearSegment } from '@app/library/models/net/publisher-and-year-segment';
 
 export interface RemoteLibraryState {
   totalComics: number;
   unscrapedComics: number;
   deletedComics: number;
   duplicateComics: number;
-  publishers: RemoteLibrarySegmentState[];
-  series: RemoteLibrarySegmentState[];
-  characters: RemoteLibrarySegmentState[];
-  teams: RemoteLibrarySegmentState[];
-  locations: RemoteLibrarySegmentState[];
-  stories: RemoteLibrarySegmentState[];
-  states: RemoteLibrarySegmentState[];
-  archiveTypes: RemoteLibrarySegmentState[];
-  byPublisherAndYear: ByPublisherAndYearSegment[];
+  publishers: RemoteLibrarySegment[];
+  series: RemoteLibrarySegment[];
+  characters: RemoteLibrarySegment[];
+  teams: RemoteLibrarySegment[];
+  locations: RemoteLibrarySegment[];
+  stories: RemoteLibrarySegment[];
+  states: RemoteLibrarySegment[];
+  archiveTypes: RemoteLibrarySegment[];
+  byPublisherAndYear: PublisherAndYearSegment[];
 }
