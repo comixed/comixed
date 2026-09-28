@@ -371,7 +371,7 @@ class ComicDataServiceTest {
   void deleteComicsById_invalidId() throws ComicException {
     when(comicService.getByComicId(anyLong())).thenThrow(ComicException.class);
 
-    final List<Long> comicIdList = new ArrayList<>(Arrays.asList(TEST_COMIC_ID));
+    final Set<Long> comicIdList = new HashSet<>(Arrays.asList(TEST_COMIC_ID));
 
     assertThrows(ComicException.class, () -> service.deleteComicsById(comicIdList));
 
@@ -383,7 +383,7 @@ class ComicDataServiceTest {
   void deleteComicsById() throws ComicException {
     when(comicService.getByComicId(anyLong())).thenReturn(comic);
 
-    final List<Long> comicIdList = new ArrayList<>(Arrays.asList(TEST_COMIC_ID));
+    final Set<Long> comicIdList = new HashSet<>(Arrays.asList(TEST_COMIC_ID));
 
     service.deleteComicsById(comicIdList);
 
@@ -395,7 +395,7 @@ class ComicDataServiceTest {
   void undeleteComicsById_invalidId() throws ComicException {
     when(comicService.getByComicId(anyLong())).thenThrow(ComicException.class);
 
-    final List<Long> comicIdList = new ArrayList<>(Arrays.asList(TEST_COMIC_ID));
+    final Set<Long> comicIdList = new HashSet<>(Arrays.asList(TEST_COMIC_ID));
 
     assertThrows(ComicException.class, () -> service.undeleteComicsById(comicIdList));
 
@@ -407,7 +407,7 @@ class ComicDataServiceTest {
   void undeleteComicsById() throws ComicException {
     when(comicService.getByComicId(anyLong())).thenReturn(comic);
 
-    final List<Long> comicIdList = new ArrayList<>(Arrays.asList(TEST_COMIC_ID));
+    final Set<Long> comicIdList = new HashSet<>(Arrays.asList(TEST_COMIC_ID));
 
     service.undeleteComicsById(comicIdList);
 

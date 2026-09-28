@@ -218,9 +218,10 @@ public class ComicDataService {
    * @throws ComicException if any of the ids are invalid
    */
   @Transactional(rollbackFor = Exception.class)
-  public void deleteComicsById(final List<Long> comicIdList) throws ComicException {
-    for (int index = 0; index < comicIdList.size(); index++) {
-      this.doFireEvent(comicIdList.get(index), ComicEvent.markComicForRemoval);
+  public void deleteComicsById(final Set<Long> comicIdList) throws ComicException {
+    final List<Long> idList = comicIdList.stream().toList();
+    for (int index = 0; index < idList.size(); index++) {
+      this.doFireEvent(idList.get(index), ComicEvent.markComicForRemoval);
     }
   }
 
@@ -230,9 +231,10 @@ public class ComicDataService {
    * @param comicIdList the comic id list
    * @throws ComicException if any of the ids are invalid
    */
-  public void undeleteComicsById(final List<Long> comicIdList) throws ComicException {
-    for (int index = 0; index < comicIdList.size(); index++) {
-      this.doFireEvent(comicIdList.get(index), ComicEvent.unmarkComicForRemoval);
+  public void undeleteComicsById(final Set<Long> comicIdList) throws ComicException {
+    final List<Long> idList = comicIdList.stream().toList();
+    for (int index = 0; index < idList.size(); index++) {
+      this.doFireEvent(idList.get(index), ComicEvent.unmarkComicForRemoval);
     }
   }
 

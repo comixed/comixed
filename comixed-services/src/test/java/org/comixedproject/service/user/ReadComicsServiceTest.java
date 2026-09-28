@@ -23,8 +23,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 import org.comixedproject.model.user.ComiXedUser;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,7 +46,7 @@ class ReadComicsServiceTest {
   @Mock private ComiXedUser user;
   @Mock private Set<Long> readComicList;
 
-  private List<Long> comicIdList = new ArrayList<>();
+  private Set<Long> comicIdList = new HashSet<>();
 
   @BeforeEach
   void setUp() throws ComiXedUserException {

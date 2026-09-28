@@ -1,0 +1,89 @@
+<p-card class="cx-width-100p cx-height-100p">
+  <ng-template #header>
+    <p-breadcrumb [model]="trail()" [home]="home" />
+  </ng-template>
+
+  <form [formGroup]="sourceForm">
+    <div class="cx-width-75p">
+      <div class="cx-form-field">
+        <label for="preferred-source-input">
+          {{ "metadata-source-page.label.source-name" | translate }}
+        </label>
+        <input
+          id="source-name-input"
+          pInputText
+          formControlName="sourceName"
+          [placeholder]="
+            'metadata-source-page.placeholder.source-name' | translate
+          "
+          readonly
+        />
+      </div>
+
+      <p-check-box
+        id="preferred-source-input"
+        [binary]="true"
+        formControlName="preferred"
+      />
+      <label for="preferred-source-input">
+        {{ "metadata-source-page.label.preferred-source" | translate }}
+      </label>
+    </div>
+
+    @if (sourceProperties().length > 0) {
+      <h3 class="cx-width-100p cx-justify-center">
+        {{ "metadata-source-page.label.properties" | translate }}
+      </h3>
+
+      <table class="cx-width-100p">
+        <thead>
+          <th>{{ "metadata-source-page.label.property-name" | translate }}</th>
+          <th>{{ "metadata-source-page.label.property-value" | translate }}</th>
+        </thead>
+        <tbody>
+          @for (property of properties.controls; track i; let i = $index) {
+            <tr [formGroup]="$any(property)">
+              <td>
+                <input
+                  class="cx-width-100p"
+                  pInputText
+                  formControlName="propertyName"
+                  readonly
+                />
+              </td>
+
+              <td>
+                <input
+                  class="cx-width-100p"
+                  pInputText
+                  formControlName="propertyValue"
+                />
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </form>
+
+  <ng-template #footer>
+    <div class="cx-width-100p cx-padding-15 cx-justify-end">
+      <p-button
+        id="reset-metadata-source-button"
+        icon="pi pi-undo"
+        severity="warn"
+        [label]="'app.button.reset' | translate"
+        [disabled]="!(sourceForm.dirty || sourceForm.touched)"
+        (click)="onResetForm()"
+      ></p-button>
+      <p-button
+        id="save-metadata-source-button"
+        icon="pi pi-send"
+        severity="primary"
+        [label]="'app.button.submit' | translate"
+        [disabled]="!sourceForm.valid"
+        (click)="onSubmitForm()"
+      ></p-button>
+    </div>
+  </ng-template>
+</p-card>

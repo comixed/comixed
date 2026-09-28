@@ -24,13 +24,17 @@ import com.fasterxml.jackson.annotation.JsonView;
 import io.micrometer.core.annotation.Timed;
 import jakarta.servlet.http.HttpSession;
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.ComicDataSet;
 import org.comixedproject.model.net.DownloadDocument;
-import org.comixedproject.model.net.comicbooks.*;
-import org.comixedproject.service.comicbooks.*;
+import org.comixedproject.model.net.comicbooks.SavePageOrderRequest;
+import org.comixedproject.model.net.comicbooks.UpdateComicRequest;
+import org.comixedproject.service.comicbooks.ComicDataService;
+import org.comixedproject.service.comicbooks.ComicException;
+import org.comixedproject.service.comicbooks.ComicSelectionException;
+import org.comixedproject.service.comicbooks.ComicSelectionService;
 import org.comixedproject.service.comicpages.ComicPageException;
 import org.comixedproject.service.comicpages.PageCacheService;
 import org.comixedproject.views.View.ComicView;
@@ -194,10 +198,10 @@ public class ComicController {
       throws ComicException {
     try {
       final String email = principal.getName();
-      final List<Long> ids =
+      final Set<Long> ids =
           this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
       log.info("Deleting multiple comics: email={} ids={}", email, ids.toArray());
-      this.comicDataService.deleteComicsById(new ArrayList<>(ids));
+      this.comicDataService.deleteComicsById(new HashSet<>(ids));
       this.comicSelectionService.clearSelectedComics(email, ids);
       session.setAttribute(LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(ids));
     } catch (ComicSelectionException error) {
@@ -220,11 +224,11 @@ public class ComicController {
       throws ComicException {
     try {
       final String email = principal.getName();
-      final List<Long> ids =
+      final Set<Long> ids =
           this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
 
       log.info("Undeleting multiple comic: email={} ids={}", email, ids.toArray());
-      this.comicDataService.undeleteComicsById(new ArrayList<>(ids));
+      this.comicDataService.undeleteComicsById(new HashSet<>(ids));
       this.comicSelectionService.clearSelectedComics(email, ids);
       session.setAttribute(LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(ids));
     } catch (ComicSelectionException error) {
