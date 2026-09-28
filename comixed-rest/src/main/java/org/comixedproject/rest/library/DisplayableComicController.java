@@ -190,7 +190,7 @@ public class DisplayableComicController implements InitializingBean, ComicStateL
       final HttpSession session, @RequestBody() final LoadSelectedComicsRequest request)
       throws ComicSelectionException {
     log.info("Loading selected comics: {}", request);
-    final List<Long> selectedIds =
+    final Set<Long> selectedIds =
         this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
     final List<DisplayableComic> comics =
         this.displayableComicService.loadComicsById(

@@ -24,8 +24,10 @@ import com.fasterxml.jackson.annotation.JsonView;
 import io.micrometer.core.annotation.Timed;
 import jakarta.servlet.http.HttpSession;
 import java.security.Principal;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.batch.metadata.MetadataProcessConfiguration;
@@ -185,7 +187,7 @@ public class ComicScrapingController {
     final String email = principal.getName();
     log.info("Starting batch metadata update process: email={}", email);
     @NonNull
-    final List<Long> selectedComicIdList =
+    final Set<Long> selectedComicIdList =
         this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
     @NonNull final Boolean skipCache = request.getSkipCache();
     log.trace(
@@ -270,9 +272,9 @@ public class ComicScrapingController {
       throws MetadataException {
     try {
       final String email = principal.getName();
-      final List<Long> selectedIds =
+      final Set<Long> selectedIds =
           this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
-      final List<Long> comicIdList =
+      final Set<Long> comicIdList =
           this.comicSelectionService.decodeSelections(
               session.getAttribute(MULTI_BOOK_SCRAPING_SELECTIONS));
 
@@ -323,7 +325,7 @@ public class ComicScrapingController {
         pageSize,
         pageNumber);
 
-    final List<Long> comicIds =
+    final Set<Long> comicIds =
         this.comicSelectionService.decodeSelections(
             session.getAttribute(MULTI_BOOK_SCRAPING_SELECTIONS));
 
@@ -416,9 +418,9 @@ public class ComicScrapingController {
       throws ComicSelectionException {
     final String email = principal.getName();
     log.info("Preparing to batch scrape selected comic books: email={}", email);
-    final List<Long> ids =
+    final Set<Long> ids =
         this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
-    this.metadataService.batchScrapeComics(new ArrayList<>(ids));
+    this.metadataService.batchScrapeComics(new HashSet<>(ids));
     this.comicSelectionService.clearSelectedComics(email, ids);
     session.setAttribute(LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(ids));
   }
@@ -488,12 +490,12 @@ public class ComicScrapingController {
       final HttpSession session, final long comicId, final int pageSize, final int pageNumber)
       throws ComicSelectionException {
     log.debug("Removing scraped comic book id from multi-book scraping selections: id={}", comicId);
-    final List<Long> comicIds =
+    final Set<Long> comicIds =
         this.comicSelectionService
             .decodeSelections(session.getAttribute(MULTI_BOOK_SCRAPING_SELECTIONS))
             .stream()
             .filter(id -> id != comicId)
-            .toList();
+            .collect(Collectors.toSet());
     log.debug("Updating multi-book scraping selections");
     session.setAttribute(
         MULTI_BOOK_SCRAPING_SELECTIONS, this.comicSelectionService.encodeSelections(comicIds));

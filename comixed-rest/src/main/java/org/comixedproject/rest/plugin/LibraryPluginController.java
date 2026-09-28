@@ -26,6 +26,7 @@ import jakarta.servlet.http.HttpSession;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.net.plugin.CreatePluginRequest;
@@ -169,7 +170,7 @@ public class LibraryPluginController {
       throws LibraryPluginException {
     try {
       final String email = principal.getName();
-      final List<Long> selectedComicIdList =
+      final Set<Long> selectedComicIdList =
           this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
       log.info("Running plugin on selected comic books: email={} plugin id={}", email, pluginId);
       this.libraryPluginService.runLibraryPlugin(pluginId, selectedComicIdList);

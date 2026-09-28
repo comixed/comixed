@@ -21,7 +21,7 @@ package org.comixedproject.rest.comicbooks;
 import io.micrometer.core.annotation.Timed;
 import jakarta.servlet.http.HttpSession;
 import java.security.Principal;
-import java.util.List;
+import java.util.Set;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.ComicTagType;
 import org.comixedproject.model.net.comicbooks.*;
@@ -65,7 +65,7 @@ public class ComicSelectionController {
   @GetMapping(value = "/api/comics/selections", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('READER')")
   @Timed(value = "comixed.comic-book.selections.load")
-  public List<Long> getAllSelections(final HttpSession session) throws ComicSelectionException {
+  public Set<Long> getAllSelections(final HttpSession session) throws ComicSelectionException {
     log.info("Loading comic book selections");
     return this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
   }
@@ -90,7 +90,7 @@ public class ComicSelectionController {
       @PathVariable("comicId") final Long comicId)
       throws ComicSelectionException {
     final String email = principal.getName();
-    final List<Long> selections =
+    final Set<Long> selections =
         this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
     log.info("Adding comic selection: email={} comic book id={}", email, comicId);
     this.comicSelectionService.addComicSelectionForUser(email, selections, comicId);
@@ -117,7 +117,7 @@ public class ComicSelectionController {
       throws ComicSelectionException {
     final String email = principal.getName();
     log.info("Removing comic selection: email={} comic book id={}", email, comicId);
-    final List<Long> selections =
+    final Set<Long> selections =
         this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
     this.comicSelectionService.removeComicSelectionFromUser(email, selections, comicId);
     session.setAttribute(
@@ -145,7 +145,7 @@ public class ComicSelectionController {
       throws ComicSelectionException {
     final String email = principal.getName();
     log.info("Updating multiple comic books selection: email={} {}", email, request);
-    final List<Long> selections =
+    final Set<Long> selections =
         this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
     this.comicSelectionService.selectByFilter(
         email,
@@ -189,7 +189,7 @@ public class ComicSelectionController {
         email,
         tagType,
         decodedTagValue);
-    final List<Long> selections =
+    final Set<Long> selections =
         this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
     this.comicSelectionService.addByTagTypeAndValue(selections, tagType, tagValue);
     this.comicSelectionService.publishSelections(email, selections);
@@ -223,7 +223,7 @@ public class ComicSelectionController {
         email,
         tagType,
         decodedTagValue);
-    final List<Long> selections =
+    final Set<Long> selections =
         this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
     this.comicSelectionService.removeByTagTypeAndValue(selections, tagType, tagValue);
     this.comicSelectionService.publishSelections(email, selections);
@@ -248,7 +248,7 @@ public class ComicSelectionController {
       @RequestBody() final AddComicSelectionsByIdRequest request)
       throws ComicSelectionException {
     final String email = principal.getName();
-    final List<Long> selections =
+    final Set<Long> selections =
         this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
 
     if (request.isSelected()) {
@@ -288,7 +288,7 @@ public class ComicSelectionController {
         email,
         publisher,
         selected);
-    final List<Long> selections =
+    final Set<Long> selections =
         this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
 
     if (selected) {
@@ -332,7 +332,7 @@ public class ComicSelectionController {
         series,
         volume,
         selected);
-    final List<Long> selections =
+    final Set<Long> selections =
         this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
 
     if (selected) {
@@ -370,10 +370,10 @@ public class ComicSelectionController {
     final boolean selected = request.isSelected();
     log.info(
         "Setting selections for all duplicate comic books: email={} selected={}", email, selected);
-    final List<Long> selections =
+    final Set<Long> selections =
         this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
 
-    final List<Long> idList = this.duplicateComicService.getDuplicateComicIds();
+    final Set<Long> idList = this.duplicateComicService.getDuplicateComicIds();
     if (selected) {
       log.info("Selecting ids for duplicate comic books");
       selections.addAll(idList);
@@ -411,7 +411,7 @@ public class ComicSelectionController {
         email,
         selected,
         unread);
-    final List<Long> selections =
+    final Set<Long> selections =
         this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
 
     if (selected) {
@@ -437,7 +437,7 @@ public class ComicSelectionController {
   public void clearSelections(final HttpSession session, final Principal principal)
       throws ComicSelectionException {
     final String email = principal.getName();
-    final List<Long> selections =
+    final Set<Long> selections =
         this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
     log.info("Clearing comic selections for {}", email);
     this.comicSelectionService.clearSelectedComics(email, selections);

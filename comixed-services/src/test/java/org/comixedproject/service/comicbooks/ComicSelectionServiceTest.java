@@ -27,11 +27,15 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.comicbooks.PublishComicSelectionStateAction;
 import org.comixedproject.model.archives.ArchiveType;
-import org.comixedproject.model.comicbooks.*;
+import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicState;
+import org.comixedproject.model.comicbooks.ComicTagType;
+import org.comixedproject.model.comicbooks.ComicType;
 import org.comixedproject.model.messaging.comicbooks.ComicSelectionEvent;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.service.library.DisplayableComicService;
@@ -40,7 +44,10 @@ import org.comixedproject.service.user.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import tools.jackson.core.JacksonException;
 import tools.jackson.databind.ObjectMapper;
@@ -63,7 +70,7 @@ class ComicSelectionServiceTest {
   private static final Integer TEST_PAGE_COUNT = 72;
   private static final String TEST_EMAIL = "user@comixedproject.org";
 
-  private final List<Long> selectedIds = new ArrayList<>();
+  private final Set<Long> selectedIds = new HashSet<>();
   private final Set<Long> storedSelectedIds = new HashSet<>();
   private final List<Comic> comicList = new ArrayList<>();
 
@@ -295,7 +302,7 @@ class ComicSelectionServiceTest {
 
   @Test
   void decodeSelections_withNull() throws ComicSelectionException {
-    final List result = service.decodeSelections(null);
+    final Set<Long> result = service.decodeSelections(null);
 
     assertNotNull(result);
     assertTrue(result.isEmpty());
@@ -317,11 +324,11 @@ class ComicSelectionServiceTest {
 
     when(objectMapper.readValue(anyString(), any(Class.class))).thenReturn(encodedIds);
 
-    final List<Long> result = service.decodeSelections(TEST_ENCODED_SELECTIONS);
+    final Set<Long> result = service.decodeSelections(TEST_ENCODED_SELECTIONS);
 
     assertNotNull(result);
     assertEquals(storedSelectedIds.size(), result.size());
-    assertEquals(TEST_COMIC_ID, result.get(0));
+    assertTrue(result.contains(TEST_COMIC_ID));
 
     verify(objectMapper)
         .readValue(TEST_ENCODED_SELECTIONS.toString(), ComicSelectionService.ListOfIds.class);
@@ -339,7 +346,7 @@ class ComicSelectionServiceTest {
 
     final ComicSelectionService.ListOfIds ids = idsArgumentCaptor.getValue();
     assertNotNull(ids);
-    assertEquals(selectedIds, ids.getIds().stream().toList());
+    assertEquals(selectedIds, ids.getIds().stream().collect(Collectors.toSet()));
 
     verify(objectMapper).writeValueAsString(ids);
   }
@@ -365,13 +372,13 @@ class ComicSelectionServiceTest {
 
   @Test
   void addByTagTypeAndValue() {
-    final List<Long> existingIds = new ArrayList<>();
+    final Set<Long> existingIds = new HashSet<>();
     existingIds.add(TEST_COMIC_ID);
 
     when(displayableComicService.getIdsByTagTypeAndValue(any(ComicTagType.class), anyString()))
         .thenReturn(existingIds);
 
-    final List emptyIds = new ArrayList();
+    final Set<Long> emptyIds = new HashSet<>();
 
     service.addByTagTypeAndValue(emptyIds, TEST_TAG_TYPE, TEST_TAG_VALUE);
 
@@ -382,13 +389,13 @@ class ComicSelectionServiceTest {
 
   @Test
   void removeByTagTypeAndValue() {
-    final List<Long> existingIds = new ArrayList<>();
+    final Set<Long> existingIds = new HashSet<>();
     existingIds.add(TEST_COMIC_ID);
 
     when(displayableComicService.getIdsByTagTypeAndValue(any(ComicTagType.class), anyString()))
         .thenReturn(existingIds);
 
-    final List emptyIds = new ArrayList();
+    final Set<Long> emptyIds = new HashSet();
     emptyIds.add(TEST_COMIC_ID);
     emptyIds.add(TEST_COMIC_ID * 2L);
 

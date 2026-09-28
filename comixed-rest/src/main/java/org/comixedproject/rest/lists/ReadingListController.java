@@ -25,8 +25,9 @@ import io.micrometer.core.annotation.Timed;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.security.Principal;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FilenameUtils;
 import org.comixedproject.model.lists.ReadingList;
@@ -178,7 +179,7 @@ public class ReadingListController {
       throws ReadingListException {
     String email = principal.getName();
     try {
-      List<Long> selectedComicIds =
+      Set<Long> selectedComicIds =
           this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
 
       log.info(
@@ -187,7 +188,7 @@ public class ReadingListController {
           email,
           id);
 
-      this.readingListService.addComicsToList(email, id, new ArrayList<>(selectedComicIds));
+      this.readingListService.addComicsToList(email, id, new HashSet<>(selectedComicIds));
 
       this.comicSelectionService.clearSelectedComics(email, selectedComicIds);
       session.setAttribute(
@@ -214,7 +215,7 @@ public class ReadingListController {
       throws ReadingListException {
     String email = principal.getName();
     try {
-      List<Long> selectedComicIds =
+      Set<Long> selectedComicIds =
           this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
 
       log.info(
@@ -222,7 +223,7 @@ public class ReadingListController {
           selectedComicIds.size(),
           email,
           id);
-      this.readingListService.removeComicsFromList(email, id, new ArrayList<>(selectedComicIds));
+      this.readingListService.removeComicsFromList(email, id, new HashSet<>(selectedComicIds));
 
       this.comicSelectionService.clearSelectedComics(email, selectedComicIds);
       session.setAttribute(
@@ -286,7 +287,7 @@ public class ReadingListController {
       final Principal principal, @RequestBody() final DeleteReadingListsRequest request)
       throws ReadingListException {
     final String email = principal.getName();
-    final List<Long> ids = request.getIds();
+    final Set<Long> ids = request.getIds();
     log.info("Deleting reading lists for {}", email);
     this.readingListService.deleteReadingLists(email, ids);
   }

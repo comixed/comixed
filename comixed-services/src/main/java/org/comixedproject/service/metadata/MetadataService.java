@@ -572,7 +572,7 @@ public class MetadataService {
    * @param ids the comic ids
    */
   @Async
-  public void batchScrapeComics(final List<Long> ids) {
+  public void batchScrapeComics(final Set<Long> ids) {
     log.debug("Marking comics for batch scraping");
     this.comicService.markComicsForBatchScraping(ids);
     log.debug("Starting batch scraping process");

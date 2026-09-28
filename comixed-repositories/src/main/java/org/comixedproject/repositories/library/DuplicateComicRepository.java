@@ -18,7 +18,7 @@
 
 package org.comixedproject.repositories.library;
 
-import java.util.List;
+import java.util.Set;
 import org.comixedproject.model.library.DuplicateComic;
 import org.comixedproject.model.library.DuplicateComicId;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -40,5 +40,5 @@ public interface DuplicateComicRepository extends JpaRepository<DuplicateComic, 
    */
   @Query(
       "SELECT DISTINCT d.comicId FROM DuplicateComic dc JOIN DisplayableComic d ON d.publisher = dc.id.publisher AND d.series = dc.id.series AND d.volume = dc.id.volume AND d.issueNumber = dc.id.issueNumber AND d.coverDate = dc.id.coverDate ")
-  List<Long> getDuplicateComicIds();
+  Set<Long> getDuplicateComicIds();
 }

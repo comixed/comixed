@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2026, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,44 +17,56 @@
  */
 
 import {
+  initialMessagingState,
   MESSAGING_FEATURE_KEY,
   MessagingState
-} from '../reducers/messaging.reducer';
-import { selectMessagingStarted } from './messaging.selectors';
+} from '@app/messaging/reducers/messaging.reducer';
+import { beforeEach } from 'vitest';
+import { selectMessagingStarted } from '@app/messaging/selectors/messaging.selectors';
 
 describe('Messaging Selectors', () => {
   let state: MessagingState;
 
   beforeEach(() => {
-    state = {
-      busy: Math.random() > 0.5,
-      started: Math.random() > 0.5
-    };
+    state = { ...initialMessagingState };
   });
 
-  describe('checking the messaging started state', () => {
-    it('returns false when busy', () => {
+  describe('started', () => {
+    it('should return false when starting', () => {
       expect(
         selectMessagingStarted({
-          [MESSAGING_FEATURE_KEY]: { ...state, busy: true, started: false }
+          [MESSAGING_FEATURE_KEY]: { ...state, starting: true }
         })
-      ).toBeFalse();
+      ).toBeFalsy();
     });
 
-    it('returns false when not started', () => {
+    it('should return true when started and stopping', () => {
       expect(
         selectMessagingStarted({
-          [MESSAGING_FEATURE_KEY]: { ...state, busy: false, started: false }
+          [MESSAGING_FEATURE_KEY]: { ...state, stopping: true, started: true }
         })
-      ).toBeFalse();
+      ).toBeTruthy();
     });
 
-    it('returns true when started', () => {
+    it('should return false when stopping and not started', () => {
       expect(
         selectMessagingStarted({
-          [MESSAGING_FEATURE_KEY]: { ...state, busy: false, started: true }
+          [MESSAGING_FEATURE_KEY]: { ...state, stopping: true, started: false }
         })
-      ).toBeTrue();
+      ).toBeFalsy();
+    });
+
+    it('should return true when started', () => {
+      expect(
+        selectMessagingStarted({
+          [MESSAGING_FEATURE_KEY]: {
+            ...state,
+            started: true,
+            starting: false,
+            stopping: false
+          }
+        })
+      ).toBeTruthy();
     });
   });
 });

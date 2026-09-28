@@ -26,16 +26,26 @@ import static org.mockito.Mockito.*;
 
 import jakarta.servlet.http.HttpSession;
 import java.security.Principal;
-import java.util.*;
-import org.comixedproject.model.comicbooks.*;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import org.comixedproject.model.comicbooks.ComicDataSet;
+import org.comixedproject.model.comicbooks.ComicType;
 import org.comixedproject.model.net.DownloadDocument;
-import org.comixedproject.model.net.comicbooks.*;
-import org.comixedproject.service.comicbooks.*;
+import org.comixedproject.model.net.comicbooks.PageOrderEntry;
+import org.comixedproject.model.net.comicbooks.SavePageOrderRequest;
+import org.comixedproject.model.net.comicbooks.UpdateComicRequest;
+import org.comixedproject.service.comicbooks.ComicDataService;
+import org.comixedproject.service.comicbooks.ComicException;
+import org.comixedproject.service.comicbooks.ComicSelectionException;
+import org.comixedproject.service.comicbooks.ComicSelectionService;
 import org.comixedproject.service.comicpages.ComicPageException;
 import org.comixedproject.service.comicpages.PageCacheService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 
@@ -67,7 +77,7 @@ class ComicControllerTest {
   @Mock private ResponseEntity<byte[]> responseEntity;
   @Mock private ComicDataSet comicData;
 
-  private List<Long> selectedIdList = new ArrayList<>();
+  private Set<Long> selectedIdList = new HashSet<>();
 
   @Test
   void getComic_exceptionThrown() throws ComicException {
@@ -245,9 +255,8 @@ class ComicControllerTest {
     when(principal.getName()).thenReturn(TEST_EMAIL);
     when(httpSession.getAttribute(LIBRARY_SELECTIONS)).thenReturn(TEST_ENCODED_SELECTIONS);
     when(comicSelectionService.decodeSelections(any())).thenReturn(selectedIdList);
-    when(comicSelectionService.encodeSelections(anyList()))
-        .thenThrow(ComicSelectionException.class);
-    doNothing().when(comicDataService).deleteComicsById(anyList());
+    when(comicSelectionService.encodeSelections(anySet())).thenThrow(ComicSelectionException.class);
+    doNothing().when(comicDataService).deleteComicsById(anySet());
 
     assertThrows(
         ComicException.class, () -> controller.deleteSelectedComics(httpSession, principal));
@@ -264,8 +273,8 @@ class ComicControllerTest {
     when(principal.getName()).thenReturn(TEST_EMAIL);
     when(httpSession.getAttribute(LIBRARY_SELECTIONS)).thenReturn(TEST_ENCODED_SELECTIONS);
     when(comicSelectionService.decodeSelections(any())).thenReturn(selectedIdList);
-    when(comicSelectionService.encodeSelections(anyList())).thenReturn(TEST_REENCODED_SELECTIONS);
-    doNothing().when(comicDataService).deleteComicsById(anyList());
+    when(comicSelectionService.encodeSelections(anySet())).thenReturn(TEST_REENCODED_SELECTIONS);
+    doNothing().when(comicDataService).deleteComicsById(anySet());
 
     controller.deleteSelectedComics(httpSession, principal);
 
@@ -294,8 +303,7 @@ class ComicControllerTest {
     when(principal.getName()).thenReturn(TEST_EMAIL);
     when(httpSession.getAttribute(LIBRARY_SELECTIONS)).thenReturn(TEST_ENCODED_SELECTIONS);
     when(comicSelectionService.decodeSelections(any())).thenReturn(selectedIdList);
-    when(comicSelectionService.encodeSelections(anyList()))
-        .thenThrow(ComicSelectionException.class);
+    when(comicSelectionService.encodeSelections(anySet())).thenThrow(ComicSelectionException.class);
 
     assertThrows(
         ComicException.class, () -> controller.undeleteSelectedComics(httpSession, principal));
@@ -312,8 +320,8 @@ class ComicControllerTest {
     when(principal.getName()).thenReturn(TEST_EMAIL);
     when(httpSession.getAttribute(LIBRARY_SELECTIONS)).thenReturn(TEST_ENCODED_SELECTIONS);
     when(comicSelectionService.decodeSelections(any())).thenReturn(selectedIdList);
-    when(comicSelectionService.encodeSelections(anyList())).thenReturn(TEST_REENCODED_SELECTIONS);
-    doNothing().when(comicDataService).undeleteComicsById(anyList());
+    when(comicSelectionService.encodeSelections(anySet())).thenReturn(TEST_REENCODED_SELECTIONS);
+    doNothing().when(comicDataService).undeleteComicsById(anySet());
 
     controller.undeleteSelectedComics(httpSession, principal);
 
