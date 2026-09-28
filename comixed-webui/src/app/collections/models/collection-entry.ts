@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2023, The ComiXed Project
+ * Copyright (C) 2026, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { ComicTagType } from '@app/comic-books/models/comic-tag-type';
+import { ComicTagType } from '@app/library/models/comic-tag-type';
 
 export interface CollectionEntry {
   tagType: ComicTagType;

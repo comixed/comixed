@@ -1,0 +1,80 @@
+<p-card class="cx-width-100p">
+  <ng-template #header>
+    <p-breadcrumb [model]="trail()" [home]="home" />
+  </ng-template>
+
+  <p-table
+    [value]="comicList()"
+    [lazy]="true"
+    (onLazyLoad)="onLoad($event)"
+    dataKey="comicId"
+    [paginator]="true"
+    stripedRows
+    [rows]="10"
+    [totalRecords]="filterCount()"
+    [loading]="comicListLoading()"
+  >
+    <ng-template #header>
+      <tr>
+        <th>{{ "comic-list-page.label.thumbnail" | translate }}</th>
+        <th>{{ "comic-list-page.label.comic-state" | translate }}</th>
+        <th>{{ "comic-list-page.label.publisher" | translate }}</th>
+        <th>{{ "comic-list-page.label.series" | translate }}</th>
+        <th>{{ "comic-list-page.label.volume" | translate }}</th>
+        <th>{{ "comic-list-page.label.issue-number" | translate }}</th>
+        <th>{{ "comic-list-page.label.page-count" | translate }}</th>
+        <th>{{ "comic-list-page.label.cover-date" | translate }}</th>
+        <th>{{ "comic-list-page.label.store-date" | translate }}</th>
+        <th>{{ "comic-list-page.label.added-date" | translate }}</th>
+      </tr>
+    </ng-template>
+
+    <ng-template #body let-comic>
+      <tr>
+        <td>
+          <img
+            [src]="comic | comicCoverUrl"
+            class="comic-cover"
+            [alt]="comic.baseFilename"
+          />
+        </td>
+        <td>
+          <fa-icon
+            [icon]="getIconForComicState(comic.comicState)"
+            [pTooltip]="
+              'comic-list-page.label.state.' + comic.comicState | translate
+            "
+          />
+        </td>
+        <td>
+          <a [routerLink]="['/library/publishers', comic.publisher]">
+            {{ comic.publisher }}
+          </a>
+        </td>
+        <td>
+          <a
+            [routerLink]="[
+              '/library/publishers',
+              comic.publisher,
+              'series',
+              comic.series,
+              comic.volume
+            ]"
+          >
+            {{ comic.series }}
+          </a>
+        </td>
+        <td>{{ comic.volume }}</td>
+        <td>
+          <a [routerLink]="['/library/comics', comic.comicId]">
+            {{ comic.issueNumber }}
+          </a>
+        </td>
+        <td>{{ comic.pageCount }}</td>
+        <td>{{ comic.coverDate | date: "mediumDate" }}</td>
+        <td>{{ comic.storeDate | date: "mediumDate" }}</td>
+        <td>{{ comic.addedDate | date: "medium" }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</p-card>
