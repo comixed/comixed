@@ -1,0 +1,33 @@
+<p-card>
+  <ng-template #header>
+    <h2 class="cx-width-100p cx-justify-center">
+      {{ "read-state-dialog.title" | translate }}
+    </h2>
+  </ng-template>
+
+  {{ "read-state-dialog.message" | translate }}
+
+  <ng-template #footer>
+    <div class="cx-width-100p cx-flex-content-container-row">
+      <p-button
+        icon="pi pi-bookmark"
+        severity="primary"
+        [label]="'read-state-dialog.button.mark' | translate"
+        (click)="onMarkRead()"
+      />
+      <div class="cx-spacer"></div>
+      <p-button
+        icon="pi pi-bookmark-fill"
+        severity="warn"
+        [label]="'read-state-dialog.button.unmark' | translate"
+        (click)="onMarkUnread()"
+      />
+      <p-button
+        icon="pi pi-times-circle"
+        severity="danger"
+        [label]="'app.button.cancel' | translate"
+        (click)="onCancel()"
+      />
+    </div>
+  </ng-template>
+</p-card>

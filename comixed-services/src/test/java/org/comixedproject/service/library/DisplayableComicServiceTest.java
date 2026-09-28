@@ -94,7 +94,7 @@ class DisplayableComicServiceTest {
   @Mock private Stream<Integer> integerStream;
   @Mock private Page<DisplayableComic> displayableComicPage;
   @Mock private List<DisplayableComic> comicBookList;
-  @Mock private List<Long> idList;
+  @Mock private Set<Long> isSet;
   @Mock private Stream<DisplayableComic> comicListStream;
   @Mock private List<Integer> yearList;
   @Mock private List<Integer> monthList;
@@ -294,7 +294,7 @@ class DisplayableComicServiceTest {
 
     final List<DisplayableComic> result =
         service.loadComicsById(
-            TEST_PAGE_SIZE, TEST_PAGE_INDEX, TEST_SORT_BY, TEST_SORT_DIRECTION, idList);
+            TEST_PAGE_SIZE, TEST_PAGE_INDEX, TEST_SORT_BY, TEST_SORT_DIRECTION, isSet);
 
     assertNotNull(result);
     assertSame(comicBookList, result);
@@ -303,7 +303,7 @@ class DisplayableComicServiceTest {
     assertEquals(TEST_PAGE_INDEX, pageable.getPageNumber());
     assertEquals(TEST_PAGE_SIZE, pageable.getPageSize());
 
-    verify(displayableComicRepository).loadComicsById(idList, pageable);
+    verify(displayableComicRepository).loadComicsById(isSet, pageable);
   }
 
   @Test
@@ -334,12 +334,12 @@ class DisplayableComicServiceTest {
 
   @Test
   void GetIdsByPublisher() {
-    when(displayableComicRepository.getIdsByPublisher(Mockito.anyString())).thenReturn(idList);
+    when(displayableComicRepository.getIdsByPublisher(Mockito.anyString())).thenReturn(isSet);
 
-    final List<Long> result = service.getIdsByPublisher(TEST_PUBLISHER);
+    final Set<Long> result = service.getIdsByPublisher(TEST_PUBLISHER);
 
     assertNotNull(result);
-    assertSame(idList, result);
+    assertSame(isSet, result);
 
     verify(displayableComicRepository).getIdsByPublisher(TEST_PUBLISHER);
   }
@@ -348,13 +348,13 @@ class DisplayableComicServiceTest {
   void GetIdsByPublisherAndSeriesAndVolume() {
     when(displayableComicRepository.getIdsByPublisherSeriesAndVolume(
             Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
-        .thenReturn(idList);
+        .thenReturn(isSet);
 
-    final List<Long> result =
+    final Set<Long> result =
         service.getIdsByPublisherSeriesAndVolume(TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME);
 
     assertNotNull(result);
-    assertSame(idList, result);
+    assertSame(isSet, result);
 
     verify(displayableComicRepository)
         .getIdsByPublisherSeriesAndVolume(TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME);

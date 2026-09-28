@@ -1,0 +1,9 @@
+<p-card>
+  <ng-template #title>{{ cardValue() }}</ng-template>
+  @if (cardType().length > 0) {
+    <ng-template #subtitle>{{ cardType() | translate }}</ng-template>
+  }
+  @if (cardImage().length > 0) {
+    <img [src]="cardImage()" [alt]="cardValue()" />
+  }
+</p-card>

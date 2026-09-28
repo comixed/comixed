@@ -18,7 +18,7 @@
 
 package org.comixedproject.model.messaging.comicbooks;
 
-import java.util.List;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.comixedproject.model.user.ComiXedUser;
@@ -32,5 +32,5 @@ import org.comixedproject.model.user.ComiXedUser;
 @AllArgsConstructor
 public class ComicSelectionEvent {
   @Getter private final ComiXedUser user;
-  @Getter private final List<Long> comicIds;
+  @Getter private final Set<Long> comicIds;
 }
