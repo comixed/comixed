@@ -1,0 +1,64 @@
+<p-card id="initial-admin-form-container" class="cx-centered">
+  <ng-template #title>
+    <h2 class="cx-width-100p cx-justify-center">
+      {{ "initial-account-page.page-title" | translate }}
+    </h2>
+  </ng-template>
+
+  <form [formGroup]="initialAdminForm">
+    <p-ifta-label>
+      <label for="input-initial-account-email">
+        {{ "initial-account-page.label.email" | translate }}
+      </label>
+      <input
+        id="input-initial-account-email"
+        pInputText
+        type="email"
+        formControlName="email"
+        [placeholder]="'initial-account-page.placeholder.email' | translate"
+      />
+    </p-ifta-label>
+    <p-ifta-label>
+      <label for="input-initial-account-password">
+        {{ "initial-account-page.label.password" | translate }}
+      </label>
+      <input
+        id="input-initial-account-password"
+        pInputText
+        type="password"
+        formControlName="password"
+        [placeholder]="'initial-account-page.placeholder.password' | translate"
+      />
+    </p-ifta-label>
+    <p-ifta-label>
+      <label for="input-initial-account-verify-password">
+        {{ "initial-account-page.label.verify-password" | translate }}
+      </label>
+      <input
+        id="input-initial-account-verify-password"
+        pInputText
+        type="password"
+        formControlName="verifyPassword"
+        [placeholder]="
+          'initial-account-page.placeholder.verify-password' | translate
+        "
+      />
+    </p-ifta-label>
+
+    @if (verifyPassword?.hasError("passwordValidation")) {
+      <div>
+        {{ "initial-account-page.error.password-validation" | translate }}
+      </div>
+    }
+  </form>
+
+  <ng-template #footer class="cx-justify-center">
+    <p-button
+      icon="pi pi-send"
+      severity="secondary"
+      [label]="'app.button.submit' | translate"
+      [disabled]="!initialAdminForm.valid"
+      (click)="onSubmitForm()"
+    ></p-button>
+  </ng-template>
+</p-card>

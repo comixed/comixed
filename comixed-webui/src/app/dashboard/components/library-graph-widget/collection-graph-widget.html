@@ -1,0 +1,14 @@
+<p-card class="cx-width-100p">
+  <ng-template #header>
+    <div class="cx-width-100p cx-justify-end cx-padding-15">
+      <p-button
+        id="unzoom-button"
+        icon="pi pi-times"
+        severity="danger"
+        (onClick)="unzoom.emit()"
+      />
+    </div>
+  </ng-template>
+
+  <p-chart type="bar" [data]="data()" />
+</p-card>
