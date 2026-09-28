@@ -1,0 +1,49 @@
+<p-card>
+  <ng-template #header>
+    <div
+      class="cx-width-100 cx-no-text-wrap"
+      [pTooltip]="comic.baseFilename"
+      style="font-size: larger"
+    >
+      <strong>{{ comic.baseFilename }}</strong>
+    </div>
+    @if (comic.title) {
+      <div class="cx-width-100 cx-no-text-wrap" [pTooltip]="comic.title">
+        <strong>{{ comic.title }}</strong>
+      </div>
+    }
+  </ng-template>
+
+  <img
+    [src]="comic | comicCoverUrl"
+    loading="lazy"
+    [style.width]="'100%'"
+    [style.height]="'auto'"
+    [alt]="comic | comicTitle"
+  />
+
+  <ng-template #footer>
+    <div class="cx-width-100 cx-justify-center">
+      <p-button
+        icon="pi pi-backward"
+        severity="contrast"
+        [routerLink]="['/library/comics', comic.previousIssueId]"
+        [label]="'comic-cover.button.previous-issue' | translate"
+        [disabled]="!comic.previousIssueId"
+      ></p-button>
+      <p-button
+        icon="pi pi-download"
+        severity="info"
+        [label]="'comic-cover.button.download-file' | translate"
+        [disabled]="comic.missing"
+      ></p-button>
+      <p-button
+        icon="pi pi-forward"
+        severity="contrast"
+        [routerLink]="['/library/comics', comic.nextIssueId]"
+        [label]="'comic-cover.button.next-issue' | translate"
+        [disabled]="!comic.nextIssueId"
+      ></p-button>
+    </div>
+  </ng-template>
+</p-card>
