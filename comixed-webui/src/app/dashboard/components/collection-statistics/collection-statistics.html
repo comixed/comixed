@@ -1,0 +1,53 @@
+<mat-card class="cx-width-100 cx-height-100">
+  <mat-card-title>
+    <h3 class="cx-width-100 cx-justify-center cx-no-text-wrap">
+      {{ title }}
+    </h3>
+  </mat-card-title>
+  <mat-card-content class="cx-padding-15">
+    <img
+      src="/images/dashboard/collections-icon.svg"
+      alt="Collections statistics"
+      style="float: inline-end; height: 150px"
+    />
+    <ul>
+      <li>
+        <a routerLink="/collections/publishers">
+          {{
+            "dashboard.statistics.publishers.description"
+              | translate: { count: publishers }
+          }}
+        </a>
+      </li>
+      <li>
+        {{
+          "dashboard.statistics.series.description"
+            | translate: { count: series }
+        }}
+      </li>
+      <li>
+        {{
+          "dashboard.statistics.characters.description"
+            | translate: { count: characters }
+        }}
+      </li>
+      <li>
+        {{
+          "dashboard.statistics.teams.description" | translate: { count: teams }
+        }}
+      </li>
+      <li>
+        {{
+          "dashboard.statistics.locations.description"
+            | translate: { count: locations }
+        }}
+      </li>
+      <li>
+        {{
+          "dashboard.statistics.stories.description"
+            | translate: { count: stories }
+        }}
+      </li>
+    </ul>
+  </mat-card-content>
+</mat-card>

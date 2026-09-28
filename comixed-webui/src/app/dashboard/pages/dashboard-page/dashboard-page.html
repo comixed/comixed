@@ -1,0 +1,17 @@
+<div id="cx-dashboard-container" class="cx-flex-content-container-row">
+  @for (stat of stats(); track stat) {
+    @if (stat === "collections-list") {
+      <div class="cx-flex-content-grow-1">
+        <app-collection-statistics
+          [title]="'dashboard.statistics.collections.title' | translate"
+          [publishers]="libraryStore.publishers().length"
+          [series]="libraryStore.series().length"
+          [characters]="libraryStore.characters().length"
+          [teams]="libraryStore.teams().length"
+          [locations]="libraryStore.locations().length"
+          [stories]="libraryStore.stories().length"
+        ></app-collection-statistics>
+      </div>
+    }
+  }
+</div>
