@@ -50,7 +50,7 @@ export const USER_READER: User = {
   lastLoginDate: new Date().getTime(),
   roles: [ROLE_READER],
   preferences: [],
-  readComicBooks: []
+  readComics: []
 };
 
 export const USER_ADMIN: User = {
@@ -62,7 +62,7 @@ export const USER_ADMIN: User = {
   lastLoginDate: new Date().getTime(),
   roles: [ROLE_READER, ROLE_ADMIN],
   preferences: [],
-  readComicBooks: []
+  readComics: []
 };
 
 export const USER_BLOCKED: User = {
@@ -74,7 +74,7 @@ export const USER_BLOCKED: User = {
   lastLoginDate: new Date().getTime(),
   roles: [],
   preferences: [],
-  readComicBooks: []
+  readComics: []
 };
 
 export const READ_COMIC_1 = DISPLAYABLE_COMIC_1.comicId;

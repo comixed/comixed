@@ -43,8 +43,8 @@ public class ComicTagService {
    * @return the comic tags
    */
   @Transactional(readOnly = true)
-  public List<ComicTag> getTagsForComicBook(final long id) {
+  public List<ComicTag> getTagsForComic(final long id) {
     log.trace("Loading all comic tags: id={}", id);
-    return this.comicTagRepository.getForComicBook(id);
+    return this.comicTagRepository.getForComic(id);
   }
 }

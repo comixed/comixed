@@ -20,6 +20,6 @@ public class PublishBlockedPageUpdateAction extends AbstractPublishAction<Blocke
 
   @Override
   public void publish(final BlockedHash blockedHash) throws PublishingException {
-    this.doPublish(BLOCKED_HASH_LIST_UPDATE_TOPIC, blockedHash, View.BlockedHashList.class);
+    this.doPublish(BLOCKED_HASH_LIST_UPDATE_TOPIC, blockedHash, View.BlockedHashListView.class);
   }
 }

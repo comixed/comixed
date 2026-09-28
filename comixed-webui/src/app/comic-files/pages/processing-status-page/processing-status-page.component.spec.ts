@@ -20,7 +20,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ProcessingStatusPageComponent } from './processing-status-page.component';
 import {
   IMPORT_COMICS_FEATURE_KEY,
-  initialState as initialImportComicBooksComicsState
+  initialState as initialImportComicsComicsState
 } from '@app/reducers/import-comics.reducer';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { LoggerModule } from '@angular-ru/cdk/logger';
@@ -44,7 +44,7 @@ describe('ProcessingStatusPageComponent', () => {
   const PROCESS_LIST = [PROCESSING_COMIC_STATUS_1];
   const initialState = {
     [MESSAGING_FEATURE_KEY]: initialMessagingState,
-    [IMPORT_COMICS_FEATURE_KEY]: initialImportComicBooksComicsState
+    [IMPORT_COMICS_FEATURE_KEY]: initialImportComicsComicsState
   };
 
   let component: ProcessingStatusPageComponent;
@@ -115,7 +115,7 @@ describe('ProcessingStatusPageComponent', () => {
       store.setState({
         ...initialState,
         [IMPORT_COMICS_FEATURE_KEY]: {
-          ...initialImportComicBooksComicsState,
+          ...initialImportComicsComicsState,
           batches: PROCESS_LIST
         }
       });

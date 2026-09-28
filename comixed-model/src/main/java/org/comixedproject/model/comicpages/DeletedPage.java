@@ -37,13 +37,13 @@ import org.comixedproject.views.View;
 @RequiredArgsConstructor
 public class DeletedPage {
   @JsonProperty("hash")
-  @JsonView(View.DeletedPageList.class)
+  @JsonView(View.DeletedPageListView.class)
   @Getter
   @NonNull
   private String hash;
 
   @JsonProperty("comics")
-  @JsonView(View.DeletedPageList.class)
+  @JsonView(View.DeletedPageListView.class)
   @Getter
   private List<DisplayableComic> comics = new ArrayList<>();
 

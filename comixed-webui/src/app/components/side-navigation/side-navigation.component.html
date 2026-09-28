@@ -31,9 +31,7 @@
       <span class="cx-align-left">
         {{ "navigation.option.all-comics" | translate }}
       </span>
-      <span class="cx-align-right">
-        ({{ totalComicBooks$ | async | number }})
-      </span>
+      <span class="cx-align-right">({{ totalComics$ | async | number }})</span>
     </mat-label>
   </button>
 }
@@ -50,7 +48,7 @@
         {{ "navigation.option.selected-comics" | translate }}
       </span>
       <span class="cx-align-right">
-        ({{ selectedComicBooks$ | async | number }})
+        ({{ selectedComics$ | async | number }})
       </span>
     </mat-label>
   </button>
@@ -66,7 +64,7 @@
     <mat-icon>incomplete_circle</mat-icon>
     <mat-label class="cx-text-nowrap">
       {{ "navigation.option.unprocessed-comics" | translate }}
-      ({{ unprocessedComicBooks$ | async | number }})
+      ({{ unprocessedComics$ | async | number }})
     </mat-label>
   </button>
 }
@@ -80,7 +78,7 @@
     <mat-icon>read_more</mat-icon>
     <mat-label class="cx-text-nowrap">
       {{ "navigation.option.read-comics" | translate }}
-      ({{ readComicBooks$ | async | number }})
+      ({{ readComics$ | async | number }})
     </mat-label>
   </button>
 }
@@ -94,7 +92,7 @@
     <mat-icon>cloud_download</mat-icon>
     <mat-label class="cx-text-nowrap">
       {{ "navigation.option.unscraped-comics" | translate }}
-      ({{ unscrapedComicBooks$ | async | number }})
+      ({{ unscrapedComics$ | async | number }})
     </mat-label>
   </button>
 }
@@ -108,7 +106,7 @@
     <mat-icon>cloud_download</mat-icon>
     <mat-label class="cx-text-nowrap">
       {{ "navigation.option.changed-comics" | translate }}
-      ({{ changedComicBooks$ | async | number }})
+      ({{ changedComics$ | async | number }})
     </mat-label>
   </button>
 }
@@ -122,7 +120,7 @@
     <mat-icon>delete_sweep</mat-icon>
     <mat-label class="cx-text-nowrap">
       {{ "navigation.option.deleted-comics" | translate }}
-      ({{ deletedComicBooks$ | async | number }})
+      ({{ deletedComics$ | async | number }})
     </mat-label>
   </button>
 }
@@ -149,7 +147,7 @@
     <mat-icon>dynamic_feed</mat-icon>
     <mat-label class="cx-text-nowrap">
       {{ "navigation.option.duplicate-comics" | translate }}
-      ({{ duplicateComicBooks$ | async | number }})
+      ({{ duplicateComics$ | async | number }})
     </mat-label>
   </button>
 }

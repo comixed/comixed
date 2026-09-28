@@ -110,8 +110,8 @@ class ComicSelectionControllerTest {
   }
 
   @Test
-  void selectComicBooksByFilter_selecting() throws ComicSelectionException {
-    controller.selectComicBooksByFilter(
+  void selectComicsByFilter_selecting() throws ComicSelectionException {
+    controller.selectComicsByFilter(
         httpSession,
         principal,
         new MultipleComicsSelectionRequest(
@@ -125,8 +125,8 @@ class ComicSelectionControllerTest {
   }
 
   @Test
-  void selectComicBooksByFilter_deselecting() throws ComicSelectionException {
-    controller.selectComicBooksByFilter(
+  void selectComicsByFilter_deselecting() throws ComicSelectionException {
+    controller.selectComicsByFilter(
         httpSession,
         principal,
         new MultipleComicsSelectionRequest(
@@ -140,11 +140,10 @@ class ComicSelectionControllerTest {
   }
 
   @Test
-  void addComicBooksByTagTypeAndValue() throws ComicSelectionException {
+  void addComicsByTagTypeAndValue() throws ComicSelectionException {
     when(opdsUtils.urlDecodeString(TEST_TAG_VALUE)).thenReturn(TEST_TAG_VALUE);
 
-    controller.addComicBooksByTagTypeAndValue(
-        httpSession, principal, TEST_TAG_TYPE, TEST_TAG_VALUE);
+    controller.addComicsByTagTypeAndValue(httpSession, principal, TEST_TAG_TYPE, TEST_TAG_VALUE);
 
     verify(httpSession).getAttribute(LIBRARY_SELECTIONS);
     verify(comicSelectionService).addByTagTypeAndValue(selectedIds, TEST_TAG_TYPE, TEST_TAG_VALUE);
@@ -153,11 +152,10 @@ class ComicSelectionControllerTest {
   }
 
   @Test
-  void removeComicBooksByTagTypeAndValue() throws ComicSelectionException {
+  void removeComicsByTagTypeAndValue() throws ComicSelectionException {
     when(opdsUtils.urlDecodeString(TEST_TAG_VALUE)).thenReturn(TEST_TAG_VALUE);
 
-    controller.removeComicBooksByTagTypeAndValue(
-        httpSession, principal, TEST_TAG_TYPE, TEST_TAG_VALUE);
+    controller.removeComicsByTagTypeAndValue(httpSession, principal, TEST_TAG_TYPE, TEST_TAG_VALUE);
 
     verify(httpSession).getAttribute(LIBRARY_SELECTIONS);
     verify(comicSelectionService)
@@ -170,7 +168,7 @@ class ComicSelectionControllerTest {
   void addSelectionsById_selecting() throws ComicSelectionException {
     for (long index = 1000L; index < 2000L; index++) comicIdList.add(index);
 
-    controller.addComicBookSelectionsById(
+    controller.addComicSelectionsById(
         httpSession, principal, new AddComicSelectionsByIdRequest(comicIdList, true));
 
     verify(httpSession).getAttribute(LIBRARY_SELECTIONS);
@@ -183,7 +181,7 @@ class ComicSelectionControllerTest {
   void addSelectionsById_deselecting() throws ComicSelectionException {
     for (long index = 1000L; index < 2000L; index++) comicIdList.add(index);
 
-    controller.addComicBookSelectionsById(
+    controller.addComicSelectionsById(
         httpSession, principal, new AddComicSelectionsByIdRequest(comicIdList, false));
 
     verify(httpSession).getAttribute(LIBRARY_SELECTIONS);
@@ -196,7 +194,7 @@ class ComicSelectionControllerTest {
   void addSelectionsByPublisherForAddition_selecting() throws ComicSelectionException {
     when(displayableComicService.getIdsByPublisher(anyString())).thenReturn(selectedIds);
 
-    controller.addComicBookSelectionsByPublisher(
+    controller.addComicSelectionsByPublisher(
         httpSession, principal, new AddComicSelectionsByPublisherRequest(TEST_PUBLISHER, true));
 
     verify(httpSession).getAttribute(LIBRARY_SELECTIONS);
@@ -210,7 +208,7 @@ class ComicSelectionControllerTest {
   void addSelectionsByPublisherForAddition_deselecting() throws ComicSelectionException {
     when(displayableComicService.getIdsByPublisher(anyString())).thenReturn(selectedIds);
 
-    controller.addComicBookSelectionsByPublisher(
+    controller.addComicSelectionsByPublisher(
         httpSession, principal, new AddComicSelectionsByPublisherRequest(TEST_PUBLISHER, false));
 
     verify(httpSession).getAttribute(LIBRARY_SELECTIONS);
@@ -226,7 +224,7 @@ class ComicSelectionControllerTest {
             anyString(), anyString(), anyString()))
         .thenReturn(selectedIds);
 
-    controller.addComicBookSelectionsByPublisherSeriesVolume(
+    controller.addComicSelectionsByPublisherSeriesVolume(
         httpSession,
         principal,
         new AddComicSelectionsByPublisherSeriesVolumeRequest(
@@ -246,7 +244,7 @@ class ComicSelectionControllerTest {
             anyString(), anyString(), anyString()))
         .thenReturn(selectedIds);
 
-    controller.addComicBookSelectionsByPublisherSeriesVolume(
+    controller.addComicSelectionsByPublisherSeriesVolume(
         httpSession,
         principal,
         new AddComicSelectionsByPublisherSeriesVolumeRequest(
@@ -261,9 +259,9 @@ class ComicSelectionControllerTest {
   }
 
   @Test
-  void addUnreadComicBooksSelection_selectingRead()
+  void addUnreadComicsSelection_selectingRead()
       throws ComicSelectionException, ComiXedUserException {
-    controller.addUnreadComicBooksSelection(
+    controller.addUnreadComicsSelection(
         httpSession, principal, new UnreadComicsSelectionRequest(true, false));
 
     verify(httpSession).getAttribute(LIBRARY_SELECTIONS);
@@ -274,9 +272,9 @@ class ComicSelectionControllerTest {
   }
 
   @Test
-  void addUnreadComicBooksSelection_deselectingRead()
+  void addUnreadComicsSelection_deselectingRead()
       throws ComicSelectionException, ComiXedUserException {
-    controller.addUnreadComicBooksSelection(
+    controller.addUnreadComicsSelection(
         httpSession, principal, new UnreadComicsSelectionRequest(false, false));
 
     verify(httpSession).getAttribute(LIBRARY_SELECTIONS);
@@ -287,9 +285,9 @@ class ComicSelectionControllerTest {
   }
 
   @Test
-  void addUnreadComicBooksSelection_selectingUnread()
+  void addUnreadComicsSelection_selectingUnread()
       throws ComicSelectionException, ComiXedUserException {
-    controller.addUnreadComicBooksSelection(
+    controller.addUnreadComicsSelection(
         httpSession, principal, new UnreadComicsSelectionRequest(true, true));
 
     verify(httpSession).getAttribute(LIBRARY_SELECTIONS);
@@ -300,9 +298,9 @@ class ComicSelectionControllerTest {
   }
 
   @Test
-  void addUnreadComicBooksSelection_deselectingUnread()
+  void addUnreadComicsSelection_deselectingUnread()
       throws ComicSelectionException, ComiXedUserException {
-    controller.addUnreadComicBooksSelection(
+    controller.addUnreadComicsSelection(
         httpSession, principal, new UnreadComicsSelectionRequest(false, true));
 
     verify(httpSession).getAttribute(LIBRARY_SELECTIONS);

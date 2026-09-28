@@ -33,7 +33,7 @@ import org.comixedproject.views.View;
  * @author Darryl L. Pierce
  */
 @AllArgsConstructor
-@JsonView(View.CollectionEntryList.class)
+@JsonView(View.CollectionEntryListView.class)
 public class LoadComicsForCollectionResponse {
   @JsonProperty("entries")
   @Getter

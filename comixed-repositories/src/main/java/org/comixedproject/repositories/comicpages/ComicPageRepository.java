@@ -166,7 +166,7 @@ public interface ComicPageRepository extends JpaRepository<ComicPage, Long> {
    */
   @Query(
       "SELECT p.comicPageId FROM ComicPage p WHERE p.comic.comicId = :comicId AND p.pageNumber = 0")
-  Long getPageIdForComicBookCover(@Param("comicId") long comicId);
+  Long getPageIdForComicCover(@Param("comicId") long comicId);
 
   @Query("SELECT p.comic.filename FROM ComicPage p WHERE p.comicPageId = :pageId")
   String getComicFilenameForPage(@Param("pageId") Long pageId);
@@ -188,5 +188,5 @@ public interface ComicPageRepository extends JpaRepository<ComicPage, Long> {
    * @return the pages
    */
   @Query("SELECT p FROM ComicPage p WHERE p.comic.comicId = :comicId ORDER BY p.pageNumber")
-  List<ComicPage> getAllPagesForComicBook(@Param("comicId") long comicId);
+  List<ComicPage> getAllPagesForComic(@Param("comicId") long comicId);
 }

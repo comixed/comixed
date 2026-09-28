@@ -57,7 +57,7 @@ import { RouterOutlet } from '@angular/router';
 import { FooterComponent } from './components/footer/footer.component';
 import { AsyncPipe } from '@angular/common';
 import { loadLibraryState } from '@app/library/actions/library.actions';
-import { resetReadComicBooks } from '@app/user/actions/read-comic-books.actions';
+import { resetReadComics } from '@app/user/actions/read-comic-books.actions';
 import { tap } from 'rxjs/operators';
 import { ApplicationEvent } from '@app/models/messages/application-event';
 
@@ -124,7 +124,7 @@ export class AppComponent implements OnInit {
           }
           if (!this.user$.value && this.sessionActive$.value) {
             this.logger.trace('Stopping the messaging subsystem');
-            this.store.dispatch(resetReadComicBooks());
+            this.store.dispatch(resetReadComics());
             this.store.dispatch(stopMessaging());
             this.logger.trace('Marking the session as inactive');
             this.sessionActive$.next(false);

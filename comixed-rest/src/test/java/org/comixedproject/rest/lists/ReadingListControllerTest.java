@@ -159,21 +159,19 @@ class ReadingListControllerTest {
   }
 
   @Test
-  void addSelectedComicBooksToReadingList_selectionServiceExceptionOnDecode()
+  void addSelectedComicsToReadingList_selectionServiceExceptionOnDecode()
       throws ComicSelectionException {
     Mockito.when(comicSelectionService.decodeSelections(Mockito.any()))
         .thenThrow(ComicSelectionException.class);
 
     assertThrows(
         ReadingListException.class,
-        () ->
-            controller.addSelectedComicBooksToReadingList(
-                session, principal, TEST_READING_LIST_ID));
+        () -> controller.addSelectedComicsToReadingList(session, principal, TEST_READING_LIST_ID));
   }
 
   @Test
-  void addSelectedComicBooksToList() throws ReadingListException {
-    controller.addSelectedComicBooksToReadingList(session, principal, TEST_READING_LIST_ID);
+  void addSelectedComicsToList() throws ReadingListException {
+    controller.addSelectedComicsToReadingList(session, principal, TEST_READING_LIST_ID);
 
     Mockito.verify(readingListService, Mockito.times(1))
         .addComicsToList(TEST_USER_EMAIL, TEST_READING_LIST_ID, selectedIdList);
@@ -188,13 +186,13 @@ class ReadingListControllerTest {
     assertThrows(
         ReadingListException.class,
         () ->
-            controller.removeSelectedComicBooksFromReadingList(
+            controller.removeSelectedComicsFromReadingList(
                 session, principal, TEST_READING_LIST_ID));
   }
 
   @Test
   void removeComicsFromList() throws ReadingListException {
-    controller.removeSelectedComicBooksFromReadingList(session, principal, TEST_READING_LIST_ID);
+    controller.removeSelectedComicsFromReadingList(session, principal, TEST_READING_LIST_ID);
 
     Mockito.verify(readingListService, Mockito.times(1))
         .removeComicsFromList(TEST_USER_EMAIL, TEST_READING_LIST_ID, selectedIdList);

@@ -54,7 +54,7 @@ public class MetadataSourceProperty {
       updatable = false,
       nullable = false)
   @JsonProperty("name")
-  @JsonView(View.MetadataSourceList.class)
+  @JsonView(View.MetadataSourceListView.class)
   @Getter
   @NonNull
   private String name;
@@ -66,7 +66,7 @@ public class MetadataSourceProperty {
       updatable = true,
       nullable = true)
   @JsonProperty("value")
-  @JsonView(View.MetadataSourceList.class)
+  @JsonView(View.MetadataSourceListView.class)
   @Getter
   @Setter
   @NonNull

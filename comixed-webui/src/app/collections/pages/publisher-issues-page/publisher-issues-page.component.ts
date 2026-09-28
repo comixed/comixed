@@ -22,8 +22,8 @@ import { QueryParameterService } from '@app/core/services/query-parameter.servic
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { setBusyState } from '@app/core/actions/busy.actions';
-import { setMultipleComicBookByPublisherSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
-import { selectComicBookSelectionIds } from '@app/comic-books/selectors/comic-book-selection.selectors';
+import { setMultipleComicByPublisherSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
+import { selectComicSelectionIds } from '@app/comic-books/selectors/comic-book-selection.selectors';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/core/services/title.service';
 import { selectUser } from '@app/user/selectors/user.selectors';
@@ -92,7 +92,7 @@ export class PublisherIssuesPageComponent implements OnInit {
       .pipe(tap(totalComics => this.totalComics$.next(totalComics)))
       .subscribe();
     this.store
-      .select(selectComicBookSelectionIds)
+      .select(selectComicSelectionIds)
       .pipe(tap(selectedIds => this.selectedIds$.next(selectedIds)))
       .subscribe();
     this.store
@@ -108,7 +108,7 @@ export class PublisherIssuesPageComponent implements OnInit {
   onSelectAll(selected: boolean): void {
     this.logger.debug('Setting all comic books selected state:', selected);
     this.store.dispatch(
-      setMultipleComicBookByPublisherSelectionState({
+      setMultipleComicByPublisherSelectionState({
         publisher: this.name$.value,
         selected
       })

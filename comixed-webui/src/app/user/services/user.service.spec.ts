@@ -77,7 +77,7 @@ import {
 } from '@angular/common/http';
 import { CreateAccountRequest } from '@app/user/models/net/create-account-request';
 import { CreateUserAccountRequest } from '@app/user/models/net/create-user-account-request';
-import { setReadComicBooks } from '@app/user/actions/read-comic-books.actions';
+import { setReadComics } from '@app/user/actions/read-comic-books.actions';
 import {
   initialState as initialUserState,
   USER_FEATURE_KEY
@@ -92,7 +92,7 @@ describe('UserService', () => {
     READ_COMIC_4,
     READ_COMIC_5
   ];
-  const USER = { ...USER_READER, readComicBooks: READ_COMICS };
+  const USER = { ...USER_READER, readComics: READ_COMICS };
   const EMAIL = USER.email;
   const PASSWORD = 'this!is!my!password';
   const PREFERENCE_NAME = 'user.preference';
@@ -300,7 +300,7 @@ describe('UserService', () => {
 
       it('sets the read comic books list', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          setReadComicBooks({ entries: READ_COMICS })
+          setReadComics({ entries: READ_COMICS })
         );
       });
     });

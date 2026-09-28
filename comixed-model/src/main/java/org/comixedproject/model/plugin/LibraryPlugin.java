@@ -42,13 +42,13 @@ public class LibraryPlugin {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "library_plugin_id")
   @JsonProperty("libraryPluginId")
-  @JsonView(View.LibraryPluginList.class)
+  @JsonView(View.LibraryPluginListView.class)
   @Getter
   private Long libraryPluginId;
 
   @Column(name = "name", length = 64, insertable = true, updatable = false, nullable = false)
   @JsonProperty("name")
-  @JsonView(View.LibraryPluginList.class)
+  @JsonView(View.LibraryPluginListView.class)
   @Getter
   @NonNull
   private String name;
@@ -67,41 +67,41 @@ public class LibraryPlugin {
 
   @Column(name = "language", length = 32, updatable = false, nullable = false)
   @JsonProperty("language")
-  @JsonView(View.LibraryPluginList.class)
+  @JsonView(View.LibraryPluginListView.class)
   @Getter
   @NonNull
   private String language;
 
   @Column(name = "filename", length = 1024, nullable = false, updatable = true)
   @JsonProperty("filename")
-  @JsonView(View.LibraryPluginList.class)
+  @JsonView(View.LibraryPluginListView.class)
   @Getter
   @NonNull
   private String filename;
 
   @Column(name = "admin_only", nullable = false)
   @JsonProperty("adminOnly")
-  @JsonView(View.LibraryPluginList.class)
+  @JsonView(View.LibraryPluginListView.class)
   @Getter
   @Setter
   private Boolean adminOnly = true;
 
   @OneToMany(mappedBy = "plugin", orphanRemoval = true, cascade = CascadeType.ALL)
   @JsonProperty("properties")
-  @JsonView(View.LibraryPluginList.class)
+  @JsonView(View.LibraryPluginListView.class)
   @Getter
   private List<LibraryPluginProperty> properties = new ArrayList<>();
 
   @Transient
   @JsonProperty("version")
-  @JsonView(View.LibraryPluginList.class)
+  @JsonView(View.LibraryPluginListView.class)
   @Getter
   @Setter
   private String version;
 
   @Transient
   @JsonProperty("pluginType")
-  @JsonView(View.LibraryPluginList.class)
+  @JsonView(View.LibraryPluginListView.class)
   @Getter
   @Setter
   private PluginType pluginType;

@@ -40,12 +40,12 @@ public class ComiXedUser {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "comixed_user_id")
   @JsonProperty("comixedUserId")
-  @JsonView(View.UserList.class)
+  @JsonView(View.UserListView.class)
   @Getter
   private Long comixedUserId;
 
   @Column(name = "email", updatable = true, nullable = false, unique = true)
-  @JsonView(View.UserList.class)
+  @JsonView(View.UserListView.class)
   @Getter
   @Setter
   private String email;
@@ -60,14 +60,14 @@ public class ComiXedUser {
   @Column(name = "created_on", nullable = false, updatable = false)
   @JsonProperty("firstLoginDate")
   @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-  @JsonView(View.UserList.class)
+  @JsonView(View.UserListView.class)
   @Getter
   private Date firstLoginDate = new Date();
 
   @Column(name = "last_logged_on", nullable = false, updatable = true)
   @JsonProperty("lastLoginDate")
   @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-  @JsonView(View.UserList.class)
+  @JsonView(View.UserListView.class)
   @Getter
   @Setter
   private Date lastLoginDate = new Date();
@@ -77,7 +77,7 @@ public class ComiXedUser {
       name = "comixed_user_roles_v4",
       joinColumns = @JoinColumn(name = "comixed_user_id"),
       inverseJoinColumns = @JoinColumn(name = "comixed_role_id"))
-  @JsonView(View.UserList.class)
+  @JsonView(View.UserListView.class)
   @Getter
   private List<ComiXedRole> roles = new ArrayList<>();
 
@@ -86,7 +86,7 @@ public class ComiXedUser {
       cascade = CascadeType.ALL,
       fetch = FetchType.EAGER,
       orphanRemoval = true)
-  @JsonView(View.UserList.class)
+  @JsonView(View.UserListView.class)
   @Getter
   private List<ComiXedUserPreference> preferences = new ArrayList<>();
 
@@ -95,12 +95,12 @@ public class ComiXedUser {
       name = "read_comic_books_v4",
       joinColumns = @JoinColumn(name = "comixed_user_id"))
   @Column(name = "comic_id")
-  @JsonView(View.UserList.class)
+  @JsonView(View.UserListView.class)
   @Getter
-  private Set<Long> readComicBooks = new HashSet<>();
+  private Set<Long> readComics = new HashSet<>();
 
   @Transient
-  @JsonView(View.UserList.class)
+  @JsonView(View.UserListView.class)
   @Getter
   @Setter
   private boolean authenticated = false;

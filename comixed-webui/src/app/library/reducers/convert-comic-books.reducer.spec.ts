@@ -24,13 +24,13 @@ import {
 import { DISPLAYABLE_COMIC_1 } from '@app/comic-books/comic-books.fixtures';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import {
-  convertComicBooksFailure,
-  convertComicBooksSuccess,
-  convertSelectedComicBooks,
-  convertSingleComicBook
+  convertComicsFailure,
+  convertComicsSuccess,
+  convertSelectedComics,
+  convertSingleComic
 } from '@app/library/actions/convert-comic-books.actions';
 
-describe('ConvertComicBooks Reducer', () => {
+describe('ConvertComics Reducer', () => {
   const ID = DISPLAYABLE_COMIC_1.comicId;
   const ARCHIVE_TYPE = ArchiveType.CBZ;
 
@@ -54,7 +54,7 @@ describe('ConvertComicBooks Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, converting: false },
-        convertSingleComicBook({
+        convertSingleComic({
           id: ID,
           archiveType: ARCHIVE_TYPE
         })
@@ -70,7 +70,7 @@ describe('ConvertComicBooks Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, converting: false },
-        convertSelectedComicBooks({
+        convertSelectedComics({
           archiveType: ARCHIVE_TYPE
         })
       );
@@ -83,10 +83,7 @@ describe('ConvertComicBooks Reducer', () => {
 
   describe('success', () => {
     beforeEach(() => {
-      state = reducer(
-        { ...state, converting: true },
-        convertComicBooksSuccess()
-      );
+      state = reducer({ ...state, converting: true }, convertComicsSuccess());
     });
 
     it('clears the converting state', () => {
@@ -96,10 +93,7 @@ describe('ConvertComicBooks Reducer', () => {
 
   describe('failure', () => {
     beforeEach(() => {
-      state = reducer(
-        { ...state, converting: true },
-        convertComicBooksFailure()
-      );
+      state = reducer({ ...state, converting: true }, convertComicsFailure());
     });
 
     it('clears the converting state', () => {

@@ -66,7 +66,7 @@ class PublishBlockedHashRemovalActionTest {
 
     action.publish(blockedHash);
 
-    Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.BlockedHashList.class);
+    Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.BlockedHashListView.class);
     Mockito.verify(objectWriter, Mockito.times(1)).writeValueAsString(blockedHash);
     Mockito.verify(messagingTemplate, Mockito.times(1))
         .convertAndSend(

@@ -29,7 +29,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.comixedproject.views.View.UserList;
+import org.comixedproject.views.View.UserListView;
 
 /**
  * A <code>ComiXedRole</code> defines the set of authorities a user has.
@@ -53,7 +53,7 @@ public class ComiXedRole {
   private Long comixedRoleId;
 
   @Column(name = "name", updatable = true, nullable = false, unique = true)
-  @JsonView(UserList.class)
+  @JsonView(UserListView.class)
   @Getter
   @NonNull
   private String name;

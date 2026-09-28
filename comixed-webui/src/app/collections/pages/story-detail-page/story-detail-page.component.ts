@@ -36,9 +36,9 @@ import { setBusyState } from '@app/core/actions/busy.actions';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { getUserPreference } from '@app/user';
 import { SHOW_COMIC_COVERS_PREFERENCE } from '@app/library/library.constants';
-import { selectComicBookSelectionIds } from '@app/comic-books/selectors/comic-book-selection.selectors';
+import { selectComicSelectionIds } from '@app/comic-books/selectors/comic-book-selection.selectors';
 import { selectUserReadingLists } from '@app/lists/selectors/reading-lists.selectors';
-import { setMultipleComicBooksByTagTypeAndValueSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
+import { setMultipleComicsByTagTypeAndValueSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
 import { loadComicsForCollection } from '@app/comic-books/actions/comic-list.actions';
 import { ComicTagType } from '@app/comic-books/models/comic-tag-type';
 import { isAdmin } from '@app/user/user.functions';
@@ -51,7 +51,7 @@ import { StoryScrapingComponent } from '../../components/story-scraping/story-sc
 import { tap } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
-import { selectReadComicBooksList } from '@app/user/selectors/read-comic-books.selectors';
+import { selectReadComicsList } from '@app/user/selectors/read-comic-books.selectors';
 
 @Component({
   selector: 'app-story-detail',
@@ -74,7 +74,7 @@ export class StoryDetailPageComponent implements OnInit {
   coverMonths$ = new BehaviorSubject<number[]>([]);
   storyName$ = new BehaviorSubject('');
   selectedIds$ = new BehaviorSubject<number[]>([]);
-  readComicBookList$ = new BehaviorSubject<number[]>([]);
+  readComicList$ = new BehaviorSubject<number[]>([]);
   readingLists$ = new BehaviorSubject<ReadingList[]>([]);
   isAdmin$ = new BehaviorSubject(false);
   showStoryScraping$ = new BehaviorSubject(false);
@@ -146,16 +146,12 @@ export class StoryDetailPageComponent implements OnInit {
       )
       .subscribe();
     this.store
-      .select(selectComicBookSelectionIds)
+      .select(selectComicSelectionIds)
       .pipe(tap(selectedIds => this.selectedIds$.next(selectedIds)))
       .subscribe();
     this.store
-      .select(selectReadComicBooksList)
-      .pipe(
-        tap(readComicBookList =>
-          this.readComicBookList$.next(readComicBookList)
-        )
-      )
+      .select(selectReadComicsList)
+      .pipe(tap(readComicList => this.readComicList$.next(readComicList)))
       .subscribe();
     this.store
       .select(selectUserReadingLists)
@@ -180,7 +176,7 @@ export class StoryDetailPageComponent implements OnInit {
       `Marking comic books as ${selected ? 'selected' : 'deselected'}`
     );
     this.store.dispatch(
-      setMultipleComicBooksByTagTypeAndValueSelectionState({
+      setMultipleComicsByTagTypeAndValueSelectionState({
         tagType: ComicTagType.STORY,
         tagValue: this.storyName$.value,
         selected

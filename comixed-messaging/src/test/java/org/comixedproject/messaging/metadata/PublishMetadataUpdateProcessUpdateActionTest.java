@@ -64,7 +64,7 @@ class PublishMetadataUpdateProcessUpdateActionTest {
     action.publish(update);
 
     Mockito.verify(objectMapper, Mockito.times(1))
-        .writerWithView(View.MetadataUpdateProcessState.class);
+        .writerWithView(View.MetadataUpdateProcessStateView.class);
     Mockito.verify(objectWriter, Mockito.times(1)).writeValueAsString(update);
     Mockito.verify(messagingTemplate, Mockito.times(1))
         .convertAndSend(

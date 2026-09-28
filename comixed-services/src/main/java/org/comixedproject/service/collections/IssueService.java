@@ -65,7 +65,7 @@ public class IssueService {
     if (result.isEmpty()) {
       log.debug("No series metadata found: generating transient series data");
       this.comicServices
-          .getAllComicBooksForPublisherAndSeriesAndVolume(publisher, series, volume, "", false)
+          .getAllComicsForPublisherAndSeriesAndVolume(publisher, series, volume, "", false)
           .forEach(
               comic -> {
                 log.debug(

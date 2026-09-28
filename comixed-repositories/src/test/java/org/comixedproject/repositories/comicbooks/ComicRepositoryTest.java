@@ -95,7 +95,7 @@ public class ComicRepositoryTest {
 
   @Test
   @Transactional
-  public void testUnscrapedComicDetails() {
+  public void testUnscrapedComics() {
     List<Comic> result = repository.findAll();
 
     assertFalse(result.stream().filter(Comic::getUnscraped).toList().isEmpty());
@@ -107,7 +107,7 @@ public class ComicRepositoryTest {
   public void testUpdateFilename() {
     repository.updateFilename(TEST_COMIC_ID, TEST_UPDATED_FILENAME);
 
-    final Comic after = repository.findByComicBookId(TEST_COMIC_ID);
+    final Comic after = repository.findByComicId(TEST_COMIC_ID);
 
     assertEquals(TEST_COMIC_ID, after.getComicId());
     assertEquals(TEST_UPDATED_FILENAME, after.getFilename());

@@ -105,7 +105,7 @@ export class LibraryPluginService {
     );
   }
 
-  runLibraryPluginOnOneComicBook(args: {
+  runLibraryPluginOnOneComic(args: {
     plugin: LibraryPlugin;
     comicId: number;
   }): Observable<any> {
@@ -119,7 +119,7 @@ export class LibraryPluginService {
     );
   }
 
-  runLibraryPluginOnSelectedComicBooks(args: {
+  runLibraryPluginOnSelectedComics(args: {
     plugin: LibraryPlugin;
   }): Observable<any> {
     this.logger.trace('Running plugin against selected comic books:', args);

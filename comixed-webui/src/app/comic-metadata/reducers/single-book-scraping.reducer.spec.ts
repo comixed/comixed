@@ -31,9 +31,9 @@ import {
   loadVolumeMetadata,
   loadVolumeMetadataFailed,
   resetMetadataState,
-  scrapeSingleComicBook,
-  scrapeSingleComicBookFailure,
-  scrapeSingleComicBookSuccess,
+  scrapeSingleComic,
+  scrapeSingleComicFailure,
+  scrapeSingleComicSuccess,
   setAutoSelectExactMatch,
   setChosenMetadataSource,
   setConfirmBeforeScraping,
@@ -279,7 +279,7 @@ describe('SingleBookScraping Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, loadingRecords: false },
-        scrapeSingleComicBook({
+        scrapeSingleComic({
           metadataSource: METADATA_SOURCE,
           comic: COMIC,
           issueId: SCRAPING_ISSUE.id,
@@ -301,7 +301,7 @@ describe('SingleBookScraping Reducer', () => {
             volumes: VOLUMES,
             scrapingIssue: SCRAPING_ISSUE
           },
-          scrapeSingleComicBookSuccess()
+          scrapeSingleComicSuccess()
         );
       });
 
@@ -322,7 +322,7 @@ describe('SingleBookScraping Reducer', () => {
       beforeEach(() => {
         state = reducer(
           { ...state, loadingRecords: true },
-          scrapeSingleComicBookFailure()
+          scrapeSingleComicFailure()
         );
       });
 

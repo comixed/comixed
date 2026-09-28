@@ -39,5 +39,5 @@ public interface ComicMetadataSourceRepository extends JpaRepository<ComicMetada
    * @return the source
    */
   @Query("SELECT s FROM ComicMetadataSource s WHERE s.comic.comicId = :comicId")
-  ComicMetadataSource findByComicBookId(@Param("comicId") long comicId);
+  ComicMetadataSource findByComicId(@Param("comicId") long comicId);
 }

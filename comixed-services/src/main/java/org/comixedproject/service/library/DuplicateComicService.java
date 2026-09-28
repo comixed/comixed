@@ -79,7 +79,7 @@ public class DuplicateComicService {
    * @return the count
    */
   @Transactional
-  public long getDuplicateComicBookCount() {
+  public long getDuplicateComicCount() {
     log.debug("Load the duplicate comic detail count");
     return this.duplicateComicRepository.count();
   }

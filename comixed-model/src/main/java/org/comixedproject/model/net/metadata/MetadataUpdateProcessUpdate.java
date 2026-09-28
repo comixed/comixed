@@ -33,17 +33,17 @@ import org.comixedproject.views.View;
 @AllArgsConstructor
 public class MetadataUpdateProcessUpdate {
   @JsonProperty("active")
-  @JsonView(View.MetadataUpdateProcessState.class)
+  @JsonView(View.MetadataUpdateProcessStateView.class)
   @Getter
   private boolean active;
 
   @JsonProperty("totalComics")
-  @JsonView(View.MetadataUpdateProcessState.class)
+  @JsonView(View.MetadataUpdateProcessStateView.class)
   @Getter
   private long totalComics;
 
   @JsonProperty("completedComics")
-  @JsonView(View.MetadataUpdateProcessState.class)
+  @JsonView(View.MetadataUpdateProcessStateView.class)
   @Getter
   private long completedComics;
 }

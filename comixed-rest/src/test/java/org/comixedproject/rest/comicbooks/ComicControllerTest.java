@@ -193,104 +193,104 @@ class ComicControllerTest {
 
   @Test
   void deleteComic_exceptionThrown() throws ComicException {
-    doThrow(ComicException.class).when(comicDataService).deleteComicBook(anyLong());
+    doThrow(ComicException.class).when(comicDataService).deleteComic(anyLong());
 
-    assertThrows(ComicException.class, () -> controller.deleteComicBook(TEST_COMIC_ID));
+    assertThrows(ComicException.class, () -> controller.deleteComic(TEST_COMIC_ID));
 
-    verify(comicDataService).deleteComicBook(TEST_COMIC_ID);
+    verify(comicDataService).deleteComic(TEST_COMIC_ID);
   }
 
   @Test
-  void deleteComicBook() throws ComicException {
-    doNothing().when(comicDataService).deleteComicBook(anyLong());
+  void deleteComic() throws ComicException {
+    doNothing().when(comicDataService).deleteComic(anyLong());
 
-    controller.deleteComicBook(TEST_COMIC_ID);
+    controller.deleteComic(TEST_COMIC_ID);
 
-    verify(comicDataService).deleteComicBook(TEST_COMIC_ID);
+    verify(comicDataService).deleteComic(TEST_COMIC_ID);
   }
 
   @Test
-  void undeleteComicBook() throws ComicException {
-    doNothing().when(comicDataService).undeleteComicBook(anyLong());
+  void undeleteComic() throws ComicException {
+    doNothing().when(comicDataService).undeleteComic(anyLong());
 
-    controller.undeleteComicBook(TEST_COMIC_ID);
+    controller.undeleteComic(TEST_COMIC_ID);
 
-    verify(comicDataService).undeleteComicBook(TEST_COMIC_ID);
+    verify(comicDataService).undeleteComic(TEST_COMIC_ID);
   }
 
   @Test
-  void undeleteComicBook_exceptionThrown() throws ComicException {
-    doThrow(ComicException.class).when(comicDataService).undeleteComicBook(anyLong());
+  void undeleteComic_exceptionThrown() throws ComicException {
+    doThrow(ComicException.class).when(comicDataService).undeleteComic(anyLong());
 
-    assertThrows(ComicException.class, () -> controller.undeleteComicBook(TEST_COMIC_ID));
+    assertThrows(ComicException.class, () -> controller.undeleteComic(TEST_COMIC_ID));
 
-    verify(comicDataService).undeleteComicBook(TEST_COMIC_ID);
+    verify(comicDataService).undeleteComic(TEST_COMIC_ID);
   }
 
   @Test
-  void deleteSelectedComicBooks_exceptionOnDecode() throws ComicException, ComicSelectionException {
+  void deleteSelectedComics_exceptionOnDecode() throws ComicException, ComicSelectionException {
     when(principal.getName()).thenReturn(TEST_EMAIL);
     when(httpSession.getAttribute(LIBRARY_SELECTIONS)).thenReturn(TEST_ENCODED_SELECTIONS);
     when(comicSelectionService.decodeSelections(any())).thenThrow(ComicSelectionException.class);
 
     assertThrows(
-        ComicException.class, () -> controller.deleteSelectedComicBooks(httpSession, principal));
+        ComicException.class, () -> controller.deleteSelectedComics(httpSession, principal));
 
     verify(comicSelectionService).decodeSelections(TEST_ENCODED_SELECTIONS);
-    verify(comicDataService, never()).deleteComicBooksById(selectedIdList);
+    verify(comicDataService, never()).deleteComicsById(selectedIdList);
   }
 
   @Test
-  void deleteSelectedComicBooks_exceptionOnEncode() throws ComicException, ComicSelectionException {
+  void deleteSelectedComics_exceptionOnEncode() throws ComicException, ComicSelectionException {
     when(principal.getName()).thenReturn(TEST_EMAIL);
     when(httpSession.getAttribute(LIBRARY_SELECTIONS)).thenReturn(TEST_ENCODED_SELECTIONS);
     when(comicSelectionService.decodeSelections(any())).thenReturn(selectedIdList);
     when(comicSelectionService.encodeSelections(anyList()))
         .thenThrow(ComicSelectionException.class);
-    doNothing().when(comicDataService).deleteComicBooksById(anyList());
+    doNothing().when(comicDataService).deleteComicsById(anyList());
 
     assertThrows(
-        ComicException.class, () -> controller.deleteSelectedComicBooks(httpSession, principal));
+        ComicException.class, () -> controller.deleteSelectedComics(httpSession, principal));
 
     verify(comicSelectionService).decodeSelections(TEST_ENCODED_SELECTIONS);
-    verify(comicDataService).deleteComicBooksById(selectedIdList);
-    verify(comicSelectionService).clearSelectedComicBooks(TEST_EMAIL, selectedIdList);
+    verify(comicDataService).deleteComicsById(selectedIdList);
+    verify(comicSelectionService).clearSelectedComics(TEST_EMAIL, selectedIdList);
     verify(comicSelectionService).encodeSelections(selectedIdList);
     verify(httpSession, never()).setAttribute(anyString(), anyString());
   }
 
   @Test
-  void deleteSelectedComicBooks() throws ComicException, ComicSelectionException {
+  void deleteSelectedComics() throws ComicException, ComicSelectionException {
     when(principal.getName()).thenReturn(TEST_EMAIL);
     when(httpSession.getAttribute(LIBRARY_SELECTIONS)).thenReturn(TEST_ENCODED_SELECTIONS);
     when(comicSelectionService.decodeSelections(any())).thenReturn(selectedIdList);
     when(comicSelectionService.encodeSelections(anyList())).thenReturn(TEST_REENCODED_SELECTIONS);
-    doNothing().when(comicDataService).deleteComicBooksById(anyList());
+    doNothing().when(comicDataService).deleteComicsById(anyList());
 
-    controller.deleteSelectedComicBooks(httpSession, principal);
+    controller.deleteSelectedComics(httpSession, principal);
 
     verify(comicSelectionService).decodeSelections(TEST_ENCODED_SELECTIONS);
-    verify(comicDataService).deleteComicBooksById(selectedIdList);
-    verify(comicSelectionService).clearSelectedComicBooks(TEST_EMAIL, selectedIdList);
+    verify(comicDataService).deleteComicsById(selectedIdList);
+    verify(comicSelectionService).clearSelectedComics(TEST_EMAIL, selectedIdList);
     verify(comicSelectionService).encodeSelections(selectedIdList);
     verify(httpSession).setAttribute(LIBRARY_SELECTIONS, TEST_REENCODED_SELECTIONS);
   }
 
   @Test
-  void undeleteSelectedComicBooks_exceptionOnDecode() throws Exception {
+  void undeleteSelectedComics_exceptionOnDecode() throws Exception {
     when(principal.getName()).thenReturn(TEST_EMAIL);
     when(httpSession.getAttribute(LIBRARY_SELECTIONS)).thenReturn(TEST_ENCODED_SELECTIONS);
     when(comicSelectionService.decodeSelections(any())).thenThrow(ComicSelectionException.class);
 
     assertThrows(
-        ComicException.class, () -> controller.undeleteSelectedComicBooks(httpSession, principal));
+        ComicException.class, () -> controller.undeleteSelectedComics(httpSession, principal));
 
     verify(comicSelectionService).decodeSelections(TEST_ENCODED_SELECTIONS);
-    verify(comicDataService, never()).undeleteComicBooksById(selectedIdList);
+    verify(comicDataService, never()).undeleteComicsById(selectedIdList);
   }
 
   @Test
-  void undeleteSelectedComicBooks_exceptionOnEncode() throws Exception {
+  void undeleteSelectedComics_exceptionOnEncode() throws Exception {
     when(principal.getName()).thenReturn(TEST_EMAIL);
     when(httpSession.getAttribute(LIBRARY_SELECTIONS)).thenReturn(TEST_ENCODED_SELECTIONS);
     when(comicSelectionService.decodeSelections(any())).thenReturn(selectedIdList);
@@ -298,28 +298,28 @@ class ComicControllerTest {
         .thenThrow(ComicSelectionException.class);
 
     assertThrows(
-        ComicException.class, () -> controller.undeleteSelectedComicBooks(httpSession, principal));
+        ComicException.class, () -> controller.undeleteSelectedComics(httpSession, principal));
 
     verify(comicSelectionService).decodeSelections(TEST_ENCODED_SELECTIONS);
-    verify(comicDataService).undeleteComicBooksById(selectedIdList);
-    verify(comicSelectionService).clearSelectedComicBooks(TEST_EMAIL, selectedIdList);
+    verify(comicDataService).undeleteComicsById(selectedIdList);
+    verify(comicSelectionService).clearSelectedComics(TEST_EMAIL, selectedIdList);
     verify(comicSelectionService).encodeSelections(selectedIdList);
     verify(httpSession, never()).setAttribute(LIBRARY_SELECTIONS, TEST_REENCODED_SELECTIONS);
   }
 
   @Test
-  void undeleteSelectedComicBooks() throws Exception {
+  void undeleteSelectedComics() throws Exception {
     when(principal.getName()).thenReturn(TEST_EMAIL);
     when(httpSession.getAttribute(LIBRARY_SELECTIONS)).thenReturn(TEST_ENCODED_SELECTIONS);
     when(comicSelectionService.decodeSelections(any())).thenReturn(selectedIdList);
     when(comicSelectionService.encodeSelections(anyList())).thenReturn(TEST_REENCODED_SELECTIONS);
-    doNothing().when(comicDataService).undeleteComicBooksById(anyList());
+    doNothing().when(comicDataService).undeleteComicsById(anyList());
 
-    controller.undeleteSelectedComicBooks(httpSession, principal);
+    controller.undeleteSelectedComics(httpSession, principal);
 
     verify(comicSelectionService).decodeSelections(TEST_ENCODED_SELECTIONS);
-    verify(comicDataService).undeleteComicBooksById(selectedIdList);
-    verify(comicSelectionService).clearSelectedComicBooks(TEST_EMAIL, selectedIdList);
+    verify(comicDataService).undeleteComicsById(selectedIdList);
+    verify(comicSelectionService).clearSelectedComics(TEST_EMAIL, selectedIdList);
     verify(comicSelectionService).encodeSelections(selectedIdList);
     verify(httpSession).setAttribute(LIBRARY_SELECTIONS, TEST_REENCODED_SELECTIONS);
   }

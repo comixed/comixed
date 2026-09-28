@@ -49,5 +49,5 @@ export const selectMultiBookScrapingList = createSelector(
 
 export const selectMultiBookScrapingCurrent = createSelector(
   selectMultiBookScrapingState,
-  state => state.currentComicBook
+  state => state.currentComic
 );

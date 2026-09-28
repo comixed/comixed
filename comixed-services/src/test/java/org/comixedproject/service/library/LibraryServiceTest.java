@@ -108,6 +108,6 @@ class LibraryServiceTest {
   void prepareForPurge() {
     service.prepareForPurging();
 
-    verify(comicService).prepareComicBooksForDeleting();
+    verify(comicService).prepareComicsForDeleting();
   }
 }

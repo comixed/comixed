@@ -24,7 +24,7 @@ import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 import { ComicMetadataSource } from '@app/comic-books/models/comic-metadata-source';
 import { ComicTag } from '@app/comic-books/models/comic-tag';
 
-export const loadComicBook = createAction(
+export const loadComic = createAction(
   '[Comic Book] Loads a single comic',
   props<{ id: number }>()
 );
@@ -39,11 +39,11 @@ export const comicLoaded = createAction(
   }>()
 );
 
-export const loadComicBookFailed = createAction(
+export const loadComicFailed = createAction(
   '[Comic Book] Failed to load a single comic'
 );
 
-export const updateComicBook = createAction(
+export const updateComic = createAction(
   '[Comic Book] Update a comic',
   props<{
     comicId: number;
@@ -61,7 +61,7 @@ export const updateComicBook = createAction(
 );
 
 export const comicUpdated = createAction(
-  '[Comic Book] ComicBook updated',
+  '[Comic Book] Comic updated',
   props<{
     detail: DisplayableComic;
     metadata: ComicMetadataSource;
@@ -69,7 +69,7 @@ export const comicUpdated = createAction(
   }>()
 );
 
-export const updateComicBookFailed = createAction(
+export const updateComicFailed = createAction(
   '[Comic Book] Failed to update a comic'
 );
 
@@ -97,15 +97,15 @@ export const savePageOrderFailed = createAction(
   '[Comic Book] Save page order failed'
 );
 
-export const downloadComicBook = createAction(
+export const downloadComic = createAction(
   '[Comic Book] Attempt to download a comic book file',
   props<{ comicId: number }>()
 );
 
-export const downloadComicBookSuccess = createAction(
+export const downloadComicSuccess = createAction(
   '[Comic Book] Download comic book file started'
 );
 
-export const downloadComicBookFailure = createAction(
+export const downloadComicFailure = createAction(
   '[Comic Book] Failed to download a comic book file'
 );

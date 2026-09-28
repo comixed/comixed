@@ -39,19 +39,19 @@ public class DuplicatePage {
   @Id
   @Column(name = "file_hash")
   @JsonProperty("hash")
-  @JsonView(View.DuplicatePageList.class)
+  @JsonView(View.DuplicatePageListView.class)
   @NonNull
   @Getter
   private String hash;
 
   @Column(name = "comic_count")
   @JsonProperty("comicCount")
-  @JsonView(View.DuplicatePageList.class)
+  @JsonView(View.DuplicatePageListView.class)
   @Getter
   private Long comicCount;
 
   @Transient
-  @JsonView(View.DuplicatePageList.class)
+  @JsonView(View.DuplicatePageListView.class)
   @Getter
   @Setter
   private Set<DisplayableComic> comics = new HashSet<>();

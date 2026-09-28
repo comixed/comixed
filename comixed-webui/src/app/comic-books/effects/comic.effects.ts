@@ -25,17 +25,17 @@ import { ComicService } from '@app/comic-books/services/comic.service';
 import {
   comicLoaded,
   comicUpdated,
-  downloadComicBook,
-  downloadComicBookFailure,
-  downloadComicBookSuccess,
-  loadComicBook,
-  loadComicBookFailed,
+  downloadComic,
+  downloadComicFailure,
+  downloadComicSuccess,
+  loadComic,
+  loadComicFailed,
   pageDeletionUpdated,
   pageOrderSaved,
   savePageOrder,
   savePageOrderFailed,
-  updateComicBook,
-  updateComicBookFailed,
+  updateComic,
+  updateComicFailed,
   updatePageDeletion,
   updatePageDeletionFailed
 } from '@app/comic-books/actions/comic-book.actions';
@@ -57,7 +57,7 @@ export class ComicEffects {
 
   loadOne$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(loadComicBook),
+      ofType(loadComic),
       tap(action => this.logger.debug('Effect: load comic:', action)),
       switchMap(action =>
         this.comicService.loadOne({ id: action.id }).pipe(
@@ -78,7 +78,7 @@ export class ComicEffects {
               )
             );
             this.router.navigateByUrl(LIBRARY_ROOT_URL);
-            return of(loadComicBookFailed());
+            return of(loadComicFailed());
           })
         )
       ),
@@ -88,13 +88,13 @@ export class ComicEffects {
           this.translateService.instant('app.general-effect-failure')
         );
         this.router.navigateByUrl(LIBRARY_ROOT_URL);
-        return of(loadComicBookFailed());
+        return of(loadComicFailed());
       })
     );
   });
   saveOne$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(updateComicBook),
+      ofType(updateComic),
       tap(action => this.logger.debug('Effect: update comic:', action)),
       switchMap(action =>
         this.comicService
@@ -134,7 +134,7 @@ export class ComicEffects {
                   'comic-book.save-changes.effect-failure'
                 )
               );
-              return of(updateComicBookFailed());
+              return of(updateComicFailed());
             })
           )
       ),
@@ -143,7 +143,7 @@ export class ComicEffects {
         this.alertService.error(
           this.translateService.instant('app.general-effect-failure')
         );
-        return of(updateComicBookFailed());
+        return of(updateComicFailed());
       })
     );
   });
@@ -233,17 +233,17 @@ export class ComicEffects {
     );
   });
   fileDownloadService = inject(FileDownloadService);
-  downloadComicBook$ = createEffect(() => {
+  downloadComic$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(downloadComicBook),
+      ofType(downloadComic),
       tap(action => this.logger.debug('Download comic book:', action)),
       switchMap(action =>
-        this.comicService.downloadComicBook({ comicId: action.comicId }).pipe(
+        this.comicService.downloadComic({ comicId: action.comicId }).pipe(
           tap(response => this.logger.debug('Response received:', response)),
           tap(response =>
             this.fileDownloadService.saveFile({ document: response })
           ),
-          map(() => downloadComicBookSuccess()),
+          map(() => downloadComicSuccess()),
           catchError(error => {
             this.logger.error('Service failure:', error);
             this.alertService.error(
@@ -251,7 +251,7 @@ export class ComicEffects {
                 'comic-book.download.effect-failure'
               )
             );
-            return of(downloadComicBookFailure());
+            return of(downloadComicFailure());
           })
         )
       ),
@@ -260,7 +260,7 @@ export class ComicEffects {
         this.alertService.error(
           this.translateService.instant('app.general-effect-failure')
         );
-        return of(downloadComicBookFailure());
+        return of(downloadComicFailure());
       })
     );
   });

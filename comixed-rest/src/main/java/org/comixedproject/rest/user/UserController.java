@@ -72,7 +72,7 @@ public class UserController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @Timed(value = "comixed.user.save-preference")
-  @JsonView(View.UserDetailsView.class)
+  @JsonView(View.UserView.class)
   @PreAuthorize("hasAnyRole('READER', 'ADMIN')")
   public ComiXedUser saveCurrentUserPreference(
       final Principal principal,
@@ -98,7 +98,7 @@ public class UserController {
       value = "/api/user/preferences/{name}",
       produces = MediaType.APPLICATION_JSON_VALUE)
   @Timed(value = "comixed.user.delete-preference")
-  @JsonView(View.UserDetailsView.class)
+  @JsonView(View.UserView.class)
   @PreAuthorize("hasAnyRole('READER', 'ADMIN')")
   public ComiXedUser deleteCurrentUserProperty(
       final Principal principal, @PathVariable("name") final String name)
@@ -122,7 +122,7 @@ public class UserController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @Timed(value = "comixed.user.update-current")
-  @JsonView(View.UserDetailsView.class)
+  @JsonView(View.UserView.class)
   @PreAuthorize("hasRole('READER')")
   public ComiXedUser updateCurrentUser(
       @PathVariable("id") final long id, @RequestBody() final UpdateCurrentUserRequest request)
@@ -144,7 +144,7 @@ public class UserController {
       value = "/api/users/statistics/comics/read",
       produces = MediaType.APPLICATION_JSON_VALUE)
   @Timed(value = "comixed.user.comics-read-statistics")
-  @JsonView(View.UserStatistics.class)
+  @JsonView(View.UserStatsView.class)
   @PreAuthorize("hasRole('READER')")
   public List<ComicsReadStatistic> loadComicsReadStatistics(final Principal principal)
       throws ComiXedUserException {
@@ -189,7 +189,7 @@ public class UserController {
   @GetMapping(value = "/api/users/list", produces = MediaType.APPLICATION_JSON_VALUE)
   @Timed(value = "comixed.user.list-accounts")
   @PreAuthorize("hasRole('ADMIN')")
-  @JsonView(View.UserList.class)
+  @JsonView(View.UserListView.class)
   public List<ComiXedUser> getUserAccountList() {
     log.info("Getting the user account list");
     return this.userService.getUserAccountList();
@@ -208,7 +208,7 @@ public class UserController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @Timed(value = "comixed.user.create-user")
   @PreAuthorize("hasRole('ADMIN')")
-  @JsonView(View.UserList.class)
+  @JsonView(View.UserListView.class)
   public List<ComiXedUser> createUserAccount(@RequestBody final CreateAccountRequest request)
       throws ComiXedUserException {
     final String email = request.getEmail();
@@ -232,7 +232,7 @@ public class UserController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @Timed(value = "comixed.user.create-user")
   @PreAuthorize("hasRole('ADMIN')")
-  @JsonView(View.UserList.class)
+  @JsonView(View.UserListView.class)
   public List<ComiXedUser> updateUserAccount(
       @RequestBody final CreateAccountRequest request, @PathVariable("userId") final long userId)
       throws ComiXedUserException {
@@ -252,7 +252,7 @@ public class UserController {
   @DeleteMapping(value = "/api/users/{userId}")
   @Timed(value = "comixed.user.create-user")
   @PreAuthorize("hasRole('ADMIN')")
-  @JsonView(View.UserList.class)
+  @JsonView(View.UserListView.class)
   public void deleteUserAccount(@PathVariable("userId") final long userId)
       throws ComiXedUserException {
     log.info("Deleting user account: {} is admin={}", userId);

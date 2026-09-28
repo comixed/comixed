@@ -359,7 +359,7 @@ public class ReadingListService {
    * @param comic the comic
    */
   @Transactional
-  public void deleteEntriesForComicBook(final Comic comic) {
+  public void deleteEntriesForComic(final Comic comic) {
     log.trace("Deleting all reading list entries for comic book: id={}", comic.getComicId());
     this.readingListRepository
         .getReadingListsWithComic(comic.getComicId())

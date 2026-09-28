@@ -27,9 +27,9 @@ import {
   loadVolumeMetadata,
   loadVolumeMetadataFailed,
   resetMetadataState,
-  scrapeSingleComicBook,
-  scrapeSingleComicBookFailure,
-  scrapeSingleComicBookSuccess,
+  scrapeSingleComic,
+  scrapeSingleComicFailure,
+  scrapeSingleComicSuccess,
   setAutoSelectExactMatch,
   setChosenMetadataSource,
   setConfirmBeforeScraping,
@@ -105,14 +105,14 @@ export const reducer = createReducer(
     scrapingIssue: action.issue
   })),
   on(loadIssueMetadataFailed, state => ({ ...state, loadingRecords: false })),
-  on(scrapeSingleComicBook, state => ({ ...state, loadingRecords: true })),
-  on(scrapeSingleComicBookSuccess, state => ({
+  on(scrapeSingleComic, state => ({ ...state, loadingRecords: true })),
+  on(scrapeSingleComicSuccess, state => ({
     ...state,
     loadingRecords: false,
     volumes: [],
     scrapingIssue: null
   })),
-  on(scrapeSingleComicBookFailure, state => ({
+  on(scrapeSingleComicFailure, state => ({
     ...state,
     loadingRecords: false
   })),

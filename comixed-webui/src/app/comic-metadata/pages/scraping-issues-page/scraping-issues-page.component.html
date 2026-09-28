@@ -55,32 +55,30 @@
       <mat-card>
         <mat-card-title
           class="cx-text-nowrap cx-align-content-center"
-          [matTooltip]="(currentComicBook$ | async)?.detail | comicTitle"
+          [matTooltip]="(currentComic$ | async)?.detail | comicTitle"
         >
-          {{ (currentComicBook$ | async)?.detail | comicTitle }}
+          {{ (currentComic$ | async)?.detail | comicTitle }}
         </mat-card-title>
         <mat-card-subtitle
           class="cx-text-nowrap cx-align-content-center"
-          [matTooltip]="(currentComicBook$ | async)?.baseFilename"
+          [matTooltip]="(currentComic$ | async)?.baseFilename"
         >
-          {{ (currentComicBook$ | async)?.baseFilename }}
+          {{ (currentComic$ | async)?.baseFilename }}
         </mat-card-subtitle>
         <mat-card-content>
           <img
             [style.width]="'100%'"
             [style.height]="'auto'"
-            [alt]="currentComicBook$ | async | comicTitle"
-            [src]="currentComicBook$ | async | comicCoverUrl"
+            [alt]="currentComic$ | async | comicTitle"
+            [src]="currentComic$ | async | comicCoverUrl"
           />
         </mat-card-content>
       </mat-card>
     </div>
-    @if (
-      !!(currentComicBook$ | async) && (scrapingVolumes$ | async).length === 0
-    ) {
+    @if (!!(currentComic$ | async) && (scrapingVolumes$ | async).length === 0) {
       <div class="cx-width-75">
         <app-comic-scraping
-          [comic]="currentComicBook$ | async"
+          [comic]="currentComic$ | async"
           [metadataSource]="metadataSource$ | async"
           [skipCache]="skipCache$ | async"
           [matchPublisher]="matchPublisher$ | async"
@@ -114,7 +112,7 @@
                 [matTooltip]="
                   'scraping.tooltip.remove-comic-from-queue' | translate
                 "
-                (click)="onRemoveComicBook(entry); $event.stopPropagation()"
+                (click)="onRemoveComic(entry); $event.stopPropagation()"
               >
                 <mat-icon>delete</mat-icon>
               </button>
@@ -168,10 +166,10 @@
           <mat-row
             *matRowDef="let row; columns: displayColumns"
             [class.cx-selected-row]="
-              (currentComicBook$ | async)?.comicId === row.comicId
+              (currentComic$ | async)?.comicId === row.comicId
             "
-            (click)="onSelectComicBook(row)"
-            (keyup)="onSelectComicBook(row)"
+            (click)="onSelectComic(row)"
+            (keyup)="onSelectComic(row)"
           ></mat-row>
         </mat-table>
       </div>
@@ -179,7 +177,7 @@
     @if ((scrapingVolumes$ | async).length > 0) {
       <div class="cx-width-75">
         <app-scraping-volume-selection
-          [comic]="currentComicBook$ | async"
+          [comic]="currentComic$ | async"
           [metadataSource]="metadataSource$ | async"
           [comicSeriesName]="currentSeries$ | async"
           [comicVolume]="currentVolume$ | async"

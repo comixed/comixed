@@ -47,7 +47,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { ComicDetailsDialogComponent } from './components/comic-details-dialog/comic-details-dialog.component';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { ComicBooksModule } from '@app/comic-books/comic-books.module';
+import { ComicsModule } from '@app/comic-books/comic-books.module';
 import { duplicatePageListFeature } from '@app/library/reducers/duplicate-page-list.reducer';
 import { DuplicatePageListEffects } from '@app/library/effects/duplicate-page-list.effects';
 import { DuplicatePageListPageComponent } from './pages/duplicate-page-list-page/duplicate-page-list-page.component';
@@ -56,13 +56,13 @@ import { DuplicatePageDetailPageComponent } from './pages/duplicate-page-detail-
 import { duplicatePageDetailFeature } from '@app/library/reducers/duplicate-page-detail.reducer';
 import { DuplicatePageDetailEffects } from '@app/library/effects/duplicate-page-detail.effects';
 import { MatDividerModule } from '@angular/material/divider';
-import { rescanComicBooksFeature } from '@app/library/reducers/rescan-comics.reducer';
+import { rescanComicsFeature } from '@app/library/reducers/rescan-comics.reducer';
 import { RescanComicsEffects } from '@app/library/effects/rescan-comics.effects';
 import { updateMetadataFeature } from '@app/library/reducers/update-metadata.reducer';
 import { UpdateMetadataEffects } from '@app/library/effects/update-metadata.effects';
 import { organizeLibraryFeature } from '@app/library/reducers/organize-library.reducer';
 import { OrganizeLibraryEffects } from '@app/library/effects/organize-library.effects';
-import { convertComicBooksFeature } from '@app/library/reducers/convert-comic-books.reducer';
+import { convertComicsFeature } from '@app/library/reducers/convert-comic-books.reducer';
 import { ConvertComicsEffects } from '@app/library/effects/convert-comics.effects';
 import { purgeLibraryFeature } from '@app/library/reducers/purge-library.reducer';
 import { PurgeLibraryEffects } from '@app/library/effects/purge-library.effects';
@@ -77,7 +77,7 @@ import { DuplicateComicsEffects } from '@app/library/effects/duplicate-comics.ef
   imports: [
     CommonModule,
     CoreModule,
-    ComicBooksModule,
+    ComicsModule,
     LibraryRouting,
     ReactiveFormsModule,
     TranslateModule.forRoot(),
@@ -85,10 +85,10 @@ import { DuplicateComicsEffects } from '@app/library/effects/duplicate-comics.ef
     StoreModule.forFeature(duplicateComicsFeature),
     StoreModule.forFeature(duplicatePageListFeature),
     StoreModule.forFeature(duplicatePageDetailFeature),
-    StoreModule.forFeature(rescanComicBooksFeature),
+    StoreModule.forFeature(rescanComicsFeature),
     StoreModule.forFeature(updateMetadataFeature),
     StoreModule.forFeature(organizeLibraryFeature),
-    StoreModule.forFeature(convertComicBooksFeature),
+    StoreModule.forFeature(convertComicsFeature),
     StoreModule.forFeature(purgeLibraryFeature),
     EffectsModule.forFeature([
       LibraryEffects,

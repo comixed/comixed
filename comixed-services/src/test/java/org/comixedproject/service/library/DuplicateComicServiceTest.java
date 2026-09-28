@@ -99,10 +99,10 @@ class DuplicateComicServiceTest {
   }
 
   @Test
-  void getDuplicateComicBookCount() {
+  void getDuplicateComicCount() {
     Mockito.when(duplicateComicRepository.count()).thenReturn(TEST_TOTAL_COMIC_COUNT);
 
-    final long result = service.getDuplicateComicBookCount();
+    final long result = service.getDuplicateComicCount();
 
     assertEquals(TEST_TOTAL_COMIC_COUNT, result);
 

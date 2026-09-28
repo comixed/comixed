@@ -239,7 +239,7 @@ export class ComicScrapingService {
     );
   }
 
-  batchScrapeComicBooks(): Observable<any> {
+  batchScrapeComics(): Observable<any> {
     this.logger.debug('Batch scraping selected comic books');
     return this.http.post(interpolate(BATCH_SCRAPE_SELECTED_COMICS_URL), {});
   }

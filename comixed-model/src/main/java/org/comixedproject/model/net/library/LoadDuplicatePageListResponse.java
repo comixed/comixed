@@ -35,12 +35,12 @@ import org.comixedproject.views.View;
 @AllArgsConstructor
 public class LoadDuplicatePageListResponse {
   @JsonProperty("pages")
-  @JsonView(View.DuplicatePageList.class)
+  @JsonView(View.DuplicatePageListView.class)
   @Getter
   private List<DuplicatePage> pages;
 
   @JsonProperty("total")
-  @JsonView(View.DuplicatePageList.class)
+  @JsonView(View.DuplicatePageListView.class)
   @Getter
   private long total;
 }

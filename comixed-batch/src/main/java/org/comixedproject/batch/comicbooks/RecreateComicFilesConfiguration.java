@@ -59,11 +59,11 @@ public class RecreateComicFilesConfiguration {
       final JobRepository jobRepository,
       final RecreatingComicFilesJobListener listener,
       @Qualifier("recreateComicFileStep") final Step recreateComicFileStep,
-      @Qualifier("loadComicBooksStep") final Step loadComicBooksStep) {
+      @Qualifier("loadComicsStep") final Step loadComicsStep) {
     return new JobBuilder(RECREATE_COMIC_FILES_JOB, jobRepository)
         .listener(listener)
         .start(recreateComicFileStep)
-        .next(loadComicBooksStep)
+        .next(loadComicsStep)
         .build();
   }
 
@@ -85,13 +85,13 @@ public class RecreateComicFilesConfiguration {
         .build();
   }
 
-  @Bean(name = "loadComicBooksStep")
-  public Step loadComicBooksStep(
+  @Bean(name = "loadComicsStep")
+  public Step loadComicsStep(
       final JobRepository jobRepository,
-      final @Qualifier("loadComicBooksJob") Job loadComicBooksJob,
+      final @Qualifier("loadComicsJob") Job loadComicsJob,
       final @Lazy @Qualifier("batchJobOperator") JobOperator jobOperator) {
-    return new StepBuilder("loadComicBooksStep", jobRepository)
-        .job(loadComicBooksJob)
+    return new StepBuilder("loadComicsStep", jobRepository)
+        .job(loadComicsJob)
         .parametersExtractor(new DefaultJobParametersExtractor())
         .operator(jobOperator)
         .build();

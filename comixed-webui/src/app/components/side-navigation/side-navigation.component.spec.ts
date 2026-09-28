@@ -43,7 +43,7 @@ import {
   USER_FEATURE_KEY
 } from '@app/user/reducers/user.reducer';
 import {
-  initialState as initialReadComicBooksState,
+  initialState as initialReadComicsState,
   READ_COMICS_FEATURE_KEY
 } from '@app/user/reducers/read-comics.reducer';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -58,7 +58,7 @@ describe('SideNavigationComponent', () => {
   const initialState = {
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
     [USER_FEATURE_KEY]: initialUserState,
-    [READ_COMICS_FEATURE_KEY]: initialReadComicBooksState,
+    [READ_COMICS_FEATURE_KEY]: initialReadComicsState,
     [READING_LISTS_FEATURE_KEY]: initialReadingListsState,
     [COMIC_SELECTION_FEATURE_KEY]: initialcomicSelectionState,
     [FEATURE_ENABLED_FEATURE_KEY]: initialFeatureEnabledState

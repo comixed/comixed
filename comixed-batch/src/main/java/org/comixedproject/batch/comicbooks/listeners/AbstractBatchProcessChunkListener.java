@@ -40,7 +40,7 @@ public abstract class AbstractBatchProcessChunkListener<I, O> extends AbstractBa
     final long total = this.getTotalElements();
     final long processed = this.getProcessedElements();
     final boolean active = this.isActive();
-    this.doPublishProcessComicBookStatus(active, this.getStepName(), total, processed);
+    this.doPublishProcessComicStatus(active, this.getStepName(), total, processed);
   }
 
   private Optional<StepContext> getStepContext() {

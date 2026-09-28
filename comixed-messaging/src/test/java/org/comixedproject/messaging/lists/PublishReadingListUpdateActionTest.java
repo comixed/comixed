@@ -66,8 +66,8 @@ class PublishReadingListUpdateActionTest {
   void PublishReadingListUpdate() throws PublishingException, JacksonException {
     action.publish(readingList);
 
-    Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.ReadingLists.class);
-    Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.ReadingListDetail.class);
+    Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.ReadingListListView.class);
+    Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.ReadingListView.class);
     Mockito.verify(objectWriter, Mockito.times(2)).writeValueAsString(readingList);
     Mockito.verify(messagingTemplate, Mockito.times(1))
         .convertAndSendToUser(

@@ -19,10 +19,10 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {
-  markSelectedComicBooksRead,
-  markSelectedComicBooksReadFailed,
-  markSelectedComicBooksReadSuccess,
-  markSingleComicBookRead
+  markSelectedComicsRead,
+  markSelectedComicsReadFailed,
+  markSelectedComicsReadSuccess,
+  markSingleComicRead
 } from '@app/user/actions/read-comic-books.actions';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
@@ -35,13 +35,13 @@ import { TranslateService } from '@ngx-translate/core';
 export class ReadComicsEffects {
   logger = inject(LoggerService);
   actions$ = inject(Actions);
-  readComicBooksService = inject(ReadComicsService);
+  readComicsService = inject(ReadComicsService);
   alertService = inject(AlertService);
   translateService = inject(TranslateService);
 
-  setSingleComicBookReadState$ = createEffect(() => {
+  setSingleComicReadState$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(markSingleComicBookRead),
+      ofType(markSingleComicRead),
       tap(action =>
         this.logger.debug(
           'Effect: updating single comic book read status:',
@@ -49,7 +49,7 @@ export class ReadComicsEffects {
         )
       ),
       switchMap(action =>
-        this.readComicBooksService
+        this.readComicsService
           .setSingleReadState({
             comicId: action.comicId,
             read: action.read
@@ -64,7 +64,7 @@ export class ReadComicsEffects {
                 )
               )
             ),
-            map(() => markSelectedComicBooksReadSuccess()),
+            map(() => markSelectedComicsReadSuccess()),
             catchError(error =>
               this.doServiceFailure(
                 error,
@@ -77,34 +77,32 @@ export class ReadComicsEffects {
       catchError(error => this.doGeneralFailure(error))
     );
   });
-  setSelectedComicBooksReadState$ = createEffect(() => {
+  setSelectedComicsReadState$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(markSelectedComicBooksRead),
+      ofType(markSelectedComicsRead),
       tap(action =>
         this.logger.debug('Effect: updating comic read status:', action)
       ),
       switchMap(action =>
-        this.readComicBooksService
-          .setSelectedReadState({ read: action.read })
-          .pipe(
-            tap(response => this.logger.debug('Response received:', response)),
-            tap(() =>
-              this.alertService.info(
-                this.translateService.instant(
-                  'selected-comic-books-read-state.effect-success',
-                  { status: action.read }
-                )
-              )
-            ),
-            map(() => markSelectedComicBooksReadSuccess()),
-            catchError(error =>
-              this.doServiceFailure(
-                error,
-                action.read,
-                'selected-comic-books-read-state.effect-failure'
+        this.readComicsService.setSelectedReadState({ read: action.read }).pipe(
+          tap(response => this.logger.debug('Response received:', response)),
+          tap(() =>
+            this.alertService.info(
+              this.translateService.instant(
+                'selected-comic-books-read-state.effect-success',
+                { status: action.read }
               )
             )
+          ),
+          map(() => markSelectedComicsReadSuccess()),
+          catchError(error =>
+            this.doServiceFailure(
+              error,
+              action.read,
+              'selected-comic-books-read-state.effect-failure'
+            )
           )
+        )
       ),
       catchError(error => this.doGeneralFailure(error))
     );
@@ -115,7 +113,7 @@ export class ReadComicsEffects {
     this.alertService.error(
       this.translateService.instant(errorMessage, { status: read })
     );
-    return of(markSelectedComicBooksReadFailed());
+    return of(markSelectedComicsReadFailed());
   }
 
   private doGeneralFailure(error: any) {
@@ -123,6 +121,6 @@ export class ReadComicsEffects {
     this.alertService.error(
       this.translateService.instant('app.general-effect-failure')
     );
-    return of(markSelectedComicBooksReadFailed());
+    return of(markSelectedComicsReadFailed());
   }
 }

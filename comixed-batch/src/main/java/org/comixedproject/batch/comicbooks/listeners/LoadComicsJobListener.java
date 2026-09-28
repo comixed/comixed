@@ -27,7 +27,7 @@ import org.springframework.batch.core.listener.JobExecutionListener;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>loadComicBooksJobListener</code> relays overall job state during the comic processing batch
+ * <code>loadComicsJobListener</code> relays overall job state during the comic processing batch
  * process.
  *
  * @author Darryl L. Pierce

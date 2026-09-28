@@ -156,6 +156,6 @@
   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
   <mat-row
     *matRowDef="let row; columns: displayedColumns"
-    [routerLink]="row.found ? ['/comics', getComicBookIdForRow(row)] : null"
+    [routerLink]="row.found ? ['/comics', getComicIdForRow(row)] : null"
   ></mat-row>
 </mat-table>

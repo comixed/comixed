@@ -324,7 +324,7 @@ describe('ComicScrapingService', () => {
   it('can batch scrape selected comic books', () => {
     const serverResponse = new HttpResponse({ status: 200 });
     service
-      .batchScrapeComicBooks()
+      .batchScrapeComics()
       .subscribe(response => expect(response).toEqual(serverResponse));
 
     const req = httpMock.expectOne(

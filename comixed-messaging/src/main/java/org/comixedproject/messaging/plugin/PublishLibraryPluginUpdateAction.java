@@ -39,6 +39,6 @@ public class PublishLibraryPluginUpdateAction extends AbstractPublishAction<List
   @Override
   public void publish(final List<LibraryPlugin> object) throws PublishingException {
     log.debug("Publishing updated plugin list");
-    this.doPublish(PUBLISH_LIBRARY_PLUGIN_UPDATES_TOPIC, object, View.LibraryPluginList.class);
+    this.doPublish(PUBLISH_LIBRARY_PLUGIN_UPDATES_TOPIC, object, View.LibraryPluginListView.class);
   }
 }

@@ -47,7 +47,7 @@ class PurgeMarkedComicsReaderTest {
   void read_noneLoaded_manyFound() {
     for (int index = 0; index < MAX_RECORDS; index++) comicList.add(comic);
 
-    when(comicService.findComicBooksToBePurged(anyInt())).thenReturn(comicList);
+    when(comicService.findComicsToBePurged(anyInt())).thenReturn(comicList);
 
     final Comic result = reader.read();
 
@@ -56,12 +56,12 @@ class PurgeMarkedComicsReaderTest {
     assertFalse(comicList.isEmpty());
     assertEquals(MAX_RECORDS - 1, comicList.size());
 
-    verify(comicService).findComicBooksToBePurged(reader.getChunkSize());
+    verify(comicService).findComicsToBePurged(reader.getChunkSize());
   }
 
   @Test
   void read_noneRemaining() {
-    when(comicService.findComicBooksToBePurged(anyInt())).thenReturn(comicList);
+    when(comicService.findComicsToBePurged(anyInt())).thenReturn(comicList);
 
     reader.comicList = comicList;
 
@@ -70,18 +70,18 @@ class PurgeMarkedComicsReaderTest {
     assertNull(result);
     assertNull(reader.comicList);
 
-    verify(comicService).findComicBooksToBePurged(reader.getChunkSize());
+    verify(comicService).findComicsToBePurged(reader.getChunkSize());
   }
 
   @Test
   void read_noneLoaded_noneFound() {
-    when(comicService.findComicBooksToBePurged(anyInt())).thenReturn(comicList);
+    when(comicService.findComicsToBePurged(anyInt())).thenReturn(comicList);
 
     final Comic result = reader.read();
 
     assertNull(result);
     assertNull(reader.comicList);
 
-    verify(comicService).findComicBooksToBePurged(reader.getChunkSize());
+    verify(comicService).findComicsToBePurged(reader.getChunkSize());
   }
 }

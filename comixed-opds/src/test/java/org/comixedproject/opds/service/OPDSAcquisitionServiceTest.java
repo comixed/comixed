@@ -84,7 +84,7 @@ class OPDSAcquisitionServiceTest {
     Mockito.when(opdsUtils.urlEncodeString(Mockito.anyString())).thenReturn(TEST_ENCODED_NAME);
     entryIdList.add(TEST_COMIC_ID);
     comicList.add(comic);
-    Mockito.when(comicService.getByComicBookId(Mockito.anyLong())).thenReturn(comic);
+    Mockito.when(comicService.getByComicId(Mockito.anyLong())).thenReturn(comic);
   }
 
   @Test
@@ -177,7 +177,7 @@ class OPDSAcquisitionServiceTest {
   @Test
   void getComicFeedForPublisherAndSeriesAndVolume() {
     Mockito.when(
-            comicService.getAllComicBooksForPublisherAndSeriesAndVolume(
+            comicService.getAllComicsForPublisherAndSeriesAndVolume(
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.anyString(),
@@ -192,7 +192,7 @@ class OPDSAcquisitionServiceTest {
     Assertions.assertNotNull(result);
 
     Mockito.verify(comicService, Mockito.times(1))
-        .getAllComicBooksForPublisherAndSeriesAndVolume(
+        .getAllComicsForPublisherAndSeriesAndVolume(
             TEST_PUBLISHER_NAME, TEST_SERIES_NAME, TEST_VOLUME, TEST_EMAIL, TEST_UNREAD);
   }
 
@@ -221,7 +221,7 @@ class OPDSAcquisitionServiceTest {
     Mockito.verify(readingListService, Mockito.times(1))
         .loadReadingListForUser(TEST_EMAIL, TEST_READING_LIST_ID);
     Mockito.verify(opdsUtils, Mockito.times(1)).createComicEntry(comic);
-    Mockito.verify(comicService, Mockito.times(1)).getByComicBookId(TEST_COMIC_ID);
+    Mockito.verify(comicService, Mockito.times(1)).getByComicId(TEST_COMIC_ID);
   }
 
   @Test

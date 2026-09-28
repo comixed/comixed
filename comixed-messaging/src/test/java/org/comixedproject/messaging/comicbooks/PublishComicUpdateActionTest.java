@@ -73,7 +73,7 @@ class PublishComicUpdateActionTest {
 
     action.publish(data);
 
-    verify(objectMapper, times(2)).writerWithView(View.ComicDetailsView.class);
+    verify(objectMapper, times(2)).writerWithView(View.ComicView.class);
     verify(objectWriter, times(2)).writeValueAsString(data);
     verify(messagingTemplate)
         .convertAndSend(PublishComicUpdateAction.COMIC_LIST_UPDATE_TOPIC, TEST_COMIC_AS_JSON);

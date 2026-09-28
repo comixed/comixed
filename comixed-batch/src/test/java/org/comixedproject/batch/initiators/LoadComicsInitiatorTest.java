@@ -74,7 +74,7 @@ class LoadComicsInitiatorTest {
     for (int index = 0; index < 100; index++) comicList.add(mock(Comic.class));
     when(jobOperator.start(any(Job.class), jobParametersArgumentCaptor.capture()))
         .thenReturn(jobExecution);
-    when(comicService.getUnprocessedComicBookCount()).thenReturn(1L);
+    when(comicService.getUnprocessedComicCount()).thenReturn(1L);
   }
 
   @Test
@@ -83,7 +83,7 @@ class LoadComicsInitiatorTest {
           JobExecutionAlreadyRunningException,
           InvalidJobParametersException,
           JobRestartException {
-    when(comicService.getUnprocessedComicBookCount()).thenReturn(1L);
+    when(comicService.getUnprocessedComicCount()).thenReturn(1L);
 
     initiator.execute();
 
@@ -91,7 +91,7 @@ class LoadComicsInitiatorTest {
     assertNotNull(jobParameters);
     assertNotNull(jobParameters.getLong(LOAD_COMICS_JOB_STARTED));
 
-    verify(comicService).getUnprocessedComicBookCount();
+    verify(comicService).getUnprocessedComicCount();
     verify(jobOperator).start(addPagesToImageCacheJob, jobParameters);
   }
 
@@ -101,7 +101,7 @@ class LoadComicsInitiatorTest {
           JobExecutionAlreadyRunningException,
           InvalidJobParametersException,
           JobRestartException {
-    when(comicService.getUnprocessedComicBookCount()).thenReturn(1L);
+    when(comicService.getUnprocessedComicCount()).thenReturn(1L);
 
     initiator.execute(LoadComicsEvent.instance);
 
@@ -109,7 +109,7 @@ class LoadComicsInitiatorTest {
     assertNotNull(jobParameters);
     assertNotNull(jobParameters.getLong(LOAD_COMICS_JOB_STARTED));
 
-    verify(comicService).getUnprocessedComicBookCount();
+    verify(comicService).getUnprocessedComicCount();
     verify(jobOperator).start(addPagesToImageCacheJob, jobParameters);
   }
 
@@ -147,12 +147,12 @@ class LoadComicsInitiatorTest {
   }
 
   @Test
-  void execute_noComicBooksFound()
+  void execute_noComicsFound()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
           InvalidJobParametersException,
           JobRestartException {
-    when(comicService.getUnprocessedComicBookCount()).thenReturn(0L);
+    when(comicService.getUnprocessedComicCount()).thenReturn(0L);
 
     initiator.execute();
 
@@ -165,7 +165,7 @@ class LoadComicsInitiatorTest {
           JobExecutionAlreadyRunningException,
           InvalidJobParametersException,
           JobRestartException {
-    when(comicService.getUnprocessedComicBookCount()).thenReturn(1L);
+    when(comicService.getUnprocessedComicCount()).thenReturn(1L);
     when(jobOperator.start(any(Job.class), jobParametersArgumentCaptor.capture()))
         .thenThrow(JobExecutionAlreadyRunningException.class);
 

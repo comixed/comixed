@@ -111,46 +111,46 @@ class LibraryControllerTest {
   }
 
   @Test
-  void convertSingleComicBookNoRecreateAllowed() {
+  void convertSingleComicNoRecreateAllowed() {
     when(configurationService.isFeatureEnabled(ConfigurationService.CFG_LIBRARY_NO_RECREATE_COMICS))
         .thenReturn(true);
 
     assertThrows(
         LibraryException.class,
         () ->
-            controller.convertSingleComicBooks(
+            controller.convertSingleComics(
                 new ConvertComicsRequest(TEST_ARCHIVE_TYPE), TEST_COMIC_ID));
   }
 
   @Test
-  void convertSingleComicBook() throws Exception {
+  void convertSingleComic() throws Exception {
     when(configurationService.isFeatureEnabled(ConfigurationService.CFG_LIBRARY_NO_RECREATE_COMICS))
         .thenReturn(false);
 
-    controller.convertSingleComicBooks(new ConvertComicsRequest(TEST_ARCHIVE_TYPE), TEST_COMIC_ID);
+    controller.convertSingleComics(new ConvertComicsRequest(TEST_ARCHIVE_TYPE), TEST_COMIC_ID);
 
     verify(libraryService)
         .prepareToRecreate(new ArrayList<>(Arrays.asList(TEST_COMIC_ID)), TEST_ARCHIVE_TYPE);
   }
 
   @Test
-  void convertSelectedComicBooksNoRecreateAllowed() {
+  void convertSelectedComicsNoRecreateAllowed() {
     when(configurationService.isFeatureEnabled(ConfigurationService.CFG_LIBRARY_NO_RECREATE_COMICS))
         .thenReturn(true);
 
     assertThrows(
         LibraryException.class,
         () ->
-            controller.convertSelectedComicBooks(
+            controller.convertSelectedComics(
                 httpSession, principal, new ConvertComicsRequest(TEST_ARCHIVE_TYPE)));
   }
 
   @Test
-  void convertSelectedComicBooks() throws Exception {
+  void convertSelectedComics() throws Exception {
     when(configurationService.isFeatureEnabled(ConfigurationService.CFG_LIBRARY_NO_RECREATE_COMICS))
         .thenReturn(false);
 
-    controller.convertSelectedComicBooks(
+    controller.convertSelectedComics(
         httpSession, principal, new ConvertComicsRequest(TEST_ARCHIVE_TYPE));
 
     verify(libraryService).prepareToRecreate(selectedIds, TEST_ARCHIVE_TYPE);
@@ -163,7 +163,7 @@ class LibraryControllerTest {
     verify(libraryService).prepareForOrganization(selectedIds);
     verify(httpSession).getAttribute(LIBRARY_SELECTIONS);
     verify(comicSelectionService).decodeSelections(TEST_ENCODED_IDS);
-    verify(comicSelectionService).clearSelectedComicBooks(TEST_EMAIL, selectedIds);
+    verify(comicSelectionService).clearSelectedComics(TEST_EMAIL, selectedIds);
     verify(httpSession).setAttribute(LIBRARY_SELECTIONS, TEST_REENCODED_IDS);
   }
 
@@ -199,22 +199,22 @@ class LibraryControllerTest {
   }
 
   @Test
-  void rescanComicBooks() throws Exception {
-    controller.rescanSelectedComicBooks(httpSession, principal);
+  void rescanComics() throws Exception {
+    controller.rescanSelectedComics(httpSession, principal);
 
     verify(comicService).prepareForRescan(selectedIds);
   }
 
   @Test
-  void updateSingleComicBookMetadata() throws Exception {
-    controller.updateSingleComicBookMetadata(TEST_COMIC_ID);
+  void updateSingleComicMetadata() throws Exception {
+    controller.updateSingleComicMetadata(TEST_COMIC_ID);
 
     verify(libraryService).prepareForMetadataUpdate(new ArrayList<>(Arrays.asList(TEST_COMIC_ID)));
   }
 
   @Test
-  void updateSelectedComicBooksMetadata() throws Exception {
-    controller.updateSelectedComicBooksMetadata(httpSession, principal);
+  void updateSelectedComicsMetadata() throws Exception {
+    controller.updateSelectedComicsMetadata(httpSession, principal);
 
     verify(libraryService).updateMetadata(selectedIds);
   }

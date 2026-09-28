@@ -36,8 +36,8 @@ import { ComicState } from '@app/comic-books/models/comic-state';
 import { MatIconButton } from '@angular/material/button';
 import { Store } from '@ngrx/store';
 import {
-  deleteSingleComicBook,
-  undeleteSingleComicBook
+  deleteSingleComic,
+  undeleteSingleComic
 } from '@app/comic-books/actions/delete-comic-books.actions';
 import { Router } from '@angular/router';
 import { LoggerService } from '@angular-ru/cdk/logger';
@@ -74,14 +74,12 @@ export class ComicGridItemComponent {
 
   onDeleteComic(): void {
     this.logger.info('Marking comic for deletion:', this.comic);
-    this.store.dispatch(deleteSingleComicBook({ comicId: this.comic.comicId }));
+    this.store.dispatch(deleteSingleComic({ comicId: this.comic.comicId }));
   }
 
   onUndeleteComic(): void {
     this.logger.info('Unmarking comic for deletion:', this.comic);
-    this.store.dispatch(
-      undeleteSingleComicBook({ comicId: this.comic.comicId })
-    );
+    this.store.dispatch(undeleteSingleComic({ comicId: this.comic.comicId }));
   }
 
   onOpenComic(): void {

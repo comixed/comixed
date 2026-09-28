@@ -47,7 +47,7 @@ class RemoveDeletedComicsReaderTest {
   void read_noneLoaded_manyFound() {
     for (int index = 0; index < MAX_RECORDS; index++) comicList.add(comic);
 
-    when(comicService.findComicBooksToBePurged(anyInt())).thenReturn(comicList);
+    when(comicService.findComicsToBePurged(anyInt())).thenReturn(comicList);
 
     final Comic result = reader.read();
 
@@ -56,17 +56,17 @@ class RemoveDeletedComicsReaderTest {
     assertFalse(comicList.isEmpty());
     assertEquals(MAX_RECORDS - 1, comicList.size());
 
-    verify(comicService).findComicBooksToBePurged(reader.getChunkSize());
+    verify(comicService).findComicsToBePurged(reader.getChunkSize());
   }
 
   @Test
   void read_noneRemaining() {
-    when(comicService.findComicBooksToBePurged(anyInt())).thenReturn(comicList);
+    when(comicService.findComicsToBePurged(anyInt())).thenReturn(comicList);
 
     final Comic result = reader.read();
 
     assertNull(result);
 
-    verify(comicService).findComicBooksToBePurged(reader.getChunkSize());
+    verify(comicService).findComicsToBePurged(reader.getChunkSize());
   }
 }

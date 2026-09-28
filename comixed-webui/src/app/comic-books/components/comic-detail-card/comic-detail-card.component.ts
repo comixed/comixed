@@ -83,7 +83,7 @@ export class ComicDetailCardComponent {
   onCoverClicked(): void {
     // only respond to the click if the details are for a comic
     if (this.comic) {
-      this.logger.trace('ComicBook cover clicked');
+      this.logger.trace('Comic cover clicked');
       this.selectionChanged.emit({
         comic: this.comic,
         selected: !this.selected

@@ -34,26 +34,26 @@ import org.comixedproject.views.View;
 @RequiredArgsConstructor
 public class LatestReleaseDetails {
   @JsonProperty("version")
-  @JsonView(View.ReleaseDetails.class)
+  @JsonView(View.ReleaseDetailsView.class)
   @NonNull
   @Getter
   private String version;
 
   @JsonProperty("url")
-  @JsonView(View.ReleaseDetails.class)
+  @JsonView(View.ReleaseDetailsView.class)
   @NonNull
   @Getter
   private String url;
 
   @JsonProperty("updated")
   @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
-  @JsonView(View.ReleaseDetails.class)
+  @JsonView(View.ReleaseDetailsView.class)
   @NonNull
   @Getter
   private Date released;
 
   @JsonProperty("newer")
-  @JsonView(View.ReleaseDetails.class)
+  @JsonView(View.ReleaseDetailsView.class)
   @Getter
   @Setter
   private Boolean newer = false;

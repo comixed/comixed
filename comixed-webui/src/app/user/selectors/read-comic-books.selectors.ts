@@ -22,11 +22,11 @@ import {
   ReadComicsState
 } from '../reducers/read-comics.reducer';
 
-const selectReadComicBooksState = createFeatureSelector<ReadComicsState>(
+const selectReadComicsState = createFeatureSelector<ReadComicsState>(
   READ_COMICS_FEATURE_KEY
 );
 
-export const selectReadComicBooksList = createSelector(
-  selectReadComicBooksState,
+export const selectReadComicsList = createSelector(
+  selectReadComicsState,
   state => state.entries
 );

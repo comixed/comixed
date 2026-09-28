@@ -19,32 +19,32 @@
 import { createAction, props } from '@ngrx/store';
 import { ReadingList } from '@app/lists/models/reading-list';
 
-export const addSelectedComicBooksToReadingList = createAction(
+export const addSelectedComicsToReadingList = createAction(
   '[Reading List Entries] Add all selected comic books to a reading list',
   props<{
     list: ReadingList;
   }>()
 );
 
-export const addComicBooksToReadingListSuccess = createAction(
+export const addComicsToReadingListSuccess = createAction(
   '[Reading List Entries] Comic books were added to a reading list'
 );
 
-export const addComicBooksToReadingListFailure = createAction(
+export const addComicsToReadingListFailure = createAction(
   '[Reading List Entries] Failed to add comic books to a reading list'
 );
 
-export const removeSelectedComicBooksFromReadingList = createAction(
+export const removeSelectedComicsFromReadingList = createAction(
   '[Reading List Entries] Remove comics from a reading list',
   props<{
     list: ReadingList;
   }>()
 );
 
-export const removeComicBooksFromReadingListSuccess = createAction(
+export const removeComicsFromReadingListSuccess = createAction(
   '[Reading List Entries] Comic books were removed from a reading list'
 );
 
-export const removeComicBooksFromReadingListFailure = createAction(
+export const removeComicsFromReadingListFailure = createAction(
   '[Reading List Entries] Failed to remove comics from a reading list'
 );

@@ -41,11 +41,11 @@ public class PublishComicUpdateAction extends AbstractPublishAction<ComicDataSet
   @Override
   public void publish(final ComicDataSet data) throws PublishingException {
     log.trace("Publishing comic list update");
-    this.doPublish(COMIC_LIST_UPDATE_TOPIC, data, View.ComicDetailsView.class);
+    this.doPublish(COMIC_LIST_UPDATE_TOPIC, data, View.ComicView.class);
     log.trace("Publishing comic book update");
     this.doPublish(
         String.format(COMIC_UPDATE_TOPIC, data.getComic().getComicId()),
         data,
-        View.ComicDetailsView.class);
+        View.ComicView.class);
   }
 }

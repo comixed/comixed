@@ -1162,9 +1162,9 @@ class MetadataServiceTest {
 
   @Test
   void batchScrape() {
-    service.batchScrapeComicBooks(comicIdList);
+    service.batchScrapeComics(comicIdList);
 
-    verify(comicService).markComicBooksForBatchScraping(comicIdList);
+    verify(comicService).markComicsForBatchScraping(comicIdList);
     verify(applicationEventPublisher).publishEvent(ScrapeMetadataEvent.instance);
   }
 

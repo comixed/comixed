@@ -67,7 +67,7 @@ public class ReadingListController {
    * @throws ReadingListException if the email address is invalid
    */
   @GetMapping(value = "/api/lists/reading", produces = MediaType.APPLICATION_JSON_VALUE)
-  @JsonView(View.ReadingLists.class)
+  @JsonView(View.ReadingListListView.class)
   @PreAuthorize("hasRole('READER')")
   @Timed(value = "comixed.reading-list.get-all-for-user")
   public List<ReadingList> loadReadingListsForUser(Principal principal)
@@ -89,7 +89,7 @@ public class ReadingListController {
       value = "/api/lists/reading",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
-  @JsonView(View.ReadingListDetail.class)
+  @JsonView(View.ReadingListView.class)
   @PreAuthorize("hasRole('READER')")
   @Timed(value = "comixed.reading-list.create")
   public ReadingList createReadingList(
@@ -117,7 +117,7 @@ public class ReadingListController {
       value = "/api/lists/reading/{id}",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
-  @JsonView(View.ReadingListDetail.class)
+  @JsonView(View.ReadingListView.class)
   @PreAuthorize("hasRole('READER')")
   @Timed(value = "comixed.reading-list.update")
   public ReadingList updateReadingList(
@@ -148,7 +148,7 @@ public class ReadingListController {
    * @throws ReadingListException if the id is invalid or not owned by the current user
    */
   @GetMapping(value = "/api/lists/reading/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-  @JsonView(View.ReadingListDetail.class)
+  @JsonView(View.ReadingListView.class)
   @PreAuthorize("hasRole('READER')")
   @Timed(value = "comixed.reading-list.get-one-for-user")
   public ReadingList loadReadingList(final Principal principal, @PathVariable("id") final long id)
@@ -170,28 +170,28 @@ public class ReadingListController {
       value = "/api/lists/reading/{id}/comics/add/selected",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
-  @JsonView(View.ReadingListDetail.class)
+  @JsonView(View.ReadingListView.class)
   @PreAuthorize("hasRole('READER')")
   @Timed(value = "comixed.reading-list.add-selected-comic-books")
-  public void addSelectedComicBooksToReadingList(
+  public void addSelectedComicsToReadingList(
       final HttpSession session, final Principal principal, @PathVariable("id") final Long id)
       throws ReadingListException {
     String email = principal.getName();
     try {
-      List<Long> selectedComicBookIds =
+      List<Long> selectedComicIds =
           this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
 
       log.info(
           "Adding {} comic(s) to the reading list for {}: id={}",
-          selectedComicBookIds.size(),
+          selectedComicIds.size(),
           email,
           id);
 
-      this.readingListService.addComicsToList(email, id, new ArrayList<>(selectedComicBookIds));
+      this.readingListService.addComicsToList(email, id, new ArrayList<>(selectedComicIds));
 
-      this.comicSelectionService.clearSelectedComicBooks(email, selectedComicBookIds);
+      this.comicSelectionService.clearSelectedComics(email, selectedComicIds);
       session.setAttribute(
-          LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selectedComicBookIds));
+          LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selectedComicIds));
     } catch (ComicSelectionException error) {
       throw new ReadingListException("Failed to add selected comic books to reading list", error);
     }
@@ -206,28 +206,27 @@ public class ReadingListController {
    * @throws ReadingListException if an error occurs
    */
   @DeleteMapping(value = "/api/lists/reading/{id}/comics/remove/selected")
-  @JsonView(View.ReadingListDetail.class)
+  @JsonView(View.ReadingListView.class)
   @PreAuthorize("hasRole('READER')")
   @Timed(value = "comixed.reading-list.remove-comics")
-  public void removeSelectedComicBooksFromReadingList(
+  public void removeSelectedComicsFromReadingList(
       final HttpSession session, final Principal principal, @PathVariable("id") final long id)
       throws ReadingListException {
     String email = principal.getName();
     try {
-      List<Long> selectedComicBookIds =
+      List<Long> selectedComicIds =
           this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
 
       log.info(
           "Removing {} comic(s) from the reading list for {}: id={}",
-          selectedComicBookIds.size(),
+          selectedComicIds.size(),
           email,
           id);
-      this.readingListService.removeComicsFromList(
-          email, id, new ArrayList<>(selectedComicBookIds));
+      this.readingListService.removeComicsFromList(email, id, new ArrayList<>(selectedComicIds));
 
-      this.comicSelectionService.clearSelectedComicBooks(email, selectedComicBookIds);
+      this.comicSelectionService.clearSelectedComics(email, selectedComicIds);
       session.setAttribute(
-          LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selectedComicBookIds));
+          LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selectedComicIds));
     } catch (ReadingListException | ComicSelectionException error) {
       throw new ReadingListException("Failed to remove selected comics from reading list", error);
     }

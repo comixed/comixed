@@ -69,7 +69,7 @@ class PublishComicRemovalActionTest {
 
     action.publish(comic);
 
-    verify(objectMapper, times(2)).writerWithView(View.ComicDetailsView.class);
+    verify(objectMapper, times(2)).writerWithView(View.ComicView.class);
     verify(objectWriter, times(2)).writeValueAsString(comic);
     verify(messagingTemplate)
         .convertAndSend(PublishComicRemovalAction.COMIC_LIST_REMOVAL_TOPIC, TEST_COMIC_AS_JSON);

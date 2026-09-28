@@ -92,7 +92,7 @@ export class ReadingListService {
     }
   }
 
-  addSelectedComicBooks(args: { list: ReadingList }): Observable<any> {
+  addSelectedComics(args: { list: ReadingList }): Observable<any> {
     this.logger.trace('Adding comics to reading list:', args);
     return this.http.put(
       interpolate(ADD_SELECTED_COMICS_TO_READING_LIST_URL, {
@@ -102,7 +102,7 @@ export class ReadingListService {
     );
   }
 
-  removeSelectedComicBooks(args: { list: ReadingList }): Observable<any> {
+  removeSelectedComics(args: { list: ReadingList }): Observable<any> {
     this.logger.trace('Removing comics from reading list:', args);
     return this.http.delete(
       interpolate(REMOVE_SELECTED_COMICS_FROM_READING_LIST_URL, {

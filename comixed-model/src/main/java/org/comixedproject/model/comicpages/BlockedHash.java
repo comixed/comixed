@@ -42,13 +42,13 @@ public class BlockedHash {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "blocked_hash_id")
   @JsonProperty("blockedHashId")
-  @JsonView(View.BlockedHashList.class)
+  @JsonView(View.BlockedHashListView.class)
   @Getter
   private Long blockedHashId;
 
   @Column(name = "label", nullable = true, updatable = true, length = 128)
   @JsonProperty("label")
-  @JsonView(View.BlockedHashList.class)
+  @JsonView(View.BlockedHashListView.class)
   @Getter
   @Setter
   @NonNull
@@ -56,7 +56,7 @@ public class BlockedHash {
 
   @Column(name = "hash_value", nullable = false, unique = true, updatable = false, length = 32)
   @JsonProperty("hash")
-  @JsonView(View.BlockedHashList.class)
+  @JsonView(View.BlockedHashListView.class)
   @Getter
   @NonNull
   private String hash;
@@ -71,14 +71,14 @@ public class BlockedHash {
   @Column(name = "created_on", nullable = false, updatable = false)
   @JsonProperty("createdOn")
   @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
-  @JsonView(View.BlockedHashList.class)
+  @JsonView(View.BlockedHashListView.class)
   @Getter
   private Date createdOn = new Date();
 
   @Formula(
       "(SELECT COUNT(*) FROM comics_v4 c WHERE c.comic_id IN (SELECT p.comic_id FROM comic_pages_v4 p WHERE p.file_hash = hash_value))")
   @JsonProperty("comicCount")
-  @JsonView(View.BlockedHashList.class)
+  @JsonView(View.BlockedHashListView.class)
   @Getter
   private Integer comicCount;
 

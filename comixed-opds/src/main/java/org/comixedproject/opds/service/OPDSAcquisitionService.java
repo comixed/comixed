@@ -143,7 +143,7 @@ public class OPDSAcquisitionService {
                 SELF,
                 String.format("%s?unread=%s", this.opdsUtils.urlEncodeString(volume), unread)));
     this.comicService
-        .getAllComicBooksForPublisherAndSeriesAndVolume(publisher, series, volume, email, unread)
+        .getAllComicsForPublisherAndSeriesAndVolume(publisher, series, volume, email, unread)
         .forEach(
             comic -> {
               log.trace("Adding comic book to feed");
@@ -180,8 +180,7 @@ public class OPDSAcquisitionService {
                   response
                       .getEntries()
                       .add(
-                          this.opdsUtils.createComicEntry(
-                              this.comicService.getByComicBookId(entryId)));
+                          this.opdsUtils.createComicEntry(this.comicService.getByComicId(entryId)));
                 } catch (ComicException error) {
                   log.error("Failed to load comic for acquisition feed", error);
                 }

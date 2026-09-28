@@ -19,8 +19,8 @@
 import { createFeature, createReducer, on } from '@ngrx/store';
 import {
   runLibraryPluginFailure,
-  runLibraryPluginOnOneComicBook,
-  runLibraryPluginOnSelectedComicBooks,
+  runLibraryPluginOnOneComic,
+  runLibraryPluginOnSelectedComics,
   runLibraryPluginSuccess
 } from '../actions/run-library-plugin.actions';
 
@@ -36,8 +36,8 @@ export const initialState: RunLibraryPluginState = {
 
 export const reducer = createReducer(
   initialState,
-  on(runLibraryPluginOnOneComicBook, state => ({ ...state, busy: true })),
-  on(runLibraryPluginOnSelectedComicBooks, state => ({ ...state, busy: true })),
+  on(runLibraryPluginOnOneComic, state => ({ ...state, busy: true })),
+  on(runLibraryPluginOnSelectedComics, state => ({ ...state, busy: true })),
   on(runLibraryPluginSuccess, state => ({ ...state, busy: false })),
   on(runLibraryPluginFailure, state => ({ ...state, busy: false }))
 );

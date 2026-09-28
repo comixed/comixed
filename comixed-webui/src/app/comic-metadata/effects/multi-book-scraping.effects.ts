@@ -21,9 +21,9 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import {
-  batchScrapeComicBooks,
-  batchScrapeComicBooksFailure,
-  batchScrapeComicBooksSuccess,
+  batchScrapeComics,
+  batchScrapeComicsFailure,
+  batchScrapeComicsSuccess,
   loadMultiBookScrapingPage,
   loadMultiBookScrapingPageFailure,
   loadMultiBookScrapingPageSuccess,
@@ -238,12 +238,12 @@ export class MultiBookScrapingEffects {
       })
     );
   });
-  batchScrapeComicBooks$ = createEffect(() => {
+  batchScrapeComics$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(batchScrapeComicBooks),
+      ofType(batchScrapeComics),
       tap(action => this.logger.debug('Batch scraping comic books:', action)),
       switchMap(() =>
-        this.comicScrapingService.batchScrapeComicBooks().pipe(
+        this.comicScrapingService.batchScrapeComics().pipe(
           tap(response => this.logger.debug('Response received;', response)),
           tap(() =>
             this.alertService.info(
@@ -252,7 +252,7 @@ export class MultiBookScrapingEffects {
               )
             )
           ),
-          map(() => batchScrapeComicBooksSuccess()),
+          map(() => batchScrapeComicsSuccess()),
           catchError(error => {
             this.logger.error('Service failure:', error);
             this.alertService.error(
@@ -260,7 +260,7 @@ export class MultiBookScrapingEffects {
                 'multi-book-scraping.batch-scraping.effect-failure'
               )
             );
-            return of(batchScrapeComicBooksFailure());
+            return of(batchScrapeComicsFailure());
           })
         )
       ),
@@ -269,7 +269,7 @@ export class MultiBookScrapingEffects {
         this.alertService.error(
           this.translateService.instant('app.general-effect-failure')
         );
-        return of(batchScrapeComicBooksFailure());
+        return of(batchScrapeComicsFailure());
       })
     );
   });

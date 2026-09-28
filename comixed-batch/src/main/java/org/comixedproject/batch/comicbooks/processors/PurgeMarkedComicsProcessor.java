@@ -54,7 +54,7 @@ public class PurgeMarkedComicsProcessor implements ItemProcessor<Comic, Comic> {
     }
     try {
       log.debug("Removing comic book from all reading lists: id={}", comic.getComicId());
-      this.readingListService.deleteEntriesForComicBook(comic);
+      this.readingListService.deleteEntriesForComic(comic);
       log.debug("Purging comic book: id={}", comic.getComicId());
       final File file = comic.getFile();
       this.comicService.deleteComic(comic);

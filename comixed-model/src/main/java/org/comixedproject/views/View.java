@@ -28,12 +28,6 @@ public interface View {
   /** Used when returning the generic response. */
   public interface GenericObjectView {}
 
-  /** Used when retrieving the list of comic formats. */
-  public interface ComicFormatList {}
-
-  /** Used when retrieving the list of scan types. */
-  public interface ScanTypeList {}
-
   /** Used when retrieving the state of the library. */
   public interface RemoteLibraryState {}
 
@@ -41,92 +35,83 @@ public interface View {
   public interface ComicListView {}
 
   /** Used when viewing the details of comics. */
-  public interface ComicDetailsView extends ComicListView {}
+  public interface ComicView extends ComicListView {}
 
   /** Used when viewing a list of duplicate comics. */
   public interface DuplicateComicListView {}
 
-  /** Used when viewing a list of deleted comics. */
-  public interface DeletedComicList {}
-
-  /** Used when viewing the details of a deleted comic. */
-  public interface PageDetails extends PageList {}
-
   /** Used when viewing a list of pages. */
-  public interface PageList {}
+  public interface PageListView {}
 
   /** Used when viewing a list of users. */
-  public interface UserList {}
+  public interface UserListView {}
 
   /** Used when viewing the details of a user. */
-  public interface UserDetailsView extends UserList {}
+  public interface UserView extends UserListView {}
 
   /** Used when viewing user statistics. */
-  public interface UserStatistics {}
+  public interface UserStatsView {}
 
   /** Used when viewing the list of reading lists. */
-  public interface ReadingLists {}
+  public interface ReadingListListView {}
 
   /** Used when viewing the details for a reading list. */
-  public interface ReadingListDetail extends ReadingLists {}
-
-  /** Used when viewing the list of smart reading lists. */
-  public interface SmartReadingList {}
+  public interface ReadingListView extends ReadingListListView {}
 
   /** Used when viewing the list of duplicate pages. */
-  public interface DuplicatePageList {}
+  public interface DuplicatePageListView {}
 
   /** Used when viewing the details of a duplicate page. */
-  public interface DuplicatePageDetail extends DuplicatePageList {}
+  public interface DuplicatePageView extends DuplicatePageListView {}
 
   /** Used when viewing the list of plugins. */
-  public interface LibraryPluginList {}
+  public interface LibraryPluginListView {}
 
   /** Used when viewing the list of plugin languages. */
-  public interface PluginLanguageList {}
+  public interface PluginLanguageListView {}
 
   /** Used when viewing a list of comic files. */
-  public interface ComicFileList {}
+  public interface ComicFileListView {}
 
   /** Used when viewing the build details for the server. */
-  public interface ReleaseDetails {}
+  public interface ReleaseDetailsView {}
 
   /** Used when viewing a list of blocked hashes. */
-  public interface BlockedHashList {}
+  public interface BlockedHashListView {}
 
   /** Used when viewing the details of a blocked hashes. */
-  public interface BlockedHashDetail extends BlockedHashList {}
+  public interface BlockedHashView extends BlockedHashListView {}
 
   /** Used when viewing the last read dates for a user. */
-  public interface LastReadList {}
+  public interface LastReadListView {}
 
   /** Used when retrieving the configuration list. */
-  public interface ConfigurationList {}
+  public interface ConfigurationListView {}
 
   /** Used when retrieving the filename scraping rules. */
-  public interface FilenameScrapingRuleList {}
+  public interface FilenameScrapingRuleListView {}
 
   /** Used when retrieving the list of imprints. */
   public interface ImprintListView {}
 
   /** Used when retrieving a list of stories. */
-  public interface StoryList {}
+  public interface StoryListView {}
 
   /** Used when retrieving a story. */
-  public interface StoryDetail extends StoryList {}
+  public interface StoryView extends StoryListView {}
 
   /** Used when retrieving a list of metadata sources. */
-  public interface MetadataSourceList {}
+  public interface MetadataSourceListView {}
 
   /** Used when retrieving a single metadata source. */
-  public interface MetadataSourceDetail extends MetadataSourceList {}
+  public interface MetadataSourceView extends MetadataSourceListView {}
 
   /** Used when marshalling a metadata process update. */
-  public interface MetadataUpdateProcessState {}
+  public interface MetadataUpdateProcessStateView {}
 
   /** Used when show the list of deleted pages. */
-  public interface DeletedPageList {}
+  public interface DeletedPageListView {}
 
   /** Used when downloading a page of collection entries. */
-  public interface CollectionEntryList {}
+  public interface CollectionEntryListView {}
 }

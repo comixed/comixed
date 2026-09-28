@@ -23,7 +23,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import lombok.*;
-import org.comixedproject.views.View.UserList;
+import org.comixedproject.views.View.UserListView;
 
 /**
  * <code>ComiXedUserPreference</code> represents a single preference name and value for a single
@@ -51,13 +51,13 @@ public class ComiXedUserPreference {
   private ComiXedUser user;
 
   @Column(name = "preference_name", nullable = false, updatable = false, length = 128)
-  @JsonView(UserList.class)
+  @JsonView(UserListView.class)
   @Getter
   @NonNull
   private String name;
 
   @Column(name = "preference_value", updatable = true, nullable = false, length = 256)
-  @JsonView(UserList.class)
+  @JsonView(UserListView.class)
   @Getter
   @Setter
   private String value;

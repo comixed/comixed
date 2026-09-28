@@ -39,11 +39,11 @@ import { ComicType } from '@app/comic-books/models/comic-type';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { ComicState } from '@app/comic-books/models/comic-state';
 import {
-  setComicBookSelectionByUnreadState,
-  setMultipleComicBookByFilterSelectionState
+  setComicSelectionByUnreadState,
+  setMultipleComicByFilterSelectionState
 } from '@app/comic-books/actions/comic-book-selection.actions';
-import { selectComicBookSelectionIds } from '@app/comic-books/selectors/comic-book-selection.selectors';
-import { selectReadComicBooksList } from '@app/user/selectors/read-comic-books.selectors';
+import { selectComicSelectionIds } from '@app/comic-books/selectors/comic-book-selection.selectors';
+import { selectReadComicsList } from '@app/user/selectors/read-comic-books.selectors';
 import {
   loadComicsByFilter,
   loadReadComics,
@@ -194,7 +194,7 @@ export class LibraryPageComponent implements OnInit {
       .pipe(tap(coverMonths => this.coverMonths$.next(coverMonths)))
       .subscribe();
     this.store
-      .select(selectComicBookSelectionIds)
+      .select(selectComicSelectionIds)
       .pipe(tap(selectedIds => this.selectedIds$.next(selectedIds)))
       .subscribe();
     this.store
@@ -219,12 +219,12 @@ export class LibraryPageComponent implements OnInit {
               `${true}`
             ) === `${true}`
           );
-          this.comicsRead$.next(user.readComicBooks);
+          this.comicsRead$.next(user.readComics);
         })
       )
       .subscribe();
     this.store
-      .select(selectReadComicBooksList)
+      .select(selectReadComicsList)
       .pipe(
         tap(comicsRead => {
           this.comicsRead$.next(comicsRead);
@@ -323,7 +323,7 @@ export class LibraryPageComponent implements OnInit {
         this.showReadOnly$.value
       );
       this.store.dispatch(
-        setComicBookSelectionByUnreadState({
+        setComicSelectionByUnreadState({
           selected,
           unreadOnly: !this.showReadOnly$.value
         })
@@ -331,7 +331,7 @@ export class LibraryPageComponent implements OnInit {
     } else {
       this.logger.debug('Setting all comic books selected state:', selected);
       this.store.dispatch(
-        setMultipleComicBookByFilterSelectionState({
+        setMultipleComicByFilterSelectionState({
           coverYear: this.queryParameterService.coverYear$?.value?.year,
           coverMonth: this.queryParameterService.coverYear$?.value?.month,
           archiveType: this.queryParameterService.archiveType$.value,

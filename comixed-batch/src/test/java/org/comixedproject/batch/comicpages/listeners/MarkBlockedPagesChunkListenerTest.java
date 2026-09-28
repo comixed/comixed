@@ -56,7 +56,7 @@ class MarkBlockedPagesChunkListenerTest {
   @Mock private JobInstance jobInstance;
   @Mock private JobExecution jobExecution;
 
-  @Captor private ArgumentCaptor<ProcessComicsStatus> publishComicBooksStatusArgumentCaptor;
+  @Captor private ArgumentCaptor<ProcessComicsStatus> publishComicsStatusArgumentCaptor;
   @Captor private ArgumentCaptor<BatchProcessDetail> batchProcessDetailArgumentCaptor;
 
   @BeforeEach
@@ -73,7 +73,7 @@ class MarkBlockedPagesChunkListenerTest {
     Mockito.when(stepExecution.getJobExecution()).thenReturn(jobExecution);
     Mockito.doNothing()
         .when(publishProcessComicsStatusAction)
-        .publish(publishComicBooksStatusArgumentCaptor.capture());
+        .publish(publishComicsStatusArgumentCaptor.capture());
     Mockito.doNothing()
         .when(publishBatchProcessDetailUpdateAction)
         .publish(batchProcessDetailArgumentCaptor.capture());
@@ -104,7 +104,7 @@ class MarkBlockedPagesChunkListenerTest {
   }
 
   private void doCommonChecks() throws PublishingException {
-    final ProcessComicsStatus status = publishComicBooksStatusArgumentCaptor.getValue();
+    final ProcessComicsStatus status = publishComicsStatusArgumentCaptor.getValue();
 
     assertNotNull(status);
     assertTrue(status.isActive());

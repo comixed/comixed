@@ -181,7 +181,7 @@ class ComicFileServiceTest {
   }
 
   @Test
-  void getAllComicsUnder_withExistingComicBook() throws IOException {
+  void getAllComicsUnder_withExistingComic() throws IOException {
     when(comicService.filenameFound(anyString())).thenReturn(true);
     when(comicFileAdaptor.isComicFile(any(File.class))).thenCallRealMethod();
 

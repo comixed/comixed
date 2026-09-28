@@ -37,9 +37,9 @@ import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ComicType } from '@app/comic-books/models/comic-type';
 import {
   COMIC_SELECTION_FEATURE_KEY,
-  initialState as initialComicBookSelectionState
+  initialState as initialComicSelectionState
 } from '@app/comic-books/reducers/comic-selection.reducer';
-import { setMultipleComicBookByPublisherSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
+import { setMultipleComicByPublisherSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
 import { TitleService } from '@app/core/services/title.service';
 import {
   initialState as initialUserState,
@@ -59,7 +59,7 @@ describe('PublisherIssuesPageComponent', () => {
   const PUBLISHER_NAME = 'The Publisher';
   const initialState = {
     [COMIC_LIST_FEATURE_KEY]: initialComicListState,
-    [COMIC_SELECTION_FEATURE_KEY]: initialComicBookSelectionState,
+    [COMIC_SELECTION_FEATURE_KEY]: initialComicSelectionState,
     [USER_FEATURE_KEY]: initialUserState,
     [LIBRARY_PLUGIN_FEATURE_KEY]: initialLibraryPluginState
   };
@@ -185,7 +185,7 @@ describe('PublisherIssuesPageComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          setMultipleComicBookByPublisherSelectionState({
+          setMultipleComicByPublisherSelectionState({
             publisher: PUBLISHER_NAME,
             selected: true
           })
@@ -200,7 +200,7 @@ describe('PublisherIssuesPageComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          setMultipleComicBookByPublisherSelectionState({
+          setMultipleComicByPublisherSelectionState({
             publisher: PUBLISHER_NAME,
             selected: false
           })

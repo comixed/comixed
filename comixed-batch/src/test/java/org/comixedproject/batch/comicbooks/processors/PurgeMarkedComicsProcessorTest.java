@@ -66,14 +66,14 @@ class PurgeMarkedComicsProcessorTest {
 
   @Test
   void process_errorThrown() throws Exception {
-    doThrow(NullPointerException.class).when(readingListService).deleteEntriesForComicBook(any());
+    doThrow(NullPointerException.class).when(readingListService).deleteEntriesForComic(any());
 
     final Comic result = processor.process(comic);
 
     assertNotNull(result);
     assertSame(comic, result);
 
-    verify(readingListService).deleteEntriesForComicBook(comic);
+    verify(readingListService).deleteEntriesForComic(comic);
     verify(comicService, never()).deleteComic(any());
   }
 
@@ -87,7 +87,7 @@ class PurgeMarkedComicsProcessorTest {
     assertNotNull(result);
     assertSame(comic, result);
 
-    verify(readingListService).deleteEntriesForComicBook(comic);
+    verify(readingListService).deleteEntriesForComic(comic);
     verify(comicService).deleteComic(comic);
     verify(fileAdaptor).deleteFile(comicFile);
   }

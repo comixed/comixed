@@ -19,10 +19,10 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {
-  rescanComicBooksFailure,
-  rescanComicBooksSuccess,
-  rescanSelectedComicBooks,
-  rescanSingleComicBook
+  rescanComicsFailure,
+  rescanComicsSuccess,
+  rescanSelectedComics,
+  rescanSingleComic
 } from '../actions/rescan-comics.actions';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { LibraryService } from '@app/library/services/library.service';
@@ -39,35 +39,12 @@ export class RescanComicsEffects {
   alertService = inject(AlertService);
   translateService = inject(TranslateService);
 
-  rescanSingleComicBook$ = createEffect(() => {
+  rescanSingleComic$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(rescanSingleComicBook),
+      ofType(rescanSingleComic),
       tap(action => this.logger.trace('Rescan a single comic book:', action)),
       switchMap(action =>
-        this.libraryService
-          .rescanSingleComicBook({ comicId: action.comicId })
-          .pipe(
-            tap(response => this.logger.debug('Response received:', response)),
-            tap(() =>
-              this.alertService.info(
-                this.translateService.instant(
-                  'library.rescan-comics.effect-success'
-                )
-              )
-            ),
-            map(() => rescanComicBooksSuccess()),
-            catchError(error => this.doServiceFailure(error))
-          )
-      ),
-      catchError(error => this.doGeneralFailure(error))
-    );
-  });
-  rescanSelectedComicBooks$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(rescanSelectedComicBooks),
-      tap(action => this.logger.trace('Rescan selected comic books:', action)),
-      switchMap(() =>
-        this.libraryService.rescanSelectedComicBooks().pipe(
+        this.libraryService.rescanSingleComic({ comicId: action.comicId }).pipe(
           tap(response => this.logger.debug('Response received:', response)),
           tap(() =>
             this.alertService.info(
@@ -76,7 +53,28 @@ export class RescanComicsEffects {
               )
             )
           ),
-          map(() => rescanComicBooksSuccess()),
+          map(() => rescanComicsSuccess()),
+          catchError(error => this.doServiceFailure(error))
+        )
+      ),
+      catchError(error => this.doGeneralFailure(error))
+    );
+  });
+  rescanSelectedComics$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(rescanSelectedComics),
+      tap(action => this.logger.trace('Rescan selected comic books:', action)),
+      switchMap(() =>
+        this.libraryService.rescanSelectedComics().pipe(
+          tap(response => this.logger.debug('Response received:', response)),
+          tap(() =>
+            this.alertService.info(
+              this.translateService.instant(
+                'library.rescan-comics.effect-success'
+              )
+            )
+          ),
+          map(() => rescanComicsSuccess()),
           catchError(error => this.doServiceFailure(error))
         )
       ),
@@ -89,7 +87,7 @@ export class RescanComicsEffects {
     this.alertService.error(
       this.translateService.instant('library.rescan-comics.effect-failure')
     );
-    return of(rescanComicBooksFailure());
+    return of(rescanComicsFailure());
   }
 
   private doGeneralFailure(error: any) {
@@ -97,6 +95,6 @@ export class RescanComicsEffects {
     this.alertService.error(
       this.translateService.instant('app.general-effect-failure')
     );
-    return of(rescanComicBooksFailure());
+    return of(rescanComicsFailure());
   }
 }

@@ -46,7 +46,7 @@ import { Store } from '@ngrx/store';
 import {
   loadIssueMetadata,
   resetMetadataState,
-  scrapeSingleComicBook
+  scrapeSingleComic
 } from '@app/comic-metadata/actions/single-book-scraping.actions';
 import {
   selectChosenMetadataAutoSelectExactMatch,
@@ -324,7 +324,7 @@ export class ComicScrapingVolumeSelectionComponent implements AfterViewInit {
     } else {
       this.logger.debug('Scraping single comic book');
       this.store.dispatch(
-        scrapeSingleComicBook({
+        scrapeSingleComic({
           metadataSource: this.metadataSource,
           issueId: this.issue.id,
           comic: this.comic,

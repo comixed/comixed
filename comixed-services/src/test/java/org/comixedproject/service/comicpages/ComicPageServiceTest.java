@@ -383,30 +383,30 @@ class ComicPageServiceTest {
   }
 
   @Test
-  void getPageIdForComicBookCover_noComicBookFound() {
-    when(comicPageRepository.getPageIdForComicBookCover(anyLong())).thenReturn(null);
+  void getPageIdForComicCover_noComicFound() {
+    when(comicPageRepository.getPageIdForComicCover(anyLong())).thenReturn(null);
 
-    final Long result = service.getPageIdForComicBookCover(TEST_COMIC_ID);
+    final Long result = service.getPageIdForComicCover(TEST_COMIC_ID);
 
     assertNull(result);
 
-    verify(comicPageRepository).getPageIdForComicBookCover(TEST_COMIC_ID);
+    verify(comicPageRepository).getPageIdForComicCover(TEST_COMIC_ID);
   }
 
   @Test
-  void getPageIdForComicBookCover() {
-    when(comicPageRepository.getPageIdForComicBookCover(anyLong())).thenReturn(TEST_PAGE_ID);
+  void getPageIdForComicCover() {
+    when(comicPageRepository.getPageIdForComicCover(anyLong())).thenReturn(TEST_PAGE_ID);
 
-    final Long result = service.getPageIdForComicBookCover(TEST_COMIC_ID);
+    final Long result = service.getPageIdForComicCover(TEST_COMIC_ID);
 
     assertNotNull(result);
     assertEquals(TEST_PAGE_ID, result.longValue());
 
-    verify(comicPageRepository).getPageIdForComicBookCover(TEST_COMIC_ID);
+    verify(comicPageRepository).getPageIdForComicCover(TEST_COMIC_ID);
   }
 
   @Test
-  void getComicFilenameForPage_noComicBookFound() {
+  void getComicFilenameForPage_noComicFound() {
     when(comicPageRepository.getComicFilenameForPage(anyLong())).thenReturn(null);
 
     assertThrows(ComicPageException.class, () -> service.getComicFilenameForPage(TEST_PAGE_ID));

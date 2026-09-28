@@ -56,12 +56,12 @@ class DeletedPageServiceTest {
     when(comicPageRepository.loadAllDeletedPages()).thenReturn(deletedPageList);
     when(deletedPage.getHash()).thenReturn(TEST_PAGE_HASH);
     when(deletedPage.getComicId()).thenReturn(TEST_COMIC_ID);
-    when(displayableComicService.getForComicBookId(anyLong())).thenThrow(ComicException.class);
+    when(displayableComicService.getForComicId(anyLong())).thenThrow(ComicException.class);
 
     assertThrows(ComicPageException.class, () -> service.loadAll());
 
     verify(comicPageRepository).loadAllDeletedPages();
-    verify(displayableComicService).getForComicBookId(TEST_COMIC_ID);
+    verify(displayableComicService).getForComicId(TEST_COMIC_ID);
   }
 
   @Test
@@ -70,7 +70,7 @@ class DeletedPageServiceTest {
     when(comicPageRepository.loadAllDeletedPages()).thenReturn(deletedPageList);
     when(deletedPage.getHash()).thenReturn(TEST_PAGE_HASH);
     when(deletedPage.getComicId()).thenReturn(TEST_COMIC_ID);
-    when(displayableComicService.getForComicBookId(anyLong())).thenReturn(comic);
+    when(displayableComicService.getForComicId(anyLong())).thenReturn(comic);
 
     final List<DeletedPage> result = service.loadAll();
 
@@ -79,6 +79,6 @@ class DeletedPageServiceTest {
     assertTrue(result.get(0).getComics().contains(comic));
 
     verify(comicPageRepository).loadAllDeletedPages();
-    verify(displayableComicService, times(deletedPageList.size())).getForComicBookId(TEST_COMIC_ID);
+    verify(displayableComicService, times(deletedPageList.size())).getForComicId(TEST_COMIC_ID);
   }
 }

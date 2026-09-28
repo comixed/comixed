@@ -76,14 +76,14 @@ class UserServiceTest {
 
   private List<ComiXedUser> userList = new ArrayList<>();
   private List<ComiXedRole> roleList = new ArrayList<>();
-  private Set<Long> readComicBookIdList = new HashSet<>();
+  private Set<Long> readComicIdList = new HashSet<>();
   private List<Long> comicIdList = new ArrayList<>();
 
   @BeforeEach
   void setUp() {
     Mockito.when(existingUser.getRoles()).thenReturn(roleList);
-    for (long index = 0; index < TEST_READ_COMIC_IDS; index++) readComicBookIdList.add(index);
-    Mockito.when(existingUser.getReadComicBooks()).thenReturn(readComicBookIdList);
+    for (long index = 0; index < TEST_READ_COMIC_IDS; index++) readComicIdList.add(index);
+    Mockito.when(existingUser.getReadComics()).thenReturn(readComicIdList);
     Mockito.when(userRepository.findByEmail(TEST_EMAIL)).thenReturn(existingUser);
     Mockito.when(roleRepository.findByName(ComiXedRole.ADMIN_ROLE)).thenReturn(adminRole);
     Mockito.when(roleRepository.findByName(ComiXedRole.READER_ROLE)).thenReturn(readerRole);

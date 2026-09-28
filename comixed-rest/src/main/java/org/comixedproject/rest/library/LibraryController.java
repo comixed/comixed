@@ -97,7 +97,7 @@ public class LibraryController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @Timed(value = "comixed.library.convert-single-comic-book")
   @PreAuthorize("hasRole('ADMIN')")
-  public void convertSingleComicBooks(
+  public void convertSingleComics(
       @RequestBody() final ConvertComicsRequest request,
       @PathVariable("comicId") final long comicId)
       throws LibraryException {
@@ -127,7 +127,7 @@ public class LibraryController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @Timed(value = "comixed.library.convert-selected-comic-books")
   @PreAuthorize("hasRole('ADMIN')")
-  public void convertSelectedComicBooks(
+  public void convertSelectedComics(
       final HttpSession session,
       final Principal principal,
       @RequestBody() final ConvertComicsRequest request)
@@ -150,7 +150,7 @@ public class LibraryController {
       log.trace("Preparing to recreate comic files");
       this.libraryService.prepareToRecreate(idList, archiveType);
       log.trace("Clearing comic book selections");
-      this.comicSelectionService.clearSelectedComicBooks(email, idList);
+      this.comicSelectionService.clearSelectedComics(email, idList);
       log.trace("Saving comic book selections");
       session.setAttribute(LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(idList));
     } catch (ComicSelectionException error) {
@@ -178,7 +178,7 @@ public class LibraryController {
     log.info("Organizing library: email={} count={}", email, selectedIds.size());
     this.libraryService.prepareForOrganization(selectedIds);
     log.debug("Clearing comic book selections");
-    this.comicSelectionService.clearSelectedComicBooks(email, selectedIds);
+    this.comicSelectionService.clearSelectedComics(email, selectedIds);
     log.debug("Deleting selections from session");
     session.setAttribute(
         LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selectedIds));
@@ -224,7 +224,7 @@ public class LibraryController {
   @PutMapping(value = "/api/library/rescan/{comicId}", consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @Timed(value = "comixed.library.batch.rescan-single")
-  public void rescanSingleComicBook(@PathVariable("comicId") final long comicId) throws Exception {
+  public void rescanSingleComic(@PathVariable("comicId") final long comicId) throws Exception {
     log.info("Rescanning single comic book: id={}", comicId);
     this.comicService.prepareForRescan(Arrays.asList(comicId));
   }
@@ -239,14 +239,14 @@ public class LibraryController {
   @PutMapping(value = "/api/library/rescan/selected", consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @Timed(value = "comixed.library.batch.rescan-selected")
-  public void rescanSelectedComicBooks(final HttpSession session, final Principal principal)
+  public void rescanSelectedComics(final HttpSession session, final Principal principal)
       throws Exception {
     final String email = principal.getName();
     final List<Long> selectedIdList =
         this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
     log.info("Rescanning selected comic books: email={}", email);
     this.comicService.prepareForRescan(selectedIdList);
-    this.comicSelectionService.clearSelectedComicBooks(email, selectedIdList);
+    this.comicSelectionService.clearSelectedComics(email, selectedIdList);
     session.setAttribute(
         LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selectedIdList));
   }
@@ -260,7 +260,7 @@ public class LibraryController {
   @PutMapping(value = "/api/library/metadata/update/{comicId}")
   @PreAuthorize("hasRole('ADMIN')")
   @Timed(value = "comixed.library.batch.metadata-update-selected-comic-books")
-  public void updateSingleComicBookMetadata(@PathVariable("comicId") final long comicId)
+  public void updateSingleComicMetadata(@PathVariable("comicId") final long comicId)
       throws Exception {
     log.info("Updating the metadata a single comic book: id={}", comicId);
     this.libraryService.prepareForMetadataUpdate(new ArrayList<>(Arrays.asList(comicId)));
@@ -276,16 +276,16 @@ public class LibraryController {
   @PutMapping(value = "/api/library/metadata/update/selected")
   @PreAuthorize("hasRole('ADMIN')")
   @Timed(value = "comixed.library.batch.metadata-update-selected-comic-books")
-  public void updateSelectedComicBooksMetadata(final HttpSession session, final Principal principal)
+  public void updateSelectedComicsMetadata(final HttpSession session, final Principal principal)
       throws Exception {
     final String email = principal.getName();
-    final List<Long> selectedComicBookIds =
+    final List<Long> selectedComicIds =
         this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
-    log.info("Updating the metadata for {} comic(s): email={}", selectedComicBookIds.size(), email);
-    this.libraryService.updateMetadata(new ArrayList<>(selectedComicBookIds));
-    this.comicSelectionService.clearSelectedComicBooks(email, selectedComicBookIds);
+    log.info("Updating the metadata for {} comic(s): email={}", selectedComicIds.size(), email);
+    this.libraryService.updateMetadata(new ArrayList<>(selectedComicIds));
+    this.comicSelectionService.clearSelectedComics(email, selectedComicIds);
     session.setAttribute(
-        LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selectedComicBookIds));
+        LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selectedComicIds));
   }
 
   /**

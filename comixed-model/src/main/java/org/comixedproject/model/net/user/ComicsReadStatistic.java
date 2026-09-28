@@ -32,12 +32,12 @@ import org.comixedproject.views.View;
 @AllArgsConstructor
 public class ComicsReadStatistic {
   @JsonProperty("publisher")
-  @JsonView(View.UserStatistics.class)
+  @JsonView(View.UserStatsView.class)
   @Getter
   private String publisher;
 
   @JsonProperty("count")
-  @JsonView(View.UserStatistics.class)
+  @JsonView(View.UserStatsView.class)
   @Getter
   private long count;
 }

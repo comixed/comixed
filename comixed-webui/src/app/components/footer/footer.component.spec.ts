@@ -41,7 +41,7 @@ import {
 } from '@app/admin/admin.fixtures';
 import {
   COMIC_SELECTION_FEATURE_KEY,
-  initialState as initialComicBookSelectionState
+  initialState as initialComicSelectionState
 } from '@app/comic-books/reducers/comic-selection.reducer';
 
 describe('FooterComponent', () => {
@@ -49,7 +49,7 @@ describe('FooterComponent', () => {
   const COMICS_READ_ENTRIES = [READ_COMIC_1, READ_COMIC_2, READ_COMIC_3];
   const initialState = {
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
-    [COMIC_SELECTION_FEATURE_KEY]: initialComicBookSelectionState,
+    [COMIC_SELECTION_FEATURE_KEY]: initialComicSelectionState,
     [BATCH_PROCESSES_FEATURE_KEY]: {
       ...initialBatchProcessesState,
       entries: [
@@ -89,7 +89,7 @@ describe('FooterComponent', () => {
 
   describe('when a user is logged in', () => {
     beforeEach(() => {
-      component.user = { ...USER, readComicBooks: COMICS_READ_ENTRIES };
+      component.user = { ...USER, readComics: COMICS_READ_ENTRIES };
     });
 
     it('sets the read count', () => {

@@ -151,7 +151,7 @@ public class ComicSelectionService {
    * @param email the user's email
    * @param selections the selected comic book ids
    */
-  public void clearSelectedComicBooks(final String email, final List<Long> selections) {
+  public void clearSelectedComics(final String email, final List<Long> selections) {
     log.debug("Clearing the selected ids");
     selections.clear();
     log.debug("Publishing cleared out selection update");

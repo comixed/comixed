@@ -204,5 +204,5 @@ public interface DisplayableComicRepository extends JpaRepository<DisplayableCom
    * @return the record
    */
   @Query("SELECT d FROM DisplayableComic d WHERE d.comicId = :comicId")
-  DisplayableComic getByComicBookId(@Param("comicId") long comicId);
+  DisplayableComic getByComicId(@Param("comicId") long comicId);
 }

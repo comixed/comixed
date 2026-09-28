@@ -18,8 +18,8 @@
 
 import { initialState, ReadComicsState, reducer } from './read-comics.reducer';
 import {
-  resetReadComicBooks,
-  setReadComicBooks
+  resetReadComics,
+  setReadComics
 } from '@app/user/actions/read-comic-books.actions';
 import {
   READ_COMIC_1,
@@ -29,7 +29,7 @@ import {
   READ_COMIC_5
 } from '@app/user/user.fixtures';
 
-describe('ReadComicBooks Reducer', () => {
+describe('ReadComics Reducer', () => {
   const READ_COMICS = [
     READ_COMIC_1,
     READ_COMIC_2,
@@ -58,7 +58,7 @@ describe('ReadComicBooks Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, entries: [] },
-        setReadComicBooks({ entries: READ_COMICS })
+        setReadComics({ entries: READ_COMICS })
       );
     });
 
@@ -69,10 +69,7 @@ describe('ReadComicBooks Reducer', () => {
 
   describe('resetting the list of read comic entries', () => {
     beforeEach(() => {
-      state = reducer(
-        { ...state, entries: READ_COMICS },
-        resetReadComicBooks()
-      );
+      state = reducer({ ...state, entries: READ_COMICS }, resetReadComics());
     });
 
     it('updates the list of read comic books', () => {
