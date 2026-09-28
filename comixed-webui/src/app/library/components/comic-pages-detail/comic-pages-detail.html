@@ -1,0 +1,17 @@
+<p-data-view [value]="comicPages()">
+  <ng-template #list let-pages>
+    <div class="cx-width-100p">
+      @for (page of pages; track page.comicPageId) {
+        <p-card>
+          <ng-template #title>{{ page.filename }}</ng-template>
+          <div class="cx-width-100p cx-flex-content-container-row">
+            <div class="cx-flex-content-grow-0">
+              <img [src]="page | comicPageUrl" [alt]="page.filename" />
+            </div>
+            <div class="cx-flex-content-grow-1"></div>
+          </div>
+        </p-card>
+      }
+    </div>
+  </ng-template>
+</p-data-view>
