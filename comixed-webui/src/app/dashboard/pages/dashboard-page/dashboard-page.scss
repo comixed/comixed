@@ -1,0 +1,13 @@
+@use './variables' as *;
+
+.cx-flex-content-container-row {
+  flex-wrap: wrap;
+  gap: 2rem;
+  margin: $cx-margin-width;
+  justify-content: space-evenly;
+}
+
+.cx-flex-content-grow-1 {
+  min-width: 400px;
+  height: 175px;
+}
