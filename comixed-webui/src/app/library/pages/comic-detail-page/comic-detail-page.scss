@@ -1,0 +1,5 @@
+@use './variables' as *;
+
+#comic-cover-container {
+  width: max($cx-min-width, 25vw);
+}

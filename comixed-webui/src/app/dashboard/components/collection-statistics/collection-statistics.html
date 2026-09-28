@@ -1,0 +1,20 @@
+<p-card class="cx-width-100p cx-height-100p">
+  <ng-template #header>
+    <h3 class="cx-width-100p cx-justify-center cx-no-text-wrap">
+      {{ title }}
+    </h3>
+    <img
+      [src]="imageUrl"
+      alt="imageAlt"
+      style="float: inline-end; height: 75px"
+    />
+  </ng-template>
+
+  {{ description }}
+
+  <ng-template #footer class="cx-padding-15">
+    <a [routerLink]="detailUrl">
+      {{ "dashboard.statistics.text.view-more" | translate }}
+    </a>
+  </ng-template>
+</p-card>

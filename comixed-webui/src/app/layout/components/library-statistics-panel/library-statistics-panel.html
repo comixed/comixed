@@ -1,0 +1,36 @@
+<div class="statistics-container">
+  <p-button
+    [label]="'library-statistics-panel.segment.total-comics' | translate"
+    [badge]="libraryStore.totalComics().toString()"
+    [routerLink]="['/library/all']"
+    severity="info"
+  />
+
+  <p-button
+    [label]="'library-statistics-panel.segment.read-comics' | translate"
+    [badge]="readComicIds().length.toString()"
+    [routerLink]="['/library/read']"
+    severity="secondary"
+  />
+
+  <p-button
+    [label]="'library-statistics-panel.segment.unscraped-comics' | translate"
+    [badge]="libraryStore.unscrapedComics().toString()"
+    [routerLink]="['/library/unscraped']"
+    severity="help"
+  />
+
+  <p-button
+    [label]="'library-statistics-panel.segment.duplicate-comics' | translate"
+    [badge]="libraryStore.duplicateComics().toString()"
+    [routerLink]="['/library/duplicates']"
+    severity="warn"
+  />
+
+  <p-button
+    [label]="'library-statistics-panel.segment.deleted-comics' | translate"
+    [badge]="libraryStore.deletedComics().toString()"
+    [routerLink]="['/library/deleted']"
+    severity="danger"
+  />
+</div>

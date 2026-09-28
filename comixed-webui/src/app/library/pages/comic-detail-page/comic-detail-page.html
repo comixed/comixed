@@ -1,0 +1,71 @@
+<p-card class="cx-width-100p cx-height-100p cx-overflow-y-scroll">
+  <ng-template #header>
+    @if (!comicDetailLoading()) {
+      <p-breadcrumb
+        [model]="comicDetailComic() | comicDetailTrail"
+        [home]="home"
+      />
+    }
+  </ng-template>
+
+  <h2 class="cx-width-100p cx-justify-center">
+    {{ comicDetailComic() | comicTitle }}
+  </h2>
+  <div
+    class="cx-width-100p cx-height-100p cx-flex-content-container-row cx-scroll-y"
+  >
+    <div
+      id="comic-cover-container"
+      class="cx-height-100p cx-flex-content-grow-0"
+    >
+      @if (comicDetailComic()) {
+        <app-comic-cover
+          [comic]="comicDetailComic()!"
+          [loading]="comicDetailLoading()"
+        ></app-comic-cover>
+      }
+    </div>
+    <div class="cx-flex-content-grow-1">
+      <p-tabs
+        lazy
+        scrollable
+        class="cx-width-100p cx-height-100p"
+        [value]="currentTab()"
+        (valueChange)="onTabChanged($event)"
+      >
+        <p-tablist>
+          <p-tab [value]="'publication'">
+            {{ "comic-detail-page.label.publication" | translate }}
+          </p-tab>
+          <p-tab [value]="'story'">
+            {{ "comic-detail-page.label.story" | translate }}
+          </p-tab>
+          <p-tab [value]="'pages'">
+            {{ "comic-detail-page.label.pages" | translate }}
+          </p-tab>
+          <p-tab [value]="'metadata'">
+            {{ "comic-detail-page.label.metadata" | translate }}
+          </p-tab>
+        </p-tablist>
+        <p-tabpanels>
+          <p-tabpanel [value]="'publication'">
+            <app-comic-publication-detail
+              [comic]="comicDetailComic()"
+              [loading]="comicDetailLoading()"
+              (updateComic)="onUpdateComic($event)"
+            ></app-comic-publication-detail>
+          </p-tabpanel>
+          <p-tabpanel [value]="'story'">
+            <app-comic-story-detail></app-comic-story-detail>
+          </p-tabpanel>
+          <p-tabpanel [value]="'pages'">
+            <app-comic-pages-detail></app-comic-pages-detail>
+          </p-tabpanel>
+          <p-tabpanel [value]="'metadata'">
+            <app-comic-metadata-detail></app-comic-metadata-detail>
+          </p-tabpanel>
+        </p-tabpanels>
+      </p-tabs>
+    </div>
+  </div>
+</p-card>
