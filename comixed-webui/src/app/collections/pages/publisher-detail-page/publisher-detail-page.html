@@ -1,0 +1,60 @@
+<mat-card class="cx-width-100 cx-height-100">
+  <mat-card-title>
+    <h2>{{ publisherDetailStore.name() }}</h2>
+  </mat-card-title>
+
+  <mat-card-content>
+    <mat-paginator
+      [pageIndex]="publisherDetailStore.index()"
+      [pageSize]="publisherDetailStore.size()"
+      showFirstLastButtons="true"
+    ></mat-paginator>
+
+    <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+      <ng-container matColumnDef="series-name">
+        <mat-header-cell *matHeaderCellDef>
+          {{
+            "collections.publisher-detail-page.label.series-name" | translate
+          }}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let entry">
+          <span>
+            {{ entry.name }}
+          </span>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="volume">
+        <mat-header-cell *matHeaderCellDef>
+          {{ "collections.publisher-detail-page.label.volume" | translate }}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let entry">
+          <span>
+            {{ entry.volume }}
+          </span>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="in-library">
+        <mat-header-cell *matHeaderCellDef>
+          {{ "collections.publisher-detail-page.label.in-library" | translate }}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let entry">
+          <span>
+            {{ entry.inLibrary }}
+          </span>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="3">
+          {{
+            "collections.publisher-detail-page.text.no-series-found" | translate
+          }}
+        </td>
+      </tr>
+    </mat-table>
+  </mat-card-content>
+</mat-card>

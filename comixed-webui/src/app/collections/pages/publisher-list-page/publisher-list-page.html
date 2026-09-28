@@ -1,0 +1,77 @@
+<mat-card class="cx-width-100 cx-height-100">
+  <mat-card-title>
+    <h2>{{ "collections.publisher-list-page.page-title" | translate }}</h2>
+  </mat-card-title>
+
+  <mat-card-actions>
+    <div class="cx-spacer"></div>
+    <mat-paginator
+      [pageIndex]="publisherListStore.index()"
+      [pageSize]="publisherListStore.size()"
+      showFirstLastButtons="true"
+    ></mat-paginator>
+  </mat-card-actions>
+
+  <mat-card-content>
+    <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+      <ng-container matColumnDef="publisher-name">
+        <mat-header-cell *matHeaderCellDef>
+          {{
+            "collections.publisher-list-page.label.publisher-name" | translate
+          }}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let entry">
+          <span>
+            {{ entry.name }}
+            <a
+              [routerLink]="['/collections/publishers', entry.name]"
+              style="float: right"
+            >
+              <mat-icon
+                [matTooltip]="
+                  'collections.tooltip.view-details'
+                    | translate: { name: entry.name }
+                "
+              >
+                link
+              </mat-icon>
+            </a>
+          </span>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="issue-count">
+        <mat-header-cell *matHeaderCellDef>
+          {{ "collections.publisher-list-page.label.issue-count" | translate }}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let entry">
+          <span>
+            {{ entry.issueCount }}
+          </span>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="series-count">
+        <mat-header-cell *matHeaderCellDef>
+          {{ "collections.publisher-list-page.label.series-count" | translate }}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let entry">
+          <span>
+            {{ entry.seriesCount }}
+          </span>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="3">
+          {{
+            "collections.publisher-list-page.text.no-publishers-found"
+              | translate
+          }}
+        </td>
+      </tr>
+    </mat-table>
+  </mat-card-content>
+</mat-card>
