@@ -144,6 +144,10 @@
             <column name="issue_number"/>
         </createIndex>
 
+        <createIndex tableName="comics_v4" indexName="comics_v4_comic_detail_idx">
+            <column name="comic_detail_id"/>
+        </createIndex>
+
         <createIndex tableName="comics_v4" indexName="comics_v4_publisher_cover_date_idx">
             <column name="publisher"/>
             <column name="cover_date"/>

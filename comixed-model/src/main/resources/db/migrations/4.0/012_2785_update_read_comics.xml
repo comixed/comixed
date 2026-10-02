@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="012_2785_update_read_comics.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="comic_details_v4"/>
+            <not>
+                <columnExists tableName="read_comic_books_v4" columnName="comic_id"/>
+            </not>
+        </preConditions>
+
+
+        <addColumn tableName="read_comic_books_v4">
+            <column name="comic_id" type="bigint"/>
+        </addColumn>
+
+        <addForeignKeyConstraint baseTableName="read_comic_books_v4" baseColumnNames="comic_id"
+                                 constraintName="read_comic_books_v4_comic_fk"
+                                 referencedTableName="comics_v4"
+                                 referencedColumnNames="comic_id"/>
+
+        <sql>UPDATE read_comic_books_v4 r
+             SET comic_id = (SELECT c.comic_id FROM comics_v4 c WHERE c.comic_detail_id = r.comic_detail_id);</sql>
+
+        <dropForeignKeyConstraint baseTableName="read_comic_books_v4"
+                                  constraintName="read_comic_books_v4_comic_detail_fk"/>
+        <dropUniqueConstraint tableName="read_comic_books_v4"
+                              constraintName="read_comic_books_v4_unique_comixed_user_and_comic_detail"/>
+        <dropIndex tableName="read_comic_books_v4" indexName="read_comic_books_v4_comic_detail_idx"/>
+        <dropColumn tableName="read_comic_books_v4" columnName="comic_detail_id"/>
+
+        <addNotNullConstraint tableName="read_comic_books_v4" columnName="comic_id" columnDataType="bigint"/>
+        <addUniqueConstraint tableName="read_comic_books_v4"
+                             constraintName="read_comic_books_v4_unique_comixed_user_and_comic"
+                             columnNames="comixed_user_id,comic_id"/>
+        <createIndex tableName="read_comic_books_v4" indexName="read_comic_books_v4_comic_idx">
+            <column name="comic_id"/>
+        </createIndex>
+
+    </changeSet>
+</databaseChangeLog>

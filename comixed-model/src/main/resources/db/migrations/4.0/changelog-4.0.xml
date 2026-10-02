@@ -24,8 +24,14 @@
     <include file="/db/migrations/4.0/007_2775_recreate_views.xml"/>
     <include file="/db/migrations/4.0/008_2680_remove_comic_books_table.xml"/>
     <include file="/db/migrations/4.0/009_2785_create_the_comics_table.xml"/>
-    <include file="/db/migrations/4.0/010_2785_migrate_comic_details_table.xml"/>
-    <include file="/db/migrations/4.0/011_2785_recreate_views.xml"/>
-    <include file="/db/migrations/4.0/012_2443_add_next_and_previous_issue_to_displayable_comics_view.xml"/>
+    <include file="/db/migrations/4.0/010_2785_drop_views.xml"/>
+    <include file="/db/migrations/4.0/011_2785_update_comic_pages.xml"/>
+    <include file="/db/migrations/4.0/012_2785_update_read_comics.xml"/>
+    <include file="/db/migrations/4.0/013_2785_update_comic_tags.xml"/>
+    <include file="/db/migrations/4.0/014_2785_update_comic_metadata_sources.xml"/>
+    <include file="/db/migrations/4.0/015_2785_update_reading_list_entries.xml"/>
+    <include file="/db/migrations/4.0/016_2785_delete_comic_details.xml"/>
+    <include file="/db/migrations/4.0/017_2785_recreate_views.xml"/>
+    <!-- include file="/db/migrations/4.0/018_2443_add_next_and_previous_issue_to_displayable_comics_view.xml"/ -->
 
 </databaseChangeLog>
