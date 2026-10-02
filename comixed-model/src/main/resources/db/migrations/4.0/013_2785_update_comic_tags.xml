@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="013_2785_update_comic_tags.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="comic_details_v4"/>
+            <not>
+                <columnExists tableName="comic_tags_v4" columnName="comic_id"/>
+            </not>
+        </preConditions>
+
+        <addColumn tableName="comic_tags_v4">
+            <column name="comic_id" type="bigint"/>
+        </addColumn>
+
+        <addForeignKeyConstraint baseTableName="comic_tags_v4" baseColumnNames="comic_id"
+                                 constraintName="comic_tags_v4_comic_fk"
+                                 referencedTableName="comics_v4"
+                                 referencedColumnNames="comic_id"/>
+
+        <sql>UPDATE comic_tags_v4 t
+             SET comic_id = (SELECT c.comic_id FROM comics_v4 c WHERE c.comic_detail_id = t.comic_detail_id);</sql>
+
+        <dropForeignKeyConstraint baseTableName="comic_tags_v4" constraintName="comic_tags_v4_comic_detail_fk"/>
+        <dropIndex tableName="comic_tags_v4" indexName="comic_tags_v4_comic_detail_idx"/>
+        <dropColumn tableName="comic_tags_v4" columnName="comic_detail_id"/>
+
+        <addNotNullConstraint tableName="comic_tags_v4" columnName="comic_id" columnDataType="bigint"/>
+        <createIndex tableName="comic_tags_v4" indexName="comic_tags_v4_comic_idx">
+            <column name="comic_id"/>
+        </createIndex>
+
+    </changeSet>
+</databaseChangeLog>

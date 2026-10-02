@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="010_2785_drop_views.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="comic_details_v4"/>
+        </preConditions>
+
+        <dropView viewName="displayable_comics_view"/>
+        <dropView viewName="duplicate_comics_view"/>
+        <dropView viewName="duplicate_pages_view"/>
+        <dropView viewName="organizing_comics_view"/>
+        <dropView viewName="publisher_details_view"/>
+        <dropView viewName="series_details_view"/>
+        <dropView viewName="stories_view"/>
+
+    </changeSet>
+</databaseChangeLog>
