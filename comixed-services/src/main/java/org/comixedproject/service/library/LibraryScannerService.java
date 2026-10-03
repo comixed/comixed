@@ -37,7 +37,6 @@ import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.service.comicfiles.ComicFileService;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 /**
@@ -45,7 +44,7 @@ import org.springframework.util.StringUtils;
  *
  * @author Darryl L. Pierce
  */
-@Component
+// @Component
 @Log4j2
 public class LibraryScannerService implements InitializingBean, ConfigurationChangedListener {
   @Autowired private ConfigurationService configurationService;
