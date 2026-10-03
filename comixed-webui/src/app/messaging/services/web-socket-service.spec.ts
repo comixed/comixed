@@ -16,17 +16,28 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, inject } from '@angular/core';
-import { DatePipe } from '@angular/common';
-import { TranslatePipe } from '@ngx-translate/core';
-import { CurrentUserStore } from '@app/account/stores/current-user-store';
+import { TestBed } from '@angular/core/testing';
+import { WebSocketService } from './web-socket-service';
+import { StompService } from '@app/messaging/services/stomp-service';
+import { TokenService } from '@app/account/services/token-service';
+import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
 
-@Component({
-  imports: [DatePipe, TranslatePipe],
-  selector: 'app-welcome-page',
-  styleUrl: './welcome-page.scss',
-  templateUrl: './welcome-page.html'
-})
-export class WelcomePage {
-  readonly currentUserStore = inject(CurrentUserStore);
-}
+describe('WebSocketService', () => {
+  let service: WebSocketService;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [
+        provideLogger({ minLevel: LoggerLevel.OFF }),
+        StompService,
+        TokenService
+      ]
+    });
+
+    service = TestBed.inject(WebSocketService);
+  });
+
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
+});

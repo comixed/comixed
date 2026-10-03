@@ -16,17 +16,22 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, inject } from '@angular/core';
-import { DatePipe } from '@angular/common';
-import { TranslatePipe } from '@ngx-translate/core';
-import { CurrentUserStore } from '@app/account/stores/current-user-store';
+import { User } from '@app/account/models/user';
 
-@Component({
-  imports: [DatePipe, TranslatePipe],
-  selector: 'app-welcome-page',
-  styleUrl: './welcome-page.scss',
-  templateUrl: './welcome-page.html'
-})
-export class WelcomePage {
-  readonly currentUserStore = inject(CurrentUserStore);
-}
+export const USER_ADMIN: User = {
+  comixedUserId: 1,
+  email: 'admin@comixedproject.org',
+  firstLoginDate: new Date().getTime(),
+  lastLoginDate: new Date().getTime(),
+  roles: [{ name: 'READER' }, { name: 'ADMIN' }],
+  readComics: []
+};
+
+export const USER_READER: User = {
+  comixedUserId: 2,
+  email: 'reader@comixedproject.org',
+  firstLoginDate: new Date().getTime(),
+  lastLoginDate: new Date().getTime(),
+  roles: [{ name: 'READER' }],
+  readComics: []
+};

@@ -16,17 +16,21 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, inject } from '@angular/core';
-import { DatePipe } from '@angular/common';
-import { TranslatePipe } from '@ngx-translate/core';
-import { CurrentUserStore } from '@app/account/stores/current-user-store';
+import { RemoteLibrarySegment } from '@app/library/models/net/remote-library-segment';
+import { PublisherAndYearSegment } from '@app/library/models/net/publisher-and-year-segment';
 
-@Component({
-  imports: [DatePipe, TranslatePipe],
-  selector: 'app-welcome-page',
-  styleUrl: './welcome-page.scss',
-  templateUrl: './welcome-page.html'
-})
-export class WelcomePage {
-  readonly currentUserStore = inject(CurrentUserStore);
+export interface RemoteLibraryState {
+  totalComics: number;
+  unscrapedComics: number;
+  deletedComics: number;
+  duplicateComics: number;
+  publishers: RemoteLibrarySegment[];
+  series: RemoteLibrarySegment[];
+  characters: RemoteLibrarySegment[];
+  teams: RemoteLibrarySegment[];
+  locations: RemoteLibrarySegment[];
+  stories: RemoteLibrarySegment[];
+  states: RemoteLibrarySegment[];
+  archiveTypes: RemoteLibrarySegment[];
+  byPublisherAndYear: PublisherAndYearSegment[];
 }

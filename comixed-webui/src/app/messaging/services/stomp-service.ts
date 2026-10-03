@@ -16,17 +16,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, inject } from '@angular/core';
-import { DatePipe } from '@angular/common';
-import { TranslatePipe } from '@ngx-translate/core';
-import { CurrentUserStore } from '@app/account/stores/current-user-store';
+import { Service } from '@angular/core';
+import { RxStomp } from '@stomp/rx-stomp';
 
-@Component({
-  imports: [DatePipe, TranslatePipe],
-  selector: 'app-welcome-page',
-  styleUrl: './welcome-page.scss',
-  templateUrl: './welcome-page.html'
-})
-export class WelcomePage {
-  readonly currentUserStore = inject(CurrentUserStore);
+export function stompServiceFactory() {
+  return new StompService();
+}
+
+@Service()
+export class StompService extends RxStomp {
+  constructor() {
+    super();
+  }
 }

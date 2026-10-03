@@ -17,24 +17,31 @@
  */
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { WelcomePage } from '@app/pages/welcome-page/welcome-page';
-import { provideTranslateService } from '@ngx-translate/core';
-import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
+import { Topbar } from '@app/layout/components/topbar/topbar';
+import { Renderer2 } from '@angular/core';
+import { provideLogger } from '@angular-ru/cdk/logger';
+import { AppState } from '@app/stores/app-store';
 
-describe('WelcomePage', () => {
-  let component: WelcomePage;
-  let fixture: ComponentFixture<WelcomePage>;
+describe('Topbar', () => {
+  let component: Topbar;
+  let fixture: ComponentFixture<Topbar>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [WelcomePage],
+      imports: [Topbar],
       providers: [
-        provideLogger({ minLevel: LoggerLevel.OFF }),
-        provideTranslateService({ fallbackLang: 'en' })
+        AppState,
+        provideLogger(),
+        {
+          provide: Renderer2,
+          useValue: {
+            setStyle: vi.fn()
+          }
+        }
       ]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(WelcomePage);
+    fixture = TestBed.createComponent(Topbar);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

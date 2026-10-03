@@ -17,16 +17,16 @@
  */
 
 import { Component, inject } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { LibraryStore } from '@app/library/stores/library-store';
 import { TranslatePipe } from '@ngx-translate/core';
-import { CurrentUserStore } from '@app/account/stores/current-user-store';
+import { MatToolbar } from '@angular/material/toolbar';
 
 @Component({
-  imports: [DatePipe, TranslatePipe],
-  selector: 'app-welcome-page',
-  styleUrl: './welcome-page.scss',
-  templateUrl: './welcome-page.html'
+  imports: [TranslatePipe, MatToolbar],
+  selector: 'app-footer',
+  styleUrl: './footer.scss',
+  templateUrl: './footer.html'
 })
-export class WelcomePage {
-  readonly currentUserStore = inject(CurrentUserStore);
+export class Footer {
+  readonly libraryState = inject(LibraryStore);
 }

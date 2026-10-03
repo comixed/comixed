@@ -16,17 +16,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, inject } from '@angular/core';
-import { DatePipe } from '@angular/common';
-import { TranslatePipe } from '@ngx-translate/core';
-import { CurrentUserStore } from '@app/account/stores/current-user-store';
+import { Service } from '@angular/core';
+import { AUTHENTICATION_TOKEN_KEY } from '@app/account/user-constants';
 
-@Component({
-  imports: [DatePipe, TranslatePipe],
-  selector: 'app-welcome-page',
-  styleUrl: './welcome-page.scss',
-  templateUrl: './welcome-page.html'
-})
-export class WelcomePage {
-  readonly currentUserStore = inject(CurrentUserStore);
+@Service()
+export class TokenService {
+  setAuthToken(token: string) {
+    window.localStorage.setItem(AUTHENTICATION_TOKEN_KEY, token);
+  }
+
+  hasAuthToken(): boolean {
+    return !!window.localStorage.getItem(AUTHENTICATION_TOKEN_KEY);
+  }
+
+  getAuthToken(): string {
+    return window.localStorage.getItem(AUTHENTICATION_TOKEN_KEY) || '';
+  }
+
+  clearAuthToken() {
+    window.localStorage.removeItem(AUTHENTICATION_TOKEN_KEY);
+  }
 }

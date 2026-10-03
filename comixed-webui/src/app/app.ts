@@ -16,14 +16,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Footer } from '@app/components/footer/footer';
-import { Topbar } from '@app/components/topbar/topbar';
+import { Footer } from '@app/layout/components/footer/footer';
+import { Topbar } from '@app/layout/components/topbar/topbar';
 import { MatToolbar } from '@angular/material/toolbar';
-import { Store } from '@ngrx/store';
 import { LoggerService } from '@angular-ru/cdk/logger';
-import { loadCurrentUser } from '@app/user/actions/authentication.actions';
+import { MessagingStore } from '@app/messaging/stores/messaging-store';
+import { AccountService } from '@app/account/services/account-service';
+import { CurrentUserStore } from '@app/account/stores/current-user-store';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { LibraryService } from '@app/library/services/library-service';
 
 @Component({
   imports: [RouterOutlet, Footer, Topbar, MatToolbar],
@@ -31,12 +34,30 @@ import { loadCurrentUser } from '@app/user/actions/authentication.actions';
   styleUrl: './app.scss',
   templateUrl: './app.html'
 })
-export class App implements OnInit {
-  logger = inject(LoggerService);
-  store = inject(Store);
+export class App {
+  private readonly authenticationService = inject(AccountService);
+  private readonly libraryService = inject(LibraryService);
+  private readonly currentUserStore = inject(CurrentUserStore);
+  private readonly messagingStore = inject(MessagingStore);
+  private readonly logger = inject(LoggerService);
 
-  ngOnInit(): void {
-    this.logger.debug('Loading current user');
-    this.store.dispatch(loadCurrentUser());
+  constructor() {
+    toObservable(this.currentUserStore.isAuthenticated)
+      .pipe(takeUntilDestroyed())
+      .subscribe({
+        next: value => {
+          if (value) {
+            this.logger.trace('Starting messaging');
+            this.messagingStore.start();
+            this.logger.trace('Loading the remote library state');
+            this.libraryService.loadLibraryState();
+          } else {
+            this.logger.trace('Stopping messaging');
+            this.messagingStore.stop();
+          }
+        }
+      });
+    this.logger.trace('Fetching the current user');
+    this.authenticationService.loadCurrentUser();
   }
 }

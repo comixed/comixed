@@ -3,7 +3,8 @@
   "version": 1,
   "cli": {
     "packageManager": "npm",
-    "schematicCollections": ["angular-eslint", "@ngrx/schematics"]
+    "schematicCollections": ["angular-eslint", "@ngrx/schematics"],
+    "analytics": false
   },
   "newProjectRoot": "projects",
   "projects": {
@@ -21,6 +22,11 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
+            "allowedCommonJsDependencies": [
+              "lodash",
+              "@messageformat/core",
+              "@stomp/stompjs"
+            ],
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
             "assets": [
@@ -29,6 +35,7 @@
                 "input": "public"
               }
             ],
+            "scripts": ["./node_modules/sockjs-client/dist/sockjs.min.js"],
             "styles": ["src/styles.scss"]
           },
           "configurations": {
@@ -68,11 +75,15 @@
               "buildTarget": "comixed:build:production"
             },
             "development": {
-              "proxyConfig": "proxy.conf.json",
               "buildTarget": "comixed:build:development"
             }
           },
-          "defaultConfiguration": "development"
+          "defaultConfiguration": "development",
+          "options": {
+            "hmr": true,
+            "liveReload": true,
+            "proxyConfig": "src/proxy.conf.json"
+          }
         },
         "test": {
           "builder": "@angular/build:unit-test"

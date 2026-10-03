@@ -33,16 +33,18 @@ import {
 } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { DashboardModule } from '@app/dashboard/dashboard-module';
-import { UserModule } from '@app/user/user-module';
-import { authenticationInterceptor } from '@app/user/interceptors/authentication-interceptor';
+import { UserModule } from '@app/account/user-module';
+import { authenticationInterceptor } from '@app/account/interceptors/authentication-interceptor';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
 import { TranslateMessageFormatCompiler } from 'ngx-translate-messageformat-compiler';
+import { MessagingModule } from '@app/messaging/messaging-module';
+import { LibraryModule } from '@app/library/library-module';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideLogger({ minLevel: LoggerLevel.DEBUG }),
+    provideLogger({ minLevel: LoggerLevel.TRACE }),
     provideRouter(appRoutes),
     environment.providers,
     provideHttpClient(withInterceptors([authenticationInterceptor])),
@@ -65,6 +67,8 @@ export const appConfig: ApplicationConfig = {
         connectInZone: true
       }),
       UserModule,
+      MessagingModule,
+      LibraryModule,
       DashboardModule
     )
   ]

@@ -27,6 +27,14 @@
       }
     }
   },
+  "footer": {
+    "segment": {
+      "deleted-comics": "Deleted: {count}",
+      "duplicate-comics": "Duplicates: {count}",
+      "total-comics": "Total: {count}",
+      "unscraped-comics": "Unscraped: {count}"
+    }
+  },
   "user": {
     "login-page": {
       "button": {

@@ -16,17 +16,21 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, inject } from '@angular/core';
-import { DatePipe } from '@angular/common';
-import { TranslatePipe } from '@ngx-translate/core';
-import { CurrentUserStore } from '@app/account/stores/current-user-store';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import {
+  StompService,
+  stompServiceFactory
+} from '@app/messaging/services/stomp-service';
 
-@Component({
-  imports: [DatePipe, TranslatePipe],
-  selector: 'app-welcome-page',
-  styleUrl: './welcome-page.scss',
-  templateUrl: './welcome-page.html'
+@NgModule({
+  declarations: [],
+  imports: [CommonModule],
+  providers: [
+    {
+      provide: StompService,
+      useFactory: stompServiceFactory
+    }
+  ]
 })
-export class WelcomePage {
-  readonly currentUserStore = inject(CurrentUserStore);
-}
+export class MessagingModule {}

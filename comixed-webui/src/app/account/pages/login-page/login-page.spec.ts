@@ -17,40 +17,61 @@
  */
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { App } from '@app/app';
-import { beforeEach } from 'vitest';
+import { LoginPage } from '@app/account/pages/login-page/login-page';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
 import { provideTranslateService } from '@ngx-translate/core';
+import { beforeEach } from 'vitest';
+import { provideRouter } from '@angular/router';
+import { USER_READER } from '@app/account/user-fixtures';
 import { AccountService } from '@app/account/services/account-service';
 
-describe('App', () => {
-  let component: App;
-  let fixture: ComponentFixture<App>;
+describe('LoginPage', () => {
+  const TEST_USER = USER_READER;
+  const TEST_EMAIL = TEST_USER.email;
+  const TEST_PASSWORD = 'th3!p455W0rD';
+
+  let component: LoginPage;
+  let fixture: ComponentFixture<LoginPage>;
   let accountService: AccountService;
-  let loadCurrentUserSpy: unknown;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [App],
+      imports: [LoginPage],
       providers: [
         provideLogger({ minLevel: LoggerLevel.OFF }),
-        AccountService,
-        provideTranslateService()
+        provideTranslateService({ fallbackLang: 'en' }),
+        provideRouter([{ path: '**', redirectTo: '' }]),
+        {
+          provide: AccountService,
+          useValue: {
+            login: vi.fn()
+          }
+        }
       ]
     }).compileComponents();
 
-    accountService = TestBed.inject(AccountService);
-    loadCurrentUserSpy = vi.spyOn(accountService, 'loadCurrentUser');
-    fixture = TestBed.createComponent(App);
+    fixture = TestBed.createComponent(LoginPage);
     component = fixture.componentInstance;
+    accountService = TestBed.inject(AccountService);
     await fixture.whenStable();
   });
 
-  it('should create the app', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should load the current user', () => {
-    expect(loadCurrentUserSpy).toHaveBeenCalled();
+  describe('submitting the form', () => {
+    beforeEach(() => {
+      component.loginForm.controls['email'].setValue(TEST_EMAIL);
+      component.loginForm.controls['password'].setValue(TEST_PASSWORD);
+      component.onSubmitForm();
+    });
+
+    it('performs a login', () => {
+      expect(accountService.login).toHaveBeenCalledWith({
+        email: TEST_EMAIL,
+        password: TEST_PASSWORD
+      });
+    });
   });
 });
