@@ -1,3 +1,20 @@
-<div class="cx-dashboard-content cx-border-1">
-  <h3>{{ title | translate }}</h3>
-</div>
+<mat-card class="cx-width-100 cx-height-100">
+  <mat-card-title>
+    <h3 class="cx-width-100 cx-justify-center cx-no-text-wrap">
+      {{ title }}
+    </h3>
+  </mat-card-title>
+  <mat-card-content class="cx-padding-15">
+    <ngx-charts-bar-vertical
+      [results]="chartData()"
+      [showGridLines]="true"
+      [gradient]="false"
+      [xAxis]="true"
+      [yAxis]="true"
+      [roundEdges]="true"
+      [showRefLabels]="true"
+      [legend]="false"
+      [noBarWhenZero]="true"
+    ></ngx-charts-bar-vertical>
+  </mat-card-content>
+</mat-card>

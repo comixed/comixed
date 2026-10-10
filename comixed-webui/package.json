@@ -51,6 +51,7 @@
     "@ngx-translate/core": "^18.0.0",
     "@ngx-translate/http-loader": "^18.0.0",
     "@stomp/rx-stomp": "^2.4.0",
+    "@swimlane/ngx-charts": "^25.0.3",
     "chart.js": "^4.5.1",
     "lodash": "^4.18.1",
     "ng2-charts": "^11.0.0",

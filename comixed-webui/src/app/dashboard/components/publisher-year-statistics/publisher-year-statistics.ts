@@ -16,15 +16,50 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, Input } from '@angular/core';
-import { TranslatePipe } from '@ngx-translate/core';
+import { Component, Input, signal } from '@angular/core';
+import { PublisherAndYearSegment } from '@app/library/models/net/publisher-and-year-segment';
+import { MatCard, MatCardContent, MatCardTitle } from '@angular/material/card';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 @Component({
-  imports: [TranslatePipe],
+  imports: [MatCard, MatCardContent, MatCardTitle, NgxChartsModule],
   selector: 'app-publisher-year-statistics',
   styleUrl: './publisher-year-statistics.scss',
   templateUrl: './publisher-year-statistics.html'
 })
 export class PublisherYearStatistics {
   @Input() title = '';
+
+  readonly chartData = signal<
+    { name: string; series: { name: string; value: number }[] }[]
+  >([]);
+
+  @Input() set statistics(statistics: PublisherAndYearSegment[]) {
+    const years = Array.from(
+      new Set(statistics.map(entry => entry.year))
+    ).sort();
+    this.chartData.set(
+      years.map(year => {
+        return {
+          name: `${year}`,
+          series: statistics
+            .filter(entry => entry.year === year)
+            .map(entry => {
+              return {
+                name: entry.publisher,
+                value: entry.count
+              };
+            })
+        };
+      })
+    );
+  }
+
+  get chartOptions() {
+    return {
+      animations: null,
+      plugins: { legend: { display: false } },
+      responsive: true
+    };
+  }
 }

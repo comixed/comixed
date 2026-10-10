@@ -19,31 +19,34 @@
 import { Component, Input, signal } from '@angular/core';
 import { RemoteLibrarySegment } from '@app/library/models/net/remote-library-segment';
 import { MatCard, MatCardContent, MatCardTitle } from '@angular/material/card';
-import { BarChartModule, PieChartModule } from '@swimlane/ngx-charts';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 @Component({
-  imports: [
-    MatCard,
-    MatCardContent,
-    MatCardTitle,
-    PieChartModule,
-    BarChartModule
-  ],
-  selector: 'app-comic-state-statistics',
-  styleUrl: './comic-state-statistics.scss',
-  templateUrl: './comic-state-statistics.html'
+  imports: [MatCard, MatCardContent, MatCardTitle, NgxChartsModule],
+  selector: 'app-archive-type-statistics',
+  styleUrl: './archive-type-statistics.scss',
+  templateUrl: './archive-type-statistics.html'
 })
-export class ComicStateStatistics {
+export class ArchiveTypeStatistics {
   @Input() title = '';
   readonly chartData = signal<{ name: string; value: number }[]>([]);
 
+  get chartOptions() {
+    return {
+      animations: null,
+      plugins: { legend: { display: true } },
+      responsive: true
+    };
+  }
+
   @Input() set statistics(statistics: RemoteLibrarySegment[]) {
     this.chartData.set(
-      Array.from(
-        statistics.map(entry => {
-          return { name: entry.name, value: entry.count };
-        })
-      )
+      statistics.map(entry => {
+        return {
+          name: entry.name,
+          value: entry.count
+        };
+      })
     );
   }
 }

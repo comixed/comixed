@@ -16,15 +16,39 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, Input } from '@angular/core';
-import { TranslatePipe } from '@ngx-translate/core';
+import { Component, inject, Input, signal } from '@angular/core';
+import { RemoteLibrarySegment } from '@app/library/models/net/remote-library-segment';
+import { MatCard, MatCardContent, MatCardTitle } from '@angular/material/card';
+import { LoggerService } from '@angular-ru/cdk/logger';
+import { BarChartModule } from '@swimlane/ngx-charts';
 
 @Component({
-  imports: [TranslatePipe],
+  imports: [
+    MatCard,
+    MatCardTitle,
+    MatCardContent,
+    BarChartModule,
+    MatCardContent
+  ],
   selector: 'app-collection-statistics',
   styleUrl: './collection-statistics.scss',
   templateUrl: './collection-statistics.html'
 })
 export class CollectionStatistics {
   @Input() title = '';
+
+  readonly logger = inject(LoggerService);
+  readonly chartData = signal<{ name: string; value: number }[]>([]);
+
+  @Input() set statistics(statistics: RemoteLibrarySegment[]) {
+    this.chartData.set(
+      Array.from(
+        statistics.map(entry => {
+          return { name: entry.name, value: entry.count };
+        })
+      )
+        .sort((left, right) => right.value - left.value)
+        .slice(0, 5)
+    );
+  }
 }

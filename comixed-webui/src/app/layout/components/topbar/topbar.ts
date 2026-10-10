@@ -22,9 +22,11 @@ import { MatIconButton } from '@angular/material/button';
 import { AppState } from '@app/stores/app-store';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { LoggerService } from '@angular-ru/cdk/logger';
+import { CurrentUserStore } from '@app/account/stores/current-user-store';
+import { RouterLink } from '@angular/router';
 
 @Component({
-  imports: [MatIcon, MatIconButton],
+  imports: [MatIcon, MatIconButton, RouterLink],
   selector: 'app-topbar',
   styleUrl: './topbar.scss',
   templateUrl: './topbar.html'
@@ -32,6 +34,7 @@ import { LoggerService } from '@angular-ru/cdk/logger';
 export class Topbar {
   readonly logger = inject(LoggerService);
   readonly appStore = inject(AppState);
+  readonly currentUserStore = inject(CurrentUserStore);
   readonly renderer = inject(Renderer2);
 
   constructor() {

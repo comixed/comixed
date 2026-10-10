@@ -1,29 +1,32 @@
 {
   "dashboard": {
     "statistics": {
+      "archive-type": {
+        "title": "Archive Types"
+      },
       "character": {
-        "title": "Characters"
+        "title": "{count, plural, =1 {1 Character} other{# Characters}}"
       },
       "comic-state": {
-        "title": "Comics By State"
+        "title": "Comic States"
       },
       "location": {
-        "title": "Locations"
+        "title": "{count, plural, =1 {1 Location} other{# Locations}}"
       },
       "publisher": {
-        "title": "Publishers"
+        "title": "{count, plural, =1 {1 Publisher} other{# Publishers}}"
       },
       "publisher-year": {
-        "title": "Publisher By Year"
+        "title": "Publishers By Year"
       },
       "series": {
-        "title": "Series"
+        "title": "{count, plural, =1 {1 Series} other{# Series}}"
       },
       "story": {
-        "title": "Stories"
+        "title": "{count, plural, =1 {1 Story} other{# Stories}}"
       },
       "team": {
-        "title": "Teams"
+        "title": "{count, plural, =1 {1 Team} other{# Teams}}"
       }
     }
   },

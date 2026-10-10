@@ -37,13 +37,18 @@ import { UserModule } from '@app/account/user-module';
 import { authenticationInterceptor } from '@app/account/interceptors/authentication-interceptor';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
-import { TranslateMessageFormatCompiler } from 'ngx-translate-messageformat-compiler';
+import {
+  MESSAGE_FORMAT_CONFIG,
+  TranslateMessageFormatCompiler
+} from 'ngx-translate-messageformat-compiler';
 import { MessagingModule } from '@app/messaging/messaging-module';
 import { LibraryModule } from '@app/library/library-module';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
+    provideAnimationsAsync(),
     provideLogger({ minLevel: LoggerLevel.TRACE }),
     provideRouter(appRoutes),
     environment.providers,
@@ -57,6 +62,12 @@ export const appConfig: ApplicationConfig = {
         suffix: '.json'
       })
     }),
+    {
+      provide: MESSAGE_FORMAT_CONFIG,
+      useValue: {
+        throwOnError: true
+      }
+    },
     importProvidersFrom(
       StoreModule.forRoot({}, {}),
       EffectsModule.forRoot([]),

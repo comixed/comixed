@@ -1,3 +1,18 @@
-<div class="cx-dashboard-content cx-border-1">
-  <h3>{{ title | translate }}</h3>
-</div>
+<mat-card class="cx-width-100 cx-height-100">
+  <mat-card-title>
+    <h3 class="cx-width-100 cx-justify-center cx-no-text-wrap">
+      {{ title }}
+    </h3>
+  </mat-card-title>
+  <mat-card-content>
+    <ngx-charts-heat-map
+      [results]="chartData()"
+      [animations]="true"
+      [xAxis]="true"
+      [yAxis]="true"
+      [gradient]="false"
+      [showXAxisLabel]="true"
+      [showYAxisLabel]="false"
+    ></ngx-charts-heat-map>
+  </mat-card-content>
+</mat-card>

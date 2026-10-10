@@ -17,24 +17,18 @@
  */
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DashboardPage } from '@app/dashboard/pages/dashboard-page/dashboard-page';
-import { provideTranslateService } from '@ngx-translate/core';
-import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
+import { ArchiveTypeStatistics } from './archive-type-statistics';
 
-describe('DashboardPage', () => {
-  let component: DashboardPage;
-  let fixture: ComponentFixture<DashboardPage>;
+describe('ArchiveTypeStatistics', () => {
+  let component: ArchiveTypeStatistics;
+  let fixture: ComponentFixture<ArchiveTypeStatistics>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DashboardPage],
-      providers: [
-        provideLogger({ minLevel: LoggerLevel.OFF }),
-        provideTranslateService({ fallbackLang: 'en' })
-      ]
+      imports: [ArchiveTypeStatistics]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(DashboardPage);
+    fixture = TestBed.createComponent(ArchiveTypeStatistics);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });
