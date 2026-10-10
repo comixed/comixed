@@ -28,6 +28,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-install-plugin</artifactId>
+        <version>3.2.0</version>
       </plugin>
       <plugin>
         <groupId>com.github.eirslett</groupId>
@@ -41,8 +42,8 @@
             </goals>
             <phase>initialize</phase>
             <configuration>
-              <nodeVersion>v22.13.0</nodeVersion>
-              <pnpmVersion>v10.34.5</pnpmVersion>
+              <nodeVersion>v26.0.0</nodeVersion>
+              <pnpmVersion>v12.10.1</pnpmVersion>
             </configuration>
           </execution>
           <execution>
