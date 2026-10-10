@@ -44,7 +44,7 @@
     "@angular/material": "^21.2.8",
     "@angular/platform-browser": "^21.2.10",
     "@angular/platform-browser-dynamic": "^21.2.10",
-    "@angular/router": "^21.2.10",
+    "@angular/router": "^21.2.24",
     "@emnapi/core": "^1.10.0",
     "@emnapi/runtime": "^1.10.0",
     "@messageformat/core": "^3.4.0",
