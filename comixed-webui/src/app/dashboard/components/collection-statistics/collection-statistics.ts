@@ -16,11 +16,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, inject, Input, signal } from '@angular/core';
-import { RemoteLibrarySegment } from '@app/library/models/net/remote-library-segment';
+import { Component, inject, Input } from '@angular/core';
 import { MatCard, MatCardContent, MatCardTitle } from '@angular/material/card';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { BarChartModule } from '@swimlane/ngx-charts';
+import { TranslatePipe } from '@ngx-translate/core';
+import { RouterLink } from '@angular/router';
 
 @Component({
   imports: [
@@ -28,7 +29,9 @@ import { BarChartModule } from '@swimlane/ngx-charts';
     MatCardTitle,
     MatCardContent,
     BarChartModule,
-    MatCardContent
+    MatCardContent,
+    TranslatePipe,
+    RouterLink
   ],
   selector: 'app-collection-statistics',
   styleUrl: './collection-statistics.scss',
@@ -36,19 +39,12 @@ import { BarChartModule } from '@swimlane/ngx-charts';
 })
 export class CollectionStatistics {
   @Input() title = '';
+  @Input() publishers = 0;
+  @Input() series = 0;
+  @Input() characters = 0;
+  @Input() teams = 0;
+  @Input() locations = 0;
+  @Input() stories = 0;
 
   readonly logger = inject(LoggerService);
-  readonly chartData = signal<{ name: string; value: number }[]>([]);
-
-  @Input() set statistics(statistics: RemoteLibrarySegment[]) {
-    this.chartData.set(
-      Array.from(
-        statistics.map(entry => {
-          return { name: entry.name, value: entry.count };
-        })
-      )
-        .sort((left, right) => right.value - left.value)
-        .slice(0, 5)
-    );
-  }
 }

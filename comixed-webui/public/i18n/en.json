@@ -2,35 +2,54 @@
   "app": {
     "page-title": "ComiXed: {title}"
   },
+  "collections": {
+    "publishers-page": {
+      "label": {
+        "issue-count": "# Comics",
+        "publisher-name": "Name",
+        "series-count": "# Series"
+      },
+      "text": {
+        "no-publishers-found": "No publishers found..."
+      }
+    }
+  },
   "dashboard": {
     "page-title": "Dashboard",
     "statistics": {
       "archive-type": {
         "title": "Archive Types"
       },
-      "character": {
-        "title": "{count, plural, =1 {1 Character} other{# Characters}}"
+      "characters": {
+        "description": "There {count, plural, =1 {is 1 character} other{are # characters}}..."
+      },
+      "collections": {
+        "title": "Collections"
       },
       "comic-state": {
         "title": "Comic States"
       },
-      "location": {
-        "title": "{count, plural, =1 {1 Location} other{# Locations}}"
+      "locations": {
+        "description": "There {count, plural, =1 {is 1 location} other{# locations}}..."
       },
-      "publisher": {
-        "title": "{count, plural, =1 {1 Publisher} other{# Publishers}}"
+      "publishers": {
+        "description": "There {count, plural, =1 {is 1 publisher} other{are # publishers}}..."
       },
       "publisher-year": {
         "title": "Publishers By Year"
       },
       "series": {
-        "title": "{count, plural, =1 {1 Series} other{# Series}}"
+        "description": "There {count, plural, =1 {is 1 series} other{are # series}}..."
       },
-      "story": {
-        "title": "{count, plural, =1 {1 Story} other{# Stories}}"
+      "stories": {
+        "description": "There {count, plural, =1 {is 1 story} other{are # stories}}..."
       },
-      "team": {
-        "title": "{count, plural, =1 {1 Team} other{# Teams}}"
+      "teams": {
+        "description": "There {count, plural, =1 {is 1 team} other{are # teams}}...",
+        "title": "Teams"
+      },
+      "text": {
+        "view-more": "View more detail..."
       }
     }
   },

@@ -16,24 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ArchiveTypeStatistics } from './archive-type-statistics';
+import { Publisher } from '@app/collections/models/publisher';
 
-describe('ArchiveTypeStatistics', () => {
-  let component: ArchiveTypeStatistics;
-  let fixture: ComponentFixture<ArchiveTypeStatistics>;
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [ArchiveTypeStatistics]
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(ArchiveTypeStatistics);
-    component = fixture.componentInstance;
-    await fixture.whenStable();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+export interface LoadPublisherListResponse {
+  publishers: Publisher[];
+  total: number;
+}

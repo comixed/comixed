@@ -17,9 +17,13 @@
  */
 
 import { Routes } from '@angular/router';
-import { WelcomePage } from '@app/pages/welcome-page/welcome-page';
+import { DashboardPage } from '@app/dashboard/pages/dashboard-page/dashboard-page';
+import { PublishersPage } from '@app/collections/pages/publishers-page/publishers-page';
+import { LoginPage } from '@app/account/pages/login-page/login-page';
 
 export const appRoutes: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: '/welcome' },
-  { path: 'welcome', component: WelcomePage }
+  { path: '', pathMatch: 'full', redirectTo: '/dashboard' },
+  { path: 'login', component: LoginPage },
+  { path: 'dashboard', component: DashboardPage },
+  { path: 'collections/publishers', component: PublishersPage }
 ];

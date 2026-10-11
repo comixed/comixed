@@ -20,6 +20,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DashboardPage } from '@app/dashboard/pages/dashboard-page/dashboard-page';
 import { provideTranslateService } from '@ngx-translate/core';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
+import { provideRouter } from '@angular/router';
 
 describe('DashboardPage', () => {
   let component: DashboardPage;
@@ -29,6 +30,7 @@ describe('DashboardPage', () => {
     await TestBed.configureTestingModule({
       imports: [DashboardPage],
       providers: [
+        provideRouter([{ path: '*', redirectTo: '' }]),
         provideLogger({ minLevel: LoggerLevel.OFF }),
         provideTranslateService({ fallbackLang: 'en' })
       ]

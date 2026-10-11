@@ -20,6 +20,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideTranslateService } from '@ngx-translate/core';
 import { CollectionStatistics } from '@app/dashboard/components/collection-statistics/collection-statistics';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
+import { provideRouter } from '@angular/router';
 
 describe('CollectionStatistics', () => {
   let component: CollectionStatistics;
@@ -29,6 +30,7 @@ describe('CollectionStatistics', () => {
     await TestBed.configureTestingModule({
       imports: [CollectionStatistics],
       providers: [
+        provideRouter([{ path: '*', redirectTo: '' }]),
         provideLogger({ minLevel: LoggerLevel.OFF }),
         provideTranslateService({ fallbackLang: 'en' })
       ]

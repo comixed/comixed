@@ -16,13 +16,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { LibraryStore } from '@app/library/stores/library-store';
+import { API_ROOT_URL } from '@app/app-constants';
 
-@NgModule({
-  declarations: [],
-  imports: [CommonModule],
-  providers: [LibraryStore]
-})
-export class LibraryModule {}
+export const LOAD_PUBLISHERS_URL = `${API_ROOT_URL}/collections/publishers`;

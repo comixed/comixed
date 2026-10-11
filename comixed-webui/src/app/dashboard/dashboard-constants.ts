@@ -16,5 +16,4 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-export const DEFAULT_DASHBOARD_STATS =
-  'publisher-list|series-list|character-list|team-list|location-list|story-list|state-list|archive-list|by-publisher-and-year-list';
+export const DEFAULT_DASHBOARD_STATS = 'collections-list';

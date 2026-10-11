@@ -18,22 +18,13 @@
 
 import { Component, inject, signal } from '@angular/core';
 import { DEFAULT_DASHBOARD_STATS } from '@app/dashboard/dashboard-constants';
-import { CollectionStatistics } from '@app/dashboard/components/collection-statistics/collection-statistics';
-import { ComicStateStatistics } from '@app/dashboard/components/comic-state-statistics/comic-state-statistics';
-import { PublisherYearStatistics } from '@app/dashboard/components/publisher-year-statistics/publisher-year-statistics';
 import { LibraryStore } from '@app/library/stores/library-store';
-import { ArchiveTypeStatistics } from '@app/dashboard/components/archive-type-statistics/archive-type-statistics';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/layout/services/title-service';
+import { CollectionStatistics } from '@app/dashboard/components/collection-statistics/collection-statistics';
 
 @Component({
-  imports: [
-    CollectionStatistics,
-    ComicStateStatistics,
-    PublisherYearStatistics,
-    ArchiveTypeStatistics,
-    TranslatePipe
-  ],
+  imports: [TranslatePipe, CollectionStatistics],
   selector: 'app-dashboard-page',
   styleUrl: './dashboard-page.scss',
   templateUrl: './dashboard-page.html'

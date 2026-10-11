@@ -1,4 +1,4 @@
-@use 'variables' as *;
+@use './variables' as *;
 @use '@angular/material' as mat;
 
 html,
@@ -33,6 +33,17 @@ body {
   background-size: 100%;
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+h7,
+h8 {
+  padding: 5px;
+}
+
 .cx-spacer {
   flex: 1 1 auto;
 }
@@ -64,6 +75,8 @@ body {
 }
 
 .cx-padding-15 {
+  padding-top: 5px;
+  padding-bottom: 5px;
   padding-left: 15px;
   padding-right: 15px;
 }
@@ -86,14 +99,14 @@ body {
 
 .cx-flex-content-grow-1 {
   flex-grow: 1;
-  width: min(100%, 600px);
+  max-width: min(100%, 600px);
   min-width: 550px;
   align-self: stretch;
 }
 
 .cx-flex-content-grow-2 {
   flex-grow: 2;
-  width: min(100%, 900px);
+  max-width: min(100%, 900px);
   min-width: 800px;
   align-self: stretch;
 }

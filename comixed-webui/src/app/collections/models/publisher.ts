@@ -16,11 +16,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-
-@NgModule({
-  declarations: [],
-  imports: [CommonModule]
-})
-export class LayoutModule {}
+export interface Publisher {
+  name: string;
+  issueCount: number;
+  seriesCount: number;
+}

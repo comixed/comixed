@@ -32,8 +32,6 @@ import {
   provideTranslateService
 } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
-import { DashboardModule } from '@app/dashboard/dashboard-module';
-import { UserModule } from '@app/account/user-module';
 import { authenticationInterceptor } from '@app/account/interceptors/authentication-interceptor';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
@@ -41,8 +39,6 @@ import {
   MESSAGE_FORMAT_CONFIG,
   TranslateMessageFormatCompiler
 } from 'ngx-translate-messageformat-compiler';
-import { MessagingModule } from '@app/messaging/messaging-module';
-import { LibraryModule } from '@app/library/library-module';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 export const appConfig: ApplicationConfig = {
@@ -76,11 +72,7 @@ export const appConfig: ApplicationConfig = {
         trace: true,
         logOnly: environment.production,
         connectInZone: true
-      }),
-      UserModule,
-      MessagingModule,
-      LibraryModule,
-      DashboardModule
+      })
     )
   ]
 };

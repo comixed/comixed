@@ -40,7 +40,10 @@
               }
             ],
             "scripts": ["./node_modules/sockjs-client/dist/sockjs.min.js"],
-            "styles": ["src/styles.scss"]
+            "styles": ["src/styles.scss"],
+            "stylePreprocessorOptions": {
+              "includePaths": ["src"]
+            }
           },
           "configurations": {
             "production": {

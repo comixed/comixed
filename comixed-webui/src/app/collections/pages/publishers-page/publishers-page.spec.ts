@@ -17,24 +17,24 @@
  */
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { WelcomePage } from '@app/pages/welcome-page/welcome-page';
-import { provideTranslateService } from '@ngx-translate/core';
+import { PublishersPage } from './publishers-page';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
+import { provideTranslateService } from '@ngx-translate/core';
 
-describe('WelcomePage', () => {
-  let component: WelcomePage;
-  let fixture: ComponentFixture<WelcomePage>;
+describe('PublishersPage', () => {
+  let component: PublishersPage;
+  let fixture: ComponentFixture<PublishersPage>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [WelcomePage],
+      imports: [PublishersPage],
       providers: [
         provideLogger({ minLevel: LoggerLevel.OFF }),
-        provideTranslateService({ fallbackLang: 'en' })
+        provideTranslateService()
       ]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(WelcomePage);
+    fixture = TestBed.createComponent(PublishersPage);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

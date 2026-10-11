@@ -16,9 +16,38 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Routes } from '@angular/router';
-import { DashboardPage } from '@app/dashboard/pages/dashboard-page/dashboard-page';
+import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
+import { Publisher } from '@app/collections/models/publisher';
 
-export const dashboardRoutes: Routes = [
-  { path: 'dashboard', component: DashboardPage }
-];
+interface PublishersState {
+  publishers: Publisher[];
+  total: number;
+  index: number;
+  size: number;
+  searchText: string;
+  sortBy: string;
+  sortDirection: string;
+}
+
+const initialState: PublishersState = {
+  publishers: [],
+  total: 0,
+  searchText: '',
+  index: 0,
+  size: 10,
+  sortBy: '',
+  sortDirection: ''
+};
+
+export const PublisherStore = signalStore(
+  { providedIn: 'root' },
+  withState(initialState),
+  withMethods(store => ({
+    updatePublishers(publishers: Publisher[], total: number): void {
+      patchState(store, {
+        publishers,
+        total
+      });
+    }
+  }))
+);
