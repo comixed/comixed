@@ -22,11 +22,11 @@ import { Footer } from '@app/layout/components/footer/footer';
 import { Topbar } from '@app/layout/components/topbar/topbar';
 import { MatToolbar } from '@angular/material/toolbar';
 import { LoggerService } from '@angular-ru/cdk/logger';
-import { MessagingStore } from '@app/messaging/stores/messaging-store';
 import { AccountService } from '@app/account/services/account-service';
 import { CurrentUserStore } from '@app/account/stores/current-user-store';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { LibraryService } from '@app/library/services/library-service';
+import { WebSocketService } from '@app/messaging/services/web-socket-service';
 
 @Component({
   imports: [RouterOutlet, Footer, Topbar, MatToolbar],
@@ -38,7 +38,7 @@ export class App {
   private readonly authenticationService = inject(AccountService);
   private readonly libraryService = inject(LibraryService);
   private readonly currentUserStore = inject(CurrentUserStore);
-  private readonly messagingStore = inject(MessagingStore);
+  private readonly webSocketService = inject(WebSocketService);
   private readonly logger = inject(LoggerService);
 
   constructor() {
@@ -47,13 +47,13 @@ export class App {
       .subscribe({
         next: value => {
           if (value) {
-            this.logger.trace('Starting messaging');
-            this.messagingStore.start();
+            this.logger.trace('Connecting the websocket');
+            this.webSocketService.connect().subscribe();
             this.logger.trace('Loading the remote library state');
             this.libraryService.loadLibraryState();
           } else {
-            this.logger.trace('Stopping messaging');
-            this.messagingStore.stop();
+            this.logger.trace('Disconnecting the websocket');
+            this.webSocketService.disconnect();
           }
         }
       });

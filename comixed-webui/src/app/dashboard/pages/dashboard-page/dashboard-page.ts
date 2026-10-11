@@ -23,7 +23,8 @@ import { ComicStateStatistics } from '@app/dashboard/components/comic-state-stat
 import { PublisherYearStatistics } from '@app/dashboard/components/publisher-year-statistics/publisher-year-statistics';
 import { LibraryStore } from '@app/library/stores/library-store';
 import { ArchiveTypeStatistics } from '@app/dashboard/components/archive-type-statistics/archive-type-statistics';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TitleService } from '@app/layout/services/title-service';
 
 @Component({
   imports: [
@@ -38,10 +39,17 @@ import { TranslatePipe } from '@ngx-translate/core';
   templateUrl: './dashboard-page.html'
 })
 export class DashboardPage {
-  stats = signal<string[]>([]);
-  libraryStore = inject(LibraryStore);
+  readonly stats = signal<string[]>([]);
+  readonly libraryStore = inject(LibraryStore);
+  readonly titleService = inject(TitleService);
+  readonly translateService = inject(TranslateService);
 
   constructor() {
+    this.translateService.onLangChange.subscribe(() =>
+      this.titleService.setTitle(
+        this.translateService.instant('dashboard.page-title')
+      )
+    );
     this.stats.set(DEFAULT_DASHBOARD_STATS.split('|'));
   }
 }

@@ -36,6 +36,7 @@ export class WebSocketService {
   readonly messagingStore = inject(MessagingStore);
 
   connect(): Observable<unknown> {
+    this.messagingStore.start();
     return new Observable(() => {
       this.logger.trace('Checking for an auth token');
       if (this.tokenService.hasAuthToken()) {
@@ -51,7 +52,6 @@ export class WebSocketService {
           heartbeatIncoming: 0,
           debug: (message: string): void => {
             /* v8 ignore next */
-            console.log(message);
             this.logger.debug(message);
           },
           logRawCommunication: true
@@ -83,6 +83,9 @@ export class WebSocketService {
   }
 
   disconnect(): Observable<unknown> {
+    if (this.stompService) {
+      this.messagingStore.stop();
+    }
     return new Observable(() => {
       if (this.stompService.connected()) {
         this.logger.trace('Deactivating STOMP service');
@@ -106,8 +109,6 @@ export class WebSocketService {
     /* v8 ignore next */
     return this.stompService.watch(destination).subscribe({
       next(message: IMessage) {
-        // this.logger.debug('Received content:', message);
-        console.log('Received content:', message);
         const content = JSON.parse(message.body);
         callback(content);
       },
@@ -138,7 +139,6 @@ export class WebSocketService {
       .watch(securedTopic(destination))
       .subscribe((message: IMessage) => {
         const content = JSON.parse(message.body);
-        this.logger.debug('Received content:', content);
         callback(content);
       });
     /* v8 ignore next */

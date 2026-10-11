@@ -19,3 +19,5 @@
 import { API_ROOT_URL } from '@app/app-constants';
 
 export const LOAD_LIBRARY_STATE_URL = `${API_ROOT_URL}/library/state`;
+
+export const REMOTE_LIBRARY_STATE_TOPIC = '/topic/remote-library.update';

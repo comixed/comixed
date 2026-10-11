@@ -19,12 +19,16 @@
 import { inject, Service } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { HttpClient } from '@angular/common/http';
-import { LOAD_LIBRARY_STATE_URL } from '@app/library/library-constants';
+import {
+  LOAD_LIBRARY_STATE_URL,
+  REMOTE_LIBRARY_STATE_TOPIC
+} from '@app/library/library-constants';
 import { interpolate } from '@app/app-functions';
 import { MessagingStore } from '@app/messaging/stores/messaging-store';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { LibraryStore } from '@app/library/stores/library-store';
 import { RemoteLibraryState } from '@app/library/models/net/remote-library-state';
+import { WebSocketService } from '@app/messaging/services/web-socket-service';
 
 @Service()
 export class LibraryService {
@@ -32,6 +36,7 @@ export class LibraryService {
   client = inject(HttpClient);
   readonly libraryStore = inject(LibraryStore);
   readonly messagingStore = inject(MessagingStore);
+  readonly webSocketService = inject(WebSocketService);
 
   constructor() {
     toObservable(this.messagingStore.isStarted)
@@ -39,8 +44,14 @@ export class LibraryService {
       .subscribe({
         next: started => {
           if (started) {
-            this.logger.trace('Loading the comic library state');
-            this.loadLibraryState();
+            this.logger.trace('Subscribing to library updates');
+            this.webSocketService.subscribe<RemoteLibraryState>(
+              REMOTE_LIBRARY_STATE_TOPIC,
+              update => {
+                this.logger.debug('Received library update:', update);
+                this.libraryStore.updateState(update);
+              }
+            );
           }
         }
       });

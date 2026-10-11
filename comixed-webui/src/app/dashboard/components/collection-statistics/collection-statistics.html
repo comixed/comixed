@@ -6,14 +6,15 @@
   </mat-card-title>
   <mat-card-content class="cx-padding-15">
     <ngx-charts-bar-vertical
+      class="cx-height-100 cx-width-100"
       [results]="chartData()"
       [showGridLines]="true"
       [gradient]="false"
-      [xAxis]="true"
+      [xAxis]="false"
       [yAxis]="true"
       [roundEdges]="true"
       [showRefLabels]="true"
-      [legend]="false"
+      [legend]="true"
       [noBarWhenZero]="true"
     ></ngx-charts-bar-vertical>
   </mat-card-content>

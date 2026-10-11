@@ -1,5 +1,9 @@
 {
+  "app": {
+    "page-title": "ComiXed: {title}"
+  },
   "dashboard": {
+    "page-title": "Dashboard",
     "statistics": {
       "archive-type": {
         "title": "Archive Types"
