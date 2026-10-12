@@ -37,7 +37,8 @@
               {
                 "glob": "**/*",
                 "input": "public"
-              }
+              },
+              "src/favicon.png"
             ],
             "scripts": ["./node_modules/sockjs-client/dist/sockjs.min.js"],
             "styles": ["src/styles.scss"],

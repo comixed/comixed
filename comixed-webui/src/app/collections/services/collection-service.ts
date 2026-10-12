@@ -21,15 +21,22 @@ import { LoggerService } from '@angular-ru/cdk/logger';
 import { HttpClient } from '@angular/common/http';
 import { LoadPublisherListRequest } from '@app/collections/models/net/load-publisher-list-request';
 import { interpolate } from '@app/app-functions';
-import { LOAD_PUBLISHERS_URL } from '@app/collections/collections-contants';
+import {
+  LOAD_PUBLISHER_LIST_URL,
+  LOAD_SERIES_LIST_URL
+} from '@app/collections/collections-contants';
 import { PublisherStore } from '@app/collections/stores/publishers-store';
 import { LoadPublisherListResponse } from '@app/collections/models/net/load-publisher-list-response';
+import { SeriesStore } from '@app/collections/stores/series-store';
+import { LoadSeriesListRequest } from '@app/collections/models/net/load-series-list-request';
+import { LoadSeriesListResponse } from '@app/collections/models/net/load-series-list-response';
 
 @Service()
 export class CollectionService {
   readonly logger = inject(LoggerService);
   readonly client = inject(HttpClient);
   readonly publisherStore = inject(PublisherStore);
+  readonly seriesStore = inject(SeriesStore);
 
   loadPublishers(args: {
     searchText: string;
@@ -38,9 +45,9 @@ export class CollectionService {
     sortBy: string;
     sortDirection: string;
   }): void {
-    this.logger.trace('Loading a page of publishers:', args);
+    this.logger.trace('Loading publisher list:', args);
     this.client
-      .post(interpolate(LOAD_PUBLISHERS_URL), {
+      .post(interpolate(LOAD_PUBLISHER_LIST_URL), {
         searchText: args.searchText,
         page: args.index,
         size: args.size,
@@ -56,6 +63,34 @@ export class CollectionService {
           );
         },
         error: error => this.logger.error('Error loading publishers:', error)
+      });
+  }
+
+  loadSeries(args: {
+    searchText: string;
+    index: number;
+    size: number;
+    sortBy: string;
+    sortDirection: string;
+  }): void {
+    this.logger.trace('Loading series list:', args);
+    this.client
+      .post(interpolate(LOAD_SERIES_LIST_URL), {
+        searchText: args.searchText,
+        pageIndex: args.index,
+        pageSize: args.size,
+        sortBy: args.sortBy,
+        sortDirection: args.sortDirection
+      } as LoadSeriesListRequest)
+      .subscribe({
+        next: response => {
+          this.logger.debug('Response received:', response);
+          this.seriesStore.updateSeries(
+            (response as LoadSeriesListResponse).series,
+            (response as LoadSeriesListResponse).total
+          );
+        },
+        error: error => this.logger.error('Error loading series list:', error)
       });
   }
 }

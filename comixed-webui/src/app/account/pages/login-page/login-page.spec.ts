@@ -20,12 +20,13 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LoginPage } from '@app/account/pages/login-page/login-page';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
 import { provideTranslateService } from '@ngx-translate/core';
-import { beforeEach } from 'vitest';
+import { beforeEach, Mock } from 'vitest';
 import { provideRouter } from '@angular/router';
 import { USER_READER } from '@app/account/user-fixtures';
 import { AccountService } from '@app/account/services/account-service';
 
 describe('LoginPage', () => {
+  const TEST_TITLE_TRANSLATED = 'The Translated Title';
   const TEST_USER = USER_READER;
   const TEST_EMAIL = TEST_USER.email;
   const TEST_PASSWORD = 'th3!p455W0rD';
@@ -72,6 +73,27 @@ describe('LoginPage', () => {
         email: TEST_EMAIL,
         password: TEST_PASSWORD
       });
+    });
+  });
+
+  describe('when the language changes', () => {
+    let setTitleSpy: Mock;
+    let instantSpy: Mock;
+
+    beforeEach(() => {
+      setTitleSpy = vi.spyOn(component.titleService, 'setTitle');
+      instantSpy = vi
+        .spyOn(component.translateService, 'instant')
+        .mockReturnValue(TEST_TITLE_TRANSLATED);
+      component.translateService.use('fr');
+    });
+
+    it('translates the title', () => {
+      expect(instantSpy).toHaveBeenCalledWith('user.login-page.page-title');
+    });
+
+    it('updates the title', () => {
+      expect(setTitleSpy).toHaveBeenCalledWith(TEST_TITLE_TRANSLATED);
     });
   });
 });

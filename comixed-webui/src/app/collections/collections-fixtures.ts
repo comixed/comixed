@@ -17,9 +17,17 @@
  */
 
 import { Publisher } from '@app/collections/models/publisher';
+import { Series } from '@app/collections/models/series';
 
 export const PUBLISHER_1: Publisher = {
   name: 'The First Publisher',
   seriesCount: 5,
   issueCount: 86
+};
+
+export const SERIES_1: Series = {
+  name: 'The Series Name',
+  publisher: 'The Series Publisher',
+  volume: '2026',
+  inLibrary: 717
 };

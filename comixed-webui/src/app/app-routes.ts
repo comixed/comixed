@@ -18,12 +18,14 @@
 
 import { Routes } from '@angular/router';
 import { DashboardPage } from '@app/dashboard/pages/dashboard-page/dashboard-page';
-import { PublishersPage } from '@app/collections/pages/publishers-page/publishers-page';
+import { PublisherListPage } from '@app/collections/pages/publisher-list-page/publisher-list-page';
 import { LoginPage } from '@app/account/pages/login-page/login-page';
+import { SeriesListPage } from '@app/collections/pages/series-list-page/series-list-page';
 
 export const appRoutes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/dashboard' },
   { path: 'login', component: LoginPage },
   { path: 'dashboard', component: DashboardPage },
-  { path: 'collections/publishers', component: PublishersPage }
+  { path: 'collections/publishers', component: PublisherListPage },
+  { path: 'collections/series', component: SeriesListPage }
 ];

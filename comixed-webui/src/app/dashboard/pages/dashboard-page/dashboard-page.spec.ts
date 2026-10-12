@@ -21,8 +21,11 @@ import { DashboardPage } from '@app/dashboard/pages/dashboard-page/dashboard-pag
 import { provideTranslateService } from '@ngx-translate/core';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
 import { provideRouter } from '@angular/router';
+import { beforeEach, Mock } from 'vitest';
 
 describe('DashboardPage', () => {
+  const TEST_TITLE_TRANSLATED = 'The Translated Title';
+
   let component: DashboardPage;
   let fixture: ComponentFixture<DashboardPage>;
 
@@ -43,5 +46,26 @@ describe('DashboardPage', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('when the language changes', () => {
+    let setTitleSpy: Mock;
+    let instantSpy: Mock;
+
+    beforeEach(() => {
+      setTitleSpy = vi.spyOn(component.titleService, 'setTitle');
+      instantSpy = vi
+        .spyOn(component.translateService, 'instant')
+        .mockReturnValue(TEST_TITLE_TRANSLATED);
+      component.translateService.use('fr');
+    });
+
+    it('translates the title', () => {
+      expect(instantSpy).toHaveBeenCalledWith('dashboard.page-title');
+    });
+
+    it('updates the title', () => {
+      expect(setTitleSpy).toHaveBeenCalledWith(TEST_TITLE_TRANSLATED);
+    });
   });
 });

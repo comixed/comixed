@@ -23,7 +23,7 @@ import {
   ReactiveFormsModule,
   Validators
 } from '@angular/forms';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
   MatCard,
   MatCardActions,
@@ -38,6 +38,7 @@ import { Router } from '@angular/router';
 import { AccountService } from '@app/account/services/account-service';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { CurrentUserStore } from '@app/account/stores/current-user-store';
+import { TitleService } from '@app/layout/services/title-service';
 
 @Component({
   imports: [
@@ -59,11 +60,13 @@ import { CurrentUserStore } from '@app/account/stores/current-user-store';
 })
 export class LoginPage {
   loginForm!: FormGroup;
-  private logger = inject(LoggerService);
-  private formBuilder = inject(FormBuilder);
-  private currentUserStore = inject(CurrentUserStore);
-  private authenticationService = inject(AccountService);
-  private router = inject(Router);
+  readonly logger = inject(LoggerService);
+  readonly formBuilder = inject(FormBuilder);
+  readonly currentUserStore = inject(CurrentUserStore);
+  readonly authenticationService = inject(AccountService);
+  readonly router = inject(Router);
+  readonly translateService = inject(TranslateService);
+  readonly titleService = inject(TitleService);
 
   constructor() {
     toObservable(this.currentUserStore.isAuthenticated)
@@ -84,6 +87,9 @@ export class LoginPage {
           }
         }
       });
+    this.translateService.onLangChange.subscribe({
+      next: () => this.doLoadTranslations()
+    });
   }
 
   onSubmitForm() {
@@ -91,5 +97,11 @@ export class LoginPage {
     const email = this.loginForm.controls['email'].value;
     const password = this.loginForm.controls['password'].value;
     this.authenticationService.login({ email, password });
+  }
+
+  private doLoadTranslations() {
+    this.titleService.setTitle(
+      this.translateService.instant('user.login-page.page-title')
+    );
   }
 }

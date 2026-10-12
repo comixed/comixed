@@ -17,7 +17,12 @@
  */
 
 import { Component, inject, Input } from '@angular/core';
-import { MatCard, MatCardContent, MatCardTitle } from '@angular/material/card';
+import {
+  MatCard,
+  MatCardContent,
+  MatCardFooter,
+  MatCardTitle
+} from '@angular/material/card';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { BarChartModule } from '@swimlane/ngx-charts';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -31,7 +36,8 @@ import { RouterLink } from '@angular/router';
     BarChartModule,
     MatCardContent,
     TranslatePipe,
-    RouterLink
+    RouterLink,
+    MatCardFooter
   ],
   selector: 'app-collection-statistics',
   styleUrl: './collection-statistics.scss',
@@ -39,12 +45,9 @@ import { RouterLink } from '@angular/router';
 })
 export class CollectionStatistics {
   @Input() title = '';
-  @Input() publishers = 0;
-  @Input() series = 0;
-  @Input() characters = 0;
-  @Input() teams = 0;
-  @Input() locations = 0;
-  @Input() stories = 0;
+  @Input() description = '';
+  @Input() imageUrl = '';
+  @Input() detailUrl = '';
 
   readonly logger = inject(LoggerService);
 }

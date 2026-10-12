@@ -6,48 +6,15 @@
   </mat-card-title>
   <mat-card-content class="cx-padding-15">
     <img
-      src="/images/dashboard/collections-icon.svg"
-      alt="Collections statistics"
-      style="float: inline-end; height: 150px"
+      [src]="imageUrl"
+      alt="imageAlt"
+      style="float: inline-end; height: 75px"
     />
-    <ul>
-      <li>
-        <a routerLink="/collections/publishers">
-          {{
-            "dashboard.statistics.publishers.description"
-              | translate: { count: publishers }
-          }}
-        </a>
-      </li>
-      <li>
-        {{
-          "dashboard.statistics.series.description"
-            | translate: { count: series }
-        }}
-      </li>
-      <li>
-        {{
-          "dashboard.statistics.characters.description"
-            | translate: { count: characters }
-        }}
-      </li>
-      <li>
-        {{
-          "dashboard.statistics.teams.description" | translate: { count: teams }
-        }}
-      </li>
-      <li>
-        {{
-          "dashboard.statistics.locations.description"
-            | translate: { count: locations }
-        }}
-      </li>
-      <li>
-        {{
-          "dashboard.statistics.stories.description"
-            | translate: { count: stories }
-        }}
-      </li>
-    </ul>
+    {{ description }}
   </mat-card-content>
+  <mat-card-footer class="cx-padding-15">
+    <a [routerLink]="detailUrl">
+      {{ "dashboard.statistics.text.view-more" | translate }}
+    </a>
+  </mat-card-footer>
 </mat-card>

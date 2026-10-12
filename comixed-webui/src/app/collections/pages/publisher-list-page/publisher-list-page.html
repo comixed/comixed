@@ -8,7 +8,7 @@
   <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
     <ng-container matColumnDef="publisher-name">
       <mat-header-cell *matHeaderCellDef>
-        {{ "collections.publishers-page.label.publisher-name" | translate }}
+        {{ "collections.publisher-list-page.label.publisher-name" | translate }}
       </mat-header-cell>
       <mat-cell *matCellDef="let entry">
         <span>
@@ -19,7 +19,7 @@
 
     <ng-container matColumnDef="issue-count">
       <mat-header-cell *matHeaderCellDef>
-        {{ "collections.publishers-page.label.issue-count" | translate }}
+        {{ "collections.publisher-list-page.label.issue-count" | translate }}
       </mat-header-cell>
       <mat-cell *matCellDef="let entry">
         <span>
@@ -30,7 +30,7 @@
 
     <ng-container matColumnDef="series-count">
       <mat-header-cell *matHeaderCellDef>
-        {{ "collections.publishers-page.label.series-count" | translate }}
+        {{ "collections.publisher-list-page.label.series-count" | translate }}
       </mat-header-cell>
       <mat-cell *matCellDef="let entry">
         <span>
@@ -43,7 +43,9 @@
     <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
     <tr class="mat-row" *matNoDataRow>
       <td class="mat-cell" colspan="3">
-        {{ "collections.publishers-page.text.no-publishers-found" | translate }}
+        {{
+          "collections.publisher-list-page.text.no-publishers-found" | translate
+        }}
       </td>
     </tr>
   </mat-table>

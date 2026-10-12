@@ -42,8 +42,9 @@ import {
   MatTable,
   MatTableDataSource
 } from '@angular/material/table';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { MatPaginator } from '@angular/material/paginator';
+import { TitleService } from '@app/layout/services/title-service';
 
 @Component({
   imports: [
@@ -61,11 +62,11 @@ import { MatPaginator } from '@angular/material/paginator';
     MatNoDataRow,
     MatPaginator
   ],
-  selector: 'app-publishers-page',
-  styleUrl: './publishers-page.scss',
-  templateUrl: './publishers-page.html'
+  selector: 'app-publisher-list-page',
+  styleUrl: './publisher-list-page.scss',
+  templateUrl: './publisher-list-page.html'
 })
-export class PublishersPage implements OnInit, AfterViewInit {
+export class PublisherListPage implements OnInit, AfterViewInit {
   @ViewChild('mat-paginator') paginator!: MatPaginator;
 
   readonly logger = inject(LoggerService);
@@ -73,6 +74,8 @@ export class PublishersPage implements OnInit, AfterViewInit {
   readonly publisherStore = inject(PublisherStore);
   readonly dataSource = new MatTableDataSource<Publisher>([]);
   readonly displayedColumns = ['publisher-name', 'issue-count', 'series-count'];
+  readonly translateService = inject(TranslateService);
+  readonly titleService = inject(TitleService);
 
   constructor() {
     this.logger.trace('Subscribing to publisher list updates');
@@ -84,6 +87,12 @@ export class PublishersPage implements OnInit, AfterViewInit {
           this.dataSource.data = data as Publisher[];
         }
       });
+    this.translateService.onLangChange.subscribe({
+      next: () => {
+        this.doLoadTranslations();
+      }
+    });
+    this.doLoadTranslations();
   }
 
   ngOnInit(): void {
@@ -100,5 +109,13 @@ export class PublishersPage implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     this.logger.trace('Connecting paginator');
     this.dataSource.paginator = this.paginator;
+  }
+
+  private doLoadTranslations() {
+    this.titleService.setTitle(
+      this.translateService.instant(
+        'collections.publisher-list-page.page-title'
+      )
+    );
   }
 }

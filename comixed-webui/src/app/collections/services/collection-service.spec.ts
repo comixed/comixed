@@ -26,10 +26,15 @@ import {
   HttpTestingController,
   provideHttpClientTesting
 } from '@angular/common/http/testing';
-import { LOAD_PUBLISHERS_URL } from '@app/collections/collections-contants';
+import {
+  LOAD_PUBLISHER_LIST_URL,
+  LOAD_SERIES_LIST_URL
+} from '@app/collections/collections-contants';
 import { LoadPublisherListRequest } from '@app/collections/models/net/load-publisher-list-request';
-import { PUBLISHER_1 } from '@app/collections/collections-fixtures';
+import { PUBLISHER_1, SERIES_1 } from '@app/collections/collections-fixtures';
 import { LoadPublisherListResponse } from '@app/collections/models/net/load-publisher-list-response';
+import { LoadSeriesListResponse } from '@app/collections/models/net/load-series-list-response';
+import { LoadSeriesListRequest } from '@app/collections/models/net/load-series-list-request';
 
 describe('CollectionService', () => {
   const TEST_SEARCH_TEXT = 'text to search for';
@@ -37,8 +42,9 @@ describe('CollectionService', () => {
   const TEST_SIZE = 25;
   const TEST_SORT_BY = 'name';
   const TEST_SORT_DIRECTION = 'asc';
+  const TEST_COLLECTION_TOTAL_COUNT = 17;
   const TEST_PUBLISHER_LIST = [PUBLISHER_1];
-  const TEST_TOTAL_PUBLISHERS = 17;
+  const TEST_SERIES_LIST = [SERIES_1];
 
   let service: CollectionService;
   let httpController: HttpTestingController;
@@ -73,7 +79,7 @@ describe('CollectionService', () => {
       );
       const serverResponse = {
         publishers: TEST_PUBLISHER_LIST,
-        total: TEST_TOTAL_PUBLISHERS
+        total: TEST_COLLECTION_TOTAL_COUNT
       } as LoadPublisherListResponse;
 
       service.loadPublishers({
@@ -84,7 +90,9 @@ describe('CollectionService', () => {
         sortDirection: TEST_SORT_DIRECTION
       });
 
-      const req = httpController.expectOne(interpolate(LOAD_PUBLISHERS_URL));
+      const req = httpController.expectOne(
+        interpolate(LOAD_PUBLISHER_LIST_URL)
+      );
       expect(req.request.method).toEqual('POST');
       expect(req.request.body).toEqual({
         searchText: TEST_SEARCH_TEXT,
@@ -97,7 +105,41 @@ describe('CollectionService', () => {
       httpController.verify();
       expect(updateStateSpy).toHaveBeenCalledWith(
         TEST_PUBLISHER_LIST,
-        TEST_TOTAL_PUBLISHERS
+        TEST_COLLECTION_TOTAL_COUNT
+      );
+    });
+  });
+
+  describe('loading series', () => {
+    it('success', async () => {
+      const updateStateSpy = vi.spyOn(service.seriesStore, 'updateSeries');
+      const serverResponse = {
+        series: TEST_SERIES_LIST,
+        total: TEST_COLLECTION_TOTAL_COUNT
+      } as LoadSeriesListResponse;
+
+      service.loadSeries({
+        searchText: TEST_SEARCH_TEXT,
+        index: TEST_INDEX,
+        size: TEST_SIZE,
+        sortBy: TEST_SORT_BY,
+        sortDirection: TEST_SORT_DIRECTION
+      });
+
+      const req = httpController.expectOne(interpolate(LOAD_SERIES_LIST_URL));
+      expect(req.request.method).toEqual('POST');
+      expect(req.request.body).toEqual({
+        searchText: TEST_SEARCH_TEXT,
+        pageIndex: TEST_INDEX,
+        pageSize: TEST_SIZE,
+        sortBy: TEST_SORT_BY,
+        sortDirection: TEST_SORT_DIRECTION
+      } as LoadSeriesListRequest);
+      req.flush(serverResponse);
+      httpController.verify();
+      expect(updateStateSpy).toHaveBeenCalledWith(
+        TEST_SERIES_LIST,
+        TEST_COLLECTION_TOTAL_COUNT
       );
     });
   });

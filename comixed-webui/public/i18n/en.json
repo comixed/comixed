@@ -3,15 +3,30 @@
     "page-title": "ComiXed: {title}"
   },
   "collections": {
-    "publishers-page": {
+    "publisher-list-page": {
       "label": {
         "issue-count": "# Comics",
         "publisher-name": "Name",
         "series-count": "# Series"
       },
+      "page-title": "Publisher List",
       "text": {
         "no-publishers-found": "No publishers found..."
       }
+    },
+    "series-list-page": {
+      "label": {
+        "in-library": "# of Comics",
+        "publisher": "Publisher",
+        "series-name": "Series Name",
+        "volume": "Volume"
+      },
+      "text": {
+        "no-series-found": "No series found..."
+      }
+    },
+    "tooltip": {
+      "view-details": "View details for {name}..."
     }
   },
   "dashboard": {
@@ -21,7 +36,8 @@
         "title": "Archive Types"
       },
       "characters": {
-        "description": "There {count, plural, =1 {is 1 character} other{are # characters}}..."
+        "description": "There {count, plural, =1 {is 1 character} other{are # characters}}...",
+        "title": "Characters"
       },
       "collections": {
         "title": "Collections"
@@ -30,19 +46,23 @@
         "title": "Comic States"
       },
       "locations": {
-        "description": "There {count, plural, =1 {is 1 location} other{# locations}}..."
+        "description": "There {count, plural, =1 {is 1 location} other{# locations}}...",
+        "title": "Locations"
       },
       "publishers": {
-        "description": "There {count, plural, =1 {is 1 publisher} other{are # publishers}}..."
+        "description": "There {count, plural, =1 {is 1 publisher} other{are # publishers}}...",
+        "title": "Publishers"
       },
       "publisher-year": {
         "title": "Publishers By Year"
       },
       "series": {
-        "description": "There {count, plural, =1 {is 1 series} other{are # series}}..."
+        "description": "There {count, plural, =1 {is 1 series} other{are # series}}...",
+        "title": "Series"
       },
       "stories": {
-        "description": "There {count, plural, =1 {is 1 story} other{are # stories}}..."
+        "description": "There {count, plural, =1 {is 1 story} other{are # stories}}...",
+        "title": "Stories"
       },
       "teams": {
         "description": "There {count, plural, =1 {is 1 team} other{are # teams}}...",
@@ -70,6 +90,7 @@
         "email": "Email",
         "password": "Password"
       },
+      "page-title": "Login",
       "placeholder": {
         "email": "your@address.tld",
         "password": "[your password]"

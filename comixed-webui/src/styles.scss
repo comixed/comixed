@@ -99,14 +99,14 @@ h8 {
 
 .cx-flex-content-grow-1 {
   flex-grow: 1;
-  max-width: min(100%, 600px);
+  max-width: min(100%, 400px);
   min-width: 550px;
   align-self: stretch;
 }
 
 .cx-flex-content-grow-2 {
   flex-grow: 2;
-  max-width: min(100%, 900px);
+  max-width: min(100%, 700px);
   min-width: 800px;
   align-self: stretch;
 }
