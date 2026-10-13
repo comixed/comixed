@@ -7,10 +7,14 @@
   z-index: 99;
 }
 
-router-outlet {
-  position: relative;
-  margin-top: 55px;
-  margin-bottom: 55px;
+#app-portal {
+  position: fixed;
+  background-color: transparent;
+  padding: 15px;
+  top: 50px;
+  left: 0;
+  width: calc(100vw - (2 * 15px));
+  height: calc(100vh - (2 * (50px + 15px)));
 }
 
 footer {

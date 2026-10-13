@@ -3,6 +3,13 @@
     "page-title": "ComiXed: {title}"
   },
   "collections": {
+    "publisher-detail-page": {
+      "label": {
+        "in-library": "# of Comics",
+        "series-name": "Series Name",
+        "volume": "Volume"
+      }
+    },
     "publisher-list-page": {
       "label": {
         "issue-count": "# Comics",
@@ -21,6 +28,7 @@
         "series-name": "Series Name",
         "volume": "Volume"
       },
+      "page-title": "Series List",
       "text": {
         "no-series-found": "No series found..."
       }
@@ -30,8 +38,9 @@
         "comic-count": "# of Comics",
         "tag-value": "Value"
       },
+      "page-title": "{tagType, select, CHARACTER{Character} TEAM{Team} LOCATION{Location} STORY{Story} other{Unknown}} List",
       "text": {
-        "tag-tag-entries-found": "No entries found..."
+        "no-tags-found": "No entries found..."
       }
     },
     "tooltip": {

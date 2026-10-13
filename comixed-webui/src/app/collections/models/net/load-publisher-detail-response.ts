@@ -16,38 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
 import { Series } from '@app/collections/models/series';
 
-interface SeriesState {
-  series: Series[];
-  total: number;
-  index: number;
-  size: number;
-  searchText: string;
-  sortBy: string;
-  sortDirection: string;
+export interface LoadPublisherDetailResponse {
+  totalSeries: number;
+  entries: Series[];
 }
-
-const initialState: SeriesState = {
-  series: [],
-  total: 0,
-  searchText: '',
-  index: 0,
-  size: 10,
-  sortBy: '',
-  sortDirection: ''
-};
-
-export const SeriesStore = signalStore(
-  { providedIn: 'root' },
-  withState(initialState),
-  withMethods(store => ({
-    updateSeries(series: Series[], total: number): void {
-      patchState(store, {
-        series,
-        total
-      });
-    }
-  }))
-);

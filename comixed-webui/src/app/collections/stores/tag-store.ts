@@ -46,7 +46,7 @@ export const TagStore = signalStore(
   { providedIn: 'root' },
   withState(initialState),
   withMethods(store => ({
-    updateEntries(entries: CollectionEntry[], total: number): void {
+    update(entries: CollectionEntry[], total: number): void {
       patchState(store, {
         entries,
         total

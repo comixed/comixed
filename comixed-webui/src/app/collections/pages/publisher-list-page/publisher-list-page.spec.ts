@@ -44,7 +44,7 @@ describe('PublisherListPage', () => {
     component = fixture.componentInstance;
     loadPublishersSpy = vi.spyOn(
       TestBed.inject(CollectionService),
-      'loadPublishers'
+      'loadPublisherList'
     );
     await fixture.whenStable();
   });

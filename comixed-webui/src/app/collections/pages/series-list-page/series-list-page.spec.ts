@@ -42,7 +42,10 @@ describe('SeriesListPage', () => {
 
     fixture = TestBed.createComponent(SeriesListPage);
     component = fixture.componentInstance;
-    loadSeriesSpy = vi.spyOn(TestBed.inject(CollectionService), 'loadSeries');
+    loadSeriesSpy = vi.spyOn(
+      TestBed.inject(CollectionService),
+      'loadSeriesList'
+    );
     await fixture.whenStable();
   });
 

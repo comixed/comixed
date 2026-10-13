@@ -23,7 +23,7 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import { PublisherStore } from '@app/collections/stores/publishers-store';
+import { PublisherListStore } from '@app/collections/stores/publisher-list-store';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { CollectionService } from '@app/collections/services/collection-service';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
@@ -45,6 +45,15 @@ import {
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { TitleService } from '@app/layout/services/title-service';
+import { MatIcon } from '@angular/material/icon';
+import { RouterLink } from '@angular/router';
+import { MatTooltip } from '@angular/material/tooltip';
+import {
+  MatCard,
+  MatCardActions,
+  MatCardContent,
+  MatCardTitle
+} from '@angular/material/card';
 
 @Component({
   imports: [
@@ -60,7 +69,14 @@ import { TitleService } from '@app/layout/services/title-service';
     MatTable,
     MatColumnDef,
     MatNoDataRow,
-    MatPaginator
+    MatPaginator,
+    MatIcon,
+    RouterLink,
+    MatTooltip,
+    MatCard,
+    MatCardTitle,
+    MatCardActions,
+    MatCardContent
   ],
   selector: 'app-publisher-list-page',
   styleUrl: './publisher-list-page.scss',
@@ -71,7 +87,7 @@ export class PublisherListPage implements OnInit, AfterViewInit {
 
   readonly logger = inject(LoggerService);
   readonly collectionsService = inject(CollectionService);
-  readonly publisherStore = inject(PublisherStore);
+  readonly publisherListStore = inject(PublisherListStore);
   readonly dataSource = new MatTableDataSource<Publisher>([]);
   readonly displayedColumns = ['publisher-name', 'issue-count', 'series-count'];
   readonly translateService = inject(TranslateService);
@@ -79,7 +95,7 @@ export class PublisherListPage implements OnInit, AfterViewInit {
 
   constructor() {
     this.logger.trace('Subscribing to publisher list updates');
-    toObservable<Publisher[]>(this.publisherStore.publishers)
+    toObservable<Publisher[]>(this.publisherListStore.publishers)
       .pipe(takeUntilDestroyed())
       .subscribe({
         next: data => {
@@ -97,12 +113,12 @@ export class PublisherListPage implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.logger.trace('Loading all publishers');
-    this.collectionsService.loadPublishers({
-      searchText: this.publisherStore.searchText(),
-      index: this.publisherStore.index(),
-      size: this.publisherStore.size(),
-      sortBy: this.publisherStore.sortBy(),
-      sortDirection: this.publisherStore.sortDirection()
+    this.collectionsService.loadPublisherList({
+      searchText: this.publisherListStore.searchText(),
+      index: this.publisherListStore.index(),
+      size: this.publisherListStore.size(),
+      sortBy: this.publisherListStore.sortBy(),
+      sortDirection: this.publisherListStore.sortDirection()
     });
   }
 

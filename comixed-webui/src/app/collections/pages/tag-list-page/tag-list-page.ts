@@ -44,6 +44,12 @@ import {
 } from '@app/library/models/comic-tag-type';
 import { TagStore } from '@app/collections/stores/tag-store';
 import { CollectionEntry } from '@app/collections/models/collection-entry';
+import {
+  MatCard,
+  MatCardActions,
+  MatCardContent,
+  MatCardTitle
+} from '@angular/material/card';
 
 @Component({
   imports: [
@@ -59,7 +65,11 @@ import { CollectionEntry } from '@app/collections/models/collection-entry';
     MatTable,
     TranslatePipe,
     MatHeaderCellDef,
-    MatNoDataRow
+    MatNoDataRow,
+    MatCard,
+    MatCardActions,
+    MatCardTitle,
+    MatCardContent
   ],
   selector: 'app-tag-list-page',
   styleUrl: './tag-list-page.scss',
@@ -94,7 +104,7 @@ export class TagListPage implements AfterViewInit {
         if (providedType) {
           this.tagType = providedType;
           this.logger.debug('Tag type:', this.tagType);
-          this.collectionsService.loadCollectionEntries({
+          this.collectionsService.loadCollectionEntryList({
             tagType: this.tagType,
             searchText: '',
             index: 0,

@@ -43,11 +43,17 @@ import {
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/layout/services/title-service';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
-import { SeriesStore } from '@app/collections/stores/series-store';
+import { SeriesListStore } from '@app/collections/stores/series-list-store';
 import { Series } from '@app/collections/models/series';
 import { RouterLink } from '@angular/router';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
+import {
+  MatCard,
+  MatCardActions,
+  MatCardContent,
+  MatCardTitle
+} from '@angular/material/card';
 
 @Component({
   imports: [
@@ -66,7 +72,11 @@ import { MatTooltip } from '@angular/material/tooltip';
     MatColumnDef,
     RouterLink,
     MatIcon,
-    MatTooltip
+    MatTooltip,
+    MatCard,
+    MatCardActions,
+    MatCardTitle,
+    MatCardContent
   ],
   selector: 'app-series-list-page',
   styleUrl: './series-list-page.scss',
@@ -77,7 +87,7 @@ export class SeriesListPage implements OnInit, AfterViewInit {
 
   readonly logger = inject(LoggerService);
   readonly collectionsService = inject(CollectionService);
-  readonly seriesStore = inject(SeriesStore);
+  readonly seriesListStore = inject(SeriesListStore);
   readonly dataSource = new MatTableDataSource<Series>([]);
   readonly displayedColumns = [
     'series-name',
@@ -90,7 +100,7 @@ export class SeriesListPage implements OnInit, AfterViewInit {
 
   constructor() {
     this.logger.trace('Subscribing to series list updates');
-    toObservable<Series[]>(this.seriesStore.series)
+    toObservable<Series[]>(this.seriesListStore.series)
       .pipe(takeUntilDestroyed())
       .subscribe({
         next: data => {
@@ -108,12 +118,12 @@ export class SeriesListPage implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.logger.trace('Loading series list');
-    this.collectionsService.loadSeries({
-      searchText: this.seriesStore.searchText(),
-      index: this.seriesStore.index(),
-      size: this.seriesStore.size(),
-      sortBy: this.seriesStore.sortBy(),
-      sortDirection: this.seriesStore.sortDirection()
+    this.collectionsService.loadSeriesList({
+      searchText: this.seriesListStore.searchText(),
+      index: this.seriesListStore.index(),
+      size: this.seriesListStore.size(),
+      sortBy: this.seriesListStore.sortBy(),
+      sortDirection: this.seriesListStore.sortDirection()
     });
   }
 
