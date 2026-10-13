@@ -22,6 +22,7 @@ import { HttpClient } from '@angular/common/http';
 import { LoadPublisherListRequest } from '@app/collections/models/net/load-publisher-list-request';
 import { interpolate } from '@app/app-functions';
 import {
+  LOAD_COLLECTION_ENTRIES_URL,
   LOAD_PUBLISHER_LIST_URL,
   LOAD_SERIES_LIST_URL
 } from '@app/collections/collections-contants';
@@ -30,6 +31,10 @@ import { LoadPublisherListResponse } from '@app/collections/models/net/load-publ
 import { SeriesStore } from '@app/collections/stores/series-store';
 import { LoadSeriesListRequest } from '@app/collections/models/net/load-series-list-request';
 import { LoadSeriesListResponse } from '@app/collections/models/net/load-series-list-response';
+import { TagStore } from '@app/collections/stores/tag-store';
+import { ComicTagType } from '@app/library/models/comic-tag-type';
+import { LoadCollectionEntriesRequest } from '@app/collections/models/net/load-collection-entries-request';
+import { LoadCollectionEntriesResponse } from '@app/collections/models/net/load-collection-entries-response';
 
 @Service()
 export class CollectionService {
@@ -37,6 +42,7 @@ export class CollectionService {
   readonly client = inject(HttpClient);
   readonly publisherStore = inject(PublisherStore);
   readonly seriesStore = inject(SeriesStore);
+  readonly tagStore = inject(TagStore);
 
   loadPublishers(args: {
     searchText: string;
@@ -47,7 +53,7 @@ export class CollectionService {
   }): void {
     this.logger.trace('Loading publisher list:', args);
     this.client
-      .post(interpolate(LOAD_PUBLISHER_LIST_URL), {
+      .post<LoadPublisherListResponse>(interpolate(LOAD_PUBLISHER_LIST_URL), {
         searchText: args.searchText,
         page: args.index,
         size: args.size,
@@ -58,8 +64,8 @@ export class CollectionService {
         next: response => {
           this.logger.debug('Response received:', response);
           this.publisherStore.updatePublishers(
-            (response as LoadPublisherListResponse).publishers,
-            (response as LoadPublisherListResponse).total
+            response.publishers,
+            response.total
           );
         },
         error: error => this.logger.error('Error loading publishers:', error)
@@ -75,7 +81,7 @@ export class CollectionService {
   }): void {
     this.logger.trace('Loading series list:', args);
     this.client
-      .post(interpolate(LOAD_SERIES_LIST_URL), {
+      .post<LoadSeriesListResponse>(interpolate(LOAD_SERIES_LIST_URL), {
         searchText: args.searchText,
         pageIndex: args.index,
         pageSize: args.size,
@@ -85,10 +91,36 @@ export class CollectionService {
       .subscribe({
         next: response => {
           this.logger.debug('Response received:', response);
-          this.seriesStore.updateSeries(
-            (response as LoadSeriesListResponse).series,
-            (response as LoadSeriesListResponse).total
-          );
+          this.seriesStore.updateSeries(response.series, response.total);
+        },
+        error: error => this.logger.error('Error loading series list:', error)
+      });
+  }
+
+  loadCollectionEntries(args: {
+    tagType: ComicTagType;
+    searchText: string;
+    index: number;
+    size: number;
+    sortBy: string;
+    sortDirection: string;
+  }): void {
+    this.logger.trace('Loading collection entry list:', args);
+    this.client
+      .post<LoadCollectionEntriesResponse>(
+        interpolate(LOAD_COLLECTION_ENTRIES_URL, { tagType: args.tagType }),
+        {
+          searchText: args.searchText,
+          pageIndex: args.index,
+          pageSize: args.size,
+          sortBy: args.sortBy,
+          sortDirection: args.sortDirection
+        } as LoadCollectionEntriesRequest
+      )
+      .subscribe({
+        next: response => {
+          this.logger.debug('Response received:', response);
+          this.tagStore.updateEntries(response.entries, response.totalEntries);
         },
         error: error => this.logger.error('Error loading series list:', error)
       });

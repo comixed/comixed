@@ -27,14 +27,21 @@ import {
   provideHttpClientTesting
 } from '@angular/common/http/testing';
 import {
+  LOAD_COLLECTION_ENTRIES_URL,
   LOAD_PUBLISHER_LIST_URL,
   LOAD_SERIES_LIST_URL
 } from '@app/collections/collections-contants';
 import { LoadPublisherListRequest } from '@app/collections/models/net/load-publisher-list-request';
-import { PUBLISHER_1, SERIES_1 } from '@app/collections/collections-fixtures';
+import {
+  COLLECTION_ENTRY_1,
+  PUBLISHER_1,
+  SERIES_1
+} from '@app/collections/collections-fixtures';
 import { LoadPublisherListResponse } from '@app/collections/models/net/load-publisher-list-response';
 import { LoadSeriesListResponse } from '@app/collections/models/net/load-series-list-response';
 import { LoadSeriesListRequest } from '@app/collections/models/net/load-series-list-request';
+import { LoadCollectionEntriesResponse } from '@app/collections/models/net/load-collection-entries-response';
+import { LoadCollectionEntriesRequest } from '@app/collections/models/net/load-collection-entries-request';
 
 describe('CollectionService', () => {
   const TEST_SEARCH_TEXT = 'text to search for';
@@ -45,6 +52,7 @@ describe('CollectionService', () => {
   const TEST_COLLECTION_TOTAL_COUNT = 17;
   const TEST_PUBLISHER_LIST = [PUBLISHER_1];
   const TEST_SERIES_LIST = [SERIES_1];
+  const TEST_COLLECTION_ENTRY_LIST = [COLLECTION_ENTRY_1];
 
   let service: CollectionService;
   let httpController: HttpTestingController;
@@ -139,6 +147,45 @@ describe('CollectionService', () => {
       httpController.verify();
       expect(updateStateSpy).toHaveBeenCalledWith(
         TEST_SERIES_LIST,
+        TEST_COLLECTION_TOTAL_COUNT
+      );
+    });
+  });
+
+  describe('loading collections', () => {
+    it('success', async () => {
+      const updateStateSpy = vi.spyOn(service.tagStore, 'updateEntries');
+      const serverResponse = {
+        entries: TEST_COLLECTION_ENTRY_LIST,
+        totalEntries: TEST_COLLECTION_TOTAL_COUNT
+      } as LoadCollectionEntriesResponse;
+
+      service.loadCollectionEntries({
+        tagType: COLLECTION_ENTRY_1.tagType,
+        searchText: TEST_SEARCH_TEXT,
+        index: TEST_INDEX,
+        size: TEST_SIZE,
+        sortBy: TEST_SORT_BY,
+        sortDirection: TEST_SORT_DIRECTION
+      });
+
+      const req = httpController.expectOne(
+        interpolate(LOAD_COLLECTION_ENTRIES_URL, {
+          tagType: COLLECTION_ENTRY_1.tagType
+        })
+      );
+      expect(req.request.method).toEqual('POST');
+      expect(req.request.body).toEqual({
+        searchText: TEST_SEARCH_TEXT,
+        pageIndex: TEST_INDEX,
+        pageSize: TEST_SIZE,
+        sortBy: TEST_SORT_BY,
+        sortDirection: TEST_SORT_DIRECTION
+      } as LoadCollectionEntriesRequest);
+      req.flush(serverResponse);
+      httpController.verify();
+      expect(updateStateSpy).toHaveBeenCalledWith(
+        TEST_COLLECTION_ENTRY_LIST,
         TEST_COLLECTION_TOTAL_COUNT
       );
     });

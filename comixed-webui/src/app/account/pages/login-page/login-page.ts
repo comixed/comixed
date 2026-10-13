@@ -69,7 +69,7 @@ export class LoginPage {
   readonly titleService = inject(TitleService);
 
   constructor() {
-    toObservable(this.currentUserStore.isAuthenticated)
+    toObservable<boolean>(this.currentUserStore.isAuthenticated)
       .pipe(takeUntilDestroyed())
       .subscribe({
         next: authenticated => {

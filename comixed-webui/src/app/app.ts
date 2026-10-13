@@ -42,7 +42,7 @@ export class App {
   private readonly logger = inject(LoggerService);
 
   constructor() {
-    toObservable(this.currentUserStore.isAuthenticated)
+    toObservable<boolean>(this.currentUserStore.isAuthenticated)
       .pipe(takeUntilDestroyed())
       .subscribe({
         next: value => {

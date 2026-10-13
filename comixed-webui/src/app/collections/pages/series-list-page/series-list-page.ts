@@ -90,12 +90,12 @@ export class SeriesListPage implements OnInit, AfterViewInit {
 
   constructor() {
     this.logger.trace('Subscribing to series list updates');
-    toObservable(this.seriesStore.series)
+    toObservable<Series[]>(this.seriesStore.series)
       .pipe(takeUntilDestroyed())
       .subscribe({
         next: data => {
           this.logger.trace('Series list update received:', data);
-          this.dataSource.data = data as Series[];
+          this.dataSource.data = data;
         }
       });
     this.translateService.onLangChange.subscribe({

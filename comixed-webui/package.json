@@ -29,7 +29,7 @@
     ]
   },
   "private": true,
-  "packageManager": "pnpm@10.34.5",
+  "packageManager": "pnpm@12.11.2",
   "dependencies": {
     "@angular-ru/cdk": "^19.0.0",
     "@angular/cdk": "~22.2.0",

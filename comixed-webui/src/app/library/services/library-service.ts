@@ -39,7 +39,7 @@ export class LibraryService {
   readonly webSocketService = inject(WebSocketService);
 
   constructor() {
-    toObservable(this.messagingStore.isStarted)
+    toObservable<boolean>(this.messagingStore.isStarted)
       .pipe(takeUntilDestroyed())
       .subscribe({
         next: started => {
@@ -59,13 +59,15 @@ export class LibraryService {
 
   loadLibraryState(): void {
     this.logger.trace('Loading remote library state');
-    this.client.get(interpolate(LOAD_LIBRARY_STATE_URL)).subscribe({
-      next: state => {
-        this.logger.debug('Response received:', state);
-        this.libraryStore.updateState(state as RemoteLibraryState);
-      },
-      error: error =>
-        this.logger.error('Failed to load remote library state', error)
-    });
+    this.client
+      .get<RemoteLibraryState>(interpolate(LOAD_LIBRARY_STATE_URL))
+      .subscribe({
+        next: state => {
+          this.logger.debug('Response received:', state);
+          this.libraryStore.updateState(state);
+        },
+        error: error =>
+          this.logger.error('Failed to load remote library state', error)
+      });
   }
 }

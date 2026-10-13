@@ -36,10 +36,10 @@ export class AccountService {
   loadCurrentUser(): void {
     this.logger.trace('Loading current user');
     this.currentUserStore.loading();
-    this.client.get(interpolate(LOAD_CURRENT_USER_URL)).subscribe({
+    this.client.get<User>(interpolate(LOAD_CURRENT_USER_URL)).subscribe({
       next: value => {
         this.logger.debug('User loaded:', value);
-        this.currentUserStore.loaded(value as User);
+        this.currentUserStore.loaded(value);
       },
       error: error => {
         this.logger.error('Failed to load user:', error);
@@ -52,14 +52,14 @@ export class AccountService {
     this.logger.trace('Sending login credentials');
     this.currentUserStore.login();
     this.client
-      .post(
+      .post<LoginResponse>(
         interpolate(LOGIN_URL),
         new HttpParams().set('email', args.email).set('password', args.password)
       )
       .subscribe({
         next: value => {
           this.logger.debug('Login successful:', value);
-          this.tokenService.setAuthToken((value as LoginResponse).token);
+          this.tokenService.setAuthToken(value.token);
           this.currentUserStore.loginSuccess();
         },
         error: error => {

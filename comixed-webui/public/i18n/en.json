@@ -25,6 +25,15 @@
         "no-series-found": "No series found..."
       }
     },
+    "tag-list-page": {
+      "label": {
+        "comic-count": "# of Comics",
+        "tag-value": "Value"
+      },
+      "text": {
+        "tag-tag-entries-found": "No entries found..."
+      }
+    },
     "tooltip": {
       "view-details": "View details for {name}..."
     }

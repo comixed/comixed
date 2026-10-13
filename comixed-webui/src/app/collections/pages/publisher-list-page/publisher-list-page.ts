@@ -79,12 +79,12 @@ export class PublisherListPage implements OnInit, AfterViewInit {
 
   constructor() {
     this.logger.trace('Subscribing to publisher list updates');
-    toObservable(this.publisherStore.publishers)
+    toObservable<Publisher[]>(this.publisherStore.publishers)
       .pipe(takeUntilDestroyed())
       .subscribe({
         next: data => {
           this.logger.trace('Publisher list update received:', data);
-          this.dataSource.data = data as Publisher[];
+          this.dataSource.data = data;
         }
       });
     this.translateService.onLangChange.subscribe({

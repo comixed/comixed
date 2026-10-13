@@ -18,6 +18,8 @@
 
 import { Publisher } from '@app/collections/models/publisher';
 import { Series } from '@app/collections/models/series';
+import { CollectionEntry } from '@app/collections/models/collection-entry';
+import { ComicTagType } from '@app/library/models/comic-tag-type';
 
 export const PUBLISHER_1: Publisher = {
   name: 'The First Publisher',
@@ -30,4 +32,10 @@ export const SERIES_1: Series = {
   publisher: 'The Series Publisher',
   volume: '2026',
   inLibrary: 717
+};
+
+export const COLLECTION_ENTRY_1: CollectionEntry = {
+  tagType: ComicTagType.STORY,
+  tagValue: 'The Story Name',
+  comicCount: 129
 };

@@ -38,7 +38,7 @@ export class Topbar {
   readonly renderer = inject(Renderer2);
 
   constructor() {
-    toObservable(this.appStore.darkMode)
+    toObservable<boolean>(this.appStore.darkMode)
       .pipe(takeUntilDestroyed())
       .subscribe({
         next: value => {
