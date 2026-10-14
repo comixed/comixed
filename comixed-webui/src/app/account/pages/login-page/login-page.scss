@@ -3,3 +3,8 @@
   width: min(800px, 50vw);
   height: min(300px, 50vh);
 }
+
+#input-login-email,
+#input-login-password {
+  width: 100%;
+}

@@ -24,35 +24,25 @@ import {
   Validators
 } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import {
-  MatCard,
-  MatCardActions,
-  MatCardContent,
-  MatCardTitle
-} from '@angular/material/card';
-import { MatFormField, MatInput, MatLabel } from '@angular/material/input';
-import { MatButton } from '@angular/material/button';
 import { LoggerService } from '@angular-ru/cdk/logger';
-import { MatIcon } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { AccountService } from '@app/account/services/account-service';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { CurrentUserStore } from '@app/account/stores/current-user-store';
 import { TitleService } from '@app/layout/services/title-service';
+import { Card } from '@openng/optimus-ui/card';
+import { Button } from '@openng/optimus-ui/button';
+import { InputText } from '@openng/optimus-ui/inputtext';
+import { IftaLabel } from '@openng/optimus-ui/iftalabel';
 
 @Component({
   imports: [
     TranslatePipe,
-    MatCard,
-    MatCardTitle,
-    MatCardContent,
-    MatFormField,
     ReactiveFormsModule,
-    MatLabel,
-    MatInput,
-    MatCardActions,
-    MatButton,
-    MatIcon
+    Card,
+    Button,
+    InputText,
+    IftaLabel
   ],
   selector: 'app-login-page',
   styleUrl: './login-page.scss',
@@ -101,7 +91,7 @@ export class LoginPage {
 
   private doLoadTranslations() {
     this.titleService.setTitle(
-      this.translateService.instant('user.login-page.page-title')
+      this.translateService.instant('login-page.page-title')
     );
   }
 }

@@ -89,7 +89,7 @@ describe('LoginPage', () => {
     });
 
     it('translates the title', () => {
-      expect(instantSpy).toHaveBeenCalledWith('user.login-page.page-title');
+      expect(instantSpy).toHaveBeenCalledWith('login-page.page-title');
     });
 
     it('updates the title', () => {

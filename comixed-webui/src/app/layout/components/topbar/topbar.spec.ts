@@ -19,8 +19,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Topbar } from '@app/layout/components/topbar/topbar';
 import { Renderer2 } from '@angular/core';
-import { provideLogger } from '@angular-ru/cdk/logger';
+import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
 import { AppState } from '@app/stores/app-store';
+import { provideTranslateService } from '@ngx-translate/core';
 
 describe('Topbar', () => {
   let component: Topbar;
@@ -30,14 +31,15 @@ describe('Topbar', () => {
     await TestBed.configureTestingModule({
       imports: [Topbar],
       providers: [
-        AppState,
-        provideLogger(),
+        provideLogger({ minLevel: LoggerLevel.OFF }),
+        provideTranslateService(),
         {
           provide: Renderer2,
           useValue: {
             setStyle: vi.fn()
           }
-        }
+        },
+        AppState
       ]
     }).compileComponents();
 

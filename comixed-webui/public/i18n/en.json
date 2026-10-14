@@ -2,51 +2,6 @@
   "app": {
     "page-title": "ComiXed: {title}"
   },
-  "collections": {
-    "publisher-detail-page": {
-      "label": {
-        "in-library": "# of Comics",
-        "series-name": "Series Name",
-        "volume": "Volume"
-      }
-    },
-    "publisher-list-page": {
-      "label": {
-        "issue-count": "# Comics",
-        "publisher-name": "Name",
-        "series-count": "# Series"
-      },
-      "page-title": "Publisher List",
-      "text": {
-        "no-publishers-found": "No publishers found..."
-      }
-    },
-    "series-list-page": {
-      "label": {
-        "in-library": "# of Comics",
-        "publisher": "Publisher",
-        "series-name": "Series Name",
-        "volume": "Volume"
-      },
-      "page-title": "Series List",
-      "text": {
-        "no-series-found": "No series found..."
-      }
-    },
-    "tag-list-page": {
-      "label": {
-        "comic-count": "# of Comics",
-        "tag-value": "Value"
-      },
-      "page-title": "{tagType, select, CHARACTER{Character} TEAM{Team} LOCATION{Location} STORY{Story} other{Unknown}} List",
-      "text": {
-        "no-tags-found": "No entries found..."
-      }
-    },
-    "tooltip": {
-      "view-details": "View details for {name}..."
-    }
-  },
   "dashboard": {
     "page-title": "Dashboard",
     "statistics": {
@@ -91,29 +46,76 @@
       }
     }
   },
-  "footer": {
+  "library-statistics-panel": {
     "segment": {
-      "deleted-comics": "Deleted: {count}",
-      "duplicate-comics": "Duplicates: {count}",
-      "total-comics": "Total: {count}",
-      "unscraped-comics": "Unscraped: {count}"
+      "deleted-comics": "Deleted",
+      "duplicate-comics": "Duplicates",
+      "total-comics": "Total",
+      "unscraped-comics": "Unscraped"
     }
   },
-  "user": {
-    "login-page": {
-      "button": {
-        "submit": "Login"
-      },
-      "label": {
-        "email": "Email",
-        "password": "Password"
-      },
-      "page-title": "Login",
-      "placeholder": {
-        "email": "your@address.tld",
-        "password": "[your password]"
-      },
-      "title": "Please Login"
+  "login-page": {
+    "button": {
+      "submit": "Login"
+    },
+    "label": {
+      "email": "Email",
+      "password": "Password"
+    },
+    "page-title": "Login",
+    "placeholder": {
+      "email": "your@address.tld",
+      "password": "your password..."
+    },
+    "title": "Login"
+  },
+  "publisher-detail-page": {
+    "label": {
+      "in-library": "# of Comics",
+      "series-name": "Series Name",
+      "volume": "Volume"
+    }
+  },
+  "publisher-list-page": {
+    "label": {
+      "issue-count": "# Comics",
+      "publisher-name": "Name",
+      "series-count": "# Series"
+    },
+    "page-title": "Publisher List",
+    "text": {
+      "no-publishers-found": "No publishers found..."
+    }
+  },
+  "series-list-page": {
+    "label": {
+      "in-library": "# of Comics",
+      "publisher": "Publisher",
+      "series-name": "Series Name",
+      "volume": "Volume"
+    },
+    "page-title": "Series List",
+    "text": {
+      "no-series-found": "No series found..."
+    }
+  },
+  "tag-list-page": {
+    "label": {
+      "comic-count": "# of Comics",
+      "tag-value": "Value"
+    },
+    "page-title": "{tagType, select, CHARACTER{Character} TEAM{Team} LOCATION{Location} STORY{Story} other{Unknown}} List",
+    "text": {
+      "no-tags-found": "No entries found..."
+    }
+  },
+  "tooltip": {
+    "view-details": "View details for {name}..."
+  },
+  "topbar": {
+    "tooltip": {
+      "home-button": "Go to the dashboard...",
+      "logout-button": "Log out of the server..."
     }
   },
   "welcome": {

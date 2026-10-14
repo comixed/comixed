@@ -1,50 +1,32 @@
-<mat-card class="cx-width-100 cx-height-100">
-  <mat-card-title>
+<p-card class="cx-width-100 cx-height-100">
+  <ng-template #header>
     <h2>
-      {{ "collections.tag-list-page.page-title" | translate: { tagType } }}
+      {{
+        "tag-list-page.page-title" | translate: { tagType: tagStore.tagType() }
+      }}
     </h2>
-  </mat-card-title>
+  </ng-template>
 
-  <mat-card-actions>
-    <div class="cx-spacer"></div>
-    <mat-paginator
-      [pageIndex]="tagStore.index()"
-      [pageSize]="tagStore.size()"
-      showFirstLastButtons="true"
-    ></mat-paginator>
-  </mat-card-actions>
-
-  <mat-card-content>
-    <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-      <ng-container matColumnDef="tag-value">
-        <mat-header-cell *matHeaderCellDef>
-          {{ "collections.tag-list-page.label.tag-value" | translate }}
-        </mat-header-cell>
-        <mat-cell *matCellDef="let entry">
-          <span>
-            {{ entry.tagValue }}
-          </span>
-        </mat-cell>
-      </ng-container>
-
-      <ng-container matColumnDef="comic-count">
-        <mat-header-cell *matHeaderCellDef>
-          {{ "collections.tag-list-page.label.comic-count" | translate }}
-        </mat-header-cell>
-        <mat-cell *matCellDef="let entry">
-          <span>
-            {{ entry.comicCount }}
-          </span>
-        </mat-cell>
-      </ng-container>
-
-      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-      <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
-      <tr class="mat-row" *matNoDataRow>
-        <td class="mat-cell" colspan="3">
-          {{ "collections.tag-list-page.text.no-tags-found" | translate }}
-        </td>
+  <p-table
+    [value]="tagStore.entries()"
+    stripedRows
+    [paginator]="true"
+    [rows]="tagStore.size()"
+    [rowsPerPageOptions]="[10, 25, 50, 100]"
+    [loading]="false"
+  >
+    <ng-template #header>
+      <tr>
+        <th>{{ "tag-list-page.label.tag-value" | translate }}</th>
+        <th>{{ "tag-list-page.label.comic-count" | translate }}</th>
       </tr>
-    </mat-table>
-  </mat-card-content>
-</mat-card>
+    </ng-template>
+
+    <ng-template #body let-tag>
+      <tr>
+        <td>{{ tag.tagValue }}</td>
+        <td>{{ tag.comicCount }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</p-card>

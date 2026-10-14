@@ -1,30 +1,28 @@
-<div id="topbar-container" class="cx-width-100">
-  <div id="topbar-row">
-    <div class="cx-logo">ComiXed</div>
-  </div>
-
-  @if (currentUserStore.isAuthenticated()) {
-    <button
-      id="dashboard-button"
-      mat-icon-button
-      aria-label="Go to dashboard"
-      routerLink="/dashboard"
-    >
-      <mat-icon>home</mat-icon>
-    </button>
-  }
-
-  <button
-    id="dark-mode-button"
-    mat-icon-button
-    aria-label="Toggle Dark Mode"
-    color="accent"
-    (click)="appStore.toggleDarkMode()"
-  >
-    @if (appStore.darkMode()) {
-      <mat-icon>light_mode</mat-icon>
-    } @else {
-      <mat-icon>dark_mode</mat-icon>
+<p-toolbar>
+  <ng-template #start>
+    @if (currentUserStore.isAuthenticated()) {
+      <p-button
+        [pTooltip]="'topbar.tooltip.home-button' | translate"
+        icon="pi pi-home"
+        severity="primary"
+        [routerLink]="['/']"
+      />
     }
-  </button>
-</div>
+    &nbsp;
+    <span class="cx-logo">ComiXed</span>
+  </ng-template>
+
+  <ng-template #center>
+    <app-library-statistics-panel></app-library-statistics-panel>
+  </ng-template>
+
+  <ng-template #end>
+    @if (currentUserStore.isAuthenticated()) {
+      <p-button
+        [pTooltip]="'topbar.tooltip.logout-button' | translate"
+        icon="pi pi-sign-out"
+        severity="warn"
+      />
+    }
+  </ng-template>
+</p-toolbar>

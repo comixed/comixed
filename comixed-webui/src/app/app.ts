@@ -17,19 +17,17 @@
  */
 
 import { Component, inject } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { Footer } from '@app/layout/components/footer/footer';
-import { Topbar } from '@app/layout/components/topbar/topbar';
-import { MatToolbar } from '@angular/material/toolbar';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { AccountService } from '@app/account/services/account-service';
 import { CurrentUserStore } from '@app/account/stores/current-user-store';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { LibraryService } from '@app/library/services/library-service';
 import { WebSocketService } from '@app/messaging/services/web-socket-service';
+import { RouterOutlet } from '@angular/router';
+import { Topbar } from '@app/layout/components/topbar/topbar';
 
 @Component({
-  imports: [RouterOutlet, Footer, Topbar, MatToolbar],
+  imports: [RouterOutlet, Topbar],
   selector: 'app-root',
   styleUrl: './app.scss',
   templateUrl: './app.html'

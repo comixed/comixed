@@ -17,24 +17,24 @@
  */
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Footer } from '@app/layout/components/footer/footer';
+import { LibraryStatisticsPanel } from './library-statistics-panel';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
 import { provideTranslateService } from '@ngx-translate/core';
 
-describe('Footer', () => {
-  let component: Footer;
-  let fixture: ComponentFixture<Footer>;
+describe('LibraryStatisticsPanel', () => {
+  let component: LibraryStatisticsPanel;
+  let fixture: ComponentFixture<LibraryStatisticsPanel>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Footer],
+      imports: [LibraryStatisticsPanel],
       providers: [
         provideLogger({ minLevel: LoggerLevel.OFF }),
         provideTranslateService()
       ]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(Footer);
+    fixture = TestBed.createComponent(LibraryStatisticsPanel);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

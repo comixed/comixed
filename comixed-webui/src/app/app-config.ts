@@ -40,6 +40,8 @@ import {
   TranslateMessageFormatCompiler
 } from 'ngx-translate-messageformat-compiler';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { provideOptimus } from '@openng/optimus-ui/config';
+import Aura from '@openng/optimus-ui-themes/aura';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -64,6 +66,7 @@ export const appConfig: ApplicationConfig = {
         throwOnError: true
       }
     },
+    provideOptimus({ theme: { preset: Aura } }),
     importProvidersFrom(
       StoreModule.forRoot({}, {}),
       EffectsModule.forRoot([]),

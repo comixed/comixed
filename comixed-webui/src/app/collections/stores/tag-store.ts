@@ -46,6 +46,9 @@ export const TagStore = signalStore(
   { providedIn: 'root' },
   withState(initialState),
   withMethods(store => ({
+    setTagType(tagType: ComicTagType): void {
+      patchState(store, { tagType });
+    },
     update(entries: CollectionEntry[], total: number): void {
       patchState(store, {
         entries,

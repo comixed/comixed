@@ -17,28 +17,14 @@
  */
 
 import { Component, inject, Input } from '@angular/core';
-import {
-  MatCard,
-  MatCardContent,
-  MatCardFooter,
-  MatCardTitle
-} from '@angular/material/card';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { BarChartModule } from '@swimlane/ngx-charts';
 import { TranslatePipe } from '@ngx-translate/core';
 import { RouterLink } from '@angular/router';
+import { Card } from '@openng/optimus-ui/card';
 
 @Component({
-  imports: [
-    MatCard,
-    MatCardTitle,
-    MatCardContent,
-    BarChartModule,
-    MatCardContent,
-    TranslatePipe,
-    RouterLink,
-    MatCardFooter
-  ],
+  imports: [BarChartModule, TranslatePipe, RouterLink, Card],
   selector: 'app-collection-statistics',
   styleUrl: './collection-statistics.scss',
   templateUrl: './collection-statistics.html'

@@ -1,21 +1,23 @@
 @use './variables' as *;
-@use '@angular/material' as mat;
+@import '@openng/icons/openng-icons.css';
+
+//@use '@angular/material' as mat;
 
 html,
 body {
   height: 100%;
 }
 
-html {
-  color-scheme: light dark;
-  @include mat.theme(
-    (
-      color: mat.$violet-palette,
-      typography: Roboto,
-      density: 0
-    )
-  );
-}
+//html {
+//  color-scheme: light dark;
+//  @include mat.theme(
+//    (
+//      color: mat.$violet-palette,
+//      typography: Roboto,
+//      density: 0
+//    )
+//  );
+//}
 
 body.dark-mode {
   color-scheme: dark;
@@ -110,7 +112,4 @@ h8 {
   max-width: min(100%, 700px);
   min-width: 800px;
   align-self: stretch;
-}
-
-.cx-detail-container {
 }

@@ -19,16 +19,14 @@
 import { Component, inject } from '@angular/core';
 import { LibraryStore } from '@app/library/stores/library-store';
 import { TranslatePipe } from '@ngx-translate/core';
-import { MatToolbar } from '@angular/material/toolbar';
-import { CurrentUserStore } from '@app/account/stores/current-user-store';
+import { Button } from '@openng/optimus-ui/button';
 
 @Component({
-  imports: [TranslatePipe, MatToolbar],
-  selector: 'app-footer',
-  styleUrl: './footer.scss',
-  templateUrl: './footer.html'
+  imports: [TranslatePipe, Button],
+  selector: 'app-library-statistics-panel',
+  styleUrl: './library-statistics-panel.scss',
+  templateUrl: './library-statistics-panel.html'
 })
-export class Footer {
+export class LibraryStatisticsPanel {
   readonly libraryStore = inject(LibraryStore);
-  readonly currentUserStore = inject(CurrentUserStore);
 }

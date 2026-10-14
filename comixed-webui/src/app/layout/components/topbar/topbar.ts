@@ -17,16 +17,26 @@
  */
 
 import { Component, inject, Renderer2 } from '@angular/core';
-import { MatIcon } from '@angular/material/icon';
-import { MatIconButton } from '@angular/material/button';
 import { AppState } from '@app/stores/app-store';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { CurrentUserStore } from '@app/account/stores/current-user-store';
 import { RouterLink } from '@angular/router';
+import { Button } from '@openng/optimus-ui/button';
+import { Toolbar } from '@openng/optimus-ui/toolbar';
+import { TranslatePipe } from '@ngx-translate/core';
+import { Tooltip } from '@openng/optimus-ui/tooltip';
+import { LibraryStatisticsPanel } from '@app/layout/components/library-statistics-panel/library-statistics-panel';
 
 @Component({
-  imports: [MatIcon, MatIconButton, RouterLink],
+  imports: [
+    RouterLink,
+    Button,
+    Toolbar,
+    TranslatePipe,
+    Tooltip,
+    LibraryStatisticsPanel
+  ],
   selector: 'app-topbar',
   styleUrl: './topbar.scss',
   templateUrl: './topbar.html'

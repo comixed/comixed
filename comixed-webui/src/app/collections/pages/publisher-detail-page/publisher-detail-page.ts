@@ -16,63 +16,26 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { AfterViewInit, Component, inject, ViewChild } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { PublisherDetailStore } from '@app/collections/stores/publisher-detail-store';
-import { MatPaginator } from '@angular/material/paginator';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { CollectionService } from '@app/collections/services/collection-service';
-import {
-  MatCell,
-  MatCellDef,
-  MatColumnDef,
-  MatHeaderCell,
-  MatHeaderCellDef,
-  MatHeaderRow,
-  MatHeaderRowDef,
-  MatNoDataRow,
-  MatRow,
-  MatRowDef,
-  MatTable,
-  MatTableDataSource
-} from '@angular/material/table';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/layout/services/title-service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
-import { Series } from '@app/collections/models/series';
-import { MatCard, MatCardContent, MatCardTitle } from '@angular/material/card';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { Card } from '@openng/optimus-ui/card';
+import { TableModule } from '@openng/optimus-ui/table';
 
 @Component({
-  imports: [
-    MatCell,
-    MatCellDef,
-    MatColumnDef,
-    MatHeaderCell,
-    MatHeaderRow,
-    MatHeaderRowDef,
-    MatPaginator,
-    MatRow,
-    MatRowDef,
-    MatTable,
-    TranslatePipe,
-    MatNoDataRow,
-    MatHeaderCellDef,
-    MatCard,
-    MatCardTitle,
-    MatCardContent
-  ],
+  imports: [Card, TableModule, TranslatePipe, RouterLink],
   selector: 'app-publisher-detail-page',
   styleUrl: './publisher-detail-page.scss',
   templateUrl: './publisher-detail-page.html'
 })
-export class PublisherDetailPage implements AfterViewInit {
-  @ViewChild('mat-paginator') paginator!: MatPaginator;
-
+export class PublisherDetailPage {
   readonly logger = inject(LoggerService);
   readonly collectionsService = inject(CollectionService);
   readonly publisherDetailStore = inject(PublisherDetailStore);
-  readonly dataSource = new MatTableDataSource<Series>([]);
-  readonly displayedColumns = ['series-name', 'volume', 'in-library'];
   readonly translateService = inject(TranslateService);
   readonly titleService = inject(TitleService);
   readonly activatedRoute = inject(ActivatedRoute);
@@ -97,26 +60,12 @@ export class PublisherDetailPage implements AfterViewInit {
         });
       }
     });
-    this.logger.trace('Subscribing to collection entry list updates');
-    toObservable<Series[]>(this.publisherDetailStore.series)
-      .pipe(takeUntilDestroyed())
-      .subscribe({
-        next: data => {
-          this.logger.trace('Series list update received:', data);
-          this.dataSource.data = data;
-        }
-      });
     this.translateService.onLangChange.subscribe({
       next: () => {
         this.doLoadTranslations();
       }
     });
     this.doLoadTranslations();
-  }
-
-  ngAfterViewInit(): void {
-    this.logger.trace('Connecting paginator');
-    this.dataSource.paginator = this.paginator;
   }
 
   private doLoadTranslations() {

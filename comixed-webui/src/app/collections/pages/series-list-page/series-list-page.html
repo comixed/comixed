@@ -1,83 +1,32 @@
-<mat-card class="cx-width-100 cx-height-100">
-  <mat-card-title>
-    <h2>{{ "collections.series-list-page.page-title" | translate }}</h2>
-  </mat-card-title>
+<p-card class="cx-width-100 cx-height-100">
+  <ng-template #header>
+    <h2>{{ "series-list-page.page-title" | translate }}</h2>
+  </ng-template>
 
-  <mat-card-actions>
-    <div class="cx-spacer"></div>
-    <mat-paginator
-      [pageIndex]="seriesListStore.index()"
-      [pageSize]="seriesListStore.size()"
-      showFirstLastButtons="true"
-    ></mat-paginator>
-  </mat-card-actions>
-
-  <mat-card-content>
-    <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-      <ng-container matColumnDef="series-name">
-        <mat-header-cell *matHeaderCellDef>
-          {{ "collections.series-list-page.label.series-name" | translate }}
-        </mat-header-cell>
-        <mat-cell *matCellDef="let entry">
-          <span>
-            {{ entry.name }}
-          </span>
-        </mat-cell>
-      </ng-container>
-
-      <ng-container matColumnDef="publisher">
-        <mat-header-cell *matHeaderCellDef>
-          {{ "collections.series-list-page.label.publisher" | translate }}
-        </mat-header-cell>
-        <mat-cell *matCellDef="let entry">
-          <span>
-            {{ entry.publisher }}&nbsp;
-            <a
-              [routerLink]="['/collections/publishers', entry.publisher]"
-              style="float: right"
-            >
-              <mat-icon
-                [matTooltip]="
-                  'collections.tooltip.view-details'
-                    | translate: { name: entry.publisher }
-                "
-              >
-                link
-              </mat-icon>
-            </a>
-          </span>
-        </mat-cell>
-      </ng-container>
-
-      <ng-container matColumnDef="volume">
-        <mat-header-cell *matHeaderCellDef>
-          {{ "collections.series-list-page.label.volume" | translate }}
-        </mat-header-cell>
-        <mat-cell *matCellDef="let entry">
-          <span>
-            {{ entry.volume }}
-          </span>
-        </mat-cell>
-      </ng-container>
-
-      <ng-container matColumnDef="in-library">
-        <mat-header-cell *matHeaderCellDef>
-          {{ "collections.series-list-page.label.in-library" | translate }}
-        </mat-header-cell>
-        <mat-cell *matCellDef="let entry">
-          <span>
-            {{ entry.inLibrary }}
-          </span>
-        </mat-cell>
-      </ng-container>
-
-      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-      <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
-      <tr class="mat-row" *matNoDataRow>
-        <td class="mat-cell" colspan="3">
-          {{ "collections.series-list-page.text.no-series-found" | translate }}
-        </td>
+  <p-table
+    [value]="seriesListStore.series()"
+    stripedRows
+    [paginator]="true"
+    [rows]="seriesListStore.size()"
+    [rowsPerPageOptions]="[10, 25, 50, 100]"
+    [loading]="false"
+  >
+    <ng-template #header>
+      <tr>
+        <th>{{ "series-list-page.label.series-name" | translate }}</th>
+        <th>{{ "series-list-page.label.publisher" | translate }}</th>
+        <th>{{ "series-list-page.label.volume" | translate }}</th>
+        <th>{{ "series-list-page.label.in-library" | translate }}</th>
       </tr>
-    </mat-table>
-  </mat-card-content>
-</mat-card>
+    </ng-template>
+
+    <ng-template #body let-series>
+      <tr>
+        <td>{{ series.name }}</td>
+        <td>{{ series.publisher }}</td>
+        <td>{{ series.volume }}</td>
+        <td>{{ series.inLibrary }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</p-card>

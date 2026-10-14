@@ -1,46 +1,43 @@
-<mat-card id="login-form-container" class="cx-detail-container cx-centered">
-  <mat-card-title>
+<p-card id="login-form-container" class="cx-centered">
+  <ng-template #title>
     <h2 class="cx-width-100 cx-justify-center">
-      {{ "user.login-page.title" | translate }}
+      {{ "login-page.title" | translate }}
     </h2>
-  </mat-card-title>
+  </ng-template>
 
-  <mat-card-content>
-    <form [formGroup]="loginForm">
-      <mat-form-field class="cx-width-100" required>
-        <mat-label>{{ "user.login-page.label.email" | translate }}</mat-label>
-        <input
-          id="input-login-email"
-          matInput
-          type="email"
-          formControlName="email"
-          [placeholder]="'user.login-page.placeholder.email' | translate"
-        />
-      </mat-form-field>
-      <mat-form-field class="cx-width-100" required>
-        <mat-label>
-          {{ "user.login-page.label.password" | translate }}
-        </mat-label>
-        <input
-          id="input-login-email"
-          matInput
-          type="password"
-          formControlName="password"
-          [placeholder]="'user.login-page.placeholder.password' | translate"
-        />
-      </mat-form-field>
-    </form>
-  </mat-card-content>
+  <form [formGroup]="loginForm">
+    <p-ifta-label>
+      <label for="input-login-email">
+        {{ "login-page.label.email" | translate }}
+      </label>
+      <input
+        id="input-login-email"
+        pInputText
+        type="email"
+        formControlName="email"
+        [placeholder]="'login-page.placeholder.email' | translate"
+      />
+    </p-ifta-label>
+    <p-ifta-label>
+      <label for="input-login-password">
+        {{ "login-page.label.password" | translate }}
+      </label>
+      <input
+        id="input-login-password"
+        pInputText
+        type="password"
+        formControlName="password"
+        [placeholder]="'login-page.placeholder.password' | translate"
+      />
+    </p-ifta-label>
+  </form>
 
-  <mat-card-actions class="cx-justify-center">
-    <button
-      mat-raised-button
-      color="primary"
+  <ng-template #footer class="cx-justify-center">
+    <p-button
+      icon="pi pi-submit"
+      [label]="'login-page.button.submit' | translate"
       [disabled]="!loginForm.valid"
       (click)="onSubmitForm()"
-    >
-      <mat-label>{{ "user.login-page.button.submit" | translate }}</mat-label>
-      <mat-icon>login</mat-icon>
-    </button>
-  </mat-card-actions>
-</mat-card>
+    ></p-button>
+  </ng-template>
+</p-card>
