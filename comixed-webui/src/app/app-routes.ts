@@ -23,6 +23,7 @@ import { LoginPage } from '@app/account/pages/login-page/login-page';
 import { SeriesListPage } from '@app/collections/pages/series-list-page/series-list-page';
 import { TagListPage } from '@app/collections/pages/tag-list-page/tag-list-page';
 import { PublisherDetailPage } from '@app/collections/pages/publisher-detail-page/publisher-detail-page';
+import { SeriesDetailPage } from '@app/collections/pages/series-detail-page/series-detail-page';
 
 export const appRoutes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/dashboard' },
@@ -34,5 +35,9 @@ export const appRoutes: Routes = [
     component: PublisherDetailPage
   },
   { path: 'collections/series', component: SeriesListPage },
+  {
+    path: 'collections/publishers/:publisherName/series/:seriesName/:volume',
+    component: SeriesDetailPage
+  },
   { path: 'collections/:tagType', component: TagListPage }
 ];

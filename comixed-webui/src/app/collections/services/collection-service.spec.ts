@@ -30,11 +30,13 @@ import {
   LOAD_COLLECTION_ENTRIES_URL,
   LOAD_PUBLISHER_DETAIL_URL,
   LOAD_PUBLISHER_LIST_URL,
+  LOAD_SERIES_DETAIL_URL,
   LOAD_SERIES_LIST_URL
 } from '@app/collections/collections-contants';
 import { LoadPublisherListRequest } from '@app/collections/models/net/load-publisher-list-request';
 import {
   COLLECTION_ENTRY_1,
+  ISSUE_1,
   PUBLISHER_1,
   SERIES_1
 } from '@app/collections/collections-fixtures';
@@ -45,6 +47,7 @@ import { LoadCollectionEntriesResponse } from '@app/collections/models/net/load-
 import { LoadCollectionEntriesRequest } from '@app/collections/models/net/load-collection-entries-request';
 import { LoadPublisherDetailResponse } from '@app/collections/models/net/load-publisher-detail-response';
 import { LoadPublisherDetailRequest } from '@app/collections/models/net/load-publisher-detail-request';
+import { LoadSeriesDetailRequest } from '@app/collections/models/net/load-series-detail-request';
 
 describe('CollectionService', () => {
   const TEST_SEARCH_TEXT = 'text to search for';
@@ -57,6 +60,8 @@ describe('CollectionService', () => {
   const TEST_PUBLISHER_LIST = [TEST_PUBLISHER];
   const TEST_SERIES = SERIES_1;
   const TEST_SERIES_LIST = [TEST_SERIES];
+  const TEST_ISSUE = ISSUE_1;
+  const TEST_ISSUE_LIST = [TEST_ISSUE];
   const TEST_COLLECTION_ENTRY_LIST = [COLLECTION_ENTRY_1];
 
   let service: CollectionService;
@@ -191,6 +196,30 @@ describe('CollectionService', () => {
         TEST_SERIES_LIST,
         TEST_COLLECTION_TOTAL_COUNT
       );
+    });
+  });
+
+  describe('loading series detail', () => {
+    it('success', async () => {
+      const updateStateSpy = vi.spyOn(service.seriesDetailStore, 'update');
+      const serverResponse = TEST_ISSUE_LIST;
+
+      service.loadSeriesDetail({
+        publisherName: TEST_SERIES.publisher,
+        seriesName: TEST_SERIES.name,
+        volume: TEST_SERIES.volume
+      });
+
+      const req = httpController.expectOne(interpolate(LOAD_SERIES_DETAIL_URL));
+      expect(req.request.method).toEqual('POST');
+      expect(req.request.body).toEqual({
+        publisher: TEST_SERIES.publisher,
+        name: TEST_SERIES.name,
+        volume: TEST_SERIES.volume
+      } as LoadSeriesDetailRequest);
+      req.flush(serverResponse);
+      httpController.verify();
+      expect(updateStateSpy).toHaveBeenCalledWith(TEST_ISSUE_LIST);
     });
   });
 

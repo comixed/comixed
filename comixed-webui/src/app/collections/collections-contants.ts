@@ -21,4 +21,5 @@ import { API_ROOT_URL } from '@app/app-constants';
 export const LOAD_PUBLISHER_LIST_URL = `${API_ROOT_URL}/collections/publishers`;
 export const LOAD_PUBLISHER_DETAIL_URL = `${API_ROOT_URL}/collections/publishers/\${publisherName}`;
 export const LOAD_SERIES_LIST_URL = `${API_ROOT_URL}/collections/series`;
+export const LOAD_SERIES_DETAIL_URL = `${API_ROOT_URL}/collections/series/detail`;
 export const LOAD_COLLECTION_ENTRIES_URL = `${API_ROOT_URL}/collections/\${tagType}`;

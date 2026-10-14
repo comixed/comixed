@@ -1,5 +1,6 @@
 <p-card class="cx-width-100 cx-height-100">
   <ng-template #header>
+    <p-breadcrumb [model]="trail" [home]="home" />
     <h2>{{ publisherDetailStore.name() }}</h2>
   </ng-template>
 
@@ -24,10 +25,11 @@
         <td>
           <a
             [routerLink]="[
-              '/collections/publisher',
-              publisherDetailStore.name(),
-              '/series',
-              series.name
+              '/collections/publishers',
+              series.publisher,
+              'series',
+              series.name,
+              series.volume
             ]"
           >
             {{ series.name }}

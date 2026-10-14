@@ -24,9 +24,12 @@ import { TitleService } from '@app/layout/services/title-service';
 import { SeriesListStore } from '@app/collections/stores/series-list-store';
 import { Card } from '@openng/optimus-ui/card';
 import { TableModule } from '@openng/optimus-ui/table';
+import { RouterLink } from '@angular/router';
+import { MenuItem } from '@openng/optimus-ui/api';
+import { Breadcrumb } from '@openng/optimus-ui/breadcrumb';
 
 @Component({
-  imports: [TranslatePipe, Card, TableModule],
+  imports: [TranslatePipe, Card, TableModule, RouterLink, Breadcrumb],
   selector: 'app-series-list-page',
   styleUrl: './series-list-page.scss',
   templateUrl: './series-list-page.html'
@@ -37,6 +40,9 @@ export class SeriesListPage implements OnInit {
   readonly seriesListStore = inject(SeriesListStore);
   readonly translateService = inject(TranslateService);
   readonly titleService = inject(TitleService);
+
+  home: MenuItem = { icon: 'pi pi-home', routerLink: ['/'] };
+  trail: MenuItem[] = [];
 
   constructor() {
     this.translateService.onLangChange.subscribe({

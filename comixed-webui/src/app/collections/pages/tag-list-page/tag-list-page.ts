@@ -26,9 +26,11 @@ import { comicTagTypeFromString } from '@app/library/models/comic-tag-type';
 import { TagStore } from '@app/collections/stores/tag-store';
 import { Card } from '@openng/optimus-ui/card';
 import { TableModule } from '@openng/optimus-ui/table';
+import { Breadcrumb } from '@openng/optimus-ui/breadcrumb';
+import { MenuItem } from '@openng/optimus-ui/api';
 
 @Component({
-  imports: [TranslatePipe, Card, TableModule],
+  imports: [TranslatePipe, Card, TableModule, Breadcrumb],
   selector: 'app-tag-list-page',
   styleUrl: './tag-list-page.scss',
   templateUrl: './tag-list-page.html'
@@ -41,6 +43,9 @@ export class TagListPage {
   readonly titleService = inject(TitleService);
   readonly activatedRoute = inject(ActivatedRoute);
   readonly router = inject(Router);
+
+  home: MenuItem = { icon: 'pi pi-home', routerLink: ['/'] };
+  trail: MenuItem[] = [];
 
   constructor() {
     this.logger.trace('Subscribing to router parameter updates');

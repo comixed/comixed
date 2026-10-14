@@ -20,6 +20,7 @@ import { Publisher } from '@app/collections/models/publisher';
 import { Series } from '@app/collections/models/series';
 import { CollectionEntry } from '@app/collections/models/collection-entry';
 import { ComicTagType } from '@app/library/models/comic-tag-type';
+import { Issue } from '@app/collections/models/issue';
 
 export const PUBLISHER_1: Publisher = {
   name: 'The First Publisher',
@@ -32,6 +33,18 @@ export const SERIES_1: Series = {
   publisher: 'The Series Publisher',
   volume: '2026',
   inLibrary: 717
+};
+
+export const ISSUE_1: Issue = {
+  issueId: 417,
+  publisher: 'The Issue Publisher',
+  series: 'The Series',
+  volume: '2026',
+  issueNumber: '714',
+  title: 'Some cool story or another...',
+  storeDate: new Date().getTime(),
+  coverDate: new Date().getTime(),
+  found: true
 };
 
 export const COLLECTION_ENTRY_1: CollectionEntry = {

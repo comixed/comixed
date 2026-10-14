@@ -87,6 +87,16 @@
       "no-publishers-found": "No publishers found..."
     }
   },
+  "series-detail-page": {
+    "label": {
+      "cover-date": "Cover Date",
+      "found": "Found",
+      "issue-number": "Issue #",
+      "store-date": "Store Date",
+      "title": "Title"
+    },
+    "page-title": "Series Detail For {name} V{volume}"
+  },
   "series-list-page": {
     "label": {
       "in-library": "# of Comics",

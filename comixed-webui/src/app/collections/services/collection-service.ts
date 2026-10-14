@@ -25,6 +25,7 @@ import {
   LOAD_COLLECTION_ENTRIES_URL,
   LOAD_PUBLISHER_DETAIL_URL,
   LOAD_PUBLISHER_LIST_URL,
+  LOAD_SERIES_DETAIL_URL,
   LOAD_SERIES_LIST_URL
 } from '@app/collections/collections-contants';
 import { PublisherListStore } from '@app/collections/stores/publisher-list-store';
@@ -39,6 +40,9 @@ import { LoadCollectionEntriesResponse } from '@app/collections/models/net/load-
 import { PublisherDetailStore } from '@app/collections/stores/publisher-detail-store';
 import { LoadPublisherDetailResponse } from '@app/collections/models/net/load-publisher-detail-response';
 import { LoadPublisherDetailRequest } from '@app/collections/models/net/load-publisher-detail-request';
+import { SeriesDetailStore } from '@app/collections/stores/series-detail-store';
+import { LoadSeriesDetailRequest } from '@app/collections/models/net/load-series-detail-request';
+import { Issue } from '@app/collections/models/issue';
 
 @Service()
 export class CollectionService {
@@ -47,6 +51,7 @@ export class CollectionService {
   readonly publisherListStore = inject(PublisherListStore);
   readonly publisherDetailStore = inject(PublisherDetailStore);
   readonly seriesListStore = inject(SeriesListStore);
+  readonly seriesDetailStore = inject(SeriesDetailStore);
   readonly tagStore = inject(TagStore);
 
   loadPublisherList(args: {
@@ -131,6 +136,27 @@ export class CollectionService {
           this.seriesListStore.update(response.series, response.total);
         },
         error: error => this.logger.error('Error loading series list:', error)
+      });
+  }
+
+  loadSeriesDetail(args: {
+    publisherName: string;
+    seriesName: string;
+    volume: string;
+  }) {
+    this.logger.trace('Loading series detail:', args);
+    this.client
+      .post<Issue[]>(interpolate(LOAD_SERIES_DETAIL_URL), {
+        publisher: args.publisherName,
+        name: args.seriesName,
+        volume: args.volume
+      } as LoadSeriesDetailRequest)
+      .subscribe({
+        next: response => {
+          this.logger.debug('Series detail received:', response);
+          this.seriesDetailStore.update(response);
+        },
+        error: error => this.logger.error('Error loading series detail:', error)
       });
   }
 

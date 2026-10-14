@@ -25,9 +25,11 @@ import { TitleService } from '@app/layout/services/title-service';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Card } from '@openng/optimus-ui/card';
 import { TableModule } from '@openng/optimus-ui/table';
+import { Breadcrumb } from '@openng/optimus-ui/breadcrumb';
+import { MenuItem } from '@openng/optimus-ui/api';
 
 @Component({
-  imports: [Card, TableModule, TranslatePipe, RouterLink],
+  imports: [Card, TableModule, TranslatePipe, RouterLink, Breadcrumb],
   selector: 'app-publisher-detail-page',
   styleUrl: './publisher-detail-page.scss',
   templateUrl: './publisher-detail-page.html'
@@ -42,17 +44,17 @@ export class PublisherDetailPage {
   readonly router = inject(Router);
 
   publisherName = '';
+  trail: MenuItem[] = [];
+  home: MenuItem = { icon: 'pi pi-home', routerLink: ['/'] };
 
   constructor() {
     this.logger.trace('Subscribing to router parameter updates');
     this.activatedRoute.paramMap.subscribe({
       next: params => {
-        if (!params.has('publisherName')) {
-          this.logger.error('Missing publisher name');
-          this.router.navigateByUrl('/');
-        }
+        const publisherName = params.get('publisherName')!;
+        this.trail = [{ label: publisherName }];
         this.collectionsService.loadPublisherDetail({
-          name: params.get('publisherName')!,
+          name: publisherName,
           index: 0,
           size: 10,
           sortBy: '',

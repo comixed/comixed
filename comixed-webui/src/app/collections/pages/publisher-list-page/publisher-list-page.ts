@@ -25,9 +25,11 @@ import { TitleService } from '@app/layout/services/title-service';
 import { TableModule } from '@openng/optimus-ui/table';
 import { Card } from '@openng/optimus-ui/card';
 import { RouterLink } from '@angular/router';
+import { Breadcrumb } from '@openng/optimus-ui/breadcrumb';
+import { MenuItem } from '@openng/optimus-ui/api';
 
 @Component({
-  imports: [TranslatePipe, TableModule, Card, RouterLink],
+  imports: [TranslatePipe, TableModule, Card, RouterLink, Breadcrumb],
   selector: 'app-publisher-list-page',
   styleUrl: './publisher-list-page.scss',
   templateUrl: './publisher-list-page.html'
@@ -38,6 +40,9 @@ export class PublisherListPage implements OnInit {
   readonly publisherListStore = inject(PublisherListStore);
   readonly translateService = inject(TranslateService);
   readonly titleService = inject(TitleService);
+
+  home: MenuItem = { icon: 'pi pi-home', routerLink: ['/'] };
+  trail: MenuItem[] = [];
 
   constructor() {
     this.translateService.onLangChange.subscribe({

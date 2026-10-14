@@ -17,6 +17,7 @@
  */
 
 import { RemoteLibraryState } from '@app/library/models/net/remote-library-state';
+import { Comic } from '@app/library/models/comic';
 
 export const REMOTE_LIBRARY_STATE: RemoteLibraryState = {
   totalComics: 71765,
@@ -32,4 +33,14 @@ export const REMOTE_LIBRARY_STATE: RemoteLibraryState = {
   states: [],
   archiveTypes: [],
   byPublisherAndYear: []
+};
+
+export const COMIC_1: Comic = {
+  publisher: 'The Publisher',
+  series: 'The Series',
+  volume: '2026',
+  issueNumber: '17',
+  addedDate: new Date().getTime(),
+  storeDate: new Date().getTime(),
+  coverDate: new Date().getTime()
 };

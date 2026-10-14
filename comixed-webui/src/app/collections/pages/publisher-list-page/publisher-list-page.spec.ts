@@ -22,6 +22,7 @@ import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
 import { provideTranslateService } from '@ngx-translate/core';
 import { CollectionService } from '@app/collections/services/collection-service';
 import { beforeEach, Mock } from 'vitest';
+import { provideRouter } from '@angular/router';
 
 describe('PublisherListPage', () => {
   const TEST_TITLE_TRANSLATED = 'The translated title';
@@ -34,6 +35,7 @@ describe('PublisherListPage', () => {
     await TestBed.configureTestingModule({
       imports: [PublisherListPage],
       providers: [
+        provideRouter([{ path: '*', redirectTo: '' }]),
         provideLogger({ minLevel: LoggerLevel.OFF }),
         provideTranslateService(),
         CollectionService
