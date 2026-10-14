@@ -22,6 +22,7 @@ import { Renderer2 } from '@angular/core';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
 import { AppState } from '@app/stores/app-store';
 import { provideTranslateService } from '@ngx-translate/core';
+import { provideRouter } from '@angular/router';
 
 describe('Topbar', () => {
   let component: Topbar;
@@ -31,6 +32,7 @@ describe('Topbar', () => {
     await TestBed.configureTestingModule({
       imports: [Topbar],
       providers: [
+        provideRouter([{ path: '*', redirectTo: '' }]),
         provideLogger({ minLevel: LoggerLevel.OFF }),
         provideTranslateService(),
         {

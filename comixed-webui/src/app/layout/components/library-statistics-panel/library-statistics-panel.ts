@@ -20,13 +20,16 @@ import { Component, inject } from '@angular/core';
 import { LibraryStore } from '@app/library/stores/library-store';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Button } from '@openng/optimus-ui/button';
+import { RouterLink } from '@angular/router';
+import { CurrentUserStore } from '@app/account/stores/current-user-store';
 
 @Component({
-  imports: [TranslatePipe, Button],
+  imports: [TranslatePipe, Button, RouterLink],
   selector: 'app-library-statistics-panel',
   styleUrl: './library-statistics-panel.scss',
   templateUrl: './library-statistics-panel.html'
 })
 export class LibraryStatisticsPanel {
   readonly libraryStore = inject(LibraryStore);
+  readonly currentUserStore = inject(CurrentUserStore);
 }

@@ -2,6 +2,21 @@
   "app": {
     "page-title": "ComiXed: {title}"
   },
+  "comic-list-page": {
+    "label": {
+      "added-date": "Added",
+      "comic-state": "State",
+      "cover-date": "Cover Date",
+      "issue-number": "Issue #",
+      "page-count": "# Pages",
+      "publisher": "Publisher",
+      "series": "Series",
+      "store-date": "Store Date",
+      "thumbnail": "Cover",
+      "volume": "Volume"
+    },
+    "page-title": "{pageType, select, ALL_COMICS{All} UNSCRAPED_COMICS{Unscraped} DUPLICATE_COMICS{Duplicate} DELETED_COMICS{Deleted} other{UNKNOWN} } Comics"
+  },
   "dashboard": {
     "page-title": "Dashboard",
     "statistics": {
@@ -50,6 +65,7 @@
     "segment": {
       "deleted-comics": "Deleted",
       "duplicate-comics": "Duplicates",
+      "read-comics": "Read",
       "total-comics": "Total",
       "unscraped-comics": "Unscraped"
     }

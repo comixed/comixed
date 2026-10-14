@@ -19,5 +19,10 @@
 import { API_ROOT_URL } from '@app/app-constants';
 
 export const LOAD_LIBRARY_STATE_URL = `${API_ROOT_URL}/library/state`;
+export const LOAD_SELECTED_COMICS_URL = `${API_ROOT_URL}/comics/selected`;
+export const LOAD_COMICS_BY_FILTER_URL = `${API_ROOT_URL}/comics/filtered`;
+
+export const GET_COMIC_COVER_URL = `${API_ROOT_URL}/comics/\${id}/cover/content`;
+export const MISSING_COMIC_IMAGE_URL = '/images/library/missing-comic-file.png';
 
 export const REMOTE_LIBRARY_STATE_TOPIC = '/topic/remote-library.update';

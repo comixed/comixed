@@ -16,12 +16,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
+import { ComicState } from '@app/library/models/comic-state';
+
 export interface Comic {
+  comicId: number;
+  comicState: ComicState;
   publisher: string;
   series: string;
   volume: string;
   issueNumber: string;
-  addedDate: number;
+  pageCount: number;
   storeDate: number;
   coverDate: number;
+  addedDate: number;
+  baseFilename: string;
 }

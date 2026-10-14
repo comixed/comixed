@@ -20,6 +20,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LibraryStatisticsPanel } from './library-statistics-panel';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
 import { provideTranslateService } from '@ngx-translate/core';
+import { provideRouter } from '@angular/router';
 
 describe('LibraryStatisticsPanel', () => {
   let component: LibraryStatisticsPanel;
@@ -29,6 +30,7 @@ describe('LibraryStatisticsPanel', () => {
     await TestBed.configureTestingModule({
       imports: [LibraryStatisticsPanel],
       providers: [
+        provideRouter([{ path: '*', redirectTo: '' }]),
         provideLogger({ minLevel: LoggerLevel.OFF }),
         provideTranslateService()
       ]

@@ -24,6 +24,7 @@ import { SeriesListPage } from '@app/collections/pages/series-list-page/series-l
 import { TagListPage } from '@app/collections/pages/tag-list-page/tag-list-page';
 import { PublisherDetailPage } from '@app/collections/pages/publisher-detail-page/publisher-detail-page';
 import { SeriesDetailPage } from '@app/collections/pages/series-detail-page/series-detail-page';
+import { ComicListPage } from '@app/library/pages/comic-list-page/comic-list-page';
 
 export const appRoutes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/dashboard' },
@@ -39,5 +40,22 @@ export const appRoutes: Routes = [
     path: 'collections/publishers/:publisherName/series/:seriesName/:volume',
     component: SeriesDetailPage
   },
-  { path: 'collections/:tagType', component: TagListPage }
+  { path: 'collections/:tagType', component: TagListPage },
+  { path: 'library/all', component: ComicListPage, data: { all: true } },
+  { path: 'library/read', component: ComicListPage, data: { readonly: true } },
+  {
+    path: 'library/unscraped',
+    component: ComicListPage,
+    data: { unscraped: true }
+  },
+  {
+    path: 'library/duplicates',
+    component: ComicListPage,
+    data: { duplicates: true }
+  },
+  {
+    path: 'library/deleted',
+    component: ComicListPage,
+    data: { deleted: true }
+  }
 ];

@@ -22,6 +22,7 @@ import { beforeEach } from 'vitest';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
 import { provideTranslateService } from '@ngx-translate/core';
 import { AccountService } from '@app/account/services/account-service';
+import { provideRouter } from '@angular/router';
 
 describe('App', () => {
   let component: App;
@@ -33,6 +34,7 @@ describe('App', () => {
     await TestBed.configureTestingModule({
       imports: [App],
       providers: [
+        provideRouter([{ path: '*', redirectTo: '' }]),
         provideLogger({ minLevel: LoggerLevel.OFF }),
         AccountService,
         provideTranslateService()

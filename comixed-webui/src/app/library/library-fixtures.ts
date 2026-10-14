@@ -18,6 +18,7 @@
 
 import { RemoteLibraryState } from '@app/library/models/net/remote-library-state';
 import { Comic } from '@app/library/models/comic';
+import { ComicState } from '@app/library/models/comic-state';
 
 export const REMOTE_LIBRARY_STATE: RemoteLibraryState = {
   totalComics: 71765,
@@ -36,11 +37,15 @@ export const REMOTE_LIBRARY_STATE: RemoteLibraryState = {
 };
 
 export const COMIC_1: Comic = {
+  comicId: 1,
+  comicState: ComicState.STABLE,
   publisher: 'The Publisher',
   series: 'The Series',
   volume: '2026',
   issueNumber: '17',
+  pageCount: 28,
   addedDate: new Date().getTime(),
   storeDate: new Date().getTime(),
-  coverDate: new Date().getTime()
+  coverDate: new Date().getTime(),
+  baseFilename: 'the series v2026 #17.cbz'
 };

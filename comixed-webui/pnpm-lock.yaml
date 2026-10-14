@@ -190,6 +190,15 @@ importers:
       '@angular/router':
         specifier: ^22.2.2
         version: 22.2.2(@angular/common@22.2.2(@angular/core@22.2.2(@angular/compiler@22.2.2)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.2.2(@angular/compiler@22.2.2)(rxjs@7.8.2)(zone.js@0.16.3))(@angular/platform-browser@22.2.2(@angular/animations@22.2.2(@angular/core@22.2.2(@angular/compiler@22.2.2)(rxjs@7.8.2)(zone.js@0.16.3)))(@angular/common@22.2.2(@angular/core@22.2.2(@angular/compiler@22.2.2)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.2.2(@angular/compiler@22.2.2)(rxjs@7.8.2)(zone.js@0.16.3)))(rxjs@7.8.2)
+      '@fortawesome/angular-fontawesome':
+        specifier: ^5.1.0
+        version: 5.1.0(@angular/core@22.2.2(@angular/compiler@22.2.2)(rxjs@7.8.2)(zone.js@0.16.3))
+      '@fortawesome/free-regular-svg-icons':
+        specifier: ^7.3.0
+        version: 7.3.1
+      '@fortawesome/free-solid-svg-icons':
+        specifier: ^7.3.0
+        version: 7.3.1
       '@messageformat/core':
         specifier: ^3.4.1
         version: 3.4.1
@@ -919,6 +928,27 @@ packages:
     peerDependenciesMeta:
       '@noble/hashes':
         optional: true
+
+  '@fortawesome/angular-fontawesome@5.1.0':
+    resolution: {integrity: sha512-22SF8aKzmOfeOKK2M8+hdGFw33p6S7kHWK5q/9bkqAl86SpcfIsfXVHMPhcyP0ZdiAMdeSjsuz76ye3gJbh25A==}
+    peerDependencies:
+      '@angular/core': ^22.0.0
+
+  '@fortawesome/fontawesome-common-types@7.3.1':
+    resolution: {integrity: sha512-k0C0sdHmZtAo6dRDtd1Z/qcpyHbL0CKsjV8seMY/21xGhY5Wsv0XRmiI/xEEH4y2c9b1+jvgNs/3EqhV27yUEA==}
+    engines: {node: '>=6'}
+
+  '@fortawesome/fontawesome-svg-core@7.3.1':
+    resolution: {integrity: sha512-BoxVN3PKnMbgStHhjoaky/oWdxHomDqmBVA24IA3KEmssFGeI7u9YT/BJceOjIum/t6TpPa/vcMKaVYQeIQ/3Q==}
+    engines: {node: '>=6'}
+
+  '@fortawesome/free-regular-svg-icons@7.3.1':
+    resolution: {integrity: sha512-q1EsmL7Q8DDnkRBUjSvrxbq7c9oVwwVjCn/xa5apKmdp65YSgzUg2y0Ltnd5aDbT6GdAQQdXql5Ha90ArqIReQ==}
+    engines: {node: '>=6'}
+
+  '@fortawesome/free-solid-svg-icons@7.3.1':
+    resolution: {integrity: sha512-v0BLa0eqg7ubvVWeNSHVBs8fWH/GJicERZoJaxJ3FE/lj67VSqzoMg9pzfZVOfLMX10y0pGwQAuxoRVVH2patg==}
+    engines: {node: '>=6'}
 
   '@harperfast/extended-iterable@1.0.3':
     resolution: {integrity: sha512-sSAYhQca3rDWtQUHSAPeO7axFIUJOI6hn1gjRC5APVE1a90tuyT8f5WIgRsFhhWA7htNkju2veB9eWL6YHi/Lw==}
@@ -4146,6 +4176,26 @@ snapshots:
       levn: 0.4.1
 
   '@exodus/bytes@1.16.0': {}
+
+  '@fortawesome/angular-fontawesome@5.1.0(@angular/core@22.2.2(@angular/compiler@22.2.2)(rxjs@7.8.2)(zone.js@0.16.3))':
+    dependencies:
+      '@angular/core': 22.2.2(@angular/compiler@22.2.2)(rxjs@7.8.2)(zone.js@0.16.3)
+      '@fortawesome/fontawesome-svg-core': 7.3.1
+      tslib: 2.8.1
+
+  '@fortawesome/fontawesome-common-types@7.3.1': {}
+
+  '@fortawesome/fontawesome-svg-core@7.3.1':
+    dependencies:
+      '@fortawesome/fontawesome-common-types': 7.3.1
+
+  '@fortawesome/free-regular-svg-icons@7.3.1':
+    dependencies:
+      '@fortawesome/fontawesome-common-types': 7.3.1
+
+  '@fortawesome/free-solid-svg-icons@7.3.1':
+    dependencies:
+      '@fortawesome/fontawesome-common-types': 7.3.1
 
   '@harperfast/extended-iterable@1.0.3':
     optional: true

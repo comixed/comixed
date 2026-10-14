@@ -24,6 +24,7 @@ interface CurrentUserState {
   isAuthenticated: boolean;
   user: User | null;
   email: string;
+  readComics: number[];
   firstLoginDate: number;
   lastLoginDate: number;
 }
@@ -33,6 +34,7 @@ const initialState: CurrentUserState = {
   isAuthenticated: false,
   user: null,
   email: '',
+  readComics: [],
   firstLoginDate: 0,
   lastLoginDate: 0
 };
@@ -54,6 +56,7 @@ export const CurrentUserStore = signalStore(
         isAuthenticated: !!user,
         user: user,
         email: user?.email || '',
+        readComics: user?.readComics || [],
         firstLoginDate: user?.firstLoginDate || 0,
         lastLoginDate: user?.lastLoginDate || 0
       });
