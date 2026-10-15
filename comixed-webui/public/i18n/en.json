@@ -61,6 +61,32 @@
       }
     }
   },
+  "import-comics-page": {
+    "label": {
+      "10-comics": "10 Comics",
+      "25-comics": "25 Comics",
+      "50-comics": "50 Comics",
+      "100-comics": "100 Comics",
+      "1000-comics": "1000 Comics",
+      "all-comics": "All Comics",
+      "base-filename": "Filename",
+      "directory-input": "Directory",
+      "maximum-input": "Maximum Files To Return",
+      "selected": "#",
+      "size": "File Size"
+    },
+    "page-title": "Import Comics",
+    "placeholder": {
+      "directory-input": "The root directory to search...",
+      "maximum-input": "Select an option..."
+    },
+    "text": {
+      "size": "{size} Mb"
+    },
+    "tooltip": {
+      "import-comics-button": "There {selected, plural, =1{is 1} other{are #}} files selected..."
+    }
+  },
   "library-statistics-panel": {
     "segment": {
       "deleted-comics": "Deleted",
@@ -90,7 +116,8 @@
       "in-library": "# of Comics",
       "series-name": "Series Name",
       "volume": "Volume"
-    }
+    },
+    "page-title": "Publisher: {name}"
   },
   "publisher-list-page": {
     "label": {
@@ -111,7 +138,7 @@
       "store-date": "Store Date",
       "title": "Title"
     },
-    "page-title": "Series Detail For {name} V{volume}"
+    "page-title": "{name} V{volume}"
   },
   "series-list-page": {
     "label": {
@@ -141,6 +168,7 @@
   "topbar": {
     "tooltip": {
       "home-button": "Go to the dashboard...",
+      "import-button": "Import comic files...",
       "logout-button": "Log out of the server..."
     }
   },

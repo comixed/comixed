@@ -1,6 +1,10 @@
 <p-toolbar>
   <ng-template #start>
+    &nbsp;
+    <span id="cx-logo">ComiXed</span>
+
     @if (currentUserStore.isAuthenticated()) {
+      &nbsp;
       <p-button
         [pTooltip]="'topbar.tooltip.home-button' | translate"
         icon="pi pi-home"
@@ -8,8 +12,16 @@
         [routerLink]="['/']"
       />
     }
-    &nbsp;
-    <span class="cx-logo">ComiXed</span>
+
+    @if (currentUserStore.isAdmin()) {
+      &nbsp;
+      <p-button
+        [pTooltip]="'topbar.tooltip.import-button' | translate"
+        icon="pi pi-file-import"
+        severity="contrast"
+        [routerLink]="['/library/import']"
+      />
+    }
   </ng-template>
 
   <ng-template #center>

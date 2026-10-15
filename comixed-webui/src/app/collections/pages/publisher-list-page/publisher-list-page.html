@@ -1,7 +1,6 @@
 <p-card class="cx-width-100 cx-height-100">
   <ng-template #header>
     <p-breadcrumb [model]="trail" [home]="home" />
-    <h2>{{ "publisher-list-page.page-title" | translate }}</h2>
   </ng-template>
 
   <p-table
@@ -9,8 +8,6 @@
     stripedRows
     [paginator]="true"
     [rows]="publisherListStore.size()"
-    [rowsPerPageOptions]="[10, 25, 50, 100]"
-    [loading]="false"
   >
     <ng-template #header>
       <tr>
@@ -23,7 +20,7 @@
     <ng-template #body let-publisher>
       <tr>
         <td>
-          <a [routerLink]="['/collections/publishers', publisher.name]">
+          <a [routerLink]="['/library/publishers', publisher.name]">
             {{ publisher.name }}
           </a>
         </td>

@@ -1,7 +1,6 @@
 <p-card class="cx-width-100 cx-height-100">
   <ng-template #header>
     <p-breadcrumb [model]="trail" [home]="home" />
-    <h2>{{ publisherDetailStore.name() }}</h2>
   </ng-template>
 
   <p-table
@@ -9,8 +8,6 @@
     stripedRows
     [paginator]="true"
     [rows]="publisherDetailStore.totalSeries()"
-    [rowsPerPageOptions]="[10, 25, 50, 100]"
-    [loading]="false"
   >
     <ng-template #header>
       <tr>
@@ -25,7 +22,7 @@
         <td>
           <a
             [routerLink]="[
-              '/collections/publishers',
+              '/library/publishers',
               series.publisher,
               'series',
               series.name,

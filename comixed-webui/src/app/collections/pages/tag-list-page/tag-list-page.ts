@@ -84,7 +84,16 @@ export class TagListPage {
 
   private doLoadTranslations() {
     this.titleService.setTitle(
-      this.translateService.instant('collections.series-list-page.page-title')
+      this.translateService.instant('tag-list-page.page-title', {
+        tagType: this.tagStore.tagType()
+      })
     );
+    this.trail = [
+      {
+        label: this.translateService.instant('tag-list-page.page-title', {
+          tagType: this.tagStore.tagType()
+        })
+      }
+    ];
   }
 }

@@ -25,22 +25,24 @@ import { TagListPage } from '@app/collections/pages/tag-list-page/tag-list-page'
 import { PublisherDetailPage } from '@app/collections/pages/publisher-detail-page/publisher-detail-page';
 import { SeriesDetailPage } from '@app/collections/pages/series-detail-page/series-detail-page';
 import { ComicListPage } from '@app/library/pages/comic-list-page/comic-list-page';
+import { ImportComicsPage } from '@app/library/pages/import-comics-page/import-comics-page';
 
 export const appRoutes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/dashboard' },
   { path: 'login', component: LoginPage },
   { path: 'dashboard', component: DashboardPage },
-  { path: 'collections/publishers', component: PublisherListPage },
+  { path: 'library/import', component: ImportComicsPage },
+  { path: 'library/publishers', component: PublisherListPage },
   {
-    path: 'collections/publishers/:publisherName',
+    path: 'library/publishers/:publisherName',
     component: PublisherDetailPage
   },
-  { path: 'collections/series', component: SeriesListPage },
+  { path: 'library/series', component: SeriesListPage },
   {
-    path: 'collections/publishers/:publisherName/series/:seriesName/:volume',
+    path: 'library/publishers/:publisherName/series/:seriesName/:volume',
     component: SeriesDetailPage
   },
-  { path: 'collections/:tagType', component: TagListPage },
+  { path: 'library/:tagType', component: TagListPage },
   { path: 'library/all', component: ComicListPage, data: { all: true } },
   { path: 'library/read', component: ComicListPage, data: { readonly: true } },
   {

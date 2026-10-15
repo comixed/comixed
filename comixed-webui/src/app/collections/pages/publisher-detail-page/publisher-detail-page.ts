@@ -51,10 +51,9 @@ export class PublisherDetailPage {
     this.logger.trace('Subscribing to router parameter updates');
     this.activatedRoute.paramMap.subscribe({
       next: params => {
-        const publisherName = params.get('publisherName')!;
-        this.trail = [{ label: publisherName }];
+        this.publisherName = params.get('publisherName')!;
         this.collectionsService.loadPublisherDetail({
-          name: publisherName,
+          name: this.publisherName,
           index: 0,
           size: 10,
           sortBy: '',
@@ -72,9 +71,16 @@ export class PublisherDetailPage {
 
   private doLoadTranslations() {
     this.titleService.setTitle(
-      this.translateService.instant(
-        'collections.publisher-detail-page.page-title'
-      )
+      this.translateService.instant('publisher-detail-page.page-title', {
+        name: this.publisherName
+      })
     );
+    this.trail = [
+      {
+        label: this.translateService.instant('publisher-list-page.page-title'),
+        routerLink: ['/library/publishers']
+      },
+      { label: this.publisherName }
+    ];
   }
 }

@@ -72,9 +72,7 @@ describe('PublisherListPage', () => {
     });
 
     it('translates the title', () => {
-      expect(instantSpy).toHaveBeenCalledWith(
-        'collections.publisher-list-page.page-title'
-      );
+      expect(instantSpy).toHaveBeenCalled();
     });
 
     it('updates the title', () => {

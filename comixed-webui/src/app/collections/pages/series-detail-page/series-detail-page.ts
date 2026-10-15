@@ -44,7 +44,9 @@ export class SeriesDetailPage {
   readonly activatedRoute = inject(ActivatedRoute);
   readonly router = inject(Router);
 
-  publisherName = '';
+  publisher = '';
+  series = '';
+  volume = '';
   trail: MenuItem[] = [];
   home: MenuItem = { icon: 'pi pi-home', routerLink: ['/'] };
 
@@ -52,22 +54,18 @@ export class SeriesDetailPage {
     this.logger.trace('Subscribing to router parameter updates');
     this.activatedRoute.paramMap.subscribe({
       next: params => {
-        const publisher = params.get('publisherName')!;
-        const series = params.get('seriesName')!;
-        const volume = params.get('volume')!;
-        this.trail = [
-          {
-            label: publisher,
-            routerLink: ['/collections/publishers', publisher]
-          },
-          { label: series },
-          { label: volume }
-        ];
-        this.seriesDetailStore.setSeries(publisher, series, volume);
+        this.publisher = params.get('publisherName')!;
+        this.series = params.get('seriesName')!;
+        this.volume = params.get('volume')!;
+        this.seriesDetailStore.setSeries(
+          this.publisher,
+          this.series,
+          this.volume
+        );
         this.collectionsService.loadSeriesDetail({
-          publisherName: publisher,
-          seriesName: series,
-          volume
+          publisherName: this.publisher,
+          seriesName: this.series,
+          volume: this.volume
         });
       }
     });
@@ -82,8 +80,29 @@ export class SeriesDetailPage {
   private doLoadTranslations() {
     this.titleService.setTitle(
       this.translateService.instant(
-        'collections.publisher-detail-page.page-title'
+        'collections.series-detail-page.page-title',
+        { name: this.series, volume: this.volume }
       )
     );
+    this.trail = [
+      {
+        label: this.translateService.instant('publisher-list-page.page-title'),
+        routerLink: ['/library/publishers']
+      },
+      {
+        label: this.publisher,
+        routerLink: ['/library/publishers', this.publisher]
+      },
+      {
+        label: this.translateService.instant('series-list-page.page-title'),
+        routerLink: ['/library/series']
+      },
+      {
+        label: this.translateService.instant('series-detail-page.page-title', {
+          name: this.series,
+          volume: this.volume
+        })
+      }
+    ];
   }
 }

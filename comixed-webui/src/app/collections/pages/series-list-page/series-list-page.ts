@@ -66,7 +66,12 @@ export class SeriesListPage implements OnInit {
 
   private doLoadTranslations() {
     this.titleService.setTitle(
-      this.translateService.instant('collections.series-list-page.page-title')
+      this.translateService.instant('series-list-page.page-title')
     );
+    this.trail = [
+      {
+        label: this.translateService.instant('series-list-page.page-title')
+      }
+    ];
   }
 }

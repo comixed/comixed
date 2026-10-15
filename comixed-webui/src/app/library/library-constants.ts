@@ -18,6 +18,11 @@
 
 import { API_ROOT_URL } from '@app/app-constants';
 
+export const LOAD_COMIC_FILES_FROM_SESSION_URL = `${API_ROOT_URL}/files/session`;
+export const LOAD_COMIC_FILES_URL = `${API_ROOT_URL}/files/contents`;
+export const TOGGLE_COMIC_FILE_SELECTIONS_URL = `${API_ROOT_URL}/files/import/selections`;
+export const SEND_COMIC_FILES_URL = `${API_ROOT_URL}/files/import`;
+
 export const LOAD_LIBRARY_STATE_URL = `${API_ROOT_URL}/library/state`;
 export const LOAD_SELECTED_COMICS_URL = `${API_ROOT_URL}/comics/selected`;
 export const LOAD_COMICS_BY_FILTER_URL = `${API_ROOT_URL}/comics/filtered`;

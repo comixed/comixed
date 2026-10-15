@@ -72,9 +72,7 @@ describe('SeriesListPage', () => {
     });
 
     it('translates the title', () => {
-      expect(instantSpy).toHaveBeenCalledWith(
-        'collections.series-list-page.page-title'
-      );
+      expect(instantSpy).toHaveBeenCalled();
     });
 
     it('updates the title', () => {

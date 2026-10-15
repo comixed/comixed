@@ -70,5 +70,8 @@ export class PublisherListPage implements OnInit {
         'collections.publisher-list-page.page-title'
       )
     );
+    this.trail = [
+      { label: this.translateService.instant('publisher-list-page.page-title') }
+    ];
   }
 }

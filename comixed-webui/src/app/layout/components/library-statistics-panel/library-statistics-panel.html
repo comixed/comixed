@@ -5,33 +5,32 @@
     [routerLink]="['/library/all']"
     severity="info"
   />
-  &nbsp;&nbsp;
+
   <p-button
     [label]="'library-statistics-panel.segment.read-comics' | translate"
     [badge]="currentUserStore.readComics().length.toString()"
     [routerLink]="['/library/read']"
-    severity="info"
+    severity="secondary"
   />
-  &nbsp;&nbsp;&nbsp;
+
   <p-button
     [label]="'library-statistics-panel.segment.unscraped-comics' | translate"
     [badge]="libraryStore.unscrapedComics().toString()"
     [routerLink]="['/library/unscraped']"
-    severity="contrast"
+    severity="help"
   />
-  &nbsp;&nbsp;&nbsp;
+
   <p-button
     [label]="'library-statistics-panel.segment.duplicate-comics' | translate"
     [badge]="libraryStore.duplicateComics().toString()"
     [routerLink]="['/library/duplicates']"
     severity="warn"
   />
-  &nbsp;&nbsp;&nbsp;
+
   <p-button
     [label]="'library-statistics-panel.segment.deleted-comics' | translate"
-    [badge]="libraryStore.unscrapedComics().toString()"
+    [badge]="libraryStore.deletedComics().toString()"
     [routerLink]="['/library/deleted']"
     severity="danger"
   />
-  &nbsp;
 </div>

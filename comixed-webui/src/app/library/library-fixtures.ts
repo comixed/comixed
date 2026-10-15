@@ -19,6 +19,7 @@
 import { RemoteLibraryState } from '@app/library/models/net/remote-library-state';
 import { Comic } from '@app/library/models/comic';
 import { ComicState } from '@app/library/models/comic-state';
+import { ComicFile } from '@app/library/models/comic-file';
 
 export const REMOTE_LIBRARY_STATE: RemoteLibraryState = {
   totalComics: 71765,
@@ -34,6 +35,14 @@ export const REMOTE_LIBRARY_STATE: RemoteLibraryState = {
   states: [],
   archiveTypes: [],
   byPublisherAndYear: []
+};
+
+export const COMIC_FILE_1: ComicFile = {
+  id: 1,
+  filename: '/Users/comixed/Documents/comics/existing-comic-file.cbz',
+  baseFilename: 'existing-comic-file',
+  size: 65535,
+  selected: false
 };
 
 export const COMIC_1: Comic = {

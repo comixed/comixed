@@ -18,6 +18,9 @@
 
 import { API_ROOT_URL } from '@app/app-constants';
 
+export const ROLE_NAME_READER = 'READER';
+export const ROLE_NAME_ADMIN = 'ADMIN';
+
 export const LOGIN_PAGE_URL = '/login';
 
 export const LOAD_CURRENT_USER_URL = `${API_ROOT_URL}/user`;
