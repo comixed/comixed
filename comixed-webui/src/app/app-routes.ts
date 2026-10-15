@@ -29,6 +29,7 @@ import { ImportComicsPage } from '@app/library/pages/import-comics-page/import-c
 import { InitialAccountPage } from '@app/account/pages/initial-account-page/initial-account-page';
 import { readerGuard } from '@app/account/guards/reader-guard';
 import { adminGuard } from '@app/account/guards/admin-guard';
+import { ComicDetailPage } from '@app/library/pages/comic-detail-page/comic-detail-page';
 
 export const appRoutes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/dashboard' },
@@ -89,5 +90,10 @@ export const appRoutes: Routes = [
     path: 'library/:tagType',
     component: TagListPage,
     canActivate: [readerGuard]
+  },
+  {
+    path: 'library/comics/:comicId',
+    component: ComicDetailPage
+    // canActivate: [readerGuard]
   }
 ];

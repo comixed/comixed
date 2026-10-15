@@ -17,17 +17,35 @@
  */
 
 import { ComicState } from '@app/library/models/comic-state';
+import { ArchiveType } from '@app/library/models/archive-type';
+import { ComicType } from '@app/library/models/comic-type';
 
 export interface Comic {
   comicId: number;
+  filename: string;
+  baseFilename: string;
+  missing: boolean;
+  archiveType: ArchiveType;
   comicState: ComicState;
+  comicType: ComicType;
   publisher: string;
+  imprint: string;
   series: string;
   volume: string;
   issueNumber: string;
+  sortableIssueNumber: string;
+  sortName: string;
+  title: string;
+  nextIssueId: number;
+  previousIssueId: number;
+  description: string;
   pageCount: number;
-  storeDate: number;
-  coverDate: number;
-  addedDate: number;
-  baseFilename: string;
+  storeDate: string;
+  coverDate: string;
+  monthPublished: number;
+  yearPublished: number;
+  addedDate: string;
+  referenceId: string;
+  unscraped: boolean;
+  lastModifiedDate: string;
 }

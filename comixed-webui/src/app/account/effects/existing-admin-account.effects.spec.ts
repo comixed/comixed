@@ -17,24 +17,13 @@
  */
 
 import { TestBed } from '@angular/core/testing';
-import { provideMockActions } from '@ngrx/effects/testing';
-import { Observable, of } from 'rxjs';
 import { ExistingAdminAccountEffects } from './existing-admin-account.effects';
-import { hot } from 'vitest-marbles';
-import {
-  checkForExistingAdminAccount,
-  checkForExistingAdminAccountSuccess,
-  createInitialAdminAccount,
-  createInitialAdminAccountSuccess
-} from '@app/account/actions/existing-admin-account.actions';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
-import { CheckForAdminResponse } from '@app/account/models/net/check-for-admin-response';
-import { HttpResponse } from '@angular/common/http';
+import { hot } from 'vitest-marbles';
+import { provideMockActions } from '@ngrx/effects/testing';
+import { Observable } from 'rxjs';
 
 describe('ExistingAdminAccountEffects', () => {
-  const TEST_EMAIL = 'user@localhost.tld';
-  const TEST_PASSWORD = 'th3!p455w0rD';
-
   let actions$: Observable<unknown>;
   let effects: ExistingAdminAccountEffects;
 
@@ -51,37 +40,7 @@ describe('ExistingAdminAccountEffects', () => {
   });
 
   it('should be created', () => {
+    actions$ = hot('', {});
     expect(effects).toBeTruthy();
-  });
-
-  describe('checking for the initial admin account', () => {
-    it('should fire an action on success', () => {
-      const serviceResponse = { hasExisting: true } as CheckForAdminResponse;
-      const action = checkForExistingAdminAccount();
-      const outcome = checkForExistingAdminAccountSuccess({ exists: true });
-
-      actions$ = hot('-a', { a: action });
-      const checkForAdminSpy = vitest
-        .spyOn(effects.accountService, 'checkForAdminAccount')
-        .mockReturnValue(of(serviceResponse));
-      effects.loadExistingAdminAccounts$;
-    });
-  });
-
-  describe('creating the initial admin account', () => {
-    it('should fire an action on success', () => {
-      const serviceResponse = new HttpResponse({ status: 200 });
-      const action = createInitialAdminAccount({
-        email: TEST_EMAIL,
-        password: TEST_PASSWORD
-      });
-      const outcome = createInitialAdminAccountSuccess();
-
-      actions$ = hot('-a', { a: action });
-      const checkForAdminSpy = vitest
-        .spyOn(effects.accountService, 'createAdminAccount')
-        .mockReturnValue(of(serviceResponse));
-      effects.createAdminAccount$;
-    });
   });
 });

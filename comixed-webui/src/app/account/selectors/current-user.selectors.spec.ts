@@ -25,12 +25,16 @@ import { beforeEach } from 'vitest';
 import {
   selectCurrentUserAuthenticated,
   selectCurrentUserIsAdmin,
+  selectCurrentUserIsReader,
   selectCurrentUserLoading,
   selectCurrentUserReadComicIds,
   selectCurrentUserState
 } from '@app/account/selectors/current-user.selectors';
 import { USER_READER } from '@app/account/account-fixtures';
-import { ROLE_NAME_ADMIN } from '@app/account/account-constants';
+import {
+  ROLE_NAME_ADMIN,
+  ROLE_NAME_READER
+} from '@app/account/account-constants';
 
 describe('CurrentUser Selectors', () => {
   const TEST_USER = USER_READER;
@@ -42,7 +46,7 @@ describe('CurrentUser Selectors', () => {
     state = { ...initialCurrentUserState };
   });
 
-  it('shoudl select the feature state', () => {
+  it('should select the feature state', () => {
     expect(selectCurrentUserState({ [CURRENT_USER_FEATURE_KEY]: state })).toBe(
       state
     );
@@ -111,6 +115,30 @@ describe('CurrentUser Selectors', () => {
     it('should return false when the user is not an admin', () => {
       expect(
         selectCurrentUserIsAdmin({
+          [CURRENT_USER_FEATURE_KEY]: {
+            ...initialCurrentUserState,
+            user: { ...TEST_USER, roles: [] }
+          }
+        })
+      ).toBeFalsy();
+    });
+  });
+
+  describe('selecting the reader flag', () => {
+    it('should return true when the user is an reader', () => {
+      expect(
+        selectCurrentUserIsReader({
+          [CURRENT_USER_FEATURE_KEY]: {
+            ...initialCurrentUserState,
+            user: { ...TEST_USER, roles: [{ name: ROLE_NAME_READER }] }
+          }
+        })
+      ).toBeTruthy();
+    });
+
+    it('should return false when the user is not a reader', () => {
+      expect(
+        selectCurrentUserIsReader({
           [CURRENT_USER_FEATURE_KEY]: {
             ...initialCurrentUserState,
             user: { ...TEST_USER, roles: [] }

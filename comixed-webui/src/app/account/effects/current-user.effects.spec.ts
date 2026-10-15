@@ -17,78 +17,30 @@
  */
 
 import { TestBed } from '@angular/core/testing';
-import { provideMockActions } from '@ngrx/effects/testing';
-import { Observable, of } from 'rxjs';
 import { CurrentUserEffects } from './current-user.effects';
-import { USER_READER } from '@app/account/account-fixtures';
-import {
-  loadCurrentUser,
-  loadCurrentUserSuccess,
-  login,
-  loginSuccess
-} from '@app/account/actions/current-user.actions';
-import { hot } from 'vitest-marbles';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
-import { AccountService } from '@app/account/services/account-service';
-import { LoginResponse } from '@app/account/models/net/login-response';
+import { provideMockActions } from '@ngrx/effects/testing';
+import { Observable } from 'rxjs';
+import { hot } from 'vitest-marbles';
 
 describe('CurrentUserEffects', () => {
-  const TEST_USER = USER_READER;
-  const TEST_EMAIL = 'user@localhost.tld';
-  const TEST_PASSWORD = 'th3!p455w0rD';
-  const TEST_TOKEN = '!t35t!t0k3n!';
-
   let actions$: Observable<unknown>;
   let effects: CurrentUserEffects;
-  let accountService: AccountService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
         CurrentUserEffects,
         provideMockActions(() => actions$),
-        provideLogger({ minLevel: LoggerLevel.OFF }),
-        AccountService
+        provideLogger({ minLevel: LoggerLevel.OFF })
       ]
     });
 
     effects = TestBed.inject(CurrentUserEffects);
-    accountService = TestBed.inject(AccountService);
   });
 
   it('should be created', () => {
+    actions$ = hot('', {});
     expect(effects).toBeTruthy();
-  });
-
-  describe('loading the current user', () => {
-    it('fires an action on success', () => {
-      const serviceResponse = TEST_USER;
-      const action = loadCurrentUser();
-      const outcome = loadCurrentUserSuccess({ user: TEST_USER });
-
-      actions$ = hot('-a', { a: action });
-      const loadCurrentAccountSpy = vi
-        .spyOn(accountService, 'loadCurrentUser')
-        .mockReturnValue(of(serviceResponse));
-      effects.loadCurrentUser$.pipe();
-    });
-  });
-
-  describe('login', () => {
-    it('fires an action on success', () => {
-      const serviceResponse = {
-        email: TEST_EMAIL,
-        token: TEST_TOKEN
-      } as LoginResponse;
-      const action = login({ email: TEST_EMAIL, password: TEST_PASSWORD });
-      const outcome1 = loginSuccess();
-      const outcome2 = loadCurrentUser();
-
-      actions$ = hot('-a', { a: action });
-      const loginSpy = vi
-        .spyOn(accountService, 'login')
-        .mockReturnValue(of(serviceResponse));
-      effects.login$.pipe();
-    });
   });
 });

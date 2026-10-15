@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { ComicFilesStore } from '@app/library/stores/comic-files-store';
 import { Card } from '@openng/optimus-ui/card';
@@ -76,9 +76,9 @@ export class ImportComicsPage {
   readonly comicFileService = inject(ComicFileService);
   readonly comicFilesStore = inject(ComicFilesStore);
   readonly formBuilder = inject(FormBuilder);
+  readonly trail = signal<MenuItem[]>([]);
 
   home: MenuItem = { icon: 'pi pi-home', routerLink: ['/'] };
-  trail: MenuItem[] = [];
   importComicsForm!: FormGroup;
   maximumOptions: MaximumOption[] = [];
 
@@ -129,9 +129,9 @@ export class ImportComicsPage {
     this.titleService.setTitle(
       this.translateService.instant('import-comics-page.page-title')
     );
-    this.trail = [
+    this.trail.set([
       { label: this.translateService.instant('import-comics-page.page-title') }
-    ];
+    ]);
     this.maximumOptions = [
       {
         label: this.translateService.instant(

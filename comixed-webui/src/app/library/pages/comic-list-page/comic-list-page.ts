@@ -16,8 +16,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, inject } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, inject, signal } from '@angular/core';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Card } from '@openng/optimus-ui/card';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
@@ -52,7 +52,8 @@ import { TitleService } from '@app/layout/services/title-service';
     DatePipe,
     ComicCoverUrlPipe,
     FaIconComponent,
-    Breadcrumb
+    Breadcrumb,
+    RouterLink
   ],
   selector: 'app-comic-list-page',
   styleUrl: './comic-list-page.scss',
@@ -65,9 +66,9 @@ export class ComicListPage {
   readonly activatedRoute = inject(ActivatedRoute);
   readonly libraryService = inject(LibraryService);
   readonly comicListStore = inject(ComicListStore);
+  readonly trail = signal<MenuItem[]>([]);
 
   home: MenuItem = { icon: 'pi pi-home', routerLink: ['/'] };
-  trail: MenuItem[] = [];
 
   allComics = true;
   readComics = false;
@@ -167,6 +168,6 @@ export class ComicListPage {
       { pageType: this.getPageType() }
     );
     this.titleService.setTitle(pageTitle);
-    this.trail = [{ label: pageTitle }];
+    this.trail.set([{ label: pageTitle }]);
   }
 }

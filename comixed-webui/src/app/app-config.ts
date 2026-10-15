@@ -43,6 +43,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { provideOptimus } from '@openng/optimus-ui/config';
 import Aura from '@openng/optimus-ui-themes/aura';
 import { AccountModule } from '@app/account/account-module';
+import { LibraryModule } from '@app/library/library-module';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -77,7 +78,8 @@ export const appConfig: ApplicationConfig = {
       }),
       StoreModule.forRoot({}, {}),
       EffectsModule.forRoot([]),
-      AccountModule
+      AccountModule,
+      LibraryModule
     )
   ]
 };

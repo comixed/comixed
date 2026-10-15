@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { PublisherListStore } from '@app/collections/stores/publisher-list-store';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { CollectionService } from '@app/collections/services/collection-service';
@@ -40,9 +40,9 @@ export class PublisherListPage implements OnInit {
   readonly publisherListStore = inject(PublisherListStore);
   readonly translateService = inject(TranslateService);
   readonly titleService = inject(TitleService);
+  readonly trail = signal<MenuItem[]>([]);
 
   home: MenuItem = { icon: 'pi pi-home', routerLink: ['/'] };
-  trail: MenuItem[] = [];
 
   constructor() {
     this.translateService.onLangChange.subscribe({
@@ -70,8 +70,8 @@ export class PublisherListPage implements OnInit {
         'collections.publisher-list-page.page-title'
       )
     );
-    this.trail = [
+    this.trail.set([
       { label: this.translateService.instant('publisher-list-page.page-title') }
-    ];
+    ]);
   }
 }

@@ -22,11 +22,14 @@ import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
 import { provideRouter } from '@angular/router';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideMockStore } from '@ngrx/store/testing';
-import { initialExistingAdminAccountState } from '@app/account/reducers/existing-admin-account.reducer';
+import {
+  EXISTING_ADMIN_ACCOUNT_FEATURE_KEY,
+  initialExistingAdminAccountState
+} from '@app/account/reducers/existing-admin-account.reducer';
 
 describe('InitialAccountPage', () => {
   const initialState = {
-    EXISTING_ADMIN_ACCOUNT_FEATURE_KEY: initialExistingAdminAccountState
+    [EXISTING_ADMIN_ACCOUNT_FEATURE_KEY]: initialExistingAdminAccountState
   };
 
   let component: InitialAccountPage;

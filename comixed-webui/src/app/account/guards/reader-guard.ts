@@ -18,25 +18,16 @@
 
 import { CanActivateFn } from '@angular/router';
 import { inject } from '@angular/core';
-import { LoggerService } from '@angular-ru/cdk/logger';
-import { Subject } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { selectCurrentUserState } from '@app/account/selectors/current-user.selectors';
-import { hasRole } from '@app/account/account-functions';
+import { selectCurrentUserIsReader } from '@app/account/selectors/current-user.selectors';
+import { LoggerService } from '@angular-ru/cdk/logger';
+import { tap } from 'rxjs';
 
 export const readerGuard: CanActivateFn = () => {
   const logger = inject(LoggerService);
   const store = inject(Store);
-  const result$ = new Subject<boolean>();
 
-  store.select(selectCurrentUserState).subscribe({
-    next: state => {
-      if (!state.loading && state.checked) {
-        const result = hasRole(state?.user?.roles || [], 'READER');
-        logger.debug('isReader?', result);
-        result$.next(result);
-      }
-    }
-  });
-  return result$.asObservable();
+  return store
+    .select(selectCurrentUserIsReader)
+    .pipe(tap(isReader => logger.debug('Is reader guard:', isReader)));
 };

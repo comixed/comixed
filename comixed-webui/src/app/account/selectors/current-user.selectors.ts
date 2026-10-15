@@ -19,6 +19,10 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import * as fromCurrentUser from '../reducers/current-user.reducer';
 import { hasRole } from '@app/account/account-functions';
+import {
+  ROLE_NAME_ADMIN,
+  ROLE_NAME_READER
+} from '@app/account/account-constants';
 
 export const selectCurrentUserState =
   createFeatureSelector<fromCurrentUser.CurrentUserState>(
@@ -37,7 +41,12 @@ export const selectCurrentUserAuthenticated = createSelector(
 
 export const selectCurrentUserIsAdmin = createSelector(
   selectCurrentUserState,
-  state => hasRole(state.user?.roles || [], 'ADMIN')
+  state => hasRole(state.user?.roles || [], ROLE_NAME_ADMIN)
+);
+
+export const selectCurrentUserIsReader = createSelector(
+  selectCurrentUserState,
+  state => hasRole(state.user?.roles || [], ROLE_NAME_READER)
 );
 
 export const selectCurrentUserReadComicIds = createSelector(

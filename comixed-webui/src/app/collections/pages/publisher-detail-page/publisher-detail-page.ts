@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { PublisherDetailStore } from '@app/collections/stores/publisher-detail-store';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { CollectionService } from '@app/collections/services/collection-service';
@@ -42,9 +42,10 @@ export class PublisherDetailPage {
   readonly titleService = inject(TitleService);
   readonly activatedRoute = inject(ActivatedRoute);
   readonly router = inject(Router);
+  readonly trail = signal<MenuItem[]>([]);
 
   publisherName = '';
-  trail: MenuItem[] = [];
+
   home: MenuItem = { icon: 'pi pi-home', routerLink: ['/'] };
 
   constructor() {
@@ -75,12 +76,6 @@ export class PublisherDetailPage {
         name: this.publisherName
       })
     );
-    this.trail = [
-      {
-        label: this.translateService.instant('publisher-list-page.page-title'),
-        routerLink: ['/library/publishers']
-      },
-      { label: this.publisherName }
-    ];
+    this.trail.set([{ label: this.publisherName }]);
   }
 }

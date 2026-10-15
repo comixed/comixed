@@ -18,3 +18,5 @@
 
 export const API_ROOT_URL = '/api';
 export const WS_ROOT_URL = '/ws';
+
+export const PAGE_SIZE_OPTIONS = [10, 25, 50, 100];

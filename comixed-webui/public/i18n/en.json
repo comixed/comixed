@@ -3,7 +3,28 @@
     "button": {
       "submit": "Submit"
     },
-    "page-title": "ComiXed: {title}"
+    "page-title": "ComiXed: {title}",
+    "text": {
+      "issue": "[issue #]",
+      "loading": "Loading, Please Wait...",
+      "publisher": "[publisher]",
+      "series": "[series]"
+    }
+  },
+  "comic-detail-page": {
+    "label": {
+      "metadata": "Metadata",
+      "pages": "Pages",
+      "publication": "Publication",
+      "story": "Story"
+    }
+  },
+  "comic-cover": {
+    "button": {
+      "download-file": "Download",
+      "next-issue": "Next Issue",
+      "previous-issue": "Prev Issue"
+    }
   },
   "comic-list-page": {
     "label": {

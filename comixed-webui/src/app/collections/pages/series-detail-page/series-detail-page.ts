@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { CollectionService } from '@app/collections/services/collection-service';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -43,11 +43,11 @@ export class SeriesDetailPage {
   readonly titleService = inject(TitleService);
   readonly activatedRoute = inject(ActivatedRoute);
   readonly router = inject(Router);
+  readonly trail = signal<MenuItem[]>([]);
 
   publisher = '';
   series = '';
   volume = '';
-  trail: MenuItem[] = [];
   home: MenuItem = { icon: 'pi pi-home', routerLink: ['/'] };
 
   constructor() {
@@ -84,18 +84,10 @@ export class SeriesDetailPage {
         { name: this.series, volume: this.volume }
       )
     );
-    this.trail = [
-      {
-        label: this.translateService.instant('publisher-list-page.page-title'),
-        routerLink: ['/library/publishers']
-      },
+    this.trail.set([
       {
         label: this.publisher,
         routerLink: ['/library/publishers', this.publisher]
-      },
-      {
-        label: this.translateService.instant('series-list-page.page-title'),
-        routerLink: ['/library/series']
       },
       {
         label: this.translateService.instant('series-detail-page.page-title', {
@@ -103,6 +95,6 @@ export class SeriesDetailPage {
           volume: this.volume
         })
       }
-    ];
+    ]);
   }
 }

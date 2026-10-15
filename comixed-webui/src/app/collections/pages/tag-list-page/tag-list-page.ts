@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { CollectionService } from '@app/collections/services/collection-service';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -43,9 +43,9 @@ export class TagListPage {
   readonly titleService = inject(TitleService);
   readonly activatedRoute = inject(ActivatedRoute);
   readonly router = inject(Router);
+  readonly trail = signal<MenuItem[]>([]);
 
   home: MenuItem = { icon: 'pi pi-home', routerLink: ['/'] };
-  trail: MenuItem[] = [];
 
   constructor() {
     this.logger.trace('Subscribing to router parameter updates');
@@ -88,12 +88,12 @@ export class TagListPage {
         tagType: this.tagStore.tagType()
       })
     );
-    this.trail = [
+    this.trail.set([
       {
         label: this.translateService.instant('tag-list-page.page-title', {
           tagType: this.tagStore.tagType()
         })
       }
-    ];
+    ]);
   }
 }

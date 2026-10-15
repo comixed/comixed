@@ -28,7 +28,7 @@ import { Comic } from '@app/library/models/comic';
   name: 'comicCoverUrl'
 })
 export class ComicCoverUrlPipe implements PipeTransform {
-  transform(comic: Comic): unknown {
+  transform(comic: Comic | null): unknown {
     if (comic) {
       return interpolate(GET_COMIC_COVER_URL, { id: comic.comicId });
     }

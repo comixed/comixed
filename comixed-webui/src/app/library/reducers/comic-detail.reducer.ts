@@ -1,0 +1,79 @@
+/*
+ * ComiXed - A digital comic book library management application.
+ * Copyright (C) 2026, The ComiXed Project
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses>
+ */
+
+import { createFeature, createReducer, on } from '@ngrx/store';
+import { Comic } from '@app/library/models/comic';
+import { ComicPage } from '@app/library/models/comic-page';
+import { ComicTag } from '@app/library/models/comic-tag';
+import { ComicMetadataSource } from '@app/library/models/comic-metadata-source';
+import {
+  loadComic,
+  loadComicFailure,
+  loadComicSuccess
+} from '@app/library/actions/comic-detail.actions';
+
+export const COMIC_DETAIL_FEATURE_KEY = 'comic_detail_state';
+
+export interface ComicDetailState {
+  loading: boolean;
+  comic: Comic | null;
+  pages: ComicPage[];
+  tags: ComicTag[];
+  metadata: ComicMetadataSource | null;
+}
+
+export const initialComicDetailState: ComicDetailState = {
+  loading: false,
+  comic: null,
+  pages: [],
+  tags: [],
+  metadata: null
+};
+
+export const comicDetailReducer = createReducer(
+  initialComicDetailState,
+  on(loadComic, state => ({
+    ...state,
+    loading: true,
+    comic: null,
+    pages: [],
+    tags: [],
+    metadata: null
+  })),
+  on(loadComicSuccess, (state, action) => ({
+    ...state,
+    loading: false,
+    comic: action.comic,
+    pages: action.pages,
+    tags: action.tags,
+    metadata: action.metadata
+  })),
+  on(loadComicFailure, state => ({
+    ...state,
+    loading: false,
+    comic: null,
+    pages: [],
+    tags: [],
+    metadata: null
+  }))
+);
+
+export const comicDetailFeature = createFeature({
+  name: COMIC_DETAIL_FEATURE_KEY,
+  reducer: comicDetailReducer
+});
