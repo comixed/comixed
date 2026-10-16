@@ -34,6 +34,8 @@
                                  constraintName="read_comic_books_v4_comic_detail_fk"
                                  referencedTableName="comic_details_v4"
                                  referencedColumnNames="comic_detail_id"/>
+        <addUniqueConstraint tableName="read_comic_books_v4" columnNames="comixed_user_id,comic_detail_id"
+                             constraintName="read_comic_books_v4_unique_comixed_user_and_comic_detail"/>
 
         <addUniqueConstraint tableName="read_comic_books_v4" columnNames="comixed_user_id,comic_detail_id"
                              constraintName="read_comic_books_unique_comixed_user_comic_detail"/>
