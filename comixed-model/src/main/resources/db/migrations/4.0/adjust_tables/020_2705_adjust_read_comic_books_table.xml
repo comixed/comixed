@@ -37,6 +37,9 @@
         <addUniqueConstraint tableName="read_comic_books_v4" columnNames="comixed_user_id,comic_detail_id"
                              constraintName="read_comic_books_v4_unique_comixed_user_and_comic_detail"/>
 
+        <addUniqueConstraint tableName="read_comic_books_v4" columnNames="comixed_user_id,comic_detail_id"
+                             constraintName="read_comic_books_unique_comixed_user_comic_detail"/>
+
         <createIndex tableName="read_comic_books_v4" indexName="read_comic_books_v4_comic_detail_idx">
             <column name="comic_detail_id"/>
         </createIndex>
