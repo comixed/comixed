@@ -35,7 +35,7 @@ import {
 import {
   HTTP_AUTHORIZATION_HEADER,
   LOGIN_PAGE_URL
-} from '@app/account/user-constants';
+} from '@app/account/account-constants';
 import { authenticationInterceptor } from '@app/account/interceptors/authentication-interceptor';
 
 describe('authenticationInterceptor', () => {

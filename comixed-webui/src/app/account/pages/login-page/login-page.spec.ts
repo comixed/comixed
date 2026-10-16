@@ -22,18 +22,22 @@ import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
 import { provideTranslateService } from '@ngx-translate/core';
 import { beforeEach, Mock } from 'vitest';
 import { provideRouter } from '@angular/router';
-import { USER_READER } from '@app/account/user-fixtures';
 import { AccountService } from '@app/account/services/account-service';
+import { provideMockStore } from '@ngrx/store/testing';
+import {
+  CURRENT_USER_FEATURE_KEY,
+  initialCurrentUserState
+} from '@app/account/reducers/current-user.reducer';
+import { login } from '@app/account/actions/current-user.actions';
 
 describe('LoginPage', () => {
   const TEST_TITLE_TRANSLATED = 'The Translated Title';
-  const TEST_USER = USER_READER;
-  const TEST_EMAIL = TEST_USER.email;
-  const TEST_PASSWORD = 'th3!p455W0rD';
+  const TEST_EMAIL = 'user@localhost.tld';
+  const TEST_PASSWORD = 'th3!p455w0rD';
+  const initialState = { [CURRENT_USER_FEATURE_KEY]: initialCurrentUserState };
 
   let component: LoginPage;
   let fixture: ComponentFixture<LoginPage>;
-  let accountService: AccountService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -42,6 +46,7 @@ describe('LoginPage', () => {
         provideLogger({ minLevel: LoggerLevel.OFF }),
         provideTranslateService({ fallbackLang: 'en' }),
         provideRouter([{ path: '**', redirectTo: '' }]),
+        provideMockStore({ initialState }),
         {
           provide: AccountService,
           useValue: {
@@ -53,7 +58,6 @@ describe('LoginPage', () => {
 
     fixture = TestBed.createComponent(LoginPage);
     component = fixture.componentInstance;
-    accountService = TestBed.inject(AccountService);
     await fixture.whenStable();
   });
 
@@ -62,17 +66,22 @@ describe('LoginPage', () => {
   });
 
   describe('submitting the form', () => {
+    let dispatchSpy: Mock;
+
     beforeEach(() => {
+      dispatchSpy = vi.spyOn(component.store, 'dispatch');
       component.loginForm.controls['email'].setValue(TEST_EMAIL);
       component.loginForm.controls['password'].setValue(TEST_PASSWORD);
       component.onSubmitForm();
     });
 
     it('performs a login', () => {
-      expect(accountService.login).toHaveBeenCalledWith({
-        email: TEST_EMAIL,
-        password: TEST_PASSWORD
-      });
+      expect(dispatchSpy).toHaveBeenCalledWith(
+        login({
+          email: TEST_EMAIL,
+          password: TEST_PASSWORD
+        })
+      );
     });
   });
 

@@ -24,7 +24,7 @@ import {
   HTTP_REQUESTED_WITH_HEADER,
   HTTP_XML_REQUEST,
   LOGIN_PAGE_URL
-} from '@app/account/user-constants';
+} from '@app/account/account-constants';
 import { catchError, of } from 'rxjs';
 import { Router } from '@angular/router';
 import { LoggerService } from '@angular-ru/cdk/logger';
@@ -40,10 +40,7 @@ export const authenticationInterceptor: HttpInterceptorFn = (req, next) => {
     headers: req.headers.set(HTTP_REQUESTED_WITH_HEADER, HTTP_XML_REQUEST)
   });
   logger.trace('Loading auth token');
-  if (authToken.length === 0) {
-    logger.debug('No auth token: redirecting to login page');
-    router.navigateByUrl(LOGIN_PAGE_URL);
-  } else {
+  if (authToken.length > 0) {
     logger.trace('Cloning request, adding auth token');
     newReq = newReq.clone({
       headers: newReq.headers.set(

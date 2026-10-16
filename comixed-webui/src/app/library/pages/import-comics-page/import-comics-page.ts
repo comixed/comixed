@@ -31,7 +31,6 @@ import {
   FormsModule,
   ReactiveFormsModule
 } from '@angular/forms';
-import { CurrentUserStore } from '@app/account/stores/current-user-store';
 import { InputText } from '@openng/optimus-ui/inputtext';
 import { Select } from '@openng/optimus-ui/select';
 import { Button } from '@openng/optimus-ui/button';
@@ -76,7 +75,6 @@ export class ImportComicsPage {
   readonly titleService = inject(TitleService);
   readonly comicFileService = inject(ComicFileService);
   readonly comicFilesStore = inject(ComicFilesStore);
-  readonly currentUserStore = inject(CurrentUserStore);
   readonly formBuilder = inject(FormBuilder);
 
   home: MenuItem = { icon: 'pi pi-home', routerLink: ['/'] };

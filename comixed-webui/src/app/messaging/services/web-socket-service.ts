@@ -21,7 +21,7 @@ import { LoggerService } from '@angular-ru/cdk/logger';
 import { TokenService } from '@app/account/services/token-service';
 import { StompService } from '@app/messaging/services/stomp-service';
 import { Observable, Subscription } from 'rxjs';
-import { HTTP_AUTHORIZATION_HEADER } from '@app/account/user-constants';
+import { HTTP_AUTHORIZATION_HEADER } from '@app/account/account-constants';
 import { securedTopic } from '@app/messaging/messaging-functions';
 import { WS_ROOT_URL } from '@app/app-constants';
 import { IMessage, RxStompState } from '@stomp/rx-stomp';

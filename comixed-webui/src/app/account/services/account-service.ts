@@ -16,56 +16,58 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { interpolate } from '@app/app-functions';
-import { LOAD_CURRENT_USER_URL, LOGIN_URL } from '@app/account/user-constants';
-import { CurrentUserStore } from '@app/account/stores/current-user-store';
+import {
+  CHECK_FOR_ADMIN_ACCOUNT_URL,
+  CREATE_ADMIN_ACCOUNT_URL,
+  LOAD_CURRENT_USER_URL,
+  LOGIN_URL
+} from '@app/account/account-constants';
 import { User } from '@app/account/models/user';
 import { LoginResponse } from '@app/account/models/net/login-response';
-import { TokenService } from '@app/account/services/token-service';
+import { CheckForAdminResponse } from '@app/account/models/net/check-for-admin-response';
+import { CreateAdminAccountRequest } from '@app/account/models/net/create-admin-account-request';
+import { Observable } from 'rxjs';
 
 @Service()
 export class AccountService {
   readonly logger = inject(LoggerService);
   readonly client = inject(HttpClient);
-  readonly tokenService = inject(TokenService);
-  readonly currentUserStore = inject(CurrentUserStore);
 
-  loadCurrentUser(): void {
-    this.logger.trace('Loading current user');
-    this.currentUserStore.loading();
-    this.client.get<User>(interpolate(LOAD_CURRENT_USER_URL)).subscribe({
-      next: value => {
-        this.logger.debug('User loaded:', value);
-        this.currentUserStore.loaded(value);
-      },
-      error: error => {
-        this.logger.error('Failed to load user:', error);
-        this.currentUserStore.loaded(null);
-      }
-    });
+  checkForAdminAccount(): Observable<CheckForAdminResponse> {
+    this.logger.trace('Checking for existing admin account');
+    return this.client.get<CheckForAdminResponse>(
+      interpolate(CHECK_FOR_ADMIN_ACCOUNT_URL)
+    );
   }
 
-  login(args: { email: string; password: string }) {
+  createAdminAccount(args: {
+    email: string;
+    password: string;
+  }): Observable<HttpResponse<unknown>> {
+    this.logger.trace('Creating admin account');
+    return this.client.post<HttpResponse<unknown>>(
+      interpolate(CREATE_ADMIN_ACCOUNT_URL),
+      {
+        email: args.email,
+        password: args.password
+      } as CreateAdminAccountRequest
+    );
+  }
+
+  loadCurrentUser(): Observable<User | null> {
+    this.logger.trace('Loading current user');
+    return this.client.get<User>(interpolate(LOAD_CURRENT_USER_URL));
+  }
+
+  login(args: { email: string; password: string }): Observable<LoginResponse> {
     this.logger.trace('Sending login credentials');
-    this.currentUserStore.login();
-    this.client
-      .post<LoginResponse>(
-        interpolate(LOGIN_URL),
-        new HttpParams().set('email', args.email).set('password', args.password)
-      )
-      .subscribe({
-        next: value => {
-          this.logger.debug('Login successful:', value);
-          this.tokenService.setAuthToken(value.token);
-          this.currentUserStore.loginSuccess();
-        },
-        error: error => {
-          this.logger.error('Failed to login user:', error);
-          this.currentUserStore.loginFailure();
-        }
-      });
+    return this.client.post<LoginResponse>(
+      interpolate(LOGIN_URL),
+      new HttpParams().set('email', args.email).set('password', args.password)
+    );
   }
 }

@@ -17,7 +17,7 @@
  */
 
 import { Service } from '@angular/core';
-import { AUTHENTICATION_TOKEN_KEY } from '@app/account/user-constants';
+import { AUTHENTICATION_TOKEN_KEY } from '@app/account/account-constants';
 
 @Service()
 export class TokenService {

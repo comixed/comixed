@@ -22,37 +22,42 @@ import {
   HttpTestingController,
   provideHttpClientTesting
 } from '@angular/common/http/testing';
-import { HttpParams, provideHttpClient } from '@angular/common/http';
+import {
+  HttpParams,
+  HttpResponse,
+  provideHttpClient
+} from '@angular/common/http';
 import { AccountService } from '@app/account/services/account-service';
-import { CurrentUserStore } from '@app/account/stores/current-user-store';
-import { LOAD_CURRENT_USER_URL, LOGIN_URL } from '@app/account/user-constants';
+import {
+  CHECK_FOR_ADMIN_ACCOUNT_URL,
+  CREATE_ADMIN_ACCOUNT_URL,
+  LOAD_CURRENT_USER_URL,
+  LOGIN_URL
+} from '@app/account/account-constants';
 import { interpolate } from '@app/app-functions';
-import { USER_READER } from '@app/account/user-fixtures';
+import { USER_READER } from '@app/account/account-fixtures';
 import { LoginResponse } from '@app/account/models/net/login-response';
-import { TokenService } from '@app/account/services/token-service';
+import { CheckForAdminResponse } from '@app/account/models/net/check-for-admin-response';
+import { CreateAdminAccountRequest } from '@app/account/models/net/create-admin-account-request';
 
 describe('AccountService', () => {
   const TEST_USER = USER_READER;
-  const TEST_EMAIL = 'user@domain.tld';
+  const TEST_EMAIL = 'user@localhost.tld';
   const TEST_PASSWORD = 'th3!p455w0rD';
   const TEST_TOKEN = '!t35t!t0k3n!';
 
   let service: AccountService;
   let httpController: HttpTestingController;
-  let tokenService: TokenService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
         provideLogger({ minLevel: LoggerLevel.OFF }),
         provideHttpClient(),
-        provideHttpClientTesting(),
-        CurrentUserStore,
-        { provide: TokenService, useValue: { setAuthToken: vi.fn() } }
+        provideHttpClientTesting()
       ]
     });
 
-    tokenService = TestBed.inject(TokenService);
     httpController = TestBed.inject(HttpTestingController);
     service = TestBed.inject(AccountService);
   });
@@ -61,32 +66,69 @@ describe('AccountService', () => {
     expect(service).toBeTruthy();
   });
 
-  describe('loading the current user', () => {
-    it('success', async () => {
-      const loadedSpy = vi.spyOn(service.currentUserStore, 'loaded');
-      await service.loadCurrentUser();
-      const req = httpController.expectOne(interpolate(LOAD_CURRENT_USER_URL));
-      expect(req.request.method).toEqual('GET');
-      req.flush(TEST_USER);
-      httpController.verify();
-      expect(loadedSpy).toHaveBeenCalledWith(TEST_USER);
+  it('should check for the existing admin account', () => {
+    const serverResponse = { hasExisting: true } as CheckForAdminResponse;
+
+    service.checkForAdminAccount().subscribe({
+      next: response => expect(response).toBe(serverResponse)
     });
+
+    const req = httpController.expectOne(
+      interpolate(CHECK_FOR_ADMIN_ACCOUNT_URL)
+    );
+    expect(req.request.method).toEqual('GET');
+    httpController.verify();
+    req.flush(serverResponse);
   });
 
-  describe('login', () => {
-    it('success', async () => {
-      const loginSpy = vi.spyOn(service.currentUserStore, 'loginSuccess');
+  it('should create for the initial admin account', () => {
+    const serverResponse = new HttpResponse({ status: 200 });
 
-      await service.login({ email: TEST_EMAIL, password: TEST_PASSWORD });
-      const req = httpController.expectOne(interpolate(LOGIN_URL));
-      expect(req.request.method).toEqual('POST');
-      expect(req.request.body).toEqual(
-        new HttpParams().set('email', TEST_EMAIL).set('password', TEST_PASSWORD)
-      );
-      req.flush({ token: TEST_TOKEN, email: TEST_EMAIL } as LoginResponse);
-      httpController.verify();
-      expect(loginSpy).toHaveBeenCalled();
-      expect(tokenService.setAuthToken).toHaveBeenCalledWith(TEST_TOKEN);
+    service
+      .createAdminAccount({ email: TEST_EMAIL, password: TEST_PASSWORD })
+      .subscribe({
+        next: response => expect(response).toBe(serverResponse)
+      });
+
+    const req = httpController.expectOne(interpolate(CREATE_ADMIN_ACCOUNT_URL));
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      email: TEST_EMAIL,
+      password: TEST_PASSWORD
+    } as CreateAdminAccountRequest);
+    httpController.verify();
+    req.flush(serverResponse);
+  });
+
+  it('should load the current user', () => {
+    const serverResponse = TEST_USER;
+
+    service.loadCurrentUser().subscribe({
+      next: response => expect(response).toBe(serverResponse)
     });
+
+    const req = httpController.expectOne(interpolate(LOAD_CURRENT_USER_URL));
+    expect(req.request.method).toEqual('GET');
+    req.flush(TEST_USER);
+    httpController.verify();
+  });
+
+  it('should login the user', () => {
+    const serverResponse = {
+      token: TEST_TOKEN,
+      email: TEST_EMAIL
+    } as LoginResponse;
+
+    service.login({ email: TEST_EMAIL, password: TEST_PASSWORD }).subscribe({
+      next: response => expect(response).toBe(serverResponse)
+    });
+
+    const req = httpController.expectOne(interpolate(LOGIN_URL));
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual(
+      new HttpParams().set('email', TEST_EMAIL).set('password', TEST_PASSWORD)
+    );
+    req.flush(serverResponse);
+    httpController.verify();
   });
 });

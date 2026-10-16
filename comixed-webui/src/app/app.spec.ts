@@ -21,28 +21,36 @@ import { App } from '@app/app';
 import { beforeEach } from 'vitest';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
 import { provideTranslateService } from '@ngx-translate/core';
-import { AccountService } from '@app/account/services/account-service';
 import { provideRouter } from '@angular/router';
+import { provideMockStore } from '@ngrx/store/testing';
+import {
+  EXISTING_ADMIN_ACCOUNT_FEATURE_KEY,
+  initialExistingAdminAccountState
+} from '@app/account/reducers/existing-admin-account.reducer';
+import {
+  CURRENT_USER_FEATURE_KEY,
+  initialCurrentUserState
+} from '@app/account/reducers/current-user.reducer';
 
 describe('App', () => {
+  const initialState = {
+    [EXISTING_ADMIN_ACCOUNT_FEATURE_KEY]: initialExistingAdminAccountState,
+    [CURRENT_USER_FEATURE_KEY]: initialCurrentUserState
+  };
   let component: App;
   let fixture: ComponentFixture<App>;
-  let accountService: AccountService;
-  let loadCurrentUserSpy: unknown;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [App],
       providers: [
-        provideRouter([{ path: '*', redirectTo: '' }]),
+        provideRouter([{ path: 'accounts/initial', redirectTo: '' }]),
         provideLogger({ minLevel: LoggerLevel.OFF }),
-        AccountService,
-        provideTranslateService()
+        provideTranslateService(),
+        provideMockStore({ initialState })
       ]
     }).compileComponents();
 
-    accountService = TestBed.inject(AccountService);
-    loadCurrentUserSpy = vi.spyOn(accountService, 'loadCurrentUser');
     fixture = TestBed.createComponent(App);
     component = fixture.componentInstance;
     await fixture.whenStable();
@@ -50,9 +58,5 @@ describe('App', () => {
 
   it('should create the app', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should load the current user', () => {
-    expect(loadCurrentUserSpy).toHaveBeenCalled();
   });
 });

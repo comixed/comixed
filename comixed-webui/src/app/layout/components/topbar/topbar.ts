@@ -20,13 +20,17 @@ import { Component, inject, Renderer2 } from '@angular/core';
 import { AppState } from '@app/stores/app-store';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { LoggerService } from '@angular-ru/cdk/logger';
-import { CurrentUserStore } from '@app/account/stores/current-user-store';
 import { RouterLink } from '@angular/router';
 import { Button } from '@openng/optimus-ui/button';
 import { Toolbar } from '@openng/optimus-ui/toolbar';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Tooltip } from '@openng/optimus-ui/tooltip';
 import { LibraryStatisticsPanel } from '@app/layout/components/library-statistics-panel/library-statistics-panel';
+import { Store } from '@ngrx/store';
+import {
+  selectCurrentUserAuthenticated,
+  selectCurrentUserIsAdmin
+} from '@app/account/selectors/current-user.selectors';
 
 @Component({
   imports: [
@@ -44,7 +48,11 @@ import { LibraryStatisticsPanel } from '@app/layout/components/library-statistic
 export class Topbar {
   readonly logger = inject(LoggerService);
   readonly appStore = inject(AppState);
-  readonly currentUserStore = inject(CurrentUserStore);
+  readonly store = inject(Store);
+  readonly authenticated = this.store.selectSignal(
+    selectCurrentUserAuthenticated
+  );
+  readonly isAdmin = this.store.selectSignal(selectCurrentUserIsAdmin);
   readonly renderer = inject(Renderer2);
 
   constructor() {

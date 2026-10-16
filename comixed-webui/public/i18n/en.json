@@ -1,5 +1,8 @@
 {
   "app": {
+    "button": {
+      "submit": "Submit"
+    },
     "page-title": "ComiXed: {title}"
   },
   "comic-list-page": {
@@ -87,6 +90,22 @@
       "import-comics-button": "There {selected, plural, =1{is 1} other{are #}} files selected..."
     }
   },
+  "initial-account-page": {
+    "error": {
+      "password-validation": "The passwords do not match..."
+    },
+    "label": {
+      "email": "The Admin Email",
+      "password": "The Admin Password",
+      "verify-password": "Verify The Admin Password"
+    },
+    "page-title": "Create Admin Account",
+    "placeholder": {
+      "email": "admin@email.tld",
+      "password": "Your password...",
+      "verify-password": "Verify your password..."
+    }
+  },
   "library-statistics-panel": {
     "segment": {
       "deleted-comics": "Deleted",
@@ -97,9 +116,6 @@
     }
   },
   "login-page": {
-    "button": {
-      "submit": "Login"
-    },
     "label": {
       "email": "Email",
       "password": "Password"

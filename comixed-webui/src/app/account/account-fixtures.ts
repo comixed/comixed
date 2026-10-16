@@ -17,13 +17,17 @@
  */
 
 import { User } from '@app/account/models/user';
+import {
+  ROLE_NAME_ADMIN,
+  ROLE_NAME_READER
+} from '@app/account/account-constants';
 
 export const USER_ADMIN: User = {
   comixedUserId: 1,
   email: 'admin@comixedproject.org',
   firstLoginDate: new Date().getTime(),
   lastLoginDate: new Date().getTime(),
-  roles: [{ name: 'READER' }, { name: 'ADMIN' }],
+  roles: [{ name: ROLE_NAME_READER }, { name: ROLE_NAME_ADMIN }],
   readComics: []
 };
 
@@ -32,6 +36,6 @@ export const USER_READER: User = {
   email: 'reader@comixedproject.org',
   firstLoginDate: new Date().getTime(),
   lastLoginDate: new Date().getTime(),
-  roles: [{ name: 'READER' }],
+  roles: [{ name: ROLE_NAME_READER }],
   readComics: []
 };

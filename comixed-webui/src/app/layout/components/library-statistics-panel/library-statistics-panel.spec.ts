@@ -21,8 +21,15 @@ import { LibraryStatisticsPanel } from './library-statistics-panel';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideRouter } from '@angular/router';
+import { provideMockStore } from '@ngrx/store/testing';
+import {
+  CURRENT_USER_FEATURE_KEY,
+  initialCurrentUserState
+} from '@app/account/reducers/current-user.reducer';
 
 describe('LibraryStatisticsPanel', () => {
+  const initialState = { [CURRENT_USER_FEATURE_KEY]: initialCurrentUserState };
+
   let component: LibraryStatisticsPanel;
   let fixture: ComponentFixture<LibraryStatisticsPanel>;
 
@@ -32,7 +39,8 @@ describe('LibraryStatisticsPanel', () => {
       providers: [
         provideRouter([{ path: '*', redirectTo: '' }]),
         provideLogger({ minLevel: LoggerLevel.OFF }),
-        provideTranslateService()
+        provideTranslateService(),
+        provideMockStore({ initialState })
       ]
     }).compileComponents();
 

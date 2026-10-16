@@ -3,7 +3,7 @@
     &nbsp;
     <span id="cx-logo">ComiXed</span>
 
-    @if (currentUserStore.isAuthenticated()) {
+    @if (authenticated()) {
       &nbsp;
       <p-button
         [pTooltip]="'topbar.tooltip.home-button' | translate"
@@ -13,7 +13,7 @@
       />
     }
 
-    @if (currentUserStore.isAdmin()) {
+    @if (isAdmin()) {
       &nbsp;
       <p-button
         [pTooltip]="'topbar.tooltip.import-button' | translate"
@@ -25,11 +25,13 @@
   </ng-template>
 
   <ng-template #center>
-    <app-library-statistics-panel></app-library-statistics-panel>
+    @if (authenticated()) {
+      <app-library-statistics-panel></app-library-statistics-panel>
+    }
   </ng-template>
 
   <ng-template #end>
-    @if (currentUserStore.isAuthenticated()) {
+    @if (authenticated()) {
       <p-button
         [pTooltip]="'topbar.tooltip.logout-button' | translate"
         icon="pi pi-sign-out"

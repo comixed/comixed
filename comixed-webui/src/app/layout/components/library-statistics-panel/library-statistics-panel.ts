@@ -21,7 +21,8 @@ import { LibraryStore } from '@app/library/stores/library-store';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Button } from '@openng/optimus-ui/button';
 import { RouterLink } from '@angular/router';
-import { CurrentUserStore } from '@app/account/stores/current-user-store';
+import { Store } from '@ngrx/store';
+import { selectCurrentUserReadComicIds } from '@app/account/selectors/current-user.selectors';
 
 @Component({
   imports: [TranslatePipe, Button, RouterLink],
@@ -31,5 +32,8 @@ import { CurrentUserStore } from '@app/account/stores/current-user-store';
 })
 export class LibraryStatisticsPanel {
   readonly libraryStore = inject(LibraryStore);
-  readonly currentUserStore = inject(CurrentUserStore);
+  readonly store = inject(Store);
+  readonly readComicIds = this.store.selectSignal(
+    selectCurrentUserReadComicIds
+  );
 }

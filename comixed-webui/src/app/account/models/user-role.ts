@@ -16,6 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
+export const ROLE_ADMIN = 'ADMIN';
+export const ROLE_READER = 'READER';
+
 export interface UserRole {
   name: string;
 }

@@ -42,6 +42,7 @@ import {
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideOptimus } from '@openng/optimus-ui/config';
 import Aura from '@openng/optimus-ui-themes/aura';
+import { AccountModule } from '@app/account/account-module';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -68,14 +69,15 @@ export const appConfig: ApplicationConfig = {
     },
     provideOptimus({ theme: { preset: Aura } }),
     importProvidersFrom(
-      StoreModule.forRoot({}, {}),
-      EffectsModule.forRoot([]),
       StoreDevtoolsModule.instrument({
         maxAge: 25,
         trace: true,
         logOnly: environment.production,
         connectInZone: true
-      })
+      }),
+      StoreModule.forRoot({}, {}),
+      EffectsModule.forRoot([]),
+      AccountModule
     )
   ]
 };

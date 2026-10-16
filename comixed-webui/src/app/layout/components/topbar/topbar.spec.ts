@@ -23,8 +23,15 @@ import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
 import { AppState } from '@app/stores/app-store';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideRouter } from '@angular/router';
+import { provideMockStore } from '@ngrx/store/testing';
+import {
+  CURRENT_USER_FEATURE_KEY,
+  initialCurrentUserState
+} from '@app/account/reducers/current-user.reducer';
 
 describe('Topbar', () => {
+  const initialState = { [CURRENT_USER_FEATURE_KEY]: initialCurrentUserState };
+
   let component: Topbar;
   let fixture: ComponentFixture<Topbar>;
 
@@ -35,6 +42,7 @@ describe('Topbar', () => {
         provideRouter([{ path: '*', redirectTo: '' }]),
         provideLogger({ minLevel: LoggerLevel.OFF }),
         provideTranslateService(),
+        provideMockStore({ initialState }),
         {
           provide: Renderer2,
           useValue: {

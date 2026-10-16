@@ -26,14 +26,14 @@ import {
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Router } from '@angular/router';
-import { AccountService } from '@app/account/services/account-service';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
-import { CurrentUserStore } from '@app/account/stores/current-user-store';
 import { TitleService } from '@app/layout/services/title-service';
 import { Card } from '@openng/optimus-ui/card';
 import { Button } from '@openng/optimus-ui/button';
 import { InputText } from '@openng/optimus-ui/inputtext';
 import { IftaLabel } from '@openng/optimus-ui/iftalabel';
+import { Store } from '@ngrx/store';
+import { selectCurrentUserAuthenticated } from '@app/account/selectors/current-user.selectors';
+import { login } from '@app/account/actions/current-user.actions';
 
 @Component({
   imports: [
@@ -52,31 +52,26 @@ export class LoginPage {
   loginForm!: FormGroup;
   readonly logger = inject(LoggerService);
   readonly formBuilder = inject(FormBuilder);
-  readonly currentUserStore = inject(CurrentUserStore);
-  readonly authenticationService = inject(AccountService);
+  readonly store = inject(Store);
   readonly router = inject(Router);
   readonly translateService = inject(TranslateService);
   readonly titleService = inject(TitleService);
 
   constructor() {
-    toObservable<boolean>(this.currentUserStore.isAuthenticated)
-      .pipe(takeUntilDestroyed())
-      .subscribe({
-        next: authenticated => {
-          if (authenticated) {
-            this.logger.trace(
-              'User already logged in: redirecting to root page...'
-            );
-            this.router.navigateByUrl('/');
-          } else {
-            this.logger.trace('User not logged in: creating login form');
-            this.loginForm = this.formBuilder.group({
-              email: ['', [Validators.required, Validators.email]],
-              password: ['', [Validators.required]]
-            });
-          }
+    this.loginForm = this.formBuilder.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required]]
+    });
+    this.store.select(selectCurrentUserAuthenticated).subscribe({
+      next: authenticated => {
+        if (authenticated) {
+          this.logger.trace(
+            'User already authenticated: redirecting to root page'
+          );
+          this.router.navigateByUrl('/');
         }
-      });
+      }
+    });
     this.translateService.onLangChange.subscribe({
       next: () => this.doLoadTranslations()
     });
@@ -86,7 +81,7 @@ export class LoginPage {
     this.logger.debug('Submitting login form');
     const email = this.loginForm.controls['email'].value;
     const password = this.loginForm.controls['password'].value;
-    this.authenticationService.login({ email, password });
+    this.store.dispatch(login({ email, password }));
   }
 
   private doLoadTranslations() {

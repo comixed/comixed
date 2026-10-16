@@ -18,7 +18,7 @@
 
 import { TestBed } from '@angular/core/testing';
 import { beforeEach } from 'vitest';
-import { AUTHENTICATION_TOKEN_KEY } from '@app/account/user-constants';
+import { AUTHENTICATION_TOKEN_KEY } from '@app/account/account-constants';
 import { TokenService } from '@app/account/services/token-service';
 
 describe('TokenService', () => {
