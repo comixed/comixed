@@ -20,6 +20,7 @@ package org.comixedproject.service.library;
 
 import static org.comixedproject.model.library.DisplayableComic.FIELD_NAME_COMIC_ID;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -92,7 +93,7 @@ class DisplayableComicServiceTest {
   @Mock private Stream<Integer> distinctIntegerStream;
   @Mock private Stream<Integer> integerStream;
   @Mock private Page<DisplayableComic> displayableComicPage;
-  @Mock private List<DisplayableComic> comicList;
+  @Mock private List<DisplayableComic> comicBookList;
   @Mock private List<Long> idList;
   @Mock private Stream<DisplayableComic> comicListStream;
   @Mock private List<Integer> yearList;
@@ -108,11 +109,11 @@ class DisplayableComicServiceTest {
   void setUp() throws ReadingListException {
     when(exampleBuilderObjectFactory.getObject()).thenReturn(exampleBuilder);
     when(exampleBuilder.build()).thenReturn(displayableComicExample);
-    when(displayableComicStream.toList()).thenReturn(comicList);
+    when(displayableComicStream.toList()).thenReturn(comicBookList);
     when(displayableComicPage.stream()).thenReturn(displayableComicStream);
     when(integerStream.distinct()).thenReturn(distinctIntegerStream);
     when(comicListStream.map(Mockito.any(Function.class))).thenReturn(integerStream);
-    when(comicList.stream()).thenReturn(comicListStream);
+    when(comicBookList.stream()).thenReturn(comicListStream);
 
     when(user.getReadComics()).thenReturn(readComicList);
 
@@ -147,7 +148,7 @@ class DisplayableComicServiceTest {
             TEST_SORT_DIRECTION);
 
     assertNotNull(result);
-    assertSame(comicList, result);
+    assertSame(comicBookList, result);
 
     final Pageable pageable = pageableArgumentCaptor.getValue();
     assertEquals(TEST_PAGE_INDEX, pageable.getPageNumber());
@@ -158,7 +159,7 @@ class DisplayableComicServiceTest {
 
   @Test
   void LoadComicsByFilter_noPageSizeOrIndex() {
-    when(displayableComicRepository.findAll(Mockito.any(Example.class))).thenReturn(comicList);
+    when(displayableComicRepository.findAll(Mockito.any(Example.class))).thenReturn(comicBookList);
 
     final List<DisplayableComic> result =
         service.loadComicsByFilter(
@@ -180,14 +181,14 @@ class DisplayableComicServiceTest {
             TEST_SORT_DIRECTION);
 
     assertNotNull(result);
-    assertSame(comicList, result);
+    assertSame(comicBookList, result);
 
     verify(displayableComicRepository).findAll(displayableComicExample);
   }
 
   @Test
   void LoadComicsByFilter_noPageIndex() {
-    when(displayableComicRepository.findAll(Mockito.any(Example.class))).thenReturn(comicList);
+    when(displayableComicRepository.findAll(Mockito.any(Example.class))).thenReturn(comicBookList);
 
     final List<DisplayableComic> result =
         service.loadComicsByFilter(
@@ -209,14 +210,14 @@ class DisplayableComicServiceTest {
             TEST_SORT_DIRECTION);
 
     assertNotNull(result);
-    assertSame(comicList, result);
+    assertSame(comicBookList, result);
 
     verify(displayableComicRepository).findAll(displayableComicExample);
   }
 
   @Test
   void GetCoverYearsForFilter() {
-    when(displayableComicRepository.findAll(Mockito.any(Example.class))).thenReturn(comicList);
+    when(displayableComicRepository.findAll(Mockito.any(Example.class))).thenReturn(comicBookList);
     when(distinctIntegerStream.toList()).thenReturn(yearList);
 
     final List<Integer> result =
@@ -240,7 +241,7 @@ class DisplayableComicServiceTest {
 
   @Test
   void GetCoverMonthsForFilter() {
-    when(displayableComicRepository.findAll(Mockito.any(Example.class))).thenReturn(comicList);
+    when(displayableComicRepository.findAll(Mockito.any(Example.class))).thenReturn(comicBookList);
     when(distinctIntegerStream.toList()).thenReturn(monthList);
 
     final List<Integer> result =
@@ -289,14 +290,14 @@ class DisplayableComicServiceTest {
   @Test
   void LoadComicsById() {
     when(displayableComicRepository.loadComicsById(Mockito.any(), pageableArgumentCaptor.capture()))
-        .thenReturn(comicList);
+        .thenReturn(comicBookList);
 
     final List<DisplayableComic> result =
         service.loadComicsById(
             TEST_PAGE_SIZE, TEST_PAGE_INDEX, TEST_SORT_BY, TEST_SORT_DIRECTION, idList);
 
     assertNotNull(result);
-    assertSame(comicList, result);
+    assertSame(comicBookList, result);
 
     final Pageable pageable = pageableArgumentCaptor.getValue();
     assertEquals(TEST_PAGE_INDEX, pageable.getPageNumber());
@@ -309,7 +310,7 @@ class DisplayableComicServiceTest {
   void LoadComicsByTagTypeAndValue() {
     when(displayableComicRepository.loadComicsByTagTypeAndValue(
             Mockito.any(ComicTagType.class), Mockito.anyString(), pageableArgumentCaptor.capture()))
-        .thenReturn(comicList);
+        .thenReturn(comicBookList);
 
     final List<DisplayableComic> result =
         service.loadComicsByTagTypeAndValue(
@@ -321,7 +322,7 @@ class DisplayableComicServiceTest {
             TEST_SORT_DIRECTION);
 
     assertNotNull(result);
-    assertSame(comicList, result);
+    assertSame(comicBookList, result);
 
     final Pageable pageable = pageableArgumentCaptor.getValue();
     assertEquals(TEST_PAGE_INDEX, pageable.getPageNumber());
@@ -409,14 +410,14 @@ class DisplayableComicServiceTest {
   void LoadUnreadComics() {
     when(displayableComicRepository.loadUnreadComics(
             Mockito.anySet(), pageableArgumentCaptor.capture()))
-        .thenReturn(comicList);
+        .thenReturn(comicBookList);
 
     final List<DisplayableComic> result =
         service.loadUnreadComics(
             user, TEST_PAGE_SIZE, TEST_PAGE_INDEX, TEST_SORT_BY, TEST_SORT_DIRECTION);
 
     assertNotNull(result);
-    assertSame(comicList, result);
+    assertSame(comicBookList, result);
 
     final Pageable pageable = pageableArgumentCaptor.getValue();
     assertEquals(TEST_PAGE_INDEX, pageable.getPageNumber());
@@ -429,14 +430,14 @@ class DisplayableComicServiceTest {
   void LoadReadComics() {
     when(displayableComicRepository.loadReadComics(
             Mockito.anySet(), pageableArgumentCaptor.capture()))
-        .thenReturn(comicList);
+        .thenReturn(comicBookList);
 
     final List<DisplayableComic> result =
         service.loadReadComics(
             user, TEST_PAGE_SIZE, TEST_PAGE_INDEX, TEST_SORT_BY, TEST_SORT_DIRECTION);
 
     assertNotNull(result);
-    assertSame(comicList, result);
+    assertSame(comicBookList, result);
 
     final Pageable pageable = pageableArgumentCaptor.getValue();
     assertEquals(TEST_PAGE_INDEX, pageable.getPageNumber());
@@ -449,7 +450,7 @@ class DisplayableComicServiceTest {
   void LoadComicsForList() throws LibraryException, ReadingListException {
     when(displayableComicRepository.loadComicsForList(
             Mockito.anyLong(), pageableArgumentCaptor.capture()))
-        .thenReturn(comicList);
+        .thenReturn(comicBookList);
 
     final List<DisplayableComic> result =
         service.loadComicsForList(
@@ -461,7 +462,7 @@ class DisplayableComicServiceTest {
             TEST_SORT_DIRECTION);
 
     assertNotNull(result);
-    assertSame(comicList, result);
+    assertSame(comicBookList, result);
 
     final Pageable pageable = pageableArgumentCaptor.getValue();
     assertEquals(TEST_PAGE_INDEX, pageable.getPageNumber());
@@ -497,7 +498,7 @@ class DisplayableComicServiceTest {
             Mockito.anyString(),
             Mockito.anyString(),
             pageableArgumentCaptor.capture()))
-        .thenReturn(comicList);
+        .thenReturn(comicBookList);
 
     final List<DisplayableComic> result =
         service.loadComics(
@@ -512,7 +513,7 @@ class DisplayableComicServiceTest {
             TEST_SORT_DIRECTION);
 
     assertNotNull(result);
-    assertSame(comicList, result);
+    assertSame(comicBookList, result);
 
     final Pageable pageable = pageableArgumentCaptor.getValue();
     assertEquals(TEST_PAGE_INDEX, pageable.getPageNumber());
@@ -654,5 +655,40 @@ class DisplayableComicServiceTest {
     assertSame(displayableComic, result);
 
     verify(displayableComicRepository).getByComicId(TEST_COMIC_ID);
+  }
+
+  @Test
+  void getAllComicsForPublisherAndSeriesAndVolume() {
+    when(displayableComicRepository.getAllComicsForPublisherAndSeriesAndVolume(
+            anyString(), anyString(), anyString()))
+        .thenReturn(comicBookList);
+
+    final List<DisplayableComic> result =
+        service.getAllComicsForPublisherAndSeriesAndVolume(
+            TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME, TEST_EMAIL, false);
+
+    assertNotNull(result);
+    assertSame(comicBookList, result);
+
+    verify(displayableComicRepository)
+        .getAllComicsForPublisherAndSeriesAndVolume(TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME);
+  }
+
+  @Test
+  void getAllComicsForPublisherAndSeriesAndVolume_unread() {
+    when(displayableComicRepository.getAllUnreadComicsForPublisherAndSeriesAndVolume(
+            anyString(), anyString(), anyString(), anyString()))
+        .thenReturn(comicBookList);
+
+    final List<DisplayableComic> result =
+        service.getAllComicsForPublisherAndSeriesAndVolume(
+            TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME, TEST_EMAIL, true);
+
+    assertNotNull(result);
+    assertSame(comicBookList, result);
+
+    verify(displayableComicRepository)
+        .getAllUnreadComicsForPublisherAndSeriesAndVolume(
+            TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME, TEST_EMAIL);
   }
 }

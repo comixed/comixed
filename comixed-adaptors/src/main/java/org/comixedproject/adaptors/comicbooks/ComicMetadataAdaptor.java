@@ -22,6 +22,7 @@ import java.text.SimpleDateFormat;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicbooks.ComicState;
+import org.comixedproject.model.library.DisplayableComic;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -64,6 +65,7 @@ public class ComicMetadataAdaptor {
    *
    * @param comic the comic book
    * @return the title
+   * @deprecated
    */
   public String getDisplayableTitle(final Comic comic) {
     log.trace("Getting cover date");
@@ -87,6 +89,37 @@ public class ComicMetadataAdaptor {
             issueNumber,
             coverDate,
             comic.getState() == ComicState.CHANGED ? CHANGED_COMIC_MARKER : "")
+        .trim();
+  }
+
+  /**
+   * Returns a displayable title for a comic book.
+   *
+   * @param comic the comic book
+   * @return the title
+   */
+  public String getDisplayableTitle(final DisplayableComic comic) {
+    log.trace("Getting cover date");
+    final String coverDate =
+        comic.getCoverDate() != null
+            ? this.coverDateFormat.format(comic.getCoverDate())
+            : NO_COVER_DATE;
+    final String series =
+        StringUtils.hasLength(comic.getSeries()) ? comic.getSeries() : UNNAMED_SERIES;
+    final String volume =
+        StringUtils.hasLength(comic.getVolume()) ? comic.getVolume() : MISSING_VOLUME;
+    final String issueNumber =
+        StringUtils.hasLength(comic.getIssueNumber())
+            ? comic.getIssueNumber()
+            : MISSING_ISSUE_NUMBER;
+    log.trace("Assembling displayable title");
+    return String.format(
+            "%s v%s #%s (%s) %s",
+            series,
+            volume,
+            issueNumber,
+            coverDate,
+            comic.getComicState() == ComicState.CHANGED ? CHANGED_COMIC_MARKER : "")
         .trim();
   }
 }

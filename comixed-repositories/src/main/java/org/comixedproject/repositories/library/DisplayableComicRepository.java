@@ -205,4 +205,19 @@ public interface DisplayableComicRepository extends JpaRepository<DisplayableCom
    */
   @Query("SELECT d FROM DisplayableComic d WHERE d.comicId = :comicId")
   DisplayableComic getByComicId(@Param("comicId") long comicId);
+
+  @Query(
+      "SELECT d FROM DisplayableComic d WHERE d.publisher = :publisher AND d.series = :series AND d.volume = :volume ORDER BY d.coverDate")
+  List<DisplayableComic> getAllComicsForPublisherAndSeriesAndVolume(
+      @Param("publisher") String publisher,
+      @Param("series") String series,
+      @Param("volume") String volume);
+
+  @Query(
+      "SELECT d FROM DisplayableComic d WHERE d.publisher = :publisher AND d.series = :series AND d.volume = :volume AND d.comicId NOT IN (SELECT c.comicId FROM Comic c WHERE c.comicId IN (SELECT rcb FROM ComiXedUser u JOIN u.readComics rcb WHERE u.email = :email))")
+  List<DisplayableComic> getAllUnreadComicsForPublisherAndSeriesAndVolume(
+      @Param("publisher") String publisher,
+      @Param("series") String series,
+      @Param("volume") String volume,
+      @Param("email") String email);
 }
