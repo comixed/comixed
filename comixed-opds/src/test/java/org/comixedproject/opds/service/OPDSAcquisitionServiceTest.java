@@ -20,6 +20,9 @@ package org.comixedproject.opds.service;
 
 import static junit.framework.TestCase.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +30,7 @@ import junit.framework.TestCase;
 import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicbooks.ComicTagType;
+import org.comixedproject.model.library.DisplayableComic;
 import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.opds.OPDSException;
 import org.comixedproject.opds.OPDSUtils;
@@ -35,6 +39,7 @@ import org.comixedproject.opds.model.OPDSAcquisitionFeed;
 import org.comixedproject.opds.model.OPDSAcquisitionFeedEntry;
 import org.comixedproject.service.comicbooks.ComicException;
 import org.comixedproject.service.comicbooks.ComicService;
+import org.comixedproject.service.library.DisplayableComicService;
 import org.comixedproject.service.lists.ReadingListException;
 import org.comixedproject.service.lists.ReadingListService;
 import org.junit.jupiter.api.Assertions;
@@ -43,7 +48,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
@@ -66,6 +70,7 @@ class OPDSAcquisitionServiceTest {
 
   @InjectMocks private OPDSAcquisitionService service;
   @Mock private ComicService comicService;
+  @Mock private DisplayableComicService displayableComicService;
   @Mock private ReadingListService readingListService;
   @Mock private OPDSUtils opdsUtils;
   @Mock private Comic comic;
@@ -74,27 +79,24 @@ class OPDSAcquisitionServiceTest {
 
   private List<Long> entryIdList = new ArrayList<>();
   private List<Comic> comicList = new ArrayList<>();
+  private List<DisplayableComic> displayableComicList = new ArrayList<>();
   private List<ReadingList> readingLists = new ArrayList<>();
 
   @BeforeEach
   void setUp() throws ComicException {
     readingLists.add(readingList);
-    Mockito.when(readingList.getReadingListId()).thenReturn(TEST_READING_LIST_ID);
-    Mockito.when(readingList.getEntryIds()).thenReturn(entryIdList);
-    Mockito.when(opdsUtils.urlEncodeString(Mockito.anyString())).thenReturn(TEST_ENCODED_NAME);
+    when(readingList.getReadingListId()).thenReturn(TEST_READING_LIST_ID);
+    when(readingList.getEntryIds()).thenReturn(entryIdList);
+    when(opdsUtils.urlEncodeString(anyString())).thenReturn(TEST_ENCODED_NAME);
     entryIdList.add(TEST_COMIC_ID);
     comicList.add(comic);
-    Mockito.when(comicService.getByComicId(Mockito.anyLong())).thenReturn(comic);
+    when(comicService.getByComicId(anyLong())).thenReturn(comic);
   }
 
   @Test
   void getEntriesForCollectionFeedForCharacter() {
-    Mockito.when(
-            comicService.getAllComicsForTag(
-                Mockito.any(ComicTagType.class),
-                Mockito.anyString(),
-                Mockito.anyString(),
-                Mockito.anyBoolean()))
+    when(comicService.getAllComicsForTag(
+            any(ComicTagType.class), anyString(), anyString(), anyBoolean()))
         .thenReturn(comicList);
 
     final OPDSAcquisitionFeed result =
@@ -104,19 +106,15 @@ class OPDSAcquisitionServiceTest {
     TestCase.assertNotNull(result);
     assertFalse(result.getEntries().isEmpty());
 
-    Mockito.verify(comicService, Mockito.times(1))
+    verify(comicService)
         .getAllComicsForTag(
             ComicTagType.CHARACTER, TEST_COLLECTION_ENTRY_NAME, TEST_EMAIL, TEST_UNREAD);
   }
 
   @Test
   void getEntriesForCollectionFeedForTeam() {
-    Mockito.when(
-            comicService.getAllComicsForTag(
-                Mockito.any(ComicTagType.class),
-                Mockito.anyString(),
-                Mockito.anyString(),
-                Mockito.anyBoolean()))
+    when(comicService.getAllComicsForTag(
+            any(ComicTagType.class), anyString(), anyString(), anyBoolean()))
         .thenReturn(comicList);
 
     final OPDSAcquisitionFeed result =
@@ -126,18 +124,14 @@ class OPDSAcquisitionServiceTest {
     TestCase.assertNotNull(result);
     assertFalse(result.getEntries().isEmpty());
 
-    Mockito.verify(comicService, Mockito.times(1))
+    verify(comicService)
         .getAllComicsForTag(ComicTagType.TEAM, TEST_COLLECTION_ENTRY_NAME, TEST_EMAIL, TEST_UNREAD);
   }
 
   @Test
   void getEntriesForCollectionFeedForLocation() {
-    Mockito.when(
-            comicService.getAllComicsForTag(
-                Mockito.any(ComicTagType.class),
-                Mockito.anyString(),
-                Mockito.anyString(),
-                Mockito.anyBoolean()))
+    when(comicService.getAllComicsForTag(
+            any(ComicTagType.class), anyString(), anyString(), anyBoolean()))
         .thenReturn(comicList);
 
     final OPDSAcquisitionFeed result =
@@ -147,19 +141,15 @@ class OPDSAcquisitionServiceTest {
     TestCase.assertNotNull(result);
     assertFalse(result.getEntries().isEmpty());
 
-    Mockito.verify(comicService, Mockito.times(1))
+    verify(comicService)
         .getAllComicsForTag(
             ComicTagType.LOCATION, TEST_COLLECTION_ENTRY_NAME, TEST_EMAIL, TEST_UNREAD);
   }
 
   @Test
   void getEntriesForCollectionFeedForStory() {
-    Mockito.when(
-            comicService.getAllComicsForTag(
-                Mockito.any(ComicTagType.class),
-                Mockito.anyString(),
-                Mockito.anyString(),
-                Mockito.anyBoolean()))
+    when(comicService.getAllComicsForTag(
+            any(ComicTagType.class), anyString(), anyString(), anyBoolean()))
         .thenReturn(comicList);
 
     final OPDSAcquisitionFeed result =
@@ -169,21 +159,16 @@ class OPDSAcquisitionServiceTest {
     TestCase.assertNotNull(result);
     assertFalse(result.getEntries().isEmpty());
 
-    Mockito.verify(comicService, Mockito.times(1))
+    verify(comicService)
         .getAllComicsForTag(
             ComicTagType.STORY, TEST_COLLECTION_ENTRY_NAME, TEST_EMAIL, TEST_UNREAD);
   }
 
   @Test
   void getComicFeedForPublisherAndSeriesAndVolume() {
-    Mockito.when(
-            comicService.getAllComicsForPublisherAndSeriesAndVolume(
-                Mockito.anyString(),
-                Mockito.anyString(),
-                Mockito.anyString(),
-                Mockito.anyString(),
-                Mockito.anyBoolean()))
-        .thenReturn(comicList);
+    when(displayableComicService.getAllComicsForPublisherAndSeriesAndVolume(
+            anyString(), anyString(), anyString(), anyString(), anyBoolean()))
+        .thenReturn(displayableComicList);
 
     final OPDSAcquisitionFeed result =
         service.getComicFeedsForPublisherAndSeriesAndVolume(
@@ -191,14 +176,14 @@ class OPDSAcquisitionServiceTest {
 
     Assertions.assertNotNull(result);
 
-    Mockito.verify(comicService, Mockito.times(1))
+    verify(displayableComicService)
         .getAllComicsForPublisherAndSeriesAndVolume(
             TEST_PUBLISHER_NAME, TEST_SERIES_NAME, TEST_VOLUME, TEST_EMAIL, TEST_UNREAD);
   }
 
   @Test
   void loadReadingListEntriesServiceException() throws ReadingListException {
-    Mockito.when(readingListService.loadReadingListForUser(Mockito.anyString(), Mockito.anyLong()))
+    when(readingListService.loadReadingListForUser(anyString(), anyLong()))
         .thenThrow(ReadingListException.class);
 
     assertThrows(
@@ -208,9 +193,8 @@ class OPDSAcquisitionServiceTest {
 
   @Test
   void loadReadingListEntries() throws ReadingListException, OPDSException, ComicException {
-    Mockito.when(readingListService.loadReadingListForUser(Mockito.anyString(), Mockito.anyLong()))
-        .thenReturn(readingList);
-    Mockito.when(opdsUtils.createComicEntry(Mockito.any(Comic.class))).thenReturn(comicEntry);
+    when(readingListService.loadReadingListForUser(anyString(), anyLong())).thenReturn(readingList);
+    when(opdsUtils.createComicEntry(any(Comic.class))).thenReturn(comicEntry);
 
     final OPDSAcquisitionFeed result =
         service.getComicFeedForReadingList(TEST_EMAIL, TEST_READING_LIST_ID);
@@ -218,19 +202,16 @@ class OPDSAcquisitionServiceTest {
     assertNotNull(result);
     assertFalse(result.getEntries().isEmpty());
 
-    Mockito.verify(readingListService, Mockito.times(1))
-        .loadReadingListForUser(TEST_EMAIL, TEST_READING_LIST_ID);
-    Mockito.verify(opdsUtils, Mockito.times(1)).createComicEntry(comic);
-    Mockito.verify(comicService, Mockito.times(1)).getByComicId(TEST_COMIC_ID);
+    verify(readingListService).loadReadingListForUser(TEST_EMAIL, TEST_READING_LIST_ID);
+    verify(opdsUtils).createComicEntry(comic);
+    verify(comicService).getByComicId(TEST_COMIC_ID);
   }
 
   @Test
   void getComicsFeedForYearAndWeek() {
-    Mockito.when(
-            comicService.getComicsForYearAndWeek(
-                Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean()))
+    when(comicService.getComicsForYearAndWeek(anyInt(), anyInt(), anyString(), anyBoolean()))
         .thenReturn(comicList);
-    Mockito.when(opdsUtils.createComicEntry(Mockito.any(Comic.class))).thenReturn(comicEntry);
+    when(opdsUtils.createComicEntry(any(Comic.class))).thenReturn(comicEntry);
 
     final OPDSAcquisitionFeed result =
         service.getComicsFeedForYearAndWeek(TEST_EMAIL, TEST_YEAR, TEST_WEEK, TEST_UNREAD);
@@ -239,15 +220,14 @@ class OPDSAcquisitionServiceTest {
     assertFalse(result.getEntries().isEmpty());
     assertEquals(entryIdList.size(), result.getEntries().size());
 
-    Mockito.verify(comicService, Mockito.times(1))
-        .getComicsForYearAndWeek(TEST_YEAR, TEST_WEEK, TEST_EMAIL, TEST_UNREAD);
-    Mockito.verify(opdsUtils, Mockito.times(1)).createComicEntry(comic);
+    verify(comicService).getComicsForYearAndWeek(TEST_YEAR, TEST_WEEK, TEST_EMAIL, TEST_UNREAD);
+    verify(opdsUtils).createComicEntry(comic);
   }
 
   @Test
   void getComicsForSearchTerm() {
-    Mockito.when(comicService.getComicForSearchTerm(Mockito.anyString())).thenReturn(comicList);
-    Mockito.when(opdsUtils.createComicEntry(Mockito.any(Comic.class))).thenReturn(comicEntry);
+    when(comicService.getComicForSearchTerm(anyString())).thenReturn(comicList);
+    when(opdsUtils.createComicEntry(any(Comic.class))).thenReturn(comicEntry);
 
     final OPDSAcquisitionFeed result = service.getComicsFeedForSearchTerms(TEST_SEARCH_TERM);
 
@@ -255,7 +235,7 @@ class OPDSAcquisitionServiceTest {
     assertFalse(result.getEntries().isEmpty());
     assertEquals(entryIdList.size(), result.getEntries().size());
 
-    Mockito.verify(comicService, Mockito.times(1)).getComicForSearchTerm(TEST_SEARCH_TERM);
-    Mockito.verify(opdsUtils, Mockito.times(1)).createComicEntry(comic);
+    verify(comicService).getComicForSearchTerm(TEST_SEARCH_TERM);
+    verify(opdsUtils).createComicEntry(comic);
   }
 }

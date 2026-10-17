@@ -36,6 +36,7 @@ import org.comixedproject.opds.model.OPDSAcquisitionFeed;
 import org.comixedproject.opds.model.OPDSLink;
 import org.comixedproject.service.comicbooks.ComicException;
 import org.comixedproject.service.comicbooks.ComicService;
+import org.comixedproject.service.library.DisplayableComicService;
 import org.comixedproject.service.lists.ReadingListException;
 import org.comixedproject.service.lists.ReadingListService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class OPDSAcquisitionService {
 
   @Autowired private ComicService comicService;
+  @Autowired private DisplayableComicService displayableComicService;
   @Autowired private ReadingListService readingListService;
   @Autowired private OPDSUtils opdsUtils;
 
@@ -142,7 +144,7 @@ public class OPDSAcquisitionService {
                 NAVIGATION_FEED_LINK_TYPE,
                 SELF,
                 String.format("%s?unread=%s", this.opdsUtils.urlEncodeString(volume), unread)));
-    this.comicService
+    this.displayableComicService
         .getAllComicsForPublisherAndSeriesAndVolume(publisher, series, volume, email, unread)
         .forEach(
             comic -> {
