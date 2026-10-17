@@ -54,7 +54,7 @@ public class DisplayableComicService {
   @Autowired private ObjectFactory<DisplayableComicExampleBuilder> exampleBuilderObjectFactory;
   @Autowired private ReadingListService readingListService;
 
-  private Map<String, String> sortFields = new HashMap<>();
+  private final Map<String, String> sortFields = new HashMap<>();
 
   public DisplayableComicService() {
     this.sortFields.put("archive-type", DisplayableComic.FIELD_NAME_ARCHIVE_TYPE);
@@ -643,5 +643,28 @@ public class DisplayableComicService {
     if (Objects.isNull(result))
       throw new ComicException(String.format("No such comic books: id=%d", id));
     return result;
+  }
+
+  @Transactional(readOnly = true)
+  public List<DisplayableComic> getAllComicsForPublisherAndSeriesAndVolume(
+      final String publisher,
+      final String series,
+      final String volume,
+      final String email,
+      final boolean unread) {
+    if (unread) {
+      log.debug(
+          "Loading comics unread by {}: publisher={} series={} volume={}",
+          email,
+          publisher,
+          series,
+          volume);
+      return this.displayableComicRepository.getAllUnreadComicsForPublisherAndSeriesAndVolume(
+          publisher, series, volume, email);
+    } else {
+      log.debug("Loading all comics: publisher={} series={} volume={}", publisher, series, volume);
+      return this.displayableComicRepository.getAllComicsForPublisherAndSeriesAndVolume(
+          publisher, series, volume);
+    }
   }
 }
