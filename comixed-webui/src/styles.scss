@@ -85,8 +85,8 @@ h8 {
   height: 100%;
 }
 
-.cx-overflow-y-scroll {
-  overflow-y: scroll;
+.cx-scroll-y-auto {
+  overflow-y: auto;
 }
 
 .cx-margin-15 {
@@ -110,14 +110,7 @@ h8 {
 
 .cx-flex-content-container-row {
   display: flex;
-  flex-flow: row wrap;
-  align-items: start;
-}
-
-.cx-flex-content-container-col {
-  display: flex;
-  flex-flow: column;
-  gap: 2rem;
+  flex-flow: row;
   align-items: start;
 }
 
@@ -134,8 +127,4 @@ h8 {
 .cx-flex-content-grow-2 {
   flex-grow: 2;
   align-self: stretch;
-}
-
-.cx-scroll-y {
-  overflow-y: scroll;
 }

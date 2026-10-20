@@ -23,13 +23,15 @@ import {
   initialComicDetailState
 } from '@app/library/reducers/comic-detail.reducer';
 import {
-  selectComicDetailComic,
-  selectComicDetailLoaded
+  selectComicDetail,
+  selectComicDetailLoaded,
+  selectComicDetailTags
 } from '@app/library/selectors/comic-detail.selectors';
-import { COMIC_1 } from '@app/library/library-fixtures';
+import { COMIC_1, COMIC_TAG_1 } from '@app/library/library-fixtures';
 
 describe('CurrentUser Selectors', () => {
   const TEST_COMIC = COMIC_1;
+  const TEST_TAGS = [COMIC_TAG_1];
 
   let state: ComicDetailState;
 
@@ -58,7 +60,7 @@ describe('CurrentUser Selectors', () => {
   describe('the comic detail', () => {
     it('should return the comic when loaded', () => {
       expect(
-        selectComicDetailComic({
+        selectComicDetail({
           [COMIC_DETAIL_FEATURE_KEY]: { ...state, comic: TEST_COMIC }
         })
       ).toBe(TEST_COMIC);
@@ -66,10 +68,21 @@ describe('CurrentUser Selectors', () => {
 
     it('should return false when not busy', () => {
       expect(
-        selectComicDetailComic({
+        selectComicDetail({
           [COMIC_DETAIL_FEATURE_KEY]: { ...state, comic: null }
         })
       ).toBeNull();
     });
+  });
+
+  it('should return the tags', () => {
+    expect(
+      selectComicDetailTags({
+        [COMIC_DETAIL_FEATURE_KEY]: {
+          ...initialComicDetailState,
+          tags: TEST_TAGS
+        }
+      })
+    ).toBe(TEST_TAGS);
   });
 });

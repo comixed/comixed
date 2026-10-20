@@ -27,69 +27,75 @@ import { SeriesDetailPage } from '@app/collections/pages/series-detail-page/seri
 import { ComicListPage } from '@app/library/pages/comic-list-page/comic-list-page';
 import { ImportComicsPage } from '@app/library/pages/import-comics-page/import-comics-page';
 import { InitialAccountPage } from '@app/account/pages/initial-account-page/initial-account-page';
-import { readerGuard } from '@app/account/guards/reader-guard';
-import { adminGuard } from '@app/account/guards/admin-guard';
 import { ComicDetailPage } from '@app/library/pages/comic-detail-page/comic-detail-page';
 
 export const appRoutes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/dashboard' },
   { path: 'accounts/initial', component: InitialAccountPage },
   { path: 'login', component: LoginPage },
-  { path: 'dashboard', component: DashboardPage, canActivate: [readerGuard] },
+  {
+    path: 'dashboard',
+    component: DashboardPage
+    // canActivate: [readerGuard]
+  },
   {
     path: 'library/import',
-    component: ImportComicsPage,
-    canActivate: [adminGuard]
+    component: ImportComicsPage
+    // canActivate: [adminGuard]
   },
   {
     path: 'library/publishers',
-    component: PublisherListPage,
-    canActivate: [readerGuard]
+    component: PublisherListPage
+    // canActivate: [readerGuard]
   },
   {
     path: 'library/publishers/:publisherName',
-    component: PublisherDetailPage,
-    canActivate: [readerGuard]
+    component: PublisherDetailPage
+    // canActivate: [readerGuard]
   },
   {
     path: 'library/series',
-    component: SeriesListPage,
-    canActivate: [readerGuard]
+    component: SeriesListPage
+    // canActivate: [readerGuard]
   },
   {
     path: 'library/publishers/:publisherName/series/:seriesName/:volume',
-    component: SeriesDetailPage,
-    canActivate: [readerGuard]
+    component: SeriesDetailPage
+    // canActivate: [readerGuard]
   },
-  { path: 'library/all', component: ComicListPage, canActivate: [readerGuard] },
+  {
+    path: 'library/all',
+    component: ComicListPage
+    // canActivate: [readerGuard]
+  },
   {
     path: 'library/read',
     component: ComicListPage,
-    data: { readonly: true },
-    canActivate: [readerGuard]
+    data: { readonly: true }
+    // canActivate: [readerGuard]
   },
   {
     path: 'library/unscraped',
     component: ComicListPage,
-    data: { unscraped: true },
-    canActivate: [readerGuard]
+    data: { unscraped: true }
+    // canActivate: [readerGuard]
   },
   {
     path: 'library/duplicates',
     component: ComicListPage,
-    data: { duplicates: true },
-    canActivate: [readerGuard]
+    data: { duplicates: true }
+    // canActivate: [readerGuard]
   },
   {
     path: 'library/deleted',
     component: ComicListPage,
-    data: { deleted: true },
-    canActivate: [readerGuard]
+    data: { deleted: true }
+    // canActivate: [readerGuard]
   },
   {
     path: 'library/:tagType',
-    component: TagListPage,
-    canActivate: [readerGuard]
+    component: TagListPage
+    // canActivate: [readerGuard]
   },
   {
     path: 'library/comics/:comicId',

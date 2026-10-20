@@ -1,26 +1,18 @@
-<p-card class="cx-width-100p cx-height-100p cx-overflow-y-scroll">
+<p-card class="cx-width-100p">
   <ng-template #header>
     @if (!comicDetailLoading()) {
-      <p-breadcrumb
-        [model]="comicDetailComic() | comicDetailTrail"
-        [home]="home"
-      />
+      <p-breadcrumb [model]="comic() | comicDetailTrail" [home]="home" />
     }
   </ng-template>
 
   <h2 class="cx-width-100p cx-justify-center">
-    {{ comicDetailComic() | comicTitle }}
+    {{ comic() | comicTitle }}
   </h2>
-  <div
-    class="cx-width-100p cx-height-100p cx-flex-content-container-row cx-scroll-y"
-  >
-    <div
-      id="comic-cover-container"
-      class="cx-height-100p cx-flex-content-grow-0"
-    >
-      @if (comicDetailComic()) {
+  <div class="cx-width-100p cx-height-100p cx-flex-content-container-row">
+    <div id="comic-cover-container">
+      @if (comic()) {
         <app-comic-cover
-          [comic]="comicDetailComic()!"
+          [comic]="comic()!"
           [loading]="comicDetailLoading()"
         ></app-comic-cover>
       }
@@ -29,7 +21,7 @@
       <p-tabs
         lazy
         scrollable
-        class="cx-width-100p cx-height-100p"
+        class="cx-height-100p cx-overflow-y-auto"
         [value]="currentTab()"
         (valueChange)="onTabChanged($event)"
       >
@@ -50,13 +42,16 @@
         <p-tabpanels>
           <p-tabpanel [value]="'publication'">
             <app-comic-publication-detail
-              [comic]="comicDetailComic()"
+              [comic]="comic()"
               [loading]="comicDetailLoading()"
               (updateComic)="onUpdateComic($event)"
             ></app-comic-publication-detail>
           </p-tabpanel>
           <p-tabpanel [value]="'story'">
-            <app-comic-story-detail></app-comic-story-detail>
+            <app-comic-story-detail
+              [comic]="comic()"
+              [tags]="tags()"
+            ></app-comic-story-detail>
           </p-tabpanel>
           <p-tabpanel [value]="'pages'">
             <app-comic-pages-detail></app-comic-pages-detail>

@@ -18,18 +18,29 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ComicStoryDetail } from './comic-story-detail';
+import { provideTranslateService } from '@ngx-translate/core';
+import { ComicTagType } from '@app/library/models/comic-tag-type';
+import { ComicTag } from '@app/library/models/comic-tag';
 
 describe('ComicStoryDetail', () => {
+  const TEST_TAGS: ComicTag[] = Object.keys(ComicTagType).map(tagType => {
+    return {
+      type: ComicTagType[tagType as keyof typeof ComicTagType],
+      value: 'The Tag Value'
+    } as ComicTag;
+  });
   let component: ComicStoryDetail;
   let fixture: ComponentFixture<ComicStoryDetail>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ComicStoryDetail]
+      imports: [ComicStoryDetail],
+      providers: [provideTranslateService()]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicStoryDetail);
     component = fixture.componentInstance;
+    component.tags = TEST_TAGS;
     await fixture.whenStable();
   });
 

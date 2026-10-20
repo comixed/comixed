@@ -32,8 +32,9 @@ import {
   updateComic
 } from '@app/library/actions/comic-detail.actions';
 import {
-  selectComicDetailComic,
-  selectComicDetailLoaded
+  selectComicDetail,
+  selectComicDetailLoaded,
+  selectComicDetailTags
 } from '@app/library/selectors/comic-detail.selectors';
 import { ComicDetailTrailPipe } from '@app/library/pipes/comic-detail-trail-pipe';
 import {
@@ -94,7 +95,8 @@ export class ComicDetailPage {
   readonly comicDetailLoading = this.store.selectSignal(
     selectComicDetailLoaded
   );
-  readonly comicDetailComic = this.store.selectSignal(selectComicDetailComic);
+  readonly comic = this.store.selectSignal(selectComicDetail);
+  readonly tags = this.store.selectSignal(selectComicDetailTags);
   readonly currentTab = signal('publication');
 
   comicId = 0;
@@ -154,7 +156,7 @@ export class ComicDetailPage {
   }
 
   private doLoadTranslations() {
-    const pageTitle = this.comicTitlePipe.transform(this.comicDetailComic());
+    const pageTitle = this.comicTitlePipe.transform(this.comic());
     this.titleService.setTitle(pageTitle);
   }
 }

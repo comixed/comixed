@@ -1,5 +1,6 @@
 @use './variables' as *;
 
 #comic-cover-container {
-  width: max($cx-min-width, 25vw);
+  min-width: 600px;
+  width: min(100vw, 600px);
 }

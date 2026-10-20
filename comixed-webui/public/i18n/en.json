@@ -52,6 +52,15 @@
       "volume": "Volume"
     }
   },
+  "comic-story-detail": {
+    "label": {
+      "characters": "Characters",
+      "credits": "Credits",
+      "locations": "Locations",
+      "stories": "Stories",
+      "teams": "Teams"
+    }
+  },
   "dashboard": {
     "page-title": "Dashboard",
     "statistics": {

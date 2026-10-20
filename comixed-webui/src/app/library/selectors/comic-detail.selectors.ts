@@ -31,7 +31,12 @@ export const selectComicDetailLoaded = createSelector(
   state => state.busy
 );
 
-export const selectComicDetailComic = createSelector(
+export const selectComicDetail = createSelector(
   selectComicDetailState,
   state => state.comic
+);
+
+export const selectComicDetailTags = createSelector(
+  selectComicDetailState,
+  state => state.tags
 );

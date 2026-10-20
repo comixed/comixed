@@ -31,6 +31,7 @@ import { beforeEach, Mock } from 'vitest';
 import { QUERY_PARAM_COMIC_DETAIL_TAB } from '@app/library/library-constants';
 import { COMIC_1 } from '@app/library/library-fixtures';
 import { updateComic } from '@app/library/actions/comic-detail.actions';
+import { TitleService } from '@app/layout/services/title-service';
 
 describe('ComicDetailPage', () => {
   const initialState = { [COMIC_DETAIL_FEATURE_KEY]: initialComicDetailState };
@@ -46,7 +47,8 @@ describe('ComicDetailPage', () => {
         provideTranslateService(),
         provideRouter([{ path: '*', redirectTo: '' }]),
         provideMockStore({ initialState }),
-        QueryParameterService
+        QueryParameterService,
+        TitleService
       ]
     }).compileComponents();
 
@@ -66,6 +68,19 @@ describe('ComicDetailPage', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('when the language changes', () => {
+    let setTitleSpy: Mock;
+
+    beforeEach(() => {
+      setTitleSpy = vi.spyOn(component.titleService, 'setTitle');
+      component.translateService.use('fr');
+    });
+
+    it('updates the tab title', () => {
+      expect(setTitleSpy).toHaveBeenCalled();
+    });
   });
 
   describe('changing tabs', () => {
