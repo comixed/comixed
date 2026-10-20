@@ -30,10 +30,15 @@ import {
   METADATA_1
 } from '@app/library/library-fixtures';
 import {
+  comicUpdateReceived,
   loadComic,
   loadComicFailure,
-  loadComicSuccess
+  loadComicSuccess,
+  updateComic,
+  updateComicFailure,
+  updateComicSuccess
 } from '@app/library/actions/comic-detail.actions';
+import { NO_COMIC } from '@app/library/models/comic';
 
 describe('ComicDetail Reducer', () => {
   const TEST_COMIC = COMIC_1;
@@ -52,12 +57,12 @@ describe('ComicDetail Reducer', () => {
       state = comicDetailReducer({ ...state }, {} as Action<string>);
     });
 
-    it('should not set the loading flag', () => {
-      expect(state.loading).toBeFalsy();
+    it('should not set the busy flag', () => {
+      expect(state.busy).toBeFalsy();
     });
 
-    it('should not have any detail', () => {
-      expect(state.comic).toBeNull();
+    it('should have NO_COMIC', () => {
+      expect(state.comic).toStrictEqual(NO_COMIC);
     });
 
     it('should not have any pages', () => {
@@ -78,7 +83,7 @@ describe('ComicDetail Reducer', () => {
       state = comicDetailReducer(
         {
           ...state,
-          loading: false,
+          busy: false,
           comic: TEST_COMIC,
           pages: TEST_PAGES,
           tags: TEST_TAGS,
@@ -88,12 +93,12 @@ describe('ComicDetail Reducer', () => {
       );
     });
 
-    it('sets the loading flag', () => {
-      expect(state.loading).toBeTruthy();
+    it('sets the busy flag', () => {
+      expect(state.busy).toBeTruthy();
     });
 
-    it('clears the detail', () => {
-      expect(state.comic).toBeNull();
+    it('resets the detail', () => {
+      expect(state.comic).toStrictEqual(NO_COMIC);
     });
 
     it('clears the pages', () => {
@@ -113,8 +118,8 @@ describe('ComicDetail Reducer', () => {
         state = comicDetailReducer(
           {
             ...state,
-            loading: true,
-            comic: null,
+            busy: true,
+            comic: NO_COMIC,
             pages: [],
             tags: [],
             metadata: null
@@ -128,8 +133,45 @@ describe('ComicDetail Reducer', () => {
         );
       });
 
-      it('clears the loading flag', () => {
-        expect(state.loading).toBeFalsy();
+      it('clears the busy flag', () => {
+        expect(state.busy).toBeFalsy();
+      });
+
+      it('sets the detail', () => {
+        expect(state.comic).toStrictEqual(TEST_COMIC);
+      });
+
+      it('sets the pages', () => {
+        expect(state.pages).toStrictEqual(TEST_PAGES);
+      });
+
+      it('sets the tags', () => {
+        expect(state.tags).toStrictEqual(TEST_TAGS);
+      });
+
+      it('sets the metadata', () => {
+        expect(state.metadata).toStrictEqual(TEST_METADATA);
+      });
+    });
+
+    describe('receiving a comic update', () => {
+      beforeEach(() => {
+        state = comicDetailReducer(
+          {
+            ...state,
+            busy: true,
+            comic: NO_COMIC,
+            pages: [],
+            tags: [],
+            metadata: null
+          },
+          comicUpdateReceived({
+            comic: TEST_COMIC,
+            pages: TEST_PAGES,
+            tags: TEST_TAGS,
+            metadata: TEST_METADATA
+          })
+        );
       });
 
       it('sets the detail', () => {
@@ -154,8 +196,8 @@ describe('ComicDetail Reducer', () => {
         state = comicDetailReducer(
           {
             ...state,
-            loading: true,
-            comic: null,
+            busy: true,
+            comic: NO_COMIC,
             pages: [],
             tags: [],
             metadata: null
@@ -164,12 +206,12 @@ describe('ComicDetail Reducer', () => {
         );
       });
 
-      it('clears the loading flag', () => {
-        expect(state.loading).toBeFalsy();
+      it('clears the busy flag', () => {
+        expect(state.busy).toBeFalsy();
       });
 
-      it('keeps the detail null', () => {
-        expect(state.comic).toBeNull();
+      it('keeps the detail', () => {
+        expect(state.comic).toStrictEqual(NO_COMIC);
       });
 
       it('keeps the pages empty', () => {
@@ -182,6 +224,45 @@ describe('ComicDetail Reducer', () => {
 
       it('keeps the metadata null', () => {
         expect(state.metadata).toBeNull();
+      });
+    });
+  });
+
+  describe('updating a comic', () => {
+    beforeEach(() => {
+      state = comicDetailReducer(
+        { ...state, busy: false },
+        updateComic({ comic: TEST_COMIC })
+      );
+    });
+
+    it('sets the busy flag', () => {
+      expect(state.busy).toBeTruthy();
+    });
+
+    describe('success', () => {
+      beforeEach(() => {
+        state = comicDetailReducer(
+          { ...state, busy: true },
+          updateComicSuccess()
+        );
+      });
+
+      it('clears the busy flag', () => {
+        expect(state.busy).toBeFalsy();
+      });
+    });
+
+    describe('failure', () => {
+      beforeEach(() => {
+        state = comicDetailReducer(
+          { ...state, busy: true },
+          updateComicFailure()
+        );
+      });
+
+      it('clears the busy flag', () => {
+        expect(state.busy).toBeFalsy();
       });
     });
   });

@@ -36,16 +36,40 @@ export interface Comic {
   sortableIssueNumber: string;
   sortName: string;
   title: string;
-  nextIssueId: number;
-  previousIssueId: number;
+  nextIssueId?: number;
+  previousIssueId?: number;
   description: string;
   pageCount: number;
-  storeDate: string;
-  coverDate: string;
-  monthPublished: number;
-  yearPublished: number;
+  storeDate?: string;
+  coverDate?: string;
+  monthPublished?: number;
+  yearPublished?: number;
   addedDate: string;
   referenceId: string;
   unscraped: boolean;
   lastModifiedDate: string;
 }
+
+export const NO_COMIC: Comic = {
+  comicId: -1,
+  filename: '',
+  baseFilename: '',
+  missing: false,
+  archiveType: ArchiveType.CBZ,
+  comicState: ComicState.UNPROCESSED,
+  comicType: ComicType.ISSUE,
+  publisher: '',
+  imprint: '',
+  series: '',
+  volume: '',
+  issueNumber: '',
+  sortableIssueNumber: '',
+  sortName: '',
+  title: '',
+  description: '',
+  pageCount: 0,
+  addedDate: '',
+  referenceId: '',
+  unscraped: true,
+  lastModifiedDate: ''
+};

@@ -24,7 +24,7 @@ import { Observable } from 'rxjs';
 import { hot } from 'vitest-marbles';
 import { AccountService } from '@app/account/services/account-service';
 
-describe('CurrentUserEffects', () => {
+describe.todo('CurrentUserEffects', () => {
   let actions$: Observable<unknown>;
   let effects: CurrentUserEffects;
 

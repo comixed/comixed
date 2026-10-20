@@ -37,19 +37,19 @@ describe('CurrentUser Selectors', () => {
     state = { ...initialComicDetailState };
   });
 
-  describe('the comic loading flag', () => {
-    it('should return true when loading', () => {
+  describe('the comic busy flag', () => {
+    it('should return true when busy', () => {
       expect(
         selectComicDetailLoaded({
-          [COMIC_DETAIL_FEATURE_KEY]: { ...state, loading: true }
+          [COMIC_DETAIL_FEATURE_KEY]: { ...state, busy: true }
         })
       ).toBeTruthy();
     });
 
-    it('should return false when not loading', () => {
+    it('should return false when not busy', () => {
       expect(
         selectComicDetailLoaded({
-          [COMIC_DETAIL_FEATURE_KEY]: { ...state, loading: false }
+          [COMIC_DETAIL_FEATURE_KEY]: { ...state, busy: false }
         })
       ).toBeFalsy();
     });
@@ -64,7 +64,7 @@ describe('CurrentUser Selectors', () => {
       ).toBe(TEST_COMIC);
     });
 
-    it('should return false when not loading', () => {
+    it('should return false when not busy', () => {
       expect(
         selectComicDetailComic({
           [COMIC_DETAIL_FEATURE_KEY]: { ...state, comic: null }

@@ -69,20 +69,28 @@ h8 {
   text-overflow: ellipsis;
 }
 
-.cx-width-25 {
+.cx-width-25p {
   width: 75%;
 }
 
-.cx-width-75 {
+.cx-width-75p {
   width: 75%;
 }
 
-.cx-width-100 {
+.cx-width-100p {
   width: 100%;
 }
 
-.cx-height-100 {
+.cx-height-100p {
   height: 100%;
+}
+
+.cx-overflow-y-scroll {
+  overflow-y: scroll;
+}
+
+.cx-margin-15 {
+  margin: 15px;
 }
 
 .cx-margin-15 {
@@ -103,30 +111,28 @@ h8 {
 .cx-flex-content-container-row {
   display: flex;
   flex-flow: row wrap;
+  align-items: start;
+}
+
+.cx-flex-content-container-col {
+  display: flex;
+  flex-flow: column;
   gap: 2rem;
   align-items: start;
-  margin: $cx-margin-width;
-  justify-content: stretch;
 }
 
 .cx-flex-content-grow-0 {
   flex-grow: 0;
-  max-width: min(100%, 400px);
-  min-width: 550px;
   align-self: stretch;
 }
 
 .cx-flex-content-grow-1 {
   flex-grow: 1;
-  max-width: min(100%, 400px);
-  min-width: 550px;
   align-self: stretch;
 }
 
 .cx-flex-content-grow-2 {
   flex-grow: 2;
-  max-width: min(100%, 700px);
-  min-width: 800px;
   align-self: stretch;
 }
 

@@ -18,22 +18,46 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ComicPublicationDetail } from './comic-publication-detail';
+import { COMIC_1 } from '@app/library/library-fixtures';
+import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
+import { provideTranslateService } from '@ngx-translate/core';
+import { beforeEach, Mock } from 'vitest';
 
 describe('ComicPublicationDetail', () => {
+  const TEST_COMIC = COMIC_1;
+
   let component: ComicPublicationDetail;
   let fixture: ComponentFixture<ComicPublicationDetail>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ComicPublicationDetail]
+      imports: [ComicPublicationDetail],
+      providers: [
+        provideLogger({ minLevel: LoggerLevel.OFF }),
+        provideTranslateService()
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicPublicationDetail);
     component = fixture.componentInstance;
+    component.comic = TEST_COMIC;
     await fixture.whenStable();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('saving publication changes', () => {
+    let emitterSpy: Mock;
+
+    beforeEach(() => {
+      emitterSpy = vi.spyOn(component.updateComic, 'emit');
+      component.onUpdateComic();
+    });
+
+    it('emits the updated comic', () => {
+      expect(emitterSpy).toHaveBeenCalled();
+    });
   });
 });

@@ -26,12 +26,15 @@ import { TitleService } from '@app/layout/services/title-service';
 import { ComicTitlePipe } from '@app/library/pipes/comic-title-pipe';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { loadComic } from '@app/library/actions/comic-detail.actions';
+import {
+  comicUpdateReceived,
+  loadComic,
+  updateComic
+} from '@app/library/actions/comic-detail.actions';
 import {
   selectComicDetailComic,
   selectComicDetailLoaded
 } from '@app/library/selectors/comic-detail.selectors';
-import { ProgressBar } from '@openng/optimus-ui/progressbar';
 import { ComicDetailTrailPipe } from '@app/library/pipes/comic-detail-trail-pipe';
 import {
   Tab,
@@ -46,13 +49,19 @@ import { ComicStoryDetail } from '@app/library/components/comic-story-detail/com
 import { ComicMetadataDetail } from '@app/library/components/comic-metadata-detail/comic-metadata-detail';
 import { ComicPublicationDetail } from '@app/library/components/comic-publication-detail/comic-publication-detail';
 import { QueryParameterService } from '@app/layout/services/query-parameter.service';
-import { QUERY_PARAM_COMIC_DETAIL_TAB } from '@app/library/library-constants';
+import {
+  COMIC_UPDATE_TOPIC,
+  QUERY_PARAM_COMIC_DETAIL_TAB
+} from '@app/library/library-constants';
+import { WebSocketService } from '@app/messaging/services/web-socket-service';
+import { LoadComicResponse } from '@app/library/models/net/load-comic-response';
+import { interpolate } from '@app/app-functions';
+import { Comic } from '@app/library/models/comic';
 
 @Component({
   imports: [
     Card,
     Breadcrumb,
-    ProgressBar,
     TranslatePipe,
     ComicDetailTrailPipe,
     ComicTitlePipe,
@@ -80,12 +89,13 @@ export class ComicDetailPage {
   readonly router = inject(Router);
   readonly titleService = inject(TitleService);
   readonly comicTitlePipe = new ComicTitlePipe();
+  readonly webSocketService = inject(WebSocketService);
 
   readonly comicDetailLoading = this.store.selectSignal(
     selectComicDetailLoaded
   );
   readonly comicDetailComic = this.store.selectSignal(selectComicDetailComic);
-  readonly currentTab = signal(0);
+  readonly currentTab = signal('publication');
 
   comicId = 0;
   trail = signal<MenuItem[]>([]);
@@ -97,13 +107,28 @@ export class ComicDetailPage {
         const comicId = +params['comicId'];
         this.logger.info('Loading comic by id:', comicId);
         this.store.dispatch(loadComic({ comicId }));
+        this.logger.debug('Subscribing to updates for comicId:', comicId);
+        this.webSocketService.subscribe<LoadComicResponse>(
+          interpolate(COMIC_UPDATE_TOPIC, { comicId }),
+          payload => {
+            this.logger.debug('Received comic update:', payload);
+            this.store.dispatch(
+              comicUpdateReceived({
+                comic: payload.detail,
+                pages: payload.pages,
+                tags: payload.tags,
+                metadata: payload.metadata
+              })
+            );
+          }
+        );
       }
     });
     this.activatedRoute.queryParams.subscribe({
       next: params => {
-        if (+params[QUERY_PARAM_COMIC_DETAIL_TAB]) {
+        if (params[QUERY_PARAM_COMIC_DETAIL_TAB]) {
           this.logger.debug('Loading tab from query params:', params);
-          this.currentTab.set(+params[QUERY_PARAM_COMIC_DETAIL_TAB]);
+          this.currentTab.set(params[QUERY_PARAM_COMIC_DETAIL_TAB]);
         }
       }
     });
@@ -113,16 +138,19 @@ export class ComicDetailPage {
     this.doLoadTranslations();
   }
 
-  onTabChanged(tab: number | string | undefined): void {
-    if (Number(tab)) {
-      this.logger.debug('Changing comic detail tabs:', tab);
-      this.queryParameterService.updateQueryParam([
-        {
-          name: QUERY_PARAM_COMIC_DETAIL_TAB,
-          value: `${tab}`
-        }
-      ]);
-    }
+  onTabChanged(tabName: number | string | undefined): void {
+    this.logger.debug('Changing comic detail tabs:', tabName);
+    this.queryParameterService.updateQueryParam([
+      {
+        name: QUERY_PARAM_COMIC_DETAIL_TAB,
+        value: !tabName ? null : `${tabName}`
+      }
+    ]);
+  }
+
+  onUpdateComic(comic: Comic): void {
+    this.logger.trace('Firing action to update comic');
+    this.store.dispatch(updateComic({ comic }));
   }
 
   private doLoadTranslations() {

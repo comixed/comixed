@@ -28,7 +28,7 @@ const selectComicDetailState = createFeatureSelector<ComicDetailState>(
 
 export const selectComicDetailLoaded = createSelector(
   selectComicDetailState,
-  state => state.loading
+  state => state.busy
 );
 
 export const selectComicDetailComic = createSelector(

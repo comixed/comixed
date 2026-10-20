@@ -27,6 +27,10 @@ import {
 } from '@app/library/reducers/comic-detail.reducer';
 import { provideRouter } from '@angular/router';
 import { QueryParameterService } from '@app/layout/services/query-parameter.service';
+import { beforeEach, Mock } from 'vitest';
+import { QUERY_PARAM_COMIC_DETAIL_TAB } from '@app/library/library-constants';
+import { COMIC_1 } from '@app/library/library-fixtures';
+import { updateComic } from '@app/library/actions/comic-detail.actions';
 
 describe('ComicDetailPage', () => {
   const initialState = { [COMIC_DETAIL_FEATURE_KEY]: initialComicDetailState };
@@ -62,5 +66,41 @@ describe('ComicDetailPage', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('changing tabs', () => {
+    const TEST_TAB_NAME = 'test-tab';
+
+    let updateQueryParamSpy: Mock;
+
+    beforeEach(() => {
+      updateQueryParamSpy = vi.spyOn(
+        component.queryParameterService,
+        'updateQueryParam'
+      );
+      component.onTabChanged(TEST_TAB_NAME);
+    });
+
+    it('updates the tab parameter', () => {
+      expect(updateQueryParamSpy).toHaveBeenCalledWith([
+        { name: QUERY_PARAM_COMIC_DETAIL_TAB, value: TEST_TAB_NAME }
+      ]);
+    });
+  });
+
+  describe('updating the comic', () => {
+    const TEST_COMIC = COMIC_1;
+    let dispatchSpy: Mock;
+
+    beforeEach(() => {
+      dispatchSpy = vi.spyOn(component.store, 'dispatch');
+      component.onUpdateComic(TEST_COMIC);
+    });
+
+    it('dispatches an action', () => {
+      expect(dispatchSpy).toHaveBeenCalledWith(
+        updateComic({ comic: TEST_COMIC })
+      );
+    });
   });
 });

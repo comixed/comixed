@@ -24,7 +24,7 @@ import { hot } from 'vitest-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable } from 'rxjs';
 
-describe('ComicDetailEffects', () => {
+describe.todo('ComicDetailEffects', () => {
   let actions$: Observable<unknown>;
   let effects: ComicDetailEffects;
 

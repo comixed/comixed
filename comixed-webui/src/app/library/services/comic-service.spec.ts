@@ -31,8 +31,12 @@ import {
   COMIC_TAG_1,
   METADATA_1
 } from '@app/library/library-fixtures';
-import { LOAD_COMIC_URL } from '@app/library/library-constants';
+import {
+  LOAD_COMIC_URL,
+  UPDATE_COMIC_URL
+} from '@app/library/library-constants';
 import { interpolate } from '@app/app-functions';
+import { UpdateComicRequest } from '@app/library/models/net/update-comic-request';
 
 describe('ComicService', () => {
   const TEST_COMIC = COMIC_1;
@@ -76,6 +80,45 @@ describe('ComicService', () => {
       interpolate(LOAD_COMIC_URL, { comicId: TEST_COMIC.comicId })
     );
     expect(req.request.method).toEqual('GET');
+    req.flush(serverResponse);
+    httpController.verify();
+  });
+
+  it('should update a comic', () => {
+    const serverResponse = {
+      detail: TEST_COMIC,
+      pages: TEST_PAGES,
+      tags: TEST_TAGS,
+      metadata: TEST_METADATA
+    } as LoadComicResponse;
+    service
+      .updateComic({
+        comicId: TEST_COMIC.comicId,
+        comicType: TEST_COMIC.comicType,
+        publisher: TEST_COMIC.publisher,
+        series: TEST_COMIC.series,
+        volume: TEST_COMIC.volume,
+        issueNumber: TEST_COMIC.issueNumber,
+        imprint: TEST_COMIC.imprint,
+        sortName: TEST_COMIC.sortName,
+        title: TEST_COMIC.title
+      })
+      .subscribe(response => expect(response).toEqual(serverResponse));
+
+    const req = httpController.expectOne(
+      interpolate(UPDATE_COMIC_URL, { id: TEST_COMIC.comicId })
+    );
+    expect(req.request.method).toEqual('PUT');
+    expect(req.request.body).toEqual({
+      comicType: TEST_COMIC.comicType,
+      publisher: TEST_COMIC.publisher,
+      series: TEST_COMIC.series,
+      volume: TEST_COMIC.volume,
+      issueNumber: TEST_COMIC.issueNumber,
+      imprint: TEST_COMIC.imprint,
+      sortName: TEST_COMIC.sortName,
+      title: TEST_COMIC.title
+    } as UpdateComicRequest);
     req.flush(serverResponse);
     httpController.verify();
   });

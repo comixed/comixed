@@ -40,3 +40,26 @@ export const loadComicSuccess = createAction(
 export const loadComicFailure = createAction(
   '[Comic Detail] Load a comic failure'
 );
+
+export const comicUpdateReceived = createAction(
+  '[Comic Detail] Comic update received',
+  props<{
+    comic: Comic;
+    pages: ComicPage[];
+    tags: ComicTag[];
+    metadata: ComicMetadataSource;
+  }>()
+);
+
+export const updateComic = createAction(
+  '[Comic Detail] Save a comic',
+  props<{ comic: Comic }>()
+);
+
+export const updateComicSuccess = createAction(
+  '[Comic Detail] Comic update success'
+);
+
+export const updateComicFailure = createAction(
+  '[Comic Detail] Comic update failure'
+);

@@ -1,6 +1,6 @@
 <p-card id="login-form-container" class="cx-centered">
   <ng-template #title>
-    <h2 class="cx-width-100 cx-justify-center">
+    <h2 class="cx-width-100p cx-justify-center">
       {{ "login-page.title" | translate }}
     </h2>
   </ng-template>
@@ -34,7 +34,7 @@
 
   <ng-template #footer class="cx-justify-center">
     <p-button
-      icon="pi pi-submit"
+      icon="pi pi-send"
       [label]="'app.button.submit' | translate"
       [disabled]="!loginForm.valid"
       (click)="onSubmitForm()"

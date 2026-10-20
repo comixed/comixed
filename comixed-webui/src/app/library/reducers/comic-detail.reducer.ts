@@ -17,29 +17,33 @@
  */
 
 import { createFeature, createReducer, on } from '@ngrx/store';
-import { Comic } from '@app/library/models/comic';
+import { Comic, NO_COMIC } from '@app/library/models/comic';
 import { ComicPage } from '@app/library/models/comic-page';
 import { ComicTag } from '@app/library/models/comic-tag';
 import { ComicMetadataSource } from '@app/library/models/comic-metadata-source';
 import {
+  comicUpdateReceived,
   loadComic,
   loadComicFailure,
-  loadComicSuccess
+  loadComicSuccess,
+  updateComic,
+  updateComicFailure,
+  updateComicSuccess
 } from '@app/library/actions/comic-detail.actions';
 
 export const COMIC_DETAIL_FEATURE_KEY = 'comic_detail_state';
 
 export interface ComicDetailState {
-  loading: boolean;
-  comic: Comic | null;
+  busy: boolean;
+  comic: Comic;
   pages: ComicPage[];
   tags: ComicTag[];
   metadata: ComicMetadataSource | null;
 }
 
 export const initialComicDetailState: ComicDetailState = {
-  loading: false,
-  comic: null,
+  busy: false,
+  comic: NO_COMIC,
   pages: [],
   tags: [],
   metadata: null
@@ -49,15 +53,15 @@ export const comicDetailReducer = createReducer(
   initialComicDetailState,
   on(loadComic, state => ({
     ...state,
-    loading: true,
-    comic: null,
+    busy: true,
+    comic: NO_COMIC,
     pages: [],
     tags: [],
     metadata: null
   })),
   on(loadComicSuccess, (state, action) => ({
     ...state,
-    loading: false,
+    busy: false,
     comic: action.comic,
     pages: action.pages,
     tags: action.tags,
@@ -65,12 +69,22 @@ export const comicDetailReducer = createReducer(
   })),
   on(loadComicFailure, state => ({
     ...state,
-    loading: false,
-    comic: null,
+    busy: false,
+    comic: NO_COMIC,
     pages: [],
     tags: [],
     metadata: null
-  }))
+  })),
+  on(comicUpdateReceived, (state, action) => ({
+    ...state,
+    comic: action.comic,
+    pages: action.pages,
+    tags: action.tags,
+    metadata: action.metadata
+  })),
+  on(updateComic, state => ({ ...state, busy: true })),
+  on(updateComicSuccess, state => ({ ...state, busy: false })),
+  on(updateComicFailure, state => ({ ...state, busy: false }))
 );
 
 export const comicDetailFeature = createFeature({

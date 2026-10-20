@@ -31,10 +31,11 @@ export const LOAD_COMICS_BY_FILTER_URL = `${API_ROOT_URL}/comics/filtered`;
 export const LOAD_COMIC_URL = `${API_ROOT_URL}/comics/\${comicId}`;
 export const GET_COMIC_COVER_URL = `${API_ROOT_URL}/comics/\${id}/cover/content`;
 export const MISSING_COMIC_IMAGE_URL = '/images/library/missing-comic-file.png';
+export const UPDATE_COMIC_URL = `${API_ROOT_URL}/comics/\${id}`;
 
 // query parameters
-
 export const QUERY_PARAM_COMIC_DETAIL_TAB = 'comic-detail-tab';
 
 // messaging
 export const REMOTE_LIBRARY_STATE_TOPIC = '/topic/remote-library.update';
+export const COMIC_UPDATE_TOPIC = `/topic/comic-book.\${comicId}.update`;

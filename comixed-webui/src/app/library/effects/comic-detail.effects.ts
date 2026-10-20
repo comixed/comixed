@@ -18,8 +18,15 @@
 
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { map, switchMap, tap } from 'rxjs';
-import { loadComic, loadComicSuccess } from '../actions/comic-detail.actions';
+import { catchError, map, of, switchMap, tap } from 'rxjs';
+import {
+  loadComic,
+  loadComicFailure,
+  loadComicSuccess,
+  updateComic,
+  updateComicFailure,
+  updateComicSuccess
+} from '../actions/comic-detail.actions';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { ComicService } from '@app/library/services/comic-service';
 
@@ -28,6 +35,7 @@ export class ComicDetailEffects {
   readonly logger = inject(LoggerService);
   readonly comicService = inject(ComicService);
   private actions$ = inject(Actions);
+
   loadComic$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(loadComic),
@@ -42,9 +50,50 @@ export class ComicDetailEffects {
               tags: response.tags,
               metadata: response.metadata
             })
-          )
+          ),
+          catchError(error => {
+            this.logger.error('Service failure:', error);
+            return of(loadComicFailure());
+          })
         )
-      )
+      ),
+      catchError(error => {
+        this.logger.error('General failure:', error);
+        return of(loadComicFailure());
+      })
+    );
+  });
+
+  updateComic$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(updateComic),
+      tap(action => this.logger.debug('Updating comic:', action)),
+      switchMap(action =>
+        this.comicService
+          .updateComic({
+            comicId: action.comic.comicId,
+            comicType: action.comic.comicType,
+            publisher: action.comic.publisher,
+            imprint: action.comic.imprint,
+            series: action.comic.series,
+            volume: action.comic.volume,
+            issueNumber: action.comic.issueNumber,
+            sortName: action.comic.sortName,
+            title: action.comic.title
+          })
+          .pipe(
+            tap(response => this.logger.debug('Response received:', response)),
+            map(() => updateComicSuccess()),
+            catchError(error => {
+              this.logger.error('Service failure:', error);
+              return of(updateComicFailure());
+            })
+          )
+      ),
+      catchError(error => {
+        this.logger.error('General failure:', error);
+        return of(updateComicFailure());
+      })
     );
   });
 }

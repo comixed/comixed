@@ -41,6 +41,17 @@
     },
     "page-title": "{pageType, select, READ{Read} UNSCRAPED{Unscraped} DUPLICATE{Duplicate} DELETED{Deleted} other{All} } Comics"
   },
+  "comic-publication-detail": {
+    "label": {
+      "cover-date": "Cover Date",
+      "imprint": "Imprint",
+      "issue-number": "Issue #",
+      "publisher": "Publisher",
+      "series": "Series",
+      "store-date": "Store Date",
+      "volume": "Volume"
+    }
+  },
   "dashboard": {
     "page-title": "Dashboard",
     "statistics": {

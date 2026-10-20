@@ -1,4 +1,5 @@
+@use './variables' as *;
+
 #comic-cover-container {
-  max-height: 100%;
-  width: min(100%, 600px);
+  width: max($cx-min-width, 25vw);
 }

@@ -16,12 +16,94 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  Output,
+  signal
+} from '@angular/core';
+import { Comic } from '@app/library/models/comic';
+import { Card } from '@openng/optimus-ui/card';
+import { LoggerService } from '@angular-ru/cdk/logger';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule
+} from '@angular/forms';
+import { IftaLabel } from '@openng/optimus-ui/iftalabel';
+import { InputText } from '@openng/optimus-ui/inputtext';
+import { TranslatePipe } from '@ngx-translate/core';
+import { Button } from '@openng/optimus-ui/button';
+import { Skeleton } from '@openng/optimus-ui/skeleton';
 
 @Component({
-  imports: [],
+  imports: [
+    Card,
+    ReactiveFormsModule,
+    IftaLabel,
+    InputText,
+    TranslatePipe,
+    Button,
+    Skeleton
+  ],
   selector: 'app-comic-publication-detail',
   styleUrl: './comic-publication-detail.scss',
   templateUrl: './comic-publication-detail.html'
 })
-export class ComicPublicationDetail {}
+export class ComicPublicationDetail {
+  @Output() updateComic = new EventEmitter<Comic>();
+  readonly isLoading = signal(false);
+  readonly logger = inject(LoggerService);
+  readonly formBuilder = inject(FormBuilder);
+  publicationForm!: FormGroup;
+
+  constructor() {
+    this.logger.trace('Creating publication form');
+    this.publicationForm = this.formBuilder.group({
+      publisher: new FormControl(''),
+      imprint: new FormControl(''),
+      series: new FormControl(''),
+      volume: new FormControl(''),
+      issueNumber: new FormControl(''),
+      coverDate: new FormControl(''),
+      storeDate: new FormControl('')
+    });
+  }
+
+  @Input() set loading(loading: boolean) {
+    this.isLoading.set(loading);
+  }
+
+  private _comic!: Comic;
+
+  get comic(): Comic {
+    return this._comic;
+  }
+
+  @Input() set comic(comic: Comic) {
+    this._comic = comic;
+    this.publicationForm.controls['publisher'].setValue(comic.publisher);
+    this.publicationForm.controls['imprint'].setValue(comic.imprint);
+    this.publicationForm.controls['series'].setValue(comic.series);
+    this.publicationForm.controls['volume'].setValue(comic.volume);
+    this.publicationForm.controls['issueNumber'].setValue(comic.issueNumber);
+    this.publicationForm.controls['coverDate'].setValue(comic.coverDate);
+    this.publicationForm.controls['storeDate'].setValue(comic.storeDate);
+  }
+
+  onUpdateComic(): void {
+    const comic = {
+      ...this.comic,
+      publisher: this.publicationForm.controls['publisher'].value,
+      imprint: this.publicationForm.controls['imprint'].value,
+      series: this.publicationForm.controls['series'].value,
+      volume: this.publicationForm.controls['volume'].value,
+      issueNumber: this.publicationForm.controls['issueNumber'].value
+    };
+    this.logger.debug('Update comic button pushed:', comic);
+    this.updateComic.emit(comic);
+  }
+}

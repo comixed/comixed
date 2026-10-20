@@ -20,9 +20,14 @@ import { inject, Service } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Observable } from 'rxjs';
-import { LOAD_COMIC_URL } from '@app/library/library-constants';
+import {
+  LOAD_COMIC_URL,
+  UPDATE_COMIC_URL
+} from '@app/library/library-constants';
 import { interpolate } from '@app/app-functions';
 import { LoadComicResponse } from '@app/library/models/net/load-comic-response';
+import { ComicType } from '@app/library/models/comic-type';
+import { UpdateComicRequest } from '@app/library/models/net/update-comic-request';
 
 @Service()
 export class ComicService {
@@ -33,6 +38,33 @@ export class ComicService {
     this.logger.debug('Loading comic:', args);
     return this.client.get<LoadComicResponse>(
       interpolate(LOAD_COMIC_URL, { comicId: args.comicId })
+    );
+  }
+
+  updateComic(args: {
+    comicId: number;
+    comicType?: ComicType;
+    publisher: string;
+    series: string;
+    volume: string;
+    issueNumber: string;
+    imprint?: string;
+    sortName?: string;
+    title?: string;
+  }): Observable<LoadComicResponse> {
+    this.logger.debug('Service: updating one comic:', args);
+    return this.client.put<LoadComicResponse>(
+      interpolate(UPDATE_COMIC_URL, { id: args.comicId }),
+      {
+        comicType: args.comicType,
+        publisher: args.publisher,
+        series: args.series,
+        volume: args.volume,
+        issueNumber: args.issueNumber,
+        imprint: args.imprint,
+        sortName: args.sortName,
+        title: args.title
+      } as UpdateComicRequest
     );
   }
 }

@@ -16,8 +16,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, Input } from '@angular/core';
-import { Comic } from '@app/library/models/comic';
+import { Component, Input, signal } from '@angular/core';
+import { Comic, NO_COMIC } from '@app/library/models/comic';
 import { ComicCoverUrlPipe } from '@app/library/pipes/comic-cover-url-pipe';
 import { Card } from '@openng/optimus-ui/card';
 import { ComicTitlePipe } from '@app/library/pipes/comic-title-pipe';
@@ -25,6 +25,7 @@ import { Tooltip } from '@openng/optimus-ui/tooltip';
 import { Button } from '@openng/optimus-ui/button';
 import { TranslatePipe } from '@ngx-translate/core';
 import { RouterLink } from '@angular/router';
+import { Skeleton } from '@openng/optimus-ui/skeleton';
 
 @Component({
   imports: [
@@ -34,12 +35,22 @@ import { RouterLink } from '@angular/router';
     Tooltip,
     Button,
     TranslatePipe,
-    RouterLink
+    RouterLink,
+    Skeleton
   ],
   selector: 'app-comic-cover',
   styleUrl: './comic-cover.scss',
   templateUrl: './comic-cover.html'
 })
 export class ComicCover {
-  @Input() comic!: Comic;
+  readonly isLoading = signal(false);
+  readonly comicDetail = signal<Comic>(NO_COMIC);
+
+  @Input() set comic(comic: Comic) {
+    this.comicDetail.set(comic);
+  }
+
+  @Input() set loading(loading: boolean) {
+    this.isLoading.set(loading);
+  }
 }

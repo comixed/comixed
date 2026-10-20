@@ -38,7 +38,7 @@ export class QueryParameterService {
     });
   }
 
-  updateQueryParam(params: { name: string; value: string }[]): void {
+  updateQueryParam(params: { name: string; value: string | null }[]): void {
     const queryParams: Params = Object.assign(
       {},
       this.activatedRoute.snapshot.queryParams
