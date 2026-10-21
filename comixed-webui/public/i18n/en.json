@@ -35,6 +35,14 @@
       "page-count": "# Pages",
       "publisher": "Publisher",
       "series": "Series",
+      "state": {
+        "ADDED": "Comic was added to the library...",
+        "CHANGED": "Comic metadata has changed...",
+        "DELETED": "Comic is marked for deletion...",
+        "DISCOVERED": "Comic was discovered...",
+        "STABLE": "Comic has no changes...",
+        "UNPROCESSED": "Comic has not been processed..."
+      },
       "store-date": "Store Date",
       "thumbnail": "Cover",
       "volume": "Volume"

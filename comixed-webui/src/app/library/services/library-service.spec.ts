@@ -25,11 +25,12 @@ import {
 import { provideHttpClient } from '@angular/common/http';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
 import { interpolate } from '@app/app-functions';
-import { LibraryStore } from '@app/library/stores/library-store';
 import { REMOTE_LIBRARY_STATE } from '@app/library/library-fixtures';
 import { LOAD_LIBRARY_STATE_URL } from '@app/library/library-constants';
+import { provideMockStore } from '@ngrx/store/testing';
 
 describe('LibraryService', () => {
+  const initialState = {};
   const TEST_LIBRARY_STATE = REMOTE_LIBRARY_STATE;
 
   let service: LibraryService;
@@ -41,7 +42,7 @@ describe('LibraryService', () => {
         provideLogger({ minLevel: LoggerLevel.OFF }),
         provideHttpClient(),
         provideHttpClientTesting(),
-        LibraryStore
+        provideMockStore({ initialState })
       ]
     });
 

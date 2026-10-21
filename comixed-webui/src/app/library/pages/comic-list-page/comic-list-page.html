@@ -4,15 +4,15 @@
   </ng-template>
 
   <p-table
-    [value]="comicListStore.comics()"
+    [value]="comicList()"
     [lazy]="true"
     (onLazyLoad)="onLoad($event)"
     dataKey="comicId"
     [paginator]="true"
     stripedRows
     [rows]="10"
-    [totalRecords]="comicListStore.totalComics()"
-    [loading]="comicListStore.loading()"
+    [totalRecords]="filterCount()"
+    [loading]="comicListLoading()"
   >
     <ng-template #header>
       <tr>
@@ -39,7 +39,12 @@
           />
         </td>
         <td>
-          <fa-icon [icon]="getIconForComicState(comic.comicState)" />
+          <fa-icon
+            [icon]="getIconForComicState(comic.comicState)"
+            [pTooltip]="
+              'comic-list-page.label.state.' + comic.comicState | translate
+            "
+          />
         </td>
         <td>
           <a [routerLink]="['/library/publishers', comic.publisher]">

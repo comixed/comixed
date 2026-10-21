@@ -20,6 +20,7 @@ import { inject, Service } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { HttpClient } from '@angular/common/http';
 import {
+  COMIC_LIST_UPDATE_TOPIC,
   LOAD_COMICS_BY_FILTER_URL,
   LOAD_LIBRARY_STATE_URL,
   LOAD_SELECTED_COMICS_URL,
@@ -31,20 +32,23 @@ import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { LibraryStore } from '@app/library/stores/library-store';
 import { RemoteLibraryState } from '@app/library/models/net/remote-library-state';
 import { WebSocketService } from '@app/messaging/services/web-socket-service';
-import { ComicListStore } from '@app/library/stores/comic-list-store';
 import { ArchiveType } from '@app/library/models/archive-type';
 import { ComicType } from '@app/library/models/comic-type';
 import { ComicState } from '@app/library/models/comic-state';
 import { LoadSelectedComicsRequest } from '@app/library/models/net/load-selected-comics-request';
 import { LoadComicsByFilterRequest } from '@app/library/models/net/load-comics-by-filter-request';
 import { LoadComicsResponse } from '@app/library/models/net/load-comics-response';
+import { Observable } from 'rxjs';
+import { LoadComicResponse } from '@app/library/models/net/load-comic-response';
+import { Store } from '@ngrx/store';
+import { ComicListActions } from '@app/library/actions/comic-list.actions';
 
 @Service()
 export class LibraryService {
   logger = inject(LoggerService);
   http = inject(HttpClient);
+  readonly store = inject(Store);
   readonly libraryStore = inject(LibraryStore);
-  readonly comicListStore = inject(ComicListStore);
   readonly messagingStore = inject(MessagingStore);
   readonly webSocketService = inject(WebSocketService);
 
@@ -58,8 +62,18 @@ export class LibraryService {
             this.webSocketService.subscribe<RemoteLibraryState>(
               REMOTE_LIBRARY_STATE_TOPIC,
               update => {
-                this.logger.debug('Received library update:', update);
+                this.logger.debug('Library update message received');
                 this.libraryStore.updateState(update);
+              }
+            );
+            this.logger.trace('Subscribing to comic list updates');
+            this.webSocketService.subscribe<LoadComicResponse>(
+              COMIC_LIST_UPDATE_TOPIC,
+              update => {
+                this.logger.trace('Comic update message received:', update);
+                this.store.dispatch(
+                  ComicListActions.listUpdate({ comic: update.detail })
+                );
               }
             );
           }
@@ -99,29 +113,23 @@ export class LibraryService {
     pageCount: number | null;
     sortBy: string;
     sortDirection: string;
-  }) {
-    this.comicListStore.setLoading(true);
+  }): Observable<LoadComicsResponse> {
     if (args.selected) {
       this.logger.trace('Loading selected comics:', args);
-      this.http
-        .post<LoadComicsResponse>(interpolate(LOAD_SELECTED_COMICS_URL), {
+      return this.http.post<LoadComicsResponse>(
+        interpolate(LOAD_SELECTED_COMICS_URL),
+        {
           pageSize: args.pageSize,
           pageIndex: args.pageIndex,
           sortBy: args.sortBy,
           sortDirection: args.sortDirection
-        } as LoadSelectedComicsRequest)
-        .subscribe({
-          next: response => {
-            this.logger.debug('Response received:', response);
-            this.comicListStore.update(response.comics, response.filteredCount);
-          },
-          error: error =>
-            this.logger.error('Failed to load selected comics:', error)
-        });
+        } as LoadSelectedComicsRequest
+      );
     } else {
       this.logger.trace('Loading comics by filter:', args);
-      this.http
-        .post<LoadComicsResponse>(interpolate(LOAD_COMICS_BY_FILTER_URL), {
+      return this.http.post<LoadComicsResponse>(
+        interpolate(LOAD_COMICS_BY_FILTER_URL),
+        {
           pageSize: args.pageSize,
           pageIndex: args.pageIndex,
           coverYear: args.coverYear,
@@ -138,16 +146,8 @@ export class LibraryService {
           pageCount: args.pageCount,
           sortBy: args.sortBy,
           sortDirection: args.sortDirection
-        } as LoadComicsByFilterRequest)
-        .subscribe({
-          next: response => {
-            this.logger.debug('Response received:', response);
-            this.comicListStore.update(response.comics, response.filteredCount);
-          },
-          error: error =>
-            this.logger.error('Failed to load filtered comics:', error)
-        });
+        } as LoadComicsByFilterRequest
+      );
     }
-    this.comicListStore.setLoading(false);
   }
 }

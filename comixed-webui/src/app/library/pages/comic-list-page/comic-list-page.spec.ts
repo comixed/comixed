@@ -21,8 +21,15 @@ import { ComicListPage } from './comic-list-page';
 import { provideRouter } from '@angular/router';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
 import { provideTranslateService } from '@ngx-translate/core';
+import { provideMockStore } from '@ngrx/store/testing';
+import {
+  COMIC_LIST_FEATURE_KEY,
+  initialComicListState
+} from '@app/library/reducers/comic-list.reducer';
 
 describe('ComicListPage', () => {
+  const initialState = { [COMIC_LIST_FEATURE_KEY]: initialComicListState };
+
   let component: ComicListPage;
   let fixture: ComponentFixture<ComicListPage>;
 
@@ -37,7 +44,8 @@ describe('ComicListPage', () => {
           }
         ]),
         provideLogger({ minLevel: LoggerLevel.OFF }),
-        provideTranslateService()
+        provideTranslateService(),
+        provideMockStore({ initialState })
       ]
     }).compileComponents();
 

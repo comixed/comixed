@@ -21,8 +21,6 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Card } from '@openng/optimus-ui/card';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
-import { LibraryService } from '@app/library/services/library-service';
-import { ComicListStore } from '@app/library/stores/comic-list-store';
 import { TableLazyLoadEvent, TableModule } from '@openng/optimus-ui/table';
 import { DatePipe } from '@angular/common';
 import { ComicCoverUrlPipe } from '@app/library/pipes/comic-cover-url-pipe';
@@ -43,6 +41,17 @@ import {
 import { Breadcrumb } from '@openng/optimus-ui/breadcrumb';
 import { MenuItem } from '@openng/optimus-ui/api';
 import { TitleService } from '@app/layout/services/title-service';
+import { Tooltip } from '@openng/optimus-ui/tooltip';
+import { Store } from '@ngrx/store';
+import { ComicListActions } from '@app/library/actions/comic-list.actions';
+import {
+  selectComicList,
+  selectComicListCoverMonthList,
+  selectComicListCoverYearList,
+  selectComicListFilterCount,
+  selectComicListLoading,
+  selectComicListTotalCount
+} from '@app/library/selectors/comic-list.selectors';
 
 @Component({
   imports: [
@@ -53,7 +62,8 @@ import { TitleService } from '@app/layout/services/title-service';
     ComicCoverUrlPipe,
     FaIconComponent,
     Breadcrumb,
-    RouterLink
+    RouterLink,
+    Tooltip
   ],
   selector: 'app-comic-list-page',
   styleUrl: './comic-list-page.scss',
@@ -64,8 +74,17 @@ export class ComicListPage {
   readonly translateService = inject(TranslateService);
   readonly titleService = inject(TitleService);
   readonly activatedRoute = inject(ActivatedRoute);
-  readonly libraryService = inject(LibraryService);
-  readonly comicListStore = inject(ComicListStore);
+  readonly store = inject(Store);
+  readonly comicListLoading = this.store.selectSignal(selectComicListLoading);
+  readonly comicList = this.store.selectSignal(selectComicList);
+  readonly totalCount = this.store.selectSignal(selectComicListTotalCount);
+  readonly filterCount = this.store.selectSignal(selectComicListFilterCount);
+  readonly coverMonthList = this.store.selectSignal(
+    selectComicListCoverMonthList
+  );
+  readonly coverYearLIst = this.store.selectSignal(
+    selectComicListCoverYearList
+  );
   readonly trail = signal<MenuItem[]>([]);
 
   home: MenuItem = { icon: 'pi pi-home', routerLink: ['/'] };
@@ -140,26 +159,28 @@ export class ComicListPage {
   }
 
   private doLoadComics(args: { pageIndex: number; pageSize: number }) {
-    this.logger.trace('Loading comics:', args);
-    this.libraryService.loadComicsByFilter({
-      pageSize: args.pageSize,
-      pageIndex: args.pageIndex,
-      coverYear: null,
-      coverMonth: null,
-      archiveType: null,
-      comicType: null,
-      comicState: null,
-      selected: false,
-      missing: false,
-      unscrapedState: this.unscrapedComics,
-      searchText: null,
-      publisher: null,
-      series: null,
-      volume: null,
-      pageCount: null,
-      sortBy: '',
-      sortDirection: ''
-    });
+    this.logger.trace('Loading comic list:', args);
+    this.store.dispatch(
+      ComicListActions.loadByFilters({
+        pageSize: args.pageSize,
+        pageIndex: args.pageIndex,
+        coverYear: null,
+        coverMonth: null,
+        archiveType: null,
+        comicType: null,
+        comicState: null,
+        selected: false,
+        missing: false,
+        unscrapedState: this.unscrapedComics,
+        searchText: null,
+        publisher: null,
+        series: null,
+        volume: null,
+        pageCount: null,
+        sortBy: '',
+        sortDirection: ''
+      })
+    );
   }
 
   private doLoadTranslations() {

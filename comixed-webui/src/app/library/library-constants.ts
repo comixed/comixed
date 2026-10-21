@@ -40,3 +40,4 @@ export const QUERY_PARAM_COMIC_DETAIL_TAB = 'comic-detail-tab';
 // messaging
 export const REMOTE_LIBRARY_STATE_TOPIC = '/topic/remote-library.update';
 export const COMIC_UPDATE_TOPIC = `/topic/comic-book.\${comicId}.update`;
+export const COMIC_LIST_UPDATE_TOPIC = '/topic/comic-list.update';

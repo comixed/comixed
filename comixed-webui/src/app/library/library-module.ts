@@ -22,13 +22,16 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { ComicDetailEffects } from '@app/library/effects/comic-detail.effects';
 import { comicDetailFeature } from '@app/library/reducers/comic-detail.reducer';
+import { comicListFeature } from '@app/library/reducers/comic-list.reducer';
+import { ComicListEffects } from '@app/library/effects/comic-list.effects';
 
 @NgModule({
   declarations: [],
   imports: [
     CommonModule,
     StoreModule.forFeature(comicDetailFeature),
-    EffectsModule.forFeature([ComicDetailEffects])
+    StoreModule.forFeature(comicListFeature),
+    EffectsModule.forFeature([ComicDetailEffects, ComicListEffects])
   ]
 })
 export class LibraryModule {}
