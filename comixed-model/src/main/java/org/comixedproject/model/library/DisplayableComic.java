@@ -18,6 +18,7 @@
 
 package org.comixedproject.model.library;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
@@ -201,6 +202,7 @@ public class DisplayableComic {
   private Integer pageCount;
 
   @JsonProperty(namespace = "coverDate")
+  @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
   @Column(name = "cover_date")
   @JsonView({View.ComicView.class})
   @Getter
@@ -222,12 +224,14 @@ public class DisplayableComic {
   private Integer yearPublished;
 
   @JsonProperty(namespace = "storeDate")
+  @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
   @Column(name = "store_date")
   @JsonView({View.ComicView.class})
   @Getter
   private Date storeDate;
 
   @JsonProperty(namespace = "addedDate")
+  @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
   @Column(name = "added_date")
   @JsonView({View.ComicView.class})
   @Getter
@@ -235,6 +239,7 @@ public class DisplayableComic {
   private Date addedDate;
 
   @JsonProperty(namespace = "lastModifiedDate")
+  @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
   @Column(name = "last_modified_date")
   @JsonView({View.ComicView.class})
   @Getter
