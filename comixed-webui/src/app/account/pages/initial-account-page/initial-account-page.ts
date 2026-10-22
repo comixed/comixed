@@ -35,7 +35,7 @@ import { Card } from '@openng/optimus-ui/card';
 import { Button } from '@openng/optimus-ui/button';
 import { InputText } from '@openng/optimus-ui/inputtext';
 import { IftaLabel } from '@openng/optimus-ui/iftalabel';
-import { createInitialAdminAccount } from '@app/account/actions/existing-admin-account.actions';
+import { ExistingAdminAccountActions } from '@app/account/actions/existing-admin-account.actions';
 
 @Component({
   imports: [
@@ -96,6 +96,8 @@ export class InitialAccountPage {
     this.logger.trace('Sending initial admin account details');
     const email = this.initialAdminForm.controls['email'].value;
     const password = this.initialAdminForm.controls['password'].value;
-    this.store.dispatch(createInitialAdminAccount({ email, password }));
+    this.store.dispatch(
+      ExistingAdminAccountActions.create({ email, password })
+    );
   }
 }

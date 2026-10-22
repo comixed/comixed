@@ -19,49 +19,25 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, mergeMap, of, switchMap, tap } from 'rxjs';
-import {
-  loadCurrentUser,
-  loadCurrentUserFailure,
-  loadCurrentUserSuccess,
-  login,
-  loginFailure,
-  loginSuccess
-} from '../actions/current-user.actions';
+import { CurrentUserActions } from '../actions/current-user.actions';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { AccountService } from '@app/account/services/account-service';
 import { TokenService } from '@app/account/services/token-service';
+import { AlertService } from '@app/services/alert-service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable()
 export class CurrentUserEffects {
   readonly logger = inject(LoggerService);
+  readonly alertService = inject(AlertService);
+  readonly translateService = inject(TranslateService);
   readonly accountService = inject(AccountService);
   readonly tokenService = inject(TokenService);
   private actions$ = inject(Actions);
 
-  loadCurrentUser$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(loadCurrentUser),
-      tap(() => this.logger.trace('Loading current user')),
-      switchMap(() =>
-        this.accountService.loadCurrentUser().pipe(
-          tap(response => this.logger.debug('Response received:', response)),
-          map(response => loadCurrentUserSuccess({ user: response })),
-          catchError(error => {
-            this.logger.debug('Service error:', error);
-            return of(loadCurrentUserFailure());
-          })
-        )
-      ),
-      catchError(error => {
-        this.logger.debug('General error:', error);
-        return of(loadCurrentUserFailure());
-      })
-    );
-  });
-
   login$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(login),
+      ofType(CurrentUserActions.login),
       tap(() => this.logger.trace('Logging in')),
       switchMap(action =>
         this.accountService
@@ -69,16 +45,56 @@ export class CurrentUserEffects {
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
             tap(response => this.tokenService.setAuthToken(response.token)),
-            mergeMap(() => [loginSuccess(), loadCurrentUser()]),
+            mergeMap(() => [
+              CurrentUserActions.loginSuccess(),
+              CurrentUserActions.load()
+            ]),
             catchError(error => {
               this.logger.error('Service error:', error);
-              return of(loginFailure());
+              this.alertService.error(
+                this.translateService.instant(
+                  'current-user-effect.login.service-failure'
+                )
+              );
+              return of(CurrentUserActions.loginFailure());
             })
           )
       ),
       catchError(error => {
         this.logger.error('General error:', error);
-        return of(loginFailure());
+        this.alertService.error(
+          this.translateService.instant('app.effect.general-failure')
+        );
+        return of(CurrentUserActions.loginFailure());
+      })
+    );
+  });
+
+  loadCurrentUser$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(CurrentUserActions.load),
+      tap(() => this.logger.trace('Loading current user')),
+      switchMap(() =>
+        this.accountService.loadCurrentUser().pipe(
+          tap(response => this.logger.debug('Response received:', response)),
+          map(response => CurrentUserActions.loadSuccess({ user: response })),
+          catchError(error => {
+            this.logger.debug('Service error:', error);
+            this.alertService.error(
+              this.translateService.instant(
+                'current-user-effect.load-current-user.service-failure'
+              )
+            );
+            return of(CurrentUserActions.loadFailure());
+          })
+        )
+      ),
+      catchError(error => {
+        this.logger.debug('General error:', error);
+        this.alertService.error(
+          this.translateService.instant('app.effect.general-failure')
+        );
+        return of(CurrentUserActions.loadFailure());
       })
     );
   });

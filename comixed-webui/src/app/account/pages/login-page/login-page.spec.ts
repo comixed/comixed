@@ -28,7 +28,7 @@ import {
   CURRENT_USER_FEATURE_KEY,
   initialCurrentUserState
 } from '@app/account/reducers/current-user.reducer';
-import { login } from '@app/account/actions/current-user.actions';
+import { CurrentUserActions } from '@app/account/actions/current-user.actions';
 
 describe('LoginPage', () => {
   const TEST_TITLE_TRANSLATED = 'The Translated Title';
@@ -77,7 +77,7 @@ describe('LoginPage', () => {
 
     it('performs a login', () => {
       expect(dispatchSpy).toHaveBeenCalledWith(
-        login({
+        CurrentUserActions.login({
           email: TEST_EMAIL,
           password: TEST_PASSWORD
         })

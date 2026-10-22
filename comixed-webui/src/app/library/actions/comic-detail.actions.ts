@@ -16,50 +16,31 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createAction, props } from '@ngrx/store';
+import { createActionGroup, emptyProps, props } from '@ngrx/store';
 import { Comic } from '@app/library/models/comic';
 import { ComicPage } from '@app/library/models/comic-page';
 import { ComicTag } from '@app/library/models/comic-tag';
 import { ComicMetadataSource } from '../models/comic-metadata-source';
 
-export const loadComic = createAction(
-  '[Comic Detail] Load a comic',
-  props<{ comicId: number }>()
-);
-
-export const loadComicSuccess = createAction(
-  '[Comic Detail] Load a comic success',
-  props<{
-    comic: Comic;
-    pages: ComicPage[];
-    tags: ComicTag[];
-    metadata: ComicMetadataSource;
-  }>()
-);
-
-export const loadComicFailure = createAction(
-  '[Comic Detail] Load a comic failure'
-);
-
-export const comicUpdateReceived = createAction(
-  '[Comic Detail] Comic update received',
-  props<{
-    comic: Comic;
-    pages: ComicPage[];
-    tags: ComicTag[];
-    metadata: ComicMetadataSource;
-  }>()
-);
-
-export const updateComic = createAction(
-  '[Comic Detail] Save a comic',
-  props<{ comic: Comic }>()
-);
-
-export const updateComicSuccess = createAction(
-  '[Comic Detail] Comic update success'
-);
-
-export const updateComicFailure = createAction(
-  '[Comic Detail] Comic update failure'
-);
+export const ComicDetailAction = createActionGroup({
+  source: 'Comic Detail',
+  events: {
+    Load: props<{ comicId: number }>(),
+    LoadSuccess: props<{
+      comic: Comic;
+      pages: ComicPage[];
+      tags: ComicTag[];
+      metadata: ComicMetadataSource;
+    }>(),
+    LoadFailure: emptyProps(),
+    UpdateReceived: props<{
+      comic: Comic;
+      pages: ComicPage[];
+      tags: ComicTag[];
+      metadata: ComicMetadataSource;
+    }>(),
+    Save: props<{ comic: Comic }>(),
+    SaveSuccess: emptyProps(),
+    SaveFailure: emptyProps()
+  }
+});

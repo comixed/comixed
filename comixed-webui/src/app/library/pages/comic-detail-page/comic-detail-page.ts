@@ -26,11 +26,7 @@ import { TitleService } from '@app/layout/services/title-service';
 import { ComicTitlePipe } from '@app/library/pipes/comic-title-pipe';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import {
-  comicUpdateReceived,
-  loadComic,
-  updateComic
-} from '@app/library/actions/comic-detail.actions';
+import { ComicDetailAction } from '@app/library/actions/comic-detail.actions';
 import {
   selectComicDetail,
   selectComicDetailLoaded,
@@ -56,7 +52,7 @@ import {
   QUERY_PARAM_COMIC_DETAIL_TAB
 } from '@app/library/library-constants';
 import { WebSocketService } from '@app/messaging/services/web-socket-service';
-import { LoadComicResponse } from '@app/library/models/net/load-comic-response';
+import { LoadComicDetailResponse } from '@app/library/models/net/load-comic-detail-response';
 import { interpolate } from '@app/app-functions';
 import { Comic } from '@app/library/models/comic';
 import { Badge } from '@openng/optimus-ui/badge';
@@ -110,14 +106,14 @@ export class ComicDetailPage {
       next: params => {
         const comicId = +params['comicId'];
         this.logger.info('Loading comic by id:', comicId);
-        this.store.dispatch(loadComic({ comicId }));
+        this.store.dispatch(ComicDetailAction.load({ comicId }));
         this.logger.debug('Subscribing to updates for comicId:', comicId);
-        this.webSocketService.subscribe<LoadComicResponse>(
+        this.webSocketService.subscribe<LoadComicDetailResponse>(
           interpolate(COMIC_UPDATE_TOPIC, { comicId }),
           payload => {
             this.logger.debug('Received comic update:', payload);
             this.store.dispatch(
-              comicUpdateReceived({
+              ComicDetailAction.updateReceived({
                 comic: payload.detail,
                 pages: payload.pages,
                 tags: payload.tags,
@@ -154,7 +150,7 @@ export class ComicDetailPage {
 
   onUpdateComic(comic: Comic): void {
     this.logger.trace('Firing action to update comic');
-    this.store.dispatch(updateComic({ comic }));
+    this.store.dispatch(ComicDetailAction.save({ comic }));
   }
 
   private doLoadTranslations() {

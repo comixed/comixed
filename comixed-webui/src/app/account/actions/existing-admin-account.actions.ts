@@ -16,30 +16,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createAction, props } from '@ngrx/store';
+import { createActionGroup, emptyProps, props } from '@ngrx/store';
 
-export const checkForExistingAdminAccount = createAction(
-  '[Initial Admin Account] Check for an existing admin account'
-);
-
-export const checkForExistingAdminAccountSuccess = createAction(
-  '[Initial Admin Account] Check for an existing admin account success',
-  props<{ exists: boolean }>()
-);
-
-export const checkForExistingAdminAccountFailure = createAction(
-  '[Initial Admin Account] Check for an existing admin account failure'
-);
-
-export const createInitialAdminAccount = createAction(
-  '[Initial Admin Account] Create the initial admin account',
-  props<{ email: string; password: string }>()
-);
-
-export const createInitialAdminAccountSuccess = createAction(
-  '[Initial Admin Account] Create the initial admin account success'
-);
-
-export const createInitialAdminAccountFailure = createAction(
-  '[Initial Admin Account] Create the initial admin account failure'
-);
+export const ExistingAdminAccountActions = createActionGroup({
+  source: 'Existing Admin Account',
+  events: {
+    Check: emptyProps(),
+    CheckSuccess: props<{ exists: boolean }>(),
+    CheckFailure: emptyProps(),
+    Create: props<{ email: string; password: string }>(),
+    CreateSuccess: emptyProps(),
+    CreateFailure: emptyProps()
+  }
+});

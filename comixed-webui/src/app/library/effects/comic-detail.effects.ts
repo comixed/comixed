@@ -19,32 +19,29 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, of, switchMap, tap } from 'rxjs';
-import {
-  loadComic,
-  loadComicFailure,
-  loadComicSuccess,
-  updateComic,
-  updateComicFailure,
-  updateComicSuccess
-} from '../actions/comic-detail.actions';
+import { ComicDetailAction } from '../actions/comic-detail.actions';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { ComicService } from '@app/library/services/comic-service';
+import { AlertService } from '@app/services/alert-service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable()
 export class ComicDetailEffects {
   readonly logger = inject(LoggerService);
+  readonly alertService = inject(AlertService);
+  readonly translateService = inject(TranslateService);
   readonly comicService = inject(ComicService);
   private actions$ = inject(Actions);
 
   loadComic$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(loadComic),
+      ofType(ComicDetailAction.load),
       tap(action => this.logger.debug('Loading comic:', action)),
       switchMap(action =>
-        this.comicService.loadComic({ comicId: action.comicId }).pipe(
+        this.comicService.load({ comicId: action.comicId }).pipe(
           tap(response => this.logger.debug('Response received:', response)),
           map(response =>
-            loadComicSuccess({
+            ComicDetailAction.loadSuccess({
               comic: response.detail,
               pages: response.pages,
               tags: response.tags,
@@ -53,24 +50,34 @@ export class ComicDetailEffects {
           ),
           catchError(error => {
             this.logger.error('Service failure:', error);
-            return of(loadComicFailure());
+            this.alertService.error(
+              this.translateService.instant(
+                'comic-detail-effect.load-comic.service-failure'
+              ),
+              '/library/all'
+            );
+            return of(ComicDetailAction.loadFailure());
           })
         )
       ),
       catchError(error => {
         this.logger.error('General failure:', error);
-        return of(loadComicFailure());
+        this.alertService.error(
+          this.translateService.instant('app.effect.general-failure'),
+          '/library/all'
+        );
+        return of(ComicDetailAction.loadFailure());
       })
     );
   });
 
-  updateComic$ = createEffect(() => {
+  saveComic$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(updateComic),
+      ofType(ComicDetailAction.save),
       tap(action => this.logger.debug('Updating comic:', action)),
       switchMap(action =>
         this.comicService
-          .updateComic({
+          .save({
             comicId: action.comic.comicId,
             comicType: action.comic.comicType,
             publisher: action.comic.publisher,
@@ -85,16 +92,24 @@ export class ComicDetailEffects {
           })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
-            map(() => updateComicSuccess()),
+            map(() => ComicDetailAction.saveSuccess()),
             catchError(error => {
               this.logger.error('Service failure:', error);
-              return of(updateComicFailure());
+              this.alertService.error(
+                this.translateService.instant(
+                  'comic-detail-effect.save-comic.service-failure'
+                )
+              );
+              return of(ComicDetailAction.saveFailure());
             })
           )
       ),
       catchError(error => {
         this.logger.error('General failure:', error);
-        return of(updateComicFailure());
+        this.alertService.error(
+          this.translateService.instant('app.effect.general-failure')
+        );
+        return of(ComicDetailAction.saveFailure());
       })
     );
   });

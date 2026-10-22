@@ -21,15 +21,7 @@ import { Comic, NO_COMIC } from '@app/library/models/comic';
 import { ComicPage } from '@app/library/models/comic-page';
 import { ComicTag } from '@app/library/models/comic-tag';
 import { ComicMetadataSource } from '@app/library/models/comic-metadata-source';
-import {
-  comicUpdateReceived,
-  loadComic,
-  loadComicFailure,
-  loadComicSuccess,
-  updateComic,
-  updateComicFailure,
-  updateComicSuccess
-} from '@app/library/actions/comic-detail.actions';
+import { ComicDetailAction } from '@app/library/actions/comic-detail.actions';
 
 export const COMIC_DETAIL_FEATURE_KEY = 'comic_detail_state';
 
@@ -51,7 +43,7 @@ export const initialComicDetailState: ComicDetailState = {
 
 export const comicDetailReducer = createReducer(
   initialComicDetailState,
-  on(loadComic, state => ({
+  on(ComicDetailAction.load, state => ({
     ...state,
     busy: true,
     comic: NO_COMIC,
@@ -59,7 +51,7 @@ export const comicDetailReducer = createReducer(
     tags: [],
     metadata: null
   })),
-  on(loadComicSuccess, (state, action) => ({
+  on(ComicDetailAction.loadSuccess, (state, action) => ({
     ...state,
     busy: false,
     comic: action.comic,
@@ -67,7 +59,7 @@ export const comicDetailReducer = createReducer(
     tags: action.tags,
     metadata: action.metadata
   })),
-  on(loadComicFailure, state => ({
+  on(ComicDetailAction.loadFailure, state => ({
     ...state,
     busy: false,
     comic: NO_COMIC,
@@ -75,16 +67,16 @@ export const comicDetailReducer = createReducer(
     tags: [],
     metadata: null
   })),
-  on(comicUpdateReceived, (state, action) => ({
+  on(ComicDetailAction.updateReceived, (state, action) => ({
     ...state,
     comic: action.comic,
     pages: action.pages,
     tags: action.tags,
     metadata: action.metadata
   })),
-  on(updateComic, state => ({ ...state, busy: true })),
-  on(updateComicSuccess, state => ({ ...state, busy: false })),
-  on(updateComicFailure, state => ({ ...state, busy: false }))
+  on(ComicDetailAction.save, state => ({ ...state, busy: true })),
+  on(ComicDetailAction.saveSuccess, state => ({ ...state, busy: false })),
+  on(ComicDetailAction.saveFailure, state => ({ ...state, busy: false }))
 );
 
 export const comicDetailFeature = createFeature({

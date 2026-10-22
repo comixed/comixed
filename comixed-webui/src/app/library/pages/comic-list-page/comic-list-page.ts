@@ -52,6 +52,7 @@ import {
   selectComicListLoading,
   selectComicListTotalCount
 } from '@app/library/selectors/comic-list.selectors';
+import { AlertService } from '@app/services/alert-service';
 
 @Component({
   imports: [
@@ -71,6 +72,7 @@ import {
 })
 export class ComicListPage {
   readonly logger = inject(LoggerService);
+  readonly alertService = inject(AlertService);
   readonly translateService = inject(TranslateService);
   readonly titleService = inject(TitleService);
   readonly activatedRoute = inject(ActivatedRoute);

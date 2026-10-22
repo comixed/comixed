@@ -30,7 +30,7 @@ import { QueryParameterService } from '@app/layout/services/query-parameter.serv
 import { beforeEach, Mock } from 'vitest';
 import { QUERY_PARAM_COMIC_DETAIL_TAB } from '@app/library/library-constants';
 import { COMIC_1 } from '@app/library/library-fixtures';
-import { updateComic } from '@app/library/actions/comic-detail.actions';
+import { ComicDetailAction } from '@app/library/actions/comic-detail.actions';
 import { TitleService } from '@app/layout/services/title-service';
 
 describe('ComicDetailPage', () => {
@@ -114,7 +114,7 @@ describe('ComicDetailPage', () => {
 
     it('dispatches an action', () => {
       expect(dispatchSpy).toHaveBeenCalledWith(
-        updateComic({ comic: TEST_COMIC })
+        ComicDetailAction.save({ comic: TEST_COMIC })
       );
     });
   });

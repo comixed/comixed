@@ -3,12 +3,23 @@
     "button": {
       "submit": "Submit"
     },
+    "effect": {
+      "general-failure": "A general failure occurred..."
+    },
     "page-title": "ComiXed: {title}",
     "text": {
       "issue": "[issue #]",
       "loading": "Loading, Please Wait...",
       "publisher": "[publisher]",
       "series": "[series]"
+    }
+  },
+  "comic-detail-effect": {
+    "load-comic": {
+      "service-failure": "Unable to load comic..."
+    },
+    "save-comic": {
+      "service-failure": "Unable to save changes..."
     }
   },
   "comic-detail-page": {
@@ -24,6 +35,11 @@
       "download-file": "Download",
       "next-issue": "Next Issue",
       "previous-issue": "Prev Issue"
+    }
+  },
+  "comic-list-effect": {
+    "load-by-filter": {
+      "service-failure": "Unable to load comics..."
     }
   },
   "comic-list-page": {
@@ -68,6 +84,11 @@
       "locations": "Locations",
       "stories": "Stories",
       "teams": "Teams"
+    }
+  },
+  "current-user-effect": {
+    "login": {
+      "service-failure": "Login was unsuccessful..."
     }
   },
   "dashboard": {

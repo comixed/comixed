@@ -22,10 +22,14 @@ import { ComicListActions } from '../actions/comic-list.actions';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { catchError, map, of, switchMap, tap } from 'rxjs';
 import { LibraryService } from '@app/library/services/library-service';
+import { TranslateService } from '@ngx-translate/core';
+import { AlertService } from '@app/services/alert-service';
 
 @Injectable()
 export class ComicListEffects {
   readonly logger = inject(LoggerService);
+  readonly alertService = inject(AlertService);
+  readonly translateService = inject(TranslateService);
   readonly libraryService = inject(LibraryService);
   private actions$ = inject(Actions);
   loadComicListByFilters$ = createEffect(() => {
@@ -34,7 +38,7 @@ export class ComicListEffects {
       tap(action => this.logger.debug('Loading comics by filter:', action)),
       switchMap(action =>
         this.libraryService
-          .loadComicsByFilter({
+          .loadComicListByFilter({
             pageSize: action.pageSize,
             pageIndex: action.pageIndex,
             coverYear: action.coverYear,
@@ -66,12 +70,20 @@ export class ComicListEffects {
             ),
             catchError(error => {
               this.logger.error('Service failure:', error);
+              this.alertService.error(
+                this.translateService.instant(
+                  'comic-list-effect.load-by-filter.service-failure'
+                )
+              );
               return of(ComicListActions.loadFailure());
             })
           )
       ),
       catchError(error => {
         this.logger.error('Service failure:', error);
+        this.alertService.error(
+          this.translateService.instant('app.effect.general-failure')
+        );
         return of(ComicListActions.loadFailure());
       })
     );

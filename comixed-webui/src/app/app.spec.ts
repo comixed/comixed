@@ -31,6 +31,7 @@ import {
   CURRENT_USER_FEATURE_KEY,
   initialCurrentUserState
 } from '@app/account/reducers/current-user.reducer';
+import { MessageService } from '@openng/optimus-ui/api';
 
 describe('App', () => {
   const initialState = {
@@ -47,7 +48,8 @@ describe('App', () => {
         provideRouter([{ path: 'accounts/initial', redirectTo: '' }]),
         provideLogger({ minLevel: LoggerLevel.OFF }),
         provideTranslateService(),
-        provideMockStore({ initialState })
+        provideMockStore({ initialState }),
+        MessageService
       ]
     }).compileComponents();
 

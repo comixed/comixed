@@ -44,6 +44,7 @@ import { provideOptimus } from '@openng/optimus-ui/config';
 import Aura from '@openng/optimus-ui-themes/aura';
 import { AccountModule } from '@app/account/account-module';
 import { LibraryModule } from '@app/library/library-module';
+import { MessageService } from '@openng/optimus-ui/api';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -69,6 +70,7 @@ export const appConfig: ApplicationConfig = {
       }
     },
     provideOptimus({ theme: { preset: Aura } }),
+    MessageService,
     importProvidersFrom(
       StoreDevtoolsModule.instrument({
         maxAge: 25,

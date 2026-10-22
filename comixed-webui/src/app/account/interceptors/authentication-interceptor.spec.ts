@@ -104,7 +104,9 @@ describe('authenticationInterceptor', () => {
           authServiceSpy = vi
             .spyOn(authenticationService, 'getAuthToken')
             .mockReturnValue(AUTH_TOKEN);
-          httpClient.get(TEST_URL).subscribe();
+          httpClient.get(TEST_URL).subscribe({
+            error: error => expect(error).not.toBeNull()
+          });
 
           request = httpController.expectOne(TEST_URL);
           request.flush('', { status: 401, statusText: 'not today pal' });
@@ -129,7 +131,9 @@ describe('authenticationInterceptor', () => {
           authServiceSpy = vi
             .spyOn(authenticationService, 'getAuthToken')
             .mockReturnValue(AUTH_TOKEN);
-          httpClient.get(TEST_URL).subscribe();
+          httpClient.get(TEST_URL).subscribe({
+            error: error => expect(error).not.toBeNull()
+          });
 
           request = httpController.expectOne(TEST_URL);
           request.flush('', {

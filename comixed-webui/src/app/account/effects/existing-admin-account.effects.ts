@@ -18,14 +18,7 @@
 
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import {
-  checkForExistingAdminAccount,
-  checkForExistingAdminAccountFailure,
-  checkForExistingAdminAccountSuccess,
-  createInitialAdminAccount,
-  createInitialAdminAccountFailure,
-  createInitialAdminAccountSuccess
-} from '../actions/existing-admin-account.actions';
+import { ExistingAdminAccountActions } from '../actions/existing-admin-account.actions';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { AccountService } from '@app/account/services/account-service';
 import { catchError, map, of, switchMap, tap } from 'rxjs';
@@ -37,32 +30,32 @@ export class ExistingAdminAccountEffects {
   private actions$ = inject(Actions);
   loadExistingAdminAccounts$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(checkForExistingAdminAccount),
+      ofType(ExistingAdminAccountActions.check),
       tap(() => this.logger.trace('Checking for existing admin accounts')),
       switchMap(() =>
         this.accountService.checkForAdminAccount().pipe(
           tap(response => this.logger.debug('Response received:', response)),
           map(response =>
-            checkForExistingAdminAccountSuccess({
+            ExistingAdminAccountActions.checkSuccess({
               exists: response.hasExisting
             })
           ),
           catchError(error => {
             this.logger.error('Service error:', error);
-            return of(checkForExistingAdminAccountFailure());
+            return of(ExistingAdminAccountActions.checkFailure());
           })
         )
       ),
       catchError(error => {
         this.logger.error('General error:', error);
-        return of(checkForExistingAdminAccountFailure());
+        return of(ExistingAdminAccountActions.checkFailure());
       })
     );
   });
 
   createAdminAccount$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(createInitialAdminAccount),
+      ofType(ExistingAdminAccountActions.create),
       tap(() => this.logger.trace('Creating the initial admin account')),
       switchMap(action =>
         this.accountService
@@ -72,16 +65,16 @@ export class ExistingAdminAccountEffects {
           })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
-            map(() => createInitialAdminAccountSuccess()),
+            map(() => ExistingAdminAccountActions.createSuccess()),
             catchError(error => {
               this.logger.error('Service error:', error);
-              return of(createInitialAdminAccountFailure());
+              return of(ExistingAdminAccountActions.createFailure());
             })
           )
       ),
       catchError(error => {
         this.logger.error('General error:', error);
-        return of(createInitialAdminAccountFailure());
+        return of(ExistingAdminAccountActions.createFailure());
       })
     );
   });

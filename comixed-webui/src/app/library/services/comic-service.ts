@@ -25,7 +25,7 @@ import {
   UPDATE_COMIC_URL
 } from '@app/library/library-constants';
 import { interpolate } from '@app/app-functions';
-import { LoadComicResponse } from '@app/library/models/net/load-comic-response';
+import { LoadComicDetailResponse } from '@app/library/models/net/load-comic-detail-response';
 import { ComicType } from '@app/library/models/comic-type';
 import { UpdateComicRequest } from '@app/library/models/net/update-comic-request';
 
@@ -34,14 +34,14 @@ export class ComicService {
   readonly logger = inject(LoggerService);
   readonly client = inject(HttpClient);
 
-  loadComic(args: { comicId: number }): Observable<LoadComicResponse> {
+  load(args: { comicId: number }): Observable<LoadComicDetailResponse> {
     this.logger.debug('Loading comic:', args);
-    return this.client.get<LoadComicResponse>(
+    return this.client.get<LoadComicDetailResponse>(
       interpolate(LOAD_COMIC_URL, { comicId: args.comicId })
     );
   }
 
-  updateComic(args: {
+  save(args: {
     comicId: number;
     comicType?: ComicType;
     publisher: string;
@@ -53,9 +53,9 @@ export class ComicService {
     title?: string;
     coverDate: number | null;
     storeDate: number | null;
-  }): Observable<LoadComicResponse> {
+  }): Observable<LoadComicDetailResponse> {
     this.logger.debug('Service: updating one comic:', args);
-    return this.client.put<LoadComicResponse>(
+    return this.client.put<LoadComicDetailResponse>(
       interpolate(UPDATE_COMIC_URL, { id: args.comicId }),
       {
         comicType: args.comicType,

@@ -17,14 +17,7 @@
  */
 
 import { createFeature, createReducer, on } from '@ngrx/store';
-import {
-  checkForExistingAdminAccount,
-  checkForExistingAdminAccountFailure,
-  checkForExistingAdminAccountSuccess,
-  createInitialAdminAccount,
-  createInitialAdminAccountFailure,
-  createInitialAdminAccountSuccess
-} from '../actions/existing-admin-account.actions';
+import { ExistingAdminAccountActions } from '../actions/existing-admin-account.actions';
 
 export const EXISTING_ADMIN_ACCOUNT_FEATURE_KEY =
   'existing_admin_account_state';
@@ -43,37 +36,37 @@ export const initialExistingAdminAccountState: ExistingAdminAccountState = {
 
 export const reducer = createReducer(
   initialExistingAdminAccountState,
-  on(checkForExistingAdminAccount, state => ({
+  on(ExistingAdminAccountActions.check, state => ({
     ...state,
     loading: true,
     checked: false,
     create: false
   })),
-  on(checkForExistingAdminAccountSuccess, (state, action) => ({
+  on(ExistingAdminAccountActions.checkSuccess, (state, action) => ({
     ...state,
     loading: false,
     checked: true,
     create: !action.exists
   })),
-  on(checkForExistingAdminAccountFailure, state => ({
+  on(ExistingAdminAccountActions.checkFailure, state => ({
     ...state,
     loading: false,
     checked: false,
     create: false
   })),
-  on(createInitialAdminAccount, state => ({
+  on(ExistingAdminAccountActions.create, state => ({
     ...state,
     loading: true,
     checked: false,
     create: false
   })),
-  on(createInitialAdminAccountSuccess, state => ({
+  on(ExistingAdminAccountActions.createSuccess, state => ({
     ...state,
     loading: false,
     checked: true,
     create: false
   })),
-  on(createInitialAdminAccountFailure, state => ({
+  on(ExistingAdminAccountActions.createFailure, state => ({
     ...state,
     loading: false,
     checked: true,

@@ -16,27 +16,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createAction, props } from '@ngrx/store';
+import { createActionGroup, emptyProps, props } from '@ngrx/store';
 import { User } from '@app/account/models/user';
 
-export const loadCurrentUser = createAction(
-  '[Current User] Load the current user'
-);
-
-export const loadCurrentUserSuccess = createAction(
-  '[Current User] Load the current user success',
-  props<{ user: User | null }>()
-);
-
-export const loadCurrentUserFailure = createAction(
-  '[Current User] Load the current user failure'
-);
-
-export const login = createAction(
-  '[Current User] Login',
-  props<{ email: string; password: string }>()
-);
-
-export const loginSuccess = createAction('[Current User] Login success');
-
-export const loginFailure = createAction('[Current User] Login failure');
+export const CurrentUserActions = createActionGroup({
+  source: 'Current User',
+  events: {
+    Login: props<{ email: string; password: string }>(),
+    LoginSuccess: emptyProps(),
+    LoginFailure: emptyProps(),
+    Load: emptyProps(),
+    LoadSuccess: props<{ user: User | null }>(),
+    LoadFailure: emptyProps()
+  }
+});

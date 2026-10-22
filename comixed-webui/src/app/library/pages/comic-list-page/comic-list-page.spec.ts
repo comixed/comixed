@@ -26,6 +26,7 @@ import {
   COMIC_LIST_FEATURE_KEY,
   initialComicListState
 } from '@app/library/reducers/comic-list.reducer';
+import { MessageService } from '@openng/optimus-ui/api';
 
 describe('ComicListPage', () => {
   const initialState = { [COMIC_LIST_FEATURE_KEY]: initialComicListState };
@@ -45,7 +46,8 @@ describe('ComicListPage', () => {
         ]),
         provideLogger({ minLevel: LoggerLevel.OFF }),
         provideTranslateService(),
-        provideMockStore({ initialState })
+        provideMockStore({ initialState }),
+        MessageService
       ]
     }).compileComponents();
 

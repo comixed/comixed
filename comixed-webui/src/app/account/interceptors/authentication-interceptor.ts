@@ -25,7 +25,7 @@ import {
   HTTP_XML_REQUEST,
   LOGIN_PAGE_URL
 } from '@app/account/account-constants';
-import { catchError, of } from 'rxjs';
+import { catchError, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { LoggerService } from '@angular-ru/cdk/logger';
 
@@ -59,7 +59,7 @@ export const authenticationInterceptor: HttpInterceptorFn = (req, next) => {
           router.navigateByUrl(LOGIN_PAGE_URL);
         }
       }
-      return of(error);
+      return throwError(() => error);
     })
   );
 };

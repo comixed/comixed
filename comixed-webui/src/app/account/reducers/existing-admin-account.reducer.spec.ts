@@ -23,14 +23,7 @@ import {
 } from './existing-admin-account.reducer';
 import { beforeEach } from 'vitest';
 import { Action } from '@ngrx/store';
-import {
-  checkForExistingAdminAccount,
-  checkForExistingAdminAccountFailure,
-  checkForExistingAdminAccountSuccess,
-  createInitialAdminAccount,
-  createInitialAdminAccountFailure,
-  createInitialAdminAccountSuccess
-} from '@app/account/actions/existing-admin-account.actions';
+import { ExistingAdminAccountActions } from '@app/account/actions/existing-admin-account.actions';
 
 describe('ExistingAdminAccount Reducer', () => {
   const TEST_EMAIL = 'user@localhost.tld';
@@ -64,7 +57,7 @@ describe('ExistingAdminAccount Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, loading: false, checked: true, create: true },
-        checkForExistingAdminAccount()
+        ExistingAdminAccountActions.check()
       );
     });
 
@@ -84,7 +77,7 @@ describe('ExistingAdminAccount Reducer', () => {
       beforeEach(() => {
         state = reducer(
           { ...state, loading: true, checked: false, create: false },
-          checkForExistingAdminAccountSuccess({ exists: true })
+          ExistingAdminAccountActions.checkSuccess({ exists: true })
         );
       });
 
@@ -105,7 +98,7 @@ describe('ExistingAdminAccount Reducer', () => {
       beforeEach(() => {
         state = reducer(
           { ...state, loading: true, checked: false, create: false },
-          checkForExistingAdminAccountSuccess({ exists: false })
+          ExistingAdminAccountActions.checkSuccess({ exists: false })
         );
       });
 
@@ -126,7 +119,7 @@ describe('ExistingAdminAccount Reducer', () => {
       beforeEach(() => {
         state = reducer(
           { ...state, loading: true, checked: false, create: false },
-          checkForExistingAdminAccountFailure()
+          ExistingAdminAccountActions.checkFailure()
         );
       });
 
@@ -148,7 +141,7 @@ describe('ExistingAdminAccount Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, loading: false, checked: true, create: true },
-        createInitialAdminAccount({
+        ExistingAdminAccountActions.create({
           email: TEST_EMAIL,
           password: TEST_PASSWORD
         })
@@ -171,7 +164,7 @@ describe('ExistingAdminAccount Reducer', () => {
       beforeEach(() => {
         state = reducer(
           { ...state, loading: true, checked: false, create: false },
-          createInitialAdminAccountSuccess()
+          ExistingAdminAccountActions.createSuccess()
         );
       });
 
@@ -192,7 +185,7 @@ describe('ExistingAdminAccount Reducer', () => {
       beforeEach(() => {
         state = reducer(
           { ...state, loading: true, checked: false, create: false },
-          createInitialAdminAccountFailure()
+          ExistingAdminAccountActions.createFailure()
         );
       });
 

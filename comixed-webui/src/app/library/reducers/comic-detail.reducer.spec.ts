@@ -29,15 +29,7 @@ import {
   COMIC_TAG_1,
   METADATA_1
 } from '@app/library/library-fixtures';
-import {
-  comicUpdateReceived,
-  loadComic,
-  loadComicFailure,
-  loadComicSuccess,
-  updateComic,
-  updateComicFailure,
-  updateComicSuccess
-} from '@app/library/actions/comic-detail.actions';
+import { ComicDetailAction } from '@app/library/actions/comic-detail.actions';
 import { NO_COMIC } from '@app/library/models/comic';
 
 describe('ComicDetail Reducer', () => {
@@ -89,7 +81,7 @@ describe('ComicDetail Reducer', () => {
           tags: TEST_TAGS,
           metadata: TEST_METADATA
         },
-        loadComic({ comicId: TEST_COMIC.comicId })
+        ComicDetailAction.load({ comicId: TEST_COMIC.comicId })
       );
     });
 
@@ -124,7 +116,7 @@ describe('ComicDetail Reducer', () => {
             tags: [],
             metadata: null
           },
-          loadComicSuccess({
+          ComicDetailAction.loadSuccess({
             comic: TEST_COMIC,
             pages: TEST_PAGES,
             tags: TEST_TAGS,
@@ -165,7 +157,7 @@ describe('ComicDetail Reducer', () => {
             tags: [],
             metadata: null
           },
-          comicUpdateReceived({
+          ComicDetailAction.updateReceived({
             comic: TEST_COMIC,
             pages: TEST_PAGES,
             tags: TEST_TAGS,
@@ -202,7 +194,7 @@ describe('ComicDetail Reducer', () => {
             tags: [],
             metadata: null
           },
-          loadComicFailure()
+          ComicDetailAction.loadFailure()
         );
       });
 
@@ -232,7 +224,7 @@ describe('ComicDetail Reducer', () => {
     beforeEach(() => {
       state = comicDetailReducer(
         { ...state, busy: false },
-        updateComic({ comic: TEST_COMIC })
+        ComicDetailAction.save({ comic: TEST_COMIC })
       );
     });
 
@@ -244,7 +236,7 @@ describe('ComicDetail Reducer', () => {
       beforeEach(() => {
         state = comicDetailReducer(
           { ...state, busy: true },
-          updateComicSuccess()
+          ComicDetailAction.saveSuccess()
         );
       });
 
@@ -257,7 +249,7 @@ describe('ComicDetail Reducer', () => {
       beforeEach(() => {
         state = comicDetailReducer(
           { ...state, busy: true },
-          updateComicFailure()
+          ComicDetailAction.saveFailure()
         );
       });
 

@@ -37,9 +37,9 @@ import { ComicType } from '@app/library/models/comic-type';
 import { ComicState } from '@app/library/models/comic-state';
 import { LoadSelectedComicsRequest } from '@app/library/models/net/load-selected-comics-request';
 import { LoadComicsByFilterRequest } from '@app/library/models/net/load-comics-by-filter-request';
-import { LoadComicsResponse } from '@app/library/models/net/load-comics-response';
+import { LoadComicListResponse } from '@app/library/models/net/load-comic-list-response';
 import { Observable } from 'rxjs';
-import { LoadComicResponse } from '@app/library/models/net/load-comic-response';
+import { LoadComicDetailResponse } from '@app/library/models/net/load-comic-detail-response';
 import { Store } from '@ngrx/store';
 import { ComicListActions } from '@app/library/actions/comic-list.actions';
 
@@ -67,7 +67,7 @@ export class LibraryService {
               }
             );
             this.logger.trace('Subscribing to comic list updates');
-            this.webSocketService.subscribe<LoadComicResponse>(
+            this.webSocketService.subscribe<LoadComicDetailResponse>(
               COMIC_LIST_UPDATE_TOPIC,
               update => {
                 this.logger.trace('Comic update message received:', update);
@@ -95,7 +95,7 @@ export class LibraryService {
       });
   }
 
-  loadComicsByFilter(args: {
+  loadComicListByFilter(args: {
     pageSize: number;
     pageIndex: number;
     coverYear: number | null;
@@ -113,10 +113,10 @@ export class LibraryService {
     pageCount: number | null;
     sortBy: string;
     sortDirection: string;
-  }): Observable<LoadComicsResponse> {
+  }): Observable<LoadComicListResponse> {
     if (args.selected) {
       this.logger.trace('Loading selected comics:', args);
-      return this.http.post<LoadComicsResponse>(
+      return this.http.post<LoadComicListResponse>(
         interpolate(LOAD_SELECTED_COMICS_URL),
         {
           pageSize: args.pageSize,
@@ -127,7 +127,7 @@ export class LibraryService {
       );
     } else {
       this.logger.trace('Loading comics by filter:', args);
-      return this.http.post<LoadComicsResponse>(
+      return this.http.post<LoadComicListResponse>(
         interpolate(LOAD_COMICS_BY_FILTER_URL),
         {
           pageSize: args.pageSize,

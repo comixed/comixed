@@ -23,14 +23,7 @@ import {
 } from './current-user.reducer';
 import { beforeEach } from 'vitest';
 import { Action } from '@ngrx/store';
-import {
-  loadCurrentUser,
-  loadCurrentUserFailure,
-  loadCurrentUserSuccess,
-  login,
-  loginFailure,
-  loginSuccess
-} from '@app/account/actions/current-user.actions';
+import { CurrentUserActions } from '@app/account/actions/current-user.actions';
 import { USER_READER } from '@app/account/account-fixtures';
 
 describe('CurrentUser Reducer', () => {
@@ -66,7 +59,7 @@ describe('CurrentUser Reducer', () => {
     beforeEach(() => {
       state = currentUserReducer(
         { ...state, loading: false, checked: true },
-        loadCurrentUser()
+        CurrentUserActions.load()
       );
     });
 
@@ -82,7 +75,7 @@ describe('CurrentUser Reducer', () => {
       beforeEach(() => {
         state = currentUserReducer(
           { ...state, loading: true, checked: false, user: null },
-          loadCurrentUserSuccess({ user: TEST_USER })
+          CurrentUserActions.loadSuccess({ user: TEST_USER })
         );
       });
 
@@ -103,7 +96,7 @@ describe('CurrentUser Reducer', () => {
       beforeEach(() => {
         state = currentUserReducer(
           { ...state, loading: true, checked: false, user: null },
-          loadCurrentUserSuccess({ user: null })
+          CurrentUserActions.loadSuccess({ user: null })
         );
       });
 
@@ -124,7 +117,7 @@ describe('CurrentUser Reducer', () => {
       beforeEach(() => {
         state = currentUserReducer(
           { ...state, loading: true, checked: false, user: null },
-          loadCurrentUserFailure()
+          CurrentUserActions.loadFailure()
         );
       });
 
@@ -146,7 +139,7 @@ describe('CurrentUser Reducer', () => {
     beforeEach(() => {
       state = currentUserReducer(
         { ...state, loading: false, checked: true, user: TEST_USER },
-        login({ email: TEST_EMAIL, password: TEST_PASSWORD })
+        CurrentUserActions.login({ email: TEST_EMAIL, password: TEST_PASSWORD })
       );
     });
 
@@ -166,7 +159,7 @@ describe('CurrentUser Reducer', () => {
       beforeEach(() => {
         state = currentUserReducer(
           { ...state, loading: true, checked: false },
-          loginSuccess()
+          CurrentUserActions.loginSuccess()
         );
       });
 
@@ -183,7 +176,7 @@ describe('CurrentUser Reducer', () => {
       beforeEach(() => {
         state = currentUserReducer(
           { ...state, loading: true, checked: false },
-          loginFailure()
+          CurrentUserActions.loginFailure()
         );
       });
 

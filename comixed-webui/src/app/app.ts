@@ -27,12 +27,13 @@ import {
   selectExistingAdminAccountChecked,
   selectExistingAdminAccountCreate
 } from '@app/account/selectors/existing-admin-account.selectors';
-import { checkForExistingAdminAccount } from '@app/account/actions/existing-admin-account.actions';
-import { loadCurrentUser } from '@app/account/actions/current-user.actions';
+import { ExistingAdminAccountActions } from '@app/account/actions/existing-admin-account.actions';
+import { CurrentUserActions } from '@app/account/actions/current-user.actions';
 import { selectCurrentUserAuthenticated } from '@app/account/selectors/current-user.selectors';
+import { Toast } from '@openng/optimus-ui/toast';
 
 @Component({
-  imports: [Topbar, RouterOutlet],
+  imports: [Topbar, RouterOutlet, Toast],
   selector: 'app-root',
   styleUrl: './app.scss',
   templateUrl: './app.html'
@@ -49,7 +50,7 @@ export class App {
       next: checked => {
         if (!checked) {
           this.logger.trace('Initiating checking for existing admin account');
-          this.store.dispatch(checkForExistingAdminAccount());
+          this.store.dispatch(ExistingAdminAccountActions.check());
         }
       }
     });
@@ -60,7 +61,7 @@ export class App {
           this.router.navigateByUrl('/accounts/initial');
         } else {
           this.logger.trace('Loading current user');
-          this.store.dispatch(loadCurrentUser());
+          this.store.dispatch(CurrentUserActions.load());
         }
       }
     });

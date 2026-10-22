@@ -17,13 +17,11 @@
  */
 
 import { Comic } from '@app/library/models/comic';
-import { ComicMetadataSource } from '@app/library/models/comic-metadata-source';
-import { ComicPage } from '@app/library/models/comic-page';
-import { ComicTag } from '@app/library/models/comic-tag';
 
-export interface LoadComicResponse {
-  detail: Comic;
-  metadata: ComicMetadataSource;
-  pages: ComicPage[];
-  tags: ComicTag[];
+export interface LoadComicListResponse {
+  comics: Comic[];
+  coverYears: number[];
+  coverMonths: number[];
+  totalCount: number;
+  filteredCount: number;
 }

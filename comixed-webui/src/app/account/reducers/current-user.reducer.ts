@@ -17,14 +17,7 @@
  */
 
 import { createFeature, createReducer, on } from '@ngrx/store';
-import {
-  loadCurrentUser,
-  loadCurrentUserFailure,
-  loadCurrentUserSuccess,
-  login,
-  loginFailure,
-  loginSuccess
-} from '../actions/current-user.actions';
+import { CurrentUserActions } from '../actions/current-user.actions';
 import { User } from '@app/account/models/user';
 
 export const CURRENT_USER_FEATURE_KEY = 'current_user_state';
@@ -43,33 +36,38 @@ export const initialCurrentUserState: CurrentUserState = {
 
 export const currentUserReducer = createReducer(
   initialCurrentUserState,
-  on(loadCurrentUser, state => ({
+  on(CurrentUserActions.login, state => ({
     ...state,
     loading: true,
     checked: false,
     user: null
   })),
-  on(loadCurrentUserSuccess, (state, action) => ({
+  on(CurrentUserActions.loginSuccess, state => ({
+    ...state,
+    loading: false,
+    checked: true
+  })),
+  on(CurrentUserActions.loginFailure, state => ({
+    ...state,
+    loading: false,
+    checked: true
+  })),
+  on(CurrentUserActions.load, state => ({
+    ...state,
+    loading: true,
+    checked: false,
+    user: null
+  })),
+  on(CurrentUserActions.loadSuccess, (state, action) => ({
     ...state,
     loading: false,
     checked: true,
     user: action.user
   })),
-  on(loadCurrentUserFailure, state => ({
+  on(CurrentUserActions.loadFailure, state => ({
     ...state,
     loading: false,
     checked: false
-  })),
-  on(login, state => ({ ...state, loading: true, checked: false, user: null })),
-  on(loginSuccess, state => ({
-    ...state,
-    loading: false,
-    checked: true
-  })),
-  on(loginFailure, state => ({
-    ...state,
-    loading: false,
-    checked: true
   }))
 );
 

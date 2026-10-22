@@ -33,7 +33,7 @@ import { InputText } from '@openng/optimus-ui/inputtext';
 import { IftaLabel } from '@openng/optimus-ui/iftalabel';
 import { Store } from '@ngrx/store';
 import { selectCurrentUserAuthenticated } from '@app/account/selectors/current-user.selectors';
-import { login } from '@app/account/actions/current-user.actions';
+import { CurrentUserActions } from '@app/account/actions/current-user.actions';
 
 @Component({
   imports: [
@@ -81,7 +81,7 @@ export class LoginPage {
     this.logger.debug('Submitting login form');
     const email = this.loginForm.controls['email'].value;
     const password = this.loginForm.controls['password'].value;
-    this.store.dispatch(login({ email, password }));
+    this.store.dispatch(CurrentUserActions.login({ email, password }));
   }
 
   private doLoadTranslations() {

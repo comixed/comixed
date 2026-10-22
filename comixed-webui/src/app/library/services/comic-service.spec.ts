@@ -24,7 +24,7 @@ import {
   HttpTestingController,
   provideHttpClientTesting
 } from '@angular/common/http/testing';
-import { LoadComicResponse } from '@app/library/models/net/load-comic-response';
+import { LoadComicDetailResponse } from '@app/library/models/net/load-comic-detail-response';
 import {
   COMIC_1,
   COMIC_PAGE_1,
@@ -70,9 +70,9 @@ describe('ComicService', () => {
       pages: TEST_PAGES,
       tags: TEST_TAGS,
       metadata: TEST_METADATA
-    } as LoadComicResponse;
+    } as LoadComicDetailResponse;
 
-    service.loadComic({ comicId: TEST_COMIC.comicId }).subscribe({
+    service.load({ comicId: TEST_COMIC.comicId }).subscribe({
       next: response => expect(response).toBe(serverResponse)
     });
 
@@ -90,9 +90,9 @@ describe('ComicService', () => {
       pages: TEST_PAGES,
       tags: TEST_TAGS,
       metadata: TEST_METADATA
-    } as LoadComicResponse;
+    } as LoadComicDetailResponse;
     service
-      .updateComic({
+      .save({
         comicId: TEST_COMIC.comicId,
         comicType: TEST_COMIC.comicType,
         publisher: TEST_COMIC.publisher,
