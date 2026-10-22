@@ -4,10 +4,15 @@
   </ng-template>
 
   <p-table
-    [value]="publisherListStore.publishers()"
-    stripedRows
+    [value]="publisherList()"
+    [lazy]="true"
+    (onLazyLoad)="onLoad($event)"
+    dataKey="name"
     [paginator]="true"
-    [rows]="publisherListStore.size()"
+    stripedRows
+    [rows]="10"
+    [totalRecords]="total()"
+    [loading]="loading()"
   >
     <ng-template #header>
       <tr>
@@ -19,11 +24,7 @@
 
     <ng-template #body let-publisher>
       <tr>
-        <td>
-          <a [routerLink]="['/library/publishers', publisher.name]">
-            {{ publisher.name }}
-          </a>
-        </td>
+        <td>{{ publisher.name }}</td>
         <td>{{ publisher.issueCount }}</td>
         <td>{{ publisher.seriesCount }}</td>
       </tr>

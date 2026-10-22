@@ -16,9 +16,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { CollectionEntry } from '@app/collections/models/collection-entry';
-
-export interface LoadCollectionEntriesResponse {
-  entries: CollectionEntry[];
-  totalEntries: number;
+export interface Publisher {
+  name: string;
+  issueCount: number;
+  seriesCount: number;
 }
+
+export const NO_PUBLISHER: Publisher = {
+  name: '',
+  issueCount: 0,
+  seriesCount: 0
+};

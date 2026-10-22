@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { CollectionEntry } from '@app/collections/models/collection-entry';
+import { CollectionEntry } from '@app/library/models/collection-entry';
 import { ComicTagType } from '@app/library/models/comic-tag-type';
 import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
 

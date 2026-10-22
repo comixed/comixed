@@ -18,7 +18,7 @@
 
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
-import { CollectionService } from '@app/collections/services/collection-service';
+import { CollectionService } from '@app/library/services/collection-service';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/layout/services/title-service';
 import { SeriesListStore } from '@app/collections/stores/series-list-store';

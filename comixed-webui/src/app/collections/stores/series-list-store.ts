@@ -17,7 +17,7 @@
  */
 
 import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
-import { Series } from '@app/collections/models/series';
+import { Series } from '@app/library/models/series';
 
 interface SeriesListState {
   series: Series[];

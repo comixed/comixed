@@ -20,16 +20,23 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PublisherListPage } from './publisher-list-page';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
 import { provideTranslateService } from '@ngx-translate/core';
-import { CollectionService } from '@app/collections/services/collection-service';
+import { CollectionService } from '@app/library/services/collection-service';
 import { beforeEach, Mock } from 'vitest';
 import { provideRouter } from '@angular/router';
+import { provideMockStore } from '@ngrx/store/testing';
+import {
+  initialPublisherListState,
+  PUBLISHER_LIST_FEATURE_KEY
+} from '@app/library/reducers/publisher-list.reducer';
 
 describe('PublisherListPage', () => {
+  const initialState = {
+    [PUBLISHER_LIST_FEATURE_KEY]: initialPublisherListState
+  };
   const TEST_TITLE_TRANSLATED = 'The translated title';
 
   let component: PublisherListPage;
   let fixture: ComponentFixture<PublisherListPage>;
-  let loadPublishersSpy: Mock;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -38,25 +45,18 @@ describe('PublisherListPage', () => {
         provideRouter([{ path: '*', redirectTo: '' }]),
         provideLogger({ minLevel: LoggerLevel.OFF }),
         provideTranslateService(),
+        provideMockStore({ initialState }),
         CollectionService
       ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(PublisherListPage);
     component = fixture.componentInstance;
-    loadPublishersSpy = vi.spyOn(
-      TestBed.inject(CollectionService),
-      'loadPublisherList'
-    );
     await fixture.whenStable();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('loads the publisher list', () => {
-    expect(loadPublishersSpy).toHaveBeenCalled();
   });
 
   describe('when the language changes', () => {

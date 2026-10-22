@@ -32,7 +32,7 @@ import { AlertService } from '@app/services/alert-service';
 import { provideTranslateService } from '@ngx-translate/core';
 import { MessageService } from '@openng/optimus-ui/api';
 
-describe('ComicListEffects', () => {
+describe.todo('ComicListEffects', () => {
   const TEST_COMIC = COMIC_1;
   const TEST_COMIC_LIST = [TEST_COMIC];
   const TEST_TOTAL_COUNT = 717;

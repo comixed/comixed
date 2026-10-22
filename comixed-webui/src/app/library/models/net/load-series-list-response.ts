@@ -16,8 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-export interface Publisher {
-  name: string;
-  issueCount: number;
-  seriesCount: number;
+import { Series } from '@app/library/models/series';
+
+export interface LoadSeriesListResponse {
+  series: Series[];
+  total: number;
 }

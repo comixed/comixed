@@ -3,7 +3,10 @@
   "version": 1,
   "cli": {
     "packageManager": "npm",
-    "schematicCollections": ["angular-eslint", "@ngrx/schematics"],
+    "schematicCollections": [
+      "angular-eslint",
+      "@ngrx/schematics"
+    ],
     "analytics": false
   },
   "newProjectRoot": "projects",
@@ -24,6 +27,7 @@
           "options": {
             "allowedCommonJsDependencies": [
               "lodash",
+              "sockjs-client",
               "@messageformat/core",
               "@stomp/stompjs"
             ],
@@ -40,10 +44,16 @@
               },
               "src/favicon.png"
             ],
-            "scripts": ["./node_modules/sockjs-client/dist/sockjs.min.js"],
-            "styles": ["src/styles.scss"],
+            "scripts": [
+              "./node_modules/sockjs-client/dist/sockjs.min.js"
+            ],
+            "styles": [
+              "src/styles.scss"
+            ],
             "stylePreprocessorOptions": {
-              "includePaths": ["src"]
+              "includePaths": [
+                "src"
+              ]
             }
           },
           "configurations": {
@@ -99,7 +109,10 @@
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
           }
         }
       }

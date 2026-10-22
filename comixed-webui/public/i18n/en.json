@@ -206,6 +206,11 @@
     },
     "page-title": "Publisher: {name}"
   },
+  "publisher-list-effect": {
+    "load": {
+      "service-failure": "Failed to load publisher list..."
+    }
+  },
   "publisher-list-page": {
     "label": {
       "issue-count": "# Comics",

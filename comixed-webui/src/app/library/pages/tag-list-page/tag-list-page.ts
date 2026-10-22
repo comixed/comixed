@@ -17,34 +17,33 @@
  */
 
 import { Component, inject, signal } from '@angular/core';
-import { PublisherDetailStore } from '@app/collections/stores/publisher-detail-store';
 import { LoggerService } from '@angular-ru/cdk/logger';
-import { CollectionService } from '@app/collections/services/collection-service';
+import { CollectionService } from '@app/library/services/collection-service';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/layout/services/title-service';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { comicTagTypeFromString } from '@app/library/models/comic-tag-type';
+import { TagStore } from '@app/collections/stores/tag-store';
 import { Card } from '@openng/optimus-ui/card';
 import { TableModule } from '@openng/optimus-ui/table';
 import { Breadcrumb } from '@openng/optimus-ui/breadcrumb';
 import { MenuItem } from '@openng/optimus-ui/api';
 
 @Component({
-  imports: [Card, TableModule, TranslatePipe, RouterLink, Breadcrumb],
-  selector: 'app-publisher-detail-page',
-  styleUrl: './publisher-detail-page.scss',
-  templateUrl: './publisher-detail-page.html'
+  imports: [TranslatePipe, Card, TableModule, Breadcrumb],
+  selector: 'app-tag-list-page',
+  styleUrl: './tag-list-page.scss',
+  templateUrl: './tag-list-page.html'
 })
-export class PublisherDetailPage {
+export class TagListPage {
   readonly logger = inject(LoggerService);
   readonly collectionsService = inject(CollectionService);
-  readonly publisherDetailStore = inject(PublisherDetailStore);
+  readonly tagStore = inject(TagStore);
   readonly translateService = inject(TranslateService);
   readonly titleService = inject(TitleService);
   readonly activatedRoute = inject(ActivatedRoute);
   readonly router = inject(Router);
   readonly trail = signal<MenuItem[]>([]);
-
-  publisherName = '';
 
   home: MenuItem = { icon: 'pi pi-home', routerLink: ['/'] };
 
@@ -52,14 +51,27 @@ export class PublisherDetailPage {
     this.logger.trace('Subscribing to router parameter updates');
     this.activatedRoute.paramMap.subscribe({
       next: params => {
-        this.publisherName = params.get('publisherName')!;
-        this.collectionsService.loadPublisherDetail({
-          name: this.publisherName,
-          index: 0,
-          size: 10,
-          sortBy: '',
-          sortDirection: ''
-        });
+        if (!params.has('tagType')) {
+          this.logger.error('Missing tag type');
+          this.router.navigateByUrl('/');
+        }
+        const typeParameter = params.get('tagType');
+        this.logger.trace('Extracting tag type');
+        const providedType = comicTagTypeFromString(typeParameter || '')!;
+        if (providedType) {
+          this.tagStore.setTagType(providedType);
+          this.collectionsService.loadCollectionEntryList({
+            tagType: providedType,
+            searchText: '',
+            index: 0,
+            size: 10,
+            sortBy: '',
+            sortDirection: ''
+          });
+        } else {
+          this.logger.error('Invalid tag type:', typeParameter);
+          this.router.navigateByUrl('/');
+        }
       }
     });
     this.translateService.onLangChange.subscribe({
@@ -72,10 +84,16 @@ export class PublisherDetailPage {
 
   private doLoadTranslations() {
     this.titleService.setTitle(
-      this.translateService.instant('publisher-detail-page.page-title', {
-        name: this.publisherName
+      this.translateService.instant('tag-list-page.page-title', {
+        tagType: this.tagStore.tagType()
       })
     );
-    this.trail.set([{ label: this.publisherName }]);
+    this.trail.set([
+      {
+        label: this.translateService.instant('tag-list-page.page-title', {
+          tagType: this.tagStore.tagType()
+        })
+      }
+    ]);
   }
 }

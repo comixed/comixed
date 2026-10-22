@@ -17,30 +17,37 @@
  */
 
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { PublisherListStore } from '@app/collections/stores/publisher-list-store';
 import { LoggerService } from '@angular-ru/cdk/logger';
-import { CollectionService } from '@app/collections/services/collection-service';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/layout/services/title-service';
-import { TableModule } from '@openng/optimus-ui/table';
+import { TableLazyLoadEvent, TableModule } from '@openng/optimus-ui/table';
 import { Card } from '@openng/optimus-ui/card';
-import { RouterLink } from '@angular/router';
 import { Breadcrumb } from '@openng/optimus-ui/breadcrumb';
 import { MenuItem } from '@openng/optimus-ui/api';
+import { Store } from '@ngrx/store';
+import { PublisherListActions } from '@app/library/actions/publisher-list.actions';
+import {
+  selectPublisherList,
+  selectPublisherListLoading,
+  selectPublisherListTotal
+} from '@app/library/selectors/publisher-list.selectors';
 
 @Component({
-  imports: [TranslatePipe, TableModule, Card, RouterLink, Breadcrumb],
+  imports: [TranslatePipe, TableModule, Card, Breadcrumb],
   selector: 'app-publisher-list-page',
   styleUrl: './publisher-list-page.scss',
   templateUrl: './publisher-list-page.html'
 })
 export class PublisherListPage implements OnInit {
   readonly logger = inject(LoggerService);
-  readonly collectionsService = inject(CollectionService);
-  readonly publisherListStore = inject(PublisherListStore);
   readonly translateService = inject(TranslateService);
   readonly titleService = inject(TitleService);
   readonly trail = signal<MenuItem[]>([]);
+
+  readonly store = inject(Store);
+  readonly loading = this.store.selectSignal(selectPublisherListLoading);
+  readonly publisherList = this.store.selectSignal(selectPublisherList);
+  readonly total = this.store.selectSignal(selectPublisherListTotal);
 
   home: MenuItem = { icon: 'pi pi-home', routerLink: ['/'] };
 
@@ -54,13 +61,13 @@ export class PublisherListPage implements OnInit {
   }
 
   ngOnInit(): void {
-    this.logger.trace('Loading all publishers');
-    this.collectionsService.loadPublisherList({
-      searchText: this.publisherListStore.searchText(),
-      index: this.publisherListStore.index(),
-      size: this.publisherListStore.size(),
-      sortBy: this.publisherListStore.sortBy(),
-      sortDirection: this.publisherListStore.sortDirection()
+    this.doLoadPublishers({ page: 0, size: 10 });
+  }
+
+  onLoad(event: TableLazyLoadEvent): void {
+    this.doLoadPublishers({
+      page: event.first! / event.rows!,
+      size: event.rows!
     });
   }
 
@@ -73,5 +80,18 @@ export class PublisherListPage implements OnInit {
     this.trail.set([
       { label: this.translateService.instant('publisher-list-page.page-title') }
     ]);
+  }
+
+  private doLoadPublishers(args: { page: number; size: number }) {
+    this.logger.trace('Loading publisher list:', args);
+    this.store.dispatch(
+      PublisherListActions.load({
+        searchText: '',
+        page: args.page,
+        size: args.size,
+        sortBy: '',
+        sortDirection: ''
+      })
+    );
   }
 }

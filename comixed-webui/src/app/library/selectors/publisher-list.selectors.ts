@@ -16,9 +16,28 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Series } from '@app/collections/models/series';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
+import {
+  PUBLISHER_LIST_FEATURE_KEY,
+  publisherListAdaptor,
+  PublisherListState
+} from '@app/library/reducers/publisher-list.reducer';
 
-export interface LoadPublisherDetailResponse {
-  totalSeries: number;
-  entries: Series[];
-}
+const selectPublisherListState = createFeatureSelector<PublisherListState>(
+  PUBLISHER_LIST_FEATURE_KEY
+);
+
+export const selectPublisherListLoading = createSelector(
+  selectPublisherListState,
+  state => state.loading
+);
+
+export const selectPublisherList = createSelector(
+  selectPublisherListState,
+  state => publisherListAdaptor.getSelectors().selectAll(state)
+);
+
+export const selectPublisherListTotal = createSelector(
+  selectPublisherListState,
+  state => state.total
+);

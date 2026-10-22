@@ -28,6 +28,10 @@ import { ComicMetadataSource } from '@app/library/models/comic-metadata-source';
 import { MetadataSource } from '@app/library/models/metadata-source';
 import { ArchiveType } from '@app/library/models/archive-type';
 import { ComicType } from '@app/library/models/comic-type';
+import { Publisher } from '@app/library/models/publisher';
+import { Series } from '@app/library/models/series';
+import { Issue } from '@app/library/models/issue';
+import { CollectionEntry } from '@app/library/models/collection-entry';
 
 export const REMOTE_LIBRARY_STATE: RemoteLibraryState = {
   totalComics: 71765,
@@ -115,4 +119,35 @@ export const METADATA_1: ComicMetadataSource = {
   metadataSource: METADATA_SOURCE_1,
   referenceId: '71765',
   lastScrapedDate: new Date().getTime()
+};
+
+export const PUBLISHER_1: Publisher = {
+  name: 'The First Publisher',
+  seriesCount: 5,
+  issueCount: 86
+};
+
+export const SERIES_1: Series = {
+  name: 'The Series Name',
+  publisher: 'The Series Publisher',
+  volume: '2026',
+  inLibrary: 717
+};
+
+export const ISSUE_1: Issue = {
+  issueId: 417,
+  publisher: 'The Issue Publisher',
+  series: 'The Series',
+  volume: '2026',
+  issueNumber: '714',
+  title: 'Some cool story or another...',
+  storeDate: new Date().getTime(),
+  coverDate: new Date().getTime(),
+  found: true
+};
+
+export const COLLECTION_ENTRY_1: CollectionEntry = {
+  tagType: ComicTagType.STORY,
+  tagValue: 'The Story Name',
+  comicCount: 129
 };

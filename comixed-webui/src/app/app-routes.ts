@@ -18,18 +18,17 @@
 
 import { Routes } from '@angular/router';
 import { DashboardPage } from '@app/dashboard/pages/dashboard-page/dashboard-page';
-import { PublisherListPage } from '@app/collections/pages/publisher-list-page/publisher-list-page';
 import { LoginPage } from '@app/account/pages/login-page/login-page';
-import { SeriesListPage } from '@app/collections/pages/series-list-page/series-list-page';
-import { TagListPage } from '@app/collections/pages/tag-list-page/tag-list-page';
-import { PublisherDetailPage } from '@app/collections/pages/publisher-detail-page/publisher-detail-page';
-import { SeriesDetailPage } from '@app/collections/pages/series-detail-page/series-detail-page';
 import { ComicListPage } from '@app/library/pages/comic-list-page/comic-list-page';
 import { ImportComicsPage } from '@app/library/pages/import-comics-page/import-comics-page';
 import { InitialAccountPage } from '@app/account/pages/initial-account-page/initial-account-page';
 import { ComicDetailPage } from '@app/library/pages/comic-detail-page/comic-detail-page';
 import { readerGuard } from '@app/account/guards/reader-guard';
 import { adminGuard } from '@app/account/guards/admin-guard';
+import { PublisherListPage } from '@app/library/pages/publisher-list-page/publisher-list-page';
+import { SeriesListPage } from '@app/library/pages/series-list-page/series-list-page';
+import { SeriesDetailPage } from '@app/library/pages/series-detail-page/series-detail-page';
+import { TagListPage } from '@app/library/pages/tag-list-page/tag-list-page';
 
 export const appRoutes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/dashboard' },
@@ -48,11 +47,6 @@ export const appRoutes: Routes = [
   {
     path: 'library/publishers',
     component: PublisherListPage,
-    canActivate: [readerGuard]
-  },
-  {
-    path: 'library/publishers/:publisherName',
-    component: PublisherDetailPage,
     canActivate: [readerGuard]
   },
   {

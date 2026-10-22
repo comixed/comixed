@@ -18,60 +18,55 @@
 
 import { Component, inject, signal } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
-import { CollectionService } from '@app/collections/services/collection-service';
+import { CollectionService } from '@app/library/services/collection-service';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/layout/services/title-service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { comicTagTypeFromString } from '@app/library/models/comic-tag-type';
-import { TagStore } from '@app/collections/stores/tag-store';
+import { SeriesDetailStore } from '@app/collections/stores/series-detail-store';
 import { Card } from '@openng/optimus-ui/card';
 import { TableModule } from '@openng/optimus-ui/table';
+import { DatePipe } from '@angular/common';
 import { Breadcrumb } from '@openng/optimus-ui/breadcrumb';
 import { MenuItem } from '@openng/optimus-ui/api';
 
 @Component({
-  imports: [TranslatePipe, Card, TableModule, Breadcrumb],
-  selector: 'app-tag-list-page',
-  styleUrl: './tag-list-page.scss',
-  templateUrl: './tag-list-page.html'
+  imports: [Card, TranslatePipe, TableModule, DatePipe, Breadcrumb],
+  selector: 'app-series-detail-page',
+  styleUrl: './series-detail-page.scss',
+  templateUrl: './series-detail-page.html'
 })
-export class TagListPage {
+export class SeriesDetailPage {
   readonly logger = inject(LoggerService);
   readonly collectionsService = inject(CollectionService);
-  readonly tagStore = inject(TagStore);
+  readonly seriesDetailStore = inject(SeriesDetailStore);
   readonly translateService = inject(TranslateService);
   readonly titleService = inject(TitleService);
   readonly activatedRoute = inject(ActivatedRoute);
   readonly router = inject(Router);
   readonly trail = signal<MenuItem[]>([]);
 
+  publisher = '';
+  series = '';
+  volume = '';
   home: MenuItem = { icon: 'pi pi-home', routerLink: ['/'] };
 
   constructor() {
     this.logger.trace('Subscribing to router parameter updates');
     this.activatedRoute.paramMap.subscribe({
       next: params => {
-        if (!params.has('tagType')) {
-          this.logger.error('Missing tag type');
-          this.router.navigateByUrl('/');
-        }
-        const typeParameter = params.get('tagType');
-        this.logger.trace('Extracting tag type');
-        const providedType = comicTagTypeFromString(typeParameter || '')!;
-        if (providedType) {
-          this.tagStore.setTagType(providedType);
-          this.collectionsService.loadCollectionEntryList({
-            tagType: providedType,
-            searchText: '',
-            index: 0,
-            size: 10,
-            sortBy: '',
-            sortDirection: ''
-          });
-        } else {
-          this.logger.error('Invalid tag type:', typeParameter);
-          this.router.navigateByUrl('/');
-        }
+        this.publisher = params.get('publisherName')!;
+        this.series = params.get('seriesName')!;
+        this.volume = params.get('volume')!;
+        this.seriesDetailStore.setSeries(
+          this.publisher,
+          this.series,
+          this.volume
+        );
+        this.collectionsService.loadSeriesDetail({
+          publisherName: this.publisher,
+          seriesName: this.series,
+          volume: this.volume
+        });
       }
     });
     this.translateService.onLangChange.subscribe({
@@ -84,14 +79,20 @@ export class TagListPage {
 
   private doLoadTranslations() {
     this.titleService.setTitle(
-      this.translateService.instant('tag-list-page.page-title', {
-        tagType: this.tagStore.tagType()
-      })
+      this.translateService.instant(
+        'collections.series-detail-page.page-title',
+        { name: this.series, volume: this.volume }
+      )
     );
     this.trail.set([
       {
-        label: this.translateService.instant('tag-list-page.page-title', {
-          tagType: this.tagStore.tagType()
+        label: this.publisher,
+        routerLink: ['/library/publishers', this.publisher]
+      },
+      {
+        label: this.translateService.instant('series-detail-page.page-title', {
+          name: this.series,
+          volume: this.volume
         })
       }
     ]);

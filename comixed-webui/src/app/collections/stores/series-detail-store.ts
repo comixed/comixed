@@ -17,7 +17,7 @@
  */
 
 import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
-import { Issue } from '@app/collections/models/issue';
+import { Issue } from '@app/library/models/issue';
 
 interface SeriesDetailState {
   publisher: string;

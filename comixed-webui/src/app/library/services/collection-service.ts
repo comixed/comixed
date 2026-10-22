@@ -19,99 +19,53 @@
 import { inject, Service } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { HttpClient } from '@angular/common/http';
-import { LoadPublisherListRequest } from '@app/collections/models/net/load-publisher-list-request';
+import { LoadPublisherListRequest } from '@app/library/models/net/load-publisher-list-request';
 import { interpolate } from '@app/app-functions';
+import { LoadPublisherListResponse } from '@app/library/models/net/load-publisher-list-response';
+import { SeriesListStore } from '@app/collections/stores/series-list-store';
+import { LoadSeriesListRequest } from '@app/library/models/net/load-series-list-request';
+import { LoadSeriesListResponse } from '@app/library/models/net/load-series-list-response';
+import { TagStore } from '@app/collections/stores/tag-store';
+import { ComicTagType } from '@app/library/models/comic-tag-type';
+import { LoadCollectionEntriesRequest } from '@app/library/models/net/load-collection-entries-request';
+import { LoadCollectionEntriesResponse } from '@app/library/models/net/load-collection-entries-response';
+import { SeriesDetailStore } from '@app/collections/stores/series-detail-store';
+import { LoadSeriesDetailRequest } from '@app/library/models/net/load-series-detail-request';
+import { Issue } from '@app/library/models/issue';
 import {
   LOAD_COLLECTION_ENTRIES_URL,
-  LOAD_PUBLISHER_DETAIL_URL,
   LOAD_PUBLISHER_LIST_URL,
   LOAD_SERIES_DETAIL_URL,
   LOAD_SERIES_LIST_URL
-} from '@app/collections/collections-contants';
-import { PublisherListStore } from '@app/collections/stores/publisher-list-store';
-import { LoadPublisherListResponse } from '@app/collections/models/net/load-publisher-list-response';
-import { SeriesListStore } from '@app/collections/stores/series-list-store';
-import { LoadSeriesListRequest } from '@app/collections/models/net/load-series-list-request';
-import { LoadSeriesListResponse } from '@app/collections/models/net/load-series-list-response';
-import { TagStore } from '@app/collections/stores/tag-store';
-import { ComicTagType } from '@app/library/models/comic-tag-type';
-import { LoadCollectionEntriesRequest } from '@app/collections/models/net/load-collection-entries-request';
-import { LoadCollectionEntriesResponse } from '@app/collections/models/net/load-collection-entries-response';
-import { PublisherDetailStore } from '@app/collections/stores/publisher-detail-store';
-import { LoadPublisherDetailResponse } from '@app/collections/models/net/load-publisher-detail-response';
-import { LoadPublisherDetailRequest } from '@app/collections/models/net/load-publisher-detail-request';
-import { SeriesDetailStore } from '@app/collections/stores/series-detail-store';
-import { LoadSeriesDetailRequest } from '@app/collections/models/net/load-series-detail-request';
-import { Issue } from '@app/collections/models/issue';
+} from '@app/library/library-constants';
+import { Observable } from 'rxjs';
 
 @Service()
 export class CollectionService {
   readonly logger = inject(LoggerService);
   readonly client = inject(HttpClient);
-  readonly publisherListStore = inject(PublisherListStore);
-  readonly publisherDetailStore = inject(PublisherDetailStore);
   readonly seriesListStore = inject(SeriesListStore);
   readonly seriesDetailStore = inject(SeriesDetailStore);
   readonly tagStore = inject(TagStore);
 
   loadPublisherList(args: {
     searchText: string;
-    index: number;
+    page: number;
     size: number;
     sortBy: string;
     sortDirection: string;
-  }): void {
+  }): Observable<LoadPublisherListResponse> {
     this.logger.trace('Loading publisher list:', args);
-    this.client
-      .post<LoadPublisherListResponse>(interpolate(LOAD_PUBLISHER_LIST_URL), {
+    return this.client.post<LoadPublisherListResponse>(
+      interpolate(LOAD_PUBLISHER_LIST_URL),
+      {
         searchText: args.searchText,
-        page: args.index,
+        page: args.page,
         size: args.size,
         sortBy: args.sortBy,
         sortDirection: args.sortDirection
-      } as LoadPublisherListRequest)
-      .subscribe({
-        next: response => {
-          this.logger.debug('Publisher list received:', response);
-          this.publisherListStore.update(response.publishers, response.total);
-        },
-        error: error =>
-          this.logger.error('Error loading publisher lists:', error)
-      });
-  }
-
-  loadPublisherDetail(args: {
-    name: string;
-    index: number;
-    size: number;
-    sortBy: string;
-    sortDirection: string;
-  }) {
-    this.logger.trace('Loading publisher detail:', args);
-    this.client
-      .post<LoadPublisherDetailResponse>(
-        interpolate(LOAD_PUBLISHER_DETAIL_URL, { publisherName: args.name }),
-        {
-          pageSize: args.size,
-          pageIndex: args.index,
-          sortBy: args.sortBy,
-          sortDirection: args.sortDirection
-        } as LoadPublisherDetailRequest
-      )
-      .subscribe({
-        next: response => {
-          this.logger.debug('Publisher detail received:', response);
-          this.publisherDetailStore.update(
-            args.name,
-            response.entries,
-            response.totalSeries,
-            args.index,
-            args.size
-          );
-        },
-        error: error =>
-          this.logger.error('Error loading publisher detail:', error)
-      });
+      } as LoadPublisherListRequest
+    );
   }
 
   loadSeriesList(args: {

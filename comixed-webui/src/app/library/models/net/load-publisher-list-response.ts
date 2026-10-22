@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Publisher } from '@app/collections/models/publisher';
+import { Publisher } from '@app/library/models/publisher';
 
 export interface LoadPublisherListResponse {
   publishers: Publisher[];
