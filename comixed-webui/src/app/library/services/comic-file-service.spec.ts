@@ -22,7 +22,7 @@ import {
   HttpTestingController,
   provideHttpClientTesting
 } from '@angular/common/http/testing';
-import { HttpResponse, provideHttpClient } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 import { interpolate } from '@app/app-functions';
 import {
   LOAD_COMIC_FILES_FROM_SESSION_URL,
@@ -68,67 +68,74 @@ describe('ComicFileService', () => {
   });
 
   describe('loading comic files', () => {
-    describe('loading from the file system', () => {
-      it('success', async () => {
-        const updateSpy = vi.spyOn(service.comicFilesStore, 'update');
-        service.loadComicFiles({
-          directory: TEST_PATH,
-          maximum: TEST_MAXIMUM_RECORDS
-        });
-        const req = httpController.expectOne(interpolate(LOAD_COMIC_FILES_URL));
+    it('should load from the session', () => {
+      const serverResponse = { groups: TEST_GROUPS } as LoadComicFilesResponse;
 
-        expect(req.request.method).toEqual('POST');
-        req.flush({ groups: TEST_GROUPS } as LoadComicFilesResponse);
-        httpController.verify();
-        expect(updateSpy).toHaveBeenCalledWith(TEST_GROUPS);
+      service.loadFromSession().subscribe({
+        next: response => expect(response).toStrictEqual(serverResponse)
       });
+
+      const req = httpController.expectOne(
+        interpolate(LOAD_COMIC_FILES_FROM_SESSION_URL)
+      );
+
+      expect(req.request.method).toEqual('GET');
+      req.flush(serverResponse);
+      httpController.verify();
     });
 
-    describe('loading from the session', () => {
-      it('success', async () => {
-        const updateSpy = vi.spyOn(service.comicFilesStore, 'update');
-        service.loadComicFilesFromSession();
-        const req = httpController.expectOne(
-          interpolate(LOAD_COMIC_FILES_FROM_SESSION_URL)
-        );
+    it('should load from the file system', async () => {
+      const serverResponse = { groups: TEST_GROUPS } as LoadComicFilesResponse;
 
-        expect(req.request.method).toEqual('GET');
-        req.flush({ groups: TEST_GROUPS } as LoadComicFilesResponse);
-        httpController.verify();
-        expect(updateSpy).toHaveBeenCalledWith(TEST_GROUPS);
-      });
+      service
+        .loadFromDisk({
+          directory: TEST_PATH,
+          maximum: TEST_MAXIMUM_RECORDS
+        })
+        .subscribe({
+          next: response => expect(response).toStrictEqual(serverResponse)
+        });
+
+      const req = httpController.expectOne(interpolate(LOAD_COMIC_FILES_URL));
+      expect(req.request.method).toEqual('POST');
+      req.flush(serverResponse);
+      httpController.verify();
     });
   });
 
   it('should selected comic files', async () => {
-    const updateSpy = vi.spyOn(service.comicFilesStore, 'update');
-    service.setComicFileSelected({
-      filename: TEST_COMIC_FILE.filename,
-      single: true,
-      selected: true
-    });
+    const serverResponse = { groups: TEST_GROUPS } as LoadComicFilesResponse;
+
+    service
+      .setComicFileSelected({
+        filename: TEST_COMIC_FILE.filename,
+        single: true,
+        selected: true
+      })
+      .subscribe({
+        next: response => expect(response).toStrictEqual(serverResponse)
+      });
+
     const req = httpController.expectOne(
       interpolate(TOGGLE_COMIC_FILE_SELECTIONS_URL)
     );
-
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
       filename: TEST_COMIC_FILE.filename,
       single: true,
       selected: true
     } as ToggleComicFileSelectionRequest);
-    req.flush({ groups: TEST_GROUPS } as LoadComicFilesResponse);
+    req.flush(serverResponse);
     httpController.verify();
-    expect(updateSpy).toHaveBeenCalledWith(TEST_GROUPS);
   });
 
-  it('should call the import process', async () => {
-    service.importComicFiles();
-    const req = httpController.expectOne(interpolate(SEND_COMIC_FILES_URL));
+  it('should import comics', async () => {
+    service.import().subscribe({ next: () => expect(true).toBeTruthy() });
 
+    const req = httpController.expectOne(interpolate(SEND_COMIC_FILES_URL));
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({} as unknown);
-    req.flush(new HttpResponse({ status: 200 }));
+    req.flush(200);
     httpController.verify();
   });
 });

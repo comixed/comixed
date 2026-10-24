@@ -17,53 +17,45 @@
  */
 
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import {
-  CURRENT_USER_FEATURE_KEY,
-  CurrentUserState
-} from '../reducers/current-user.reducer';
 import { hasRole } from '@app/account/account-functions';
 import {
   ROLE_NAME_ADMIN,
   ROLE_NAME_READER
 } from '@app/account/account-constants';
 import { RoleCheck } from '@app/account/guards/role-check';
+import {
+  USER_FEATURE_KEY,
+  UserState
+} from '@app/account/reducers/user.reducer';
 
-const selectCurrentUserState = createFeatureSelector<CurrentUserState>(
-  CURRENT_USER_FEATURE_KEY
+const selectUserState = createFeatureSelector<UserState>(USER_FEATURE_KEY);
+export default selectUserState;
+
+export const selectUserLoading = createSelector(
+  selectUserState,
+  state => state.busy
 );
-export default selectCurrentUserState;
 
-export const selectCurrentUserLoading = createSelector(
-  selectCurrentUserState,
-  state => state.loading
-);
-
-export const selectCurrentUserAuthenticated = createSelector(
-  selectCurrentUserState,
+export const selectUserAuthenticated = createSelector(
+  selectUserState,
   state => state.checked && !!state.user
 );
 
-export const selectCurrentUserIsAdmin = createSelector(
-  selectCurrentUserState,
-  state => {
-    return {
-      checked: state.checked,
-      passed: hasRole(state.user?.roles || [], ROLE_NAME_ADMIN)
-    } as RoleCheck;
-  }
-);
+export const selectUserIsAdmin = createSelector(selectUserState, state => {
+  return {
+    checked: state.checked,
+    passed: hasRole(state.user?.roles || [], ROLE_NAME_ADMIN)
+  } as RoleCheck;
+});
 
-export const selectCurrentUserIsReader = createSelector(
-  selectCurrentUserState,
-  state => {
-    return {
-      checked: state.checked,
-      passed: hasRole(state.user?.roles || [], ROLE_NAME_READER)
-    } as RoleCheck;
-  }
-);
+export const selectUserIsReader = createSelector(selectUserState, state => {
+  return {
+    checked: state.checked,
+    passed: hasRole(state.user?.roles || [], ROLE_NAME_READER)
+  } as RoleCheck;
+});
 
-export const selectCurrentUserReadComicIds = createSelector(
-  selectCurrentUserState,
+export const selectUserReadComicIds = createSelector(
+  selectUserState,
   state => state.user?.readComics || []
 );

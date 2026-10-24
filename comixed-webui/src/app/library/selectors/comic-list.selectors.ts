@@ -21,7 +21,7 @@ import {
   COMIC_LIST_FEATURE_KEY,
   comicListAdaptor,
   ComicListState
-} from '../reducers/comic-list.reducer';
+} from '@app/library/reducers/comic-list.reducer';
 
 const selectComicListState = createFeatureSelector<ComicListState>(
   COMIC_LIST_FEATURE_KEY

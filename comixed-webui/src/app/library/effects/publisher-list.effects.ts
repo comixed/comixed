@@ -18,12 +18,12 @@
 
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { PublisherListActions } from '../actions/publisher-list.actions';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { AlertService } from '@app/services/alert-service';
 import { TranslateService } from '@ngx-translate/core';
 import { CollectionService } from '@app/library/services/collection-service';
 import { catchError, map, of, switchMap, tap } from 'rxjs';
+import { PublisherListActions } from '@app/library/actions/publisher-list.actions';
 
 @Injectable()
 export class PublisherListEffects {
@@ -57,7 +57,7 @@ export class PublisherListEffects {
               this.logger.error('Service failure:', error);
               this.alertService.error(
                 this.translateService.instant(
-                  'publisher-list-effect.load.service-failure'
+                  'publisher-list-effects.load.service-failure'
                 )
               );
               return of(PublisherListActions.loadFailure());
@@ -67,7 +67,7 @@ export class PublisherListEffects {
       catchError(error => {
         this.logger.error('General failure:', error);
         this.alertService.error(
-          this.translateService.instant('app.effect.general-failure')
+          this.translateService.instant('app.effects.general-failure')
         );
         return of(PublisherListActions.loadFailure());
       })

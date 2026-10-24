@@ -28,9 +28,9 @@ import { Tooltip } from '@openng/optimus-ui/tooltip';
 import { LibraryStatisticsPanel } from '@app/layout/components/library-statistics-panel/library-statistics-panel';
 import { Store } from '@ngrx/store';
 import {
-  selectCurrentUserAuthenticated,
-  selectCurrentUserIsAdmin
-} from '@app/account/selectors/current-user.selectors';
+  selectUserAuthenticated,
+  selectUserIsAdmin
+} from '@app/account/selectors/user.selectors';
 
 @Component({
   imports: [
@@ -49,10 +49,8 @@ export class Topbar {
   readonly logger = inject(LoggerService);
   readonly appStore = inject(AppState);
   readonly store = inject(Store);
-  readonly authenticated = this.store.selectSignal(
-    selectCurrentUserAuthenticated
-  );
-  readonly isAdmin = this.store.selectSignal(selectCurrentUserIsAdmin);
+  readonly authenticated = this.store.selectSignal(selectUserAuthenticated);
+  readonly isAdmin = this.store.selectSignal(selectUserIsAdmin);
   readonly renderer = inject(Renderer2);
 
   constructor() {

@@ -19,9 +19,9 @@
 import { TestBed } from '@angular/core/testing';
 import { USER_READER } from '@app/account/account-fixtures';
 import {
-  CURRENT_USER_FEATURE_KEY,
-  initialCurrentUserState
-} from '@app/account/reducers/current-user.reducer';
+  USER_FEATURE_KEY,
+  initialUserState
+} from '@app/account/reducers/user.reducer';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
@@ -33,7 +33,7 @@ import { readerGuard } from '@app/account/guards/reader-guard';
 class Protected {}
 
 describe('readerGuard', () => {
-  const initialState = { [CURRENT_USER_FEATURE_KEY]: initialCurrentUserState };
+  const initialState = { [USER_FEATURE_KEY]: initialUserState };
 
   let store: MockStore;
   let routerHarness: RouterTestingHarness;
@@ -59,9 +59,9 @@ describe('readerGuard', () => {
 
   it('should grant access to a reader', async () => {
     store.setState({
-      ...initialCurrentUserState,
-      [CURRENT_USER_FEATURE_KEY]: {
-        ...initialCurrentUserState,
+      ...initialUserState,
+      [USER_FEATURE_KEY]: {
+        ...initialUserState,
         checked: true,
         user: USER_READER
       }
@@ -74,9 +74,9 @@ describe('readerGuard', () => {
 
   it('should deny access to a non-reader', async () => {
     store.setState({
-      ...initialCurrentUserState,
-      [CURRENT_USER_FEATURE_KEY]: {
-        ...initialCurrentUserState,
+      ...initialUserState,
+      [USER_FEATURE_KEY]: {
+        ...initialUserState,
         checked: true,
         user: { ...USER_READER, roles: [] }
       }

@@ -17,7 +17,7 @@
  */
 
 import { createFeature, createReducer, on } from '@ngrx/store';
-import { ExistingAdminAccountActions } from '../actions/existing-admin-account.actions';
+import { ExistingAdminAccountActions } from '@app/account/actions/existing-admin-account.actions';
 
 export const EXISTING_ADMIN_ACCOUNT_FEATURE_KEY =
   'existing_admin_account_state';

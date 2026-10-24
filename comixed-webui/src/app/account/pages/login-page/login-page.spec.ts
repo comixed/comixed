@@ -25,16 +25,16 @@ import { provideRouter } from '@angular/router';
 import { AccountService } from '@app/account/services/account-service';
 import { provideMockStore } from '@ngrx/store/testing';
 import {
-  CURRENT_USER_FEATURE_KEY,
-  initialCurrentUserState
-} from '@app/account/reducers/current-user.reducer';
-import { CurrentUserActions } from '@app/account/actions/current-user.actions';
+  USER_FEATURE_KEY,
+  initialUserState
+} from '@app/account/reducers/user.reducer';
+import { UserActions } from '@app/account/actions/user.actions';
 
 describe('LoginPage', () => {
   const TEST_TITLE_TRANSLATED = 'The Translated Title';
   const TEST_EMAIL = 'user@localhost.tld';
   const TEST_PASSWORD = 'th3!p455w0rD';
-  const initialState = { [CURRENT_USER_FEATURE_KEY]: initialCurrentUserState };
+  const initialState = { [USER_FEATURE_KEY]: initialUserState };
 
   let component: LoginPage;
   let fixture: ComponentFixture<LoginPage>;
@@ -77,7 +77,7 @@ describe('LoginPage', () => {
 
     it('performs a login', () => {
       expect(dispatchSpy).toHaveBeenCalledWith(
-        CurrentUserActions.login({
+        UserActions.login({
           email: TEST_EMAIL,
           password: TEST_PASSWORD
         })

@@ -17,9 +17,9 @@
  */
 
 import { createFeature, createReducer, on } from '@ngrx/store';
-import { ComicListActions } from '../actions/comic-list.actions';
 import { Comic } from '@app/library/models/comic';
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
+import { ComicListActions } from '@app/library/actions/comic-list.actions';
 
 export const COMIC_LIST_FEATURE_KEY = 'comic_list_state';
 

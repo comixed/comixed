@@ -17,7 +17,7 @@
  */
 
 import { TestBed } from '@angular/core/testing';
-import { CurrentUserEffects } from './current-user.effects';
+import { UserEffects } from './user.effects';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of, tap, throwError } from 'rxjs';
@@ -26,20 +26,22 @@ import { TokenService } from '@app/account/services/token-service';
 import { AlertService } from '@app/services/alert-service';
 import { MessageService } from '@openng/optimus-ui/api';
 import { LoginResponse } from '@app/account/models/net/login-response';
-import { CurrentUserActions } from '@app/account/actions/current-user.actions';
+import { UserActions } from '@app/account/actions/user.actions';
 import { USER_READER } from '@app/account/account-fixtures';
 import { hot } from 'vitest-marbles';
 import { HttpErrorResponse } from '@angular/common/http';
 import { provideTranslateService } from '@ngx-translate/core';
 
-describe.todo('CurrentUserEffects', () => {
+describe.todo('UserEffects', () => {
   const TEST_USER = USER_READER;
   const TEST_EMAIL = TEST_USER.email;
   const TEST_PASSWORD = 'th3!p455w0Rd';
   const TEST_TOKEN = 'The Auth Token';
+  const TEST_PREFERENCE_NAME = 'preference.name';
+  const TEST_PREFERENCE_VALUE = 'preference.value';
 
   let actions$: Observable<unknown>;
-  let effects: CurrentUserEffects;
+  let effects: UserEffects;
   let accountService: AccountService;
   let tokenService: TokenService;
   let alertService: AlertService;
@@ -47,7 +49,7 @@ describe.todo('CurrentUserEffects', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
-        CurrentUserEffects,
+        UserEffects,
         provideLogger({ minLevel: LoggerLevel.OFF }),
         provideTranslateService(),
         provideMockActions(() => actions$),
@@ -57,7 +59,7 @@ describe.todo('CurrentUserEffects', () => {
       ]
     });
 
-    effects = TestBed.inject(CurrentUserEffects);
+    effects = TestBed.inject(UserEffects);
     accountService = TestBed.inject(AccountService);
     tokenService = TestBed.inject(TokenService);
     alertService = TestBed.inject(AlertService);
@@ -73,12 +75,12 @@ describe.todo('CurrentUserEffects', () => {
         email: TEST_EMAIL,
         token: TEST_TOKEN
       } as LoginResponse;
-      const action = CurrentUserActions.login({
+      const action = UserActions.login({
         email: TEST_EMAIL,
         password: TEST_PASSWORD
       });
-      const outcome1 = CurrentUserActions.loginSuccess();
-      const outcome2 = CurrentUserActions.load();
+      const outcome1 = UserActions.loginSuccess();
+      const outcome2 = UserActions.load();
 
       actions$ = hot('-a', { a: action });
       const loginSpy = vi
@@ -100,11 +102,11 @@ describe.todo('CurrentUserEffects', () => {
 
     it('should fire an account on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = CurrentUserActions.login({
+      const action = UserActions.login({
         email: TEST_EMAIL,
         password: TEST_PASSWORD
       });
-      const outcome = CurrentUserActions.loginFailure();
+      const outcome = UserActions.loginFailure();
 
       actions$ = hot('-a', { a: action });
       const loginSpy = vi
@@ -125,11 +127,11 @@ describe.todo('CurrentUserEffects', () => {
     });
 
     it('should fire an account on general failure', () => {
-      const action = CurrentUserActions.login({
+      const action = UserActions.login({
         email: TEST_EMAIL,
         password: TEST_PASSWORD
       });
-      const outcome = CurrentUserActions.loginFailure();
+      const outcome = UserActions.loginFailure();
 
       actions$ = hot('-a', { a: action });
       const loginSpy = vi.spyOn(accountService, 'login').mockThrow(new Error());
@@ -151,57 +153,125 @@ describe.todo('CurrentUserEffects', () => {
   describe('loading the current user', () => {
     it('should fire an account on success', () => {
       const serviceResponse = TEST_USER;
-      const action = CurrentUserActions.load();
-      const outcome = CurrentUserActions.loadSuccess({ user: TEST_USER });
+      const action = UserActions.load();
+      const outcome = UserActions.loadSuccess({ user: TEST_USER });
 
       actions$ = hot('-a', { a: action });
-      const loadCurrentUserSpy = vi
-        .spyOn(accountService, 'loadCurrentUser')
+      const loadUserSpy = vi
+        .spyOn(accountService, 'loadUser')
         .mockReturnValue(of(serviceResponse));
       expect(
-        effects.loadCurrentUser$.pipe(
+        effects.loadUser$.pipe(
           tap(response => expect(response).toStrictEqual(outcome))
         )
       ).toSatisfyOnFlush(() => {
-        expect(loadCurrentUserSpy).toHaveBeenCalledWith();
+        expect(loadUserSpy).toHaveBeenCalledWith();
       });
     });
 
     it('should fire an account on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = CurrentUserActions.load();
-      const outcome = CurrentUserActions.loadFailure();
+      const action = UserActions.load();
+      const outcome = UserActions.loadFailure();
 
       actions$ = hot('-a', { a: action });
-      const loadCurrentUserSpy = vi
-        .spyOn(accountService, 'loadCurrentUser')
+      const loadUserSpy = vi
+        .spyOn(accountService, 'loadUser')
         .mockReturnValue(throwError(() => serviceResponse));
       const errorSpy = vi.spyOn(alertService, 'error');
       expect(
-        effects.loadCurrentUser$.pipe(
+        effects.loadUser$.pipe(
           tap(response => expect(response).toStrictEqual(outcome))
         )
       ).toSatisfyOnFlush(() => {
-        expect(loadCurrentUserSpy).toHaveBeenCalledWith();
+        expect(loadUserSpy).toHaveBeenCalledWith();
         expect(errorSpy).toHaveBeenCalled();
       });
     });
 
     it('should fire an account on general failure', () => {
-      const action = CurrentUserActions.load();
-      const outcome = CurrentUserActions.loadFailure();
+      const action = UserActions.load();
+      const outcome = UserActions.loadFailure();
 
       actions$ = hot('-a', { a: action });
-      const loadCurrentUserSpy = vi
-        .spyOn(accountService, 'loadCurrentUser')
+      const loadUserSpy = vi
+        .spyOn(accountService, 'loadUser')
         .mockThrow(new Error());
       const errorSpy = vi.spyOn(alertService, 'error');
       expect(
-        effects.loadCurrentUser$.pipe(
+        effects.loadUser$.pipe(
           tap(response => expect(response).toStrictEqual(outcome))
         )
       ).toSatisfyOnFlush(() => {
-        expect(loadCurrentUserSpy).toHaveBeenCalledWith();
+        expect(loadUserSpy).toHaveBeenCalledWith();
+        expect(errorSpy).toHaveBeenCalled();
+      });
+    });
+  });
+
+  describe('saving a user preference', () => {
+    it('should fire an account on success', () => {
+      const serviceResponse = TEST_USER;
+      const action = UserActions.savePreference({
+        name: TEST_PREFERENCE_NAME,
+        value: TEST_PREFERENCE_VALUE
+      });
+      const outcome = UserActions.savePreferenceSuccess({ user: TEST_USER });
+
+      actions$ = hot('-a', { a: action });
+      const savePreferenceSpy = vi
+        .spyOn(accountService, 'saveUserPreference')
+        .mockReturnValue(of(serviceResponse));
+      expect(
+        effects.savePreference$.pipe(
+          tap(response => expect(response).toStrictEqual(outcome))
+        )
+      ).toSatisfyOnFlush(() => {
+        expect(savePreferenceSpy).toHaveBeenCalledWith();
+      });
+    });
+
+    it('should fire an account on service failure', () => {
+      const serviceResponse = new HttpErrorResponse({});
+      const action = UserActions.savePreference({
+        name: TEST_PREFERENCE_NAME,
+        value: TEST_PREFERENCE_VALUE
+      });
+      const outcome = UserActions.savePreferenceFailure();
+
+      actions$ = hot('-a', { a: action });
+      const savePreferenceSpy = vi
+        .spyOn(accountService, 'saveUserPreference')
+        .mockReturnValue(throwError(() => serviceResponse));
+      const errorSpy = vi.spyOn(alertService, 'error');
+      expect(
+        effects.savePreference$.pipe(
+          tap(response => expect(response).toStrictEqual(outcome))
+        )
+      ).toSatisfyOnFlush(() => {
+        expect(savePreferenceSpy).toHaveBeenCalledWith();
+        expect(errorSpy).toHaveBeenCalled();
+      });
+    });
+
+    it('should fire an account on general failure', () => {
+      const action = UserActions.savePreference({
+        name: TEST_PREFERENCE_NAME,
+        value: TEST_PREFERENCE_VALUE
+      });
+      const outcome = UserActions.savePreferenceFailure();
+
+      actions$ = hot('-a', { a: action });
+      const savePreferenceSpy = vi
+        .spyOn(accountService, 'saveUserPreference')
+        .mockThrow(new Error());
+      const errorSpy = vi.spyOn(alertService, 'error');
+      expect(
+        effects.savePreference$.pipe(
+          tap(response => expect(response).toStrictEqual(outcome))
+        )
+      ).toSatisfyOnFlush(() => {
+        expect(savePreferenceSpy).toHaveBeenCalledWith();
         expect(errorSpy).toHaveBeenCalled();
       });
     });

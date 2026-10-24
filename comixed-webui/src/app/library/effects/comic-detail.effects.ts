@@ -19,11 +19,11 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, of, switchMap, tap } from 'rxjs';
-import { ComicDetailAction } from '../actions/comic-detail.actions';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { ComicService } from '@app/library/services/comic-service';
 import { AlertService } from '@app/services/alert-service';
 import { TranslateService } from '@ngx-translate/core';
+import { ComicDetailAction } from '@app/library/actions/comic-detail.actions';
 
 @Injectable()
 export class ComicDetailEffects {
@@ -52,7 +52,7 @@ export class ComicDetailEffects {
             this.logger.error('Service failure:', error);
             this.alertService.error(
               this.translateService.instant(
-                'comic-detail-effect.load-comic.service-failure'
+                'comic-detail-effects.load-comic.service-failure'
               ),
               '/library/all'
             );
@@ -63,7 +63,7 @@ export class ComicDetailEffects {
       catchError(error => {
         this.logger.error('General failure:', error);
         this.alertService.error(
-          this.translateService.instant('app.effect.general-failure'),
+          this.translateService.instant('app.effects.general-failure'),
           '/library/all'
         );
         return of(ComicDetailAction.loadFailure());
@@ -97,7 +97,7 @@ export class ComicDetailEffects {
               this.logger.error('Service failure:', error);
               this.alertService.error(
                 this.translateService.instant(
-                  'comic-detail-effect.save-comic.service-failure'
+                  'comic-detail-effects.save-comic.service-failure'
                 )
               );
               return of(ComicDetailAction.saveFailure());
@@ -107,7 +107,7 @@ export class ComicDetailEffects {
       catchError(error => {
         this.logger.error('General failure:', error);
         this.alertService.error(
-          this.translateService.instant('app.effect.general-failure')
+          this.translateService.instant('app.effects.general-failure')
         );
         return of(ComicDetailAction.saveFailure());
       })

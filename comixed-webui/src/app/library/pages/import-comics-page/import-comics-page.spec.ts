@@ -21,8 +21,21 @@ import { ImportComicsPage } from './import-comics-page';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideRouter } from '@angular/router';
+import { provideMockStore } from '@ngrx/store/testing';
+import {
+  initialUserState,
+  USER_FEATURE_KEY
+} from '@app/account/reducers/user.reducer';
+import {
+  COMIC_FILE_LIST_FEATURE_KEY,
+  initialComicFileListState
+} from '@app/library/reducers/comic-file-list.reducer';
 
 describe('ImportComicsPage', () => {
+  const initialState = {
+    [USER_FEATURE_KEY]: initialUserState,
+    [COMIC_FILE_LIST_FEATURE_KEY]: initialComicFileListState
+  };
   let component: ImportComicsPage;
   let fixture: ComponentFixture<ImportComicsPage>;
 
@@ -37,7 +50,8 @@ describe('ImportComicsPage', () => {
           }
         ]),
         provideLogger({ minLevel: LoggerLevel.OFF }),
-        provideTranslateService()
+        provideTranslateService(),
+        provideMockStore({ initialState })
       ]
     }).compileComponents();
 

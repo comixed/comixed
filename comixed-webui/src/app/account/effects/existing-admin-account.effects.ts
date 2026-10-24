@@ -18,10 +18,10 @@
 
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { ExistingAdminAccountActions } from '../actions/existing-admin-account.actions';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { AccountService } from '@app/account/services/account-service';
 import { catchError, map, of, switchMap, tap } from 'rxjs';
+import { ExistingAdminAccountActions } from '@app/account/actions/existing-admin-account.actions';
 
 @Injectable()
 export class ExistingAdminAccountEffects {
@@ -41,13 +41,13 @@ export class ExistingAdminAccountEffects {
             })
           ),
           catchError(error => {
-            this.logger.error('Service error:', error);
+            this.logger.error('Service failure:', error);
             return of(ExistingAdminAccountActions.checkFailure());
           })
         )
       ),
       catchError(error => {
-        this.logger.error('General error:', error);
+        this.logger.error('General failure:', error);
         return of(ExistingAdminAccountActions.checkFailure());
       })
     );
@@ -67,13 +67,13 @@ export class ExistingAdminAccountEffects {
             tap(response => this.logger.debug('Response received:', response)),
             map(() => ExistingAdminAccountActions.createSuccess()),
             catchError(error => {
-              this.logger.error('Service error:', error);
+              this.logger.error('Service failure:', error);
               return of(ExistingAdminAccountActions.createFailure());
             })
           )
       ),
       catchError(error => {
-        this.logger.error('General error:', error);
+        this.logger.error('General failure:', error);
         return of(ExistingAdminAccountActions.createFailure());
       })
     );

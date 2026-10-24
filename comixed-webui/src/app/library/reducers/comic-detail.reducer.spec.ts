@@ -16,11 +16,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import {
-  comicDetailReducer,
-  ComicDetailState,
-  initialComicDetailState
-} from '../reducers/comic-detail.reducer';
 import { beforeEach } from 'vitest';
 import { Action } from '@ngrx/store';
 import {
@@ -31,6 +26,11 @@ import {
 } from '@app/library/library-fixtures';
 import { ComicDetailAction } from '@app/library/actions/comic-detail.actions';
 import { NO_COMIC } from '@app/library/models/comic';
+import {
+  comicDetailReducer,
+  ComicDetailState,
+  initialComicDetailState
+} from '@app/library/reducers/comic-detail.reducer';
 
 describe('ComicDetail Reducer', () => {
   const TEST_COMIC = COMIC_1;

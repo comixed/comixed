@@ -26,10 +26,20 @@ import {
   EXISTING_ADMIN_ACCOUNT_FEATURE_KEY,
   initialExistingAdminAccountState
 } from '@app/account/reducers/existing-admin-account.reducer';
+import {
+  initialUserState,
+  USER_FEATURE_KEY
+} from '@app/account/reducers/user.reducer';
+import {
+  initialMessagingState,
+  MESSAGING_FEATURE_KEY
+} from '@app/messaging/reducers/messaging.reducer';
 
 describe('InitialAccountPage', () => {
   const initialState = {
-    [EXISTING_ADMIN_ACCOUNT_FEATURE_KEY]: initialExistingAdminAccountState
+    [MESSAGING_FEATURE_KEY]: initialMessagingState,
+    [EXISTING_ADMIN_ACCOUNT_FEATURE_KEY]: initialExistingAdminAccountState,
+    [USER_FEATURE_KEY]: initialUserState
   };
 
   let component: InitialAccountPage;

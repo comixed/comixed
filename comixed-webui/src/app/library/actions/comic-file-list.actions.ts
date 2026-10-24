@@ -17,16 +17,22 @@
  */
 
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
-import { User } from '@app/account/models/user';
+import { ComicFileGroup } from '@app/library/models/comic-file-group';
 
-export const CurrentUserActions = createActionGroup({
-  source: 'Current User',
+export const ComicFileListActions = createActionGroup({
+  source: 'ComicFileList/API',
   events: {
-    Login: props<{ email: string; password: string }>(),
-    LoginSuccess: emptyProps(),
-    LoginFailure: emptyProps(),
-    Load: emptyProps(),
-    LoadSuccess: props<{ user: User | null }>(),
-    LoadFailure: emptyProps()
+    LoadFromSession: emptyProps(),
+    LoadFromSessionSuccess: props<{ groups: ComicFileGroup[] }>(),
+    LoadFromSessionFailure: emptyProps(),
+    LoadFromDisk: props<{ directory: string; maximum: number }>(),
+    LoadFromDiskSuccess: props<{ groups: ComicFileGroup[] }>(),
+    LoadFromDiskFailure: emptyProps(),
+    Select: props<{ filename: string; selected: boolean; single: boolean }>(),
+    SelectSuccess: props<{ groups: ComicFileGroup[] }>(),
+    SelectFailure: emptyProps(),
+    Import: emptyProps(),
+    ImportSuccess: emptyProps(),
+    ImportFailure: emptyProps()
   }
 });

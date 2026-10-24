@@ -32,8 +32,8 @@ import { Button } from '@openng/optimus-ui/button';
 import { InputText } from '@openng/optimus-ui/inputtext';
 import { IftaLabel } from '@openng/optimus-ui/iftalabel';
 import { Store } from '@ngrx/store';
-import { selectCurrentUserAuthenticated } from '@app/account/selectors/current-user.selectors';
-import { CurrentUserActions } from '@app/account/actions/current-user.actions';
+import { selectUserAuthenticated } from '@app/account/selectors/user.selectors';
+import { UserActions } from '@app/account/actions/user.actions';
 
 @Component({
   imports: [
@@ -62,7 +62,7 @@ export class LoginPage {
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]]
     });
-    this.store.select(selectCurrentUserAuthenticated).subscribe({
+    this.store.select(selectUserAuthenticated).subscribe({
       next: authenticated => {
         if (authenticated) {
           this.logger.trace(
@@ -81,7 +81,7 @@ export class LoginPage {
     this.logger.debug('Submitting login form');
     const email = this.loginForm.controls['email'].value;
     const password = this.loginForm.controls['password'].value;
-    this.store.dispatch(CurrentUserActions.login({ email, password }));
+    this.store.dispatch(UserActions.login({ email, password }));
   }
 
   private doLoadTranslations() {

@@ -3,7 +3,7 @@
     "button": {
       "submit": "Submit"
     },
-    "effect": {
+    "effects": {
       "general-failure": "A general failure occurred..."
     },
     "page-title": "ComiXed: {title}",
@@ -14,7 +14,7 @@
       "series": "[series]"
     }
   },
-  "comic-detail-effect": {
+  "comic-detail-effects": {
     "load-comic": {
       "service-failure": "Unable to load comic..."
     },
@@ -38,7 +38,15 @@
       "previous-issue": "Prev Issue"
     }
   },
-  "comic-list-effect": {
+  "comic-file-list-effects": {
+    "load-from-disk": {
+      "service-failure": "Failed to load comics from path: {directory}"
+    },
+    "load-from-session": {
+      "service-failure": "Failed to load comic files from the session..."
+    }
+  },
+  "comic-list-effects": {
     "load-by-filter": {
       "service-failure": "Unable to load comics..."
     }
@@ -95,14 +103,6 @@
       "locations": "Locations",
       "stories": "Stories",
       "teams": "Teams"
-    }
-  },
-  "current-user-effect": {
-    "load-current-user": {
-      "service-failure": "User session expired..."
-    },
-    "login": {
-      "service-failure": "Login was unsuccessful..."
     }
   },
   "dashboard": {
@@ -212,15 +212,7 @@
     },
     "title": "Login"
   },
-  "publisher-detail-page": {
-    "label": {
-      "in-library": "# of Comics",
-      "series-name": "Series Name",
-      "volume": "Volume"
-    },
-    "page-title": "Publisher: {name}"
-  },
-  "publisher-list-effect": {
+  "publisher-list-effects": {
     "load": {
       "service-failure": "Failed to load publisher list..."
     }
@@ -276,6 +268,14 @@
       "home-button": "Go to the dashboard...",
       "import-button": "Import comic files...",
       "logout-button": "Log out of the server..."
+    }
+  },
+  "user-effects": {
+    "load-current-user": {
+      "service-failure": "User session expired..."
+    },
+    "login": {
+      "service-failure": "Login was unsuccessful..."
     }
   },
   "welcome": {

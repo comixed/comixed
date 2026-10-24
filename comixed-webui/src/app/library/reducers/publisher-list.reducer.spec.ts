@@ -16,16 +16,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
+import { beforeEach } from 'vitest';
+import { Action } from '@ngrx/store';
+import { PublisherListActions } from '@app/library/actions/publisher-list.actions';
+import { PUBLISHER_1 } from '@app/library/library-fixtures';
 import {
   initialPublisherListState,
   publisherListAdaptor,
   publisherListReducer,
   PublisherListState
-} from '../reducers/publisher-list.reducer';
-import { beforeEach } from 'vitest';
-import { Action } from '@ngrx/store';
-import { PublisherListActions } from '@app/library/actions/publisher-list.actions';
-import { PUBLISHER_1 } from '@app/library/library-fixtures';
+} from '@app/library/reducers/publisher-list.reducer';
 
 describe('PublisherList Reducer', () => {
   const TEST_PUBLISHER_LIST = [PUBLISHER_1];

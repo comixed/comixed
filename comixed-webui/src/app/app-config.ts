@@ -24,7 +24,6 @@ import {
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { appRoutes } from '@app/app-routes';
-import { environment } from '../environments/environment';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import {
   provideTranslateCompiler,
@@ -47,6 +46,7 @@ import { MessageService } from '@openng/optimus-ui/api';
 import { MessagingModule } from '@app/messaging/messaging-module';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
+import { environment } from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
   providers: [

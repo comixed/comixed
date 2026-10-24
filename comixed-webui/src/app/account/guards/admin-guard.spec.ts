@@ -20,9 +20,9 @@ import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { adminGuard } from './admin-guard';
 import {
-  CURRENT_USER_FEATURE_KEY,
-  initialCurrentUserState
-} from '@app/account/reducers/current-user.reducer';
+  USER_FEATURE_KEY,
+  initialUserState
+} from '@app/account/reducers/user.reducer';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
 import { beforeEach } from 'vitest';
@@ -34,7 +34,7 @@ import { RouterTestingHarness } from '@angular/router/testing';
 class Protected {}
 
 describe('adminGuard', () => {
-  const initialState = { [CURRENT_USER_FEATURE_KEY]: initialCurrentUserState };
+  const initialState = { [USER_FEATURE_KEY]: initialUserState };
 
   let store: MockStore;
   let routerHarness: RouterTestingHarness;
@@ -60,9 +60,9 @@ describe('adminGuard', () => {
 
   it('should grant access to an admin', async () => {
     store.setState({
-      ...initialCurrentUserState,
-      [CURRENT_USER_FEATURE_KEY]: {
-        ...initialCurrentUserState,
+      ...initialUserState,
+      [USER_FEATURE_KEY]: {
+        ...initialUserState,
         checked: true,
         user: USER_ADMIN
       }
@@ -75,9 +75,9 @@ describe('adminGuard', () => {
 
   it('should deny access to a non-admin', async () => {
     store.setState({
-      ...initialCurrentUserState,
-      [CURRENT_USER_FEATURE_KEY]: {
-        ...initialCurrentUserState,
+      ...initialUserState,
+      [USER_FEATURE_KEY]: {
+        ...initialUserState,
         checked: true,
         user: { ...USER_ADMIN, roles: [] }
       }

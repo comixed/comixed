@@ -17,61 +17,72 @@
  */
 
 import { createFeature, createReducer, on } from '@ngrx/store';
-import { CurrentUserActions } from '../actions/current-user.actions';
 import { User } from '@app/account/models/user';
+import { UserActions } from '@app/account/actions/user.actions';
 
-export const CURRENT_USER_FEATURE_KEY = 'current_user_state';
+export const USER_FEATURE_KEY = 'user_state';
 
-export interface CurrentUserState {
-  loading: boolean;
+export interface UserState {
+  busy: boolean;
   checked: boolean;
   user: User | null;
 }
 
-export const initialCurrentUserState: CurrentUserState = {
-  loading: false,
+export const initialUserState: UserState = {
+  busy: false,
   checked: false,
   user: null
 };
 
-export const currentUserReducer = createReducer(
-  initialCurrentUserState,
-  on(CurrentUserActions.login, state => ({
+export const userReducer = createReducer(
+  initialUserState,
+  on(UserActions.login, state => ({
     ...state,
-    loading: true,
+    busy: true,
     checked: false,
     user: null
   })),
-  on(CurrentUserActions.loginSuccess, state => ({
+  on(UserActions.loginSuccess, state => ({
     ...state,
-    loading: false,
+    busy: false,
     checked: true
   })),
-  on(CurrentUserActions.loginFailure, state => ({
+  on(UserActions.loginFailure, state => ({
     ...state,
-    loading: false,
+    busy: false,
     checked: true
   })),
-  on(CurrentUserActions.load, state => ({
+  on(UserActions.load, state => ({
     ...state,
-    loading: true,
+    busy: true,
     checked: false,
     user: null
   })),
-  on(CurrentUserActions.loadSuccess, (state, action) => ({
+  on(UserActions.loadSuccess, (state, action) => ({
     ...state,
-    loading: false,
+    busy: false,
     checked: true,
     user: action.user
   })),
-  on(CurrentUserActions.loadFailure, state => ({
+  on(UserActions.loadFailure, state => ({
     ...state,
-    loading: false,
+    busy: false,
     checked: false
-  }))
+  })),
+  on(UserActions.userUpdate, (state, action) => ({
+    ...state,
+    user: action.user
+  })),
+  on(UserActions.savePreference, state => ({ ...state, busy: true })),
+  on(UserActions.savePreferenceSuccess, (state, action) => ({
+    ...state,
+    busy: false,
+    user: action.user
+  })),
+  on(UserActions.savePreferenceFailure, state => ({ ...state, busy: false }))
 );
 
-export const currentUserFeature = createFeature({
-  name: CURRENT_USER_FEATURE_KEY,
-  reducer: currentUserReducer
+export const userFeature = createFeature({
+  name: USER_FEATURE_KEY,
+  reducer: userReducer
 });

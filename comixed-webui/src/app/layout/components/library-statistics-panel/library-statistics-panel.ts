@@ -22,7 +22,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { Button } from '@openng/optimus-ui/button';
 import { RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { selectCurrentUserReadComicIds } from '@app/account/selectors/current-user.selectors';
+import { selectUserReadComicIds } from '@app/account/selectors/user.selectors';
 
 @Component({
   imports: [TranslatePipe, Button, RouterLink],
@@ -33,7 +33,5 @@ import { selectCurrentUserReadComicIds } from '@app/account/selectors/current-us
 export class LibraryStatisticsPanel {
   readonly libraryStore = inject(LibraryStore);
   readonly store = inject(Store);
-  readonly readComicIds = this.store.selectSignal(
-    selectCurrentUserReadComicIds
-  );
+  readonly readComicIds = this.store.selectSignal(selectUserReadComicIds);
 }

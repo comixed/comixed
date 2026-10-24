@@ -18,12 +18,12 @@
 
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { ComicListActions } from '../actions/comic-list.actions';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { catchError, map, of, switchMap, tap } from 'rxjs';
 import { LibraryService } from '@app/library/services/library-service';
 import { TranslateService } from '@ngx-translate/core';
 import { AlertService } from '@app/services/alert-service';
+import { ComicListActions } from '@app/library/actions/comic-list.actions';
 
 @Injectable()
 export class ComicListEffects {
@@ -72,7 +72,7 @@ export class ComicListEffects {
               this.logger.error('Service failure:', error);
               this.alertService.error(
                 this.translateService.instant(
-                  'comic-list-effect.load-by-filter.service-failure'
+                  'comic-list-effects.load-by-filter.service-failure'
                 )
               );
               return of(ComicListActions.loadFailure());
@@ -80,9 +80,9 @@ export class ComicListEffects {
           )
       ),
       catchError(error => {
-        this.logger.error('Service failure:', error);
+        this.logger.error('General failure:', error);
         this.alertService.error(
-          this.translateService.instant('app.effect.general-failure')
+          this.translateService.instant('app.effects.general-failure')
         );
         return of(ComicListActions.loadFailure());
       })

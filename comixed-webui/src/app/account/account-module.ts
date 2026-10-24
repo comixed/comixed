@@ -22,16 +22,16 @@ import { StoreModule } from '@ngrx/store';
 import { existingAdminAccountFeature } from '@app/account/reducers/existing-admin-account.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { ExistingAdminAccountEffects } from '@app/account/effects/existing-admin-account.effects';
-import { currentUserFeature } from '@app/account/reducers/current-user.reducer';
-import { CurrentUserEffects } from '@app/account/effects/current-user.effects';
+import { userFeature } from '@app/account/reducers/user.reducer';
+import { UserEffects } from '@app/account/effects/user.effects';
 
 @NgModule({
   declarations: [],
   imports: [
     CommonModule,
     StoreModule.forFeature(existingAdminAccountFeature),
-    StoreModule.forFeature(currentUserFeature),
-    EffectsModule.forFeature([ExistingAdminAccountEffects, CurrentUserEffects])
+    StoreModule.forFeature(userFeature),
+    EffectsModule.forFeature([ExistingAdminAccountEffects, UserEffects])
   ]
 })
 export class AccountModule {}

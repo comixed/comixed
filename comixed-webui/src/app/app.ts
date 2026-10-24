@@ -28,8 +28,8 @@ import {
   selectExistingAdminAccountCreate
 } from '@app/account/selectors/existing-admin-account.selectors';
 import { ExistingAdminAccountActions } from '@app/account/actions/existing-admin-account.actions';
-import { CurrentUserActions } from '@app/account/actions/current-user.actions';
-import { selectCurrentUserAuthenticated } from '@app/account/selectors/current-user.selectors';
+import { UserActions } from '@app/account/actions/user.actions';
+import { selectUserAuthenticated } from '@app/account/selectors/user.selectors';
 import { Toast } from '@openng/optimus-ui/toast';
 
 @Component({
@@ -61,11 +61,11 @@ export class App {
           this.router.navigateByUrl('/accounts/initial');
         } else {
           this.logger.trace('Loading current user');
-          this.store.dispatch(CurrentUserActions.load());
+          this.store.dispatch(UserActions.load());
         }
       }
     });
-    this.store.select(selectCurrentUserAuthenticated).subscribe({
+    this.store.select(selectUserAuthenticated).subscribe({
       next: authenticated => {
         if (authenticated) {
           this.webSocketService.connect().subscribe();

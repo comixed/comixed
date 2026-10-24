@@ -17,12 +17,6 @@
  */
 
 import {
-  COMIC_LIST_FEATURE_KEY,
-  comicListAdaptor,
-  ComicListState,
-  initialComicListState
-} from '../reducers/comic-list.reducer';
-import {
   selectComicList,
   selectComicListCoverMonthList,
   selectComicListCoverYearList,
@@ -32,6 +26,12 @@ import {
 } from './comic-list.selectors';
 import { beforeEach } from 'vitest';
 import { COMIC_1 } from '@app/library/library-fixtures';
+import {
+  COMIC_LIST_FEATURE_KEY,
+  comicListAdaptor,
+  ComicListState,
+  initialComicListState
+} from '@app/library/reducers/comic-list.reducer';
 
 describe('ComicList Selectors', () => {
   const TEST_COMIC_LIST = [COMIC_1];

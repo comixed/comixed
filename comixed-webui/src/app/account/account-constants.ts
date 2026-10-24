@@ -18,18 +18,21 @@
 
 import { API_ROOT_URL } from '@app/app-constants';
 
+export const AUTHENTICATION_TOKEN_KEY = 'comixed.auth-token';
+
+export const HTTP_AUTHORIZATION_HEADER = 'Authorization';
+export const HTTP_REQUESTED_WITH_HEADER = 'X-Requested-With';
+export const HTTP_XML_REQUEST = 'XMLHttpRequest';
+
 export const ROLE_NAME_READER = 'READER';
 export const ROLE_NAME_ADMIN = 'ADMIN';
 
 export const CHECK_FOR_ADMIN_ACCOUNT_URL = `${API_ROOT_URL}/users/admins/existing`;
 export const CREATE_ADMIN_ACCOUNT_URL = `${API_ROOT_URL}/users/admins`;
 export const LOGIN_PAGE_URL = '/login';
-
-export const LOAD_CURRENT_USER_URL = `${API_ROOT_URL}/user`;
+export const LOAD_USER_URL = `${API_ROOT_URL}/user`;
 export const LOGIN_URL = `${API_ROOT_URL}/token/generate`;
+export const SAVE_USER_PREFERENCE_URL = `${API_ROOT_URL}/user/preferences/\${preferenceName}`;
 
-export const AUTHENTICATION_TOKEN_KEY = 'comixed.auth-token';
-
-export const HTTP_AUTHORIZATION_HEADER = 'Authorization';
-export const HTTP_REQUESTED_WITH_HEADER = 'X-Requested-With';
-export const HTTP_XML_REQUEST = 'XMLHttpRequest';
+// mesaging
+export const ACCOUNT_UPDATES_TOPIC = `/secured/user/\${email}/user/current`;

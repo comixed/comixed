@@ -20,7 +20,7 @@ import { createActionGroup, emptyProps, props } from '@ngrx/store';
 import { Comic } from '@app/library/models/comic';
 import { ComicPage } from '@app/library/models/comic-page';
 import { ComicTag } from '@app/library/models/comic-tag';
-import { ComicMetadataSource } from '../models/comic-metadata-source';
+import { ComicMetadataSource } from '@app/library/models/comic-metadata-source';
 
 export const ComicDetailAction = createActionGroup({
   source: 'Comic Detail',

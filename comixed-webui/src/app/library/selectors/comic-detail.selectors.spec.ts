@@ -34,7 +34,7 @@ import {
   COMIC_TAG_1
 } from '@app/library/library-fixtures';
 
-describe('CurrentUser Selectors', () => {
+describe('User Selectors', () => {
   const TEST_COMIC = COMIC_1;
   const TEST_TAGS = [COMIC_TAG_1];
   const TEST_PAGES = [COMIC_PAGE_1];

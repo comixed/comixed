@@ -26,15 +26,19 @@ import { comicListFeature } from '@app/library/reducers/comic-list.reducer';
 import { ComicListEffects } from '@app/library/effects/comic-list.effects';
 import { publisherListsFeature } from '@app/library/reducers/publisher-list.reducer';
 import { PublisherListEffects } from '@app/library/effects/publisher-list.effects';
+import { ComicFileListEffects } from '@app/library/effects/comic-file-list.effects';
+import { comicFileListsFeature } from '@app/library/reducers/comic-file-list.reducer';
 
 @NgModule({
   declarations: [],
   imports: [
     CommonModule,
+    StoreModule.forFeature(comicFileListsFeature),
     StoreModule.forFeature(publisherListsFeature),
     StoreModule.forFeature(comicDetailFeature),
     StoreModule.forFeature(comicListFeature),
     EffectsModule.forFeature([
+      ComicFileListEffects,
       PublisherListEffects,
       ComicDetailEffects,
       ComicListEffects

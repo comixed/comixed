@@ -28,9 +28,9 @@ import {
   initialExistingAdminAccountState
 } from '@app/account/reducers/existing-admin-account.reducer';
 import {
-  CURRENT_USER_FEATURE_KEY,
-  initialCurrentUserState
-} from '@app/account/reducers/current-user.reducer';
+  USER_FEATURE_KEY,
+  initialUserState
+} from '@app/account/reducers/user.reducer';
 import { MessageService } from '@openng/optimus-ui/api';
 import {
   initialMessagingState,
@@ -40,7 +40,7 @@ import {
 describe('App', () => {
   const initialState = {
     [EXISTING_ADMIN_ACCOUNT_FEATURE_KEY]: initialExistingAdminAccountState,
-    [CURRENT_USER_FEATURE_KEY]: initialCurrentUserState,
+    [USER_FEATURE_KEY]: initialUserState,
     [MESSAGING_FEATURE_KEY]: initialMessagingState
   };
   let component: App;

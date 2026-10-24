@@ -26,6 +26,7 @@
           formControlName="maximum"
           [options]="maximumOptions"
           optionLabel="label"
+          optionValue="value"
           [placeholder]="
             'import-comics-page.placeholder.maximum-input' | translate
           "
@@ -34,22 +35,22 @@
         <p-button
           icon="pi pi-cloud-upload"
           severity="primary"
-          [label]="comicFilesStore.selected().toString()"
+          [label]="comicFileSelectedCount().toString()"
           [pTooltip]="
             'import-comics-page.tooltip.import-comics-button'
-              | translate: { selected: comicFilesStore.selected() }
+              | translate: { selected: comicFileSelectedCount() }
           "
-          [disabled]="!(comicFilesStore.selected() > 0)"
+          [disabled]="!(comicFileSelectedCount() > 0)"
           (click)="onImportComicFiles()"
         />
       </p-input-group>
     </form>
   </ng-template>
 
-  @if (comicFilesStore.files().length > 0) {
+  @if (comicFileList().length > 0) {
     <p-table
       #filetable
-      [value]="comicFilesStore.files()"
+      [value]="comicFileList()"
       stripedRows
       [paginator]="true"
       paginatorPosition="both"
@@ -60,7 +61,7 @@
           <th>
             <p-check-box
               [binary]="true"
-              [ngModel]="comicFilesStore.allSelected()"
+              [ngModel]="comicFileCount() === comicFileSelectedCount()"
               (onChange)="onSelectAll($event)"
             />
           </th>

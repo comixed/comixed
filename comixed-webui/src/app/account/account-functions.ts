@@ -18,6 +18,7 @@
 
 import { FormGroup } from '@angular/forms';
 import { UserRole } from '@app/account/models/user-role';
+import { User } from '@app/account/models/user';
 
 export function hasRole(roles: UserRole[], target: string): boolean {
   return roles.map(role => role.name).includes(target);
@@ -41,4 +42,15 @@ export function validatePasswordsMatch(password: string, verify: string) {
       verifyPasswordField.setErrors(null);
     }
   };
+}
+
+export function getUserPreference(
+  user: User,
+  preferenceName: string,
+  defaultValue: string
+): string {
+  return (
+    user.preferences.find(entry => entry.name === preferenceName)?.value ||
+    defaultValue
+  );
 }

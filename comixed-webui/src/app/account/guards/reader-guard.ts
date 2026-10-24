@@ -19,7 +19,7 @@
 import { CanActivateFn } from '@angular/router';
 import { inject } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { selectCurrentUserIsReader } from '@app/account/selectors/current-user.selectors';
+import { selectUserIsReader } from '@app/account/selectors/user.selectors';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { filter, map, take, tap } from 'rxjs';
 
@@ -27,7 +27,7 @@ export const readerGuard: CanActivateFn = () => {
   const logger = inject(LoggerService);
   const store = inject(Store);
 
-  return store.select(selectCurrentUserIsReader).pipe(
+  return store.select(selectUserIsReader).pipe(
     filter(status => status.checked),
     take(1),
     tap(status => logger.trace('Is reader?', status.passed)),

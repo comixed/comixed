@@ -25,12 +25,12 @@ import { provideTranslateService } from '@ngx-translate/core';
 import { provideRouter } from '@angular/router';
 import { provideMockStore } from '@ngrx/store/testing';
 import {
-  CURRENT_USER_FEATURE_KEY,
-  initialCurrentUserState
-} from '@app/account/reducers/current-user.reducer';
+  USER_FEATURE_KEY,
+  initialUserState
+} from '@app/account/reducers/user.reducer';
 
 describe('Topbar', () => {
-  const initialState = { [CURRENT_USER_FEATURE_KEY]: initialCurrentUserState };
+  const initialState = { [USER_FEATURE_KEY]: initialUserState };
 
   let component: Topbar;
   let fixture: ComponentFixture<Topbar>;

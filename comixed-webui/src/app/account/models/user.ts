@@ -17,12 +17,14 @@
  */
 
 import { UserRole } from '@app/account/models/user-role';
+import { UserPreference } from '@app/account/models/user-preference';
 
 export interface User {
   comixedUserId: number;
   email: string;
   firstLoginDate: number;
   lastLoginDate: number;
+  preferences: UserPreference[];
   readComics: number[];
   roles: UserRole[];
 }
@@ -32,6 +34,7 @@ export const USER_NOBODY: User = {
   email: '',
   firstLoginDate: 0,
   lastLoginDate: 0,
+  preferences: [],
   readComics: [],
   roles: []
 };

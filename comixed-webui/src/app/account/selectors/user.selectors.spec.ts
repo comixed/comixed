@@ -16,55 +16,53 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import {
-  CURRENT_USER_FEATURE_KEY,
-  CurrentUserState,
-  initialCurrentUserState
-} from '../reducers/current-user.reducer';
 import { beforeEach } from 'vitest';
-import selectCurrentUserState, {
-  selectCurrentUserAuthenticated,
-  selectCurrentUserIsAdmin,
-  selectCurrentUserIsReader,
-  selectCurrentUserLoading,
-  selectCurrentUserReadComicIds
-} from '@app/account/selectors/current-user.selectors';
+import selectUserState, {
+  selectUserAuthenticated,
+  selectUserIsAdmin,
+  selectUserIsReader,
+  selectUserLoading,
+  selectUserReadComicIds
+} from '@app/account/selectors/user.selectors';
 import { USER_READER } from '@app/account/account-fixtures';
 import {
   ROLE_NAME_ADMIN,
   ROLE_NAME_READER
 } from '@app/account/account-constants';
 import { RoleCheck } from '@app/account/guards/role-check';
+import {
+  USER_FEATURE_KEY,
+  UserState,
+  initialUserState
+} from '@app/account/reducers/user.reducer';
 
-describe('CurrentUser Selectors', () => {
+describe('User Selectors', () => {
   const TEST_USER = USER_READER;
   const TEST_READ_COMIC_IDS = [1000, 2000, 3000, 4000, 5000];
 
-  let state: CurrentUserState;
+  let state: UserState;
 
   beforeEach(() => {
-    state = { ...initialCurrentUserState };
+    state = { ...initialUserState };
   });
 
   it('should select the feature state', () => {
-    expect(selectCurrentUserState({ [CURRENT_USER_FEATURE_KEY]: state })).toBe(
-      state
-    );
+    expect(selectUserState({ [USER_FEATURE_KEY]: state })).toBe(state);
   });
 
-  describe('selecting the loading state', () => {
-    it('should return false when not loading', () => {
+  describe('selecting the busy state', () => {
+    it('should return false when not busy', () => {
       expect(
-        selectCurrentUserLoading({
-          [CURRENT_USER_FEATURE_KEY]: { ...state, loading: false }
+        selectUserLoading({
+          [USER_FEATURE_KEY]: { ...state, busy: false }
         })
       ).toBeFalsy();
     });
 
-    it('should return true when loading', () => {
+    it('should return true when busy', () => {
       expect(
-        selectCurrentUserLoading({
-          [CURRENT_USER_FEATURE_KEY]: { ...state, loading: true }
+        selectUserLoading({
+          [USER_FEATURE_KEY]: { ...state, busy: true }
         })
       ).toBeTruthy();
     });
@@ -73,16 +71,16 @@ describe('CurrentUser Selectors', () => {
   describe('selecting the authenticated state', () => {
     it('should return false when not checked', () => {
       expect(
-        selectCurrentUserAuthenticated({
-          [CURRENT_USER_FEATURE_KEY]: { ...state, checked: false }
+        selectUserAuthenticated({
+          [USER_FEATURE_KEY]: { ...state, checked: false }
         })
       ).toBeFalsy();
     });
 
     it('should return true when checked and a user was loaded', () => {
       expect(
-        selectCurrentUserAuthenticated({
-          [CURRENT_USER_FEATURE_KEY]: {
+        selectUserAuthenticated({
+          [USER_FEATURE_KEY]: {
             ...state,
             checked: true,
             user: TEST_USER
@@ -93,8 +91,8 @@ describe('CurrentUser Selectors', () => {
 
     it('should return false when checked and no user was loaded', () => {
       expect(
-        selectCurrentUserAuthenticated({
-          [CURRENT_USER_FEATURE_KEY]: { ...state, checked: true, user: null }
+        selectUserAuthenticated({
+          [USER_FEATURE_KEY]: { ...state, checked: true, user: null }
         })
       ).toBeFalsy();
     });
@@ -103,9 +101,9 @@ describe('CurrentUser Selectors', () => {
   describe('selecting the admin flag', () => {
     it('should return true when the user is an admin', () => {
       expect(
-        selectCurrentUserIsAdmin({
-          [CURRENT_USER_FEATURE_KEY]: {
-            ...initialCurrentUserState,
+        selectUserIsAdmin({
+          [USER_FEATURE_KEY]: {
+            ...initialUserState,
             checked: true,
             user: {
               ...TEST_USER,
@@ -118,9 +116,9 @@ describe('CurrentUser Selectors', () => {
 
     it('should return false when the user is not an admin', () => {
       expect(
-        selectCurrentUserIsAdmin({
-          [CURRENT_USER_FEATURE_KEY]: {
-            ...initialCurrentUserState,
+        selectUserIsAdmin({
+          [USER_FEATURE_KEY]: {
+            ...initialUserState,
             checked: true,
             user: { ...TEST_USER, roles: [] }
           }
@@ -132,9 +130,9 @@ describe('CurrentUser Selectors', () => {
   describe('selecting the reader flag', () => {
     it('should return true when the user is an reader', () => {
       expect(
-        selectCurrentUserIsReader({
-          [CURRENT_USER_FEATURE_KEY]: {
-            ...initialCurrentUserState,
+        selectUserIsReader({
+          [USER_FEATURE_KEY]: {
+            ...initialUserState,
             checked: true,
             user: {
               ...TEST_USER,
@@ -147,9 +145,9 @@ describe('CurrentUser Selectors', () => {
 
     it('should return false when the user is not a reader', () => {
       expect(
-        selectCurrentUserIsReader({
-          [CURRENT_USER_FEATURE_KEY]: {
-            ...initialCurrentUserState,
+        selectUserIsReader({
+          [USER_FEATURE_KEY]: {
+            ...initialUserState,
             checked: true,
             user: { ...TEST_USER, roles: [] }
           }
@@ -161,9 +159,9 @@ describe('CurrentUser Selectors', () => {
   describe('selecting the read comic ids', () => {
     it('should return the list of ids for a user', () => {
       expect(
-        selectCurrentUserReadComicIds({
-          [CURRENT_USER_FEATURE_KEY]: {
-            ...initialCurrentUserState,
+        selectUserReadComicIds({
+          [USER_FEATURE_KEY]: {
+            ...initialUserState,
             user: { ...TEST_USER, readComics: TEST_READ_COMIC_IDS }
           }
         })
@@ -172,9 +170,9 @@ describe('CurrentUser Selectors', () => {
 
     it('should return an empty array when there is no user', () => {
       expect(
-        selectCurrentUserReadComicIds({
-          [CURRENT_USER_FEATURE_KEY]: {
-            ...initialCurrentUserState,
+        selectUserReadComicIds({
+          [USER_FEATURE_KEY]: {
+            ...initialUserState,
             user: null
           }
         })

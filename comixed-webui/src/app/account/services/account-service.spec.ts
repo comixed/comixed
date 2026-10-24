@@ -31,20 +31,36 @@ import { AccountService } from '@app/account/services/account-service';
 import {
   CHECK_FOR_ADMIN_ACCOUNT_URL,
   CREATE_ADMIN_ACCOUNT_URL,
-  LOAD_CURRENT_USER_URL,
-  LOGIN_URL
+  LOAD_USER_URL,
+  LOGIN_URL,
+  SAVE_USER_PREFERENCE_URL
 } from '@app/account/account-constants';
 import { interpolate } from '@app/app-functions';
 import { USER_READER } from '@app/account/account-fixtures';
 import { LoginResponse } from '@app/account/models/net/login-response';
 import { CheckForAdminResponse } from '@app/account/models/net/check-for-admin-response';
 import { CreateAdminAccountRequest } from '@app/account/models/net/create-admin-account-request';
+import { provideMockStore } from '@ngrx/store/testing';
+import {
+  initialMessagingState,
+  MESSAGING_FEATURE_KEY
+} from '@app/messaging/reducers/messaging.reducer';
+import {
+  initialUserState,
+  USER_FEATURE_KEY
+} from '@app/account/reducers/user.reducer';
 
 describe('AccountService', () => {
+  const initialState = {
+    [MESSAGING_FEATURE_KEY]: initialMessagingState,
+    [USER_FEATURE_KEY]: initialUserState
+  };
   const TEST_USER = USER_READER;
   const TEST_EMAIL = 'user@localhost.tld';
   const TEST_PASSWORD = 'th3!p455w0rD';
   const TEST_TOKEN = '!t35t!t0k3n!';
+  const TEST_PREFERENCE_NAME = 'preference.name';
+  const TEST_PREFERENCE_VALUE = 'preference.value';
 
   let service: AccountService;
   let httpController: HttpTestingController;
@@ -52,9 +68,10 @@ describe('AccountService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
-        provideLogger({ minLevel: LoggerLevel.OFF }),
         provideHttpClient(),
-        provideHttpClientTesting()
+        provideHttpClientTesting(),
+        provideLogger({ minLevel: LoggerLevel.OFF }),
+        provideMockStore({ initialState })
       ]
     });
 
@@ -100,14 +117,14 @@ describe('AccountService', () => {
     req.flush(serverResponse);
   });
 
-  it('should load the current user', () => {
+  it('should load the user', () => {
     const serverResponse = TEST_USER;
 
-    service.loadCurrentUser().subscribe({
+    service.loadUser().subscribe({
       next: response => expect(response).toBe(serverResponse)
     });
 
-    const req = httpController.expectOne(interpolate(LOAD_CURRENT_USER_URL));
+    const req = httpController.expectOne(interpolate(LOAD_USER_URL));
     expect(req.request.method).toEqual('GET');
     req.flush(TEST_USER);
     httpController.verify();
@@ -128,6 +145,28 @@ describe('AccountService', () => {
     expect(req.request.body).toEqual(
       new HttpParams().set('email', TEST_EMAIL).set('password', TEST_PASSWORD)
     );
+    req.flush(serverResponse);
+    httpController.verify();
+  });
+
+  it('should save a user preference', () => {
+    const serverResponse = TEST_USER;
+
+    service
+      .saveUserPreference({
+        name: TEST_PREFERENCE_NAME,
+        value: TEST_PREFERENCE_VALUE
+      })
+      .subscribe({
+        next: response => expect(response).toStrictEqual(serverResponse)
+      });
+
+    const req = httpController.expectOne(
+      interpolate(SAVE_USER_PREFERENCE_URL, {
+        preferenceName: TEST_PREFERENCE_NAME
+      })
+    );
+    expect(req.request.method).toBe('POST');
     req.flush(serverResponse);
     httpController.verify();
   });

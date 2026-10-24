@@ -28,6 +28,7 @@ export const USER_ADMIN: User = {
   firstLoginDate: new Date().getTime(),
   lastLoginDate: new Date().getTime(),
   roles: [{ name: ROLE_NAME_READER }, { name: ROLE_NAME_ADMIN }],
+  preferences: [],
   readComics: []
 };
 
@@ -37,5 +38,6 @@ export const USER_READER: User = {
   firstLoginDate: new Date().getTime(),
   lastLoginDate: new Date().getTime(),
   roles: [{ name: ROLE_NAME_READER }],
+  preferences: [],
   readComics: []
 };
