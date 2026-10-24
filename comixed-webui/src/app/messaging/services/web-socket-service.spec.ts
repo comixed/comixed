@@ -21,14 +21,18 @@ import { WebSocketService } from './web-socket-service';
 import { StompService } from '@app/messaging/services/stomp-service';
 import { TokenService } from '@app/account/services/token-service';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
+import { provideMockStore } from '@ngrx/store/testing';
 
 describe('WebSocketService', () => {
+  const initialState = {};
+
   let service: WebSocketService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
         provideLogger({ minLevel: LoggerLevel.OFF }),
+        provideMockStore({ initialState }),
         StompService,
         TokenService
       ]

@@ -22,21 +22,22 @@ import { TokenService } from '@app/account/services/token-service';
 import { StompService } from '@app/messaging/services/stomp-service';
 import { Observable, Subscription } from 'rxjs';
 import { HTTP_AUTHORIZATION_HEADER } from '@app/account/account-constants';
-import { securedTopic } from '@app/messaging/messaging-functions';
 import { WS_ROOT_URL } from '@app/app-constants';
 import { IMessage, RxStompState } from '@stomp/rx-stomp';
 import SockJS from 'sockjs-client';
-import { MessagingStore } from '@app/messaging/stores/messaging-store';
+import { Store } from '@ngrx/store';
+import { MessagingActions } from '@app/messaging/actions/messaging.actions';
+import { securedTopic } from '@app/messaging/messaging-functions';
 
 @Service()
 export class WebSocketService {
-  logger = inject(LoggerService);
-  tokenService = inject(TokenService);
-  stompService = inject(StompService);
-  readonly messagingStore = inject(MessagingStore);
+  private readonly logger = inject(LoggerService);
+  private readonly tokenService = inject(TokenService);
+  private readonly stompService = inject(StompService);
+  private readonly store = inject(Store);
 
   connect(): Observable<unknown> {
-    this.messagingStore.start();
+    this.store.dispatch(MessagingActions.start());
     return new Observable(() => {
       this.logger.trace('Checking for an auth token');
       if (this.tokenService.hasAuthToken()) {
@@ -62,7 +63,7 @@ export class WebSocketService {
             this.logger.debug('Connection state:', RxStompState[state]);
             switch (state) {
               case RxStompState.OPEN:
-                this.messagingStore.started();
+                this.store.dispatch(MessagingActions.started());
                 break;
             }
           },
@@ -84,13 +85,13 @@ export class WebSocketService {
 
   disconnect(): Observable<unknown> {
     if (this.stompService) {
-      this.messagingStore.stop();
+      this.store.dispatch(MessagingActions.stop());
     }
     return new Observable(() => {
       if (this.stompService.connected()) {
         this.logger.trace('Deactivating STOMP service');
         this.stompService.deactivate();
-        this.messagingStore.stopped();
+        this.store.dispatch(MessagingActions.stopped());
       }
     });
   }

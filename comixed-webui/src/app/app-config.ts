@@ -19,13 +19,12 @@
 import {
   ApplicationConfig,
   importProvidersFrom,
+  isDevMode,
   provideBrowserGlobalErrorListeners
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { appRoutes } from '@app/app-routes';
 import { environment } from '../environments/environment';
-import { StoreModule } from '@ngrx/store';
-import { EffectsModule } from '@ngrx/effects';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import {
   provideTranslateCompiler,
@@ -33,7 +32,7 @@ import {
 } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { authenticationInterceptor } from '@app/account/interceptors/authentication-interceptor';
-import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
 import {
   MESSAGE_FORMAT_CONFIG,
@@ -45,6 +44,9 @@ import Aura from '@openng/optimus-ui-themes/aura';
 import { AccountModule } from '@app/account/account-module';
 import { LibraryModule } from '@app/library/library-module';
 import { MessageService } from '@openng/optimus-ui/api';
+import { MessagingModule } from '@app/messaging/messaging-module';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -72,16 +74,21 @@ export const appConfig: ApplicationConfig = {
     provideOptimus({ theme: { preset: Aura } }),
     MessageService,
     importProvidersFrom(
-      StoreDevtoolsModule.instrument({
-        maxAge: 25,
-        trace: true,
-        logOnly: environment.production,
-        connectInZone: true
-      }),
       StoreModule.forRoot({}, {}),
       EffectsModule.forRoot([]),
       AccountModule,
-      LibraryModule
-    )
+      LibraryModule,
+      MessagingModule
+    ),
+    provideStoreDevtools({
+      maxAge: 25,
+      logOnly: !isDevMode(),
+      autoPause: true,
+      features: {
+        pause: false,
+        lock: true,
+        persist: true
+      }
+    })
   ]
 };

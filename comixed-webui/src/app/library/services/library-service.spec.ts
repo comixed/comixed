@@ -28,9 +28,13 @@ import { interpolate } from '@app/app-functions';
 import { REMOTE_LIBRARY_STATE } from '@app/library/library-fixtures';
 import { LOAD_LIBRARY_STATE_URL } from '@app/library/library-constants';
 import { provideMockStore } from '@ngrx/store/testing';
+import {
+  initialMessagingState,
+  MESSAGING_FEATURE_KEY
+} from '@app/messaging/reducers/messaging.reducer';
 
 describe('LibraryService', () => {
-  const initialState = {};
+  const initialState = { [MESSAGING_FEATURE_KEY]: initialMessagingState };
   const TEST_LIBRARY_STATE = REMOTE_LIBRARY_STATE;
 
   let service: LibraryService;

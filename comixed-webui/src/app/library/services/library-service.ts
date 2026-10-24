@@ -27,8 +27,6 @@ import {
   REMOTE_LIBRARY_STATE_TOPIC
 } from '@app/library/library-constants';
 import { interpolate } from '@app/app-functions';
-import { MessagingStore } from '@app/messaging/stores/messaging-store';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { LibraryStore } from '@app/library/stores/library-store';
 import { RemoteLibraryState } from '@app/library/models/net/remote-library-state';
 import { WebSocketService } from '@app/messaging/services/web-socket-service';
@@ -42,6 +40,7 @@ import { Observable } from 'rxjs';
 import { LoadComicDetailResponse } from '@app/library/models/net/load-comic-detail-response';
 import { Store } from '@ngrx/store';
 import { ComicListActions } from '@app/library/actions/comic-list.actions';
+import { selectMessagingStarted } from '@app/messaging/selectors/messaging.selectors';
 
 @Service()
 export class LibraryService {
@@ -49,36 +48,33 @@ export class LibraryService {
   http = inject(HttpClient);
   readonly store = inject(Store);
   readonly libraryStore = inject(LibraryStore);
-  readonly messagingStore = inject(MessagingStore);
   readonly webSocketService = inject(WebSocketService);
 
   constructor() {
-    toObservable<boolean>(this.messagingStore.isStarted)
-      .pipe(takeUntilDestroyed())
-      .subscribe({
-        next: started => {
-          if (started) {
-            this.logger.trace('Subscribing to library updates');
-            this.webSocketService.subscribe<RemoteLibraryState>(
-              REMOTE_LIBRARY_STATE_TOPIC,
-              update => {
-                this.logger.debug('Library update message received');
-                this.libraryStore.updateState(update);
-              }
-            );
-            this.logger.trace('Subscribing to comic list updates');
-            this.webSocketService.subscribe<LoadComicDetailResponse>(
-              COMIC_LIST_UPDATE_TOPIC,
-              update => {
-                this.logger.trace('Comic update message received:', update);
-                this.store.dispatch(
-                  ComicListActions.listUpdate({ comic: update.detail })
-                );
-              }
-            );
-          }
+    this.store.select(selectMessagingStarted).subscribe({
+      next: started => {
+        if (started) {
+          this.logger.trace('Subscribing to library updates');
+          this.webSocketService.subscribe<RemoteLibraryState>(
+            REMOTE_LIBRARY_STATE_TOPIC,
+            update => {
+              this.logger.debug('Library update message received');
+              this.libraryStore.updateState(update);
+            }
+          );
+          this.logger.trace('Subscribing to comic list updates');
+          this.webSocketService.subscribe<LoadComicDetailResponse>(
+            COMIC_LIST_UPDATE_TOPIC,
+            update => {
+              this.logger.trace('Comic update message received:', update);
+              this.store.dispatch(
+                ComicListActions.listUpdate({ comic: update.detail })
+              );
+            }
+          );
         }
-      });
+      }
+    });
   }
 
   loadLibraryState(): void {
