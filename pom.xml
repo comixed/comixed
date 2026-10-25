@@ -3,7 +3,7 @@
   <groupId>org.comixedproject</groupId>
   <artifactId>comixed</artifactId>
   <packaging>pom</packaging>
-  <version>4.1-SNAPSHOT</version>
+  <version>${comixed.semver}</version>
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -41,6 +41,7 @@
     <url>https://github.com/comixed/comixed/issues</url>
   </issueManagement>
   <properties>
+    <comixed.semver>4.1-SNAPSHOT</comixed.semver>
     <assembly.name>local</assembly.name>
     <maven-git-code-format.version>5.4</maven-git-code-format.version>
     <git-code-format-maven-plugin.version>5.4</git-code-format-maven-plugin.version>
