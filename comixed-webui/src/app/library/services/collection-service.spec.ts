@@ -117,38 +117,35 @@ describe('CollectionService', () => {
     httpController.verify();
   });
 
-  describe('loading the series list', () => {
-    it('success', async () => {
-      const updateStateSpy = vi.spyOn(service.seriesListStore, 'update');
-      const serverResponse = {
-        series: TEST_SERIES_LIST,
-        total: TEST_COLLECTION_TOTAL_COUNT
-      } as LoadSeriesListResponse;
+  it('loading the series list', () => {
+    const serverResponse = {
+      series: TEST_SERIES_LIST,
+      totalSeries: TEST_COLLECTION_TOTAL_COUNT
+    } as LoadSeriesListResponse;
 
-      service.loadSeriesList({
+    service
+      .loadSeriesList({
         searchText: TEST_SEARCH_TEXT,
         index: TEST_INDEX,
         size: TEST_SIZE,
         sortBy: TEST_SORT_BY,
         sortDirection: TEST_SORT_DIRECTION
+      })
+      .subscribe({
+        next: response => expect(response).toStrictEqual(serverResponse)
       });
 
-      const req = httpController.expectOne(interpolate(LOAD_SERIES_LIST_URL));
-      expect(req.request.method).toEqual('POST');
-      expect(req.request.body).toEqual({
-        searchText: TEST_SEARCH_TEXT,
-        pageIndex: TEST_INDEX,
-        pageSize: TEST_SIZE,
-        sortBy: TEST_SORT_BY,
-        sortDirection: TEST_SORT_DIRECTION
-      } as LoadSeriesListRequest);
-      req.flush(serverResponse);
-      httpController.verify();
-      expect(updateStateSpy).toHaveBeenCalledWith(
-        TEST_SERIES_LIST,
-        TEST_COLLECTION_TOTAL_COUNT
-      );
-    });
+    const req = httpController.expectOne(interpolate(LOAD_SERIES_LIST_URL));
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      searchText: TEST_SEARCH_TEXT,
+      pageIndex: TEST_INDEX,
+      pageSize: TEST_SIZE,
+      sortBy: TEST_SORT_BY,
+      sortDirection: TEST_SORT_DIRECTION
+    } as LoadSeriesListRequest);
+    req.flush(serverResponse);
+    httpController.verify();
   });
 
   describe('loading series detail', () => {

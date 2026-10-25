@@ -17,10 +17,10 @@
  */
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ComicStoryDetail } from './comic-story-detail';
 import { provideTranslateService } from '@ngx-translate/core';
 import { ComicTagType } from '@app/library/models/comic-tag-type';
 import { ComicTag } from '@app/library/models/comic-tag';
+import { ComicStoryDetail } from '@app/library/components/comic-story-detail/comic-story-detail';
 
 describe('ComicStoryDetail', () => {
   const TEST_TAGS: ComicTag[] = Object.keys(ComicTagType).map(tagType => {

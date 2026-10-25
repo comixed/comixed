@@ -18,13 +18,12 @@
 
 import { Component, inject, Input } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
-import { BarChartModule } from '@swimlane/ngx-charts';
 import { TranslatePipe } from '@ngx-translate/core';
 import { RouterLink } from '@angular/router';
 import { Card } from '@openng/optimus-ui/card';
 
 @Component({
-  imports: [BarChartModule, TranslatePipe, RouterLink, Card],
+  imports: [TranslatePipe, RouterLink, Card],
   selector: 'app-collection-statistics',
   styleUrl: './collection-statistics.scss',
   templateUrl: './collection-statistics.html'

@@ -16,38 +16,28 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
-import { Series } from '@app/library/models/series';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
+import {
+  SERIES_LIST_FEATURE_KEY,
+  seriesListAdaptor,
+  SeriesListState
+} from '@app/library/reducers/series-list.reducer';
 
-interface SeriesListState {
-  series: Series[];
-  total: number;
-  index: number;
-  size: number;
-  searchText: string;
-  sortBy: string;
-  sortDirection: string;
-}
+const selectSeriesListState = createFeatureSelector<SeriesListState>(
+  SERIES_LIST_FEATURE_KEY
+);
 
-const initialState: SeriesListState = {
-  series: [],
-  total: 0,
-  searchText: '',
-  index: 0,
-  size: 10,
-  sortBy: '',
-  sortDirection: ''
-};
+export const selectSeriesListBusy = createSelector(
+  selectSeriesListState,
+  state => state.busy
+);
 
-export const SeriesListStore = signalStore(
-  { providedIn: 'root' },
-  withState(initialState),
-  withMethods(store => ({
-    update(series: Series[], total: number): void {
-      patchState(store, {
-        series,
-        total
-      });
-    }
-  }))
+export const selectSeriesListEntries = createSelector(
+  selectSeriesListState,
+  state => seriesListAdaptor.getSelectors().selectAll(state)
+);
+
+export const selectSeriesListTotal = createSelector(
+  selectSeriesListState,
+  state => state.total
 );

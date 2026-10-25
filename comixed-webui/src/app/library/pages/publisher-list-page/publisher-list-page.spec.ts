@@ -17,7 +17,6 @@
  */
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { PublisherListPage } from './publisher-list-page';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
 import { provideTranslateService } from '@ngx-translate/core';
 import { CollectionService } from '@app/library/services/collection-service';
@@ -28,6 +27,7 @@ import {
   initialPublisherListState,
   PUBLISHER_LIST_FEATURE_KEY
 } from '@app/library/reducers/publisher-list.reducer';
+import { PublisherListPage } from '@app/library/pages/publisher-list-page/publisher-list-page';
 
 describe('PublisherListPage', () => {
   const initialState = {

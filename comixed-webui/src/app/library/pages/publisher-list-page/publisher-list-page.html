@@ -4,15 +4,15 @@
   </ng-template>
 
   <p-table
-    [value]="publisherList()"
+    [value]="publisherListEntries()"
     [lazy]="true"
     (onLazyLoad)="onLoad($event)"
     dataKey="name"
     [paginator]="true"
     stripedRows
     [rows]="10"
-    [totalRecords]="total()"
-    [loading]="loading()"
+    [totalRecords]="publisherListTotal()"
+    [loading]="publisherListBusy()"
   >
     <ng-template #header>
       <tr>

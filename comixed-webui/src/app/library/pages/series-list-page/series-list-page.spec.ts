@@ -17,19 +17,24 @@
  */
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { SeriesListPage } from './series-list-page';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
 import { provideTranslateService } from '@ngx-translate/core';
 import { CollectionService } from '@app/library/services/collection-service';
 import { beforeEach, Mock } from 'vitest';
 import { provideRouter } from '@angular/router';
+import { SeriesListPage } from '@app/library/pages/series-list-page/series-list-page';
+import { provideMockStore } from '@ngrx/store/testing';
+import {
+  initialSeriesListState,
+  SERIES_LIST_FEATURE_KEY
+} from '@app/library/reducers/series-list.reducer';
 
 describe('SeriesListPage', () => {
+  const initialState = { [SERIES_LIST_FEATURE_KEY]: initialSeriesListState };
   const TEST_TITLE_TRANSLATED = 'The translated title';
 
   let component: SeriesListPage;
   let fixture: ComponentFixture<SeriesListPage>;
-  let loadSeriesSpy: unknown;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -38,25 +43,18 @@ describe('SeriesListPage', () => {
         provideRouter([{ path: '*', redirectTo: '' }]),
         provideLogger({ minLevel: LoggerLevel.OFF }),
         provideTranslateService(),
+        provideMockStore({ initialState }),
         CollectionService
       ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(SeriesListPage);
     component = fixture.componentInstance;
-    loadSeriesSpy = vi.spyOn(
-      TestBed.inject(CollectionService),
-      'loadSeriesList'
-    );
     await fixture.whenStable();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('loads the series list', () => {
-    expect(loadSeriesSpy).toHaveBeenCalled();
   });
 
   describe('when the language changes', () => {

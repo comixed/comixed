@@ -16,17 +16,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import {
-  comicFileListAdaptor,
-  comicFileListReducer,
-  ComicFileListState,
-  initialComicFileListState
-} from '../reducers/comic-file-list.reducer';
 import { beforeEach } from 'vitest';
 import { Action } from '@ngrx/store';
 import { ComicFileListActions } from '@app/library/actions/comic-file-list.actions';
 import { COMIC_FILE_1 } from '@app/library/library-fixtures';
 import { ComicFileGroup } from '@app/library/models/comic-file-group';
+import {
+  comicFileListAdaptor,
+  comicFileListReducer,
+  ComicFileListState,
+  initialComicFileListState
+} from '@app/library/reducers/comic-file-list.reducer';
 
 describe('ComicFileList Reducer', () => {
   const TEST_COMIC_FILE = COMIC_FILE_1;

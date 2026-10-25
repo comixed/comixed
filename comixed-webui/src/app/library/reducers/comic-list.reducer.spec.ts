@@ -16,16 +16,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
+import { beforeEach, Mock } from 'vitest';
+import { Action } from '@ngrx/store';
+import { ComicListActions } from '@app/library/actions/comic-list.actions';
+import { COMIC_1 } from '@app/library/library-fixtures';
 import {
   comicListAdaptor,
   comicListReducer,
   ComicListState,
   initialComicListState
-} from './comic-list.reducer';
-import { beforeEach, Mock } from 'vitest';
-import { Action } from '@ngrx/store';
-import { ComicListActions } from '@app/library/actions/comic-list.actions';
-import { COMIC_1 } from '@app/library/library-fixtures';
+} from '@app/library/reducers/comic-list.reducer';
 
 describe('ComicList Reducer', () => {
   const TEST_COMIC = COMIC_1;

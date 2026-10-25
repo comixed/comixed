@@ -17,7 +17,6 @@
  */
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ComicDetailPage } from './comic-detail-page';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideMockStore } from '@ngrx/store/testing';
@@ -32,6 +31,7 @@ import { QUERY_PARAM_COMIC_DETAIL_TAB } from '@app/library/library-constants';
 import { COMIC_1 } from '@app/library/library-fixtures';
 import { ComicDetailAction } from '@app/library/actions/comic-detail.actions';
 import { TitleService } from '@app/layout/services/title-service';
+import { ComicDetailPage } from '@app/library/pages/comic-detail-page/comic-detail-page';
 
 describe('ComicDetailPage', () => {
   const initialState = { [COMIC_DETAIL_FEATURE_KEY]: initialComicDetailState };

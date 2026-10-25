@@ -16,17 +16,23 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
-import { CollectionService } from '@app/library/services/collection-service';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/layout/services/title-service';
-import { SeriesListStore } from '@app/collections/stores/series-list-store';
 import { Card } from '@openng/optimus-ui/card';
-import { TableModule } from '@openng/optimus-ui/table';
-import { RouterLink } from '@angular/router';
+import { TableLazyLoadEvent, TableModule } from '@openng/optimus-ui/table';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MenuItem } from '@openng/optimus-ui/api';
 import { Breadcrumb } from '@openng/optimus-ui/breadcrumb';
+import { Store } from '@ngrx/store';
+import {
+  selectSeriesListBusy,
+  selectSeriesListEntries,
+  selectSeriesListTotal
+} from '@app/library/selectors/series-list.selectors';
+import { SeriesListActions } from '@app/library/actions/series-list.actions';
+import { QueryParameterService } from '@app/layout/services/query-parameter.service';
 
 @Component({
   imports: [TranslatePipe, Card, TableModule, RouterLink, Breadcrumb],
@@ -34,10 +40,14 @@ import { Breadcrumb } from '@openng/optimus-ui/breadcrumb';
   styleUrl: './series-list-page.scss',
   templateUrl: './series-list-page.html'
 })
-export class SeriesListPage implements OnInit {
+export class SeriesListPage {
   readonly logger = inject(LoggerService);
-  readonly collectionsService = inject(CollectionService);
-  readonly seriesListStore = inject(SeriesListStore);
+  readonly store = inject(Store);
+  readonly queryParameterService = inject(QueryParameterService);
+  readonly activatedRoute = inject(ActivatedRoute);
+  readonly seriesListBusy = this.store.selectSignal(selectSeriesListBusy);
+  readonly seriesListEntries = this.store.selectSignal(selectSeriesListEntries);
+  readonly seriesListTotal = this.store.selectSignal(selectSeriesListTotal);
   readonly translateService = inject(TranslateService);
   readonly titleService = inject(TitleService);
   readonly trail = signal<MenuItem[]>([]);
@@ -45,6 +55,21 @@ export class SeriesListPage implements OnInit {
   home: MenuItem = { icon: 'pi pi-home', routerLink: ['/'] };
 
   constructor() {
+    this.activatedRoute.queryParams.subscribe({
+      next: params => {
+        const index = +params['index'] || 0;
+        const size = +params['size'] || 10;
+        this.store.dispatch(
+          SeriesListActions.load({
+            searchText: '',
+            index,
+            size,
+            sortBy: '',
+            sortDirection: ''
+          })
+        );
+      }
+    });
     this.translateService.onLangChange.subscribe({
       next: () => {
         this.doLoadTranslations();
@@ -53,15 +78,24 @@ export class SeriesListPage implements OnInit {
     this.doLoadTranslations();
   }
 
-  ngOnInit(): void {
+  onLoad(event: TableLazyLoadEvent): void {
+    this.queryParameterService.updateQueryParam([
+      { name: 'index', value: `${event.first! / event.rows!}` },
+      { name: 'size', value: `${event.rows!}` }
+    ]);
+  }
+
+  private doLoadSeries(args: { index: number; size: number }) {
     this.logger.trace('Loading series list');
-    this.collectionsService.loadSeriesList({
-      searchText: this.seriesListStore.searchText(),
-      index: this.seriesListStore.index(),
-      size: this.seriesListStore.size(),
-      sortBy: this.seriesListStore.sortBy(),
-      sortDirection: this.seriesListStore.sortDirection()
-    });
+    this.store.dispatch(
+      SeriesListActions.load({
+        searchText: '',
+        index: args.index,
+        size: args.size,
+        sortBy: '',
+        sortDirection: ''
+      })
+    );
   }
 
   private doLoadTranslations() {

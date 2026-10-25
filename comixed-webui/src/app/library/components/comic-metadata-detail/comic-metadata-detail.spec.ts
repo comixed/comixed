@@ -17,7 +17,7 @@
  */
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ComicMetadataDetail } from './comic-metadata-detail';
+import { ComicMetadataDetail } from '@app/library/components/comic-metadata-detail/comic-metadata-detail';
 
 describe('ComicMetadataDetail', () => {
   let component: ComicMetadataDetail;

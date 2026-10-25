@@ -17,10 +17,10 @@
  */
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ComicCover } from './comic-cover';
 import { COMIC_1 } from '@app/library/library-fixtures';
 import { provideRouter } from '@angular/router';
 import { provideTranslateService } from '@ngx-translate/core';
+import { ComicCover } from '@app/library/components/comic-cover/comic-cover';
 
 describe('ComicCover', () => {
   const TEST_COMIC = COMIC_1;

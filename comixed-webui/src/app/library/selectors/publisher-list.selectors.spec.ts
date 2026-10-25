@@ -25,8 +25,8 @@ import {
   PublisherListState
 } from '@app/library/reducers/publisher-list.reducer';
 import {
-  selectPublisherList,
-  selectPublisherListLoading,
+  selectPublisherListEntries,
+  selectPublisherListBusy,
   selectPublisherListTotal
 } from '@app/library/selectors/publisher-list.selectors';
 
@@ -44,19 +44,19 @@ describe('PublisherList Selectors', () => {
     });
   });
 
-  describe('selecting the loading flag', () => {
-    it('returns false when loading', () => {
+  describe('selecting the busy flag', () => {
+    it('returns false when busy', () => {
       expect(
-        selectPublisherListLoading({
-          [PUBLISHER_LIST_FEATURE_KEY]: { ...state, loading: false }
+        selectPublisherListBusy({
+          [PUBLISHER_LIST_FEATURE_KEY]: { ...state, busy: false }
         })
       ).toBeFalsy();
     });
 
-    it('returns true when loading', () => {
+    it('returns true when busy', () => {
       expect(
-        selectPublisherListLoading({
-          [PUBLISHER_LIST_FEATURE_KEY]: { ...state, loading: true }
+        selectPublisherListBusy({
+          [PUBLISHER_LIST_FEATURE_KEY]: { ...state, busy: true }
         })
       ).toBeTruthy();
     });
@@ -64,7 +64,7 @@ describe('PublisherList Selectors', () => {
 
   it('should return the publisher list', () => {
     expect(
-      selectPublisherList({ [PUBLISHER_LIST_FEATURE_KEY]: { ...state } })
+      selectPublisherListEntries({ [PUBLISHER_LIST_FEATURE_KEY]: { ...state } })
     ).toStrictEqual(TEST_PUBLISHER_LIST);
   });
 

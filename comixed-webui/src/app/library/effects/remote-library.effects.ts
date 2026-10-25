@@ -18,12 +18,12 @@
 
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { RemoteLibraryActions } from '../actions/remote-library.actions';
 import { catchError, map, of, switchMap, tap } from 'rxjs';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { AlertService } from '@app/services/alert-service';
 import { TranslateService } from '@ngx-translate/core';
 import { LibraryService } from '@app/library/services/library-service';
+import { RemoteLibraryActions } from '@app/library/actions/remote-library.actions';
 
 @Injectable()
 export class RemoteLibraryEffects {

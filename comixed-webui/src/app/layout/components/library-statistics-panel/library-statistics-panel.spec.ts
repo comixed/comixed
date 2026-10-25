@@ -17,7 +17,6 @@
  */
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { LibraryStatisticsPanel } from './library-statistics-panel';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideRouter } from '@angular/router';
@@ -30,6 +29,7 @@ import {
   initialRemoteLibraryState,
   REMOTE_LIBRARY_FEATURE_KEY
 } from '@app/library/reducers/remote-library.reducer';
+import { LibraryStatisticsPanel } from '@app/layout/components/library-statistics-panel/library-statistics-panel';
 
 describe('LibraryStatisticsPanel', () => {
   const initialState = {

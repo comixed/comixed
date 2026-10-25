@@ -27,12 +27,12 @@ const selectPublisherListState = createFeatureSelector<PublisherListState>(
   PUBLISHER_LIST_FEATURE_KEY
 );
 
-export const selectPublisherListLoading = createSelector(
+export const selectPublisherListBusy = createSelector(
   selectPublisherListState,
-  state => state.loading
+  state => state.busy
 );
 
-export const selectPublisherList = createSelector(
+export const selectPublisherListEntries = createSelector(
   selectPublisherListState,
   state => publisherListAdaptor.getSelectors().selectAll(state)
 );

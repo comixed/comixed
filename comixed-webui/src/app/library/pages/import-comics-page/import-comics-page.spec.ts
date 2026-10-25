@@ -17,7 +17,6 @@
  */
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ImportComicsPage } from './import-comics-page';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideRouter } from '@angular/router';
@@ -30,6 +29,7 @@ import {
   COMIC_FILE_LIST_FEATURE_KEY,
   initialComicFileListState
 } from '@app/library/reducers/comic-file-list.reducer';
+import { ImportComicsPage } from '@app/library/pages/import-comics-page/import-comics-page';
 
 describe('ImportComicsPage', () => {
   const initialState = {

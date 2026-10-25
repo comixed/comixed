@@ -17,9 +17,9 @@
  */
 
 import { TestBed } from '@angular/core/testing';
-import { QueryParameterService } from './query-parameter.service';
 import { provideRouter } from '@angular/router';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
+import { QueryParameterService } from '@app/layout/services/query-parameter.service';
 
 describe('QueryParameterService', () => {
   let service: QueryParameterService;

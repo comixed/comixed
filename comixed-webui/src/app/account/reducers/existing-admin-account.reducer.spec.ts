@@ -16,14 +16,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import {
-  ExistingAdminAccountState,
-  initialExistingAdminAccountState,
-  reducer
-} from './existing-admin-account.reducer';
 import { beforeEach } from 'vitest';
 import { Action } from '@ngrx/store';
 import { ExistingAdminAccountActions } from '@app/account/actions/existing-admin-account.actions';
+import {
+  ExistingAdminAccountState,
+  initialExistingAdminAccountState,
+  existingAdminAccountReducer
+} from '@app/account/reducers/existing-admin-account.reducer';
 
 describe('ExistingAdminAccount Reducer', () => {
   const TEST_EMAIL = 'user@localhost.tld';
@@ -37,7 +37,7 @@ describe('ExistingAdminAccount Reducer', () => {
 
   describe('the initial state', () => {
     beforeEach(() => {
-      state = reducer({ ...state }, {} as Action<string>);
+      state = existingAdminAccountReducer({ ...state }, {} as Action<string>);
     });
 
     it('should not set the loading flag', () => {
@@ -55,7 +55,7 @@ describe('ExistingAdminAccount Reducer', () => {
 
   describe('checking for an existing admin account', () => {
     beforeEach(() => {
-      state = reducer(
+      state = existingAdminAccountReducer(
         { ...state, loading: false, checked: true, create: true },
         ExistingAdminAccountActions.check()
       );
@@ -75,7 +75,7 @@ describe('ExistingAdminAccount Reducer', () => {
 
     describe('success - admins found', () => {
       beforeEach(() => {
-        state = reducer(
+        state = existingAdminAccountReducer(
           { ...state, loading: true, checked: false, create: false },
           ExistingAdminAccountActions.checkSuccess({ exists: true })
         );
@@ -96,7 +96,7 @@ describe('ExistingAdminAccount Reducer', () => {
 
     describe('success - admins not found', () => {
       beforeEach(() => {
-        state = reducer(
+        state = existingAdminAccountReducer(
           { ...state, loading: true, checked: false, create: false },
           ExistingAdminAccountActions.checkSuccess({ exists: false })
         );
@@ -117,7 +117,7 @@ describe('ExistingAdminAccount Reducer', () => {
 
     describe('failure', () => {
       beforeEach(() => {
-        state = reducer(
+        state = existingAdminAccountReducer(
           { ...state, loading: true, checked: false, create: false },
           ExistingAdminAccountActions.checkFailure()
         );
@@ -139,7 +139,7 @@ describe('ExistingAdminAccount Reducer', () => {
 
   describe('creating the initial admin account', () => {
     beforeEach(() => {
-      state = reducer(
+      state = existingAdminAccountReducer(
         { ...state, loading: false, checked: true, create: true },
         ExistingAdminAccountActions.create({
           email: TEST_EMAIL,
@@ -162,7 +162,7 @@ describe('ExistingAdminAccount Reducer', () => {
 
     describe('success', () => {
       beforeEach(() => {
-        state = reducer(
+        state = existingAdminAccountReducer(
           { ...state, loading: true, checked: false, create: false },
           ExistingAdminAccountActions.createSuccess()
         );
@@ -183,7 +183,7 @@ describe('ExistingAdminAccount Reducer', () => {
 
     describe('failure', () => {
       beforeEach(() => {
-        state = reducer(
+        state = existingAdminAccountReducer(
           { ...state, loading: true, checked: false, create: false },
           ExistingAdminAccountActions.createFailure()
         );

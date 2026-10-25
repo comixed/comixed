@@ -17,7 +17,6 @@
  */
 
 import { TestBed } from '@angular/core/testing';
-import { ComicDetailEffects } from './comic-detail.effects';
 import { ComicService } from '@app/library/services/comic-service';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
 import { provideMockActions } from '@ngrx/effects/testing';
@@ -36,6 +35,7 @@ import { provideTranslateService } from '@ngx-translate/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 import { AlertService } from '@app/services/alert-service';
+import { ComicDetailEffects } from '@app/library/effects/comic-detail.effects';
 
 describe.todo('ComicDetailEffects', () => {
   const TEST_COMIC = COMIC_1;

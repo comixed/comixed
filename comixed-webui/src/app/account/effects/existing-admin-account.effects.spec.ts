@@ -17,11 +17,11 @@
  */
 
 import { TestBed } from '@angular/core/testing';
-import { ExistingAdminAccountEffects } from './existing-admin-account.effects';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
 import { hot } from 'vitest-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable } from 'rxjs';
+import { ExistingAdminAccountEffects } from '@app/account/effects/existing-admin-account.effects';
 
 describe.todo('ExistingAdminAccountEffects', () => {
   let actions$: Observable<unknown>;

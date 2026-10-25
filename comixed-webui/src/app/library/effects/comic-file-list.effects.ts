@@ -18,7 +18,6 @@
 
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { ComicFileListActions } from '../actions/comic-file-list.actions';
 import { catchError, map, mergeMap, of, switchMap, tap } from 'rxjs';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { ComicFileService } from '@app/library/services/comic-file-service';
@@ -26,6 +25,7 @@ import { AlertService } from '@app/services/alert-service';
 import { TranslateService } from '@ngx-translate/core';
 import { UserActions } from '@app/account/actions/user.actions';
 import { IMPORT_ROOT_DIRECTORY_PREFERENCE } from '@app/account/user-preferences';
+import { ComicFileListActions } from '@app/library/actions/comic-file-list.actions';
 
 @Injectable()
 export class ComicFileListEffects {

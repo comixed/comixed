@@ -19,7 +19,6 @@
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of, tap, throwError } from 'rxjs';
-import { ComicListEffects } from './comic-list.effects';
 import { hot } from 'vitest-marbles';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
 import { provideMockStore } from '@ngrx/store/testing';
@@ -31,6 +30,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { AlertService } from '@app/services/alert-service';
 import { provideTranslateService } from '@ngx-translate/core';
 import { MessageService } from '@openng/optimus-ui/api';
+import { ComicListEffects } from '@app/library/effects/comic-list.effects';
 
 describe.todo('ComicListEffects', () => {
   const TEST_COMIC = COMIC_1;

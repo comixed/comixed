@@ -17,9 +17,9 @@
  */
 
 import { createFeature, createReducer, on } from '@ngrx/store';
-import { RemoteLibraryActions } from '../actions/remote-library.actions';
 import { RemoteLibrarySegment } from '@app/library/models/net/remote-library-segment';
 import { PublisherAndYearSegment } from '@app/library/models/net/publisher-and-year-segment';
+import { RemoteLibraryActions } from '@app/library/actions/remote-library.actions';
 
 export const REMOTE_LIBRARY_FEATURE_KEY = 'remote_library_state';
 

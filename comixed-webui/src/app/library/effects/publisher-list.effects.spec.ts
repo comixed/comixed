@@ -19,7 +19,6 @@
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of, tap, throwError } from 'rxjs';
-import { PublisherListEffects } from './publisher-list.effects';
 import { hot } from 'vitest-marbles';
 import { CollectionService } from '@app/library/services/collection-service';
 import { AlertService } from '@app/services/alert-service';
@@ -30,6 +29,7 @@ import { PublisherListActions } from '@app/library/actions/publisher-list.action
 import { HttpErrorResponse } from '@angular/common/http';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
 import { provideTranslateService } from '@ngx-translate/core';
+import { PublisherListEffects } from '@app/library/effects/publisher-list.effects';
 
 describe.todo('PublisherListEffects', () => {
   const TEST_PUBLISHER_LIST = [PUBLISHER_1];

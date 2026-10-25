@@ -17,11 +17,11 @@
  */
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ComicPublicationDetail } from './comic-publication-detail';
 import { COMIC_1 } from '@app/library/library-fixtures';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
 import { provideTranslateService } from '@ngx-translate/core';
 import { beforeEach, Mock } from 'vitest';
+import { ComicPublicationDetail } from '@app/library/components/comic-publication-detail/comic-publication-detail';
 
 describe('ComicPublicationDetail', () => {
   const TEST_COMIC = COMIC_1;

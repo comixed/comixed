@@ -34,7 +34,7 @@ export const initialExistingAdminAccountState: ExistingAdminAccountState = {
   create: false
 };
 
-export const reducer = createReducer(
+export const existingAdminAccountReducer = createReducer(
   initialExistingAdminAccountState,
   on(ExistingAdminAccountActions.check, state => ({
     ...state,
@@ -76,5 +76,5 @@ export const reducer = createReducer(
 
 export const existingAdminAccountFeature = createFeature({
   name: EXISTING_ADMIN_ACCOUNT_FEATURE_KEY,
-  reducer
+  reducer: existingAdminAccountReducer
 });

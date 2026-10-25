@@ -17,10 +17,10 @@
  */
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { SeriesDetailPage } from './series-detail-page';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideRouter } from '@angular/router';
+import { SeriesDetailPage } from '@app/library/pages/series-detail-page/series-detail-page';
 
 describe('SeriesDetailPage', () => {
   let component: SeriesDetailPage;

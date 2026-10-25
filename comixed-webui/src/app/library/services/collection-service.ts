@@ -22,7 +22,6 @@ import { HttpClient } from '@angular/common/http';
 import { LoadPublisherListRequest } from '@app/library/models/net/load-publisher-list-request';
 import { interpolate } from '@app/app-functions';
 import { LoadPublisherListResponse } from '@app/library/models/net/load-publisher-list-response';
-import { SeriesListStore } from '@app/collections/stores/series-list-store';
 import { LoadSeriesListRequest } from '@app/library/models/net/load-series-list-request';
 import { LoadSeriesListResponse } from '@app/library/models/net/load-series-list-response';
 import { TagStore } from '@app/collections/stores/tag-store';
@@ -44,7 +43,6 @@ import { Observable } from 'rxjs';
 export class CollectionService {
   readonly logger = inject(LoggerService);
   readonly client = inject(HttpClient);
-  readonly seriesListStore = inject(SeriesListStore);
   readonly seriesDetailStore = inject(SeriesDetailStore);
   readonly tagStore = inject(TagStore);
 
@@ -74,23 +72,18 @@ export class CollectionService {
     size: number;
     sortBy: string;
     sortDirection: string;
-  }): void {
+  }): Observable<LoadSeriesListResponse> {
     this.logger.trace('Loading series list:', args);
-    this.client
-      .post<LoadSeriesListResponse>(interpolate(LOAD_SERIES_LIST_URL), {
+    return this.client.post<LoadSeriesListResponse>(
+      interpolate(LOAD_SERIES_LIST_URL),
+      {
         searchText: args.searchText,
         pageIndex: args.index,
         pageSize: args.size,
         sortBy: args.sortBy,
         sortDirection: args.sortDirection
-      } as LoadSeriesListRequest)
-      .subscribe({
-        next: response => {
-          this.logger.debug('Series list received:', response);
-          this.seriesListStore.update(response.series, response.total);
-        },
-        error: error => this.logger.error('Error loading series list:', error)
-      });
+      } as LoadSeriesListRequest
+    );
   }
 
   loadSeriesDetail(args: {

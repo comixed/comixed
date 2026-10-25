@@ -19,8 +19,8 @@
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable } from 'rxjs';
-import { RemoteLibraryEffects } from './remote-library.effects';
 import { hot } from 'vitest-marbles';
+import { RemoteLibraryEffects } from '@app/library/effects/remote-library.effects';
 
 describe.todo('RemoteLibraryEffects', () => {
   let actions$: Observable<unknown>;

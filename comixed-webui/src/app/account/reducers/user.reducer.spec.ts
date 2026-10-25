@@ -16,11 +16,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { initialUserState, userReducer, UserState } from './user.reducer';
 import { beforeEach } from 'vitest';
 import { Action } from '@ngrx/store';
 import { UserActions } from '@app/account/actions/user.actions';
 import { USER_READER } from '@app/account/account-fixtures';
+import {
+  initialUserState,
+  userReducer,
+  UserState
+} from '@app/account/reducers/user.reducer';
 
 describe('User Reducer', () => {
   const TEST_USER = USER_READER;

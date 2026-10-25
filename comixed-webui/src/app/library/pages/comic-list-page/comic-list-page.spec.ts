@@ -17,7 +17,6 @@
  */
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ComicListPage } from './comic-list-page';
 import { provideRouter } from '@angular/router';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
 import { provideTranslateService } from '@ngx-translate/core';
@@ -27,6 +26,7 @@ import {
   initialComicListState
 } from '@app/library/reducers/comic-list.reducer';
 import { MessageService } from '@openng/optimus-ui/api';
+import { ComicListPage } from '@app/library/pages/comic-list-page/comic-list-page';
 
 describe('ComicListPage', () => {
   const initialState = { [COMIC_LIST_FEATURE_KEY]: initialComicListState };

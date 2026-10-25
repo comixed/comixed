@@ -4,10 +4,15 @@
   </ng-template>
 
   <p-table
-    [value]="seriesListStore.series()"
-    stripedRows
+    [value]="seriesListEntries()"
+    [lazy]="true"
+    (onLazyLoad)="onLoad($event)"
+    dataKey="name"
     [paginator]="true"
-    [rows]="seriesListStore.size()"
+    stripedRows
+    [rows]="10"
+    [totalRecords]="seriesListTotal()"
+    [loading]="seriesListBusy()"
   >
     <ng-template #header>
       <tr>

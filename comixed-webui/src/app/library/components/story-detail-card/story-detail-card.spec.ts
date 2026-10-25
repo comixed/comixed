@@ -17,8 +17,8 @@
  */
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { StoryDetailCard } from './story-detail-card';
 import { COMIC_TAG_1 } from '@app/library/library-fixtures';
+import { StoryDetailCard } from '@app/library/components/story-detail-card/story-detail-card';
 
 describe('StoryDetailCard', () => {
   const TEST_TAG = COMIC_TAG_1;

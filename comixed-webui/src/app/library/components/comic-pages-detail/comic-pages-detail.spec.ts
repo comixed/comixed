@@ -17,7 +17,7 @@
  */
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ComicPagesDetail } from './comic-pages-detail';
+import { ComicPagesDetail } from '@app/library/components/comic-pages-detail/comic-pages-detail';
 
 describe('ComicPagesDetail', () => {
   let component: ComicPagesDetail;

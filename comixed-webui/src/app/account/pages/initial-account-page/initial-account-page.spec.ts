@@ -17,7 +17,6 @@
  */
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { InitialAccountPage } from './initial-account-page';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
 import { provideRouter } from '@angular/router';
 import { provideTranslateService } from '@ngx-translate/core';
@@ -34,6 +33,7 @@ import {
   initialMessagingState,
   MESSAGING_FEATURE_KEY
 } from '@app/messaging/reducers/messaging.reducer';
+import { InitialAccountPage } from '@app/account/pages/initial-account-page/initial-account-page';
 
 describe('InitialAccountPage', () => {
   const initialState = {

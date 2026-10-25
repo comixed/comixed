@@ -17,10 +17,10 @@
  */
 
 import { TestBed } from '@angular/core/testing';
-import { TitleService } from './title-service';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
 import { provideTranslateService, TranslateService } from '@ngx-translate/core';
 import { Title } from '@angular/platform-browser';
+import { TitleService } from '@app/layout/services/title-service';
 
 describe('TitleService', () => {
   const TEST_TITLE = 'The Page Title';

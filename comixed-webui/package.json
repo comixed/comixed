@@ -56,7 +56,6 @@
     "@openng/optimus-ui": "^2.0.2",
     "@openng/optimus-ui-themes": "^2.0.2",
     "@stomp/rx-stomp": "^2.4.0",
-    "@swimlane/ngx-charts": "^25.0.3",
     "chart.js": "^4.5.1",
     "lodash": "^4.18.1",
     "ng2-charts": "^11.0.0",

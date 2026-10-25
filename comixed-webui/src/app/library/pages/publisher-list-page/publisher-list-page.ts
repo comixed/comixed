@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/layout/services/title-service';
@@ -27,10 +27,12 @@ import { MenuItem } from '@openng/optimus-ui/api';
 import { Store } from '@ngrx/store';
 import { PublisherListActions } from '@app/library/actions/publisher-list.actions';
 import {
-  selectPublisherList,
-  selectPublisherListLoading,
+  selectPublisherListBusy,
+  selectPublisherListEntries,
   selectPublisherListTotal
 } from '@app/library/selectors/publisher-list.selectors';
+import { QueryParameterService } from '@app/layout/services/query-parameter.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   imports: [TranslatePipe, TableModule, Card, Breadcrumb],
@@ -38,20 +40,41 @@ import {
   styleUrl: './publisher-list-page.scss',
   templateUrl: './publisher-list-page.html'
 })
-export class PublisherListPage implements OnInit {
+export class PublisherListPage {
   readonly logger = inject(LoggerService);
+  readonly queryParameterService = inject(QueryParameterService);
+  readonly activatedRoute = inject(ActivatedRoute);
   readonly translateService = inject(TranslateService);
   readonly titleService = inject(TitleService);
   readonly trail = signal<MenuItem[]>([]);
 
   readonly store = inject(Store);
-  readonly loading = this.store.selectSignal(selectPublisherListLoading);
-  readonly publisherList = this.store.selectSignal(selectPublisherList);
-  readonly total = this.store.selectSignal(selectPublisherListTotal);
+  readonly publisherListBusy = this.store.selectSignal(selectPublisherListBusy);
+  readonly publisherListEntries = this.store.selectSignal(
+    selectPublisherListEntries
+  );
+  readonly publisherListTotal = this.store.selectSignal(
+    selectPublisherListTotal
+  );
 
   home: MenuItem = { icon: 'pi pi-home', routerLink: ['/'] };
 
   constructor() {
+    this.activatedRoute.queryParams.subscribe({
+      next: params => {
+        const page = +params['index'] || 0;
+        const size = +params['size'] || 10;
+        this.store.dispatch(
+          PublisherListActions.load({
+            searchText: '',
+            page,
+            size,
+            sortBy: '',
+            sortDirection: ''
+          })
+        );
+      }
+    });
     this.translateService.onLangChange.subscribe({
       next: () => {
         this.doLoadTranslations();
@@ -60,15 +83,11 @@ export class PublisherListPage implements OnInit {
     this.doLoadTranslations();
   }
 
-  ngOnInit(): void {
-    this.doLoadPublishers({ page: 0, size: 10 });
-  }
-
   onLoad(event: TableLazyLoadEvent): void {
-    this.doLoadPublishers({
-      page: event.first! / event.rows!,
-      size: event.rows!
-    });
+    this.queryParameterService.updateQueryParam([
+      { name: 'index', value: `${event.first! / event.rows!}` },
+      { name: 'size', value: `${event.rows!}` }
+    ]);
   }
 
   private doLoadTranslations() {
@@ -80,18 +99,5 @@ export class PublisherListPage implements OnInit {
     this.trail.set([
       { label: this.translateService.instant('publisher-list-page.page-title') }
     ]);
-  }
-
-  private doLoadPublishers(args: { page: number; size: number }) {
-    this.logger.trace('Loading publisher list:', args);
-    this.store.dispatch(
-      PublisherListActions.load({
-        searchText: '',
-        page: args.page,
-        size: args.size,
-        sortBy: '',
-        sortDirection: ''
-      })
-    );
   }
 }

@@ -42,8 +42,8 @@ describe('PublisherList Reducer', () => {
       state = publisherListReducer({ ...state }, {} as Action<string>);
     });
 
-    it('should not set the loading flag', () => {
-      expect(state.loading).toBeFalsy();
+    it('should not set the busy flag', () => {
+      expect(state.busy).toBeFalsy();
     });
 
     it('should have no publishers', () => {
@@ -57,10 +57,10 @@ describe('PublisherList Reducer', () => {
     });
   });
 
-  describe('loading the publisher list', () => {
+  describe('busy the publisher list', () => {
     beforeEach(() => {
       state = publisherListReducer(
-        { ...state, loading: false },
+        { ...state, busy: false },
         PublisherListActions.load({
           searchText: '',
           page: 0,
@@ -71,8 +71,8 @@ describe('PublisherList Reducer', () => {
       );
     });
 
-    it('should set the loading flag', () => {
-      expect(state.loading).toBeTruthy();
+    it('should set the busy flag', () => {
+      expect(state.busy).toBeTruthy();
     });
 
     describe('success', () => {
@@ -80,7 +80,7 @@ describe('PublisherList Reducer', () => {
         state = publisherListReducer(
           publisherListAdaptor.setAll([], {
             ...state,
-            loading: true,
+            busy: true,
             total: 0
           }),
           PublisherListActions.loadSuccess({
@@ -90,8 +90,8 @@ describe('PublisherList Reducer', () => {
         );
       });
 
-      it('should clear the loading flag', () => {
-        expect(state.loading).toBeFalsy();
+      it('should clear the busy flag', () => {
+        expect(state.busy).toBeFalsy();
       });
 
       it('should set the publisher list', () => {
@@ -108,13 +108,13 @@ describe('PublisherList Reducer', () => {
     describe('failure', () => {
       beforeEach(() => {
         state = publisherListReducer(
-          { ...state, loading: true },
+          { ...state, busy: true },
           PublisherListActions.loadFailure()
         );
       });
 
-      it('should clear the loading flag', () => {
-        expect(state.loading).toBeFalsy();
+      it('should clear the busy flag', () => {
+        expect(state.busy).toBeFalsy();
       });
     });
   });

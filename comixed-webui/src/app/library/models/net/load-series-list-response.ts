@@ -20,5 +20,5 @@ import { Series } from '@app/library/models/series';
 
 export interface LoadSeriesListResponse {
   series: Series[];
-  total: number;
+  totalSeries: number;
 }

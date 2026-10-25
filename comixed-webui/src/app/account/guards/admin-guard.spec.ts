@@ -18,7 +18,6 @@
 
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { adminGuard } from './admin-guard';
 import {
   USER_FEATURE_KEY,
   initialUserState
@@ -29,6 +28,7 @@ import { beforeEach } from 'vitest';
 import { USER_ADMIN } from '@app/account/account-fixtures';
 import { Component } from '@angular/core';
 import { RouterTestingHarness } from '@angular/router/testing';
+import { adminGuard } from '@app/account/guards/admin-guard';
 
 @Component({ template: '<h1>Protected page</h1>' })
 class Protected {}

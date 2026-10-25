@@ -24,7 +24,7 @@ import { PublisherListActions } from '@app/library/actions/publisher-list.action
 export const PUBLISHER_LIST_FEATURE_KEY = 'publisher_list_state';
 
 export interface PublisherListState extends EntityState<Publisher> {
-  loading: boolean;
+  busy: boolean;
   total: number;
 }
 
@@ -36,21 +36,21 @@ export const publisherListAdaptor: EntityAdapter<Publisher> =
 
 export const initialPublisherListState: PublisherListState =
   publisherListAdaptor.getInitialState({
-    loading: false,
+    busy: false,
     total: 0
   });
 
 export const publisherListReducer = createReducer(
   initialPublisherListState,
-  on(PublisherListActions.load, state => ({ ...state, loading: true })),
+  on(PublisherListActions.load, state => ({ ...state, busy: true })),
   on(PublisherListActions.loadSuccess, (state, action) =>
     publisherListAdaptor.setAll(action.publishers, {
       ...state,
-      loading: false,
+      busy: false,
       total: action.total
     })
   ),
-  on(PublisherListActions.loadFailure, state => ({ ...state, loading: false }))
+  on(PublisherListActions.loadFailure, state => ({ ...state, busy: false }))
 );
 
 export const publisherListsFeature = createFeature({

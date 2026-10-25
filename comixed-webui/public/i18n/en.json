@@ -244,6 +244,11 @@
     },
     "page-title": "{name} V{volume}"
   },
+  "series-list-effects": {
+    "load-series-list": {
+      "service-failure": "Failed to load series entries..."
+    }
+  },
   "series-list-page": {
     "label": {
       "in-library": "# of Comics",

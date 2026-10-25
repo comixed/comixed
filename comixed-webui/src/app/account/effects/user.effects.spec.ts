@@ -17,7 +17,6 @@
  */
 
 import { TestBed } from '@angular/core/testing';
-import { UserEffects } from './user.effects';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of, tap, throwError } from 'rxjs';
@@ -31,6 +30,7 @@ import { USER_READER } from '@app/account/account-fixtures';
 import { hot } from 'vitest-marbles';
 import { HttpErrorResponse } from '@angular/common/http';
 import { provideTranslateService } from '@ngx-translate/core';
+import { UserEffects } from '@app/account/effects/user.effects';
 
 describe.todo('UserEffects', () => {
   const TEST_USER = USER_READER;
