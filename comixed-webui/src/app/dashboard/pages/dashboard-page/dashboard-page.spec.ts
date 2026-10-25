@@ -22,8 +22,16 @@ import { provideTranslateService } from '@ngx-translate/core';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
 import { provideRouter } from '@angular/router';
 import { beforeEach, Mock } from 'vitest';
+import { provideMockStore } from '@ngrx/store/testing';
+import {
+  initialRemoteLibraryState,
+  REMOTE_LIBRARY_FEATURE_KEY
+} from '@app/library/reducers/remote-library.reducer';
 
 describe('DashboardPage', () => {
+  const initialState = {
+    [REMOTE_LIBRARY_FEATURE_KEY]: initialRemoteLibraryState
+  };
   const TEST_TITLE_TRANSLATED = 'The Translated Title';
 
   let component: DashboardPage;
@@ -35,7 +43,8 @@ describe('DashboardPage', () => {
       providers: [
         provideRouter([{ path: '*', redirectTo: '' }]),
         provideLogger({ minLevel: LoggerLevel.OFF }),
-        provideTranslateService({ fallbackLang: 'en' })
+        provideTranslateService({ fallbackLang: 'en' }),
+        provideMockStore({ initialState })
       ]
     }).compileComponents();
 

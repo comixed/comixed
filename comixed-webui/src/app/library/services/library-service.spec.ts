@@ -25,17 +25,24 @@ import {
 import { provideHttpClient } from '@angular/common/http';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
 import { interpolate } from '@app/app-functions';
-import { REMOTE_LIBRARY_STATE } from '@app/library/library-fixtures';
+import { REMOTE_LIBRARY } from '@app/library/library-fixtures';
 import { LOAD_LIBRARY_STATE_URL } from '@app/library/library-constants';
 import { provideMockStore } from '@ngrx/store/testing';
 import {
   initialMessagingState,
   MESSAGING_FEATURE_KEY
 } from '@app/messaging/reducers/messaging.reducer';
+import {
+  initialRemoteLibraryState,
+  REMOTE_LIBRARY_FEATURE_KEY
+} from '@app/library/reducers/remote-library.reducer';
 
 describe('LibraryService', () => {
-  const initialState = { [MESSAGING_FEATURE_KEY]: initialMessagingState };
-  const TEST_LIBRARY_STATE = REMOTE_LIBRARY_STATE;
+  const initialState = {
+    [MESSAGING_FEATURE_KEY]: initialMessagingState,
+    [REMOTE_LIBRARY_FEATURE_KEY]: initialRemoteLibraryState
+  };
+  const TEST_REMOTE_LIBRARY = REMOTE_LIBRARY;
 
   let service: LibraryService;
   let httpController: HttpTestingController;
@@ -43,9 +50,9 @@ describe('LibraryService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
-        provideLogger({ minLevel: LoggerLevel.OFF }),
         provideHttpClient(),
         provideHttpClientTesting(),
+        provideLogger({ minLevel: LoggerLevel.OFF }),
         provideMockStore({ initialState })
       ]
     });
@@ -58,15 +65,16 @@ describe('LibraryService', () => {
     expect(service).toBeTruthy();
   });
 
-  describe('loading the library state', () => {
-    it('success', async () => {
-      const updateStateSpy = vi.spyOn(service.libraryStore, 'updateState');
-      await service.loadLibraryState();
-      const req = httpController.expectOne(interpolate(LOAD_LIBRARY_STATE_URL));
-      expect(req.request.method).toEqual('GET');
-      req.flush(TEST_LIBRARY_STATE);
-      httpController.verify();
-      expect(updateStateSpy).toHaveBeenCalledWith(TEST_LIBRARY_STATE);
+  it('should load the library state', () => {
+    const serverResponse = TEST_REMOTE_LIBRARY;
+
+    service.loadState().subscribe({
+      next: response => expect(response).toStrictEqual(serverResponse)
     });
+
+    const req = httpController.expectOne(interpolate(LOAD_LIBRARY_STATE_URL));
+    expect(req.request.method).toEqual('GET');
+    req.flush(serverResponse);
+    httpController.verify();
   });
 });

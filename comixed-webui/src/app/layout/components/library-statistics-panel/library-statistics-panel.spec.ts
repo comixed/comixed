@@ -23,12 +23,19 @@ import { provideTranslateService } from '@ngx-translate/core';
 import { provideRouter } from '@angular/router';
 import { provideMockStore } from '@ngrx/store/testing';
 import {
-  USER_FEATURE_KEY,
-  initialUserState
+  initialUserState,
+  USER_FEATURE_KEY
 } from '@app/account/reducers/user.reducer';
+import {
+  initialRemoteLibraryState,
+  REMOTE_LIBRARY_FEATURE_KEY
+} from '@app/library/reducers/remote-library.reducer';
 
 describe('LibraryStatisticsPanel', () => {
-  const initialState = { [USER_FEATURE_KEY]: initialUserState };
+  const initialState = {
+    [REMOTE_LIBRARY_FEATURE_KEY]: initialRemoteLibraryState,
+    [USER_FEATURE_KEY]: initialUserState
+  };
 
   let component: LibraryStatisticsPanel;
   let fixture: ComponentFixture<LibraryStatisticsPanel>;

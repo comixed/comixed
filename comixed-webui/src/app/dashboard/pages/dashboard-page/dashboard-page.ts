@@ -18,10 +18,21 @@
 
 import { Component, inject, signal } from '@angular/core';
 import { DEFAULT_DASHBOARD_STATS } from '@app/dashboard/dashboard-constants';
-import { LibraryStore } from '@app/library/stores/library-store';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/layout/services/title-service';
 import { CollectionStatistics } from '@app/dashboard/components/collection-statistics/collection-statistics';
+import { Store } from '@ngrx/store';
+import {
+  selectRemoteLibraryArchiveTypes,
+  selectRemoteLibraryByPublisherAndYear,
+  selectRemoteLibraryCharacters,
+  selectRemoteLibraryLocations,
+  selectRemoteLibraryPublishers,
+  selectRemoteLibrarySeries,
+  selectRemoteLibraryStates,
+  selectRemoteLibraryStories,
+  selectRemoteLibraryTeams
+} from '@app/library/selectors/remote-library.selectors';
 
 @Component({
   imports: [TranslatePipe, CollectionStatistics],
@@ -31,7 +42,20 @@ import { CollectionStatistics } from '@app/dashboard/components/collection-stati
 })
 export class DashboardPage {
   readonly stats = signal<string[]>([]);
-  readonly libraryStore = inject(LibraryStore);
+  readonly store = inject(Store);
+  readonly publishers = this.store.selectSignal(selectRemoteLibraryPublishers);
+  readonly series = this.store.selectSignal(selectRemoteLibrarySeries);
+  readonly characters = this.store.selectSignal(selectRemoteLibraryCharacters);
+  readonly teams = this.store.selectSignal(selectRemoteLibraryTeams);
+  readonly locations = this.store.selectSignal(selectRemoteLibraryLocations);
+  readonly stories = this.store.selectSignal(selectRemoteLibraryStories);
+  readonly states = this.store.selectSignal(selectRemoteLibraryStates);
+  readonly archiveTypes = this.store.selectSignal(
+    selectRemoteLibraryArchiveTypes
+  );
+  readonly byPublisherAndYear = this.store.selectSignal(
+    selectRemoteLibraryByPublisherAndYear
+  );
   readonly titleService = inject(TitleService);
   readonly translateService = inject(TranslateService);
 

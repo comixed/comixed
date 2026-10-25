@@ -17,12 +17,17 @@
  */
 
 import { Component, inject } from '@angular/core';
-import { LibraryStore } from '@app/library/stores/library-store';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Button } from '@openng/optimus-ui/button';
 import { RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { selectUserReadComicIds } from '@app/account/selectors/user.selectors';
+import {
+  selectRemoteLibraryDeletedComics,
+  selectRemoteLibraryDuplicateComics,
+  selectRemoteLibraryTotalComics,
+  selectRemoteLibraryUnscrapedComics
+} from '@app/library/selectors/remote-library.selectors';
 
 @Component({
   imports: [TranslatePipe, Button, RouterLink],
@@ -31,7 +36,18 @@ import { selectUserReadComicIds } from '@app/account/selectors/user.selectors';
   templateUrl: './library-statistics-panel.html'
 })
 export class LibraryStatisticsPanel {
-  readonly libraryStore = inject(LibraryStore);
   readonly store = inject(Store);
+  readonly totalComics = this.store.selectSignal(
+    selectRemoteLibraryTotalComics
+  );
+  readonly unscrapedComics = this.store.selectSignal(
+    selectRemoteLibraryUnscrapedComics
+  );
+  readonly deletedComics = this.store.selectSignal(
+    selectRemoteLibraryDeletedComics
+  );
+  readonly duplicateComics = this.store.selectSignal(
+    selectRemoteLibraryDuplicateComics
+  );
   readonly readComicIds = this.store.selectSignal(selectUserReadComicIds);
 }

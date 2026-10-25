@@ -1,7 +1,7 @@
 <div class="statistics-container">
   <p-button
     [label]="'library-statistics-panel.segment.total-comics' | translate"
-    [badge]="libraryStore.totalComics().toString()"
+    [badge]="totalComics().toString()"
     [routerLink]="['/library/all']"
     severity="info"
   />
@@ -15,21 +15,21 @@
 
   <p-button
     [label]="'library-statistics-panel.segment.unscraped-comics' | translate"
-    [badge]="libraryStore.unscrapedComics().toString()"
+    [badge]="unscrapedComics().toString()"
     [routerLink]="['/library/unscraped']"
     severity="help"
   />
 
   <p-button
     [label]="'library-statistics-panel.segment.duplicate-comics' | translate"
-    [badge]="libraryStore.duplicateComics().toString()"
+    [badge]="duplicateComics().toString()"
     [routerLink]="['/library/duplicates']"
     severity="warn"
   />
 
   <p-button
     [label]="'library-statistics-panel.segment.deleted-comics' | translate"
-    [badge]="libraryStore.deletedComics().toString()"
+    [badge]="deletedComics().toString()"
     [routerLink]="['/library/deleted']"
     severity="danger"
   />

@@ -16,21 +16,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { RemoteLibrarySegment } from '@app/library/models/net/remote-library-segment';
-import { PublisherAndYearSegment } from '@app/library/models/net/publisher-and-year-segment';
+import { createActionGroup, emptyProps, props } from '@ngrx/store';
+import { RemoteLibrary } from '@app/library/models/net/remote-library';
 
-export interface RemoteLibraryState {
-  totalComics: number;
-  unscrapedComics: number;
-  deletedComics: number;
-  duplicateComics: number;
-  publishers: RemoteLibrarySegment[];
-  series: RemoteLibrarySegment[];
-  characters: RemoteLibrarySegment[];
-  teams: RemoteLibrarySegment[];
-  locations: RemoteLibrarySegment[];
-  stories: RemoteLibrarySegment[];
-  states: RemoteLibrarySegment[];
-  archiveTypes: RemoteLibrarySegment[];
-  byPublisherAndYear: PublisherAndYearSegment[];
-}
+export const RemoteLibraryActions = createActionGroup({
+  source: 'RemoteLibrary',
+  events: {
+    Load: emptyProps(),
+    LoadSuccess: props<{ state: RemoteLibrary }>(),
+    LoadFailure: emptyProps()
+  }
+});

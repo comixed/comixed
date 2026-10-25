@@ -18,7 +18,6 @@
 
 import { Component, inject } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
-import { LibraryService } from '@app/library/services/library-service';
 import { WebSocketService } from '@app/messaging/services/web-socket-service';
 import { Router, RouterOutlet } from '@angular/router';
 import { Topbar } from '@app/layout/components/topbar/topbar';
@@ -31,6 +30,7 @@ import { ExistingAdminAccountActions } from '@app/account/actions/existing-admin
 import { UserActions } from '@app/account/actions/user.actions';
 import { selectUserAuthenticated } from '@app/account/selectors/user.selectors';
 import { Toast } from '@openng/optimus-ui/toast';
+import { RemoteLibraryActions } from '@app/library/actions/remote-library.actions';
 
 @Component({
   imports: [Topbar, RouterOutlet, Toast],
@@ -42,7 +42,6 @@ export class App {
   readonly logger = inject(LoggerService);
   readonly store = inject(Store);
   readonly router = inject(Router);
-  readonly libraryService = inject(LibraryService);
   readonly webSocketService = inject(WebSocketService);
 
   constructor() {
@@ -69,7 +68,7 @@ export class App {
       next: authenticated => {
         if (authenticated) {
           this.webSocketService.connect().subscribe();
-          this.libraryService.loadLibraryState();
+          this.store.dispatch(RemoteLibraryActions.load());
         } else {
           this.webSocketService.disconnect();
         }

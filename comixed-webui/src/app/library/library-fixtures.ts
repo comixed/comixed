@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { RemoteLibraryState } from '@app/library/models/net/remote-library-state';
+import { RemoteLibrary } from '@app/library/models/net/remote-library';
 import { Comic } from '@app/library/models/comic';
 import { ComicState } from '@app/library/models/comic-state';
 import { ComicFile } from '@app/library/models/comic-file';
@@ -33,20 +33,20 @@ import { Series } from '@app/library/models/series';
 import { Issue } from '@app/library/models/issue';
 import { CollectionEntry } from '@app/library/models/collection-entry';
 
-export const REMOTE_LIBRARY_STATE: RemoteLibraryState = {
+export const REMOTE_LIBRARY: RemoteLibrary = {
   totalComics: 71765,
   unscrapedComics: 15,
   deletedComics: 3,
   duplicateComics: 52,
-  publishers: [],
-  series: [],
-  characters: [],
-  teams: [],
-  locations: [],
-  stories: [],
-  states: [],
-  archiveTypes: [],
-  byPublisherAndYear: []
+  publishers: [{ name: 'The Publisher', count: 52 }],
+  series: [{ name: 'The Series', count: 4 }],
+  characters: [{ name: 'The Character', count: 12 }],
+  teams: [{ name: 'The Team', count: 4 }],
+  locations: [{ name: 'The Location', count: 20 }],
+  stories: [{ name: 'The Story', count: 22 }],
+  states: [{ name: 'ADDED', count: 17 }],
+  archiveTypes: [{ name: 'CBZ', count: 5 }],
+  byPublisherAndYear: [{ publisher: 'The Publisher', year: 2026, count: 44 }]
 };
 
 export const COMIC_FILE_1: ComicFile = {

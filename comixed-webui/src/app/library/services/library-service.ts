@@ -27,8 +27,7 @@ import {
   REMOTE_LIBRARY_STATE_TOPIC
 } from '@app/library/library-constants';
 import { interpolate } from '@app/app-functions';
-import { LibraryStore } from '@app/library/stores/library-store';
-import { RemoteLibraryState } from '@app/library/models/net/remote-library-state';
+import { RemoteLibrary } from '@app/library/models/net/remote-library';
 import { WebSocketService } from '@app/messaging/services/web-socket-service';
 import { ArchiveType } from '@app/library/models/archive-type';
 import { ComicType } from '@app/library/models/comic-type';
@@ -41,13 +40,13 @@ import { LoadComicDetailResponse } from '@app/library/models/net/load-comic-deta
 import { Store } from '@ngrx/store';
 import { ComicListActions } from '@app/library/actions/comic-list.actions';
 import { selectMessagingStarted } from '@app/messaging/selectors/messaging.selectors';
+import { RemoteLibraryActions } from '@app/library/actions/remote-library.actions';
 
 @Service()
 export class LibraryService {
   logger = inject(LoggerService);
   http = inject(HttpClient);
   readonly store = inject(Store);
-  readonly libraryStore = inject(LibraryStore);
   readonly webSocketService = inject(WebSocketService);
 
   constructor() {
@@ -55,11 +54,13 @@ export class LibraryService {
       next: started => {
         if (started) {
           this.logger.trace('Subscribing to library updates');
-          this.webSocketService.subscribe<RemoteLibraryState>(
+          this.webSocketService.subscribe<RemoteLibrary>(
             REMOTE_LIBRARY_STATE_TOPIC,
             update => {
               this.logger.debug('Library update message received');
-              this.libraryStore.updateState(update);
+              this.store.dispatch(
+                RemoteLibraryActions.loadSuccess({ state: update })
+              );
             }
           );
           this.logger.trace('Subscribing to comic list updates');
@@ -77,18 +78,9 @@ export class LibraryService {
     });
   }
 
-  loadLibraryState(): void {
+  loadState(): Observable<RemoteLibrary> {
     this.logger.trace('Loading remote library state');
-    this.http
-      .get<RemoteLibraryState>(interpolate(LOAD_LIBRARY_STATE_URL))
-      .subscribe({
-        next: state => {
-          this.logger.debug('Response received:', state);
-          this.libraryStore.updateState(state);
-        },
-        error: error =>
-          this.logger.error('Failed to load remote library state', error)
-      });
+    return this.http.get<RemoteLibrary>(interpolate(LOAD_LIBRARY_STATE_URL));
   }
 
   loadComicListByFilter(args: {
