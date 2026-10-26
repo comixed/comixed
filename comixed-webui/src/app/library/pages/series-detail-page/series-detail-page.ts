@@ -48,7 +48,7 @@ export class SeriesDetailPage {
   publisher = '';
   series = '';
   volume = '';
-  home: MenuItem = { icon: 'pi pi-home', routerLink: ['/'] };
+  readonly home: MenuItem = { icon: 'pi pi-home', routerLink: ['/'] };
 
   constructor() {
     this.logger.trace('Subscribing to router parameter updates');

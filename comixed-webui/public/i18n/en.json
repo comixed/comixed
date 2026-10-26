@@ -26,7 +26,6 @@
     "label": {
       "metadata": "Metadata",
       "pages": "Pages",
-
       "publication": "Publication",
       "story": "Story"
     }
@@ -121,12 +120,6 @@
         "description": "There {count, plural, =1 {is 1 character} other{are # characters}}...",
         "title": "Characters"
       },
-      "collections": {
-        "title": "Collections"
-      },
-      "comic-state": {
-        "title": "Comic States"
-      },
       "locations": {
         "description": "There {count, plural, =1 {is 1 location} other{# locations}}...",
         "title": "Locations"
@@ -134,9 +127,6 @@
       "publishers": {
         "description": "There {count, plural, =1 {is 1 publisher} other{are # publishers}}...",
         "title": "Publishers"
-      },
-      "publisher-year": {
-        "title": "Publishers By Year"
       },
       "series": {
         "description": "There {count, plural, =1 {is 1 series} other{are # series}}...",
@@ -234,6 +224,15 @@
       "no-publishers-found": "No publishers found..."
     }
   },
+  "publisher-series-list-page": {
+    "label": {
+      "in-library": "# Comics in Library",
+      "series-name": "Series Name",
+      "total-issues": "Total Issues In Series",
+      "volume": "Volume"
+    },
+    "page-title": "Series By {publisherName}"
+  },
   "series-detail-page": {
     "label": {
       "cover-date": "Cover Date",
@@ -282,11 +281,14 @@
     }
   },
   "user-effects": {
-    "load-current-user": {
+    "load-user": {
       "service-failure": "User session expired..."
     },
     "login": {
       "service-failure": "Login was unsuccessful..."
+    },
+    "save-preference": {
+      "service-failure": "Failed to save user preference: {name}..."
     }
   },
   "welcome": {

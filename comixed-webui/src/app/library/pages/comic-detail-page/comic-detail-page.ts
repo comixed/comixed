@@ -97,7 +97,7 @@ export class ComicDetailPage {
 
   comicId = 0;
   trail = signal<MenuItem[]>([]);
-  home: MenuItem = { icon: 'pi pi-home', routerLink: ['/'] };
+  readonly home: MenuItem = { icon: 'pi pi-home', routerLink: ['/'] };
 
   constructor() {
     this.activatedRoute.params.subscribe({

@@ -26,8 +26,16 @@
     <ng-template #body let-publisher>
       <tr>
         <td>{{ publisher.name }}</td>
-        <td>{{ publisher.issueCount }}</td>
-        <td>{{ publisher.seriesCount }}</td>
+        <td>
+          <a [routerLink]="['/library/publishers', publisher.name, 'comics']">
+            {{ publisher.issueCount }}
+          </a>
+        </td>
+        <td>
+          <a [routerLink]="['/library/publishers', publisher.name, 'series']">
+            {{ publisher.seriesCount }}
+          </a>
+        </td>
       </tr>
     </ng-template>
   </p-table>

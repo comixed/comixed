@@ -35,6 +35,7 @@ import { LoadCollectionEntriesRequest } from '@app/library/models/net/load-colle
 import { LoadSeriesDetailRequest } from '@app/library/models/net/load-series-detail-request';
 import {
   LOAD_COLLECTION_ENTRIES_URL,
+  LOAD_PUBLISHER_DETAIL_URL,
   LOAD_PUBLISHER_LIST_URL,
   LOAD_SERIES_DETAIL_URL,
   LOAD_SERIES_LIST_URL
@@ -45,6 +46,8 @@ import {
   PUBLISHER_1,
   SERIES_1
 } from '@app/library/library-fixtures';
+import { LoadPublisherDetailResponse } from '@app/library/models/net/load-publisher-detail-response';
+import { LoadPublisherDetailRequest } from '@app/library/models/net/load-publisher-detail-request';
 
 describe('CollectionService', () => {
   const TEST_SEARCH_TEXT = 'text to search for';
@@ -117,6 +120,40 @@ describe('CollectionService', () => {
     httpController.verify();
   });
 
+  it('should load the publisher series list', () => {
+    const serverResponse = {
+      entries: TEST_SERIES_LIST,
+      totalSeries: TEST_COLLECTION_TOTAL_COUNT
+    } as LoadPublisherDetailResponse;
+
+    service
+      .loadPublisherDetail({
+        name: TEST_PUBLISHER.name,
+        index: TEST_INDEX,
+        size: TEST_SIZE,
+        sortBy: TEST_SORT_BY,
+        sortDirection: TEST_SORT_DIRECTION
+      })
+      .subscribe({
+        next: response => expect(response).toStrictEqual(serverResponse)
+      });
+
+    const req = httpController.expectOne(
+      interpolate(LOAD_PUBLISHER_DETAIL_URL, {
+        publisherName: TEST_PUBLISHER.name
+      })
+    );
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      pageIndex: TEST_INDEX,
+      pageSize: TEST_SIZE,
+      sortBy: TEST_SORT_BY,
+      sortDirection: TEST_SORT_DIRECTION
+    } as LoadPublisherDetailRequest);
+    req.flush(serverResponse);
+    httpController.verify();
+  });
+
   it('loading the series list', () => {
     const serverResponse = {
       series: TEST_SERIES_LIST,
@@ -148,28 +185,28 @@ describe('CollectionService', () => {
     httpController.verify();
   });
 
-  describe('loading series detail', () => {
-    it('success', async () => {
-      const updateStateSpy = vi.spyOn(service.seriesDetailStore, 'update');
-      const serverResponse = TEST_ISSUE_LIST;
+  it('loading series detail', () => {
+    const serverResponse = TEST_ISSUE_LIST;
 
-      service.loadSeriesDetail({
+    service
+      .loadSeriesDetail({
         publisherName: TEST_SERIES.publisher,
         seriesName: TEST_SERIES.name,
         volume: TEST_SERIES.volume
+      })
+      .subscribe({
+        next: response => expect(response).toStrictEqual(serverResponse)
       });
 
-      const req = httpController.expectOne(interpolate(LOAD_SERIES_DETAIL_URL));
-      expect(req.request.method).toEqual('POST');
-      expect(req.request.body).toEqual({
-        publisher: TEST_SERIES.publisher,
-        name: TEST_SERIES.name,
-        volume: TEST_SERIES.volume
-      } as LoadSeriesDetailRequest);
-      req.flush(serverResponse);
-      httpController.verify();
-      expect(updateStateSpy).toHaveBeenCalledWith(TEST_ISSUE_LIST);
-    });
+    const req = httpController.expectOne(interpolate(LOAD_SERIES_DETAIL_URL));
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      publisher: TEST_SERIES.publisher,
+      name: TEST_SERIES.name,
+      volume: TEST_SERIES.volume
+    } as LoadSeriesDetailRequest);
+    req.flush(serverResponse);
+    httpController.verify();
   });
 
   describe('loading the collection entry list', () => {

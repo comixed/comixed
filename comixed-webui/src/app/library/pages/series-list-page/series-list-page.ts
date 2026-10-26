@@ -58,7 +58,7 @@ export class SeriesListPage {
   readonly titleService = inject(TitleService);
   readonly trail = signal<MenuItem[]>([]);
 
-  home: MenuItem = { icon: 'pi pi-home', routerLink: ['/'] };
+  readonly home: MenuItem = { icon: 'pi pi-home', routerLink: ['/'] };
 
   constructor() {
     this.activatedRoute.queryParams.subscribe({

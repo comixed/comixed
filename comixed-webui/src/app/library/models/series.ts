@@ -17,8 +17,9 @@
  */
 
 export interface Series {
-  name: string;
   publisher: string;
+  name: string;
   volume: string;
   inLibrary: number;
+  totalIssues: number;
 }

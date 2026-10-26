@@ -32,14 +32,14 @@ import {
   selectPublisherListTotal
 } from '@app/library/selectors/publisher-list.selectors';
 import { QueryParameterService } from '@app/layout/services/query-parameter.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import {
   QUERY_PARAM_PAGE_INDEX,
   QUERY_PARAM_PAGE_SIZE
 } from '@app/library/library-constants';
 
 @Component({
-  imports: [TranslatePipe, TableModule, Card, Breadcrumb],
+  imports: [TranslatePipe, TableModule, Card, Breadcrumb, RouterLink],
   selector: 'app-publisher-list-page',
   styleUrl: './publisher-list-page.scss',
   templateUrl: './publisher-list-page.html'
@@ -63,7 +63,7 @@ export class PublisherListPage {
     selectPublisherListTotal
   );
 
-  home: MenuItem = { icon: 'pi pi-home', routerLink: ['/'] };
+  readonly home: MenuItem = { icon: 'pi pi-home', routerLink: ['/'] };
 
   constructor() {
     this.activatedRoute.queryParams.subscribe({

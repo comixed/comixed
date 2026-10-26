@@ -32,7 +32,7 @@ export class ComicListEffects {
   readonly translateService = inject(TranslateService);
   readonly libraryService = inject(LibraryService);
   private actions$ = inject(Actions);
-  loadComicListByFilters$ = createEffect(() => {
+  loadByFilters$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(ComicListActions.loadByFilters),
       tap(action => this.logger.debug('Loading comics by filter:', action)),

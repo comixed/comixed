@@ -32,6 +32,8 @@ import { RemoteLibraryEffects } from '@app/library/effects/remote-library.effect
 import { remoteLibraryFeature } from '@app/library/reducers/remote-library.reducer';
 import { SeriesListEffects } from '@app/library/effects/series-list.effects';
 import { seriesListFeature } from '@app/library/reducers/series-list.reducer';
+import { publisherSeriesListsFeature } from '@app/library/reducers/publisher-series-list.reducer';
+import { PublisherSeriesListEffects } from '@app/library/effects/publisher-series-list.effects';
 
 @NgModule({
   declarations: [],
@@ -40,6 +42,7 @@ import { seriesListFeature } from '@app/library/reducers/series-list.reducer';
     StoreModule.forFeature(remoteLibraryFeature),
     StoreModule.forFeature(comicFileListsFeature),
     StoreModule.forFeature(publisherListsFeature),
+    StoreModule.forFeature(publisherSeriesListsFeature),
     StoreModule.forFeature(seriesListFeature),
     StoreModule.forFeature(comicDetailFeature),
     StoreModule.forFeature(comicListFeature),
@@ -47,6 +50,7 @@ import { seriesListFeature } from '@app/library/reducers/series-list.reducer';
       RemoteLibraryEffects,
       ComicFileListEffects,
       PublisherListEffects,
+      PublisherSeriesListEffects,
       SeriesListEffects,
       ComicDetailEffects,
       ComicListEffects

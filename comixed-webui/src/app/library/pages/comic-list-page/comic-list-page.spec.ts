@@ -27,6 +27,7 @@ import {
 } from '@app/library/reducers/comic-list.reducer';
 import { MessageService } from '@openng/optimus-ui/api';
 import { ComicListPage } from '@app/library/pages/comic-list-page/comic-list-page';
+import { beforeEach, Mock } from 'vitest';
 
 describe('ComicListPage', () => {
   const initialState = { [COMIC_LIST_FEATURE_KEY]: initialComicListState };
@@ -58,5 +59,18 @@ describe('ComicListPage', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('changing the language', () => {
+    let setTitleSpy: Mock;
+
+    beforeEach(() => {
+      setTitleSpy = vi.spyOn(component.titleService, 'setTitle');
+      component.translateService.use('fr');
+    });
+
+    it('should update the page title', () => {
+      expect(setTitleSpy).toHaveBeenCalled();
+    });
   });
 });

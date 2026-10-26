@@ -81,7 +81,7 @@ interface MaximumOption {
   templateUrl: './import-comics-page.html'
 })
 export class ImportComicsPage {
-  home: MenuItem = { icon: 'pi pi-home', routerLink: ['/'] };
+  readonly home: MenuItem = { icon: 'pi pi-home', routerLink: ['/'] };
   importComicsForm!: FormGroup;
   maximumOptions: MaximumOption[] = [];
   readonly logger = inject(LoggerService);

@@ -79,7 +79,7 @@ export class UserEffects {
             this.logger.debug('Service failure:', error);
             this.alertService.error(
               this.translateService.instant(
-                'user-effects.load-current-user.service-failure'
+                'user-effects.load-user.service-failure'
               )
             );
             return of(UserActions.loadFailure());
@@ -112,7 +112,8 @@ export class UserEffects {
               this.logger.error('Service failure:', error);
               this.alertService.error(
                 this.translateService.instant(
-                  'user-effects.save-user-preference.service-failure'
+                  'user-effects.save-preference.service-failure',
+                  { name: action.name }
                 )
               );
               return of(UserActions.savePreferenceFailure());

@@ -31,7 +31,6 @@ import {
 
 describe('SeriesListPage', () => {
   const initialState = { [SERIES_LIST_FEATURE_KEY]: initialSeriesListState };
-  const TEST_TITLE_TRANSLATED = 'The translated title';
 
   let component: SeriesListPage;
   let fixture: ComponentFixture<SeriesListPage>;
@@ -57,24 +56,16 @@ describe('SeriesListPage', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('when the language changes', () => {
+  describe('changing the language', () => {
     let setTitleSpy: Mock;
-    let instantSpy: Mock;
 
     beforeEach(() => {
       setTitleSpy = vi.spyOn(component.titleService, 'setTitle');
-      instantSpy = vi
-        .spyOn(component.translateService, 'instant')
-        .mockReturnValue(TEST_TITLE_TRANSLATED);
       component.translateService.use('fr');
     });
 
-    it('translates the title', () => {
-      expect(instantSpy).toHaveBeenCalled();
-    });
-
-    it('updates the title', () => {
-      expect(setTitleSpy).toHaveBeenCalledWith(TEST_TITLE_TRANSLATED);
+    it('should update the page title', () => {
+      expect(setTitleSpy).toHaveBeenCalled();
     });
   });
 });

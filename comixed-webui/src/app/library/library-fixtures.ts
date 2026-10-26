@@ -131,7 +131,8 @@ export const SERIES_1: Series = {
   name: 'The Series Name',
   publisher: 'The Series Publisher',
   volume: '2026',
-  inLibrary: 717
+  inLibrary: 717,
+  totalIssues: 920
 };
 
 export const ISSUE_1: Issue = {

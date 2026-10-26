@@ -32,7 +32,7 @@ export class SeriesListEffects {
   readonly alertService = inject(AlertService);
   readonly translateService = inject(TranslateService);
   private actions$ = inject(Actions);
-  loadSeriesLists$ = createEffect(() => {
+  load$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(SeriesListActions.load),
       tap(action => this.logger.debug('Loading series list:', action)),

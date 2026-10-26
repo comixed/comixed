@@ -29,6 +29,8 @@ import { PublisherListPage } from '@app/library/pages/publisher-list-page/publis
 import { SeriesListPage } from '@app/library/pages/series-list-page/series-list-page';
 import { SeriesDetailPage } from '@app/library/pages/series-detail-page/series-detail-page';
 import { TagListPage } from '@app/library/pages/tag-list-page/tag-list-page';
+import { PublisherSeriesListPage } from '@app/library/pages/publisher-series-list-page/publisher-series-list-page';
+import { PublisherComicListPage } from '@app/library/pages/publisher-comic-list-page/publisher-comic-list-page.component';
 
 export const appRoutes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/dashboard' },
@@ -52,6 +54,16 @@ export const appRoutes: Routes = [
   {
     path: 'library/series',
     component: SeriesListPage,
+    canActivate: [readerGuard]
+  },
+  {
+    path: 'library/publishers/:publisherName/comics',
+    component: PublisherComicListPage,
+    canActivate: [readerGuard]
+  },
+  {
+    path: 'library/publishers/:publisherName/series',
+    component: PublisherSeriesListPage,
     canActivate: [readerGuard]
   },
   {

@@ -45,7 +45,7 @@ export class TagListPage {
   readonly router = inject(Router);
   readonly trail = signal<MenuItem[]>([]);
 
-  home: MenuItem = { icon: 'pi pi-home', routerLink: ['/'] };
+  readonly home: MenuItem = { icon: 'pi pi-home', routerLink: ['/'] };
 
   constructor() {
     this.logger.trace('Subscribing to router parameter updates');

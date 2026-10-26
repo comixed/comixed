@@ -110,7 +110,7 @@ describe.todo('ComicListEffects', () => {
         .spyOn(libraryService, 'loadComicListByFilter')
         .mockReturnValue(of(serviceResponse));
       expect(
-        effects.loadComicListByFilters$.pipe(
+        effects.loadByFilters$.pipe(
           tap(response => expect(response).toStrictEqual(outcome))
         )
       ).toSatisfyOnFlush(() => {
@@ -165,7 +165,7 @@ describe.todo('ComicListEffects', () => {
         .mockReturnValue(throwError(() => serviceResponse));
       const errorSpy = vi.spyOn(alertService, 'error');
       expect(
-        effects.loadComicListByFilters$.pipe(
+        effects.loadByFilters$.pipe(
           tap(response => expect(response).toStrictEqual(outcome))
         )
       ).toSatisfyOnFlush(() => {
@@ -220,7 +220,7 @@ describe.todo('ComicListEffects', () => {
         .mockThrow(new Error());
       const errorSpy = vi.spyOn(alertService, 'error');
       expect(
-        effects.loadComicListByFilters$.pipe(
+        effects.loadByFilters$.pipe(
           tap(response => expect(response).toStrictEqual(outcome))
         )
       ).toSatisfyOnFlush(() => {

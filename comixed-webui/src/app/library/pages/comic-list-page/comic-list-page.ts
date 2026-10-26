@@ -101,7 +101,7 @@ export class ComicListPage {
   );
   readonly trail = signal<MenuItem[]>([]);
 
-  home: MenuItem = { icon: 'pi pi-home', routerLink: ['/'] };
+  readonly home: MenuItem = { icon: 'pi pi-home', routerLink: ['/'] };
 
   allComics = true;
   readComics = false;
