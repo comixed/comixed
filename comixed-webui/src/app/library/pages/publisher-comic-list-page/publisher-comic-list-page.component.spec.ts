@@ -18,14 +18,32 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PublisherComicListPage } from './publisher-comic-list-page.component';
+import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
+import { provideTranslateService } from '@ngx-translate/core';
+import { provideRouter } from '@angular/router';
+import { provideMockStore } from '@ngrx/store/testing';
+import {
+  initialPublisherComicListState,
+  PUBLISHER_COMIC_LIST_FEATURE_KEY
+} from '@app/library/reducers/publisher-comic-list.reducer';
 
 describe('PublisherComicListPage', () => {
+  const initialState = {
+    [PUBLISHER_COMIC_LIST_FEATURE_KEY]: initialPublisherComicListState
+  };
+
   let component: PublisherComicListPage;
   let fixture: ComponentFixture<PublisherComicListPage>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PublisherComicListPage]
+      imports: [PublisherComicListPage],
+      providers: [
+        provideRouter([{ path: '*', redirectTo: '' }]),
+        provideLogger({ minLevel: LoggerLevel.OFF }),
+        provideTranslateService(),
+        provideMockStore({ initialState })
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(PublisherComicListPage);

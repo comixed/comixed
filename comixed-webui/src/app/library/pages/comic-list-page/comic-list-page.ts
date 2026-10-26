@@ -17,31 +17,14 @@
  */
 
 import { Component, inject, signal } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Card } from '@openng/optimus-ui/card';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { TableLazyLoadEvent, TableModule } from '@openng/optimus-ui/table';
-import { DatePipe } from '@angular/common';
-import { ComicCoverUrlPipe } from '@app/library/pipes/comic-cover-url-pipe';
-import {
-  FaIconComponent,
-  IconDefinition
-} from '@fortawesome/angular-fontawesome';
-import { ComicState } from '@app/library/models/comic-state';
-import {
-  faBoltLightning,
-  faCircleCheck,
-  faFile,
-  faPlus,
-  faQuestion,
-  faRotate,
-  faTrash
-} from '@fortawesome/free-solid-svg-icons';
 import { Breadcrumb } from '@openng/optimus-ui/breadcrumb';
 import { MenuItem } from '@openng/optimus-ui/api';
 import { TitleService } from '@app/layout/services/title-service';
-import { Tooltip } from '@openng/optimus-ui/tooltip';
 import { Store } from '@ngrx/store';
 import {
   selectComicList,
@@ -58,19 +41,10 @@ import {
   QUERY_PARAM_PAGE_INDEX,
   QUERY_PARAM_PAGE_SIZE
 } from '@app/library/library-constants';
+import { ComicTable } from '@app/library/components/comic-table/comic-table';
 
 @Component({
-  imports: [
-    Card,
-    TranslatePipe,
-    TableModule,
-    DatePipe,
-    ComicCoverUrlPipe,
-    FaIconComponent,
-    Breadcrumb,
-    RouterLink,
-    Tooltip
-  ],
+  imports: [Card, TableModule, Breadcrumb, ComicTable],
   selector: 'app-comic-list-page',
   styleUrl: './comic-list-page.scss',
   templateUrl: './comic-list-page.html'
@@ -180,25 +154,6 @@ export class ComicListPage {
       { name: QUERY_PARAM_PAGE_INDEX, value: `${event.first! / event.rows!}` },
       { name: QUERY_PARAM_PAGE_SIZE, value: `${event.rows!}` }
     ]);
-  }
-
-  getIconForComicState(comicState: ComicState): IconDefinition {
-    switch (comicState) {
-      case ComicState.ADDED:
-        return faPlus;
-      case ComicState.DISCOVERED:
-        return faFile;
-      case ComicState.UNPROCESSED:
-        return faBoltLightning;
-      case ComicState.STABLE:
-        return faCircleCheck;
-      case ComicState.CHANGED:
-        return faRotate;
-      case ComicState.DELETED:
-        return faTrash;
-      default:
-        return faQuestion;
-    }
   }
 
   private doLoadTranslations() {

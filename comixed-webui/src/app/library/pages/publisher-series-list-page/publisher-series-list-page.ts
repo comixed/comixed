@@ -112,7 +112,7 @@ export class PublisherSeriesListPage {
     );
     this.trail.set([
       {
-        label: this.translateService.instant('publisher-list-page.page-title'),
+        label: this.translateService.instant('publisher-list-page.trail-title'),
         routerLink: ['/library/publishers']
       },
       {
@@ -120,8 +120,7 @@ export class PublisherSeriesListPage {
       },
       {
         label: this.translateService.instant(
-          'publisher-series-list-page.page-title',
-          { publisherName: this.publisherName }
+          'publisher-series-list-page.trail-title'
         )
       }
     ]);

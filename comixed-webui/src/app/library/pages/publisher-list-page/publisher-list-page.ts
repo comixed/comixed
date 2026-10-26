@@ -105,7 +105,9 @@ export class PublisherListPage {
       )
     );
     this.trail.set([
-      { label: this.translateService.instant('publisher-list-page.page-title') }
+      {
+        label: this.translateService.instant('publisher-list-page.trail-title')
+      }
     ]);
   }
 }

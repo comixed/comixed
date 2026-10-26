@@ -35,7 +35,7 @@ import { LoadCollectionEntriesRequest } from '@app/library/models/net/load-colle
 import { LoadSeriesDetailRequest } from '@app/library/models/net/load-series-detail-request';
 import {
   LOAD_COLLECTION_ENTRIES_URL,
-  LOAD_PUBLISHER_DETAIL_URL,
+  LOAD_PUBLISHER_SERIES_LIST_URL,
   LOAD_PUBLISHER_LIST_URL,
   LOAD_SERIES_DETAIL_URL,
   LOAD_SERIES_LIST_URL
@@ -46,8 +46,8 @@ import {
   PUBLISHER_1,
   SERIES_1
 } from '@app/library/library-fixtures';
-import { LoadPublisherDetailResponse } from '@app/library/models/net/load-publisher-detail-response';
-import { LoadPublisherDetailRequest } from '@app/library/models/net/load-publisher-detail-request';
+import { LoadPublisherSeriesListResponse } from '@app/library/models/net/load-publisher-series-list-response';
+import { LoadPublisherSeriesListRequest } from '@app/library/models/net/load-publisher-series-list-request';
 
 describe('CollectionService', () => {
   const TEST_SEARCH_TEXT = 'text to search for';
@@ -124,10 +124,10 @@ describe('CollectionService', () => {
     const serverResponse = {
       entries: TEST_SERIES_LIST,
       totalSeries: TEST_COLLECTION_TOTAL_COUNT
-    } as LoadPublisherDetailResponse;
+    } as LoadPublisherSeriesListResponse;
 
     service
-      .loadPublisherDetail({
+      .loadPublisherSeriesList({
         name: TEST_PUBLISHER.name,
         index: TEST_INDEX,
         size: TEST_SIZE,
@@ -139,7 +139,7 @@ describe('CollectionService', () => {
       });
 
     const req = httpController.expectOne(
-      interpolate(LOAD_PUBLISHER_DETAIL_URL, {
+      interpolate(LOAD_PUBLISHER_SERIES_LIST_URL, {
         publisherName: TEST_PUBLISHER.name
       })
     );
@@ -149,7 +149,7 @@ describe('CollectionService', () => {
       pageSize: TEST_SIZE,
       sortBy: TEST_SORT_BY,
       sortDirection: TEST_SORT_DIRECTION
-    } as LoadPublisherDetailRequest);
+    } as LoadPublisherSeriesListRequest);
     req.flush(serverResponse);
     httpController.verify();
   });

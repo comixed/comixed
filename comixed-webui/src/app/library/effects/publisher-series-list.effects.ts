@@ -38,7 +38,7 @@ export class PublisherSeriesListEffects {
       tap(action => this.logger.debug('Loading publisher detail:', action)),
       switchMap(action =>
         this.collectionService
-          .loadPublisherDetail({
+          .loadPublisherSeriesList({
             name: action.name,
             index: action.index,
             size: action.size,

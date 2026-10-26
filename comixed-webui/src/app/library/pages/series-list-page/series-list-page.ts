@@ -112,7 +112,7 @@ export class SeriesListPage {
     );
     this.trail.set([
       {
-        label: this.translateService.instant('series-list-page.page-title')
+        label: this.translateService.instant('series-list-page.trail-title')
       }
     ]);
   }

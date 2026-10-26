@@ -45,8 +45,8 @@ export class SeriesDetailPage {
   readonly router = inject(Router);
   readonly trail = signal<MenuItem[]>([]);
 
-  publisher = '';
-  series = '';
+  publisherName = '';
+  seriesName = '';
   volume = '';
   readonly home: MenuItem = { icon: 'pi pi-home', routerLink: ['/'] };
 
@@ -54,17 +54,17 @@ export class SeriesDetailPage {
     this.logger.trace('Subscribing to router parameter updates');
     this.activatedRoute.paramMap.subscribe({
       next: params => {
-        this.publisher = params.get('publisherName')!;
-        this.series = params.get('seriesName')!;
+        this.publisherName = params.get('publisherName')!;
+        this.seriesName = params.get('seriesName')!;
         this.volume = params.get('volume')!;
         this.seriesDetailStore.setSeries(
-          this.publisher,
-          this.series,
+          this.publisherName,
+          this.seriesName,
           this.volume
         );
         this.collectionsService.loadSeriesDetail({
-          publisherName: this.publisher,
-          seriesName: this.series,
+          publisherName: this.publisherName,
+          seriesName: this.seriesName,
           volume: this.volume
         });
       }
@@ -79,19 +79,22 @@ export class SeriesDetailPage {
 
   private doLoadTranslations() {
     this.titleService.setTitle(
-      this.translateService.instant(
-        'collections.series-detail-page.page-title',
-        { name: this.series, volume: this.volume }
-      )
+      this.translateService.instant('series-detail-page.page-title', {
+        name: this.seriesName,
+        volume: this.volume
+      })
     );
     this.trail.set([
       {
-        label: this.publisher,
-        routerLink: ['/library/publishers', this.publisher]
+        label: this.translateService.instant('publisher-list-page.trail-title')
       },
       {
-        label: this.translateService.instant('series-detail-page.page-title', {
-          name: this.series,
+        label: this.publisherName,
+        routerLink: ['/library/publishers', this.publisherName, 'series']
+      },
+      {
+        label: this.translateService.instant('series-detail-page.trail-title', {
+          name: this.seriesName,
           volume: this.volume
         })
       }

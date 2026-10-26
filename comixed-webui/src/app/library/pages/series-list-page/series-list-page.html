@@ -18,14 +18,17 @@
     <ng-template #header>
       <tr>
         <th>{{ "series-list-page.label.series-name" | translate }}</th>
-        <th>{{ "series-list-page.label.publisher" | translate }}</th>
         <th>{{ "series-list-page.label.volume" | translate }}</th>
+        <th>{{ "series-list-page.label.publisher" | translate }}</th>
         <th>{{ "series-list-page.label.in-library" | translate }}</th>
       </tr>
     </ng-template>
 
     <ng-template #body let-series>
       <tr>
+        <td>
+          {{ series.name }}
+        </td>
         <td>
           <a
             [routerLink]="[
@@ -36,7 +39,7 @@
               series.volume
             ]"
           >
-            {{ series.name }}
+            {{ series.volume }}
           </a>
         </td>
         <td>
@@ -44,7 +47,6 @@
             {{ series.publisher }}
           </a>
         </td>
-        <td>{{ series.volume }}</td>
         <td>{{ series.inLibrary }}</td>
       </tr>
     </ng-template>

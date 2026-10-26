@@ -33,14 +33,14 @@ import { LoadSeriesDetailRequest } from '@app/library/models/net/load-series-det
 import { Issue } from '@app/library/models/issue';
 import {
   LOAD_COLLECTION_ENTRIES_URL,
-  LOAD_PUBLISHER_DETAIL_URL,
+  LOAD_PUBLISHER_SERIES_LIST_URL,
   LOAD_PUBLISHER_LIST_URL,
   LOAD_SERIES_DETAIL_URL,
   LOAD_SERIES_LIST_URL
 } from '@app/library/library-constants';
 import { Observable } from 'rxjs';
-import { LoadPublisherDetailResponse } from '@app/library/models/net/load-publisher-detail-response';
-import { LoadPublisherDetailRequest } from '@app/library/models/net/load-publisher-detail-request';
+import { LoadPublisherSeriesListResponse } from '@app/library/models/net/load-publisher-series-list-response';
+import { LoadPublisherSeriesListRequest } from '@app/library/models/net/load-publisher-series-list-request';
 
 @Service()
 export class CollectionService {
@@ -69,23 +69,23 @@ export class CollectionService {
     );
   }
 
-  loadPublisherDetail(args: {
+  loadPublisherSeriesList(args: {
     name: string;
     index: number;
     size: number;
     sortBy: string;
     sortDirection: string;
-  }): Observable<LoadPublisherDetailResponse> {
+  }): Observable<LoadPublisherSeriesListResponse> {
     this.logger.trace('Loading publisher detail:', args);
 
-    return this.client.post<LoadPublisherDetailResponse>(
-      interpolate(LOAD_PUBLISHER_DETAIL_URL, { publisherName: args.name }),
+    return this.client.post<LoadPublisherSeriesListResponse>(
+      interpolate(LOAD_PUBLISHER_SERIES_LIST_URL, { publisherName: args.name }),
       {
         pageIndex: args.index,
         pageSize: args.size,
         sortBy: args.sortBy,
         sortDirection: args.sortDirection
-      } as LoadPublisherDetailRequest
+      } as LoadPublisherSeriesListRequest
     );
   }
 

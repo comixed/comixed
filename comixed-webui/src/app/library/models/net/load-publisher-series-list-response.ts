@@ -16,9 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-export interface LoadPublisherDetailRequest {
-  pageIndex: number;
-  pageSize: number;
-  sortBy: string;
-  sortDirection: string;
+import { Series } from '@app/library/models/series';
+
+export interface LoadPublisherSeriesListResponse {
+  totalSeries: number;
+  entries: Series[];
 }

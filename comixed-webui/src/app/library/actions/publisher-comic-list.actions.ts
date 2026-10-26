@@ -16,9 +16,26 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Series } from '@app/library/models/series';
+import { createActionGroup, emptyProps, props } from '@ngrx/store';
+import { Comic } from '@app/library/models/comic';
 
-export interface LoadPublisherDetailResponse {
-  totalSeries: number;
-  entries: Series[];
-}
+export const PublisherComicListActions = createActionGroup({
+  source: 'PublisherComicList/API',
+  events: {
+    Load: props<{
+      publisherName: string;
+      index: number;
+      size: number;
+      sortBy: string;
+      sortDirection: string;
+    }>(),
+    LoadSuccess: props<{
+      entries: Comic[];
+      coverMonthList: number[];
+      coverYearList: number[];
+      total: number;
+      filteredTotal: number;
+    }>(),
+    LoadFailure: emptyProps()
+  }
+});
