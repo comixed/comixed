@@ -56,11 +56,23 @@ h8 {
   align-items: center;
 }
 
+.cx-justify-start {
+  display: flex;
+  justify-content: start;
+  align-items: start;
+}
+
 .cx-centered {
   top: 50%;
   left: 50%;
   margin-right: -50%;
   transform: translate(-50%, -50%);
+}
+
+.cx-justify-end {
+  display: flex;
+  justify-content: end;
+  align-items: end;
 }
 
 .cx-no-text-wrap {

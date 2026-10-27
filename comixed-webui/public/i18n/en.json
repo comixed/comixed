@@ -120,29 +120,37 @@
       },
       "characters": {
         "description": "There {count, plural, =1 {is 1 character} other{are # characters}}...",
-        "title": "Characters"
+        "title": "Characters",
+        "zoom-title": "{count, select, 0{All} other{Top}} Characters"
       },
       "locations": {
         "description": "There {count, plural, =1 {is 1 location} other{# locations}}...",
-        "title": "Locations"
+        "title": "Locations",
+        "zoom-title": "{count, select, 0{All} other{Top}}  Locations"
       },
       "publishers": {
         "description": "There {count, plural, =1 {is 1 publisher} other{are # publishers}}...",
-        "title": "Publishers"
+        "title": "Publishers",
+        "zoom-title": "{count, select, 0{All} other{Top}}  Publishers"
       },
       "series": {
         "description": "There {count, plural, =1 {is 1 series} other{are # series}}...",
-        "title": "Series"
+        "title": "Series",
+        "zoom-title": "{count, select, 0{All} other{Top}}  Series"
       },
       "stories": {
         "description": "There {count, plural, =1 {is 1 story} other{are # stories}}...",
-        "title": "Stories"
+        "title": "Stories",
+        "zoom-title": "{count, select, 0{All} other{Top}}  Stories"
       },
       "teams": {
         "description": "There {count, plural, =1 {is 1 team} other{are # teams}}...",
-        "title": "Teams"
+        "title": "Teams",
+        "zoom-title": "{count, select, 0{All} other{Top}}  Teams"
       },
       "text": {
+        "show-details": "Zoom in on all entries...",
+        "show-top": "Zoom in on the top entries...",
         "view-more": "View more detail..."
       }
     }

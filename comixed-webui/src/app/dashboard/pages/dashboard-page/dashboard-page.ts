@@ -33,9 +33,11 @@ import {
   selectRemoteLibraryStories,
   selectRemoteLibraryTeams
 } from '@app/library/selectors/remote-library.selectors';
+import { RemoteLibrarySegment } from '@app/library/models/net/remote-library-segment';
+import { LibrarySegmentGraph } from '@app/dashboard/components/library-segment-graph/library-segment-graph';
 
 @Component({
-  imports: [TranslatePipe, CollectionStatistics],
+  imports: [TranslatePipe, CollectionStatistics, LibrarySegmentGraph],
   selector: 'app-dashboard-page',
   styleUrl: './dashboard-page.scss',
   templateUrl: './dashboard-page.html'
@@ -58,6 +60,9 @@ export class DashboardPage {
   );
   readonly titleService = inject(TitleService);
   readonly translateService = inject(TranslateService);
+  readonly zoomedStatistics = signal<RemoteLibrarySegment[]>([]);
+  readonly zoomedTitle = signal('');
+  readonly zoomedRecords = signal(0);
 
   constructor() {
     this.translateService.onLangChange.subscribe({
@@ -65,6 +70,20 @@ export class DashboardPage {
     });
     this.stats.set(DEFAULT_DASHBOARD_STATS.split('|'));
     this.doLoadTranslations();
+  }
+
+  onZoom(
+    statistics: RemoteLibrarySegment[],
+    title: string,
+    maxRecords: number
+  ) {
+    this.zoomedTitle.set(title);
+    this.zoomedStatistics.set(statistics);
+    this.zoomedRecords.set(maxRecords);
+  }
+
+  onUnzoom(): void {
+    this.zoomedStatistics.set([]);
   }
 
   private doLoadTranslations() {

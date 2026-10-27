@@ -16,14 +16,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, inject, Input } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { TranslatePipe } from '@ngx-translate/core';
 import { RouterLink } from '@angular/router';
 import { Card } from '@openng/optimus-ui/card';
+import { Tooltip } from '@openng/optimus-ui/tooltip';
+import { Button } from '@openng/optimus-ui/button';
 
 @Component({
-  imports: [TranslatePipe, RouterLink, Card],
+  imports: [TranslatePipe, RouterLink, Card, Tooltip, Button],
   selector: 'app-collection-statistics',
   styleUrl: './collection-statistics.scss',
   templateUrl: './collection-statistics.html'
@@ -33,6 +35,8 @@ export class CollectionStatistics {
   @Input() description = '';
   @Input() imageUrl = '';
   @Input() detailUrl = '';
+
+  @Output() zoom = new EventEmitter<number>();
 
   readonly logger = inject(LoggerService);
 }

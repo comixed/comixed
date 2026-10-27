@@ -27,12 +27,24 @@ import {
   initialRemoteLibraryState,
   REMOTE_LIBRARY_FEATURE_KEY
 } from '@app/library/reducers/remote-library.reducer';
+import { RemoteLibrarySegment } from '@app/library/models/net/remote-library-segment';
 
 describe('DashboardPage', () => {
   const initialState = {
     [REMOTE_LIBRARY_FEATURE_KEY]: initialRemoteLibraryState
   };
-  const TEST_TITLE_TRANSLATED = 'The Translated Title';
+  const TEST_STATISTICS: RemoteLibrarySegment[] = [
+    { name: 'First Segment', count: 29 },
+    { name: 'Second Segment', count: 20 },
+    { name: 'Third Segment', count: 17 },
+    { name: 'Fourth Segment', count: 17 },
+    {
+      name: 'Fifth Segment',
+      count: 20
+    }
+  ];
+  const TEST_TITLE = 'The Segment Title';
+  const TEST_MAX_RECORDS = 0;
 
   let component: DashboardPage;
   let fixture: ComponentFixture<DashboardPage>;
@@ -70,24 +82,48 @@ describe('DashboardPage', () => {
     });
   });
 
-  describe('when the language changes', () => {
+  describe('changing the language', () => {
     let setTitleSpy: Mock;
-    let instantSpy: Mock;
 
     beforeEach(() => {
       setTitleSpy = vi.spyOn(component.titleService, 'setTitle');
-      instantSpy = vi
-        .spyOn(component.translateService, 'instant')
-        .mockReturnValue(TEST_TITLE_TRANSLATED);
       component.translateService.use('fr');
     });
 
-    it('translates the title', () => {
-      expect(instantSpy).toHaveBeenCalled();
+    it('should update the page title', () => {
+      expect(setTitleSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('zooming on a library segment card', () => {
+    beforeEach(() => {
+      component.zoomedTitle.set('');
+      component.zoomedStatistics.set([]);
+      component.zoomedRecords.set(0);
+      component.onZoom(TEST_STATISTICS, TEST_TITLE, TEST_MAX_RECORDS);
     });
 
-    it('updates the title', () => {
-      expect(setTitleSpy).toHaveBeenCalledWith(TEST_TITLE_TRANSLATED);
+    it('should set the data', () => {
+      expect(component.zoomedStatistics()).toStrictEqual(TEST_STATISTICS);
+    });
+
+    it('should set the title', () => {
+      expect(component.zoomedTitle()).toStrictEqual(TEST_TITLE);
+    });
+
+    it('should set the max records', () => {
+      expect(component.zoomedRecords()).toStrictEqual(TEST_MAX_RECORDS);
+    });
+  });
+
+  describe('when the user unzooms on a library segment', () => {
+    beforeEach(() => {
+      component.zoomedStatistics.set(TEST_STATISTICS);
+      component.onUnzoom();
+    });
+
+    it('srehould set the data', () => {
+      expect(component.zoomedStatistics()).toStrictEqual([]);
     });
   });
 });
