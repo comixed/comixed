@@ -30,11 +30,16 @@ import {
   REMOTE_LIBRARY_FEATURE_KEY
 } from '@app/library/reducers/remote-library.reducer';
 import { LibraryStatisticsPanel } from '@app/layout/components/library-statistics-panel/library-statistics-panel';
+import {
+  BATCH_PROCESS_LIST_FEATURE_KEY,
+  initialBatchProcessListState
+} from '@app/batch/reducers/batch-process-list.reducer';
 
 describe('LibraryStatisticsPanel', () => {
   const initialState = {
     [REMOTE_LIBRARY_FEATURE_KEY]: initialRemoteLibraryState,
-    [USER_FEATURE_KEY]: initialUserState
+    [USER_FEATURE_KEY]: initialUserState,
+    [BATCH_PROCESS_LIST_FEATURE_KEY]: initialBatchProcessListState
   };
 
   let component: LibraryStatisticsPanel;

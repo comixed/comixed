@@ -97,7 +97,6 @@ export class CreateAdminPageComponent implements OnInit {
       .select(selectCheckedForExistingAccount)
       .pipe(
         tap(checked => {
-          console.log('*** checked:', checked);
           if (!checked) {
             this.logger.debug('Loading initial user accounts');
             this.store.dispatch(loadInitialUserAccount());

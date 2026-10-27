@@ -21,13 +21,17 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { Button } from '@openng/optimus-ui/button';
 import { RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { selectUserReadComicIds } from '@app/account/selectors/user.selectors';
+import {
+  selectUserIsAdmin,
+  selectUserReadComicIds
+} from '@app/account/selectors/user.selectors';
 import {
   selectRemoteLibraryDeletedComics,
   selectRemoteLibraryDuplicateComics,
   selectRemoteLibraryTotalComics,
   selectRemoteLibraryUnscrapedComics
 } from '@app/library/selectors/remote-library.selectors';
+import { selectBatchProcessListRunningCount } from '@app/batch/selectors/batch-process-list.selectors';
 
 @Component({
   imports: [TranslatePipe, Button, RouterLink],
@@ -50,4 +54,8 @@ export class LibraryStatisticsPanel {
     selectRemoteLibraryDuplicateComics
   );
   readonly readComicIds = this.store.selectSignal(selectUserReadComicIds);
+  readonly userIsAdmin = this.store.selectSignal(selectUserIsAdmin);
+  readonly batchProcessCount = this.store.selectSignal(
+    selectBatchProcessListRunningCount
+  );
 }

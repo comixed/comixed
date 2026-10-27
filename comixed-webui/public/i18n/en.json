@@ -202,6 +202,7 @@
   },
   "library-statistics-panel": {
     "segment": {
+      "batch-processes": "Processes",
       "deleted-comics": "Deleted",
       "duplicate-comics": "Duplicates",
       "read-comics": "Read",

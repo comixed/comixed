@@ -58,7 +58,6 @@ export class DistributionStatistics {
   }
 
   private doLoadData() {
-    console.log('*** data:', this.data);
     this.chartData.set({
       labels: this.data.map(entry => entry.name),
       datasets: [

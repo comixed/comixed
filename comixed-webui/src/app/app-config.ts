@@ -47,6 +47,7 @@ import { MessagingModule } from '@app/messaging/messaging-module';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { environment } from '../environments/environment';
+import { BatchModule } from '@app/batch/batch-module';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -76,6 +77,7 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(
       StoreModule.forRoot({}, {}),
       EffectsModule.forRoot([]),
+      BatchModule,
       AccountModule,
       LibraryModule,
       MessagingModule
