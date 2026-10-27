@@ -34,10 +34,16 @@ import {
   selectRemoteLibraryTeams
 } from '@app/library/selectors/remote-library.selectors';
 import { RemoteLibrarySegment } from '@app/library/models/net/remote-library-segment';
-import { LibrarySegmentGraph } from '@app/dashboard/components/library-segment-graph/library-segment-graph';
+import { CollectionGraphWidget } from '@app/dashboard/components/library-graph-widget/collection-graph-widget';
+import { DistributionStatistics } from '@app/dashboard/components/distribution-statistics/distribution-statistics';
 
 @Component({
-  imports: [TranslatePipe, CollectionStatistics, LibrarySegmentGraph],
+  imports: [
+    TranslatePipe,
+    CollectionStatistics,
+    CollectionGraphWidget,
+    DistributionStatistics
+  ],
   selector: 'app-dashboard-page',
   styleUrl: './dashboard-page.scss',
   templateUrl: './dashboard-page.html'
@@ -51,7 +57,7 @@ export class DashboardPage {
   readonly teams = this.store.selectSignal(selectRemoteLibraryTeams);
   readonly locations = this.store.selectSignal(selectRemoteLibraryLocations);
   readonly stories = this.store.selectSignal(selectRemoteLibraryStories);
-  readonly states = this.store.selectSignal(selectRemoteLibraryStates);
+  readonly comicStates = this.store.selectSignal(selectRemoteLibraryStates);
   readonly archiveTypes = this.store.selectSignal(
     selectRemoteLibraryArchiveTypes
   );

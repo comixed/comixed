@@ -37,11 +37,11 @@ interface GraphData {
 
 @Component({
   imports: [Card, UIChart, Button],
-  selector: 'app-library-segment-graph',
-  styleUrl: './library-segment-graph.scss',
-  templateUrl: './library-segment-graph.html'
+  selector: 'app-collection-graph-widget',
+  styleUrl: './collection-graph-widget.scss',
+  templateUrl: './collection-graph-widget.html'
 })
-export class LibrarySegmentGraph {
+export class CollectionGraphWidget {
   readonly data = signal<GraphData>({} as GraphData);
   readonly dataTitle = signal('');
   readonly maxRecords = signal(0);

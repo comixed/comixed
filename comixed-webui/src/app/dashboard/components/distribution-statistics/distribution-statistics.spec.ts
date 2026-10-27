@@ -17,11 +17,11 @@
  */
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { LibrarySegmentGraph } from './library-segment-graph';
-import { RemoteLibrarySegment } from '@app/library/models/net/remote-library-segment';
+import { DistributionStatistics } from './distribution-statistics';
 import { beforeEach } from 'vitest';
+import { RemoteLibrarySegment } from '@app/library/models/net/remote-library-segment';
 
-describe('LibrarySegmentGraph', () => {
+describe('DistributionStatistics', () => {
   const TEST_STATISTICS: RemoteLibrarySegment[] = [
     { name: 'Segment 1', count: 29 },
     { name: 'Segment 3', count: 30 },
@@ -35,17 +35,16 @@ describe('LibrarySegmentGraph', () => {
     { name: 'Segment 10', count: 219 }
   ];
   const TEST_TITLE = 'The Segment Title';
-  const TEST_MAX_RECORDS = 10;
 
-  let component: LibrarySegmentGraph;
-  let fixture: ComponentFixture<LibrarySegmentGraph>;
+  let component: DistributionStatistics;
+  let fixture: ComponentFixture<DistributionStatistics>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [LibrarySegmentGraph]
+      imports: [DistributionStatistics]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(LibrarySegmentGraph);
+    fixture = TestBed.createComponent(DistributionStatistics);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });
@@ -56,11 +55,11 @@ describe('LibrarySegmentGraph', () => {
 
   describe('setting the statistical data', () => {
     beforeEach(() => {
-      component.segment = TEST_STATISTICS;
+      component.data = TEST_STATISTICS;
     });
 
     it('should update the data', () => {
-      expect(component.data()).not.toStrictEqual([]);
+      expect(component.chartData()).not.toStrictEqual([]);
     });
   });
 
@@ -70,27 +69,7 @@ describe('LibrarySegmentGraph', () => {
     });
 
     it('should update the title', () => {
-      expect(component.dataTitle()).toStrictEqual(TEST_TITLE);
-    });
-  });
-
-  describe('setting the max records', () => {
-    beforeEach(() => {
-      component.records = 0;
-    });
-
-    it('should update the max records to zero', () => {
-      expect(component.maxRecords()).toStrictEqual(0);
-    });
-  });
-
-  describe('setting the max records', () => {
-    beforeEach(() => {
-      component.records = TEST_MAX_RECORDS;
-    });
-
-    it('should update the max records to a value', () => {
-      expect(component.maxRecords()).toStrictEqual(TEST_MAX_RECORDS);
+      expect(component.chartTitle()).toStrictEqual(TEST_TITLE);
     });
   });
 });

@@ -115,13 +115,16 @@
   "dashboard": {
     "page-title": "Dashboard",
     "statistics": {
-      "archive-type": {
+      "archive-types": {
         "title": "Archive Types"
       },
       "characters": {
         "description": "There {count, plural, =1 {is 1 character} other{are # characters}}...",
         "title": "Characters",
         "zoom-title": "{count, select, 0{All} other{Top}} Characters"
+      },
+      "comic-states": {
+        "title": "Comic States"
       },
       "locations": {
         "description": "There {count, plural, =1 {is 1 location} other{# locations}}...",

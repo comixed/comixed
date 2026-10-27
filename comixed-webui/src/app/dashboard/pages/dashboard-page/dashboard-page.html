@@ -1,10 +1,10 @@
 @if (zoomedStatistics().length > 0) {
-  <app-library-segment-graph
+  <app-collection-graph-widget
     [segment]="zoomedStatistics()"
     [title]="zoomedTitle() | translate: { count: zoomedRecords() }"
     [records]="zoomedRecords()"
     (unzoom)="onUnzoom()"
-  ></app-library-segment-graph>
+  ></app-collection-graph-widget>
 } @else {
   <div id="cx-dashboard-container" class="cx-flex-content-container-row">
     @for (stat of stats(); track stat) {
@@ -123,6 +123,24 @@
               )
             "
           ></app-collection-statistics>
+        </div>
+      }
+
+      @if (stat === "comic-state-stats") {
+        <div class="cx-flex-content-grow-1">
+          <app-distribution-statistics
+            [title]="'dashboard.statistics.comic-states.title' | translate"
+            [data]="comicStates()"
+          ></app-distribution-statistics>
+        </div>
+      }
+
+      @if (stat === "archive-type-stats") {
+        <div class="cx-flex-content-grow-1">
+          <app-distribution-statistics
+            [title]="'dashboard.statistics.archive-types.title' | translate"
+            [data]="archiveTypes()"
+          ></app-distribution-statistics>
         </div>
       }
     }

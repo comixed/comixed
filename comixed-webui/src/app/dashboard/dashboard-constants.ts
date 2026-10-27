@@ -17,4 +17,4 @@
  */
 
 export const DEFAULT_DASHBOARD_STATS =
-  'publisher-stats|series-stats|character-stats|team-stats|location-stats|story-stats';
+  'publisher-stats|series-stats|character-stats|team-stats|location-stats|story-stats|comic-state-stats|archive-type-stats';
