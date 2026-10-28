@@ -1,6 +1,8 @@
 {
   "app": {
     "button": {
+      "cancel": "Cancel",
+      "confirm": "Confirm",
       "submit": "Submit"
     },
     "effects": {
@@ -23,6 +25,10 @@
     }
   },
   "batch-process-list-page": {
+    "delete-completed-processes": {
+      "confirmation-message": "Are you sure you want to delete the completed batches?",
+      "confirmation-title": "Delete Completed Batches"
+    },
     "label": {
       "create-time": "Created",
       "end-time": "Ended",
@@ -186,6 +192,10 @@
     }
   },
   "import-comics-page": {
+    "import-comic-files": {
+      "confirmation-message": "Are sure you want to import these files into the library?",
+      "confirmation-title": "Import Comic Files"
+    },
     "label": {
       "10-comics": "10 Comics",
       "25-comics": "25 Comics",

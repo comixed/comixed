@@ -31,9 +31,10 @@ import { UserActions } from '@app/account/actions/user.actions';
 import { selectUserAuthenticated } from '@app/account/selectors/user.selectors';
 import { Toast } from '@openng/optimus-ui/toast';
 import { RemoteLibraryActions } from '@app/library/actions/remote-library.actions';
+import { ConfirmDialog } from '@openng/optimus-ui/confirmdialog';
 
 @Component({
-  imports: [Topbar, RouterOutlet, Toast],
+  imports: [Topbar, RouterOutlet, Toast, ConfirmDialog],
   selector: 'app-root',
   styleUrl: './app.scss',
   templateUrl: './app.html'

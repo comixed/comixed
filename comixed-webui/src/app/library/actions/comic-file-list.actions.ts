@@ -20,7 +20,7 @@ import { createActionGroup, emptyProps, props } from '@ngrx/store';
 import { ComicFileGroup } from '@app/library/models/comic-file-group';
 
 export const ComicFileListActions = createActionGroup({
-  source: 'ComicFileList/API',
+  source: 'Comic File List',
   events: {
     LoadFromSession: emptyProps(),
     LoadFromSessionSuccess: props<{ groups: ComicFileGroup[] }>(),

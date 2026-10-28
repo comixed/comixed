@@ -30,6 +30,7 @@ import { BATCH_PROCESS_1, BATCH_PROCESS_2 } from '@app/batch/batch-fixtures';
 import { provideRouter } from '@angular/router';
 import { beforeEach, Mock } from 'vitest';
 import { BatchProcessListActions } from '@app/batch/actions/batch-process-list.actions';
+import { Confirmation, ConfirmationService } from '@openng/optimus-ui/api';
 
 describe('BatchProcessListPage', () => {
   const TEST_BATCH_PROCESS_LIST = [BATCH_PROCESS_1, BATCH_PROCESS_2];
@@ -51,7 +52,8 @@ describe('BatchProcessListPage', () => {
         provideRouter([{ path: '*', redirectTo: '' }]),
         provideLogger({ minLevel: LoggerLevel.OFF }),
         provideTranslateService(),
-        provideMockStore({ initialState })
+        provideMockStore({ initialState }),
+        ConfirmationService
       ]
     }).compileComponents();
 
@@ -79,10 +81,17 @@ describe('BatchProcessListPage', () => {
   });
 
   describe('deleting completed processes', () => {
+    let confirmSpy: Mock;
     let dispatchSpy: Mock;
 
     beforeEach(() => {
       dispatchSpy = vi.spyOn(store, 'dispatch');
+      confirmSpy = vi
+        .spyOn(component.confirmationService, 'confirm')
+        .mockImplementation((confirm: Confirmation) => {
+          confirm.accept?.();
+          return component.confirmationService;
+        });
       store.setState({
         ...initialState,
         [BATCH_PROCESS_LIST_FEATURE_KEY]: batchProcessListAdaptor.setAll(
@@ -94,6 +103,10 @@ describe('BatchProcessListPage', () => {
         '#delete-completed-processes-button button'
       );
       button.click();
+    });
+
+    it('should confirm with the user', () => {
+      expect(confirmSpy).toHaveBeenCalled();
     });
 
     it('should dispatch an action', () => {

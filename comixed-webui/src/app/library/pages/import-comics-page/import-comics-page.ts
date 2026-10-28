@@ -21,7 +21,7 @@ import { LoggerService } from '@angular-ru/cdk/logger';
 import { Card } from '@openng/optimus-ui/card';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Breadcrumb } from '@openng/optimus-ui/breadcrumb';
-import { MenuItem } from '@openng/optimus-ui/api';
+import { ConfirmationService, MenuItem } from '@openng/optimus-ui/api';
 import { TitleService } from '@app/layout/services/title-service';
 import {
   FormBuilder,
@@ -36,10 +36,9 @@ import { Button } from '@openng/optimus-ui/button';
 import { InputGroup } from '@openng/optimus-ui/inputgroup';
 import { TableModule } from '@openng/optimus-ui/table';
 import { DecimalPipe } from '@angular/common';
-import { Checkbox, CheckboxChangeEvent } from '@openng/optimus-ui/checkbox';
+import { Checkbox } from '@openng/optimus-ui/checkbox';
 import { ComicFile } from '@app/library/models/comic-file';
 import { Tooltip } from '@openng/optimus-ui/tooltip';
-import { Skeleton } from '@openng/optimus-ui/skeleton';
 import { Store } from '@ngrx/store';
 import { ComicFileListActions } from '@app/library/actions/comic-file-list.actions';
 import {
@@ -73,8 +72,7 @@ interface MaximumOption {
     TableModule,
     DecimalPipe,
     Checkbox,
-    Tooltip,
-    Skeleton
+    Tooltip
   ],
   selector: 'app-import-comics-page',
   styleUrl: './import-comics-page.scss',
@@ -88,6 +86,7 @@ export class ImportComicsPage {
   readonly translateService = inject(TranslateService);
   readonly titleService = inject(TitleService);
   readonly store = inject(Store);
+  readonly confirmationService = inject(ConfirmationService);
   readonly comicFileList = this.store.selectSignal(selectComicFileList);
   readonly comicFileCount = this.store.selectSignal(selectComicFileCount);
   readonly comicFileSelectedCount = this.store.selectSignal(
@@ -133,31 +132,49 @@ export class ImportComicsPage {
     );
   }
 
-  onSelectComicFile(file: ComicFile, event: CheckboxChangeEvent) {
-    this.logger.debug('Toggling file selected:', file, event.checked);
+  onSelectComicFile(file: ComicFile, selected: boolean) {
+    this.logger.debug('Toggling file selected:', file, selected);
     this.store.dispatch(
       ComicFileListActions.select({
         filename: file.filename,
-        selected: event.checked,
+        selected,
         single: true
       })
     );
   }
 
-  onSelectAll(event: CheckboxChangeEvent) {
-    this.logger.debug('Toggling all files selected:', event.checked);
+  onSelectAll(selected: boolean) {
+    this.logger.debug('Toggling all files selected:', selected);
     this.store.dispatch(
       ComicFileListActions.select({
         filename: '',
-        selected: event.checked,
+        selected,
         single: false
       })
     );
   }
 
   onImportComicFiles() {
-    this.logger.debug('Starting to import the selecting comics');
-    this.store.dispatch(ComicFileListActions.import());
+    this.confirmationService.confirm({
+      message: this.translateService.instant(
+        'import-comics-page.import-comic-files.confirmation-message'
+      ),
+      header: this.translateService.instant(
+        'import-comics-page.import-comic-files.confirmation-title'
+      ),
+      rejectButtonProps: {
+        label: this.translateService.instant('app.button.cancel'),
+        severity: 'danger'
+      },
+      acceptButtonProps: {
+        label: this.translateService.instant('app.button.confirm'),
+        severity: 'primary'
+      },
+      accept: () => {
+        this.logger.debug('Starting to import the selecting comics');
+        this.store.dispatch(ComicFileListActions.import());
+      }
+    });
   }
 
   private doLoadTranslations() {

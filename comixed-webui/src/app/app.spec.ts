@@ -28,10 +28,10 @@ import {
   initialExistingAdminAccountState
 } from '@app/account/reducers/existing-admin-account.reducer';
 import {
-  USER_FEATURE_KEY,
-  initialUserState
+  initialUserState,
+  USER_FEATURE_KEY
 } from '@app/account/reducers/user.reducer';
-import { MessageService } from '@openng/optimus-ui/api';
+import { ConfirmationService, MessageService } from '@openng/optimus-ui/api';
 import {
   initialMessagingState,
   MESSAGING_FEATURE_KEY
@@ -54,7 +54,8 @@ describe('App', () => {
         provideLogger({ minLevel: LoggerLevel.OFF }),
         provideTranslateService(),
         provideMockStore({ initialState }),
-        MessageService
+        MessageService,
+        ConfirmationService
       ]
     }).compileComponents();
 

@@ -42,7 +42,7 @@ import { provideOptimus } from '@openng/optimus-ui/config';
 import Aura from '@openng/optimus-ui-themes/aura';
 import { AccountModule } from '@app/account/account-module';
 import { LibraryModule } from '@app/library/library-module';
-import { MessageService } from '@openng/optimus-ui/api';
+import { ConfirmationService, MessageService } from '@openng/optimus-ui/api';
 import { MessagingModule } from '@app/messaging/messaging-module';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
@@ -74,6 +74,7 @@ export const appConfig: ApplicationConfig = {
     },
     provideOptimus({ theme: { preset: Aura } }),
     MessageService,
+    ConfirmationService,
     importProvidersFrom(
       StoreModule.forRoot({}, {}),
       EffectsModule.forRoot([]),

@@ -5,6 +5,7 @@
     <form [formGroup]="importComicsForm">
       <p-input-group>
         <p-button
+          id="load-comic-files-button"
           icon="pi pi-send"
           severity="primary"
           [disabled]="!importComicsForm.valid"
@@ -33,6 +34,7 @@
         />
 
         <p-button
+          id="import-comic-files-button"
           icon="pi pi-cloud-upload"
           severity="primary"
           [label]="comicFileSelectedCount().toString()"
@@ -40,71 +42,57 @@
             'import-comics-page.tooltip.import-comics-button'
               | translate: { selected: comicFileSelectedCount() }
           "
-          [disabled]="!(comicFileSelectedCount() > 0)"
+          [disabled]="comicFileSelectedCount() === 0"
           (click)="onImportComicFiles()"
         />
       </p-input-group>
     </form>
   </ng-template>
 
-  @if (comicFileList().length > 0) {
-    <p-table
-      #filetable
-      [value]="comicFileList()"
-      stripedRows
-      [paginator]="true"
-      paginatorPosition="both"
-      [rows]="10"
-    >
-      <ng-template #header>
-        <tr>
-          <th>
-            <p-check-box
-              [binary]="true"
-              [ngModel]="comicFileCount() === comicFileSelectedCount()"
-              (onChange)="onSelectAll($event)"
-            />
-          </th>
-          <th>{{ "import-comics-page.label.base-filename" | translate }}</th>
-          <th>{{ "import-comics-page.label.size" | translate }}</th>
-        </tr>
-      </ng-template>
+  <p-table
+    #filetable
+    [value]="comicFileList()"
+    stripedRows
+    [paginator]="true"
+    paginatorPosition="both"
+    [rows]="10"
+  >
+    <ng-template #header>
+      <tr>
+        <th>
+          <p-check-box
+            id="select-all-comic-files"
+            [binary]="true"
+            [ngModel]="comicFileCount() === comicFileSelectedCount()"
+            (onChange)="onSelectAll($event.checked)"
+          />
+        </th>
+        <th>{{ "import-comics-page.label.base-filename" | translate }}</th>
+        <th>{{ "import-comics-page.label.size" | translate }}</th>
+      </tr>
+    </ng-template>
 
-      <ng-template #body let-file>
-        <tr>
-          <td>
-            <p-check-box
-              [binary]="true"
-              [ngModel]="file.selected"
-              (onChange)="onSelectComicFile(file, $event)"
-            />
-          </td>
-          <td>
-            <span [pTooltip]="file.filename">{{ file.baseFilename }}</span>
-          </td>
-          <td>
-            {{
-              "import-comics-page.text.size"
-                | translate
-                  : { size: (file.size / (1024 * 1024) | number: "1.2-2") }
-            }}
-          </td>
-        </tr>
-      </ng-template>
-
-      <ng-template #loadingbody let-files>
-        <tr>
-          <td>
-            <p-skeleton />
-          </td>
-          <td>
-            <p-skeleton />
-          </td>
-          <td>
-            <p-skeleton />
-          </td>
-        </tr>
-      </ng-template>
-    </p-table>
-  }
+    <ng-template #body let-file>
+      <tr>
+        <td>
+          <p-check-box
+            [id]="`select-comic-file-checkbox-${file.id}`"
+            [binary]="true"
+            [ngModel]="file.selected"
+            (onChange)="onSelectComicFile(file, $event.checked)"
+          />
+        </td>
+        <td>
+          <span [pTooltip]="file.filename">{{ file.baseFilename }}</span>
+        </td>
+        <td>
+          {{
+            "import-comics-page.text.size"
+              | translate
+                : { size: (file.size / (1024 * 1024) | number: "1.2-2") }
+          }}
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
 </p-card>

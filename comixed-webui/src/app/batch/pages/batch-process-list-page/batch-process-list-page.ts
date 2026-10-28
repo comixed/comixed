@@ -28,7 +28,7 @@ import { DatePipe } from '@angular/common';
 import { TableModule } from '@openng/optimus-ui/table';
 import { Card } from '@openng/optimus-ui/card';
 import { Breadcrumb } from '@openng/optimus-ui/breadcrumb';
-import { MenuItem } from '@openng/optimus-ui/api';
+import { ConfirmationService, MenuItem } from '@openng/optimus-ui/api';
 import { TitleService } from '@app/layout/services/title-service';
 import { Button } from '@openng/optimus-ui/button';
 import { Tooltip } from '@openng/optimus-ui/tooltip';
@@ -52,6 +52,7 @@ export class BatchProcessListPage {
   readonly logger = inject(LoggerService);
   readonly translateService = inject(TranslateService);
   readonly titleService = inject(TitleService);
+  readonly confirmationService = inject(ConfirmationService);
   readonly home: MenuItem = { icon: 'pi pi-home', routerLink: ['/'] };
   readonly trail = signal<MenuItem[]>([]);
   readonly store = inject(Store);
@@ -71,8 +72,26 @@ export class BatchProcessListPage {
   }
 
   onDeleteCompletedProcesses(): void {
-    this.logger.debug('Deleting completed batch processes');
-    this.store.dispatch(BatchProcessListActions.deleteCompleted());
+    this.confirmationService.confirm({
+      message: this.translateService.instant(
+        'batch-process-list-page.delete-completed-processes.confirmation-message'
+      ),
+      header: this.translateService.instant(
+        'batch-process-list-page.delete-completed-processes.confirmation-title'
+      ),
+      rejectButtonProps: {
+        label: this.translateService.instant('app.button.cancel'),
+        severity: 'danger'
+      },
+      acceptButtonProps: {
+        label: this.translateService.instant('app.button.confirm'),
+        severity: 'primary'
+      },
+      accept: () => {
+        this.logger.debug('Deleting completed batch processes');
+        this.store.dispatch(BatchProcessListActions.deleteCompleted());
+      }
+    });
   }
 
   private doLoadTranslations() {
