@@ -39,15 +39,15 @@ describe.todo('SeriesListEffects', () => {
   });
 
   describe('loading all series', () => {
-    it('fires an action on success', () => {
+    it('should fire an action on success', () => {
       actions$ = hot('', {});
     });
 
-    it('fires an action on series failure', () => {
+    it('should fire an action on series failure', () => {
       actions$ = hot('', {});
     });
 
-    it('fires an action on general failure', () => {
+    it('should fire an action on general failure', () => {
       actions$ = hot('', {});
     });
   });

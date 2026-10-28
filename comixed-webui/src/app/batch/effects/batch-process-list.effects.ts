@@ -18,8 +18,48 @@
 
 import { inject, Injectable } from '@angular/core';
 import BatchProcessService from '@app/batch/services/batch-process-service';
+import { LoggerService } from '@angular-ru/cdk/logger';
+import { AlertService } from '@app/services/alert-service';
+import { TranslateService } from '@ngx-translate/core';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { catchError, map, of, switchMap, tap } from 'rxjs';
+import { BatchProcessListActions } from '@app/batch/actions/batch-process-list.actions';
 
 @Injectable()
 export class BatchProcessListEffects {
+  readonly logger = inject(LoggerService);
   readonly batchProcessService = inject(BatchProcessService);
+  readonly alertService = inject(AlertService);
+  readonly translateService = inject(TranslateService);
+  private actions$ = inject(Actions);
+  loadBatchProcessList$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(BatchProcessListActions.load),
+      tap(() => this.logger.debug('Loading batch process list')),
+      switchMap(() =>
+        this.batchProcessService.loadBatchProcessList().pipe(
+          tap(response => this.logger.debug('Response received:', response)),
+          map(response =>
+            BatchProcessListActions.loadSuccess({ entries: response })
+          ),
+          catchError(error => {
+            this.logger.error('Service failure:', error);
+            this.alertService.error(
+              this.translateService.instant(
+                'batch-process-list-effects.load-batch-process-list.service-failure'
+              )
+            );
+            return of(BatchProcessListActions.loadFailure());
+          })
+        )
+      ),
+      catchError(error => {
+        this.logger.error('General failure:', error);
+        this.alertService.error(
+          this.translateService.instant('app.effects.general-failure')
+        );
+        return of(BatchProcessListActions.loadFailure());
+      })
+    );
+  });
 }

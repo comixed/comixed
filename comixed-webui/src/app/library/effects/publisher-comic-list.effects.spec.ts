@@ -39,15 +39,15 @@ describe.todo('PublisherComicListEffects', () => {
   });
 
   describe('loading', () => {
-    it('fires an action on success', () => {
+    it('should fire an action on success', () => {
       actions$ = hot('', {});
     });
 
-    it('fires an action on service failure', () => {
+    it('should fire an action on service failure', () => {
       actions$ = hot('', {});
     });
 
-    it('fires an action on general failure', () => {
+    it('should fire an action on general failure', () => {
       actions$ = hot('', {});
     });
   });

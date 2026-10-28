@@ -24,7 +24,10 @@ import {
 } from '@app/batch/reducers/batch-process-list.reducer';
 import { beforeEach } from 'vitest';
 import { BATCH_PROCESS_1, BATCH_PROCESS_2 } from '@app/batch/batch-fixtures';
-import { selectBatchProcessListRunningCount } from '@app/batch/selectors/batch-process-list.selectors';
+import {
+  selectBatchProcessListEntries,
+  selectBatchProcessListRunningCount
+} from '@app/batch/selectors/batch-process-list.selectors';
 
 describe('BatchProcessList Selectors', () => {
   const TEST_BATCH_PROCESS_LIST = [BATCH_PROCESS_1, BATCH_PROCESS_2];
@@ -44,5 +47,13 @@ describe('BatchProcessList Selectors', () => {
         [BATCH_PROCESS_LIST_FEATURE_KEY]: state
       })
     ).toBe(1);
+  });
+
+  it('should return all batch processes', () => {
+    expect(
+      selectBatchProcessListEntries({
+        [BATCH_PROCESS_LIST_FEATURE_KEY]: state
+      })
+    ).toStrictEqual(TEST_BATCH_PROCESS_LIST);
   });
 });

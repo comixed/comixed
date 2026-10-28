@@ -25,26 +25,45 @@ import {
   MESSAGING_FEATURE_KEY
 } from '@app/messaging/reducers/messaging.reducer';
 import { Mock } from 'vitest';
-import { BATCH_PROCESS_LIST_UPDATE_TOPIC } from '@app/batch/batch-constants';
-import { BATCH_PROCESS_1 } from '@app/batch/batch-fixtures';
-import { Observable } from 'rxjs';
+import {
+  BATCH_PROCESS_LIST_UPDATE_TOPIC,
+  LOAD_BATCH_PROCESS_LIST_URL
+} from '@app/batch/batch-constants';
+import { BATCH_PROCESS_1, BATCH_PROCESS_2 } from '@app/batch/batch-fixtures';
+import {
+  HttpTestingController,
+  provideHttpClientTesting
+} from '@angular/common/http/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { interpolate } from '@app/app-functions';
+import { BatchProcessListActions } from '@app/batch/actions/batch-process-list.actions';
+import { Subscription } from 'rxjs';
 
 describe('BatchProcessService', () => {
   const initialState = { [MESSAGING_FEATURE_KEY]: initialMessagingState };
   const TEST_BATCH_PROCESS = BATCH_PROCESS_1;
+  const TEST_OTHER_BATCH_PROCESS = BATCH_PROCESS_2;
+  const TEST_BATCH_PROCESS_LIST = [
+    TEST_BATCH_PROCESS,
+    TEST_OTHER_BATCH_PROCESS
+  ];
 
   let service: BatchProcessService;
   let store: MockStore;
+  let httpController: HttpTestingController;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
         provideLogger({ minLevel: LoggerLevel.OFF }),
         provideMockStore({ initialState })
       ]
     });
     service = TestBed.inject(BatchProcessService);
     store = TestBed.inject(MockStore);
+    httpController = TestBed.inject(HttpTestingController);
   });
 
   it('should be created', () => {
@@ -53,15 +72,16 @@ describe('BatchProcessService', () => {
 
   describe('when messaging starts', () => {
     let subscribeSpy: Mock;
+    let dispatchSpy: Mock;
 
     beforeEach(() => {
+      dispatchSpy = vi.spyOn(service.store, 'dispatch');
       subscribeSpy = vi
         .spyOn(service.webSocketService, 'subscribe')
         .mockImplementation((topic, callback) => {
-          return Observable.create(() => {
-            expect(topic).toStrictEqual(BATCH_PROCESS_LIST_UPDATE_TOPIC);
-            callback(TEST_BATCH_PROCESS);
-          });
+          expect(topic).toStrictEqual(BATCH_PROCESS_LIST_UPDATE_TOPIC);
+          callback(TEST_OTHER_BATCH_PROCESS);
+          return new Subscription();
         });
       store.setState({
         ...initialMessagingState,
@@ -72,5 +92,30 @@ describe('BatchProcessService', () => {
     it('should subscribe to batch process updates', () => {
       expect(subscribeSpy).toHaveBeenCalled();
     });
+
+    it('should process updates', () => {
+      expect(dispatchSpy).toHaveBeenCalledWith(
+        BatchProcessListActions.update({ update: TEST_OTHER_BATCH_PROCESS })
+      );
+    });
+
+    it('should load the batch process list', () => {
+      expect(dispatchSpy).toHaveBeenCalledWith(BatchProcessListActions.load());
+    });
+  });
+
+  it('should load the current list of batch processes', () => {
+    const serverResponse = TEST_BATCH_PROCESS_LIST;
+
+    service.loadBatchProcessList().subscribe({
+      next: response => expect(response).toStrictEqual(serverResponse)
+    });
+
+    const req = httpController.expectOne(
+      interpolate(LOAD_BATCH_PROCESS_LIST_URL)
+    );
+    expect(req.request.method).toEqual('GET');
+    req.flush(serverResponse);
+    httpController.verify();
   });
 });

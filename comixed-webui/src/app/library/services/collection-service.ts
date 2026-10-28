@@ -28,13 +28,12 @@ import { TagStore } from '@app/collections/stores/tag-store';
 import { ComicTagType } from '@app/library/models/comic-tag-type';
 import { LoadCollectionEntriesRequest } from '@app/library/models/net/load-collection-entries-request';
 import { LoadCollectionEntriesResponse } from '@app/library/models/net/load-collection-entries-response';
-import { SeriesDetailStore } from '@app/collections/stores/series-detail-store';
 import { LoadSeriesDetailRequest } from '@app/library/models/net/load-series-detail-request';
 import { Issue } from '@app/library/models/issue';
 import {
   LOAD_COLLECTION_ENTRIES_URL,
-  LOAD_PUBLISHER_SERIES_LIST_URL,
   LOAD_PUBLISHER_LIST_URL,
+  LOAD_PUBLISHER_SERIES_LIST_URL,
   LOAD_SERIES_DETAIL_URL,
   LOAD_SERIES_LIST_URL
 } from '@app/library/library-constants';
@@ -45,8 +44,7 @@ import { LoadPublisherSeriesListRequest } from '@app/library/models/net/load-pub
 @Service()
 export class CollectionService {
   readonly logger = inject(LoggerService);
-  readonly client = inject(HttpClient);
-  readonly seriesDetailStore = inject(SeriesDetailStore);
+  readonly http = inject(HttpClient);
   readonly tagStore = inject(TagStore);
 
   loadPublisherList(args: {
@@ -57,7 +55,7 @@ export class CollectionService {
     sortDirection: string;
   }): Observable<LoadPublisherListResponse> {
     this.logger.trace('Loading publisher list:', args);
-    return this.client.post<LoadPublisherListResponse>(
+    return this.http.post<LoadPublisherListResponse>(
       interpolate(LOAD_PUBLISHER_LIST_URL),
       {
         searchText: args.searchText,
@@ -78,7 +76,7 @@ export class CollectionService {
   }): Observable<LoadPublisherSeriesListResponse> {
     this.logger.trace('Loading publisher detail:', args);
 
-    return this.client.post<LoadPublisherSeriesListResponse>(
+    return this.http.post<LoadPublisherSeriesListResponse>(
       interpolate(LOAD_PUBLISHER_SERIES_LIST_URL, { publisherName: args.name }),
       {
         pageIndex: args.index,
@@ -97,7 +95,7 @@ export class CollectionService {
     sortDirection: string;
   }): Observable<LoadSeriesListResponse> {
     this.logger.trace('Loading series list:', args);
-    return this.client.post<LoadSeriesListResponse>(
+    return this.http.post<LoadSeriesListResponse>(
       interpolate(LOAD_SERIES_LIST_URL),
       {
         searchText: args.searchText,
@@ -115,7 +113,7 @@ export class CollectionService {
     volume: string;
   }): Observable<Issue[]> {
     this.logger.trace('Loading series detail:', args);
-    return this.client.post<Issue[]>(interpolate(LOAD_SERIES_DETAIL_URL), {
+    return this.http.post<Issue[]>(interpolate(LOAD_SERIES_DETAIL_URL), {
       publisher: args.publisherName,
       name: args.seriesName,
       volume: args.volume
@@ -131,7 +129,7 @@ export class CollectionService {
     sortDirection: string;
   }): void {
     this.logger.trace('Loading collection entry list:', args);
-    this.client
+    this.http
       .post<LoadCollectionEntriesResponse>(
         interpolate(LOAD_COLLECTION_ENTRIES_URL, { tagType: args.tagType }),
         {

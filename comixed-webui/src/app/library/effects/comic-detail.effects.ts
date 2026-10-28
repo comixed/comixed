@@ -27,11 +27,11 @@ import { ComicDetailAction } from '@app/library/actions/comic-detail.actions';
 
 @Injectable()
 export class ComicDetailEffects {
+  private actions$ = inject(Actions);
   readonly logger = inject(LoggerService);
   readonly alertService = inject(AlertService);
-  readonly translateService = inject(TranslateService);
   readonly comicService = inject(ComicService);
-  private actions$ = inject(Actions);
+  readonly translateService = inject(TranslateService);
 
   loadComic$ = createEffect(() => {
     return this.actions$.pipe(

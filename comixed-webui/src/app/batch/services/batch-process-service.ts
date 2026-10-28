@@ -21,15 +21,22 @@ import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { WebSocketService } from '@app/messaging/services/web-socket-service';
 import { selectMessagingStarted } from '@app/messaging/selectors/messaging.selectors';
-import { BATCH_PROCESS_LIST_UPDATE_TOPIC } from '@app/batch/batch-constants';
+import {
+  BATCH_PROCESS_LIST_UPDATE_TOPIC,
+  LOAD_BATCH_PROCESS_LIST_URL
+} from '@app/batch/batch-constants';
 import { BatchProcess } from '@app/batch/models/batch-process';
 import { BatchProcessListActions } from '@app/batch/actions/batch-process-list.actions';
+import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { interpolate } from '@app/app-functions';
 
 @Service()
 class BatchProcessService {
   readonly logger = inject(LoggerService);
   readonly store = inject(Store);
   readonly webSocketService = inject(WebSocketService);
+  readonly http = inject(HttpClient);
 
   constructor() {
     this.store.select(selectMessagingStarted).subscribe({
@@ -43,9 +50,18 @@ class BatchProcessService {
               this.store.dispatch(BatchProcessListActions.update({ update }));
             }
           );
+          this.logger.trace('Loading batch process list');
+          this.store.dispatch(BatchProcessListActions.load());
         }
       }
     });
+  }
+
+  loadBatchProcessList(): Observable<BatchProcess[]> {
+    this.logger.trace('Loading batch process list');
+    return this.http.get<BatchProcess[]>(
+      interpolate(LOAD_BATCH_PROCESS_LIST_URL)
+    );
   }
 }
 

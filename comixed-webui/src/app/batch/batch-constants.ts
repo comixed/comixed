@@ -16,5 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
+import { API_ROOT_URL } from '@app/app-constants';
+
+export const LOAD_BATCH_PROCESS_LIST_URL = `${API_ROOT_URL}/admin/processes`;
+
 export const BATCH_PROCESS_LIST_UPDATE_TOPIC =
   '/topic/batch-process-list.update';

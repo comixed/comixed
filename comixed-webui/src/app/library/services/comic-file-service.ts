@@ -34,14 +34,14 @@ import { Observable } from 'rxjs';
 @Service()
 export class ComicFileService {
   readonly logger = inject(LoggerService);
-  readonly client = inject(HttpClient);
+  readonly http = inject(HttpClient);
 
   loadFromDisk(args: {
     directory: string;
     maximum: number;
   }): Observable<LoadComicFilesResponse> {
     this.logger.trace('Loading comic files:', args);
-    return this.client.post<LoadComicFilesResponse>(
+    return this.http.post<LoadComicFilesResponse>(
       interpolate(LOAD_COMIC_FILES_URL),
       {
         directory: args.directory,
@@ -52,7 +52,7 @@ export class ComicFileService {
 
   loadFromSession(): Observable<LoadComicFilesResponse> {
     this.logger.trace('Getting session files from server');
-    return this.client.get<LoadComicFilesResponse>(
+    return this.http.get<LoadComicFilesResponse>(
       interpolate(LOAD_COMIC_FILES_FROM_SESSION_URL)
     );
   }
@@ -63,7 +63,7 @@ export class ComicFileService {
     single: boolean;
   }): Observable<LoadComicFilesResponse> {
     this.logger.trace('Toggling comic file selections:', args);
-    return this.client.post<LoadComicFilesResponse>(
+    return this.http.post<LoadComicFilesResponse>(
       interpolate(TOGGLE_COMIC_FILE_SELECTIONS_URL),
       {
         filename: args.filename,
@@ -75,7 +75,7 @@ export class ComicFileService {
 
   import(): Observable<void> {
     this.logger.trace('Starting the comic file import process');
-    return this.client.post<void>(
+    return this.http.post<void>(
       interpolate(SEND_COMIC_FILES_URL),
       {} as unknown
     );

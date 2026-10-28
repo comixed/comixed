@@ -42,12 +42,12 @@ import selectUserState from '@app/account/selectors/user.selectors';
 
 @Service()
 export class AccountService {
-  private readonly logger = inject(LoggerService);
-  private readonly client = inject(HttpClient);
-  private readonly store = inject(Store);
-  private readonly webSocketService = inject(WebSocketService);
+  readonly logger = inject(LoggerService);
+  readonly client = inject(HttpClient);
+  readonly store = inject(Store);
+  readonly webSocketService = inject(WebSocketService);
 
-  private email = '';
+  email = '';
 
   constructor() {
     this.logger.trace('Subscribing to user users');

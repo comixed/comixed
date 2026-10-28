@@ -34,3 +34,8 @@ export const selectBatchProcessListRunningCount = createSelector(
       .selectAll(state)
       .filter(entry => entry.running).length
 );
+
+export const selectBatchProcessListEntries = createSelector(
+  selectBatchProcessListState,
+  state => batchProcessListAdaptor.getSelectors().selectAll(state)
+);

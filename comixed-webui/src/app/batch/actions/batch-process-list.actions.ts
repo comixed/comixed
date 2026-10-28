@@ -16,12 +16,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createActionGroup, props } from '@ngrx/store';
+import { createActionGroup, emptyProps, props } from '@ngrx/store';
 import { BatchProcess } from '@app/batch/models/batch-process';
 
 export const BatchProcessListActions = createActionGroup({
   source: 'Batch Process List',
   events: {
+    Load: emptyProps(),
+    LoadSuccess: props<{ entries: BatchProcess[] }>(),
+    LoadFailure: emptyProps(),
     Update: props<{ update: BatchProcess }>()
   }
 });

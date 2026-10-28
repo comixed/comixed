@@ -31,11 +31,17 @@ import { SeriesDetailPage } from '@app/library/pages/series-detail-page/series-d
 import { TagListPage } from '@app/library/pages/tag-list-page/tag-list-page';
 import { PublisherSeriesListPage } from '@app/library/pages/publisher-series-list-page/publisher-series-list-page';
 import { PublisherComicListPage } from '@app/library/pages/publisher-comic-list-page/publisher-comic-list-page.component';
+import { BatchProcessListPage } from '@app/batch/pages/batch-process-list-page/batch-process-list-page';
 
 export const appRoutes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/dashboard' },
   { path: 'accounts/initial', component: InitialAccountPage },
   { path: 'login', component: LoginPage },
+  {
+    path: 'admin/processes',
+    component: BatchProcessListPage,
+    canActivate: [adminGuard]
+  },
   {
     path: 'dashboard',
     component: DashboardPage,

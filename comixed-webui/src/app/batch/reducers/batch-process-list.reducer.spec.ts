@@ -30,6 +30,7 @@ import { BatchProcessListActions } from '@app/batch/actions/batch-process-list.a
 describe('BatchProcessList Reducer', () => {
   const TEST_BATCH_PROCESS = BATCH_PROCESS_1;
   const TEST_EXISTING_PROCESS = BATCH_PROCESS_2;
+  const TEST_BATCH_PROCESS_LIST = [TEST_BATCH_PROCESS, TEST_EXISTING_PROCESS];
 
   let state: BatchProcessListState;
 
@@ -44,10 +45,67 @@ describe('BatchProcessList Reducer', () => {
       state = batchProcessListReducer({ ...state }, {} as Action<string>);
     });
 
+    it('should not set the busy flag', () => {
+      expect(state.busy).toBeFalsy();
+    });
+
     it('should contain no batch processes', () => {
       expect(
         batchProcessListAdaptor.getSelectors().selectAll(state)
       ).toStrictEqual([]);
+    });
+  });
+
+  describe('loading', () => {
+    beforeEach(() => {
+      state = batchProcessListReducer(
+        { ...state, busy: false },
+        BatchProcessListActions.load()
+      );
+    });
+
+    it('should set the busy flag', () => {
+      expect(state.busy).toBeTruthy();
+    });
+
+    describe('success', () => {
+      beforeEach(() => {
+        state = batchProcessListReducer(
+          batchProcessListAdaptor.setAll([], {
+            ...state,
+            busy: true
+          }),
+          BatchProcessListActions.loadSuccess({
+            entries: TEST_BATCH_PROCESS_LIST
+          })
+        );
+      });
+
+      it('should clear the busy flag', () => {
+        expect(state.busy).toBeFalsy();
+      });
+
+      it('should update the list of processes', () => {
+        expect(
+          batchProcessListAdaptor.getSelectors().selectAll(state)
+        ).toStrictEqual(TEST_BATCH_PROCESS_LIST);
+      });
+    });
+
+    describe('failure', () => {
+      beforeEach(() => {
+        state = batchProcessListReducer(
+          batchProcessListAdaptor.setAll([], {
+            ...state,
+            busy: true
+          }),
+          BatchProcessListActions.loadFailure()
+        );
+      });
+
+      it('should clear the busy flag', () => {
+        expect(state.busy).toBeFalsy();
+      });
     });
   });
 

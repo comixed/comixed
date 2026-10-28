@@ -21,6 +21,7 @@ import { provideTranslateService } from '@ngx-translate/core';
 import { CollectionStatistics } from '@app/dashboard/components/collection-statistics/collection-statistics';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
 import { provideRouter } from '@angular/router';
+import { beforeEach, Mock } from 'vitest';
 
 describe('CollectionStatistics', () => {
   let component: CollectionStatistics;
@@ -43,5 +44,37 @@ describe('CollectionStatistics', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('when the user clicks the all statistics button', () => {
+    let emitSpy: Mock;
+
+    beforeEach(() => {
+      emitSpy = vi.spyOn(component.zoom, 'emit');
+      const button: HTMLButtonElement = fixture.nativeElement.querySelector(
+        '#show-all-statistics-button button'
+      );
+      button.click();
+    });
+
+    it('should emit an event', () => {
+      expect(emitSpy).toHaveBeenCalledWith(0);
+    });
+  });
+
+  describe('when the user clicks the top statistics button', () => {
+    let emitSpy: Mock;
+
+    beforeEach(() => {
+      emitSpy = vi.spyOn(component.zoom, 'emit');
+      const button: HTMLButtonElement = fixture.nativeElement.querySelector(
+        '#show-top-statistics-button button'
+      );
+      button.click();
+    });
+
+    it('should emit an event', () => {
+      expect(emitSpy).toHaveBeenCalledWith(10);
+    });
   });
 });

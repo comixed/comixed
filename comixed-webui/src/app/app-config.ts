@@ -86,6 +86,7 @@ export const appConfig: ApplicationConfig = {
       maxAge: 25,
       logOnly: !isDevMode(),
       autoPause: true,
+      trace: true,
       features: {
         pause: false,
         lock: true,

@@ -14,6 +14,20 @@
       "series": "[series]"
     }
   },
+  "batch-process-list-page": {
+    "label": {
+      "create-time": "Created",
+      "end-time": "Ended",
+      "errors": "Errors",
+      "exit-status": "Exit Status",
+      "job-id": "ID",
+      "job-name": "Name",
+      "last-update-time": "Last Updated",
+      "running": "Is Running?",
+      "start-time": "Started",
+      "status": "Status"
+    }
+  },
   "comic-detail-effects": {
     "load-comic": {
       "service-failure": "Unable to load comic..."

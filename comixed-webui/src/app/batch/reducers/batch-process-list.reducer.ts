@@ -40,6 +40,14 @@ export const initialBatchProcessListState: BatchProcessListState =
 
 export const batchProcessListReducer = createReducer(
   initialBatchProcessListState,
+  on(BatchProcessListActions.load, state => ({ ...state, busy: true })),
+  on(BatchProcessListActions.loadSuccess, (state, action) => {
+    return batchProcessListAdaptor.setAll(action.entries, {
+      ...state,
+      busy: false
+    });
+  }),
+  on(BatchProcessListActions.loadFailure, state => ({ ...state, busy: false })),
   on(BatchProcessListActions.update, (state, action) =>
     batchProcessListAdaptor.upsertOne(action.update, { ...state })
   )

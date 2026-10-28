@@ -35,8 +35,8 @@ import { LoadCollectionEntriesRequest } from '@app/library/models/net/load-colle
 import { LoadSeriesDetailRequest } from '@app/library/models/net/load-series-detail-request';
 import {
   LOAD_COLLECTION_ENTRIES_URL,
-  LOAD_PUBLISHER_SERIES_LIST_URL,
   LOAD_PUBLISHER_LIST_URL,
+  LOAD_PUBLISHER_SERIES_LIST_URL,
   LOAD_SERIES_DETAIL_URL,
   LOAD_SERIES_LIST_URL
 } from '@app/library/library-constants';

@@ -17,12 +17,14 @@
   <ng-template #footer class="cx-padding-15">
     <div class="cx-width-100p cx-justify-start">
       <p-button
+        id="show-all-statistics-button"
         icon="pi pi-chart-bar"
         severity="secondary"
         [pTooltip]="'dashboard.statistics.text.show-details' | translate"
         (click)="zoom.emit(0)"
       ></p-button>
       <p-button
+        id="show-top-statistics-button"
         icon="pi pi-chart-scatter"
         severity="secondary"
         [pTooltip]="'dashboard.statistics.text.show-top' | translate"

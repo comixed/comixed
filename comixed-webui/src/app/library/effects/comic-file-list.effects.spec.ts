@@ -39,57 +39,57 @@ describe.todo('ComicFileListEffects', () => {
   });
 
   describe('loading comic files from the session', () => {
-    it('fires an action on success', () => {
+    it('should fire an action on success', () => {
       actions$ = hot('', {});
     });
 
-    it('fires an action on service failure', () => {
+    it('should fire an action on service failure', () => {
       actions$ = hot('', {});
     });
 
-    it('fires an action on general failure', () => {
+    it('should fire an action on general failure', () => {
       actions$ = hot('', {});
     });
   });
 
   describe('loading comic files from disk', () => {
-    it('fires an action on success', () => {
+    it('should fire an action on success', () => {
       actions$ = hot('', {});
     });
 
-    it('fires an action on service failure', () => {
+    it('should fire an action on service failure', () => {
       actions$ = hot('', {});
     });
 
-    it('fires an action on general failure', () => {
+    it('should fire an action on general failure', () => {
       actions$ = hot('', {});
     });
   });
 
   describe('setting the select state on comic files', () => {
-    it('fires an action on success', () => {
+    it('should fire an action on success', () => {
       actions$ = hot('', {});
     });
 
-    it('fires an action on service failure', () => {
+    it('should fire an action on service failure', () => {
       actions$ = hot('', {});
     });
 
-    it('fires an action on general failure', () => {
+    it('should fire an action on general failure', () => {
       actions$ = hot('', {});
     });
   });
 
   describe('starting the import', () => {
-    it('fires an action on success', () => {
+    it('should fire an action on success', () => {
       actions$ = hot('', {});
     });
 
-    it('fires an action on service failure', () => {
+    it('should fire an action on service failure', () => {
       actions$ = hot('', {});
     });
 
-    it('fires an action on general failure', () => {
+    it('should fire an action on general failure', () => {
       actions$ = hot('', {});
     });
   });

@@ -28,6 +28,7 @@ import {
   REMOTE_LIBRARY_FEATURE_KEY
 } from '@app/library/reducers/remote-library.reducer';
 import { RemoteLibrarySegment } from '@app/library/models/net/remote-library-segment';
+import { By } from '@angular/platform-browser';
 
 describe('DashboardPage', () => {
   const initialState = {
@@ -124,6 +125,97 @@ describe('DashboardPage', () => {
 
     it('srehould set the data', () => {
       expect(component.zoomedStatistics()).toStrictEqual([]);
+    });
+  });
+
+  describe('the dashboard', () => {
+    let zoomSpy: Mock;
+
+    beforeEach(() => {
+      zoomSpy = vi.spyOn(component, 'onZoom');
+    });
+
+    it('should display the container', () => {
+      expect(
+        fixture.nativeElement.querySelector('#cx-dashboard-container')
+      ).not.toBeNull();
+    });
+
+    it('should zoom on publishers', () => {
+      fixture.debugElement
+        .query(By.css('#publisher-statistics'))
+        .triggerEventHandler('zoom', 0);
+      expect(zoomSpy).toHaveBeenCalled();
+    });
+
+    it('should zoom on series', () => {
+      fixture.debugElement
+        .query(By.css('#series-statistics'))
+        .triggerEventHandler('zoom', 0);
+      expect(zoomSpy).toHaveBeenCalled();
+    });
+
+    it('should zoom on characters', () => {
+      fixture.debugElement
+        .query(By.css('#character-statistics'))
+        .triggerEventHandler('zoom', 0);
+      expect(zoomSpy).toHaveBeenCalled();
+    });
+
+    it('should zoom on teams', () => {
+      fixture.debugElement
+        .query(By.css('#team-statistics'))
+        .triggerEventHandler('zoom', 0);
+      expect(zoomSpy).toHaveBeenCalled();
+    });
+
+    it('should zoom on locations', () => {
+      fixture.debugElement
+        .query(By.css('#location-statistics'))
+        .triggerEventHandler('zoom', 0);
+      expect(zoomSpy).toHaveBeenCalled();
+    });
+
+    it('should zoom on stories', () => {
+      fixture.debugElement
+        .query(By.css('#story-statistics'))
+        .triggerEventHandler('zoom', 0);
+      expect(zoomSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('when zooming on statistics', () => {
+    beforeEach(() => {
+      component.onZoom(TEST_STATISTICS, TEST_TITLE, 0);
+      fixture.detectChanges();
+    });
+
+    it('should display the collection graph', () => {
+      expect(
+        fixture.nativeElement.querySelector('#collection-graph')
+      ).not.toBeNull();
+    });
+
+    it('should not display the dashboard container', () => {
+      expect(
+        fixture.nativeElement.querySelector('#cx-dashboard-container')
+      ).toBeNull();
+    });
+
+    describe('when unzooming', () => {
+      let unzoomSpy: Mock;
+
+      beforeEach(() => {
+        unzoomSpy = vi.spyOn(component, 'onUnzoom');
+
+        fixture.debugElement
+          .query(By.css('#collection-graph'))
+          .triggerEventHandler('unzoom', undefined);
+      });
+
+      it('should call unzoom on the component', () => {
+        expect(unzoomSpy).toHaveBeenCalled();
+      });
     });
   });
 });

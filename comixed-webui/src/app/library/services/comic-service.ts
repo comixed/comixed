@@ -32,11 +32,11 @@ import { UpdateComicRequest } from '@app/library/models/net/update-comic-request
 @Service()
 export class ComicService {
   readonly logger = inject(LoggerService);
-  readonly client = inject(HttpClient);
+  readonly http = inject(HttpClient);
 
   load(args: { comicId: number }): Observable<LoadComicDetailResponse> {
     this.logger.debug('Loading comic:', args);
-    return this.client.get<LoadComicDetailResponse>(
+    return this.http.get<LoadComicDetailResponse>(
       interpolate(LOAD_COMIC_URL, { comicId: args.comicId })
     );
   }
@@ -55,7 +55,7 @@ export class ComicService {
     storeDate: number | null;
   }): Observable<LoadComicDetailResponse> {
     this.logger.debug('Service: updating one comic:', args);
-    return this.client.put<LoadComicDetailResponse>(
+    return this.http.put<LoadComicDetailResponse>(
       interpolate(UPDATE_COMIC_URL, { id: args.comicId }),
       {
         comicType: args.comicType,

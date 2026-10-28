@@ -44,8 +44,8 @@ import { RemoteLibraryActions } from '@app/library/actions/remote-library.action
 
 @Service()
 export class LibraryService {
-  logger = inject(LoggerService);
-  http = inject(HttpClient);
+  readonly logger = inject(LoggerService);
+  readonly http = inject(HttpClient);
   readonly store = inject(Store);
   readonly webSocketService = inject(WebSocketService);
 

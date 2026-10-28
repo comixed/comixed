@@ -16,9 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, inject, Renderer2 } from '@angular/core';
-import { AppState } from '@app/stores/app-store';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { Component, inject } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { RouterLink } from '@angular/router';
 import { Button } from '@openng/optimus-ui/button';
@@ -47,31 +45,7 @@ import {
 })
 export class Topbar {
   readonly logger = inject(LoggerService);
-  readonly appStore = inject(AppState);
   readonly store = inject(Store);
   readonly authenticated = this.store.selectSignal(selectUserAuthenticated);
   readonly isAdmin = this.store.selectSignal(selectUserIsAdmin);
-  readonly renderer = inject(Renderer2);
-
-  constructor() {
-    toObservable<boolean>(this.appStore.darkMode)
-      .pipe(takeUntilDestroyed())
-      .subscribe({
-        next: value => {
-          if (value) {
-            this.renderer.setStyle(
-              document.documentElement,
-              'color-scheme',
-              'dark'
-            );
-          } else {
-            this.renderer.setStyle(
-              document.documentElement,
-              'color-scheme',
-              'light'
-            );
-          }
-        }
-      });
-  }
 }

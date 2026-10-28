@@ -1,11 +1,10 @@
 <p-toolbar>
   <ng-template #start>
-    &nbsp;
     <span id="cx-logo">ComiXed</span>
 
     @if (authenticated()) {
-      &nbsp;
       <p-button
+        id="home-button"
         [pTooltip]="'topbar.tooltip.home-button' | translate"
         icon="pi pi-home"
         severity="primary"
@@ -13,9 +12,9 @@
       />
     }
 
-    @if (isAdmin()) {
-      &nbsp;
+    @if (isAdmin().passed) {
       <p-button
+        id="import-comics-button"
         [pTooltip]="'topbar.tooltip.import-button' | translate"
         icon="pi pi-file-import"
         severity="contrast"
@@ -26,13 +25,16 @@
 
   <ng-template #center>
     @if (authenticated()) {
-      <app-library-statistics-panel></app-library-statistics-panel>
+      <app-library-statistics-panel
+        id="library-statistics"
+      ></app-library-statistics-panel>
     }
   </ng-template>
 
   <ng-template #end>
     @if (authenticated()) {
       <p-button
+        id="logout-button"
         [pTooltip]="'topbar.tooltip.logout-button' | translate"
         icon="pi pi-sign-out"
         severity="warn"

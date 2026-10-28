@@ -19,7 +19,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CollectionGraphWidget } from './collection-graph-widget';
 import { RemoteLibrarySegment } from '@app/library/models/net/remote-library-segment';
-import { beforeEach } from 'vitest';
+import { beforeEach, Mock } from 'vitest';
 
 describe('CollectionGraphWidget', () => {
   const TEST_STATISTICS: RemoteLibrarySegment[] = [
@@ -91,6 +91,22 @@ describe('CollectionGraphWidget', () => {
 
     it('should update the max records to a value', () => {
       expect(component.maxRecords()).toStrictEqual(TEST_MAX_RECORDS);
+    });
+  });
+
+  describe('when the user clicks the close button', () => {
+    let emitSpy: Mock;
+
+    beforeEach(() => {
+      emitSpy = vi.spyOn(component.unzoom, 'emit');
+      const button: HTMLButtonElement = fixture.nativeElement.querySelector(
+        '#unzoom-button button'
+      );
+      button.click();
+    });
+
+    it('should emit an event', () => {
+      expect(emitSpy).toHaveBeenCalled();
     });
   });
 });
