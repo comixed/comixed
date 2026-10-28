@@ -4,8 +4,8 @@
       | translate
         : {
             publisher: publisherName$ | async,
-            series: seriesName$,
-            volume: volume$
+            series: seriesName$ | async,
+            volume: volume$ | async
           }
   }}
 </h2>
