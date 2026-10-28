@@ -50,7 +50,21 @@ export const batchProcessListReducer = createReducer(
   on(BatchProcessListActions.loadFailure, state => ({ ...state, busy: false })),
   on(BatchProcessListActions.update, (state, action) =>
     batchProcessListAdaptor.upsertOne(action.update, { ...state })
-  )
+  ),
+  on(BatchProcessListActions.deleteCompleted, state => ({
+    ...state,
+    busy: true
+  })),
+  on(BatchProcessListActions.deleteCompletedSuccess, (state, action) => {
+    return batchProcessListAdaptor.setAll(action.entries, {
+      ...state,
+      busy: false
+    });
+  }),
+  on(BatchProcessListActions.deleteCompletedFailure, state => ({
+    ...state,
+    busy: false
+  }))
 );
 
 export const batchProcessListFeature = createFeature({

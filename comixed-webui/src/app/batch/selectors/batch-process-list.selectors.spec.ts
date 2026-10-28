@@ -25,6 +25,7 @@ import {
 import { beforeEach } from 'vitest';
 import { BATCH_PROCESS_1, BATCH_PROCESS_2 } from '@app/batch/batch-fixtures';
 import {
+  selectBatchProcessListBusy,
   selectBatchProcessListEntries,
   selectBatchProcessListRunningCount
 } from '@app/batch/selectors/batch-process-list.selectors';
@@ -39,6 +40,24 @@ describe('BatchProcessList Selectors', () => {
       TEST_BATCH_PROCESS_LIST,
       initialBatchProcessListState
     );
+  });
+
+  describe('the busy flag', () => {
+    it('should return true when busy', () => {
+      expect(
+        selectBatchProcessListBusy({
+          [BATCH_PROCESS_LIST_FEATURE_KEY]: { ...state, busy: true }
+        })
+      ).toBeTruthy();
+    });
+
+    it('should return false when not busy', () => {
+      expect(
+        selectBatchProcessListBusy({
+          [BATCH_PROCESS_LIST_FEATURE_KEY]: { ...state, busy: false }
+        })
+      ).toBeFalsy();
+    });
   });
 
   it('should return the active batch process count', () => {

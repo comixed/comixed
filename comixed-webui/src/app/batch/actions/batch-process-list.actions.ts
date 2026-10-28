@@ -25,6 +25,9 @@ export const BatchProcessListActions = createActionGroup({
     Load: emptyProps(),
     LoadSuccess: props<{ entries: BatchProcess[] }>(),
     LoadFailure: emptyProps(),
-    Update: props<{ update: BatchProcess }>()
+    Update: props<{ update: BatchProcess }>(),
+    DeleteCompleted: emptyProps(),
+    DeleteCompletedSuccess: props<{ entries: BatchProcess[] }>(),
+    DeleteCompletedFailure: emptyProps()
   }
 });

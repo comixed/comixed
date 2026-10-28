@@ -27,6 +27,7 @@ import {
 import { Mock } from 'vitest';
 import {
   BATCH_PROCESS_LIST_UPDATE_TOPIC,
+  DELETE_COMPLETED_BATCH_PROCESSES_URL,
   LOAD_BATCH_PROCESS_LIST_URL
 } from '@app/batch/batch-constants';
 import { BATCH_PROCESS_1, BATCH_PROCESS_2 } from '@app/batch/batch-fixtures';
@@ -115,6 +116,22 @@ describe('BatchProcessService', () => {
       interpolate(LOAD_BATCH_PROCESS_LIST_URL)
     );
     expect(req.request.method).toEqual('GET');
+    req.flush(serverResponse);
+    httpController.verify();
+  });
+
+  it('should delete completed processes', () => {
+    const serverResponse = TEST_BATCH_PROCESS_LIST;
+
+    service.deleteCompletedBatchProcesses().subscribe({
+      next: response => expect(response).toStrictEqual(serverResponse)
+    });
+
+    const req = httpController.expectOne(
+      interpolate(DELETE_COMPLETED_BATCH_PROCESSES_URL)
+    );
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({});
     req.flush(serverResponse);
     httpController.verify();
   });

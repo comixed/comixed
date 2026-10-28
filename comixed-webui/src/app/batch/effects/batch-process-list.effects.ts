@@ -62,4 +62,36 @@ export class BatchProcessListEffects {
       })
     );
   });
+  deleteCompletedProcesses$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(BatchProcessListActions.deleteCompleted),
+      tap(() => this.logger.debug('Deleting completed batch processes')),
+      switchMap(() =>
+        this.batchProcessService.deleteCompletedBatchProcesses().pipe(
+          tap(response => this.logger.debug('Response received:', response)),
+          map(response =>
+            BatchProcessListActions.deleteCompletedSuccess({
+              entries: response
+            })
+          ),
+          catchError(error => {
+            this.logger.error('Service failure:', error);
+            this.alertService.error(
+              this.translateService.instant(
+                'batch-process-list-effects.delete-completed-batch-processes.service-failure'
+              )
+            );
+            return of(BatchProcessListActions.deleteCompletedFailure());
+          })
+        )
+      ),
+      catchError(error => {
+        this.logger.error('General failure:', error);
+        this.alertService.error(
+          this.translateService.instant('app.effects.general-failure')
+        );
+        return of(BatchProcessListActions.deleteCompletedFailure());
+      })
+    );
+  });
 }

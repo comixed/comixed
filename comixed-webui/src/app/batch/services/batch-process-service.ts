@@ -23,6 +23,7 @@ import { WebSocketService } from '@app/messaging/services/web-socket-service';
 import { selectMessagingStarted } from '@app/messaging/selectors/messaging.selectors';
 import {
   BATCH_PROCESS_LIST_UPDATE_TOPIC,
+  DELETE_COMPLETED_BATCH_PROCESSES_URL,
   LOAD_BATCH_PROCESS_LIST_URL
 } from '@app/batch/batch-constants';
 import { BatchProcess } from '@app/batch/models/batch-process';
@@ -61,6 +62,14 @@ class BatchProcessService {
     this.logger.trace('Loading batch process list');
     return this.http.get<BatchProcess[]>(
       interpolate(LOAD_BATCH_PROCESS_LIST_URL)
+    );
+  }
+
+  deleteCompletedBatchProcesses(): Observable<BatchProcess[]> {
+    this.logger.trace('Deleted completed batch processes');
+    return this.http.post<BatchProcess[]>(
+      interpolate(DELETE_COMPLETED_BATCH_PROCESSES_URL),
+      {} as unknown
     );
   }
 }

@@ -1,11 +1,31 @@
 <p-card>
-  <ng-template #header></ng-template>
+  <ng-template #header>
+    <div class="cx-width-100p cx-justify-center">
+      <p-breadcrumb [model]="trail()" [home]="home" />
+
+      <div class="cx-spacer"></div>
+
+      <p-button
+        id="delete-completed-processes-button"
+        class="cx-padding-15"
+        icon="pi pi-trash"
+        severity="danger"
+        [loading]="batchProcessListBusy()"
+        [pTooltip]="
+          'batch-process-list-page.tooltip.delete-completed-processes'
+            | translate
+        "
+        (onClick)="onDeleteCompletedProcesses()"
+      />
+    </div>
+  </ng-template>
 
   <p-table
     [value]="batchProcessListEntries()"
     dataKey="jobId"
     [paginator]="true"
     stripedRows
+    paginatorPosition="both"
     [rows]="batchProcessListRows()"
     [totalRecords]="batchProcessListEntries().length"
   >

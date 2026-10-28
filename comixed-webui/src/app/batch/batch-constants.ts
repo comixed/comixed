@@ -19,6 +19,7 @@
 import { API_ROOT_URL } from '@app/app-constants';
 
 export const LOAD_BATCH_PROCESS_LIST_URL = `${API_ROOT_URL}/admin/processes`;
+export const DELETE_COMPLETED_BATCH_PROCESSES_URL = `${API_ROOT_URL}/admin/processes/completed/delete`;
 
 export const BATCH_PROCESS_LIST_UPDATE_TOPIC =
   '/topic/batch-process-list.update';

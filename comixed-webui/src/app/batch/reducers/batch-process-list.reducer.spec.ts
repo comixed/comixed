@@ -123,4 +123,57 @@ describe('BatchProcessList Reducer', () => {
       ).toStrictEqual([TEST_BATCH_PROCESS, TEST_EXISTING_PROCESS]);
     });
   });
+
+  describe('deleting completed processes', () => {
+    beforeEach(() => {
+      state = batchProcessListReducer(
+        { ...state, busy: false },
+        BatchProcessListActions.deleteCompleted()
+      );
+    });
+
+    it('should set the busy flag', () => {
+      expect(state.busy).toBeTruthy();
+    });
+
+    describe('success', () => {
+      beforeEach(() => {
+        state = batchProcessListReducer(
+          batchProcessListAdaptor.setAll([], {
+            ...state,
+            busy: true
+          }),
+          BatchProcessListActions.deleteCompletedSuccess({
+            entries: TEST_BATCH_PROCESS_LIST
+          })
+        );
+      });
+
+      it('should clear the busy flag', () => {
+        expect(state.busy).toBeFalsy();
+      });
+
+      it('should update the list of processes', () => {
+        expect(
+          batchProcessListAdaptor.getSelectors().selectAll(state)
+        ).toStrictEqual(TEST_BATCH_PROCESS_LIST);
+      });
+    });
+
+    describe('failure', () => {
+      beforeEach(() => {
+        state = batchProcessListReducer(
+          batchProcessListAdaptor.setAll([], {
+            ...state,
+            busy: true
+          }),
+          BatchProcessListActions.deleteCompletedFailure()
+        );
+      });
+
+      it('should clear the busy flag', () => {
+        expect(state.busy).toBeFalsy();
+      });
+    });
+  });
 });

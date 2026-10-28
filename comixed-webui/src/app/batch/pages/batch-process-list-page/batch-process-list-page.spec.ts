@@ -19,7 +19,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BatchProcessListPage } from './batch-process-list-page';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
-import { provideMockStore } from '@ngrx/store/testing';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import {
   BATCH_PROCESS_LIST_FEATURE_KEY,
   batchProcessListAdaptor,
@@ -27,6 +27,9 @@ import {
 } from '@app/batch/reducers/batch-process-list.reducer';
 import { provideTranslateService } from '@ngx-translate/core';
 import { BATCH_PROCESS_1, BATCH_PROCESS_2 } from '@app/batch/batch-fixtures';
+import { provideRouter } from '@angular/router';
+import { beforeEach, Mock } from 'vitest';
+import { BatchProcessListActions } from '@app/batch/actions/batch-process-list.actions';
 
 describe('BatchProcessListPage', () => {
   const TEST_BATCH_PROCESS_LIST = [BATCH_PROCESS_1, BATCH_PROCESS_2];
@@ -39,17 +42,20 @@ describe('BatchProcessListPage', () => {
 
   let component: BatchProcessListPage;
   let fixture: ComponentFixture<BatchProcessListPage>;
+  let store: MockStore;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [BatchProcessListPage],
       providers: [
+        provideRouter([{ path: '*', redirectTo: '' }]),
         provideLogger({ minLevel: LoggerLevel.OFF }),
         provideTranslateService(),
         provideMockStore({ initialState })
       ]
     }).compileComponents();
 
+    store = TestBed.inject(MockStore);
     fixture = TestBed.createComponent(BatchProcessListPage);
     component = fixture.componentInstance;
     await fixture.whenStable();
@@ -57,5 +63,43 @@ describe('BatchProcessListPage', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('changing the language', () => {
+    let setTitleSpy: Mock;
+
+    beforeEach(() => {
+      setTitleSpy = vi.spyOn(component.titleService, 'setTitle');
+      component.translateService.use('fr');
+    });
+
+    it('should update the page title', () => {
+      expect(setTitleSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('deleting completed processes', () => {
+    let dispatchSpy: Mock;
+
+    beforeEach(() => {
+      dispatchSpy = vi.spyOn(store, 'dispatch');
+      store.setState({
+        ...initialState,
+        [BATCH_PROCESS_LIST_FEATURE_KEY]: batchProcessListAdaptor.setAll(
+          TEST_BATCH_PROCESS_LIST,
+          initialBatchProcessListState
+        )
+      });
+      const button: HTMLButtonElement = fixture.nativeElement.querySelector(
+        '#delete-completed-processes-button button'
+      );
+      button.click();
+    });
+
+    it('should dispatch an action', () => {
+      expect(dispatchSpy).toHaveBeenCalledWith(
+        BatchProcessListActions.deleteCompleted()
+      );
+    });
   });
 });

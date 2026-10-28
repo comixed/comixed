@@ -38,7 +38,21 @@ describe.todo('BatchProcessListEffects', () => {
     expect(effects).toBeTruthy();
   });
 
-  describe('loading', () => {
+  describe('loading batch processes', () => {
+    it('should fire an action on success', () => {
+      actions$ = hot('', {});
+    });
+
+    it('should fire an action on service failure', () => {
+      actions$ = hot('', {});
+    });
+
+    it('should fire an action on general failure', () => {
+      actions$ = hot('', {});
+    });
+  });
+
+  describe('deleting completed batch processes', () => {
     it('should fire an action on success', () => {
       actions$ = hot('', {});
     });
