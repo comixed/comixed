@@ -30,7 +30,7 @@ export const comicListAdaptor: EntityAdapter<Comic> =
   });
 
 export interface ComicListState extends EntityState<Comic> {
-  loading: boolean;
+  busy: boolean;
   totalCount: number;
   filterCount: number;
   coverMonthList: number[];
@@ -39,7 +39,7 @@ export interface ComicListState extends EntityState<Comic> {
 
 export const initialComicListState: ComicListState =
   comicListAdaptor.getInitialState({
-    loading: false,
+    busy: false,
     totalCount: 0,
     filterCount: 0,
     coverMonthList: [],
@@ -48,11 +48,12 @@ export const initialComicListState: ComicListState =
 
 export const comicListReducer = createReducer(
   initialComicListState,
-  on(ComicListActions.loadByFilters, state => ({ ...state, loading: true })),
+  on(ComicListActions.loadByFilters, state => ({ ...state, busy: true })),
+  on(ComicListActions.loadByReadState, state => ({ ...state, busy: true })),
   on(ComicListActions.loadSuccess, (state, action) => {
     return comicListAdaptor.setAll(action.comicList, {
       ...state,
-      loading: false,
+      busy: false,
       totalCount: action.totalCount,
       filterCount: action.filterCount,
       coverMonthList: action.coverMonthList,
@@ -61,7 +62,7 @@ export const comicListReducer = createReducer(
   }),
   on(ComicListActions.loadFailure, state => ({
     ...state,
-    loading: false
+    busy: false
   })),
   on(ComicListActions.listUpdate, (state, action) => {
     if ((state.ids as number[]).includes(action.comic.comicId)) {

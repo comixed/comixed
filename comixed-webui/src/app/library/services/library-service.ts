@@ -23,7 +23,9 @@ import {
   COMIC_LIST_UPDATE_TOPIC,
   LOAD_COMICS_BY_FILTER_URL,
   LOAD_LIBRARY_STATE_URL,
+  LOAD_READ_COMICS_URL,
   LOAD_SELECTED_COMICS_URL,
+  LOAD_UNREAD_COMICS_URL,
   REMOTE_LIBRARY_STATE_TOPIC
 } from '@app/library/library-constants';
 import { interpolate } from '@app/app-functions';
@@ -53,7 +55,7 @@ export class LibraryService {
     this.store.select(selectMessagingStarted).subscribe({
       next: started => {
         if (started) {
-          this.logger.trace('Subscribing to library updates');
+          this.logger.debug('Subscribing to library updates');
           this.webSocketService.subscribe<RemoteLibrary>(
             REMOTE_LIBRARY_STATE_TOPIC,
             update => {
@@ -63,11 +65,11 @@ export class LibraryService {
               );
             }
           );
-          this.logger.trace('Subscribing to comic list updates');
+          this.logger.debug('Subscribing to comic list updates');
           this.webSocketService.subscribe<LoadComicDetailResponse>(
             COMIC_LIST_UPDATE_TOPIC,
             update => {
-              this.logger.trace('Comic update message received:', update);
+              this.logger.debug('Comic update message received:', update);
               this.store.dispatch(
                 ComicListActions.listUpdate({ comic: update.detail })
               );
@@ -79,7 +81,7 @@ export class LibraryService {
   }
 
   loadState(): Observable<RemoteLibrary> {
-    this.logger.trace('Loading remote library state');
+    this.logger.debug('Loading remote library state');
     return this.http.get<RemoteLibrary>(interpolate(LOAD_LIBRARY_STATE_URL));
   }
 
@@ -103,7 +105,7 @@ export class LibraryService {
     sortDirection: string;
   }): Observable<LoadComicListResponse> {
     if (args.selected) {
-      this.logger.trace('Loading selected comics:', args);
+      this.logger.debug('Loading selected comics:', args);
       return this.http.post<LoadComicListResponse>(
         interpolate(LOAD_SELECTED_COMICS_URL),
         {
@@ -114,7 +116,7 @@ export class LibraryService {
         } as LoadSelectedComicsRequest
       );
     } else {
-      this.logger.trace('Loading comics by filter:', args);
+      this.logger.debug('Loading comics by filter:', args);
       return this.http.post<LoadComicListResponse>(
         interpolate(LOAD_COMICS_BY_FILTER_URL),
         {
@@ -135,6 +137,38 @@ export class LibraryService {
           sortBy: args.sortBy,
           sortDirection: args.sortDirection
         } as LoadComicsByFilterRequest
+      );
+    }
+  }
+
+  loadByReadState(args: {
+    unreadOnly: boolean;
+    pageSize: number;
+    pageIndex: number;
+    sortBy: string;
+    sortDirection: string;
+  }): Observable<LoadComicListResponse> {
+    if (args.unreadOnly) {
+      this.logger.debug('Loading unread comics:', args);
+      return this.http.post<LoadComicListResponse>(
+        interpolate(LOAD_UNREAD_COMICS_URL),
+        {
+          pageSize: args.pageSize,
+          pageIndex: args.pageIndex,
+          sortBy: args.sortBy,
+          sortDirection: args.sortDirection
+        } as LoadSelectedComicsRequest
+      );
+    } else {
+      this.logger.debug('Loading read comics:', args);
+      return this.http.post<LoadComicListResponse>(
+        interpolate(LOAD_READ_COMICS_URL),
+        {
+          pageSize: args.pageSize,
+          pageIndex: args.pageIndex,
+          sortBy: args.sortBy,
+          sortDirection: args.sortDirection
+        } as LoadSelectedComicsRequest
       );
     }
   }

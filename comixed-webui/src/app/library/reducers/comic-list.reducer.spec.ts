@@ -46,8 +46,8 @@ describe('ComicList Reducer', () => {
       state = comicListReducer({ ...state }, {} as Action<string>);
     });
 
-    it('should not set the loading flag', () => {
-      expect(state.loading).toBeFalsy();
+    it('should not set the busy flag', () => {
+      expect(state.busy).toBeFalsy();
     });
 
     it('should have no comics', () => {
@@ -76,7 +76,7 @@ describe('ComicList Reducer', () => {
   describe('loading comic list by filter', () => {
     beforeEach(() => {
       state = comicListReducer(
-        { ...state, loading: false },
+        { ...state, busy: false },
         ComicListActions.loadByFilters({
           pageSize: 10,
           pageIndex: 5,
@@ -99,8 +99,27 @@ describe('ComicList Reducer', () => {
       );
     });
 
-    it('should set the loading flag', () => {
-      expect(state.loading).toBeTruthy();
+    it('should set the busy flag', () => {
+      expect(state.busy).toBeTruthy();
+    });
+  });
+
+  describe('loading comic list by read state', () => {
+    beforeEach(() => {
+      state = comicListReducer(
+        { ...state, busy: false },
+        ComicListActions.loadByReadState({
+          unreadOnly: true,
+          pageSize: 10,
+          pageIndex: 5,
+          sortBy: '',
+          sortDirection: ''
+        })
+      );
+    });
+
+    it('should set the busy flag', () => {
+      expect(state.busy).toBeTruthy();
     });
   });
 
@@ -109,7 +128,7 @@ describe('ComicList Reducer', () => {
       state = comicListReducer(
         comicListAdaptor.setAll(TEST_COMIC_LIST, {
           ...state,
-          loading: true,
+          busy: true,
           totalCount: 0,
           filterCount: 0,
           coverMonthList: [],
@@ -125,8 +144,8 @@ describe('ComicList Reducer', () => {
       );
     });
 
-    it('should clear the loading flag', () => {
-      expect(state.loading).toBeFalsy();
+    it('should clear the busy flag', () => {
+      expect(state.busy).toBeFalsy();
     });
 
     it('should set the comic list', () => {
@@ -157,14 +176,14 @@ describe('ComicList Reducer', () => {
       state = comicListReducer(
         {
           ...state,
-          loading: true
+          busy: true
         },
         ComicListActions.loadFailure()
       );
     });
 
-    it('should clear the loading flag', () => {
-      expect(state.loading).toBeFalsy();
+    it('should clear the busy flag', () => {
+      expect(state.busy).toBeFalsy();
     });
   });
 

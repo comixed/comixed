@@ -47,6 +47,13 @@
       "delete-completed-processes": "Delete completed batch processes"
     }
   },
+  "comic-cover": {
+    "button": {
+      "download-file": "Download",
+      "next-issue": "Next Issue",
+      "previous-issue": "Prev Issue"
+    }
+  },
   "comic-detail-effects": {
     "load-comic": {
       "service-failure": "Unable to load comic..."
@@ -61,13 +68,6 @@
       "pages": "Pages",
       "publication": "Publication",
       "story": "Story"
-    }
-  },
-  "comic-cover": {
-    "button": {
-      "download-file": "Download",
-      "next-issue": "Next Issue",
-      "previous-issue": "Prev Issue"
     }
   },
   "comic-file-list-effects": {
@@ -90,7 +90,14 @@
     }
   },
   "comic-list-page": {
-    "page-title": "{pageType, select, READ{Read} UNSCRAPED{Unscraped} DUPLICATE{Duplicate} DELETED{Deleted} other{All} } Comics"
+    "label": {
+      "read-only": "Read",
+      "unread-only": "Unread"
+    },
+    "page-title": "{pageType, select, READ{Read} UNSCRAPED{Unscraped} DUPLICATE{Duplicate} DELETED{Deleted} other{All} } Comics",
+    "tooltip": {
+      "toggle-unread": "Toggle showing read/unread comics..."
+    }
   },
   "comic-pages-detail": {
     "label": {

@@ -28,12 +28,14 @@ import {
 import { MessageService } from '@openng/optimus-ui/api';
 import { ComicListPage } from '@app/library/pages/comic-list-page/comic-list-page';
 import { beforeEach, Mock } from 'vitest';
+import { RouterTestingHarness } from '@angular/router/testing';
 
 describe('ComicListPage', () => {
   const initialState = { [COMIC_LIST_FEATURE_KEY]: initialComicListState };
 
   let component: ComicListPage;
   let fixture: ComponentFixture<ComicListPage>;
+  let harness: RouterTestingHarness;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -41,8 +43,9 @@ describe('ComicListPage', () => {
       providers: [
         provideRouter([
           {
-            path: '*',
-            redirectTo: ''
+            path: 'testing/read',
+            component: ComicListPage,
+            data: { readState: true }
           }
         ]),
         provideLogger({ minLevel: LoggerLevel.OFF }),
@@ -52,6 +55,7 @@ describe('ComicListPage', () => {
       ]
     }).compileComponents();
 
+    harness = await RouterTestingHarness.create();
     fixture = TestBed.createComponent(ComicListPage);
     component = fixture.componentInstance;
     await fixture.whenStable();
@@ -71,6 +75,42 @@ describe('ComicListPage', () => {
 
     it('should update the page title', () => {
       expect(setTitleSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('read comics', () => {
+    beforeEach(async () => {
+      component = await harness.navigateByUrl('/testing/read', ComicListPage);
+    });
+
+    it('should set the page type', () => {
+      expect(component.getPageType()).toStrictEqual('READ');
+    });
+
+    it('should set the read state flag', () => {
+      expect(component.readState()).toBeTruthy();
+    });
+
+    it('should display the read toggle button', () => {
+      expect(
+        harness.routeNativeElement?.querySelector('#unread-comic-toggle')
+      ).not.toBeNull();
+    });
+
+    describe('clicking the read toggle button', () => {
+      let toggleSpy: Mock;
+
+      beforeEach(() => {
+        toggleSpy = vi.spyOn(component, 'onToggleUnreadOnly');
+        const button = harness.routeNativeElement?.querySelector(
+          '#unread-comic-toggle'
+        ) as HTMLButtonElement;
+        button.click();
+      });
+
+      it('should toggle the read flag', () => {
+        expect(toggleSpy).toHaveBeenCalled();
+      });
     });
   });
 });

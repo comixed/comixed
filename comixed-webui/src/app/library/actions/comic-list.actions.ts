@@ -44,6 +44,13 @@ export const ComicListActions = createActionGroup({
       sortBy: string;
       sortDirection: string;
     }>(),
+    LoadByReadState: props<{
+      unreadOnly: boolean;
+      pageSize: number;
+      pageIndex: number;
+      sortBy: string;
+      sortDirection: string;
+    }>(),
     LoadSuccess: props<{
       comicList: Comic[];
       totalCount: number;

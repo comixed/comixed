@@ -19,7 +19,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Card } from '@openng/optimus-ui/card';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { TableLazyLoadEvent, TableModule } from '@openng/optimus-ui/table';
 import { Breadcrumb } from '@openng/optimus-ui/breadcrumb';
@@ -39,12 +39,25 @@ import { QueryParameterService } from '@app/layout/services/query-parameter.serv
 import { ComicListActions } from '@app/library/actions/comic-list.actions';
 import {
   QUERY_PARAM_PAGE_INDEX,
-  QUERY_PARAM_PAGE_SIZE
+  QUERY_PARAM_PAGE_SIZE,
+  QUERY_PARAM_UNREAD_ONLY
 } from '@app/library/library-constants';
 import { ComicTable } from '@app/library/components/comic-table/comic-table';
+import { ToggleButton } from '@openng/optimus-ui/togglebutton';
+import { FormsModule } from '@angular/forms';
+import { Tooltip } from '@openng/optimus-ui/tooltip';
 
 @Component({
-  imports: [Card, TableModule, Breadcrumb, ComicTable],
+  imports: [
+    Card,
+    TableModule,
+    Breadcrumb,
+    ComicTable,
+    ToggleButton,
+    FormsModule,
+    TranslatePipe,
+    Tooltip
+  ],
   selector: 'app-comic-list-page',
   styleUrl: './comic-list-page.scss',
   templateUrl: './comic-list-page.html'
@@ -59,8 +72,6 @@ export class ComicListPage {
   readonly store = inject(Store);
   readonly comicListBusy = this.store.selectSignal(selectComicListBusy);
   readonly comicListEntries = this.store.selectSignal(selectComicList);
-  readonly comicListFirst = signal(0);
-  readonly comicListRows = signal(10);
   readonly comicListTotalCount = this.store.selectSignal(
     selectComicListTotalCount
   );
@@ -73,12 +84,15 @@ export class ComicListPage {
   readonly coverYearList = this.store.selectSignal(
     selectComicListCoverYearList
   );
+  readonly comicListFirst = signal(0);
+  readonly comicListRows = signal(10);
+  readonly readState = signal(false);
   readonly trail = signal<MenuItem[]>([]);
 
   readonly home: MenuItem = { icon: 'pi pi-home', routerLink: ['/'] };
 
   allComics = true;
-  readComics = false;
+  readonly unreadComics = signal(false);
   unscrapedComics = false;
   duplicateComics = false;
   deletedComics = false;
@@ -87,12 +101,12 @@ export class ComicListPage {
     this.activatedRoute.data.subscribe({
       next: data => {
         this.logger.debug('Activated route data updated:', data);
-        this.readComics = data['readOnly'] === true;
+        this.readState.set(data['readState'] === true);
         this.unscrapedComics = data['unscraped'] === true;
         this.duplicateComics = data['duplicates'] === true;
         this.deletedComics = data['deleted'] === true;
         this.allComics =
-          !this.readComics &&
+          !this.unreadComics() &&
           !this.unscrapedComics &&
           !this.duplicateComics &&
           !this.deletedComics;
@@ -102,29 +116,44 @@ export class ComicListPage {
       next: params => {
         const page = +params[QUERY_PARAM_PAGE_INDEX] || 0;
         const size = +params[QUERY_PARAM_PAGE_SIZE] || 10;
+        if (params[QUERY_PARAM_UNREAD_ONLY]) {
+          this.unreadComics.set(params[QUERY_PARAM_UNREAD_ONLY] === `${true}`);
+        }
         this.comicListFirst.set(page * size);
         this.comicListRows.set(size);
-        this.store.dispatch(
-          ComicListActions.loadByFilters({
-            pageIndex: page,
-            pageSize: size,
-            coverYear: null,
-            coverMonth: null,
-            archiveType: null,
-            comicType: null,
-            comicState: null,
-            selected: false,
-            missing: false,
-            unscrapedState: this.unscrapedComics,
-            searchText: null,
-            publisher: null,
-            series: null,
-            volume: null,
-            pageCount: null,
-            sortBy: '',
-            sortDirection: ''
-          })
-        );
+        if (this.readState()) {
+          this.store.dispatch(
+            ComicListActions.loadByReadState({
+              unreadOnly: this.unreadComics(),
+              pageIndex: page,
+              pageSize: size,
+              sortBy: '',
+              sortDirection: ''
+            })
+          );
+        } else {
+          this.store.dispatch(
+            ComicListActions.loadByFilters({
+              pageIndex: page,
+              pageSize: size,
+              coverYear: null,
+              coverMonth: null,
+              archiveType: null,
+              comicType: null,
+              comicState: null,
+              selected: false,
+              missing: false,
+              unscrapedState: this.unscrapedComics,
+              searchText: null,
+              publisher: null,
+              series: null,
+              volume: null,
+              pageCount: null,
+              sortBy: '',
+              sortDirection: ''
+            })
+          );
+        }
       }
     });
     this.translateService.onLangChange.subscribe({
@@ -133,8 +162,14 @@ export class ComicListPage {
     this.doLoadTranslations();
   }
 
+  onToggleUnreadOnly(unreadOnly: boolean) {
+    this.queryParameterService.updateQueryParam([
+      { name: QUERY_PARAM_UNREAD_ONLY, value: `${unreadOnly}` }
+    ]);
+  }
+
   getPageType(): string {
-    if (this.readComics) {
+    if (this.readState()) {
       return 'READ';
     }
     if (this.unscrapedComics) {

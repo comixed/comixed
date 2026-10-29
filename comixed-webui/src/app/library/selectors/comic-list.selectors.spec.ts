@@ -52,19 +52,19 @@ describe('ComicList Selectors', () => {
     });
   });
 
-  describe('the loading flag', () => {
-    it('should return true when loading', () => {
+  describe('the busy flag', () => {
+    it('should return true when busy', () => {
       expect(
         selectComicListBusy({
-          [COMIC_LIST_FEATURE_KEY]: { ...state, loading: true }
+          [COMIC_LIST_FEATURE_KEY]: { ...state, busy: true }
         })
       ).toBeTruthy();
     });
 
-    it('should return false when not loading', () => {
+    it('should return false when not busy', () => {
       expect(
         selectComicListBusy({
-          [COMIC_LIST_FEATURE_KEY]: { ...state, loading: false }
+          [COMIC_LIST_FEATURE_KEY]: { ...state, busy: false }
         })
       ).toBeFalsy();
     });

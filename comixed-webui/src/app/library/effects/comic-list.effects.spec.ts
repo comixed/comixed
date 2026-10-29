@@ -106,7 +106,7 @@ describe.todo('ComicListEffects', () => {
       });
 
       actions$ = hot('-a', { a: action });
-      const loadByFilterSpy = vi
+      const loadSpy = vi
         .spyOn(libraryService, 'loadComicListByFilter')
         .mockReturnValue(of(serviceResponse));
       expect(
@@ -114,7 +114,7 @@ describe.todo('ComicListEffects', () => {
           tap(response => expect(response).toStrictEqual(outcome))
         )
       ).toSatisfyOnFlush(() => {
-        expect(loadByFilterSpy).toHaveBeenCalledWith({
+        expect(loadSpy).toHaveBeenCalledWith({
           pageSize: 10,
           pageIndex: 5,
           coverYear: null,
@@ -160,7 +160,7 @@ describe.todo('ComicListEffects', () => {
       const outcome = ComicListActions.loadFailure();
 
       actions$ = hot('-a', { a: action });
-      const loadByFilterSpy = vi
+      const loadSpy = vi
         .spyOn(libraryService, 'loadComicListByFilter')
         .mockReturnValue(throwError(() => serviceResponse));
       const errorSpy = vi.spyOn(alertService, 'error');
@@ -169,7 +169,7 @@ describe.todo('ComicListEffects', () => {
           tap(response => expect(response).toStrictEqual(outcome))
         )
       ).toSatisfyOnFlush(() => {
-        expect(loadByFilterSpy).toHaveBeenCalledWith({
+        expect(loadSpy).toHaveBeenCalledWith({
           pageSize: 10,
           pageIndex: 5,
           coverYear: null,
@@ -215,7 +215,7 @@ describe.todo('ComicListEffects', () => {
       const outcome = ComicListActions.loadFailure();
 
       actions$ = hot('-a', { a: action });
-      const loadByFilterSpy = vi
+      const loadSpy = vi
         .spyOn(libraryService, 'loadComicListByFilter')
         .mockThrow(new Error());
       const errorSpy = vi.spyOn(alertService, 'error');
@@ -224,7 +224,7 @@ describe.todo('ComicListEffects', () => {
           tap(response => expect(response).toStrictEqual(outcome))
         )
       ).toSatisfyOnFlush(() => {
-        expect(loadByFilterSpy).toHaveBeenCalledWith({
+        expect(loadSpy).toHaveBeenCalledWith({
           pageSize: 10,
           pageIndex: 5,
           coverYear: null,
@@ -240,6 +240,113 @@ describe.todo('ComicListEffects', () => {
           series: '',
           volume: '',
           pageCount: null,
+          sortBy: '',
+          sortDirection: ''
+        });
+        expect(errorSpy).toHaveBeenCalled();
+      });
+    });
+  });
+
+  describe('loading a list of comics by read state', () => {
+    it('should fire an action on success', () => {
+      const serviceResponse = {
+        comics: TEST_COMIC_LIST,
+        totalCount: TEST_TOTAL_COUNT,
+        filteredCount: TEST_FILTER_COUNT,
+        coverMonths: TEST_COVER_MONTH_LIST,
+        coverYears: TEST_COVER_YEAR_LIST
+      } as LoadComicListResponse;
+      const action = ComicListActions.loadByReadState({
+        unreadOnly: true,
+        pageSize: 10,
+        pageIndex: 5,
+        sortBy: '',
+        sortDirection: ''
+      });
+      const outcome = ComicListActions.loadSuccess({
+        comicList: TEST_COMIC_LIST,
+        totalCount: TEST_TOTAL_COUNT,
+        filterCount: TEST_FILTER_COUNT,
+        coverMonthList: TEST_COVER_MONTH_LIST,
+        coverYearList: TEST_COVER_YEAR_LIST
+      });
+
+      actions$ = hot('-a', { a: action });
+      const loadSpy = vi
+        .spyOn(libraryService, 'loadByReadState')
+        .mockReturnValue(of(serviceResponse));
+      expect(
+        effects.loadByReadState$.pipe(
+          tap(response => expect(response).toStrictEqual(outcome))
+        )
+      ).toSatisfyOnFlush(() => {
+        expect(loadSpy).toHaveBeenCalledWith({
+          unreadOnly: true,
+          pageSize: 10,
+          pageIndex: 5,
+          sortBy: '',
+          sortDirection: ''
+        });
+      });
+    });
+
+    it('should fire an action on service failure', () => {
+      const serviceResponse = new HttpErrorResponse({});
+      const action = ComicListActions.loadByReadState({
+        unreadOnly: true,
+        pageSize: 10,
+        pageIndex: 5,
+        sortBy: '',
+        sortDirection: ''
+      });
+      const outcome = ComicListActions.loadFailure();
+
+      actions$ = hot('-a', { a: action });
+      const loadSpy = vi
+        .spyOn(libraryService, 'loadByReadState')
+        .mockReturnValue(throwError(() => serviceResponse));
+      const errorSpy = vi.spyOn(alertService, 'error');
+      expect(
+        effects.loadByReadState$.pipe(
+          tap(response => expect(response).toStrictEqual(outcome))
+        )
+      ).toSatisfyOnFlush(() => {
+        expect(loadSpy).toHaveBeenCalledWith({
+          unreadOnly: true,
+          pageSize: 10,
+          pageIndex: 5,
+          sortBy: '',
+          sortDirection: ''
+        });
+        expect(errorSpy).toHaveBeenCalled();
+      });
+    });
+
+    it('should fire an action on general failure', () => {
+      const action = ComicListActions.loadByReadState({
+        unreadOnly: true,
+        pageSize: 10,
+        pageIndex: 5,
+        sortBy: '',
+        sortDirection: ''
+      });
+      const outcome = ComicListActions.loadFailure();
+
+      actions$ = hot('-a', { a: action });
+      const loadSpy = vi
+        .spyOn(libraryService, 'loadByReadState')
+        .mockThrow(new Error());
+      const errorSpy = vi.spyOn(alertService, 'error');
+      expect(
+        effects.loadByReadState$.pipe(
+          tap(response => expect(response).toStrictEqual(outcome))
+        )
+      ).toSatisfyOnFlush(() => {
+        expect(loadSpy).toHaveBeenCalledWith({
+          unreadOnly: true,
+          pageSize: 10,
+          pageIndex: 5,
           sortBy: '',
           sortDirection: ''
         });

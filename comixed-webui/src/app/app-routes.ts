@@ -85,7 +85,7 @@ export const appRoutes: Routes = [
   {
     path: 'library/read',
     component: ComicListPage,
-    data: { readonly: true },
+    data: { readState: true },
     canActivate: [readerGuard]
   },
   {

@@ -27,6 +27,8 @@ export const SEND_COMIC_FILES_URL = `${API_ROOT_URL}/files/import`;
 export const LOAD_LIBRARY_STATE_URL = `${API_ROOT_URL}/library/state`;
 export const LOAD_SELECTED_COMICS_URL = `${API_ROOT_URL}/comics/selected`;
 export const LOAD_COMICS_BY_FILTER_URL = `${API_ROOT_URL}/comics/filtered`;
+export const LOAD_UNREAD_COMICS_URL = `${API_ROOT_URL}/comics/unread`;
+export const LOAD_READ_COMICS_URL = `${API_ROOT_URL}/comics/read`;
 
 export const LOAD_COMIC_URL = `${API_ROOT_URL}/comics/\${comicId}`;
 export const GET_COMIC_COVER_URL = `${API_ROOT_URL}/comics/\${id}/cover/content`;
@@ -44,6 +46,7 @@ export const LOAD_COLLECTION_ENTRIES_URL = `${API_ROOT_URL}/collections/\${tagTy
 export const QUERY_PARAM_COMIC_DETAIL_TAB = 'comic-detail-tab';
 export const QUERY_PARAM_PAGE_INDEX = 'index';
 export const QUERY_PARAM_PAGE_SIZE = 'size';
+export const QUERY_PARAM_UNREAD_ONLY = 'unread';
 
 // messaging
 export const REMOTE_LIBRARY_STATE_TOPIC = '/topic/remote-library.update';

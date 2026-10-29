@@ -29,7 +29,7 @@ const selectComicListState = createFeatureSelector<ComicListState>(
 
 export const selectComicListBusy = createSelector(
   selectComicListState,
-  state => state.loading
+  state => state.busy
 );
 
 export const selectComicList = createSelector(selectComicListState, state =>

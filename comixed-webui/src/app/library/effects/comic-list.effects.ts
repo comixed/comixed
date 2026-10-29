@@ -32,6 +32,7 @@ export class ComicListEffects {
   readonly translateService = inject(TranslateService);
   readonly libraryService = inject(LibraryService);
   private actions$ = inject(Actions);
+
   loadByFilters$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(ComicListActions.loadByFilters),
@@ -73,6 +74,51 @@ export class ComicListEffects {
               this.alertService.error(
                 this.translateService.instant(
                   'comic-list-effects.load-by-filter.service-failure'
+                )
+              );
+              return of(ComicListActions.loadFailure());
+            })
+          )
+      ),
+      catchError(error => {
+        this.logger.error('General failure:', error);
+        this.alertService.error(
+          this.translateService.instant('app.effects.general-failure')
+        );
+        return of(ComicListActions.loadFailure());
+      })
+    );
+  });
+
+  loadByReadState$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(ComicListActions.loadByReadState),
+      tap(action => this.logger.debug('Loading comics by read state:', action)),
+      switchMap(action =>
+        this.libraryService
+          .loadByReadState({
+            unreadOnly: action.unreadOnly,
+            pageSize: action.pageSize,
+            pageIndex: action.pageIndex,
+            sortBy: action.sortBy,
+            sortDirection: action.sortDirection
+          })
+          .pipe(
+            tap(response => this.logger.debug('Response received:', response)),
+            map(response =>
+              ComicListActions.loadSuccess({
+                comicList: response.comics,
+                totalCount: response.totalCount,
+                filterCount: response.filteredCount,
+                coverMonthList: response.coverMonths,
+                coverYearList: response.coverYears
+              })
+            ),
+            catchError(error => {
+              this.logger.error('Service failure:', error);
+              this.alertService.error(
+                this.translateService.instant(
+                  'comic-list-effects.load-by-read-state.service-failure'
                 )
               );
               return of(ComicListActions.loadFailure());
