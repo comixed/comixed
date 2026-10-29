@@ -30,12 +30,14 @@ import {
 import { validatePasswordsMatch } from '@app/account/account-functions';
 import { Store } from '@ngrx/store';
 import { selectExistingAdminAccountExists } from '@app/account/selectors/existing-admin-account.selectors';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Card } from '@openng/optimus-ui/card';
 import { Button } from '@openng/optimus-ui/button';
 import { InputText } from '@openng/optimus-ui/inputtext';
 import { IftaLabel } from '@openng/optimus-ui/iftalabel';
 import { ExistingAdminAccountActions } from '@app/account/actions/existing-admin-account.actions';
+import { TitleService } from '@app/layout/services/title-service';
+import { ConfirmationService } from '@openng/optimus-ui/api';
 
 @Component({
   imports: [
@@ -56,6 +58,9 @@ export class InitialAccountPage {
   readonly router = inject(Router);
   readonly accountService = inject(AccountService);
   readonly formBuilder = inject(FormBuilder);
+  readonly titleService = inject(TitleService);
+  readonly confirmationService = inject(ConfirmationService);
+  readonly translateService = inject(TranslateService);
 
   initialAdminForm!: FormGroup;
 
@@ -84,6 +89,10 @@ export class InitialAccountPage {
       },
       { validator: validatePasswordsMatch('password', 'verifyPassword') }
     );
+    this.translateService.onLangChange.subscribe({
+      next: () => this.doLoadTranslations()
+    });
+    this.doLoadTranslations();
     this.logger.trace('Checking for existing accounts');
     this.accountService.checkForAdminAccount();
   }
@@ -93,11 +102,28 @@ export class InitialAccountPage {
   }
 
   onSubmitForm(): void {
-    this.logger.trace('Sending initial admin account details');
     const email = this.initialAdminForm.controls['email'].value;
     const password = this.initialAdminForm.controls['password'].value;
-    this.store.dispatch(
-      ExistingAdminAccountActions.create({ email, password })
+    this.confirmationService.confirm({
+      header: this.translateService.instant(
+        'initial-account-page.create.confirmation-title'
+      ),
+      message: this.translateService.instant(
+        'initial-account-page.create.confirmation-title',
+        { email }
+      ),
+      accept: () => {
+        this.logger.trace('Sending initial admin account details');
+        this.store.dispatch(
+          ExistingAdminAccountActions.create({ email, password })
+        );
+      }
+    });
+  }
+
+  private doLoadTranslations() {
+    this.titleService.setTitle(
+      this.translateService.instant('initial-account-page.page-title')
     );
   }
 }

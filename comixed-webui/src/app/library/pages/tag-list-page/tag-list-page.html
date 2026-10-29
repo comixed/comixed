@@ -2,17 +2,21 @@
   <ng-template #header>
     <p-breadcrumb [model]="trail()" [home]="home" />
     <h2>
-      {{
-        "tag-list-page.page-title" | translate: { tagType: tagStore.tagType() }
-      }}
+      {{ "tag-list-page.page-title" | translate: { tagType: tagType() } }}
     </h2>
   </ng-template>
 
   <p-table
-    [value]="tagStore.entries()"
-    stripedRows
+    [value]="tagListEntries()"
+    [lazy]="true"
+    (onLazyLoad)="onLoad($event)"
+    dataKey="tagValue"
     [paginator]="true"
-    [rows]="tagStore.size()"
+    stripedRows
+    [first]="tagListFirst()"
+    [rows]="tagListRows()"
+    [totalRecords]="tagListTotal()"
+    [loading]="tagListBusy()"
   >
     <ng-template #header>
       <tr>

@@ -28,7 +28,7 @@ export interface SeriesListState extends EntityState<Series> {
   total: number;
 }
 
-export const seriesListAdaptor: EntityAdapter<Series> =
+export const seriesListAdapter: EntityAdapter<Series> =
   createEntityAdapter<Series>({
     selectId: series => series.name,
     sortComparer: (left, right) =>
@@ -38,7 +38,7 @@ export const seriesListAdaptor: EntityAdapter<Series> =
   });
 
 export const initialSeriesListState: SeriesListState =
-  seriesListAdaptor.getInitialState({
+  seriesListAdapter.getInitialState({
     busy: false,
     total: 0
   });
@@ -47,7 +47,7 @@ export const seriesListReducer = createReducer(
   initialSeriesListState,
   on(SeriesListActions.load, state => ({ ...state, busy: true })),
   on(SeriesListActions.loadSuccess, (state, action) => {
-    return seriesListAdaptor.setAll(action.entries, {
+    return seriesListAdapter.setAll(action.entries, {
       ...state,
       busy: false,
       total: action.total

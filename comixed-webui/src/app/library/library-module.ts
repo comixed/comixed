@@ -36,6 +36,8 @@ import { publisherSeriesListsFeature } from '@app/library/reducers/publisher-ser
 import { PublisherSeriesListEffects } from '@app/library/effects/publisher-series-list.effects';
 import { PublisherComicListEffects } from '@app/library/effects/publisher-comic-list.effects';
 import { publisherComicListsFeature } from '@app/library/reducers/publisher-comic-list.reducer';
+import { tagListsFeature } from '@app/library/reducers/tag-list.reducer';
+import { TagListEffects } from '@app/library/effects/tag-list.effects';
 
 @NgModule({
   declarations: [],
@@ -47,6 +49,7 @@ import { publisherComicListsFeature } from '@app/library/reducers/publisher-comi
     StoreModule.forFeature(publisherSeriesListsFeature),
     StoreModule.forFeature(publisherComicListsFeature),
     StoreModule.forFeature(seriesListFeature),
+    StoreModule.forFeature(tagListsFeature),
     StoreModule.forFeature(comicDetailFeature),
     StoreModule.forFeature(comicListFeature),
     EffectsModule.forFeature([
@@ -56,6 +59,7 @@ import { publisherComicListsFeature } from '@app/library/reducers/publisher-comi
       PublisherSeriesListEffects,
       PublisherComicListEffects,
       SeriesListEffects,
+      TagListEffects,
       ComicDetailEffects,
       ComicListEffects
     ])

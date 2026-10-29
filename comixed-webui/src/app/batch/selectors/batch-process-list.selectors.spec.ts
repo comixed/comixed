@@ -18,7 +18,7 @@
 
 import {
   BATCH_PROCESS_LIST_FEATURE_KEY,
-  batchProcessListAdaptor,
+  batchProcessListAdapter,
   BatchProcessListState,
   initialBatchProcessListState
 } from '@app/batch/reducers/batch-process-list.reducer';
@@ -36,7 +36,7 @@ describe('BatchProcessList Selectors', () => {
   let state: BatchProcessListState;
 
   beforeEach(() => {
-    state = batchProcessListAdaptor.setAll(
+    state = batchProcessListAdapter.setAll(
       TEST_BATCH_PROCESS_LIST,
       initialBatchProcessListState
     );

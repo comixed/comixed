@@ -19,7 +19,7 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import {
   COMIC_FILE_LIST_FEATURE_KEY,
-  comicFileListAdaptor,
+  comicFileListAdapter,
   ComicFileListState
 } from '@app/library/reducers/comic-file-list.reducer';
 
@@ -35,7 +35,7 @@ export const selectComicFileListBusy = createSelector(
 export const selectComicFileList = createSelector(
   selectComicFileListState,
   state =>
-    comicFileListAdaptor
+    comicFileListAdapter
       .getSelectors()
       .selectAll(state)
       .map(entry => entry.files)

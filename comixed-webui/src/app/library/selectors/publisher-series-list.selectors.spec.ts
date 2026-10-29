@@ -21,7 +21,7 @@ import { beforeEach } from 'vitest';
 import {
   initialPublisherSeriesListState,
   PUBLISHER_SERIES_LIST_FEATURE_KEY,
-  publisherSeriesListAdaptor,
+  publisherSeriesListAdapter,
   PublisherSeriesListState
 } from '@app/library/reducers/publisher-series-list.reducer';
 import {
@@ -37,7 +37,7 @@ describe('', () => {
   let state: PublisherSeriesListState;
 
   beforeEach(() => {
-    state = publisherSeriesListAdaptor.setAll(TEST_SERIES_LIST, {
+    state = publisherSeriesListAdapter.setAll(TEST_SERIES_LIST, {
       ...initialPublisherSeriesListState,
       total: TEST_TOTAL,
       loading: false

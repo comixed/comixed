@@ -21,8 +21,33 @@ import { TagListPage } from './tag-list-page';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideRouter } from '@angular/router';
+import { provideMockStore } from '@ngrx/store/testing';
+import {
+  initialTagListState,
+  TAG_LIST_FEATURE_KEY,
+  tagListAdapter
+} from '@app/library/reducers/tag-list.reducer';
+import {
+  COLLECTION_ENTRY_1,
+  COLLECTION_ENTRY_2,
+  COLLECTION_ENTRY_3
+} from '@app/library/library-fixtures';
+import { beforeEach, Mock } from 'vitest';
 
 describe('TagListPage', () => {
+  const TEST_COLLECTION_LIST = [
+    COLLECTION_ENTRY_1,
+    COLLECTION_ENTRY_2,
+    COLLECTION_ENTRY_3
+  ];
+  const TEST_TOTAL = 417;
+  const initialState = {
+    [TAG_LIST_FEATURE_KEY]: tagListAdapter.setAll(TEST_COLLECTION_LIST, {
+      ...initialTagListState,
+      total: TEST_TOTAL
+    })
+  };
+
   let component: TagListPage;
   let fixture: ComponentFixture<TagListPage>;
 
@@ -37,7 +62,8 @@ describe('TagListPage', () => {
           }
         ]),
         provideLogger({ minLevel: LoggerLevel.OFF }),
-        provideTranslateService()
+        provideTranslateService(),
+        provideMockStore({ initialState })
       ]
     }).compileComponents();
 
@@ -48,5 +74,18 @@ describe('TagListPage', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('changing the language', () => {
+    let setTitleSpy: Mock;
+
+    beforeEach(() => {
+      setTitleSpy = vi.spyOn(component.titleService, 'setTitle');
+      component.translateService.use('fr');
+    });
+
+    it('should update the page title', () => {
+      expect(setTitleSpy).toHaveBeenCalled();
+    });
   });
 });

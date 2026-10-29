@@ -28,14 +28,14 @@ export interface ComicFileListState extends EntityState<ComicFileGroup> {
   currentPath: string;
 }
 
-export const comicFileListAdaptor: EntityAdapter<ComicFileGroup> =
+export const comicFileListAdapter: EntityAdapter<ComicFileGroup> =
   createEntityAdapter<ComicFileGroup>({
     selectId: group => group.directory,
     sortComparer: (left, right) => left.directory.localeCompare(right.directory)
   });
 
 export const initialComicFileListState: ComicFileListState =
-  comicFileListAdaptor.getInitialState({
+  comicFileListAdapter.getInitialState({
     busy: false,
     currentPath: ''
   });
@@ -47,7 +47,7 @@ export const comicFileListReducer = createReducer(
     busy: true
   })),
   on(ComicFileListActions.loadFromSessionSuccess, (state, action) => {
-    return comicFileListAdaptor.setAll(action.groups, {
+    return comicFileListAdapter.setAll(action.groups, {
       ...state,
       busy: false,
       currentPath: ''
@@ -59,7 +59,7 @@ export const comicFileListReducer = createReducer(
   })),
   on(ComicFileListActions.loadFromDisk, state => ({ ...state, busy: true })),
   on(ComicFileListActions.loadFromDiskSuccess, (state, action) => {
-    return comicFileListAdaptor.setAll(action.groups, {
+    return comicFileListAdapter.setAll(action.groups, {
       ...state,
       busy: false,
       currentPath: ''
@@ -71,7 +71,7 @@ export const comicFileListReducer = createReducer(
   })),
   on(ComicFileListActions.select, state => ({ ...state, busy: true })),
   on(ComicFileListActions.selectSuccess, (state, action) => {
-    return comicFileListAdaptor.setAll(action.groups, {
+    return comicFileListAdapter.setAll(action.groups, {
       ...state,
       busy: false
     });
@@ -79,7 +79,7 @@ export const comicFileListReducer = createReducer(
   on(ComicFileListActions.selectFailure, state => ({ ...state, busy: false })),
   on(ComicFileListActions.import, state => ({ ...state, busy: true })),
   on(ComicFileListActions.importSuccess, state => {
-    return comicFileListAdaptor.setAll([], {
+    return comicFileListAdapter.setAll([], {
       ...state,
       busy: false,
       currentPath: ''

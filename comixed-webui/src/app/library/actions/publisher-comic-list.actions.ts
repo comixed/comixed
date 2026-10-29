@@ -20,7 +20,7 @@ import { createActionGroup, emptyProps, props } from '@ngrx/store';
 import { Comic } from '@app/library/models/comic';
 
 export const PublisherComicListActions = createActionGroup({
-  source: 'PublisherComicList/API',
+  source: 'Publisher Comic List',
   events: {
     Load: props<{
       publisherName: string;

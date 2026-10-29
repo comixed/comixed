@@ -19,7 +19,7 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import {
   PUBLISHER_COMIC_LIST_FEATURE_KEY,
-  publisherComicListAdaptor,
+  publisherComicListAdapter,
   PublisherComicListState
 } from '@app/library/reducers/publisher-comic-list.reducer';
 
@@ -35,7 +35,7 @@ export const selectPublisherComicListBusy = createSelector(
 
 export const selectPublisherComicListEntries = createSelector(
   selectPublisherComicListState,
-  state => publisherComicListAdaptor.getSelectors().selectAll(state)
+  state => publisherComicListAdapter.getSelectors().selectAll(state)
 );
 
 export const selectPublisherComicListTotal = createSelector(

@@ -19,7 +19,7 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import {
   COMIC_LIST_FEATURE_KEY,
-  comicListAdaptor,
+  comicListAdapter,
   ComicListState
 } from '@app/library/reducers/comic-list.reducer';
 
@@ -33,7 +33,7 @@ export const selectComicListBusy = createSelector(
 );
 
 export const selectComicList = createSelector(selectComicListState, state =>
-  comicListAdaptor.getSelectors().selectAll(state)
+  comicListAdapter.getSelectors().selectAll(state)
 );
 
 export const selectComicListTotalCount = createSelector(

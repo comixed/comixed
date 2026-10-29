@@ -22,7 +22,7 @@ import { PublisherListActions } from '@app/library/actions/publisher-list.action
 import { PUBLISHER_1 } from '@app/library/library-fixtures';
 import {
   initialPublisherListState,
-  publisherListAdaptor,
+  publisherListAdapter,
   publisherListReducer,
   PublisherListState
 } from '@app/library/reducers/publisher-list.reducer';
@@ -48,7 +48,7 @@ describe('PublisherList Reducer', () => {
 
     it('should have no publishers', () => {
       expect(
-        publisherListAdaptor.getSelectors().selectAll(state)
+        publisherListAdapter.getSelectors().selectAll(state)
       ).toStrictEqual([]);
     });
 
@@ -78,7 +78,7 @@ describe('PublisherList Reducer', () => {
     describe('success', () => {
       beforeEach(() => {
         state = publisherListReducer(
-          publisherListAdaptor.setAll([], {
+          publisherListAdapter.setAll([], {
             ...state,
             busy: true,
             total: 0
@@ -96,7 +96,7 @@ describe('PublisherList Reducer', () => {
 
       it('should set the publisher list', () => {
         expect(
-          publisherListAdaptor.getSelectors().selectAll(state)
+          publisherListAdapter.getSelectors().selectAll(state)
         ).toStrictEqual(TEST_PUBLISHER_LIST);
       });
 

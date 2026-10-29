@@ -154,7 +154,7 @@ describe('CollectionService', () => {
     httpController.verify();
   });
 
-  it('loading the series list', () => {
+  it('should load the series list', () => {
     const serverResponse = {
       series: TEST_SERIES_LIST,
       totalSeries: TEST_COLLECTION_TOTAL_COUNT
@@ -185,7 +185,7 @@ describe('CollectionService', () => {
     httpController.verify();
   });
 
-  it('loading series detail', () => {
+  it('should load series detail', () => {
     const serverResponse = TEST_ISSUE_LIST;
 
     service
@@ -209,42 +209,39 @@ describe('CollectionService', () => {
     httpController.verify();
   });
 
-  describe('loading the collection entry list', () => {
-    it('success', async () => {
-      const updateStateSpy = vi.spyOn(service.tagStore, 'update');
-      const serverResponse = {
-        entries: TEST_COLLECTION_ENTRY_LIST,
-        totalEntries: TEST_COLLECTION_TOTAL_COUNT
-      } as LoadCollectionEntriesResponse;
+  it('should load the collection entry list', () => {
+    const serverResponse = {
+      entries: TEST_COLLECTION_ENTRY_LIST,
+      totalEntries: TEST_COLLECTION_TOTAL_COUNT
+    } as LoadCollectionEntriesResponse;
 
-      service.loadCollectionEntryList({
+    service
+      .loadCollectionEntryList({
         tagType: COLLECTION_ENTRY_1.tagType,
         searchText: TEST_SEARCH_TEXT,
         index: TEST_INDEX,
         size: TEST_SIZE,
         sortBy: TEST_SORT_BY,
         sortDirection: TEST_SORT_DIRECTION
+      })
+      .subscribe({
+        next: response => expect(response).toStrictEqual(serverResponse)
       });
 
-      const req = httpController.expectOne(
-        interpolate(LOAD_COLLECTION_ENTRIES_URL, {
-          tagType: COLLECTION_ENTRY_1.tagType
-        })
-      );
-      expect(req.request.method).toEqual('POST');
-      expect(req.request.body).toEqual({
-        searchText: TEST_SEARCH_TEXT,
-        pageIndex: TEST_INDEX,
-        pageSize: TEST_SIZE,
-        sortBy: TEST_SORT_BY,
-        sortDirection: TEST_SORT_DIRECTION
-      } as LoadCollectionEntriesRequest);
-      req.flush(serverResponse);
-      httpController.verify();
-      expect(updateStateSpy).toHaveBeenCalledWith(
-        TEST_COLLECTION_ENTRY_LIST,
-        TEST_COLLECTION_TOTAL_COUNT
-      );
-    });
+    const req = httpController.expectOne(
+      interpolate(LOAD_COLLECTION_ENTRIES_URL, {
+        tagType: COLLECTION_ENTRY_1.tagType
+      })
+    );
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      searchText: TEST_SEARCH_TEXT,
+      pageIndex: TEST_INDEX,
+      pageSize: TEST_SIZE,
+      sortBy: TEST_SORT_BY,
+      sortDirection: TEST_SORT_DIRECTION
+    } as LoadCollectionEntriesRequest);
+    req.flush(serverResponse);
+    httpController.verify();
   });
 });

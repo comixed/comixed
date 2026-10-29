@@ -20,7 +20,7 @@ import { createActionGroup, emptyProps, props } from '@ngrx/store';
 import { Series } from '@app/library/models/series';
 
 export const SeriesListActions = createActionGroup({
-  source: 'SeriesList/API',
+  source: 'Series List',
   events: {
     Load: props<{
       searchText: string;

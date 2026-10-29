@@ -24,7 +24,6 @@ import { interpolate } from '@app/app-functions';
 import { LoadPublisherListResponse } from '@app/library/models/net/load-publisher-list-response';
 import { LoadSeriesListRequest } from '@app/library/models/net/load-series-list-request';
 import { LoadSeriesListResponse } from '@app/library/models/net/load-series-list-response';
-import { TagStore } from '@app/collections/stores/tag-store';
 import { ComicTagType } from '@app/library/models/comic-tag-type';
 import { LoadCollectionEntriesRequest } from '@app/library/models/net/load-collection-entries-request';
 import { LoadCollectionEntriesResponse } from '@app/library/models/net/load-collection-entries-response';
@@ -45,7 +44,6 @@ import { LoadPublisherSeriesListRequest } from '@app/library/models/net/load-pub
 export class CollectionService {
   readonly logger = inject(LoggerService);
   readonly http = inject(HttpClient);
-  readonly tagStore = inject(TagStore);
 
   loadPublisherList(args: {
     searchText: string;
@@ -54,7 +52,7 @@ export class CollectionService {
     sortBy: string;
     sortDirection: string;
   }): Observable<LoadPublisherListResponse> {
-    this.logger.trace('Loading publisher list:', args);
+    this.logger.debug('Loading publisher list:', args);
     return this.http.post<LoadPublisherListResponse>(
       interpolate(LOAD_PUBLISHER_LIST_URL),
       {
@@ -74,7 +72,7 @@ export class CollectionService {
     sortBy: string;
     sortDirection: string;
   }): Observable<LoadPublisherSeriesListResponse> {
-    this.logger.trace('Loading publisher detail:', args);
+    this.logger.debug('Loading publisher detail:', args);
 
     return this.http.post<LoadPublisherSeriesListResponse>(
       interpolate(LOAD_PUBLISHER_SERIES_LIST_URL, { publisherName: args.name }),
@@ -94,7 +92,7 @@ export class CollectionService {
     sortBy: string;
     sortDirection: string;
   }): Observable<LoadSeriesListResponse> {
-    this.logger.trace('Loading series list:', args);
+    this.logger.debug('Loading series list:', args);
     return this.http.post<LoadSeriesListResponse>(
       interpolate(LOAD_SERIES_LIST_URL),
       {
@@ -112,7 +110,7 @@ export class CollectionService {
     seriesName: string;
     volume: string;
   }): Observable<Issue[]> {
-    this.logger.trace('Loading series detail:', args);
+    this.logger.debug('Loading series detail:', args);
     return this.http.post<Issue[]>(interpolate(LOAD_SERIES_DETAIL_URL), {
       publisher: args.publisherName,
       name: args.seriesName,
@@ -127,26 +125,17 @@ export class CollectionService {
     size: number;
     sortBy: string;
     sortDirection: string;
-  }): void {
-    this.logger.trace('Loading collection entry list:', args);
-    this.http
-      .post<LoadCollectionEntriesResponse>(
-        interpolate(LOAD_COLLECTION_ENTRIES_URL, { tagType: args.tagType }),
-        {
-          searchText: args.searchText,
-          pageIndex: args.index,
-          pageSize: args.size,
-          sortBy: args.sortBy,
-          sortDirection: args.sortDirection
-        } as LoadCollectionEntriesRequest
-      )
-      .subscribe({
-        next: response => {
-          this.logger.debug('Collection entries received:', response);
-          this.tagStore.update(response.entries, response.totalEntries);
-        },
-        error: error =>
-          this.logger.error('Error loading collection entry list:', error)
-      });
+  }): Observable<LoadCollectionEntriesResponse> {
+    this.logger.debug('Loading collection entry list:', args);
+    return this.http.post<LoadCollectionEntriesResponse>(
+      interpolate(LOAD_COLLECTION_ENTRIES_URL, { tagType: args.tagType }),
+      {
+        searchText: args.searchText,
+        pageIndex: args.index,
+        pageSize: args.size,
+        sortBy: args.sortBy,
+        sortDirection: args.sortDirection
+      } as LoadCollectionEntriesRequest
+    );
   }
 }

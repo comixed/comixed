@@ -28,7 +28,7 @@ import { beforeEach } from 'vitest';
 import { COMIC_1 } from '@app/library/library-fixtures';
 import {
   COMIC_LIST_FEATURE_KEY,
-  comicListAdaptor,
+  comicListAdapter,
   ComicListState,
   initialComicListState
 } from '@app/library/reducers/comic-list.reducer';
@@ -43,7 +43,7 @@ describe('ComicList Selectors', () => {
   let state: ComicListState;
 
   beforeEach(() => {
-    state = comicListAdaptor.setAll(TEST_COMIC_LIST, {
+    state = comicListAdapter.setAll(TEST_COMIC_LIST, {
       ...initialComicListState,
       totalCount: TEST_TOTAL_COUNT,
       filterCount: TEST_FILTER_COUNT,

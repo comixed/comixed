@@ -21,7 +21,7 @@ import { PUBLISHER_1 } from '@app/library/library-fixtures';
 import {
   initialPublisherListState,
   PUBLISHER_LIST_FEATURE_KEY,
-  publisherListAdaptor,
+  publisherListAdapter,
   PublisherListState
 } from '@app/library/reducers/publisher-list.reducer';
 import {
@@ -37,7 +37,7 @@ describe('PublisherList Selectors', () => {
   let state: PublisherListState;
 
   beforeEach(() => {
-    state = publisherListAdaptor.setAll(TEST_PUBLISHER_LIST, {
+    state = publisherListAdapter.setAll(TEST_PUBLISHER_LIST, {
       ...initialPublisherListState,
       total: TEST_TOTAL,
       loading: false

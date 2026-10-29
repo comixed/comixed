@@ -22,7 +22,7 @@ import { ComicFileListActions } from '@app/library/actions/comic-file-list.actio
 import { COMIC_FILE_1 } from '@app/library/library-fixtures';
 import { ComicFileGroup } from '@app/library/models/comic-file-group';
 import {
-  comicFileListAdaptor,
+  comicFileListAdapter,
   comicFileListReducer,
   ComicFileListState,
   initialComicFileListState
@@ -60,7 +60,7 @@ describe('ComicFileList Reducer', () => {
 
     it('should not have any comic groups', () => {
       expect(
-        comicFileListAdaptor.getSelectors().selectAll(state)
+        comicFileListAdapter.getSelectors().selectAll(state)
       ).toStrictEqual([]);
     });
   });
@@ -93,7 +93,7 @@ describe('ComicFileList Reducer', () => {
 
       it('should set the group list', () => {
         expect(
-          comicFileListAdaptor.getSelectors().selectAll(state)
+          comicFileListAdapter.getSelectors().selectAll(state)
         ).toStrictEqual(TEST_COMIC_FILE_GROUP_LIST);
       });
 
@@ -147,7 +147,7 @@ describe('ComicFileList Reducer', () => {
 
       it('should set the group list', () => {
         expect(
-          comicFileListAdaptor.getSelectors().selectAll(state)
+          comicFileListAdapter.getSelectors().selectAll(state)
         ).toStrictEqual(TEST_COMIC_FILE_GROUP_LIST);
       });
 
@@ -202,7 +202,7 @@ describe('ComicFileList Reducer', () => {
 
       it('should update the group list', () => {
         expect(
-          comicFileListAdaptor.getSelectors().selectAll(state)
+          comicFileListAdapter.getSelectors().selectAll(state)
         ).toStrictEqual(TEST_COMIC_FILE_GROUP_LIST);
       });
     });
@@ -236,7 +236,7 @@ describe('ComicFileList Reducer', () => {
     describe('success', () => {
       beforeEach(() => {
         state = comicFileListReducer(
-          comicFileListAdaptor.setAll(TEST_COMIC_FILE_GROUP_LIST, {
+          comicFileListAdapter.setAll(TEST_COMIC_FILE_GROUP_LIST, {
             ...state,
             busy: true,
             currentPath: TEST_PATH
@@ -255,7 +255,7 @@ describe('ComicFileList Reducer', () => {
 
       it('should clear the comic file list', () => {
         expect(
-          comicFileListAdaptor.getSelectors().selectAll(state)
+          comicFileListAdapter.getSelectors().selectAll(state)
         ).toStrictEqual([]);
       });
     });

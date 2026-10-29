@@ -26,6 +26,7 @@ import {
   initialPublisherComicListState,
   PUBLISHER_COMIC_LIST_FEATURE_KEY
 } from '@app/library/reducers/publisher-comic-list.reducer';
+import { beforeEach, Mock } from 'vitest';
 
 describe('PublisherComicListPage', () => {
   const initialState = {
@@ -53,5 +54,18 @@ describe('PublisherComicListPage', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('changing the language', () => {
+    let setTitleSpy: Mock;
+
+    beforeEach(() => {
+      setTitleSpy = vi.spyOn(component.titleService, 'setTitle');
+      component.translateService.use('fr');
+    });
+
+    it('should update the page title', () => {
+      expect(setTitleSpy).toHaveBeenCalled();
+    });
   });
 });

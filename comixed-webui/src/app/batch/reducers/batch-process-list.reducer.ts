@@ -27,14 +27,14 @@ export interface BatchProcessListState extends EntityState<BatchProcess> {
   busy: boolean;
 }
 
-export const batchProcessListAdaptor: EntityAdapter<BatchProcess> =
+export const batchProcessListAdapter: EntityAdapter<BatchProcess> =
   createEntityAdapter<BatchProcess>({
     selectId: process => process.jobId,
     sortComparer: (left, right) => left.startTime - right.startTime
   });
 
 export const initialBatchProcessListState: BatchProcessListState =
-  batchProcessListAdaptor.getInitialState({
+  batchProcessListAdapter.getInitialState({
     busy: false
   });
 
@@ -42,21 +42,21 @@ export const batchProcessListReducer = createReducer(
   initialBatchProcessListState,
   on(BatchProcessListActions.load, state => ({ ...state, busy: true })),
   on(BatchProcessListActions.loadSuccess, (state, action) => {
-    return batchProcessListAdaptor.setAll(action.entries, {
+    return batchProcessListAdapter.setAll(action.entries, {
       ...state,
       busy: false
     });
   }),
   on(BatchProcessListActions.loadFailure, state => ({ ...state, busy: false })),
   on(BatchProcessListActions.update, (state, action) =>
-    batchProcessListAdaptor.upsertOne(action.update, { ...state })
+    batchProcessListAdapter.upsertOne(action.update, { ...state })
   ),
   on(BatchProcessListActions.deleteCompleted, state => ({
     ...state,
     busy: true
   })),
   on(BatchProcessListActions.deleteCompletedSuccess, (state, action) => {
-    return batchProcessListAdaptor.setAll(action.entries, {
+    return batchProcessListAdapter.setAll(action.entries, {
       ...state,
       busy: false
     });

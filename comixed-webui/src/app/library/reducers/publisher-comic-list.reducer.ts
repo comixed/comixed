@@ -31,14 +31,14 @@ export interface PublisherComicListState extends EntityState<Comic> {
   filteredTotal: number;
 }
 
-export const publisherComicListAdaptor: EntityAdapter<Comic> =
+export const publisherComicListAdapter: EntityAdapter<Comic> =
   createEntityAdapter<Comic>({
     selectId: comic => comic.comicId,
     sortComparer: (left, right) => left.addedDate - right.addedDate
   });
 
 export const initialPublisherComicListState: PublisherComicListState =
-  publisherComicListAdaptor.getInitialState({
+  publisherComicListAdapter.getInitialState({
     busy: false,
     coverMonthList: [],
     coverYearList: [],
@@ -50,7 +50,7 @@ export const publisherComicListReducer = createReducer(
   initialPublisherComicListState,
   on(PublisherComicListActions.load, state => ({ ...state, busy: true })),
   on(PublisherComicListActions.loadSuccess, (state, action) => {
-    return publisherComicListAdaptor.setAll(action.entries, {
+    return publisherComicListAdapter.setAll(action.entries, {
       ...state,
       busy: false,
       coverMonthList: action.coverMonthList,

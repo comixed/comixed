@@ -20,7 +20,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
 import { provideRouter } from '@angular/router';
 import { provideTranslateService } from '@ngx-translate/core';
-import { provideMockStore } from '@ngrx/store/testing';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import {
   EXISTING_ADMIN_ACCOUNT_FEATURE_KEY,
   initialExistingAdminAccountState
@@ -34,8 +34,13 @@ import {
   MESSAGING_FEATURE_KEY
 } from '@app/messaging/reducers/messaging.reducer';
 import { InitialAccountPage } from '@app/account/pages/initial-account-page/initial-account-page';
+import { beforeEach, Mock } from 'vitest';
+import { ExistingAdminAccountActions } from '@app/account/actions/existing-admin-account.actions';
+import { Confirmation, ConfirmationService } from '@openng/optimus-ui/api';
 
 describe('InitialAccountPage', () => {
+  const TEST_EMAIL = 'read@comixedproject.org';
+  const TEST_PASSWORD = 'th3!p455w0Rd';
   const initialState = {
     [MESSAGING_FEATURE_KEY]: initialMessagingState,
     [EXISTING_ADMIN_ACCOUNT_FEATURE_KEY]: initialExistingAdminAccountState,
@@ -44,6 +49,7 @@ describe('InitialAccountPage', () => {
 
   let component: InitialAccountPage;
   let fixture: ComponentFixture<InitialAccountPage>;
+  let store: MockStore;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -52,10 +58,12 @@ describe('InitialAccountPage', () => {
         provideRouter([{ path: 'accounts/initial', redirectTo: '' }]),
         provideLogger({ minLevel: LoggerLevel.OFF }),
         provideTranslateService(),
-        provideMockStore({ initialState })
+        provideMockStore({ initialState }),
+        ConfirmationService
       ]
     }).compileComponents();
 
+    store = TestBed.inject(MockStore);
     fixture = TestBed.createComponent(InitialAccountPage);
     component = fixture.componentInstance;
     await fixture.whenStable();
@@ -63,5 +71,76 @@ describe('InitialAccountPage', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('changing the language', () => {
+    let setTitleSpy: Mock;
+
+    beforeEach(() => {
+      setTitleSpy = vi.spyOn(component.titleService, 'setTitle');
+      component.translateService.use('fr');
+    });
+
+    it('should update the page title', () => {
+      expect(setTitleSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('when an admin already exists', () => {
+    let navigateSpy: Mock;
+
+    beforeEach(() => {
+      navigateSpy = vi.spyOn(component.router, 'navigateByUrl');
+      store.setState({
+        ...initialState,
+        [EXISTING_ADMIN_ACCOUNT_FEATURE_KEY]: {
+          ...initialExistingAdminAccountState,
+          checked: true,
+          create: false
+        }
+      });
+    });
+
+    it('should redirect the browser to the root page', () => {
+      expect(navigateSpy).toHaveBeenCalledWith('/');
+    });
+  });
+
+  describe('submitting the form', () => {
+    let dispatchSpy: Mock;
+    let confirmSpy: Mock;
+
+    beforeEach(() => {
+      dispatchSpy = vi.spyOn(store, 'dispatch');
+      confirmSpy = vi
+        .spyOn(component.confirmationService, 'confirm')
+        .mockImplementation((confirm: Confirmation) => {
+          confirm.accept?.();
+          return component.confirmationService;
+        });
+      component.initialAdminForm.controls['email'].setValue(TEST_EMAIL);
+      component.initialAdminForm.controls['password'].setValue(TEST_PASSWORD);
+      component.initialAdminForm.controls['verifyPassword'].setValue(
+        TEST_PASSWORD
+      );
+      fixture.detectChanges();
+      const button = fixture.nativeElement.querySelector(
+        '#submit-admin-account-details button'
+      );
+      button.click();
+    });
+
+    it('should confirm with the user', () => {
+      expect(confirmSpy).toHaveBeenCalled();
+    });
+
+    it('should dispatch an action', () => {
+      expect(dispatchSpy).toHaveBeenCalledWith(
+        ExistingAdminAccountActions.create({
+          email: TEST_EMAIL,
+          password: TEST_PASSWORD
+        })
+      );
+    });
   });
 });

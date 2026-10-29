@@ -21,7 +21,7 @@ import { SERIES_1 } from '@app/library/library-fixtures';
 import {
   initialSeriesListState,
   SERIES_LIST_FEATURE_KEY,
-  seriesListAdaptor,
+  seriesListAdapter,
   SeriesListState
 } from '@app/library/reducers/series-list.reducer';
 import {
@@ -37,7 +37,7 @@ describe('SeriesList Selectors', () => {
   let state: SeriesListState;
 
   beforeEach(() => {
-    state = seriesListAdaptor.setAll(TEST_SERIES_LIST, {
+    state = seriesListAdapter.setAll(TEST_SERIES_LIST, {
       ...initialSeriesListState,
       total: TEST_TOTAL,
       loading: false
@@ -68,7 +68,7 @@ describe('SeriesList Selectors', () => {
     ).toStrictEqual(TEST_SERIES_LIST);
   });
 
-  it('should return the total publishers', () => {
+  it('should return the total series', () => {
     expect(
       selectSeriesListTotal({ [SERIES_LIST_FEATURE_KEY]: { ...state } })
     ).toBe(TEST_TOTAL);

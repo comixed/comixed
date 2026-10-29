@@ -23,7 +23,7 @@ import { ComicListActions } from '@app/library/actions/comic-list.actions';
 
 export const COMIC_LIST_FEATURE_KEY = 'comic_list_state';
 
-export const comicListAdaptor: EntityAdapter<Comic> =
+export const comicListAdapter: EntityAdapter<Comic> =
   createEntityAdapter<Comic>({
     selectId: comic => comic.comicId,
     sortComparer: (left, right) => left.comicId - right.comicId
@@ -38,7 +38,7 @@ export interface ComicListState extends EntityState<Comic> {
 }
 
 export const initialComicListState: ComicListState =
-  comicListAdaptor.getInitialState({
+  comicListAdapter.getInitialState({
     busy: false,
     totalCount: 0,
     filterCount: 0,
@@ -51,7 +51,7 @@ export const comicListReducer = createReducer(
   on(ComicListActions.loadByFilters, state => ({ ...state, busy: true })),
   on(ComicListActions.loadByReadState, state => ({ ...state, busy: true })),
   on(ComicListActions.loadSuccess, (state, action) => {
-    return comicListAdaptor.setAll(action.comicList, {
+    return comicListAdapter.setAll(action.comicList, {
       ...state,
       busy: false,
       totalCount: action.totalCount,
@@ -66,7 +66,7 @@ export const comicListReducer = createReducer(
   })),
   on(ComicListActions.listUpdate, (state, action) => {
     if ((state.ids as number[]).includes(action.comic.comicId)) {
-      state = comicListAdaptor.updateOne(
+      state = comicListAdapter.updateOne(
         { id: action.comic.comicId, changes: action.comic },
         state
       );

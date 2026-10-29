@@ -18,7 +18,7 @@
 
 import {
   initialPublisherComicListState,
-  publisherComicListAdaptor,
+  publisherComicListAdapter,
   publisherComicListReducer,
   PublisherComicListState
 } from '../reducers/publisher-comic-list.reducer';
@@ -51,7 +51,7 @@ describe('PublisherComicList Reducer', () => {
 
     it('should have no comics', () => {
       expect(
-        publisherComicListAdaptor.getSelectors().selectAll(state)
+        publisherComicListAdapter.getSelectors().selectAll(state)
       ).toStrictEqual([]);
     });
 
@@ -88,7 +88,7 @@ describe('PublisherComicList Reducer', () => {
     describe('success', () => {
       beforeEach(() => {
         state = publisherComicListReducer(
-          publisherComicListAdaptor.setAll([], {
+          publisherComicListAdapter.setAll([], {
             ...state,
             busy: true,
             coverMonthList: [],

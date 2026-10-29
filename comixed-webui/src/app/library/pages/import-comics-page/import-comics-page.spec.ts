@@ -27,7 +27,7 @@ import {
 } from '@app/account/reducers/user.reducer';
 import {
   COMIC_FILE_LIST_FEATURE_KEY,
-  comicFileListAdaptor,
+  comicFileListAdapter,
   initialComicFileListState
 } from '@app/library/reducers/comic-file-list.reducer';
 import { ImportComicsPage } from '@app/library/pages/import-comics-page/import-comics-page';
@@ -54,7 +54,7 @@ describe('ImportComicsPage', () => {
         ]
       }
     },
-    [COMIC_FILE_LIST_FEATURE_KEY]: comicFileListAdaptor.setAll(
+    [COMIC_FILE_LIST_FEATURE_KEY]: comicFileListAdapter.setAll(
       [
         {
           directory: TEST_IMPORT_DIRECTORY,
@@ -148,7 +148,7 @@ describe('ImportComicsPage', () => {
   function setSelectedState(isSelected: boolean) {
     store.setState({
       ...initialState,
-      [COMIC_FILE_LIST_FEATURE_KEY]: comicFileListAdaptor.setAll(
+      [COMIC_FILE_LIST_FEATURE_KEY]: comicFileListAdapter.setAll(
         [
           {
             directory: TEST_IMPORT_DIRECTORY,

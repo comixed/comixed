@@ -18,7 +18,7 @@
 
 import {
   initialSeriesListState,
-  seriesListAdaptor,
+  seriesListAdapter,
   seriesListReducer,
   SeriesListState
 } from '@app/library/reducers/series-list.reducer';
@@ -47,7 +47,7 @@ describe('SeriesList Reducer', () => {
     });
 
     it('should not have any series', () => {
-      expect(seriesListAdaptor.getSelectors().selectAll(state)).toStrictEqual(
+      expect(seriesListAdapter.getSelectors().selectAll(state)).toStrictEqual(
         []
       );
     });
@@ -78,7 +78,7 @@ describe('SeriesList Reducer', () => {
     describe('success', () => {
       beforeEach(() => {
         state = seriesListReducer(
-          seriesListAdaptor.setAll([], { ...state, busy: true, total: 0 }),
+          seriesListAdapter.setAll([], { ...state, busy: true, total: 0 }),
           SeriesListActions.loadSuccess({
             entries: TEST_SERIES_LIST,
             total: TEST_TOTAL
@@ -91,7 +91,7 @@ describe('SeriesList Reducer', () => {
       });
 
       it('should update the list of series', () => {
-        expect(seriesListAdaptor.getSelectors().selectAll(state)).toStrictEqual(
+        expect(seriesListAdapter.getSelectors().selectAll(state)).toStrictEqual(
           TEST_SERIES_LIST
         );
       });
@@ -104,7 +104,7 @@ describe('SeriesList Reducer', () => {
     describe('failure', () => {
       beforeEach(() => {
         state = seriesListReducer(
-          seriesListAdaptor.setAll([], { ...state, busy: true, total: 0 }),
+          seriesListAdapter.setAll([], { ...state, busy: true, total: 0 }),
           SeriesListActions.loadFailure()
         );
       });

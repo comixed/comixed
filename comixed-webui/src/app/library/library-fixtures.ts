@@ -105,6 +105,26 @@ export const COMIC_TAG_1: ComicTag = {
   value: 'The Hero'
 };
 
+export const COMIC_TAG_2: ComicTag = {
+  type: ComicTagType.TEAM,
+  value: 'The Team'
+};
+
+export const COMIC_TAG_3: ComicTag = {
+  type: ComicTagType.CHARACTER,
+  value: 'The Villain'
+};
+
+export const COMIC_TAG_4: ComicTag = {
+  type: ComicTagType.LOCATION,
+  value: 'The Location'
+};
+
+export const COMIC_TAG_5: ComicTag = {
+  type: ComicTagType.STORY,
+  value: 'The Story'
+};
+
 export const METADATA_SOURCE_1: MetadataSource = {
   metadataSourceId: 3000,
   name: 'The Metadata Source',
@@ -149,6 +169,18 @@ export const ISSUE_1: Issue = {
 
 export const COLLECTION_ENTRY_1: CollectionEntry = {
   tagType: ComicTagType.STORY,
-  tagValue: 'The Story Name',
+  tagValue: 'The First Story Name',
   comicCount: 129
+};
+
+export const COLLECTION_ENTRY_2: CollectionEntry = {
+  tagType: ComicTagType.STORY,
+  tagValue: 'The Second Story Name',
+  comicCount: 219
+};
+
+export const COLLECTION_ENTRY_3: CollectionEntry = {
+  tagType: ComicTagType.STORY,
+  tagValue: 'The Third Story Name',
+  comicCount: 291
 };

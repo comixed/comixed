@@ -21,7 +21,7 @@ import { Action } from '@ngrx/store';
 import { ComicListActions } from '@app/library/actions/comic-list.actions';
 import { COMIC_1 } from '@app/library/library-fixtures';
 import {
-  comicListAdaptor,
+  comicListAdapter,
   comicListReducer,
   ComicListState,
   initialComicListState
@@ -51,7 +51,7 @@ describe('ComicList Reducer', () => {
     });
 
     it('should have no comics', () => {
-      expect(comicListAdaptor.getSelectors().selectAll(state)).toStrictEqual(
+      expect(comicListAdapter.getSelectors().selectAll(state)).toStrictEqual(
         []
       );
     });
@@ -126,7 +126,7 @@ describe('ComicList Reducer', () => {
   describe('success loading the comic list', () => {
     beforeEach(() => {
       state = comicListReducer(
-        comicListAdaptor.setAll(TEST_COMIC_LIST, {
+        comicListAdapter.setAll(TEST_COMIC_LIST, {
           ...state,
           busy: true,
           totalCount: 0,
@@ -149,7 +149,7 @@ describe('ComicList Reducer', () => {
     });
 
     it('should set the comic list', () => {
-      expect(comicListAdaptor.getSelectors().selectAll(state)).toStrictEqual(
+      expect(comicListAdapter.getSelectors().selectAll(state)).toStrictEqual(
         TEST_COMIC_LIST
       );
     });
@@ -191,9 +191,9 @@ describe('ComicList Reducer', () => {
     let updateOneSpy: Mock;
 
     beforeEach(() => {
-      updateOneSpy = vi.spyOn(comicListAdaptor, 'updateOne');
+      updateOneSpy = vi.spyOn(comicListAdapter, 'updateOne');
       state = comicListReducer(
-        comicListAdaptor.setAll(TEST_COMIC_LIST, { ...state }),
+        comicListAdapter.setAll(TEST_COMIC_LIST, { ...state }),
         ComicListActions.listUpdate({
           comic: TEST_COMIC
         })

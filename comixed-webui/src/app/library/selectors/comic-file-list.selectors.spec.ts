@@ -18,7 +18,7 @@
 
 import {
   COMIC_FILE_LIST_FEATURE_KEY,
-  comicFileListAdaptor,
+  comicFileListAdapter,
   ComicFileListState,
   initialComicFileListState
 } from '@app/library/reducers/comic-file-list.reducer';
@@ -47,7 +47,7 @@ describe('ComicFileList Selectors', () => {
   let state: ComicFileListState;
 
   beforeEach(() => {
-    state = comicFileListAdaptor.setAll(TEST_COMIC_FILE_GROUP_LIST, {
+    state = comicFileListAdapter.setAll(TEST_COMIC_FILE_GROUP_LIST, {
       ...initialComicFileListState
     });
   });

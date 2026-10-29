@@ -22,7 +22,7 @@ import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import {
   BATCH_PROCESS_LIST_FEATURE_KEY,
-  batchProcessListAdaptor,
+  batchProcessListAdapter,
   initialBatchProcessListState
 } from '@app/batch/reducers/batch-process-list.reducer';
 import { provideTranslateService } from '@ngx-translate/core';
@@ -35,7 +35,7 @@ import { Confirmation, ConfirmationService } from '@openng/optimus-ui/api';
 describe('BatchProcessListPage', () => {
   const TEST_BATCH_PROCESS_LIST = [BATCH_PROCESS_1, BATCH_PROCESS_2];
   const initialState = {
-    [BATCH_PROCESS_LIST_FEATURE_KEY]: batchProcessListAdaptor.setAll(
+    [BATCH_PROCESS_LIST_FEATURE_KEY]: batchProcessListAdapter.setAll(
       TEST_BATCH_PROCESS_LIST,
       { ...initialBatchProcessListState }
     )
@@ -94,7 +94,7 @@ describe('BatchProcessListPage', () => {
         });
       store.setState({
         ...initialState,
-        [BATCH_PROCESS_LIST_FEATURE_KEY]: batchProcessListAdaptor.setAll(
+        [BATCH_PROCESS_LIST_FEATURE_KEY]: batchProcessListAdapter.setAll(
           TEST_BATCH_PROCESS_LIST,
           initialBatchProcessListState
         )

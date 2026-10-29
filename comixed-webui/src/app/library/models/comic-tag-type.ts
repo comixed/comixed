@@ -33,7 +33,7 @@ export enum ComicTagType {
   OTHER = 'OTHER'
 }
 
-export function comicTagTypeFromString(key: string): ComicTagType | null {
+export function comicTagTypeFromString(key: string): ComicTagType {
   switch (key) {
     case 'publishers':
       return ComicTagType.PUBLISHER;
@@ -48,5 +48,5 @@ export function comicTagTypeFromString(key: string): ComicTagType | null {
     case 'teams':
       return ComicTagType.TEAM;
   }
-  return null;
+  throw new Error(`Invalid tag type: ${key}`);
 }

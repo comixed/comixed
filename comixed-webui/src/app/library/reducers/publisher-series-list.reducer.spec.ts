@@ -18,7 +18,7 @@
 
 import {
   initialPublisherSeriesListState,
-  publisherSeriesListAdaptor,
+  publisherSeriesListAdapter,
   publisherSeriesListReducer,
   PublisherSeriesListState
 } from '../reducers/publisher-series-list.reducer';
@@ -48,7 +48,7 @@ describe('PublisherSeriesList Reducer', () => {
 
     it('should have no series', () => {
       expect(
-        publisherSeriesListAdaptor.getSelectors().selectAll(state)
+        publisherSeriesListAdapter.getSelectors().selectAll(state)
       ).toStrictEqual([]);
     });
 
@@ -78,7 +78,7 @@ describe('PublisherSeriesList Reducer', () => {
     describe('success', () => {
       beforeEach(() => {
         state = publisherSeriesListReducer(
-          publisherSeriesListAdaptor.setAll([], {
+          publisherSeriesListAdapter.setAll([], {
             ...state,
             busy: true,
             total: 0
@@ -100,7 +100,7 @@ describe('PublisherSeriesList Reducer', () => {
 
       it('should set the list of series', () => {
         expect(
-          publisherSeriesListAdaptor.getSelectors().selectAll(state)
+          publisherSeriesListAdapter.getSelectors().selectAll(state)
         ).toStrictEqual(TEST_SERIES_LIST);
       });
     });

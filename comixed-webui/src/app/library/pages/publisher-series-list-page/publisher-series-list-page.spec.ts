@@ -28,13 +28,24 @@ import {
 } from '@app/library/reducers/publisher-list.reducer';
 import {
   initialPublisherSeriesListState,
-  PUBLISHER_SERIES_LIST_FEATURE_KEY
+  PUBLISHER_SERIES_LIST_FEATURE_KEY,
+  publisherSeriesListAdapter
 } from '@app/library/reducers/publisher-series-list.reducer';
 import { beforeEach, Mock } from 'vitest';
+import { SERIES_1 } from '@app/library/library-fixtures';
 
 describe('PublisherSeriesListPage', () => {
+  const TEST_SERIES_LIST = [SERIES_1];
+  const TEST_TOTAL_SERIES = 129;
+
   const initialState = {
-    [PUBLISHER_SERIES_LIST_FEATURE_KEY]: initialPublisherSeriesListState,
+    [PUBLISHER_SERIES_LIST_FEATURE_KEY]: publisherSeriesListAdapter.setAll(
+      TEST_SERIES_LIST,
+      {
+        ...initialPublisherSeriesListState,
+        total: TEST_TOTAL_SERIES
+      }
+    ),
     [PUBLISHER_LIST_FEATURE_KEY]: initialPublisherListState
   };
 

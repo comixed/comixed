@@ -19,7 +19,7 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import {
   BATCH_PROCESS_LIST_FEATURE_KEY,
-  batchProcessListAdaptor,
+  batchProcessListAdapter,
   BatchProcessListState
 } from '@app/batch/reducers/batch-process-list.reducer';
 
@@ -34,7 +34,7 @@ export const selectBatchProcessListBusy = createSelector(
 export const selectBatchProcessListRunningCount = createSelector(
   selectBatchProcessListState,
   state =>
-    batchProcessListAdaptor
+    batchProcessListAdapter
       .getSelectors()
       .selectAll(state)
       .filter(entry => entry.running).length
@@ -42,5 +42,5 @@ export const selectBatchProcessListRunningCount = createSelector(
 
 export const selectBatchProcessListEntries = createSelector(
   selectBatchProcessListState,
-  state => batchProcessListAdaptor.getSelectors().selectAll(state)
+  state => batchProcessListAdapter.getSelectors().selectAll(state)
 );

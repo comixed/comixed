@@ -19,7 +19,7 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import {
   SERIES_LIST_FEATURE_KEY,
-  seriesListAdaptor,
+  seriesListAdapter,
   SeriesListState
 } from '@app/library/reducers/series-list.reducer';
 
@@ -34,7 +34,7 @@ export const selectSeriesListBusy = createSelector(
 
 export const selectSeriesListEntries = createSelector(
   selectSeriesListState,
-  state => seriesListAdaptor.getSelectors().selectAll(state)
+  state => seriesListAdapter.getSelectors().selectAll(state)
 );
 
 export const selectSeriesListTotal = createSelector(

@@ -18,16 +18,29 @@
 
 import { Component, inject, signal } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
-import { CollectionService } from '@app/library/services/collection-service';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/layout/services/title-service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { comicTagTypeFromString } from '@app/library/models/comic-tag-type';
-import { TagStore } from '@app/collections/stores/tag-store';
+import {
+  ComicTagType,
+  comicTagTypeFromString
+} from '@app/library/models/comic-tag-type';
 import { Card } from '@openng/optimus-ui/card';
-import { TableModule } from '@openng/optimus-ui/table';
+import { TableLazyLoadEvent, TableModule } from '@openng/optimus-ui/table';
 import { Breadcrumb } from '@openng/optimus-ui/breadcrumb';
 import { MenuItem } from '@openng/optimus-ui/api';
+import { Store } from '@ngrx/store';
+import {
+  selectTagListBusy,
+  selectTagListEntries,
+  selectTagListTotal
+} from '@app/library/selectors/tag-list.selectors';
+import { TagListActions } from '@app/library/actions/tag-list.actions';
+import {
+  QUERY_PARAM_PAGE_INDEX,
+  QUERY_PARAM_PAGE_SIZE
+} from '@app/library/library-constants';
+import { QueryParameterService } from '@app/layout/services/query-parameter.service';
 
 @Component({
   imports: [TranslatePipe, Card, TableModule, Breadcrumb],
@@ -37,41 +50,50 @@ import { MenuItem } from '@openng/optimus-ui/api';
 })
 export class TagListPage {
   readonly logger = inject(LoggerService);
-  readonly collectionsService = inject(CollectionService);
-  readonly tagStore = inject(TagStore);
+  readonly store = inject(Store);
+  readonly queryParameterService = inject(QueryParameterService);
+  readonly tagListBusy = this.store.selectSignal(selectTagListBusy);
+  readonly tagListEntries = this.store.selectSignal(selectTagListEntries);
+  readonly tagListTotal = this.store.selectSignal(selectTagListTotal);
   readonly translateService = inject(TranslateService);
   readonly titleService = inject(TitleService);
   readonly activatedRoute = inject(ActivatedRoute);
   readonly router = inject(Router);
   readonly trail = signal<MenuItem[]>([]);
+  readonly tagType = signal(ComicTagType.STORY);
+  readonly tagListFirst = signal(0);
+  readonly tagListRows = signal(10);
 
   readonly home: MenuItem = { icon: 'pi pi-home', routerLink: ['/'] };
 
   constructor() {
     this.logger.trace('Subscribing to router parameter updates');
-    this.activatedRoute.paramMap.subscribe({
-      next: params => {
-        if (!params.has('tagType')) {
-          this.logger.error('Missing tag type');
+    this.activatedRoute.params.subscribe({
+      next: data => {
+        try {
+          this.tagType.set(comicTagTypeFromString(data['tagType']));
+        } catch (error) {
+          this.logger.error('Could not determine tag type', error);
           this.router.navigateByUrl('/');
         }
-        const typeParameter = params.get('tagType');
-        this.logger.trace('Extracting tag type');
-        const providedType = comicTagTypeFromString(typeParameter || '')!;
-        if (providedType) {
-          this.tagStore.setTagType(providedType);
-          this.collectionsService.loadCollectionEntryList({
-            tagType: providedType,
+      }
+    });
+    this.activatedRoute.queryParams.subscribe({
+      next: params => {
+        const index = +params[QUERY_PARAM_PAGE_INDEX] || 0;
+        const size = +params[QUERY_PARAM_PAGE_SIZE] || 10;
+        this.store.dispatch(
+          TagListActions.load({
+            tagType: this.tagType(),
             searchText: '',
-            index: 0,
-            size: 10,
+            index,
+            size,
             sortBy: '',
             sortDirection: ''
-          });
-        } else {
-          this.logger.error('Invalid tag type:', typeParameter);
-          this.router.navigateByUrl('/');
-        }
+          })
+        );
+        this.tagListFirst.set(index * size);
+        this.tagListRows.set(size);
       }
     });
     this.translateService.onLangChange.subscribe({
@@ -82,16 +104,23 @@ export class TagListPage {
     this.doLoadTranslations();
   }
 
+  onLoad(event: TableLazyLoadEvent): void {
+    this.queryParameterService.updateQueryParam([
+      { name: QUERY_PARAM_PAGE_INDEX, value: `${event.first! / event.rows!}` },
+      { name: QUERY_PARAM_PAGE_SIZE, value: `${event.rows!}` }
+    ]);
+  }
+
   private doLoadTranslations() {
     this.titleService.setTitle(
-      this.translateService.instant('tag-list-page.page-title', {
-        tagType: this.tagStore.tagType()
+      this.translateService.instant('tag-list-page.trail-title', {
+        tagType: this.tagType()
       })
     );
     this.trail.set([
       {
-        label: this.translateService.instant('tag-list-page.page-title', {
-          tagType: this.tagStore.tagType()
+        label: this.translateService.instant('tag-list-page.trail-title', {
+          tagType: this.tagType()
         })
       }
     ]);

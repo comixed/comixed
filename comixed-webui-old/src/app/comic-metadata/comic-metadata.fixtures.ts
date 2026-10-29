@@ -22,7 +22,7 @@ import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 
 export const METADATA_SOURCE_1: MetadataSource = {
   metadataSourceId: 1,
-  name: 'farkleVineScrapingAdaptor',
+  name: 'farkleVineScrapingAdapter',
   version: '1.2',
   homepage: 'http://www.projectpage.com',
   preferred: false,
@@ -32,7 +32,7 @@ export const METADATA_SOURCE_1: MetadataSource = {
 
 export const METADATA_SOURCE_2: MetadataSource = {
   metadataSourceId: 2,
-  name: 'farkleVineScrapingAdaptor',
+  name: 'farkleVineScrapingAdapter',
   version: '1.2',
   homepage: 'http://www.projectpage.com',
   preferred: false,

@@ -21,7 +21,7 @@ import { beforeEach } from 'vitest';
 import {
   initialPublisherComicListState,
   PUBLISHER_COMIC_LIST_FEATURE_KEY,
-  publisherComicListAdaptor,
+  publisherComicListAdapter,
   PublisherComicListState
 } from '@app/library/reducers/publisher-comic-list.reducer';
 import {
@@ -39,7 +39,7 @@ describe('', () => {
   let state: PublisherComicListState;
 
   beforeEach(() => {
-    state = publisherComicListAdaptor.setAll(TEST_COMIC_LIST, {
+    state = publisherComicListAdapter.setAll(TEST_COMIC_LIST, {
       ...initialPublisherComicListState,
       total: TEST_TOTAL,
       loading: false

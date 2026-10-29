@@ -17,7 +17,7 @@
  */
 
 import {
-  batchProcessListAdaptor,
+  batchProcessListAdapter,
   batchProcessListReducer,
   BatchProcessListState,
   initialBatchProcessListState
@@ -51,7 +51,7 @@ describe('BatchProcessList Reducer', () => {
 
     it('should contain no batch processes', () => {
       expect(
-        batchProcessListAdaptor.getSelectors().selectAll(state)
+        batchProcessListAdapter.getSelectors().selectAll(state)
       ).toStrictEqual([]);
     });
   });
@@ -71,7 +71,7 @@ describe('BatchProcessList Reducer', () => {
     describe('success', () => {
       beforeEach(() => {
         state = batchProcessListReducer(
-          batchProcessListAdaptor.setAll([], {
+          batchProcessListAdapter.setAll([], {
             ...state,
             busy: true
           }),
@@ -87,7 +87,7 @@ describe('BatchProcessList Reducer', () => {
 
       it('should update the list of processes', () => {
         expect(
-          batchProcessListAdaptor.getSelectors().selectAll(state)
+          batchProcessListAdapter.getSelectors().selectAll(state)
         ).toStrictEqual(TEST_BATCH_PROCESS_LIST);
       });
     });
@@ -95,7 +95,7 @@ describe('BatchProcessList Reducer', () => {
     describe('failure', () => {
       beforeEach(() => {
         state = batchProcessListReducer(
-          batchProcessListAdaptor.setAll([], {
+          batchProcessListAdapter.setAll([], {
             ...state,
             busy: true
           }),
@@ -112,14 +112,14 @@ describe('BatchProcessList Reducer', () => {
   describe('receiving an update', () => {
     beforeEach(() => {
       state = batchProcessListReducer(
-        batchProcessListAdaptor.setAll([TEST_EXISTING_PROCESS], { ...state }),
+        batchProcessListAdapter.setAll([TEST_EXISTING_PROCESS], { ...state }),
         BatchProcessListActions.update({ update: TEST_BATCH_PROCESS })
       );
     });
 
     it('should update the list of processes', () => {
       expect(
-        batchProcessListAdaptor.getSelectors().selectAll(state)
+        batchProcessListAdapter.getSelectors().selectAll(state)
       ).toStrictEqual([TEST_BATCH_PROCESS, TEST_EXISTING_PROCESS]);
     });
   });
@@ -139,7 +139,7 @@ describe('BatchProcessList Reducer', () => {
     describe('success', () => {
       beforeEach(() => {
         state = batchProcessListReducer(
-          batchProcessListAdaptor.setAll([], {
+          batchProcessListAdapter.setAll([], {
             ...state,
             busy: true
           }),
@@ -155,7 +155,7 @@ describe('BatchProcessList Reducer', () => {
 
       it('should update the list of processes', () => {
         expect(
-          batchProcessListAdaptor.getSelectors().selectAll(state)
+          batchProcessListAdapter.getSelectors().selectAll(state)
         ).toStrictEqual(TEST_BATCH_PROCESS_LIST);
       });
     });
@@ -163,7 +163,7 @@ describe('BatchProcessList Reducer', () => {
     describe('failure', () => {
       beforeEach(() => {
         state = batchProcessListReducer(
-          batchProcessListAdaptor.setAll([], {
+          batchProcessListAdapter.setAll([], {
             ...state,
             busy: true
           }),

@@ -28,14 +28,14 @@ export interface PublisherListState extends EntityState<Publisher> {
   total: number;
 }
 
-export const publisherListAdaptor: EntityAdapter<Publisher> =
+export const publisherListAdapter: EntityAdapter<Publisher> =
   createEntityAdapter<Publisher>({
     selectId: publisher => publisher.name,
     sortComparer: (left, right) => left.name.localeCompare(right.name)
   });
 
 export const initialPublisherListState: PublisherListState =
-  publisherListAdaptor.getInitialState({
+  publisherListAdapter.getInitialState({
     busy: false,
     total: 0
   });
@@ -44,7 +44,7 @@ export const publisherListReducer = createReducer(
   initialPublisherListState,
   on(PublisherListActions.load, state => ({ ...state, busy: true })),
   on(PublisherListActions.loadSuccess, (state, action) =>
-    publisherListAdaptor.setAll(action.publishers, {
+    publisherListAdapter.setAll(action.publishers, {
       ...state,
       busy: false,
       total: action.total
