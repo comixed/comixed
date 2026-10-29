@@ -35,7 +35,6 @@ describe('CollectionGraphWidget', () => {
     { name: 'Segment 10', count: 219 }
   ];
   const TEST_TITLE = 'The Segment Title';
-  const TEST_MAX_RECORDS = 10;
 
   let component: CollectionGraphWidget;
   let fixture: ComponentFixture<CollectionGraphWidget>;
@@ -71,26 +70,6 @@ describe('CollectionGraphWidget', () => {
 
     it('should update the title', () => {
       expect(component.dataTitle()).toStrictEqual(TEST_TITLE);
-    });
-  });
-
-  describe('setting the max records', () => {
-    beforeEach(() => {
-      component.records = 0;
-    });
-
-    it('should update the max records to zero', () => {
-      expect(component.maxRecords()).toStrictEqual(0);
-    });
-  });
-
-  describe('setting the max records', () => {
-    beforeEach(() => {
-      component.records = TEST_MAX_RECORDS;
-    });
-
-    it('should update the max records to a value', () => {
-      expect(component.maxRecords()).toStrictEqual(TEST_MAX_RECORDS);
     });
   });
 

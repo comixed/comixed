@@ -45,7 +45,6 @@ describe('DashboardPage', () => {
     }
   ];
   const TEST_TITLE = 'The Segment Title';
-  const TEST_MAX_RECORDS = 0;
 
   let component: DashboardPage;
   let fixture: ComponentFixture<DashboardPage>;
@@ -100,8 +99,7 @@ describe('DashboardPage', () => {
     beforeEach(() => {
       component.zoomedTitle.set('');
       component.zoomedStatistics.set([]);
-      component.zoomedRecords.set(0);
-      component.onZoom(TEST_STATISTICS, TEST_TITLE, TEST_MAX_RECORDS);
+      component.onZoom(TEST_STATISTICS, TEST_TITLE);
     });
 
     it('should set the data', () => {
@@ -110,10 +108,6 @@ describe('DashboardPage', () => {
 
     it('should set the title', () => {
       expect(component.zoomedTitle()).toStrictEqual(TEST_TITLE);
-    });
-
-    it('should set the max records', () => {
-      expect(component.zoomedRecords()).toStrictEqual(TEST_MAX_RECORDS);
     });
   });
 
@@ -186,7 +180,7 @@ describe('DashboardPage', () => {
 
   describe('when zooming on statistics', () => {
     beforeEach(() => {
-      component.onZoom(TEST_STATISTICS, TEST_TITLE, 0);
+      component.onZoom(TEST_STATISTICS, TEST_TITLE);
       fixture.detectChanges();
     });
 

@@ -16,27 +16,87 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
-import { LoggerService } from '@angular-ru/cdk/logger';
+import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { RouterLink } from '@angular/router';
 import { Card } from '@openng/optimus-ui/card';
 import { Tooltip } from '@openng/optimus-ui/tooltip';
 import { Button } from '@openng/optimus-ui/button';
+import { RemoteLibrarySegment } from '@app/library/models/net/remote-library-segment';
+import { GraphData } from '@app/dashboard/models/graph-data';
+import { UIChart } from '@openng/optimus-ui/chart';
+import { RouterLink } from '@angular/router';
 
 @Component({
-  imports: [TranslatePipe, RouterLink, Card, Tooltip, Button],
+  imports: [TranslatePipe, Card, Tooltip, Button, UIChart, RouterLink],
   selector: 'app-collection-statistics',
   styleUrl: './collection-statistics.scss',
   templateUrl: './collection-statistics.html'
 })
 export class CollectionStatistics {
-  @Input() title = '';
-  @Input() description = '';
-  @Input() imageUrl = '';
-  @Input() detailUrl = '';
+  @Output() zoom = new EventEmitter<void>();
+  readonly chartTitle = signal('');
+  readonly chartData = signal<GraphData>({ labels: [], datasets: [] });
+  readonly chartUrl = signal('');
 
-  @Output() zoom = new EventEmitter<number>();
+  readonly options = {
+    scales: {
+      x: {
+        display: false
+      },
+      y: {
+        beginAtZero: true
+      }
+    }
+  };
 
-  readonly logger = inject(LoggerService);
+  @Input() set url(url: string) {
+    this.chartUrl.set(url);
+  }
+
+  @Input() set title(title: string) {
+    this.chartTitle.set(title);
+    this.doLoadData();
+  }
+
+  private _data: RemoteLibrarySegment[] = [];
+
+  get data(): RemoteLibrarySegment[] {
+    return this._data;
+  }
+
+  @Input() set data(data: RemoteLibrarySegment[]) {
+    this._data = data;
+    this.doLoadData();
+  }
+
+  private doLoadData() {
+    const source = Array.from(this.data)
+      .sort((left, right) => left.count - right.count)
+      .reverse()
+      .slice(0, 5);
+    const data = {
+      labels: source.map(entry => entry.name),
+      datasets: [
+        {
+          label: this.chartTitle(),
+          data: source.map(entry => entry.count),
+          backgroundColor: [
+            'rgba(249, 115, 22, 0.2)',
+            'rgba(6, 182, 212, 0.2)',
+            'rgb(107, 114, 128, 0.2)',
+            'rgba(139, 92, 246, 0.2)'
+          ],
+          borderColor: [
+            'rgb(249, 115, 22)',
+            'rgb(6, 182, 212)',
+            'rgb(107, 114, 128)',
+            'rgb(139, 92, 246)'
+          ],
+          borderWidth: 1
+        }
+      ]
+    } as GraphData;
+
+    this.chartData.set(data);
+  }
 }

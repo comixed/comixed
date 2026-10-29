@@ -338,6 +338,9 @@ importers:
       vitest:
         specifier: ^5.0.4
         version: 5.0.5(@vitest/coverage-v8@5.0.5)(jsdom@28.1.0(supports-color@8.1.1))(vite@8.3.0(esbuild@0.28.2)(jiti@2.7.0)(sass-embedded@1.104.1)(sass@1.104.1))
+      vitest-canvas-mock:
+        specifier: ^1.2.0
+        version: 1.2.0(vitest@5.0.5)
       vitest-marbles:
         specifier: ^0.0.1
         version: 0.0.1(rxjs@7.8.2)(vitest@5.0.5)
@@ -2183,6 +2186,9 @@ packages:
     resolution: {integrity: sha512-k7ndgKhwoQveBL+/1tqGJYNz097I7WOvwbmmU2AR5+magtbjPWQTS1C5vzGkBC8Ym8UWRzfKUzUUqFLypY4Q+w==}
     engines: {node: '>=20'}
 
+  color-name@1.1.4:
+    resolution: {integrity: sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==}
+
   colorjs.io@0.7.1:
     resolution: {integrity: sha512-LY7OHnJZxHwT5UlzNa9bbhHHDbzB6yE5+3MIPwJEQKRvSCt/T4G7epsj+9j2BExUIIfXFIJGsIXUKdfrK9Q5tA==}
 
@@ -2207,6 +2213,9 @@ packages:
   css-what@8.0.0:
     resolution: {integrity: sha512-DH0Bqq3DNp5tdOReuNyAA+Ev4Y2GS5FMbZpeTLP6C4CDi0h5nL0BmUPChXw3o/qbHLDWHl49sbNqQVY7bMSDdw==}
     engines: {node: '>=20.19.0'}
+
+  cssfontparser@1.2.1:
+    resolution: {integrity: sha512-6tun4LoZnj7VN6YeegOVb67KBX/7JJsqvj+pv3ZA7F878/eN33AbGa5b/S/wXxS/tcp8nc40xRUrsPlxIyNUPg==}
 
   cssstyle@6.2.0:
     resolution: {integrity: sha512-Fm5NvhYathRnXNVndkUsCCuR63DCLVVwGOOwQw782coXFi5HhkXdu289l59HlXZBawsyNccXfWRYvLzcDCdDig==}
@@ -2769,6 +2778,9 @@ packages:
   minimatch@10.2.6:
     resolution: {integrity: sha512-vpLQEs+VLCr1nU0BXS07maYoFwlDAH0gngQuuttxIwutDFEMHq2blX+8vpgxDdK3J1PwjCJiep77OitTZ4Ll1A==}
     engines: {node: 18 || 20 || >=22}
+
+  moo-color@1.0.3:
+    resolution: {integrity: sha512-i/+ZKXMDf6aqYtBhuOcej71YSlbjT3wCO/4H1j8rPvxDJEifdwgg5MaFyu6iYAT8GBZJg2z0dkgK4YMzvURALQ==}
 
   moo@0.5.3:
     resolution: {integrity: sha512-m2fmM2dDm7GZQsY7KK2cme8agi+AAljILjQnof7p1ZMDe6dQ4bdnSMx0cPppudoeNv5hEFQirN6u+O4fDE0IWA==}
@@ -3342,6 +3354,11 @@ packages:
         optional: true
       yaml:
         optional: true
+
+  vitest-canvas-mock@1.2.0:
+    resolution: {integrity: sha512-gTy8+dL7aDFZq2EOGCk5krSVsvszTW/M+58efNzybehZNakON2HiPfi3bDBAp85L8DL+D+f/cNtQ5N60rZEL7A==}
+    peerDependencies:
+      vitest: ^3.0.0 || ^4.0.0 || ^5.0.0
 
   vitest-marbles@0.0.1:
     resolution: {integrity: sha512-RWEoTrb+b8OAL1DAg3Ze+2ggTgC9D4pKGdtoXKOJO/3D2XWrXANykX5spL0bMIoe723olO/83iF9Uwa9y63/bA==}
@@ -5069,6 +5086,8 @@ snapshots:
       strip-ansi: 7.2.0
       wrap-ansi: 9.0.2
 
+  color-name@1.1.4: {}
+
   colorjs.io@0.7.1: {}
 
   convert-source-map@1.9.0: {}
@@ -5095,6 +5114,8 @@ snapshots:
       source-map-js: 1.2.2
 
   css-what@8.0.0: {}
+
+  cssfontparser@1.2.1: {}
 
   cssstyle@6.2.0:
     dependencies:
@@ -5644,6 +5665,10 @@ snapshots:
     dependencies:
       brace-expansion: 5.0.12
 
+  moo-color@1.0.3:
+    dependencies:
+      color-name: 1.1.4
+
   moo@0.5.3: {}
 
   mrmime@2.0.1: {}
@@ -6153,6 +6178,12 @@ snapshots:
       jiti: 2.7.0
       sass: 1.104.1
       sass-embedded: 1.104.1
+
+  vitest-canvas-mock@1.2.0(vitest@5.0.5):
+    dependencies:
+      cssfontparser: 1.2.1
+      moo-color: 1.0.3
+      vitest: 5.0.5(@vitest/coverage-v8@5.0.5)(jsdom@28.1.0(supports-color@8.1.1))(vite@8.3.0(esbuild@0.28.2)(jiti@2.7.0)(sass-embedded@1.104.1)(sass@1.104.1))
 
   vitest-marbles@0.0.1(rxjs@7.8.2)(vitest@5.0.5):
     dependencies:

@@ -21,19 +21,7 @@ import { RemoteLibrarySegment } from '@app/library/models/net/remote-library-seg
 import { Card } from '@openng/optimus-ui/card';
 import { UIChart } from '@openng/optimus-ui/chart';
 import { Button } from '@openng/optimus-ui/button';
-
-interface DataSetEntry {
-  label: string;
-  data: number[];
-  backgroundColor: string[];
-  borderColor: string[];
-  borderWidth: number;
-}
-
-interface GraphData {
-  labels: string[];
-  datasets: DataSetEntry[];
-}
+import { GraphData } from '@app/dashboard/models/graph-data';
 
 @Component({
   imports: [Card, UIChart, Button],
@@ -44,7 +32,6 @@ interface GraphData {
 export class CollectionGraphWidget {
   readonly data = signal<GraphData>({} as GraphData);
   readonly dataTitle = signal('');
-  readonly maxRecords = signal(0);
 
   @Output() unzoom = new EventEmitter<void>();
 
@@ -59,11 +46,6 @@ export class CollectionGraphWidget {
     this.doLoadData();
   }
 
-  @Input() set records(records: number) {
-    this.maxRecords.set(records);
-    this.doLoadData();
-  }
-
   @Input() set title(title: string) {
     this.dataTitle.set(title);
     this.doLoadData();
@@ -71,14 +53,9 @@ export class CollectionGraphWidget {
 
   private doLoadData() {
     const source = this.segment
-      .sort((left, right) =>
-        this.maxRecords() === 0 ? 0 : left.count - right.count
-      )
+      .sort((left, right) => left.count - right.count)
       .reverse()
-      .slice(
-        0,
-        this.maxRecords() === 0 ? this.segment.length : this.maxRecords()
-      );
+      .slice(0, this.segment.length);
     const data = {
       labels: source.map(entry => entry.name),
       datasets: [

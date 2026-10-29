@@ -68,7 +68,6 @@ export class DashboardPage {
   readonly translateService = inject(TranslateService);
   readonly zoomedStatistics = signal<RemoteLibrarySegment[]>([]);
   readonly zoomedTitle = signal('');
-  readonly zoomedRecords = signal(0);
 
   constructor() {
     this.translateService.onLangChange.subscribe({
@@ -78,14 +77,9 @@ export class DashboardPage {
     this.doLoadTranslations();
   }
 
-  onZoom(
-    statistics: RemoteLibrarySegment[],
-    title: string,
-    maxRecords: number
-  ) {
+  onZoom(statistics: RemoteLibrarySegment[], title: string) {
     this.zoomedTitle.set(title);
     this.zoomedStatistics.set(statistics);
-    this.zoomedRecords.set(maxRecords);
   }
 
   onUnzoom(): void {

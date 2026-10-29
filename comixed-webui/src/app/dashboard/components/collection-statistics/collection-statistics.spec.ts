@@ -22,8 +22,16 @@ import { CollectionStatistics } from '@app/dashboard/components/collection-stati
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
 import { provideRouter } from '@angular/router';
 import { beforeEach, Mock } from 'vitest';
+import { RemoteLibrarySegment } from '@app/library/models/net/remote-library-segment';
 
 describe('CollectionStatistics', () => {
+  const TEST_REMOTE_LIBRARY_SEGMENT: RemoteLibrarySegment[] = [
+    { name: 'First piece of data', count: 17 },
+    { name: 'Second piece of data', count: 29 }
+  ];
+  const TEST_TITLE = 'The Segment Title';
+  const TEST_URL = 'http://localhost';
+
   let component: CollectionStatistics;
   let fixture: ComponentFixture<CollectionStatistics>;
 
@@ -39,6 +47,9 @@ describe('CollectionStatistics', () => {
 
     fixture = TestBed.createComponent(CollectionStatistics);
     component = fixture.componentInstance;
+    component.title = TEST_TITLE;
+    component.url = TEST_URL;
+    component.data = TEST_REMOTE_LIBRARY_SEGMENT;
     await fixture.whenStable();
   });
 
@@ -58,23 +69,7 @@ describe('CollectionStatistics', () => {
     });
 
     it('should emit an event', () => {
-      expect(emitSpy).toHaveBeenCalledWith(0);
-    });
-  });
-
-  describe('when the user clicks the top statistics button', () => {
-    let emitSpy: Mock;
-
-    beforeEach(() => {
-      emitSpy = vi.spyOn(component.zoom, 'emit');
-      const button: HTMLButtonElement = fixture.nativeElement.querySelector(
-        '#show-top-statistics-button button'
-      );
-      button.click();
-    });
-
-    it('should emit an event', () => {
-      expect(emitSpy).toHaveBeenCalledWith(10);
+      expect(emitSpy).toHaveBeenCalled();
     });
   });
 });

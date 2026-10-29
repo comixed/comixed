@@ -159,41 +159,35 @@
         "title": "Archive Types"
       },
       "characters": {
-        "description": "There {count, plural, =1 {is 1 character} other{are # characters}}...",
-        "title": "Characters",
-        "zoom-title": "{count, select, 0{All} other{Top}} Characters"
+        "title": "{count, plural, =1{1 Character} other{# Characters}}",
+        "zoom-title": "All Characters"
       },
       "comic-states": {
         "title": "Comic States"
       },
       "locations": {
-        "description": "There {count, plural, =1 {is 1 location} other{# locations}}...",
-        "title": "Locations",
-        "zoom-title": "{count, select, 0{All} other{Top}}  Locations"
+        "title": "{count, plural, =1{1 Location} other{# Locations}}",
+        "zoom-title": "All Locations"
       },
       "publishers": {
-        "description": "There {count, plural, =1 {is 1 publisher} other{are # publishers}}...",
-        "title": "Publishers",
-        "zoom-title": "{count, select, 0{All} other{Top}}  Publishers"
+        "title": "{count, plural, =1{1 Publisher} other{# Publishers}}",
+        "zoom-title": "All Publishers"
       },
       "series": {
-        "description": "There {count, plural, =1 {is 1 series} other{are # series}}...",
-        "title": "Series",
-        "zoom-title": "{count, select, 0{All} other{Top}}  Series"
+        "title": "{count, plural, =1{1 Series} other{# Series}}",
+        "zoom-title": "All Series"
       },
       "stories": {
-        "description": "There {count, plural, =1 {is 1 story} other{are # stories}}...",
-        "title": "Stories",
-        "zoom-title": "{count, select, 0{All} other{Top}}  Stories"
+        "title": "{count, plural, =1{1 Story} other{# Stories}}",
+        "zoom-title": "All Stories"
       },
       "teams": {
-        "description": "There {count, plural, =1 {is 1 team} other{are # teams}}...",
-        "title": "Teams",
-        "zoom-title": "{count, select, 0{All} other{Top}}  Teams"
+        "title": "{count, plural, =1{1 Team} other{# Teams}}",
+        "zoom-title": "All Teams"
       },
       "text": {
-        "show-details": "Zoom in on all entries...",
-        "show-top": "Zoom in on the top entries...",
+        "go-to-page": "View the details...",
+        "show-details": "Expand this graph...",
         "view-more": "View more detail..."
       }
     }
