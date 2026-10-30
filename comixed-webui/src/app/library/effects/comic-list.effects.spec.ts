@@ -70,7 +70,7 @@ describe.todo('ComicListEffects', () => {
   });
 
   describe('loading a list of comics by filter', () => {
-    it('should fire an action on success', () => {
+    it('should dispatch an action on success', () => {
       const serviceResponse = {
         comics: TEST_COMIC_LIST,
         totalCount: TEST_TOTAL_COUNT,
@@ -136,7 +136,7 @@ describe.todo('ComicListEffects', () => {
       });
     });
 
-    it('should fire an action on service failure', () => {
+    it('should dispatch an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
       const action = ComicListActions.loadByFilters({
         pageSize: 10,
@@ -192,7 +192,7 @@ describe.todo('ComicListEffects', () => {
       });
     });
 
-    it('should fire an action on general failure', () => {
+    it('should dispatch an action on general failure', () => {
       const action = ComicListActions.loadByFilters({
         pageSize: 10,
         pageIndex: 5,
@@ -249,7 +249,7 @@ describe.todo('ComicListEffects', () => {
   });
 
   describe('loading a list of comics by read state', () => {
-    it('should fire an action on success', () => {
+    it('should dispatch an action on success', () => {
       const serviceResponse = {
         comics: TEST_COMIC_LIST,
         totalCount: TEST_TOTAL_COUNT,
@@ -291,7 +291,7 @@ describe.todo('ComicListEffects', () => {
       });
     });
 
-    it('should fire an action on service failure', () => {
+    it('should dispatch an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
       const action = ComicListActions.loadByReadState({
         unreadOnly: true,
@@ -323,7 +323,7 @@ describe.todo('ComicListEffects', () => {
       });
     });
 
-    it('should fire an action on general failure', () => {
+    it('should dispatch an action on general failure', () => {
       const action = ComicListActions.loadByReadState({
         unreadOnly: true,
         pageSize: 10,

@@ -45,7 +45,7 @@ describe('SeriesList Selectors', () => {
   });
 
   describe('selecting the busy flag', () => {
-    it('returns false when loading', () => {
+    it('returns false when busy', () => {
       expect(
         selectSeriesListBusy({
           [SERIES_LIST_FEATURE_KEY]: { ...state, busy: false }
@@ -53,7 +53,7 @@ describe('SeriesList Selectors', () => {
       ).toBeFalsy();
     });
 
-    it('returns true when loading', () => {
+    it('returns true when busy', () => {
       expect(
         selectSeriesListBusy({
           [SERIES_LIST_FEATURE_KEY]: { ...state, busy: true }

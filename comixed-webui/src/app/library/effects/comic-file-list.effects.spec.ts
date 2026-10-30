@@ -39,57 +39,57 @@ describe.todo('ComicFileListEffects', () => {
   });
 
   describe('loading comic files from the session', () => {
-    it('should fire an action on success', () => {
+    it('should dispatch an action on success', () => {
       actions$ = hot('', {});
     });
 
-    it('should fire an action on service failure', () => {
+    it('should dispatch an action on service failure', () => {
       actions$ = hot('', {});
     });
 
-    it('should fire an action on general failure', () => {
+    it('should dispatch an action on general failure', () => {
       actions$ = hot('', {});
     });
   });
 
   describe('loading comic files from disk', () => {
-    it('should fire an action on success', () => {
+    it('should dispatch an action on success', () => {
       actions$ = hot('', {});
     });
 
-    it('should fire an action on service failure', () => {
+    it('should dispatch an action on service failure', () => {
       actions$ = hot('', {});
     });
 
-    it('should fire an action on general failure', () => {
+    it('should dispatch an action on general failure', () => {
       actions$ = hot('', {});
     });
   });
 
   describe('setting the select state on comic files', () => {
-    it('should fire an action on success', () => {
+    it('should dispatch an action on success', () => {
       actions$ = hot('', {});
     });
 
-    it('should fire an action on service failure', () => {
+    it('should dispatch an action on service failure', () => {
       actions$ = hot('', {});
     });
 
-    it('should fire an action on general failure', () => {
+    it('should dispatch an action on general failure', () => {
       actions$ = hot('', {});
     });
   });
 
   describe('starting the import', () => {
-    it('should fire an action on success', () => {
+    it('should dispatch an action on success', () => {
       actions$ = hot('', {});
     });
 
-    it('should fire an action on service failure', () => {
+    it('should dispatch an action on service failure', () => {
       actions$ = hot('', {});
     });
 
-    it('should fire an action on general failure', () => {
+    it('should dispatch an action on general failure', () => {
       actions$ = hot('', {});
     });
   });

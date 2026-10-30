@@ -18,27 +18,36 @@
 
 import { Component, inject, signal } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
-import { CollectionService } from '@app/library/services/collection-service';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/layout/services/title-service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SeriesDetailStore } from '@app/collections/stores/series-detail-store';
 import { Card } from '@openng/optimus-ui/card';
 import { TableModule } from '@openng/optimus-ui/table';
 import { DatePipe } from '@angular/common';
 import { Breadcrumb } from '@openng/optimus-ui/breadcrumb';
 import { MenuItem } from '@openng/optimus-ui/api';
+import { Store } from '@ngrx/store';
+import {
+  selectSeriesComicListBusy,
+  selectSeriesComicListEntries
+} from '@app/library/selectors/series-comic-list.selectors';
+import { SeriesComicListActions } from '@app/library/actions/series-comic-list.actions';
 
 @Component({
   imports: [Card, TranslatePipe, TableModule, DatePipe, Breadcrumb],
-  selector: 'app-series-detail-page',
-  styleUrl: './series-detail-page.scss',
-  templateUrl: './series-detail-page.html'
+  selector: 'app-series-comic-list-page',
+  styleUrl: './series-comic-list-page.scss',
+  templateUrl: './series-comic-list-page.html'
 })
-export class SeriesDetailPage {
+export class SeriesComicListPage {
   readonly logger = inject(LoggerService);
-  readonly collectionsService = inject(CollectionService);
-  readonly seriesDetailStore = inject(SeriesDetailStore);
+  readonly store = inject(Store);
+  readonly seriesComicListBusy = this.store.selectSignal(
+    selectSeriesComicListBusy
+  );
+  readonly seriesComicListEntries = this.store.selectSignal(
+    selectSeriesComicListEntries
+  );
   readonly translateService = inject(TranslateService);
   readonly titleService = inject(TitleService);
   readonly activatedRoute = inject(ActivatedRoute);
@@ -52,21 +61,18 @@ export class SeriesDetailPage {
 
   constructor() {
     this.logger.trace('Subscribing to router parameter updates');
-    this.activatedRoute.paramMap.subscribe({
+    this.activatedRoute.params.subscribe({
       next: params => {
-        this.publisherName = params.get('publisherName')!;
-        this.seriesName = params.get('seriesName')!;
-        this.volume = params.get('volume')!;
-        this.seriesDetailStore.setSeries(
-          this.publisherName,
-          this.seriesName,
-          this.volume
+        this.publisherName = params['publisherName'];
+        this.seriesName = params['seriesName'];
+        this.volume = params['volume'];
+        this.store.dispatch(
+          SeriesComicListActions.load({
+            publisherName: this.publisherName,
+            seriesName: this.seriesName,
+            volume: this.volume
+          })
         );
-        this.collectionsService.loadSeriesDetail({
-          publisherName: this.publisherName,
-          seriesName: this.seriesName,
-          volume: this.volume
-        });
       }
     });
     this.translateService.onLangChange.subscribe({
@@ -79,7 +85,7 @@ export class SeriesDetailPage {
 
   private doLoadTranslations() {
     this.titleService.setTitle(
-      this.translateService.instant('series-detail-page.page-title', {
+      this.translateService.instant('series-comic-list-page.page-title', {
         name: this.seriesName,
         volume: this.volume
       })
@@ -93,10 +99,13 @@ export class SeriesDetailPage {
         routerLink: ['/library/publishers', this.publisherName, 'series']
       },
       {
-        label: this.translateService.instant('series-detail-page.trail-title', {
-          name: this.seriesName,
-          volume: this.volume
-        })
+        label: this.translateService.instant(
+          'series-comic-list-page.trail-title',
+          {
+            name: this.seriesName,
+            volume: this.volume
+          }
+        )
       }
     ]);
   }

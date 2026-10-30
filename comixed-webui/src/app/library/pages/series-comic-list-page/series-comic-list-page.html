@@ -4,18 +4,22 @@
   </ng-template>
 
   <p-table
-    [value]="seriesDetailStore.issues()"
-    stripedRows
+    [value]="seriesComicListEntries()"
+    [lazy]="true"
+    dataKey="issueId"
     [paginator]="true"
-    [rows]="seriesDetailStore.size()"
+    stripedRows
+    [rows]="10"
+    [totalRecords]="seriesComicListEntries().length"
+    [loading]="seriesComicListBusy()"
   >
     <ng-template #header>
       <tr>
-        <th>{{ "series-detail-page.label.issue-number" | translate }}</th>
-        <th>{{ "series-detail-page.label.title" | translate }}</th>
-        <th>{{ "series-detail-page.label.cover-date" | translate }}</th>
-        <th>{{ "series-detail-page.label.store-date" | translate }}</th>
-        <th>{{ "series-detail-page.label.found" | translate }}</th>
+        <th>{{ "series-comic-list-page.label.issue-number" | translate }}</th>
+        <th>{{ "series-comic-list-page.label.title" | translate }}</th>
+        <th>{{ "series-comic-list-page.label.cover-date" | translate }}</th>
+        <th>{{ "series-comic-list-page.label.store-date" | translate }}</th>
+        <th>{{ "series-comic-list-page.label.found" | translate }}</th>
       </tr>
     </ng-template>
 

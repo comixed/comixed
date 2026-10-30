@@ -42,15 +42,15 @@ describe.todo('PublisherSeriesListEffects', () => {
   });
 
   describe('loading', () => {
-    it('should fire an action on success', () => {
+    it('should dispatch an action on success', () => {
       actions$ = hot('', {});
     });
 
-    it('should fire an action on service failure', () => {
+    it('should dispatch an action on service failure', () => {
       actions$ = hot('', {});
     });
 
-    it('should fire an action on general failure', () => {
+    it('should dispatch an action on general failure', () => {
       actions$ = hot('', {});
     });
   });

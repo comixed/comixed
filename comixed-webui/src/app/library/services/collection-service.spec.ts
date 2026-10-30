@@ -189,7 +189,7 @@ describe('CollectionService', () => {
     const serverResponse = TEST_ISSUE_LIST;
 
     service
-      .loadSeriesDetail({
+      .loadSeriesComicList({
         publisherName: TEST_SERIES.publisher,
         seriesName: TEST_SERIES.name,
         volume: TEST_SERIES.volume

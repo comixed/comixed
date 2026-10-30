@@ -68,7 +68,7 @@ describe.todo('PublisherListEffects', () => {
   });
 
   describe('loading the publisher list', () => {
-    it('should fire an action on success', () => {
+    it('should dispatch an action on success', () => {
       const serviceResponse = {
         publishers: TEST_PUBLISHER_LIST,
         total: TEST_TOTAL
@@ -104,7 +104,7 @@ describe.todo('PublisherListEffects', () => {
       });
     });
 
-    it('should fire an action on service failure', () => {
+    it('should dispatch an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
       const action = PublisherListActions.load({
         searchText: TEST_SEARCH_TEXT,
@@ -136,7 +136,7 @@ describe.todo('PublisherListEffects', () => {
       });
     });
 
-    it('should fire an action on general failure', () => {
+    it('should dispatch an action on general failure', () => {
       const action = PublisherListActions.load({
         searchText: TEST_SEARCH_TEXT,
         page: TEST_PAGE,

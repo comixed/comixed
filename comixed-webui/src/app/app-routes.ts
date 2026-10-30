@@ -27,11 +27,11 @@ import { readerGuard } from '@app/account/guards/reader-guard';
 import { adminGuard } from '@app/account/guards/admin-guard';
 import { PublisherListPage } from '@app/library/pages/publisher-list-page/publisher-list-page';
 import { SeriesListPage } from '@app/library/pages/series-list-page/series-list-page';
-import { SeriesDetailPage } from '@app/library/pages/series-detail-page/series-detail-page';
 import { TagListPage } from '@app/library/pages/tag-list-page/tag-list-page';
 import { PublisherSeriesListPage } from '@app/library/pages/publisher-series-list-page/publisher-series-list-page';
 import { PublisherComicListPage } from '@app/library/pages/publisher-comic-list-page/publisher-comic-list-page.component';
 import { BatchProcessListPage } from '@app/batch/pages/batch-process-list-page/batch-process-list-page';
+import { SeriesComicListPage } from '@app/library/pages/series-comic-list-page/series-comic-list-page';
 
 export const appRoutes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/dashboard' },
@@ -74,7 +74,7 @@ export const appRoutes: Routes = [
   },
   {
     path: 'library/publishers/:publisherName/series/:seriesName/:volume',
-    component: SeriesDetailPage,
+    component: SeriesComicListPage,
     canActivate: [readerGuard]
   },
   {

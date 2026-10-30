@@ -299,7 +299,12 @@
     "page-title": "{publisherName}: Series List",
     "trail-title": "Series List"
   },
-  "series-detail-page": {
+  "series-comic-list-effects": {
+    "load": {
+      "service-failure": "Failed to load comics for series {seriesName}..."
+    }
+  },
+  "series-comic-list-page": {
     "label": {
       "cover-date": "Cover Date",
       "found": "Found",

@@ -155,6 +155,14 @@ export const SERIES_1: Series = {
   totalIssues: 920
 };
 
+export const SERIES_2: Series = {
+  name: 'The Other Series Name',
+  publisher: 'The Series Publisher',
+  volume: '2026',
+  inLibrary: 129,
+  totalIssues: 320
+};
+
 export const ISSUE_1: Issue = {
   issueId: 417,
   publisher: 'The Issue Publisher',
@@ -162,6 +170,18 @@ export const ISSUE_1: Issue = {
   volume: '2026',
   issueNumber: '714',
   title: 'Some cool story or another...',
+  storeDate: new Date().getTime(),
+  coverDate: new Date().getTime(),
+  found: true
+};
+
+export const ISSUE_2: Issue = {
+  issueId: 418,
+  publisher: 'The Issue Publisher',
+  series: 'The Other Series',
+  volume: '2026',
+  issueNumber: '924',
+  title: 'Some other cool story or another...',
   storeDate: new Date().getTime(),
   coverDate: new Date().getTime(),
   found: true

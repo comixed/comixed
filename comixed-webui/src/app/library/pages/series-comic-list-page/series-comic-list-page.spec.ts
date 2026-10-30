@@ -20,15 +20,30 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideRouter } from '@angular/router';
-import { SeriesDetailPage } from '@app/library/pages/series-detail-page/series-detail-page';
+import { SeriesComicListPage } from '@app/library/pages/series-comic-list-page/series-comic-list-page';
+import { provideMockStore } from '@ngrx/store/testing';
+import {
+  initialSeriesComicListState,
+  SERIES_COMIC_LIST_FEATURE_KEY,
+  seriesComicListAdapter
+} from '@app/library/reducers/series-comic-list.reducer';
+import { ISSUE_1, ISSUE_2 } from '@app/library/library-fixtures';
+import { beforeEach, Mock } from 'vitest';
 
-describe('SeriesDetailPage', () => {
-  let component: SeriesDetailPage;
-  let fixture: ComponentFixture<SeriesDetailPage>;
+describe('SeriesComicListPage', () => {
+  const TEST_ISSUE_LIST = [ISSUE_1, ISSUE_2];
+  const initialState = {
+    [SERIES_COMIC_LIST_FEATURE_KEY]: seriesComicListAdapter.setAll(
+      TEST_ISSUE_LIST,
+      initialSeriesComicListState
+    )
+  };
+  let component: SeriesComicListPage;
+  let fixture: ComponentFixture<SeriesComicListPage>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SeriesDetailPage],
+      imports: [SeriesComicListPage],
       providers: [
         provideRouter([
           {
@@ -37,16 +52,30 @@ describe('SeriesDetailPage', () => {
           }
         ]),
         provideLogger({ minLevel: LoggerLevel.OFF }),
-        provideTranslateService()
+        provideTranslateService(),
+        provideMockStore({ initialState })
       ]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(SeriesDetailPage);
+    fixture = TestBed.createComponent(SeriesComicListPage);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('changing the language', () => {
+    let setTitleSpy: Mock;
+
+    beforeEach(() => {
+      setTitleSpy = vi.spyOn(component.titleService, 'setTitle');
+      component.translateService.use('fr');
+    });
+
+    it('should update the page title', () => {
+      expect(setTitleSpy).toHaveBeenCalled();
+    });
   });
 });

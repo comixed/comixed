@@ -72,7 +72,7 @@ describe.todo('ComicDetailEffects', () => {
   });
 
   describe('loading a comic', () => {
-    it('should fire an action on success', () => {
+    it('should dispatch an action on success', () => {
       const serviceResponse = {
         detail: TEST_COMIC,
         metadata: TEST_METADATA,
@@ -102,7 +102,7 @@ describe.todo('ComicDetailEffects', () => {
       });
     });
 
-    it('should fire an action on service failure', () => {
+    it('should dispatch an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
       const action = ComicDetailAction.load({
         comicId: TEST_COMIC.comicId
@@ -126,7 +126,7 @@ describe.todo('ComicDetailEffects', () => {
       });
     });
 
-    it('should fire an action on general failure', () => {
+    it('should dispatch an action on general failure', () => {
       const action = ComicDetailAction.load({
         comicId: TEST_COMIC.comicId
       });
@@ -151,7 +151,7 @@ describe.todo('ComicDetailEffects', () => {
   });
 
   describe('saving a comic', () => {
-    it('should fire an action on success', () => {
+    it('should dispatch an action on success', () => {
       const serviceResponse = {
         detail: TEST_COMIC,
         metadata: TEST_METADATA,
@@ -186,7 +186,7 @@ describe.todo('ComicDetailEffects', () => {
       });
     });
 
-    it('should fire an action on service failure', () => {
+    it('should dispatch an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
       const action = ComicDetailAction.save({
         comic: TEST_COMIC
@@ -220,7 +220,7 @@ describe.todo('ComicDetailEffects', () => {
       });
     });
 
-    it('should fire an action on general failure', () => {
+    it('should dispatch an action on general failure', () => {
       const action = ComicDetailAction.save({
         comic: TEST_COMIC
       });

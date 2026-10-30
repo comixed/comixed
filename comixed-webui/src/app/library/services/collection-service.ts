@@ -105,7 +105,7 @@ export class CollectionService {
     );
   }
 
-  loadSeriesDetail(args: {
+  loadSeriesComicList(args: {
     publisherName: string;
     seriesName: string;
     volume: string;

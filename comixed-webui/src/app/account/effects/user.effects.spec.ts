@@ -70,7 +70,7 @@ describe.todo('UserEffects', () => {
   });
 
   describe('logging into the app', () => {
-    it('should fire an account on success', () => {
+    it('should dispatch an action on success', () => {
       const serviceResponse = {
         email: TEST_EMAIL,
         token: TEST_TOKEN
@@ -100,7 +100,7 @@ describe.todo('UserEffects', () => {
       });
     });
 
-    it('should fire an account on service failure', () => {
+    it('should dispatch an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
       const action = UserActions.login({
         email: TEST_EMAIL,
@@ -126,7 +126,7 @@ describe.todo('UserEffects', () => {
       });
     });
 
-    it('should fire an account on general failure', () => {
+    it('should dispatch an action on general failure', () => {
       const action = UserActions.login({
         email: TEST_EMAIL,
         password: TEST_PASSWORD
@@ -151,7 +151,7 @@ describe.todo('UserEffects', () => {
   });
 
   describe('loading the current user', () => {
-    it('should fire an account on success', () => {
+    it('should dispatch an action on success', () => {
       const serviceResponse = TEST_USER;
       const action = UserActions.load();
       const outcome = UserActions.loadSuccess({ user: TEST_USER });
@@ -169,7 +169,7 @@ describe.todo('UserEffects', () => {
       });
     });
 
-    it('should fire an account on service failure', () => {
+    it('should dispatch an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
       const action = UserActions.load();
       const outcome = UserActions.loadFailure();
@@ -189,7 +189,7 @@ describe.todo('UserEffects', () => {
       });
     });
 
-    it('should fire an account on general failure', () => {
+    it('should dispatch an action on general failure', () => {
       const action = UserActions.load();
       const outcome = UserActions.loadFailure();
 
@@ -210,7 +210,7 @@ describe.todo('UserEffects', () => {
   });
 
   describe('saving a user preference', () => {
-    it('should fire an account on success', () => {
+    it('should dispatch an action on success', () => {
       const serviceResponse = TEST_USER;
       const action = UserActions.savePreference({
         name: TEST_PREFERENCE_NAME,
@@ -231,7 +231,7 @@ describe.todo('UserEffects', () => {
       });
     });
 
-    it('should fire an account on service failure', () => {
+    it('should dispatch an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
       const action = UserActions.savePreference({
         name: TEST_PREFERENCE_NAME,
@@ -254,7 +254,7 @@ describe.todo('UserEffects', () => {
       });
     });
 
-    it('should fire an account on general failure', () => {
+    it('should dispatch an action on general failure', () => {
       const action = UserActions.savePreference({
         name: TEST_PREFERENCE_NAME,
         value: TEST_PREFERENCE_VALUE
