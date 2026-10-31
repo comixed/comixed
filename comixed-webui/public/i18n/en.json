@@ -257,6 +257,7 @@
       "deleted-comics": "Deleted",
       "duplicate-comics": "Duplicates",
       "read-comics": "Read",
+      "selected-comics": "Selected",
       "total-comics": "Total",
       "unscraped-comics": "Unscraped"
     }

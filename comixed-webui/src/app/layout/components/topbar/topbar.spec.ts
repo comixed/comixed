@@ -38,12 +38,17 @@ import {
 import { beforeEach } from 'vitest';
 import { USER_ADMIN, USER_READER } from '@app/account/account-fixtures';
 import { By } from '@angular/platform-browser';
+import {
+  initialSelectedComicListState,
+  SELECTED_COMIC_LIST_FEATURE_KEY
+} from '@app/library/reducers/selected-comic-list.reducer';
 
 describe('Topbar', () => {
   const initialState = {
     [USER_FEATURE_KEY]: initialUserState,
     [REMOTE_LIBRARY_FEATURE_KEY]: initialRemoteLibraryState,
-    [BATCH_PROCESS_LIST_FEATURE_KEY]: initialBatchProcessListState
+    [BATCH_PROCESS_LIST_FEATURE_KEY]: initialBatchProcessListState,
+    [SELECTED_COMIC_LIST_FEATURE_KEY]: initialSelectedComicListState
   };
 
   let component: Topbar;

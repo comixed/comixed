@@ -32,6 +32,7 @@ export class PublisherComicListEffects {
   readonly alertService = inject(AlertService);
   readonly translateService = inject(TranslateService);
   private actions$ = inject(Actions);
+
   load$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(PublisherComicListActions.load),

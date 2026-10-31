@@ -32,6 +32,7 @@ import {
   selectRemoteLibraryUnscrapedComics
 } from '@app/library/selectors/remote-library.selectors';
 import { selectBatchProcessListRunningCount } from '@app/batch/selectors/batch-process-list.selectors';
+import { selectSelectedComicListEntries } from '@app/library/selectors/selected-comic-list.selectors';
 
 @Component({
   imports: [TranslatePipe, Button, RouterLink],
@@ -44,6 +45,10 @@ export class LibraryStatisticsPanel {
   readonly totalComics = this.store.selectSignal(
     selectRemoteLibraryTotalComics
   );
+  readonly selectedComicEntries = this.store.selectSignal(
+    selectSelectedComicListEntries
+  );
+  readonly readComicIds = this.store.selectSignal(selectUserReadComicIds);
   readonly unscrapedComics = this.store.selectSignal(
     selectRemoteLibraryUnscrapedComics
   );
@@ -53,7 +58,6 @@ export class LibraryStatisticsPanel {
   readonly duplicateComics = this.store.selectSignal(
     selectRemoteLibraryDuplicateComics
   );
-  readonly readComicIds = this.store.selectSignal(selectUserReadComicIds);
   readonly userIsAdmin = this.store.selectSignal(selectUserIsAdmin);
   readonly batchProcessCount = this.store.selectSignal(
     selectBatchProcessListRunningCount

@@ -16,7 +16,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  EventEmitter,
+  inject,
+  Input,
+  Output,
+  signal
+} from '@angular/core';
 import { TableLazyLoadEvent, TableModule } from '@openng/optimus-ui/table';
 import { Comic } from '@app/library/models/comic';
 import { ComicCoverUrlPipe } from '@app/library/pipes/comic-cover-url-pipe';
@@ -38,6 +46,15 @@ import {
   faRotate,
   faTrash
 } from '@fortawesome/free-solid-svg-icons';
+import { Checkbox } from '@openng/optimus-ui/checkbox';
+import { ItemSelection } from '@app/library/models/item-selection';
+import { Store } from '@ngrx/store';
+import {
+  selectSelectedComicListBusy,
+  selectSelectedComicListEntries
+} from '@app/library/selectors/selected-comic-list.selectors';
+import { SelectedComicListActions } from '@app/library/actions/selected-comic-list.actions';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   imports: [
@@ -47,7 +64,9 @@ import {
     RouterLink,
     Tooltip,
     FaIconComponent,
-    TableModule
+    TableModule,
+    Checkbox,
+    FormsModule
   ],
   selector: 'app-comic-table',
   styleUrl: './comic-table.scss',
@@ -60,6 +79,21 @@ export class ComicTable {
   readonly comicListRows = signal(10);
   readonly comicListTotalCount = signal(0);
   readonly comicListBusy = signal(false);
+  readonly store = inject(Store);
+  readonly selectedComicListBusy = this.store.selectSignal(
+    selectSelectedComicListBusy
+  );
+  readonly selectedComicListEntries = this.store.selectSignal(
+    selectSelectedComicListEntries
+  );
+  readonly tableEntries = computed<ItemSelection<Comic>[]>(() =>
+    this.comicEntries().map(comic => {
+      return {
+        item: comic,
+        selected: this.selectedComicListEntries().includes(comic.comicId)
+      } as ItemSelection<Comic>;
+    })
+  );
 
   @Input() set comics(comics: Comic[]) {
     this.comicEntries.set(comics);
@@ -79,6 +113,12 @@ export class ComicTable {
 
   @Input() set busy(busy: boolean) {
     this.comicListBusy.set(busy);
+  }
+
+  onSelectComic(comic: Comic, selected: boolean) {
+    this.store.dispatch(
+      SelectedComicListActions.selectComic({ comic, selected })
+    );
   }
 
   getIconForComicState(comicState: ComicState): IconDefinition {

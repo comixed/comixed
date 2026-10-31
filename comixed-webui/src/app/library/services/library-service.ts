@@ -59,7 +59,7 @@ export class LibraryService {
           this.webSocketService.subscribe<RemoteLibrary>(
             REMOTE_LIBRARY_STATE_TOPIC,
             update => {
-              this.logger.debug('Library update message received');
+              this.logger.debug('Library update received');
               this.store.dispatch(
                 RemoteLibraryActions.loadSuccess({ state: update })
               );

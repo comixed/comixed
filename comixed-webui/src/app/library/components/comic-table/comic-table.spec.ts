@@ -20,19 +20,44 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ComicTable } from './comic-table';
 import { provideTranslateService } from '@ngx-translate/core';
 import { ComicState } from '@app/library/models/comic-state';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { COMIC_1, COMIC_2 } from '@app/library/library-fixtures';
+import {
+  initialSelectedComicListState,
+  SELECTED_COMIC_LIST_FEATURE_KEY
+} from '@app/library/reducers/selected-comic-list.reducer';
+import { provideRouter } from '@angular/router';
+import { beforeEach, Mock } from 'vitest';
+import { SelectedComicListActions } from '@app/library/actions/selected-comic-list.actions';
 
 describe('ComicTable', () => {
+  const TEST_COMIC_LIST = [COMIC_1, COMIC_2];
+  const initialState = {
+    [SELECTED_COMIC_LIST_FEATURE_KEY]: initialSelectedComicListState
+  };
+
   let component: ComicTable;
   let fixture: ComponentFixture<ComicTable>;
+  let store: MockStore;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ComicTable],
-      providers: [provideTranslateService()]
+      providers: [
+        provideRouter([{ path: '*', redirectTo: '' }]),
+        provideTranslateService(),
+        provideMockStore({ initialState })
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicTable);
     component = fixture.componentInstance;
+    component.comics = TEST_COMIC_LIST;
+    component.first = 0;
+    component.rows = 10;
+    component.total = TEST_COMIC_LIST.length;
+    component.busy = false;
+    store = TestBed.inject(MockStore);
     await fixture.whenStable();
   });
 
@@ -44,5 +69,30 @@ describe('ComicTable', () => {
     Object.values(ComicState).forEach(key =>
       expect(component.getIconForComicState(key)).not.toBe(null)
     );
+  });
+
+  describe('toggling a comic selection', () => {
+    const TEST_COMIC = TEST_COMIC_LIST[0];
+    let previousSelectionState: boolean;
+    let dispatchSpy: Mock;
+
+    beforeEach(() => {
+      dispatchSpy = vi.spyOn(store, 'dispatch');
+      const checkbox: HTMLInputElement = fixture.nativeElement.querySelector(
+        `#comic-${TEST_COMIC.comicId}-select-input input`
+      );
+      previousSelectionState = checkbox.checked;
+      checkbox.click();
+      fixture.detectChanges();
+    });
+
+    it('should dispatch an action', () => {
+      expect(dispatchSpy).toHaveBeenCalledWith(
+        SelectedComicListActions.selectComic({
+          comic: TEST_COMIC,
+          selected: !previousSelectionState
+        })
+      );
+    });
   });
 });

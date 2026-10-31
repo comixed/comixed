@@ -42,6 +42,10 @@ export const LOAD_SERIES_LIST_URL = `${API_ROOT_URL}/collections/series`;
 export const LOAD_SERIES_DETAIL_URL = `${API_ROOT_URL}/collections/series/detail`;
 export const LOAD_COLLECTION_ENTRIES_URL = `${API_ROOT_URL}/collections/\${tagType}`;
 
+export const LOAD_SELECTED_COMIC_ID_LIST_URL = `${API_ROOT_URL}/comics/selections`;
+export const SELECT_SINGLE_COMIC_URL = `${API_ROOT_URL}/comics/selections/\${comicId}`;
+export const DESELECT_SINGLE_COMIC_URL = `${API_ROOT_URL}/comics/selections/\${comicId}`;
+
 // query parameters
 export const QUERY_PARAM_COMIC_DETAIL_TAB = 'comic-detail-tab';
 export const QUERY_PARAM_PAGE_INDEX = 'index';

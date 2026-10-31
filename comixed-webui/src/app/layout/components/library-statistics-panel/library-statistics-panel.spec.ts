@@ -34,11 +34,16 @@ import {
   BATCH_PROCESS_LIST_FEATURE_KEY,
   initialBatchProcessListState
 } from '@app/batch/reducers/batch-process-list.reducer';
+import {
+  initialSelectedComicListState,
+  SELECTED_COMIC_LIST_FEATURE_KEY
+} from '@app/library/reducers/selected-comic-list.reducer';
 
 describe('LibraryStatisticsPanel', () => {
   const initialState = {
     [REMOTE_LIBRARY_FEATURE_KEY]: initialRemoteLibraryState,
     [USER_FEATURE_KEY]: initialUserState,
+    [SELECTED_COMIC_LIST_FEATURE_KEY]: initialSelectedComicListState,
     [BATCH_PROCESS_LIST_FEATURE_KEY]: initialBatchProcessListState
   };
 

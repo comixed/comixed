@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { API_ROOT_URL } from '@app/app-constants';
+import { API_ROOT_URL, SECURED_MESSAGING_PREFIX } from '@app/app-constants';
 
 export const AUTHENTICATION_TOKEN_KEY = 'comixed.auth-token';
 
@@ -34,5 +34,6 @@ export const LOAD_USER_URL = `${API_ROOT_URL}/user`;
 export const LOGIN_URL = `${API_ROOT_URL}/token/generate`;
 export const SAVE_USER_PREFERENCE_URL = `${API_ROOT_URL}/user/preferences/\${preferenceName}`;
 
-// mesaging
+// messaging
 export const ACCOUNT_UPDATES_TOPIC = `/secured/user/\${email}/user/current`;
+export const COMIC_SELECTION_UPDATE_TOPIC = `${SECURED_MESSAGING_PREFIX}/\${email}/topic/comic-book-selection.update`;

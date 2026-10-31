@@ -32,6 +32,7 @@ import { selectUserAuthenticated } from '@app/account/selectors/user.selectors';
 import { Toast } from '@openng/optimus-ui/toast';
 import { RemoteLibraryActions } from '@app/library/actions/remote-library.actions';
 import { ConfirmDialog } from '@openng/optimus-ui/confirmdialog';
+import { SelectedComicListActions } from '@app/library/actions/selected-comic-list.actions';
 
 @Component({
   imports: [Topbar, RouterOutlet, Toast, ConfirmDialog],
@@ -69,7 +70,10 @@ export class App {
       next: authenticated => {
         if (authenticated) {
           this.webSocketService.connect().subscribe();
+          this.logger.trace('Loading the remote library state');
           this.store.dispatch(RemoteLibraryActions.load());
+          this.logger.trace('Loading the selected comic list');
+          this.store.dispatch(SelectedComicListActions.load());
         } else {
           this.webSocketService.disconnect();
         }

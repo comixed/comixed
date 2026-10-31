@@ -23,6 +23,7 @@ import { interpolate } from '@app/app-functions';
 import {
   ACCOUNT_UPDATES_TOPIC,
   CHECK_FOR_ADMIN_ACCOUNT_URL,
+  COMIC_SELECTION_UPDATE_TOPIC,
   CREATE_ADMIN_ACCOUNT_URL,
   LOAD_USER_URL,
   LOGIN_URL,
@@ -39,6 +40,7 @@ import { selectMessagingStarted } from '@app/messaging/selectors/messaging.selec
 import { UserActions } from '@app/account/actions/user.actions';
 import { SaveUserPreferenceRequest } from '@app/account/models/net/save-user-preference-request';
 import selectUserState from '@app/account/selectors/user.selectors';
+import { SelectedComicListActions } from '@app/library/actions/selected-comic-list.actions';
 
 @Service()
 export class AccountService {
@@ -62,11 +64,32 @@ export class AccountService {
     this.store.select(selectMessagingStarted).subscribe({
       next: started => {
         if (started) {
+          this.logger.debug('Subscribing to user updates');
           this.webSocketService.subscribe<User>(
             interpolate(ACCOUNT_UPDATES_TOPIC, { email: this.email }),
             user => {
               this.logger.debug('Received user update:', user);
               this.store.dispatch(UserActions.userUpdate({ user }));
+            }
+          );
+          this.logger.debug('Subscribing to comic selection updates');
+          this.webSocketService.subscribe<number[]>(
+            interpolate(COMIC_SELECTION_UPDATE_TOPIC, { email: this.email }),
+            comicIds => {
+              this.logger.debug('Received selected comic updates:', comicIds);
+              this.store.dispatch(
+                SelectedComicListActions.updateList({ comicIds })
+              );
+            }
+          );
+          this.logger.debug('Subscribing to comic selection updates');
+          this.webSocketService.subscribe<number[]>(
+            interpolate(COMIC_SELECTION_UPDATE_TOPIC, { email: this.email }),
+            update => {
+              this.logger.debug('Comic selection update received:', update);
+              this.store.dispatch(
+                SelectedComicListActions.updateList({ comicIds: update })
+              );
             }
           );
         }

@@ -1,5 +1,5 @@
 <p-table
-  [value]="comicEntries()"
+  [value]="tableEntries()"
   [lazy]="true"
   (onLazyLoad)="loadComics.emit($event)"
   dataKey="comicId"
@@ -12,6 +12,7 @@
 >
   <ng-template #header>
     <tr>
+      <th></th>
       <th>{{ "comic-table.label.thumbnail" | translate }}</th>
       <th>{{ "comic-table.label.comic-state" | translate }}</th>
       <th>{{ "comic-table.label.publisher" | translate }}</th>
@@ -28,46 +29,57 @@
   <ng-template #body let-comic>
     <tr>
       <td>
+        <p-check-box
+          [id]="`comic-${comic.item.comicId}-select-input`"
+          [binary]="true"
+          [ngModel]="comic.selected"
+          [disabled]="selectedComicListBusy()"
+          (onChange)="onSelectComic(comic.item, !comic.selected)"
+        />
+      </td>
+      <td>
         <img
-          [src]="comic | comicCoverUrl"
+          [src]="comic.item | comicCoverUrl"
           class="comic-cover"
-          [alt]="comic.baseFilename"
+          [alt]="comic.item.baseFilename"
         />
       </td>
       <td>
         <fa-icon
-          [icon]="getIconForComicState(comic.comicState)"
-          [pTooltip]="'comic-table.label.state.' + comic.comicState | translate"
+          [icon]="getIconForComicState(comic.item.comicState)"
+          [pTooltip]="
+            'comic-table.label.state.' + comic.item.comicState | translate
+          "
         ></fa-icon>
       </td>
       <td>
-        <a [routerLink]="['/library/publishers', comic.publisher]">
-          {{ comic.publisher }}
+        <a [routerLink]="['/library/publishers', comic.item.publisher]">
+          {{ comic.item.publisher }}
         </a>
       </td>
       <td>
         <a
           [routerLink]="[
             '/library/publishers',
-            comic.publisher,
+            comic.item.publisher,
             'series',
-            comic.series,
-            comic.volume
+            comic.item.series,
+            comic.item.volume
           ]"
         >
-          {{ comic.series }}
+          {{ comic.item.series }}
         </a>
       </td>
-      <td>{{ comic.volume }}</td>
+      <td>{{ comic.item.volume }}</td>
       <td>
-        <a [routerLink]="['/library/comics', comic.comicId]">
-          {{ comic.issueNumber }}
+        <a [routerLink]="['/library/comics', comic.item.comicId]">
+          {{ comic.item.issueNumber }}
         </a>
       </td>
-      <td>{{ comic.pageCount }}</td>
-      <td>{{ comic.coverDate | date: "mediumDate" }}</td>
-      <td>{{ comic.storeDate | date: "mediumDate" }}</td>
-      <td>{{ comic.addedDate | date: "mediumDate" }}</td>
+      <td>{{ comic.item.pageCount }}</td>
+      <td>{{ comic.item.coverDate | date: "mediumDate" }}</td>
+      <td>{{ comic.item.storeDate | date: "mediumDate" }}</td>
+      <td>{{ comic.item.addedDate | date: "mediumDate" }}</td>
     </tr>
   </ng-template>
 </p-table>
