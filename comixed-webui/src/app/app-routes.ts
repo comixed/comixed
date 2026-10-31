@@ -78,42 +78,48 @@ export const appRoutes: Routes = [
     canActivate: [readerGuard]
   },
   {
-    path: 'library/all',
+    path: 'library/comics/all',
     component: ComicListPage,
     canActivate: [readerGuard]
   },
   {
-    path: 'library/read',
+    path: 'library/comics/selected',
+    component: ComicListPage,
+    data: { selected: true },
+    canActivate: [readerGuard]
+  },
+  {
+    path: 'library/comics/read',
     component: ComicListPage,
     data: { readState: true },
     canActivate: [readerGuard]
   },
   {
-    path: 'library/unscraped',
+    path: 'library/comics/unscraped',
     component: ComicListPage,
     data: { unscraped: true },
     canActivate: [readerGuard]
   },
   {
-    path: 'library/duplicates',
+    path: 'library/comics/duplicates',
     component: ComicListPage,
     data: { duplicates: true },
     canActivate: [readerGuard]
   },
   {
-    path: 'library/deleted',
+    path: 'library/comics/deleted',
     component: ComicListPage,
     data: { deleted: true },
     canActivate: [readerGuard]
   },
   {
-    path: 'library/:tagType',
-    component: TagListPage,
+    path: 'library/comics/:comicId',
+    component: ComicDetailPage,
     canActivate: [readerGuard]
   },
   {
-    path: 'library/comics/:comicId',
-    component: ComicDetailPage,
+    path: 'library/:tagType',
+    component: TagListPage,
     canActivate: [readerGuard]
   }
 ];

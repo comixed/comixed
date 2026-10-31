@@ -2,42 +2,42 @@
   <p-button
     [label]="'library-statistics-panel.segment.total-comics' | translate"
     [badge]="totalComics().toString()"
-    [routerLink]="['/library/all']"
+    [routerLink]="['/library/comics/all']"
     severity="primary"
   />
 
   <p-button
     [label]="'library-statistics-panel.segment.selected-comics' | translate"
     [badge]="selectedComicEntries().length.toString()"
-    [routerLink]="['/library/read']"
+    [routerLink]="['/library/comics/selected']"
     severity="secondary"
   />
 
   <p-button
     [label]="'library-statistics-panel.segment.read-comics' | translate"
     [badge]="readComicIds().length.toString()"
-    [routerLink]="['/library/read']"
+    [routerLink]="['/library/comics/read']"
     severity="secondary"
   />
 
   <p-button
     [label]="'library-statistics-panel.segment.unscraped-comics' | translate"
     [badge]="unscrapedComics().toString()"
-    [routerLink]="['/library/unscraped']"
+    [routerLink]="['/library/comics/unscraped']"
     severity="contrast"
   />
 
   <p-button
     [label]="'library-statistics-panel.segment.duplicate-comics' | translate"
     [badge]="duplicateComics().toString()"
-    [routerLink]="['/library/duplicates']"
+    [routerLink]="['/library/comics/duplicates']"
     severity="danger"
   />
 
   <p-button
     [label]="'library-statistics-panel.segment.deleted-comics' | translate"
     [badge]="deletedComics().toString()"
-    [routerLink]="['/library/deleted']"
+    [routerLink]="['/library/comics/deleted']"
     severity="danger"
   />
 

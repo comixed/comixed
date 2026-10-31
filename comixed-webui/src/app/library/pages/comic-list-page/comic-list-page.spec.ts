@@ -113,4 +113,31 @@ describe('ComicListPage', () => {
       });
     });
   });
+
+  describe('the page type', () => {
+    it('should return the selected page type', () => {
+      component.selectedComics.set(true);
+      expect(component.getPageType()).toStrictEqual('SELECTED');
+    });
+
+    it('should return the read page type', () => {
+      component.readState.set(true);
+      expect(component.getPageType()).toStrictEqual('READ');
+    });
+
+    it('should return the unscraped page type', () => {
+      component.unscrapedComics.set(true);
+      expect(component.getPageType()).toStrictEqual('UNSCRAPED');
+    });
+
+    it('should return the duplicate page type', () => {
+      component.duplicateComics.set(true);
+      expect(component.getPageType()).toStrictEqual('DUPLICATE');
+    });
+
+    it('should return the deleted page type', () => {
+      component.deletedComics.set(true);
+      expect(component.getPageType()).toStrictEqual('DELETED');
+    });
+  });
 });

@@ -87,29 +87,25 @@ export class ComicListPage {
   readonly comicListFirst = signal(0);
   readonly comicListRows = signal(10);
   readonly readState = signal(false);
-  readonly trail = signal<MenuItem[]>([]);
 
+  readonly trail = signal<MenuItem[]>([]);
   readonly home: MenuItem = { icon: 'pi pi-home', routerLink: ['/'] };
 
-  allComics = true;
+  readonly selectedComics = signal(false);
   readonly unreadComics = signal(false);
-  unscrapedComics = false;
-  duplicateComics = false;
-  deletedComics = false;
+  readonly unscrapedComics = signal(false);
+  readonly duplicateComics = signal(false);
+  readonly deletedComics = signal(false);
 
   constructor() {
     this.activatedRoute.data.subscribe({
       next: data => {
         this.logger.debug('Activated route data updated:', data);
+        this.selectedComics.set(data['selected'] === true);
         this.readState.set(data['readState'] === true);
-        this.unscrapedComics = data['unscraped'] === true;
-        this.duplicateComics = data['duplicates'] === true;
-        this.deletedComics = data['deleted'] === true;
-        this.allComics =
-          !this.unreadComics() &&
-          !this.unscrapedComics &&
-          !this.duplicateComics &&
-          !this.deletedComics;
+        this.unscrapedComics.set(data['unscraped'] === true);
+        this.duplicateComics.set(data['duplicates'] === true);
+        this.deletedComics.set(data['deleted'] === true);
       }
     });
     this.activatedRoute.queryParams.subscribe({
@@ -141,9 +137,9 @@ export class ComicListPage {
               archiveType: null,
               comicType: null,
               comicState: null,
-              selected: false,
+              selected: this.selectedComics(),
               missing: false,
-              unscrapedState: this.unscrapedComics,
+              unscrapedState: this.unscrapedComics(),
               searchText: null,
               publisher: null,
               series: null,
@@ -169,16 +165,19 @@ export class ComicListPage {
   }
 
   getPageType(): string {
+    if (this.selectedComics()) {
+      return 'SELECTED';
+    }
     if (this.readState()) {
       return 'READ';
     }
-    if (this.unscrapedComics) {
+    if (this.unscrapedComics()) {
       return 'UNSCRAPED';
     }
-    if (this.duplicateComics) {
+    if (this.duplicateComics()) {
       return 'DUPLICATE';
     }
-    if (this.deletedComics) {
+    if (this.deletedComics()) {
       return 'DELETED';
     }
     return '';

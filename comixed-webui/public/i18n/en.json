@@ -95,7 +95,7 @@
       "read-only": "Read",
       "unread-only": "Unread"
     },
-    "page-title": "{pageType, select, READ{Read} UNSCRAPED{Unscraped} DUPLICATE{Duplicate} DELETED{Deleted} other{All} } Comics",
+    "page-title": "{pageType, select, SELECTED{Selected} READ{Read} UNSCRAPED{Unscraped} DUPLICATE{Duplicate} DELETED{Deleted} other{All} } Comics",
     "tooltip": {
       "toggle-unread": "Toggle showing read/unread comics..."
     }
