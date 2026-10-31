@@ -18,20 +18,48 @@
 
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { Observable } from 'rxjs';
-import { hot } from 'vitest-marbles';
+import { firstValueFrom, Observable, of, throwError } from 'rxjs';
 import { SeriesListEffects } from '@app/library/effects/series-list.effects';
+import { expect, it, vi } from 'vitest';
+import { CollectionService } from '@app/library/services/collection-service';
+import { AlertService } from '@app/services/alert-service';
+import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
+import { provideTranslateService } from '@ngx-translate/core';
+import { MessageService } from '@openng/optimus-ui/api';
+import { LoadSeriesListResponse } from '@app/library/models/net/load-series-list-response';
+import { SERIES_1, SERIES_2 } from '@app/library/library-fixtures';
+import { SeriesListActions } from '@app/library/actions/series-list.actions';
 
-describe.todo('SeriesListEffects', () => {
+describe('SeriesListEffects', () => {
+  const TEST_SEARCH_TEXT = 'The search text';
+  const TEST_INDEX = 3;
+  const TEST_SIZE = 10;
+  const TEST_SORT_BY = 'name';
+  const TEST_SORT_DIRECTION = 'asc';
+  const TEST_SERIES_LIST = [SERIES_1, SERIES_2];
+  const TEST_TOTAL = 27;
+
   let actions$: Observable<unknown>;
   let effects: SeriesListEffects;
+  let collectionService: CollectionService;
+  let alertService: AlertService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [SeriesListEffects, provideMockActions(() => actions$)]
+      providers: [
+        SeriesListEffects,
+        provideMockActions(() => actions$),
+        provideLogger({ minLevel: LoggerLevel.OFF }),
+        provideTranslateService(),
+        CollectionService,
+        AlertService,
+        MessageService
+      ]
     });
 
     effects = TestBed.inject(SeriesListEffects);
+    collectionService = TestBed.inject(CollectionService);
+    alertService = TestBed.inject(AlertService);
   });
 
   it('should be created', () => {
@@ -39,16 +67,91 @@ describe.todo('SeriesListEffects', () => {
   });
 
   describe('loading all series', () => {
-    it('should dispatch an action on success', () => {
-      actions$ = hot('', {});
+    it('should dispatch an action on success', async () => {
+      const serviceResponse = {
+        series: TEST_SERIES_LIST,
+        totalSeries: TEST_TOTAL
+      } as LoadSeriesListResponse;
+      const action = SeriesListActions.load({
+        searchText: TEST_SEARCH_TEXT,
+        index: TEST_INDEX,
+        size: TEST_SIZE,
+        sortBy: TEST_SORT_BY,
+        sortDirection: TEST_SORT_DIRECTION
+      });
+      const outcome = SeriesListActions.loadSuccess({
+        entries: TEST_SERIES_LIST,
+        total: TEST_TOTAL
+      });
+
+      const loadSpy = vi
+        .spyOn(collectionService, 'loadSeriesList')
+        .mockReturnValue(of(serviceResponse));
+
+      actions$ = of(action);
+      await expect(firstValueFrom(effects.load$)).resolves.toEqual(outcome);
+      expect(loadSpy).toHaveBeenCalledWith({
+        searchText: TEST_SEARCH_TEXT,
+        index: TEST_INDEX,
+        size: TEST_SIZE,
+        sortBy: TEST_SORT_BY,
+        sortDirection: TEST_SORT_DIRECTION
+      });
     });
 
-    it('should dispatch an action on series failure', () => {
-      actions$ = hot('', {});
+    it('should dispatch an action on service failure', async () => {
+      const serviceResponse = new Error('Service failure');
+      const action = SeriesListActions.load({
+        searchText: TEST_SEARCH_TEXT,
+        index: TEST_INDEX,
+        size: TEST_SIZE,
+        sortBy: TEST_SORT_BY,
+        sortDirection: TEST_SORT_DIRECTION
+      });
+      const outcome = SeriesListActions.loadFailure();
+
+      const loadSpy = vi
+        .spyOn(collectionService, 'loadSeriesList')
+        .mockReturnValue(throwError(() => serviceResponse));
+      const alertSpy = vi.spyOn(alertService, 'error');
+
+      actions$ = of(action);
+      await expect(firstValueFrom(effects.load$)).resolves.toEqual(outcome);
+      expect(loadSpy).toHaveBeenCalledWith({
+        searchText: TEST_SEARCH_TEXT,
+        index: TEST_INDEX,
+        size: TEST_SIZE,
+        sortBy: TEST_SORT_BY,
+        sortDirection: TEST_SORT_DIRECTION
+      });
+      expect(alertSpy).toHaveBeenCalled();
     });
 
-    it('should dispatch an action on general failure', () => {
-      actions$ = hot('', {});
+    it('should dispatch an action on general failure', async () => {
+      const action = SeriesListActions.load({
+        searchText: TEST_SEARCH_TEXT,
+        index: TEST_INDEX,
+        size: TEST_SIZE,
+        sortBy: TEST_SORT_BY,
+        sortDirection: TEST_SORT_DIRECTION
+      });
+      const outcome = SeriesListActions.loadFailure();
+
+      const loadSpy = vi
+        .spyOn(collectionService, 'loadSeriesList')
+        .mockThrow(new Error('General failure'));
+      const alertSpy = vi.spyOn(alertService, 'error');
+
+      actions$ = of(action);
+      await expect(firstValueFrom(effects.load$)).resolves.toEqual(outcome);
+      expect(loadSpy).toHaveBeenCalledWith({
+        searchText: TEST_SEARCH_TEXT,
+        index: TEST_INDEX,
+        size: TEST_SIZE,
+        sortBy: TEST_SORT_BY,
+        sortDirection: TEST_SORT_DIRECTION
+      });
+      expect(alertSpy).toHaveBeenCalled();
     });
   });
 });

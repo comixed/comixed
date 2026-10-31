@@ -40,7 +40,7 @@ describe('ComicFileService', () => {
   const TEST_COMIC_FILE = COMIC_FILE_1;
   const TEST_PATH = '/Users/comixed/Library/Comics/import';
   const TEST_MAXIMUM_RECORDS = 100;
-  const TEST_GROUPS: ComicFileGroup[] = [
+  const TEST_GROUP_LIST: ComicFileGroup[] = [
     {
       directory: 'directory1',
       files: [TEST_COMIC_FILE]
@@ -69,7 +69,9 @@ describe('ComicFileService', () => {
 
   describe('loading comic files', () => {
     it('should load from the session', () => {
-      const serverResponse = { groups: TEST_GROUPS } as LoadComicFilesResponse;
+      const serverResponse = {
+        groups: TEST_GROUP_LIST
+      } as LoadComicFilesResponse;
 
       service.loadFromSession().subscribe({
         next: response => expect(response).toStrictEqual(serverResponse)
@@ -85,7 +87,9 @@ describe('ComicFileService', () => {
     });
 
     it('should load from the file system', async () => {
-      const serverResponse = { groups: TEST_GROUPS } as LoadComicFilesResponse;
+      const serverResponse = {
+        groups: TEST_GROUP_LIST
+      } as LoadComicFilesResponse;
 
       service
         .loadFromDisk({
@@ -104,7 +108,9 @@ describe('ComicFileService', () => {
   });
 
   it('should selected comic files', async () => {
-    const serverResponse = { groups: TEST_GROUPS } as LoadComicFilesResponse;
+    const serverResponse = {
+      groups: TEST_GROUP_LIST
+    } as LoadComicFilesResponse;
 
     service
       .setComicFileSelected({

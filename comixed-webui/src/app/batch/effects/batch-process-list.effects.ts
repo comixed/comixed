@@ -32,6 +32,7 @@ export class BatchProcessListEffects {
   readonly alertService = inject(AlertService);
   readonly translateService = inject(TranslateService);
   private actions$ = inject(Actions);
+
   loadBatchProcessList$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(BatchProcessListActions.load),
@@ -62,6 +63,7 @@ export class BatchProcessListEffects {
       })
     );
   });
+
   deleteCompletedProcesses$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(BatchProcessListActions.deleteCompleted),

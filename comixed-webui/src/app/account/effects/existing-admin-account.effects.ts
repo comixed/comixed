@@ -22,13 +22,17 @@ import { LoggerService } from '@angular-ru/cdk/logger';
 import { AccountService } from '@app/account/services/account-service';
 import { catchError, map, of, switchMap, tap } from 'rxjs';
 import { ExistingAdminAccountActions } from '@app/account/actions/existing-admin-account.actions';
+import { AlertService } from '@app/services/alert-service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable()
 export class ExistingAdminAccountEffects {
   readonly logger = inject(LoggerService);
   readonly accountService = inject(AccountService);
+  readonly alertService = inject(AlertService);
+  readonly translateService = inject(TranslateService);
   private actions$ = inject(Actions);
-  loadExistingAdminAccounts$ = createEffect(() => {
+  hasExisting$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(ExistingAdminAccountActions.check),
       tap(() => this.logger.trace('Checking for existing admin accounts')),
@@ -42,12 +46,20 @@ export class ExistingAdminAccountEffects {
           ),
           catchError(error => {
             this.logger.error('Service failure:', error);
+            this.alertService.error(
+              this.translateService.instant(
+                'existing-admin-account-effects.has-existing.service-failure'
+              )
+            );
             return of(ExistingAdminAccountActions.checkFailure());
           })
         )
       ),
       catchError(error => {
         this.logger.error('General failure:', error);
+        this.alertService.error(
+          this.translateService.instant('app.effects.general-failure')
+        );
         return of(ExistingAdminAccountActions.checkFailure());
       })
     );
@@ -68,12 +80,21 @@ export class ExistingAdminAccountEffects {
             map(() => ExistingAdminAccountActions.createSuccess()),
             catchError(error => {
               this.logger.error('Service failure:', error);
+              this.alertService.error(
+                this.translateService.instant(
+                  'existing-admin-account-effects.create-admin-account.service-failure',
+                  { email: action.email }
+                )
+              );
               return of(ExistingAdminAccountActions.createFailure());
             })
           )
       ),
       catchError(error => {
         this.logger.error('General failure:', error);
+        this.alertService.error(
+          this.translateService.instant('app.effects.general-failure')
+        );
         return of(ExistingAdminAccountActions.createFailure());
       })
     );

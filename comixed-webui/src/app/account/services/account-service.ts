@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { interpolate } from '@app/app-functions';
@@ -84,15 +84,12 @@ export class AccountService {
   createAdminAccount(args: {
     email: string;
     password: string;
-  }): Observable<HttpResponse<unknown>> {
+  }): Observable<void> {
     this.logger.trace('Creating admin account');
-    return this.client.post<HttpResponse<unknown>>(
-      interpolate(CREATE_ADMIN_ACCOUNT_URL),
-      {
-        email: args.email,
-        password: args.password
-      } as CreateAdminAccountRequest
-    );
+    return this.client.post<void>(interpolate(CREATE_ADMIN_ACCOUNT_URL), {
+      email: args.email,
+      password: args.password
+    } as CreateAdminAccountRequest);
   }
 
   loadUser(): Observable<User | null> {

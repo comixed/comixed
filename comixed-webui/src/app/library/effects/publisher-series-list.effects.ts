@@ -23,7 +23,7 @@ import { LoggerService } from '@angular-ru/cdk/logger';
 import { AlertService } from '@app/services/alert-service';
 import { CollectionService } from '@app/library/services/collection-service';
 import { TranslateService } from '@ngx-translate/core';
-import { map, switchMap, tap } from 'rxjs';
+import { catchError, map, of, switchMap, tap } from 'rxjs';
 
 @Injectable()
 export class PublisherSeriesListEffects {
@@ -52,9 +52,26 @@ export class PublisherSeriesListEffects {
                 entries: response.entries,
                 total: response.totalSeries
               })
-            )
+            ),
+            catchError(error => {
+              this.logger.error('Service failure:', error);
+              this.alertService.error(
+                this.translateService.instant(
+                  'publisher-series-list-effects.load.service-failure',
+                  { publisherName: action.name }
+                )
+              );
+              return of(PublisherSeriesListActions.loadFailure());
+            })
           )
-      )
+      ),
+      catchError(error => {
+        this.logger.error('General failure:', error);
+        this.alertService.error(
+          this.translateService.instant('app.effects.general-failure')
+        );
+        return of(PublisherSeriesListActions.loadFailure());
+      })
     );
   });
 }

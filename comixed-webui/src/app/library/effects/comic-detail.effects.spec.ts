@@ -20,7 +20,7 @@ import { TestBed } from '@angular/core/testing';
 import { ComicService } from '@app/library/services/comic-service';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { Observable, of, tap, throwError } from 'rxjs';
+import { firstValueFrom, Observable, of, throwError } from 'rxjs';
 import { LoadComicDetailResponse } from '@app/library/models/net/load-comic-detail-response';
 import {
   COMIC_1,
@@ -29,16 +29,16 @@ import {
   METADATA_1
 } from '@app/library/library-fixtures';
 import { ComicDetailAction } from '@app/library/actions/comic-detail.actions';
-import { hot } from 'vitest-marbles';
 import { MessageService } from '@openng/optimus-ui/api';
 import { provideTranslateService } from '@ngx-translate/core';
-import { HttpErrorResponse } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 import { AlertService } from '@app/services/alert-service';
 import { ComicDetailEffects } from '@app/library/effects/comic-detail.effects';
+import { expect, it, vi } from 'vitest';
 
-describe.todo('ComicDetailEffects', () => {
+describe('ComicDetailEffects', () => {
   const TEST_COMIC = COMIC_1;
+  const TEST_COMIC_ID = TEST_COMIC.comicId;
   const TEST_METADATA = METADATA_1;
   const TEST_PAGE_LIST = [COMIC_PAGE_1];
   const TEST_TAG_LIST = [COMIC_TAG_1];
@@ -72,185 +72,171 @@ describe.todo('ComicDetailEffects', () => {
   });
 
   describe('loading a comic', () => {
-    it('should dispatch an action on success', () => {
+    it('should dispatch an action on success', async () => {
       const serviceResponse = {
         detail: TEST_COMIC,
-        metadata: TEST_METADATA,
         pages: TEST_PAGE_LIST,
-        tags: TEST_TAG_LIST
+        tags: TEST_TAG_LIST,
+        metadata: TEST_METADATA
       } as LoadComicDetailResponse;
-      const action = ComicDetailAction.load({ comicId: TEST_COMIC.comicId });
+      const action = ComicDetailAction.load({
+        comicId: TEST_COMIC_ID
+      });
       const outcome = ComicDetailAction.loadSuccess({
         comic: TEST_COMIC,
-        metadata: TEST_METADATA,
         pages: TEST_PAGE_LIST,
-        tags: TEST_TAG_LIST
+        tags: TEST_TAG_LIST,
+        metadata: TEST_METADATA
       });
 
-      actions$ = hot('-a', { a: action });
-      const loadComicSpy = vi
+      const loadSpy = vi
         .spyOn(comicService, 'load')
         .mockReturnValue(of(serviceResponse));
-      expect(
-        effects.loadComic$.pipe(
-          tap(response => expect(response).toStrictEqual(outcome))
-        )
-      ).toSatisfyOnFlush(() => {
-        expect(loadComicSpy).toHaveBeenCalledWith({
-          comicId: TEST_COMIC.comicId
-        });
-      });
+
+      actions$ = of(action);
+      await expect(firstValueFrom(effects.loadComic$)).resolves.toEqual(
+        outcome
+      );
+      expect(loadSpy).toHaveBeenCalledWith({ comicId: TEST_COMIC_ID });
     });
 
-    it('should dispatch an action on service failure', () => {
-      const serviceResponse = new HttpErrorResponse({});
+    it('should dispatch an action on service failure', async () => {
+      const serviceResponse = new Error('Service failure');
       const action = ComicDetailAction.load({
-        comicId: TEST_COMIC.comicId
+        comicId: TEST_COMIC_ID
       });
       const outcome = ComicDetailAction.loadFailure();
 
-      actions$ = hot('-a', { a: action });
-      const loadComicSpy = vi
+      const loadSpy = vi
         .spyOn(comicService, 'load')
         .mockReturnValue(throwError(() => serviceResponse));
-      const errorSpy = vi.spyOn(alertService, 'error');
-      expect(
-        effects.loadComic$.pipe(
-          tap(response => expect(response).toStrictEqual(outcome))
-        )
-      ).toSatisfyOnFlush(() => {
-        expect(loadComicSpy).toHaveBeenCalledWith({
-          comicId: TEST_COMIC.comicId
-        });
-        expect(errorSpy).toHaveBeenCalled();
-      });
+      const alertSpy = vi.spyOn(alertService, 'error');
+
+      actions$ = of(action);
+      await expect(firstValueFrom(effects.loadComic$)).resolves.toEqual(
+        outcome
+      );
+      expect(loadSpy).toHaveBeenCalledWith({ comicId: TEST_COMIC_ID });
+      expect(alertSpy).toHaveBeenCalled();
     });
 
-    it('should dispatch an action on general failure', () => {
+    it('should dispatch an action on general failure', async () => {
       const action = ComicDetailAction.load({
-        comicId: TEST_COMIC.comicId
+        comicId: TEST_COMIC_ID
       });
       const outcome = ComicDetailAction.loadFailure();
 
-      actions$ = hot('-a', { a: action });
-      const loadComicSpy = vi
+      const loadSpy = vi
         .spyOn(comicService, 'load')
-        .mockThrow(new Error());
-      const errorSpy = vi.spyOn(alertService, 'error');
-      expect(
-        effects.loadComic$.pipe(
-          tap(response => expect(response).toStrictEqual(outcome))
-        )
-      ).toSatisfyOnFlush(() => {
-        expect(loadComicSpy).toHaveBeenCalledWith({
-          comicId: TEST_COMIC.comicId
-        });
-        expect(errorSpy).toHaveBeenCalled();
-      });
+        .mockThrow(new Error('General failure'));
+      const alertSpy = vi.spyOn(alertService, 'error');
+
+      actions$ = of(action);
+      await expect(firstValueFrom(effects.loadComic$)).resolves.toEqual(
+        outcome
+      );
+      expect(loadSpy).toHaveBeenCalledWith({ comicId: TEST_COMIC_ID });
+      expect(alertSpy).toHaveBeenCalled();
     });
   });
 
   describe('saving a comic', () => {
-    it('should dispatch an action on success', () => {
+    it('should dispatch an action on success', async () => {
       const serviceResponse = {
         detail: TEST_COMIC,
-        metadata: TEST_METADATA,
         pages: TEST_PAGE_LIST,
-        tags: TEST_TAG_LIST
+        tags: TEST_TAG_LIST,
+        metadata: TEST_METADATA
       } as LoadComicDetailResponse;
-      const action = ComicDetailAction.save({ comic: TEST_COMIC });
+      const action = ComicDetailAction.save({
+        comic: TEST_COMIC
+      });
       const outcome = ComicDetailAction.saveSuccess();
 
-      actions$ = hot('-a', { a: action });
-      const saveComicSpy = vi
+      const saveSpy = vi
         .spyOn(comicService, 'save')
         .mockReturnValue(of(serviceResponse));
-      expect(
-        effects.saveComic$.pipe(
-          tap(response => expect(response).toStrictEqual(outcome))
-        )
-      ).toSatisfyOnFlush(() => {
-        expect(saveComicSpy).toHaveBeenCalledWith({
-          comicId: TEST_COMIC.comicId,
-          comicType: TEST_COMIC.comicType,
-          publisher: TEST_COMIC.publisher,
-          series: TEST_COMIC.series,
-          volume: TEST_COMIC.volume,
-          issueNumber: TEST_COMIC.issueNumber,
-          imprint: TEST_COMIC.imprint,
-          sortName: TEST_COMIC.sortName,
-          title: TEST_COMIC.title,
-          coverDate: TEST_COMIC.coverDate,
-          storeDate: TEST_COMIC.storeDate
-        });
+
+      actions$ = of(action);
+      await expect(firstValueFrom(effects.saveComic$)).resolves.toEqual(
+        outcome
+      );
+      expect(saveSpy).toHaveBeenCalledWith({
+        comicId: TEST_COMIC.comicId,
+        comicType: TEST_COMIC.comicType,
+        publisher: TEST_COMIC.publisher,
+        series: TEST_COMIC.series,
+        volume: TEST_COMIC.volume,
+        issueNumber: TEST_COMIC.issueNumber,
+        imprint: TEST_COMIC.imprint,
+        sortName: TEST_COMIC.sortName,
+        title: TEST_COMIC.title,
+        coverDate: TEST_COMIC.coverDate,
+        storeDate: TEST_COMIC.storeDate
       });
     });
 
-    it('should dispatch an action on service failure', () => {
-      const serviceResponse = new HttpErrorResponse({});
+    it('should dispatch an action on service failure', async () => {
+      const serviceResponse = new Error('Service failure');
       const action = ComicDetailAction.save({
         comic: TEST_COMIC
       });
       const outcome = ComicDetailAction.saveFailure();
 
-      actions$ = hot('-a', { a: action });
-      const saveComicSpy = vi
+      const saveSpy = vi
         .spyOn(comicService, 'save')
         .mockReturnValue(throwError(() => serviceResponse));
-      const errorSpy = vi.spyOn(alertService, 'error');
-      expect(
-        effects.saveComic$.pipe(
-          tap(response => expect(response).toStrictEqual(outcome))
-        )
-      ).toSatisfyOnFlush(() => {
-        expect(saveComicSpy).toHaveBeenCalledWith({
-          comicId: TEST_COMIC.comicId,
-          comicType: TEST_COMIC.comicType,
-          publisher: TEST_COMIC.publisher,
-          series: TEST_COMIC.series,
-          volume: TEST_COMIC.volume,
-          issueNumber: TEST_COMIC.issueNumber,
-          imprint: TEST_COMIC.imprint,
-          sortName: TEST_COMIC.sortName,
-          title: TEST_COMIC.title,
-          coverDate: TEST_COMIC.coverDate,
-          storeDate: TEST_COMIC.storeDate
-        });
-        expect(errorSpy).toHaveBeenCalled();
+      const alertSpy = vi.spyOn(alertService, 'error');
+
+      actions$ = of(action);
+      await expect(firstValueFrom(effects.saveComic$)).resolves.toEqual(
+        outcome
+      );
+      expect(saveSpy).toHaveBeenCalledWith({
+        comicId: TEST_COMIC.comicId,
+        comicType: TEST_COMIC.comicType,
+        publisher: TEST_COMIC.publisher,
+        series: TEST_COMIC.series,
+        volume: TEST_COMIC.volume,
+        issueNumber: TEST_COMIC.issueNumber,
+        imprint: TEST_COMIC.imprint,
+        sortName: TEST_COMIC.sortName,
+        title: TEST_COMIC.title,
+        coverDate: TEST_COMIC.coverDate,
+        storeDate: TEST_COMIC.storeDate
       });
+      expect(alertSpy).toHaveBeenCalled();
     });
 
-    it('should dispatch an action on general failure', () => {
+    it('should dispatch an action on general failure', async () => {
       const action = ComicDetailAction.save({
         comic: TEST_COMIC
       });
       const outcome = ComicDetailAction.saveFailure();
 
-      actions$ = hot('-a', { a: action });
-      const saveComicSpy = vi
+      const saveSpy = vi
         .spyOn(comicService, 'save')
-        .mockThrow(new Error());
-      const errorSpy = vi.spyOn(alertService, 'error');
-      expect(
-        effects.saveComic$.pipe(
-          tap(response => expect(response).toStrictEqual(outcome))
-        )
-      ).toSatisfyOnFlush(() => {
-        expect(saveComicSpy).toHaveBeenCalledWith({
-          comicId: TEST_COMIC.comicId,
-          comicType: TEST_COMIC.comicType,
-          publisher: TEST_COMIC.publisher,
-          series: TEST_COMIC.series,
-          volume: TEST_COMIC.volume,
-          issueNumber: TEST_COMIC.issueNumber,
-          imprint: TEST_COMIC.imprint,
-          sortName: TEST_COMIC.sortName,
-          title: TEST_COMIC.title,
-          coverDate: TEST_COMIC.coverDate,
-          storeDate: TEST_COMIC.storeDate
-        });
-        expect(errorSpy).toHaveBeenCalled();
+        .mockThrow(new Error('General failure'));
+      const alertSpy = vi.spyOn(alertService, 'error');
+
+      actions$ = of(action);
+      await expect(firstValueFrom(effects.saveComic$)).resolves.toEqual(
+        outcome
+      );
+      expect(saveSpy).toHaveBeenCalledWith({
+        comicId: TEST_COMIC.comicId,
+        comicType: TEST_COMIC.comicType,
+        publisher: TEST_COMIC.publisher,
+        series: TEST_COMIC.series,
+        volume: TEST_COMIC.volume,
+        issueNumber: TEST_COMIC.issueNumber,
+        imprint: TEST_COMIC.imprint,
+        sortName: TEST_COMIC.sortName,
+        title: TEST_COMIC.title,
+        coverDate: TEST_COMIC.coverDate,
+        storeDate: TEST_COMIC.storeDate
       });
+      expect(alertSpy).toHaveBeenCalled();
     });
   });
 });

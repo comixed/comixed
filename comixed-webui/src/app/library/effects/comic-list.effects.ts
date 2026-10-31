@@ -63,10 +63,10 @@ export class ComicListEffects {
             map(response =>
               ComicListActions.loadSuccess({
                 comicList: response.comics,
-                totalCount: response.totalCount,
-                filterCount: response.filteredCount,
                 coverMonthList: response.coverMonths,
-                coverYearList: response.coverYears
+                coverYearList: response.coverYears,
+                totalCount: response.totalCount,
+                filterCount: response.filteredCount
               })
             ),
             catchError(error => {

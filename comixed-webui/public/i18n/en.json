@@ -193,6 +193,14 @@
       }
     }
   },
+  "existing-admin-account-effects": {
+    "create-admin-account": {
+      "service-failure": "Failed to create admin account: {email}"
+    },
+    "has-existing": {
+      "service-failure": "Failed to check for an existing admin account..."
+    }
+  },
   "import-comics-page": {
     "import-comic-files": {
       "confirmation-message": "Are sure you want to import these files into the library?",
@@ -289,6 +297,11 @@
       "no-publishers-found": "No publishers found..."
     },
     "trail-title": "Publishers"
+  },
+  "publisher-series-list-effects": {
+    "load": {
+      "service-failure": "Failed to load comics for {name}..."
+    }
   },
   "publisher-series-list-page": {
     "label": {

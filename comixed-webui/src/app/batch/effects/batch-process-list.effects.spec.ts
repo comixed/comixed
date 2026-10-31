@@ -18,20 +18,48 @@
 
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { Observable } from 'rxjs';
-import { hot } from 'vitest-marbles';
+import { firstValueFrom, Observable, of, throwError } from 'rxjs';
 import { BatchProcessListEffects } from '@app/batch/effects/batch-process-list.effects';
+import { expect, it, vi } from 'vitest';
+import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
+import { provideTranslateService } from '@ngx-translate/core';
+import { AlertService } from '@app/services/alert-service';
+import { MessageService } from '@openng/optimus-ui/api';
+import BatchProcessService from '@app/batch/services/batch-process-service';
+import { BATCH_PROCESS_1, BATCH_PROCESS_2 } from '@app/batch/batch-fixtures';
+import { BatchProcessListActions } from '@app/batch/actions/batch-process-list.actions';
+import { provideMockStore } from '@ngrx/store/testing';
+import {
+  initialMessagingState,
+  MESSAGING_FEATURE_KEY
+} from '@app/messaging/reducers/messaging.reducer';
 
-describe.todo('BatchProcessListEffects', () => {
+describe('BatchProcessListEffects', () => {
+  const TEST_BATCH_PROCESS_LIST = [BATCH_PROCESS_1, BATCH_PROCESS_2];
+  const initialState = { [MESSAGING_FEATURE_KEY]: initialMessagingState };
+
   let actions$: Observable<unknown>;
   let effects: BatchProcessListEffects;
+  let batchProcessService: BatchProcessService;
+  let alertService: AlertService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [BatchProcessListEffects, provideMockActions(() => actions$)]
+      providers: [
+        BatchProcessListEffects,
+        provideMockActions(() => actions$),
+        provideLogger({ minLevel: LoggerLevel.OFF }),
+        provideTranslateService(),
+        provideMockStore({ initialState }),
+        BatchProcessService,
+        AlertService,
+        MessageService
+      ]
     });
 
     effects = TestBed.inject(BatchProcessListEffects);
+    batchProcessService = TestBed.inject(BatchProcessService);
+    alertService = TestBed.inject(AlertService);
   });
 
   it('should be created', () => {
@@ -39,30 +67,116 @@ describe.todo('BatchProcessListEffects', () => {
   });
 
   describe('loading batch processes', () => {
-    it('should dispatch an action on success', () => {
-      actions$ = hot('', {});
+    it('should dispatch an action on success', async () => {
+      const serviceResponse = TEST_BATCH_PROCESS_LIST;
+      const action = BatchProcessListActions.load();
+      const outcome = BatchProcessListActions.loadSuccess({
+        entries: TEST_BATCH_PROCESS_LIST
+      });
+
+      const loadSpy = vi
+        .spyOn(batchProcessService, 'loadBatchProcessList')
+        .mockReturnValue(of(serviceResponse));
+
+      actions$ = of(action);
+      await expect(
+        firstValueFrom(effects.loadBatchProcessList$)
+      ).resolves.toEqual(outcome);
+      expect(loadSpy).toHaveBeenCalled();
     });
 
-    it('should dispatch an action on service failure', () => {
-      actions$ = hot('', {});
+    it('should dispatch an action on service failure', async () => {
+      const serviceResponse = new Error('Service failure');
+      const action = BatchProcessListActions.load();
+      const outcome = BatchProcessListActions.loadFailure();
+
+      const loadSpy = vi
+        .spyOn(batchProcessService, 'loadBatchProcessList')
+        .mockReturnValue(throwError(() => serviceResponse));
+      const alertSpy = vi.spyOn(alertService, 'error');
+
+      actions$ = of(action);
+      await expect(
+        firstValueFrom(effects.loadBatchProcessList$)
+      ).resolves.toEqual(outcome);
+
+      expect(loadSpy).toHaveBeenCalled();
+      expect(alertSpy).toHaveBeenCalled();
     });
 
-    it('should dispatch an action on general failure', () => {
-      actions$ = hot('', {});
+    it('should dispatch an action on general failure', async () => {
+      const action = BatchProcessListActions.load();
+      const outcome = BatchProcessListActions.loadFailure();
+
+      const loadSpy = vi
+        .spyOn(batchProcessService, 'loadBatchProcessList')
+        .mockThrow(new Error('General failure'));
+      const alertSpy = vi.spyOn(alertService, 'error');
+
+      actions$ = of(action);
+      await expect(
+        firstValueFrom(effects.loadBatchProcessList$)
+      ).resolves.toEqual(outcome);
+
+      expect(loadSpy).toHaveBeenCalled();
+      expect(alertSpy).toHaveBeenCalled();
     });
   });
 
   describe('deleting completed batch processes', () => {
-    it('should dispatch an action on success', () => {
-      actions$ = hot('', {});
+    it('should dispatch an action on success', async () => {
+      const serviceResponse = TEST_BATCH_PROCESS_LIST;
+      const action = BatchProcessListActions.deleteCompleted();
+      const outcome = BatchProcessListActions.deleteCompletedSuccess({
+        entries: TEST_BATCH_PROCESS_LIST
+      });
+
+      const deleteSpy = vi
+        .spyOn(batchProcessService, 'deleteCompletedBatchProcesses')
+        .mockReturnValue(of(serviceResponse));
+
+      actions$ = of(action);
+      await expect(
+        firstValueFrom(effects.deleteCompletedProcesses$)
+      ).resolves.toEqual(outcome);
+      expect(deleteSpy).toHaveBeenCalled();
     });
 
-    it('should dispatch an action on service failure', () => {
-      actions$ = hot('', {});
+    it('should dispatch an action on service failure', async () => {
+      const serviceResponse = new Error('Service failure');
+      const action = BatchProcessListActions.deleteCompleted();
+      const outcome = BatchProcessListActions.deleteCompletedFailure();
+
+      const deleteSpy = vi
+        .spyOn(batchProcessService, 'deleteCompletedBatchProcesses')
+        .mockReturnValue(throwError(() => serviceResponse));
+      const alertSpy = vi.spyOn(alertService, 'error');
+
+      actions$ = of(action);
+      await expect(
+        firstValueFrom(effects.deleteCompletedProcesses$)
+      ).resolves.toEqual(outcome);
+
+      expect(deleteSpy).toHaveBeenCalled();
+      expect(alertSpy).toHaveBeenCalled();
     });
 
-    it('should dispatch an action on general failure', () => {
-      actions$ = hot('', {});
+    it('should dispatch an action on general failure', async () => {
+      const action = BatchProcessListActions.deleteCompleted();
+      const outcome = BatchProcessListActions.deleteCompletedFailure();
+
+      const deleteSpy = vi
+        .spyOn(batchProcessService, 'deleteCompletedBatchProcesses')
+        .mockThrow(new Error('General failure'));
+      const alertSpy = vi.spyOn(alertService, 'error');
+
+      actions$ = of(action);
+      await expect(
+        firstValueFrom(effects.deleteCompletedProcesses$)
+      ).resolves.toEqual(outcome);
+
+      expect(deleteSpy).toHaveBeenCalled();
+      expect(alertSpy).toHaveBeenCalled();
     });
   });
 });

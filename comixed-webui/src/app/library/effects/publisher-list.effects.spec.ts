@@ -18,20 +18,19 @@
 
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { Observable, of, tap, throwError } from 'rxjs';
-import { hot } from 'vitest-marbles';
+import { firstValueFrom, Observable, of, throwError } from 'rxjs';
 import { CollectionService } from '@app/library/services/collection-service';
 import { AlertService } from '@app/services/alert-service';
 import { MessageService } from '@openng/optimus-ui/api';
 import { LoadPublisherListResponse } from '@app/library/models/net/load-publisher-list-response';
 import { PUBLISHER_1 } from '@app/library/library-fixtures';
 import { PublisherListActions } from '@app/library/actions/publisher-list.actions';
-import { HttpErrorResponse } from '@angular/common/http';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
 import { provideTranslateService } from '@ngx-translate/core';
 import { PublisherListEffects } from '@app/library/effects/publisher-list.effects';
+import { expect, it, vi } from 'vitest';
 
-describe.todo('PublisherListEffects', () => {
+describe('PublisherListEffects', () => {
   const TEST_PUBLISHER_LIST = [PUBLISHER_1];
   const TEST_TOTAL = 320;
   const TEST_SEARCH_TEXT = 'the search text';
@@ -68,7 +67,7 @@ describe.todo('PublisherListEffects', () => {
   });
 
   describe('loading the publisher list', () => {
-    it('should dispatch an action on success', () => {
+    it('should dispatch an action on success', async () => {
       const serviceResponse = {
         publishers: TEST_PUBLISHER_LIST,
         total: TEST_TOTAL
@@ -85,27 +84,23 @@ describe.todo('PublisherListEffects', () => {
         total: TEST_TOTAL
       });
 
-      actions$ = hot('-a', { a: action });
-      const loadPublisherListSpy = vi
+      const loadSpy = vi
         .spyOn(collectionService, 'loadPublisherList')
         .mockReturnValue(of(serviceResponse));
-      expect(
-        effects.load$.pipe(
-          tap(response => expect(response).toStrictEqual(outcome))
-        )
-      ).toSatisfyOnFlush(() => {
-        expect(loadPublisherListSpy).toHaveBeenCalledWith({
-          searchText: TEST_SEARCH_TEXT,
-          page: TEST_PAGE,
-          size: TEST_SIZE,
-          sortBy: TEST_SORT_BY,
-          sortDirection: TEST_SORT_DIRECTION
-        });
+
+      actions$ = of(action);
+      await expect(firstValueFrom(effects.load$)).resolves.toEqual(outcome);
+      expect(loadSpy).toHaveBeenCalledWith({
+        searchText: TEST_SEARCH_TEXT,
+        page: TEST_PAGE,
+        size: TEST_SIZE,
+        sortBy: TEST_SORT_BY,
+        sortDirection: TEST_SORT_DIRECTION
       });
     });
 
-    it('should dispatch an action on service failure', () => {
-      const serviceResponse = new HttpErrorResponse({});
+    it('should dispatch an action on service failure', async () => {
+      const serviceResponse = new Error('Service failure');
       const action = PublisherListActions.load({
         searchText: TEST_SEARCH_TEXT,
         page: TEST_PAGE,
@@ -115,28 +110,24 @@ describe.todo('PublisherListEffects', () => {
       });
       const outcome = PublisherListActions.loadFailure();
 
-      actions$ = hot('-a', { a: action });
-      const loadPublisherListSpy = vi
+      const loadSpy = vi
         .spyOn(collectionService, 'loadPublisherList')
         .mockReturnValue(throwError(() => serviceResponse));
-      const errorSpy = vi.spyOn(alertService, 'error');
-      expect(
-        effects.load$.pipe(
-          tap(response => expect(response).toStrictEqual(outcome))
-        )
-      ).toSatisfyOnFlush(() => {
-        expect(loadPublisherListSpy).toHaveBeenCalledWith({
-          searchText: TEST_SEARCH_TEXT,
-          page: TEST_PAGE,
-          size: TEST_SIZE,
-          sortBy: TEST_SORT_BY,
-          sortDirection: TEST_SORT_DIRECTION
-        });
-        expect(errorSpy).toHaveBeenCalled();
+      const alertSpy = vi.spyOn(alertService, 'error');
+
+      actions$ = of(action);
+      await expect(firstValueFrom(effects.load$)).resolves.toEqual(outcome);
+      expect(loadSpy).toHaveBeenCalledWith({
+        searchText: TEST_SEARCH_TEXT,
+        page: TEST_PAGE,
+        size: TEST_SIZE,
+        sortBy: TEST_SORT_BY,
+        sortDirection: TEST_SORT_DIRECTION
       });
+      expect(alertSpy).toHaveBeenCalled();
     });
 
-    it('should dispatch an action on general failure', () => {
+    it('should dispatch an action on general failure', async () => {
       const action = PublisherListActions.load({
         searchText: TEST_SEARCH_TEXT,
         page: TEST_PAGE,
@@ -146,25 +137,21 @@ describe.todo('PublisherListEffects', () => {
       });
       const outcome = PublisherListActions.loadFailure();
 
-      actions$ = hot('-a', { a: action });
-      const loadPublisherListSpy = vi
+      const loadSpy = vi
         .spyOn(collectionService, 'loadPublisherList')
-        .mockThrow(new Error());
-      const errorSpy = vi.spyOn(alertService, 'error');
-      expect(
-        effects.load$.pipe(
-          tap(response => expect(response).toStrictEqual(outcome))
-        )
-      ).toSatisfyOnFlush(() => {
-        expect(loadPublisherListSpy).toHaveBeenCalledWith({
-          searchText: TEST_SEARCH_TEXT,
-          page: TEST_PAGE,
-          size: TEST_SIZE,
-          sortBy: TEST_SORT_BY,
-          sortDirection: TEST_SORT_DIRECTION
-        });
-        expect(errorSpy).toHaveBeenCalled();
+        .mockThrow(new Error('General failure'));
+      const alertSpy = vi.spyOn(alertService, 'error');
+
+      actions$ = of(action);
+      await expect(firstValueFrom(effects.load$)).resolves.toEqual(outcome);
+      expect(loadSpy).toHaveBeenCalledWith({
+        searchText: TEST_SEARCH_TEXT,
+        page: TEST_PAGE,
+        size: TEST_SIZE,
+        sortBy: TEST_SORT_BY,
+        sortDirection: TEST_SORT_DIRECTION
       });
+      expect(alertSpy).toHaveBeenCalled();
     });
   });
 });
