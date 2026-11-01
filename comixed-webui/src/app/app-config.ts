@@ -48,6 +48,7 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { environment } from '../environments/environment';
 import { BatchModule } from '@app/batch/batch-module';
+import { DialogService } from '@openng/optimus-ui/dynamicdialog';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -73,8 +74,9 @@ export const appConfig: ApplicationConfig = {
       }
     },
     provideOptimus({ theme: { preset: Aura } }),
-    MessageService,
     ConfirmationService,
+    DialogService,
+    MessageService,
     importProvidersFrom(
       StoreModule.forRoot({}, {}),
       EffectsModule.forRoot([]),

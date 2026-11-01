@@ -21,6 +21,7 @@ import { COMIC_1 } from '@app/library/library-fixtures';
 import { provideRouter } from '@angular/router';
 import { provideTranslateService } from '@ngx-translate/core';
 import { ComicCover } from '@app/library/components/comic-cover/comic-cover';
+import { beforeEach } from 'vitest';
 
 describe('ComicCover', () => {
   const TEST_COMIC = COMIC_1;
@@ -39,11 +40,29 @@ describe('ComicCover', () => {
 
     fixture = TestBed.createComponent(ComicCover);
     component = fixture.componentInstance;
-    component.comic = TEST_COMIC;
     await fixture.whenStable();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('when loaded', () => {
+    beforeEach(() => {
+      component.comic = TEST_COMIC;
+      fixture.detectChanges();
+    });
+
+    it('should show the comic title as the title', () => {
+      expect(
+        document.querySelector('#comic-cover-title')?.textContent.trim()
+      ).toBe(TEST_COMIC.title);
+    });
+
+    it('should show the comic base filename as the subtitle', () => {
+      expect(
+        document.querySelector('#comic-cover-subtitle')?.textContent.trim()
+      ).toBe(TEST_COMIC.baseFilename);
+    });
   });
 });

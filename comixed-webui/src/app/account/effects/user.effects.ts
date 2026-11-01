@@ -25,6 +25,7 @@ import { TokenService } from '@app/account/services/token-service';
 import { AlertService } from '@app/services/alert-service';
 import { TranslateService } from '@ngx-translate/core';
 import { UserActions } from '@app/account/actions/user.actions';
+import { ReadComicListActions } from '@app/account/actions/read-comic-list.actions';
 
 @Injectable()
 export class UserEffects {
@@ -33,7 +34,7 @@ export class UserEffects {
   readonly translateService = inject(TranslateService);
   readonly accountService = inject(AccountService);
   readonly tokenService = inject(TokenService);
-  private actions$ = inject(Actions);
+  readonly actions$ = inject(Actions);
 
   login$ = createEffect(() => {
     return this.actions$.pipe(
@@ -74,7 +75,12 @@ export class UserEffects {
       switchMap(() =>
         this.accountService.loadUser().pipe(
           tap(response => this.logger.debug('Response received:', response)),
-          map(response => UserActions.loadSuccess({ user: response })),
+          mergeMap(response => [
+            UserActions.loadSuccess({ user: response }),
+            ReadComicListActions.updateList({
+              comicIds: response?.readComics || []
+            })
+          ]),
           catchError(error => {
             this.logger.debug('Service failure:', error);
             this.alertService.error(

@@ -34,6 +34,9 @@ export const LOAD_USER_URL = `${API_ROOT_URL}/user`;
 export const LOGIN_URL = `${API_ROOT_URL}/token/generate`;
 export const SAVE_USER_PREFERENCE_URL = `${API_ROOT_URL}/user/preferences/\${preferenceName}`;
 
+export const MARK_SELECTED_COMICS_READ_STATE_URL = `${API_ROOT_URL}/user/read/selected`;
+export const UNMARK_SELECTED_COMICS_READ_STATE_URL = `${API_ROOT_URL}/user/read/selected`;
+
 // messaging
 export const ACCOUNT_UPDATES_TOPIC = `/secured/user/\${email}/user/current`;
 export const COMIC_SELECTION_UPDATE_TOPIC = `${SECURED_MESSAGING_PREFIX}/\${email}/topic/comic-book-selection.update`;

@@ -20,3 +20,4 @@ export const DEFAULT_DASHBOARD_STATS =
   'publisher-stats|series-stats|character-stats|team-stats|location-stats|story-stats|comic-state-stats|archive-type-stats';
 
 export const BACKGROUND_COLORS = ['#f7aa00', '#235784', '#40a8c4', '#bcdbdf'];
+export const BORDER_COLORS = ['#C78300', '#173B5B', '#28788C', '#7CABB1'];

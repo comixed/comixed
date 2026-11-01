@@ -20,11 +20,16 @@ import { Component, Input, signal } from '@angular/core';
 import { RemoteLibrarySegment } from '@app/library/models/net/remote-library-segment';
 import { Card } from '@openng/optimus-ui/card';
 import { UIChart } from '@openng/optimus-ui/chart';
-import { BACKGROUND_COLORS } from '@app/dashboard/dashboard-constants';
+import {
+  BACKGROUND_COLORS,
+  BORDER_COLORS
+} from '@app/dashboard/dashboard-constants';
 
 interface PieData {
   labels: string[];
-  datasets: [{ data: number[]; backgroundColor: string[] }];
+  datasets: [
+    { data: number[]; backgroundColor: string[]; borderColor: string[] }
+  ];
 }
 
 @Component({
@@ -67,7 +72,8 @@ export class DistributionStatistics {
       datasets: [
         {
           data: this.data.map(entry => entry.count),
-          backgroundColor: BACKGROUND_COLORS
+          backgroundColor: BACKGROUND_COLORS,
+          borderColor: BORDER_COLORS
         }
       ]
     } as PieData);

@@ -31,7 +31,7 @@ export class RemoteLibraryEffects {
   readonly libraryService = inject(LibraryService);
   readonly alertService = inject(AlertService);
   readonly translateService = inject(TranslateService);
-  private actions$ = inject(Actions);
+  readonly actions$ = inject(Actions);
   loadState$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(RemoteLibraryActions.load),

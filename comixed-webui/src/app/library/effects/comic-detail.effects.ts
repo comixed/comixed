@@ -27,7 +27,7 @@ import { ComicDetailAction } from '@app/library/actions/comic-detail.actions';
 
 @Injectable()
 export class ComicDetailEffects {
-  private actions$ = inject(Actions);
+  readonly actions$ = inject(Actions);
   readonly logger = inject(LoggerService);
   readonly alertService = inject(AlertService);
   readonly comicService = inject(ComicService);

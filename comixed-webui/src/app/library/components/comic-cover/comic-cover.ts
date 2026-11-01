@@ -25,7 +25,6 @@ import { Tooltip } from '@openng/optimus-ui/tooltip';
 import { Button } from '@openng/optimus-ui/button';
 import { TranslatePipe } from '@ngx-translate/core';
 import { RouterLink } from '@angular/router';
-import { Skeleton } from '@openng/optimus-ui/skeleton';
 
 @Component({
   imports: [
@@ -35,22 +34,20 @@ import { Skeleton } from '@openng/optimus-ui/skeleton';
     Tooltip,
     Button,
     TranslatePipe,
-    RouterLink,
-    Skeleton
+    RouterLink
   ],
   selector: 'app-comic-cover',
   styleUrl: './comic-cover.scss',
   templateUrl: './comic-cover.html'
 })
 export class ComicCover {
-  readonly isLoading = signal(false);
   readonly comicDetail = signal<Comic>(NO_COMIC);
+  readonly comicTitle = signal('');
+  readonly comicSubtitle = signal('');
 
   @Input() set comic(comic: Comic) {
     this.comicDetail.set(comic);
-  }
-
-  @Input() set loading(loading: boolean) {
-    this.isLoading.set(loading);
+    this.comicTitle.set(comic.title);
+    this.comicSubtitle.set(comic.baseFilename);
   }
 }

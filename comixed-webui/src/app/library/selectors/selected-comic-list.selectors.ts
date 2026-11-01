@@ -37,3 +37,8 @@ export const selectSelectedComicListEntries = createSelector(
   selectSelectedComicListState,
   state => selectedComicListAdapter.getSelectors().selectAll(state)
 );
+
+export const selectSelectedComicListCount = createSelector(
+  selectSelectedComicListState,
+  state => selectedComicListAdapter.getSelectors().selectAll(state).length
+);

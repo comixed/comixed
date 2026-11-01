@@ -23,12 +23,12 @@ import { Button } from '@openng/optimus-ui/button';
 import { Toolbar } from '@openng/optimus-ui/toolbar';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Tooltip } from '@openng/optimus-ui/tooltip';
-import { LibraryStatisticsPanel } from '@app/layout/components/library-statistics-panel/library-statistics-panel';
 import { Store } from '@ngrx/store';
 import {
   selectUserAuthenticated,
   selectUserIsAdmin
 } from '@app/account/selectors/user.selectors';
+import { SelectedComicToolbar } from '@app/layout/components/selected-comic-toolbar/selected-comic-toolbar';
 
 @Component({
   imports: [
@@ -37,7 +37,7 @@ import {
     Toolbar,
     TranslatePipe,
     Tooltip,
-    LibraryStatisticsPanel
+    SelectedComicToolbar
   ],
   selector: 'app-topbar',
   styleUrl: './topbar.scss',

@@ -14,6 +14,7 @@
       "loading": "Loading, Please Wait...",
       "publisher": "[publisher]",
       "series": "[series]",
+      "version": "ComiXed v{version}",
       "yes-or-no": "{value, select, true{Yes} other{no}}"
     }
   },
@@ -313,6 +314,26 @@
     },
     "page-title": "{publisherName}: Series List",
     "trail-title": "Series List"
+  },
+  "read-state-dialog": {
+    "button": {
+      "mark": "Mark Read",
+      "unmark": "Mark Unread"
+    },
+    "message": "Do you want to mark the selected comics as READ or UNREAD?",
+    "title": "Selected Comics Read State"
+  },
+  "selected-comic-toolbar": {
+    "tooltip": {
+      "batch-scrape": "Batch scrape the selected comics...",
+      "deleted-state": "Mark/Unmark selected comics for removal...",
+      "organize": "Organize the selected comics...",
+      "read-state": "Mark selected comics as read/unread...",
+      "recreate": "Recreate the selected comics...",
+      "rescan": "Rescan the selected comics...",
+      "scrape": "Scrape the selected comics...",
+      "update-metadata": "Update the metadata for the selected comics..."
+    }
   },
   "series-comic-list-effects": {
     "load": {

@@ -41,6 +41,7 @@ import { UserActions } from '@app/account/actions/user.actions';
 import { SaveUserPreferenceRequest } from '@app/account/models/net/save-user-preference-request';
 import selectUserState from '@app/account/selectors/user.selectors';
 import { SelectedComicListActions } from '@app/library/actions/selected-comic-list.actions';
+import { ReadComicListActions } from '@app/account/actions/read-comic-list.actions';
 
 @Service()
 export class AccountService {
@@ -70,6 +71,10 @@ export class AccountService {
             user => {
               this.logger.debug('Received user update:', user);
               this.store.dispatch(UserActions.userUpdate({ user }));
+              this.logger.debug('Updating read comic list');
+              this.store.dispatch(
+                ReadComicListActions.updateList({ comicIds: user.readComics })
+              );
             }
           );
           this.logger.debug('Subscribing to comic selection updates');

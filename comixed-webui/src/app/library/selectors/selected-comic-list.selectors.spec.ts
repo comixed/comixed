@@ -25,6 +25,7 @@ import {
 } from '@app/library/reducers/selected-comic-list.reducer';
 import {
   selectSelectedComicListBusy,
+  selectSelectedComicListCount,
   selectSelectedComicListEntries
 } from '@app/library/selectors/selected-comic-list.selectors';
 
@@ -55,7 +56,7 @@ describe('SelectecComicList Selectors', () => {
     });
   });
 
-  it('should return the selected comic id list', () => {
+  it('should return the selected comic list', () => {
     expect(
       selectSelectedComicListEntries({
         [SELECTED_COMIC_LIST_FEATURE_KEY]: selectedComicListAdapter.setAll(
@@ -64,5 +65,16 @@ describe('SelectecComicList Selectors', () => {
         )
       })
     ).toStrictEqual(TEST_COMIC_ID_LIST);
+  });
+
+  it('should return the selected comic count', () => {
+    expect(
+      selectSelectedComicListCount({
+        [SELECTED_COMIC_LIST_FEATURE_KEY]: selectedComicListAdapter.setAll(
+          TEST_COMIC_ID_LIST,
+          { ...state }
+        )
+      })
+    ).toBe(TEST_COMIC_ID_LIST.length);
   });
 });

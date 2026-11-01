@@ -31,7 +31,7 @@ export class ExistingAdminAccountEffects {
   readonly accountService = inject(AccountService);
   readonly alertService = inject(AlertService);
   readonly translateService = inject(TranslateService);
-  private actions$ = inject(Actions);
+  readonly actions$ = inject(Actions);
   hasExisting$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(ExistingAdminAccountActions.check),

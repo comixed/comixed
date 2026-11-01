@@ -33,7 +33,7 @@ export class ComicFileListEffects {
   readonly comicFileService = inject(ComicFileService);
   readonly alertService = inject(AlertService);
   readonly translateService = inject(TranslateService);
-  private actions$ = inject(Actions);
+  readonly actions$ = inject(Actions);
   loadFromSession$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(ComicFileListActions.loadFromSession),

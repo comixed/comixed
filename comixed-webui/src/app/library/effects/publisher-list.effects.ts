@@ -31,7 +31,7 @@ export class PublisherListEffects {
   readonly alertService = inject(AlertService);
   readonly translateService = inject(TranslateService);
   readonly collectionService = inject(CollectionService);
-  private actions$ = inject(Actions);
+  readonly actions$ = inject(Actions);
   load$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(PublisherListActions.load),

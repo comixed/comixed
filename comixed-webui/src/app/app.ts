@@ -33,9 +33,10 @@ import { Toast } from '@openng/optimus-ui/toast';
 import { RemoteLibraryActions } from '@app/library/actions/remote-library.actions';
 import { ConfirmDialog } from '@openng/optimus-ui/confirmdialog';
 import { SelectedComicListActions } from '@app/library/actions/selected-comic-list.actions';
+import { Footer } from '@app/layout/components/footer/footer';
 
 @Component({
-  imports: [Topbar, RouterOutlet, Toast, ConfirmDialog],
+  imports: [Topbar, RouterOutlet, Toast, ConfirmDialog, Footer],
   selector: 'app-root',
   styleUrl: './app.scss',
   templateUrl: './app.html'

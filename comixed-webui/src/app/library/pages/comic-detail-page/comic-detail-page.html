@@ -3,10 +3,7 @@
 >
   <div id="comic-cover-container" class="cx-flex-content-grow-0 cx-height-100p">
     @if (comic()) {
-      <app-comic-cover
-        [comic]="comic()!"
-        [loading]="loading()"
-      ></app-comic-cover>
+      <app-comic-cover [comic]="comic()!"></app-comic-cover>
     }
   </div>
   <div class="cx-flex-content-grow-1 cx-scroll-y-auto">

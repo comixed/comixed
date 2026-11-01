@@ -18,7 +18,6 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
-import { provideTranslateService } from '@ngx-translate/core';
 import { provideRouter } from '@angular/router';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import {
@@ -37,6 +36,7 @@ import { IMPORT_ROOT_DIRECTORY_PREFERENCE } from '@app/account/user-preferences'
 import { beforeEach, Mock } from 'vitest';
 import { ComicFileListActions } from '@app/library/actions/comic-file-list.actions';
 import { COMIC_FILE_1 } from '@app/library/library-fixtures';
+import { provideTranslateService } from '@ngx-translate/core';
 
 describe('ImportComicsPage', () => {
   const TEST_IMPORT_DIRECTORY = '/home/comixed/library/imports';
@@ -170,7 +170,9 @@ describe('ImportComicsPage', () => {
       const checkbox: HTMLInputElement = fixture.nativeElement.querySelector(
         `#select-comic-file-checkbox-${TEST_COMIC_FILE.id} input`
       );
-      expect(checkbox.checked).toBeFalsy();
+      checkbox.checked = false;
+      checkbox.dispatchEvent(new Event('change', { bubbles: false }));
+      fixture.detectChanges();
       checkbox.click();
       fixture.detectChanges();
     });
@@ -186,14 +188,18 @@ describe('ImportComicsPage', () => {
     });
   });
 
-  describe.todo('deselecting a single comic', () => {
+  describe('deselecting a single comic', () => {
     beforeEach(() => {
       dispatchSpy.mockClear();
       setSelectedState(true);
-      const checkbox = fixture.nativeElement.querySelector(
-        `#select-comic-file-checkbox-${TEST_COMIC_FILE.id} input[type="checkbox"]`
-      ) as HTMLInputElement;
+      const checkbox: HTMLInputElement = fixture.nativeElement.querySelector(
+        `#select-comic-file-checkbox-${TEST_COMIC_FILE.id} input`
+      );
+      checkbox.checked = true;
+      checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+      fixture.detectChanges();
       checkbox.click();
+      fixture.detectChanges();
     });
 
     it('should dispatch an action', () => {

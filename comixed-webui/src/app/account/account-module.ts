@@ -24,6 +24,8 @@ import { EffectsModule } from '@ngrx/effects';
 import { ExistingAdminAccountEffects } from '@app/account/effects/existing-admin-account.effects';
 import { userFeature } from '@app/account/reducers/user.reducer';
 import { UserEffects } from '@app/account/effects/user.effects';
+import { readComicListFeature } from '@app/account/reducers/read-comic-list.reducer';
+import { ReadComicListEffects } from '@app/account/effects/read-comic-list.effects';
 
 @NgModule({
   declarations: [],
@@ -31,7 +33,12 @@ import { UserEffects } from '@app/account/effects/user.effects';
     CommonModule,
     StoreModule.forFeature(existingAdminAccountFeature),
     StoreModule.forFeature(userFeature),
-    EffectsModule.forFeature([ExistingAdminAccountEffects, UserEffects])
+    StoreModule.forFeature(readComicListFeature),
+    EffectsModule.forFeature([
+      ExistingAdminAccountEffects,
+      UserEffects,
+      ReadComicListEffects
+    ])
   ]
 })
 export class AccountModule {}

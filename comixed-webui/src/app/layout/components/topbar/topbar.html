@@ -10,24 +10,18 @@
         severity="primary"
         [routerLink]="['/']"
       />
-    }
 
-    @if (isAdmin().passed) {
-      <p-button
-        id="import-comics-button"
-        [pTooltip]="'topbar.tooltip.import-button' | translate"
-        icon="pi pi-file-import"
-        severity="contrast"
-        [routerLink]="['/library/import']"
-      />
-    }
-  </ng-template>
+      @if (isAdmin().passed) {
+        <p-button
+          id="import-comics-button"
+          [pTooltip]="'topbar.tooltip.import-button' | translate"
+          icon="pi pi-file-import"
+          severity="warn"
+          [routerLink]="['/library/import']"
+        />
+      }
 
-  <ng-template #center>
-    @if (authenticated()) {
-      <app-library-statistics-panel
-        id="library-statistics"
-      ></app-library-statistics-panel>
+      <app-selected-comic-toolbar></app-selected-comic-toolbar>
     }
   </ng-template>
 
@@ -37,7 +31,7 @@
         id="logout-button"
         [pTooltip]="'topbar.tooltip.logout-button' | translate"
         icon="pi pi-sign-out"
-        severity="warn"
+        severity="danger"
       />
     }
   </ng-template>

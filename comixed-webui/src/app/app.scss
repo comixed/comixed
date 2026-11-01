@@ -1,14 +1,5 @@
 @use './variables' as *;
 
-#app-topbar-container {
-  position: sticky;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: $cx-topbar-height;
-  z-index: 99;
-}
-
 #app-portal {
   position: fixed;
   overflow-y: auto;
@@ -17,4 +8,13 @@
   left: $cx-margin-width;
   width: $cx-portal-width;
   height: $cx-portal-height;
+}
+
+footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  height: $cx-footer-height;
+  width: 100%;
+  padding-top: $cx-footer-padding;
 }

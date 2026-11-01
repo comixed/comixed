@@ -76,7 +76,7 @@
       <tr>
         <td>
           <p-check-box
-            [id]="`select-comic-file-checkbox-${file.id}`"
+            [id]="'select-comic-file-checkbox-' + file.id"
             [binary]="true"
             [ngModel]="file.selected"
             (onChange)="onSelectComicFile(file, $event.checked)"

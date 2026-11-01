@@ -42,6 +42,7 @@ import { selectSelectedComicListEntries } from '@app/library/selectors/selected-
 })
 export class LibraryStatisticsPanel {
   readonly store = inject(Store);
+  readonly isAdmin = this.store.selectSignal(selectUserIsAdmin);
   readonly totalComics = this.store.selectSignal(
     selectRemoteLibraryTotalComics
   );

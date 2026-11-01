@@ -22,7 +22,10 @@ import { Card } from '@openng/optimus-ui/card';
 import { UIChart } from '@openng/optimus-ui/chart';
 import { Button } from '@openng/optimus-ui/button';
 import { GraphData } from '@app/dashboard/models/graph-data';
-import { BACKGROUND_COLORS } from '@app/dashboard/dashboard-constants';
+import {
+  BACKGROUND_COLORS,
+  BORDER_COLORS
+} from '@app/dashboard/dashboard-constants';
 import { topEntries } from '@app/dashboard/dashboard-functions';
 
 @Component({
@@ -79,7 +82,8 @@ export class ZoomedStatistics {
           label: this.dataTitle(),
           data: source.map(entry => entry.count),
           backgroundColor: BACKGROUND_COLORS,
-          borderWidth: 1
+          borderColor: BORDER_COLORS,
+          borderWidth: 3
         }
       ]
     } as GraphData;

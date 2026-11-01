@@ -31,7 +31,7 @@ export class TagListEffects {
   readonly collectService = inject(CollectionService);
   readonly alertService = inject(AlertService);
   readonly translateService = inject(TranslateService);
-  private actions$ = inject(Actions);
+  readonly actions$ = inject(Actions);
   loadTagLists$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(TagListActions.load),

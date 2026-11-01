@@ -25,7 +25,10 @@ import { RemoteLibrarySegment } from '@app/library/models/net/remote-library-seg
 import { GraphData } from '@app/dashboard/models/graph-data';
 import { UIChart } from '@openng/optimus-ui/chart';
 import { RouterLink } from '@angular/router';
-import { BACKGROUND_COLORS } from '@app/dashboard/dashboard-constants';
+import {
+  BACKGROUND_COLORS,
+  BORDER_COLORS
+} from '@app/dashboard/dashboard-constants';
 import { topEntries } from '@app/dashboard/dashboard-functions';
 
 @Component({
@@ -93,7 +96,8 @@ export class CollectionStatistics {
           label: this.chartTitle(),
           data: source.map(entry => entry.count),
           backgroundColor: BACKGROUND_COLORS,
-          borderWidth: 1
+          borderColor: BORDER_COLORS,
+          borderWidth: 3
         }
       ]
     } as GraphData;

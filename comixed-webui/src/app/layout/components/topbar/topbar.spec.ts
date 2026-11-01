@@ -42,6 +42,7 @@ import {
   initialSelectedComicListState,
   SELECTED_COMIC_LIST_FEATURE_KEY
 } from '@app/library/reducers/selected-comic-list.reducer';
+import { DialogService } from '@openng/optimus-ui/dynamicdialog';
 
 describe('Topbar', () => {
   const initialState = {
@@ -68,7 +69,8 @@ describe('Topbar', () => {
           useValue: {
             setStyle: vi.fn()
           }
-        }
+        },
+        DialogService
       ]
     }).compileComponents();
 
@@ -125,12 +127,6 @@ describe('Topbar', () => {
       expect(
         fixture.debugElement.query(By.css('#import-comics-button'))
       ).toBeNull();
-    });
-
-    it('should show the library statistics panel', () => {
-      expect(
-        fixture.debugElement.query(By.css('#library-statistics'))
-      ).not.toBeNull();
     });
 
     it('should show the logout button', () => {
