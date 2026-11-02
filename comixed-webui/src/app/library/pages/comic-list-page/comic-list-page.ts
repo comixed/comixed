@@ -40,12 +40,13 @@ import { ComicListActions } from '@app/library/actions/comic-list.actions';
 import {
   QUERY_PARAM_PAGE_INDEX,
   QUERY_PARAM_PAGE_SIZE,
-  QUERY_PARAM_UNREAD_ONLY
+  QUERY_PARAM_READ_ONLY
 } from '@app/library/library-constants';
 import { ComicTable } from '@app/library/components/comic-table/comic-table';
 import { ToggleButton } from '@openng/optimus-ui/togglebutton';
 import { FormsModule } from '@angular/forms';
 import { Tooltip } from '@openng/optimus-ui/tooltip';
+import { SelectedComicListActions } from '@app/library/actions/selected-comic-list.actions';
 
 @Component({
   imports: [
@@ -86,13 +87,13 @@ export class ComicListPage {
   );
   readonly comicListFirst = signal(0);
   readonly comicListRows = signal(10);
-  readonly readState = signal(false);
+  readonly readFlag = signal(true);
 
   readonly trail = signal<MenuItem[]>([]);
   readonly home: MenuItem = { icon: 'pi pi-home', routerLink: ['/'] };
 
   readonly selectedComics = signal(false);
-  readonly unreadComics = signal(false);
+  readonly readComics = signal(true);
   readonly unscrapedComics = signal(false);
   readonly duplicateComics = signal(false);
   readonly deletedComics = signal(false);
@@ -102,7 +103,7 @@ export class ComicListPage {
       next: data => {
         this.logger.debug('Activated route data updated:', data);
         this.selectedComics.set(data['selected'] === true);
-        this.readState.set(data['readState'] === true);
+        this.readComics.set(data['readState'] === true);
         this.unscrapedComics.set(data['unscraped'] === true);
         this.duplicateComics.set(data['duplicates'] === true);
         this.deletedComics.set(data['deleted'] === true);
@@ -112,15 +113,15 @@ export class ComicListPage {
       next: params => {
         const page = +params[QUERY_PARAM_PAGE_INDEX] || 0;
         const size = +params[QUERY_PARAM_PAGE_SIZE] || 10;
-        if (params[QUERY_PARAM_UNREAD_ONLY]) {
-          this.unreadComics.set(params[QUERY_PARAM_UNREAD_ONLY] === `${true}`);
+        if (params[QUERY_PARAM_READ_ONLY]) {
+          this.readFlag.set(params[QUERY_PARAM_READ_ONLY] === `${true}`);
         }
         this.comicListFirst.set(page * size);
         this.comicListRows.set(size);
-        if (this.readState()) {
+        if (this.readComics()) {
           this.store.dispatch(
             ComicListActions.loadByReadState({
-              unreadOnly: this.unreadComics(),
+              unreadOnly: this.readFlag() === false,
               pageIndex: page,
               pageSize: size,
               sortBy: '',
@@ -158,9 +159,11 @@ export class ComicListPage {
     this.doLoadTranslations();
   }
 
-  onToggleUnreadOnly(unreadOnly: boolean) {
+  onToggleUnreadOnly() {
+    const readFlag = !this.readFlag();
+    this.logger.debug('Toggling read flag:', readFlag);
     this.queryParameterService.updateQueryParam([
-      { name: QUERY_PARAM_UNREAD_ONLY, value: `${unreadOnly}` }
+      { name: QUERY_PARAM_READ_ONLY, value: `${readFlag}` }
     ]);
   }
 
@@ -168,7 +171,7 @@ export class ComicListPage {
     if (this.selectedComics()) {
       return 'SELECTED';
     }
-    if (this.readState()) {
+    if (this.readComics()) {
       return 'READ';
     }
     if (this.unscrapedComics()) {
@@ -188,6 +191,20 @@ export class ComicListPage {
       { name: QUERY_PARAM_PAGE_INDEX, value: `${event.first! / event.rows!}` },
       { name: QUERY_PARAM_PAGE_SIZE, value: `${event.rows!}` }
     ]);
+  }
+
+  onSelectAll(selected: boolean): void {
+    if (this.readComics()) {
+      this.logger.debug(
+        `Setting selected state for read comics: read=${this.readFlag} selected=${selected}`
+      );
+      this.store.dispatch(
+        SelectedComicListActions.selectByReadState({
+          readState: this.readFlag(),
+          selected
+        })
+      );
+    }
   }
 
   private doLoadTranslations() {

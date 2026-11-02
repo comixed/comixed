@@ -21,7 +21,7 @@ import {
   selectedComicListAdapter,
   selectedComicListReducer,
   SelectedComicListState
-} from '../reducers/selected-comic-list.reducer';
+} from './selected-comic-list.reducer';
 import { beforeEach } from 'vitest';
 import { Action } from '@ngrx/store';
 import { SelectedComicListActions } from '@app/library/actions/selected-comic-list.actions';
@@ -32,7 +32,6 @@ describe('SelectedComicList Reducer', () => {
     7, 17, 65, 1, 29, 71, 12, 3, 86, 3, 20, 96, 9, 21, 98, 4, 6
   ];
   const TEST_COMIC = COMIC_1;
-
   let state: SelectedComicListState;
 
   beforeEach(() => {
@@ -148,6 +147,57 @@ describe('SelectedComicList Reducer', () => {
         state = selectedComicListReducer(
           { ...state, busy: true },
           SelectedComicListActions.selectComicFailure()
+        );
+      });
+
+      it('should clear the busy flag', () => {
+        expect(state.busy).toBeFalsy();
+      });
+    });
+  });
+
+  describe('toggling all comics by read state', () => {
+    beforeEach(() => {
+      state = selectedComicListReducer(
+        {
+          ...state,
+          busy: false
+        },
+        SelectedComicListActions.selectByReadState({
+          readState: true,
+          selected: false
+        })
+      );
+    });
+
+    it('should set the busy flag', () => {
+      expect(state.busy).toBeTruthy();
+    });
+
+    describe('success', () => {
+      beforeEach(() => {
+        state = selectedComicListReducer(
+          {
+            ...state,
+            busy: true
+          },
+          SelectedComicListActions.selectByReadStateSuccess()
+        );
+      });
+
+      it('should clear the busy flag', () => {
+        expect(state.busy).toBeFalsy();
+      });
+    });
+
+    describe('failure', () => {
+      beforeEach(() => {
+        state = selectedComicListReducer(
+          {
+            ...state,
+            busy: true
+          },
+          SelectedComicListActions.selectByReadStateFailure()
         );
       });
 

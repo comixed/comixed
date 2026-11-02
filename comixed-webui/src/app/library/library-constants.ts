@@ -45,12 +45,13 @@ export const LOAD_COLLECTION_ENTRIES_URL = `${API_ROOT_URL}/collections/\${tagTy
 export const LOAD_SELECTED_COMIC_ID_LIST_URL = `${API_ROOT_URL}/comics/selections`;
 export const SELECT_SINGLE_COMIC_URL = `${API_ROOT_URL}/comics/selections/\${comicId}`;
 export const DESELECT_SINGLE_COMIC_URL = `${API_ROOT_URL}/comics/selections/\${comicId}`;
+export const SET_SELECTED_BY_READ_STATE_URL = `${API_ROOT_URL}/comics/selections/unread`;
 
 // query parameters
 export const QUERY_PARAM_COMIC_DETAIL_TAB = 'comic-detail-tab';
 export const QUERY_PARAM_PAGE_INDEX = 'index';
 export const QUERY_PARAM_PAGE_SIZE = 'size';
-export const QUERY_PARAM_UNREAD_ONLY = 'unread';
+export const QUERY_PARAM_READ_ONLY = 'read-flag';
 
 // messaging
 export const REMOTE_LIBRARY_STATE_TOPIC = '/topic/remote-library.update';

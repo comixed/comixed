@@ -29,6 +29,7 @@ import { MessageService } from '@openng/optimus-ui/api';
 import { ComicListPage } from '@app/library/pages/comic-list-page/comic-list-page';
 import { beforeEach, Mock } from 'vitest';
 import { RouterTestingHarness } from '@angular/router/testing';
+import { SelectedComicListActions } from '@app/library/actions/selected-comic-list.actions';
 
 describe('ComicListPage', () => {
   const initialState = { [COMIC_LIST_FEATURE_KEY]: initialComicListState };
@@ -65,6 +66,12 @@ describe('ComicListPage', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should not show the read toggle flag', () => {
+    expect(
+      harness.routeNativeElement?.querySelector('#read-comic-toggle') || null
+    ).toBeNull();
+  });
+
   describe('changing the language', () => {
     let setTitleSpy: Mock;
 
@@ -88,28 +95,50 @@ describe('ComicListPage', () => {
     });
 
     it('should set the read state flag', () => {
-      expect(component.readState()).toBeTruthy();
+      expect(component.readComics()).toBeTruthy();
     });
 
     it('should display the read toggle button', () => {
       expect(
-        harness.routeNativeElement?.querySelector('#unread-comic-toggle')
+        harness.routeNativeElement?.querySelector('#read-comic-toggle')
       ).not.toBeNull();
     });
 
-    describe('clicking the read toggle button', () => {
+    describe('toggling the read flag', () => {
       let toggleSpy: Mock;
 
       beforeEach(() => {
         toggleSpy = vi.spyOn(component, 'onToggleUnreadOnly');
         const button = harness.routeNativeElement?.querySelector(
-          '#unread-comic-toggle'
+          '#read-comic-toggle'
         ) as HTMLButtonElement;
         button.click();
       });
 
       it('should toggle the read flag', () => {
         expect(toggleSpy).toHaveBeenCalled();
+      });
+    });
+
+    describe('selecting all comics', () => {
+      const TEST_READ_STATE = Math.random() > 0.5;
+      const TEST_SELECTED = Math.random() > 0.5;
+
+      let dispatchSpy: Mock;
+
+      beforeEach(() => {
+        dispatchSpy = vi.spyOn(component.store, 'dispatch');
+        component.readFlag.set(TEST_READ_STATE);
+        component.onSelectAll(TEST_SELECTED);
+      });
+
+      it('should dispatch an action', () => {
+        expect(dispatchSpy).toHaveBeenCalledWith(
+          SelectedComicListActions.selectByReadState({
+            readState: TEST_READ_STATE,
+            selected: TEST_SELECTED
+          })
+        );
       });
     });
   });
@@ -121,7 +150,7 @@ describe('ComicListPage', () => {
     });
 
     it('should return the read page type', () => {
-      component.readState.set(true);
+      component.readComics.set(true);
       expect(component.getPageType()).toStrictEqual('READ');
     });
 

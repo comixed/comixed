@@ -28,15 +28,17 @@ import { provideTranslateService } from '@ngx-translate/core';
 import { MessageService } from '@openng/optimus-ui/api';
 import { SelectedComicListActions } from '@app/library/actions/selected-comic-list.actions';
 import { COMIC_1 } from '@app/library/library-fixtures';
+import { ComicSelectionService } from '@app/library/services/comic-selection-service';
 
 describe('SelectedComicListEffects', () => {
   const TEST_COMIC_ID_LIST = [3, 6, 8, 15, 72, 63, 129];
   const TEST_COMIC = COMIC_1;
+  const TEST_READ_STATE = Math.random() > 0.5;
   const TEST_SELECTED = Math.random() > 0.5;
 
   let actions$: Observable<unknown>;
   let effects: SelectedComicListEffects;
-  let comicService: ComicService;
+  let comicSelectionService: ComicSelectionService;
   let alertService: AlertService;
 
   beforeEach(() => {
@@ -53,7 +55,7 @@ describe('SelectedComicListEffects', () => {
     });
 
     effects = TestBed.inject(SelectedComicListEffects);
-    comicService = TestBed.inject(ComicService);
+    comicSelectionService = TestBed.inject(ComicSelectionService);
     alertService = TestBed.inject(AlertService);
   });
 
@@ -70,7 +72,7 @@ describe('SelectedComicListEffects', () => {
       });
 
       const loadSpy = vi
-        .spyOn(comicService, 'loadSelectComicIds')
+        .spyOn(comicSelectionService, 'loadSelectComicIds')
         .mockReturnValue(of(serviceResponse));
 
       actions$ = of(action);
@@ -84,7 +86,7 @@ describe('SelectedComicListEffects', () => {
       const outcome = SelectedComicListActions.loadFailure();
 
       const loadSpy = vi
-        .spyOn(comicService, 'loadSelectComicIds')
+        .spyOn(comicSelectionService, 'loadSelectComicIds')
         .mockReturnValue(throwError(() => serviceResponse));
       const alertSpy = vi.spyOn(alertService, 'error');
 
@@ -99,7 +101,7 @@ describe('SelectedComicListEffects', () => {
       const outcome = SelectedComicListActions.loadFailure();
 
       const loadSpy = vi
-        .spyOn(comicService, 'loadSelectComicIds')
+        .spyOn(comicSelectionService, 'loadSelectComicIds')
         .mockThrow(new Error('General failure'));
       const alertSpy = vi.spyOn(alertService, 'error');
 
@@ -119,7 +121,7 @@ describe('SelectedComicListEffects', () => {
       const outcome = SelectedComicListActions.selectComicSuccess();
 
       const selectSpy = vi
-        .spyOn(comicService, 'singleComicSelection')
+        .spyOn(comicSelectionService, 'singleComicSelection')
         .mockReturnValue(of(undefined));
 
       actions$ = of(action);
@@ -141,7 +143,7 @@ describe('SelectedComicListEffects', () => {
       const outcome = SelectedComicListActions.selectComicFailure();
 
       const selectSpy = vi
-        .spyOn(comicService, 'singleComicSelection')
+        .spyOn(comicSelectionService, 'singleComicSelection')
         .mockReturnValue(throwError(() => serviceResponse));
       const alertSpy = vi.spyOn(alertService, 'error');
 
@@ -164,7 +166,7 @@ describe('SelectedComicListEffects', () => {
       const outcome = SelectedComicListActions.selectComicFailure();
 
       const selectSpy = vi
-        .spyOn(comicService, 'singleComicSelection')
+        .spyOn(comicSelectionService, 'singleComicSelection')
         .mockThrow(new Error('General failure'));
       const alertSpy = vi.spyOn(alertService, 'error');
 
@@ -174,6 +176,76 @@ describe('SelectedComicListEffects', () => {
       );
       expect(selectSpy).toHaveBeenCalledWith({
         comic: TEST_COMIC,
+        selected: TEST_SELECTED
+      });
+      expect(alertSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('selecting by read state', () => {
+    it('should dispatch an action on success', async () => {
+      const action = SelectedComicListActions.selectByReadState({
+        readState: TEST_READ_STATE,
+        selected: TEST_SELECTED
+      });
+      const outcome = SelectedComicListActions.selectByReadStateSuccess();
+
+      const selectSpy = vi
+        .spyOn(comicSelectionService, 'setSelectedByReadState')
+        .mockReturnValue(of(undefined));
+
+      actions$ = of(action);
+      await expect(firstValueFrom(effects.selectByReadState$)).resolves.toEqual(
+        outcome
+      );
+      expect(selectSpy).toHaveBeenCalledWith({
+        readState: TEST_READ_STATE,
+        selected: TEST_SELECTED
+      });
+    });
+
+    it('should dispatch an action on service failure', async () => {
+      const serviceResponse = new Error('Service failure');
+      const action = SelectedComicListActions.selectByReadState({
+        readState: TEST_READ_STATE,
+        selected: TEST_SELECTED
+      });
+      const outcome = SelectedComicListActions.selectByReadStateFailure();
+
+      const selectSpy = vi
+        .spyOn(comicSelectionService, 'setSelectedByReadState')
+        .mockReturnValue(throwError(() => serviceResponse));
+      const alertSpy = vi.spyOn(alertService, 'error');
+
+      actions$ = of(action);
+      await expect(firstValueFrom(effects.selectByReadState$)).resolves.toEqual(
+        outcome
+      );
+      expect(selectSpy).toHaveBeenCalledWith({
+        readState: TEST_READ_STATE,
+        selected: TEST_SELECTED
+      });
+      expect(alertSpy).toHaveBeenCalled();
+    });
+
+    it('should dispatch an action on general failure', async () => {
+      const action = SelectedComicListActions.selectByReadState({
+        readState: TEST_READ_STATE,
+        selected: TEST_SELECTED
+      });
+      const outcome = SelectedComicListActions.selectByReadStateFailure();
+
+      const selectSpy = vi
+        .spyOn(comicSelectionService, 'setSelectedByReadState')
+        .mockThrow(new Error('General failure'));
+      const alertSpy = vi.spyOn(alertService, 'error');
+
+      actions$ = of(action);
+      await expect(firstValueFrom(effects.selectByReadState$)).resolves.toEqual(
+        outcome
+      );
+      expect(selectSpy).toHaveBeenCalledWith({
+        readState: TEST_READ_STATE,
         selected: TEST_SELECTED
       });
       expect(alertSpy).toHaveBeenCalled();

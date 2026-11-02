@@ -32,22 +32,17 @@ import {
   METADATA_1
 } from '@app/library/library-fixtures';
 import {
-  DESELECT_SINGLE_COMIC_URL,
   LOAD_COMIC_URL,
-  LOAD_SELECTED_COMIC_ID_LIST_URL,
-  SELECT_SINGLE_COMIC_URL,
   UPDATE_COMIC_URL
 } from '@app/library/library-constants';
 import { interpolate } from '@app/app-functions';
 import { UpdateComicRequest } from '@app/library/models/net/update-comic-request';
-import { of } from 'rxjs';
 
 describe('ComicService', () => {
   const TEST_COMIC = COMIC_1;
   const TEST_PAGES = [COMIC_PAGE_1];
   const TEST_TAGS = [COMIC_TAG_1];
   const TEST_METADATA = METADATA_1;
-  const TEST_COMIC_ID_LIST = [1, 3, 5, 6, 7, 89];
 
   let service: ComicService;
   let httpController: HttpTestingController;
@@ -131,58 +126,6 @@ describe('ComicService', () => {
       storeDate: TEST_COMIC.storeDate
     } as UpdateComicRequest);
     req.flush(serverResponse);
-    httpController.verify();
-  });
-
-  it('should load the select comic id list', () => {
-    const serverResponse = TEST_COMIC_ID_LIST;
-
-    service.loadSelectComicIds().subscribe({
-      next: response => expect(response).toStrictEqual(TEST_COMIC_ID_LIST)
-    });
-
-    const req = httpController.expectOne(
-      interpolate(LOAD_SELECTED_COMIC_ID_LIST_URL)
-    );
-    expect(req.request.method).toEqual('GET');
-    req.flush(serverResponse);
-    httpController.verify();
-  });
-
-  it('should select a single comic', () => {
-    service
-      .singleComicSelection({
-        comic: TEST_COMIC,
-        selected: true
-      })
-      .subscribe({ next: () => expect(true).toBeTruthy() });
-
-    const req = httpController.expectOne(
-      interpolate(SELECT_SINGLE_COMIC_URL, {
-        comicId: TEST_COMIC.comicId
-      })
-    );
-    expect(req.request.method).toEqual('PUT');
-    expect(req.request.body).toEqual({} as unknown);
-    req.flush(of(undefined));
-    httpController.verify();
-  });
-
-  it('should deselect a single comic', () => {
-    service
-      .singleComicSelection({
-        comic: TEST_COMIC,
-        selected: false
-      })
-      .subscribe({ next: () => expect(true).toBeTruthy() });
-
-    const req = httpController.expectOne(
-      interpolate(DESELECT_SINGLE_COMIC_URL, {
-        comicId: TEST_COMIC.comicId
-      })
-    );
-    expect(req.request.method).toEqual('DELETE');
-    req.flush(of(undefined));
     httpController.verify();
   });
 });

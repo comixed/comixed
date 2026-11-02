@@ -21,17 +21,13 @@ import { HttpClient } from '@angular/common/http';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Observable } from 'rxjs';
 import {
-  DESELECT_SINGLE_COMIC_URL,
   LOAD_COMIC_URL,
-  LOAD_SELECTED_COMIC_ID_LIST_URL,
-  SELECT_SINGLE_COMIC_URL,
   UPDATE_COMIC_URL
 } from '@app/library/library-constants';
 import { interpolate } from '@app/app-functions';
 import { LoadComicDetailResponse } from '@app/library/models/net/load-comic-detail-response';
 import { ComicType } from '@app/library/models/comic-type';
 import { UpdateComicRequest } from '@app/library/models/net/update-comic-request';
-import { Comic } from '@app/library/models/comic';
 
 @Service()
 export class ComicService {
@@ -74,30 +70,5 @@ export class ComicService {
         storeDate: args.storeDate
       } as UpdateComicRequest
     );
-  }
-
-  loadSelectComicIds(): Observable<number[]> {
-    this.logger.debug('Loading selected comic id list');
-    return this.http.get<number[]>(
-      interpolate(LOAD_SELECTED_COMIC_ID_LIST_URL)
-    );
-  }
-
-  singleComicSelection(args: {
-    comic: Comic;
-    selected: boolean;
-  }): Observable<void> {
-    if (args.selected) {
-      this.logger.debug('Selecting a single comic:', args);
-      return this.http.put<void>(
-        interpolate(SELECT_SINGLE_COMIC_URL, { comicId: args.comic.comicId }),
-        {} as unknown
-      );
-    } else {
-      this.logger.debug('Deselecting a single comic:', args);
-      return this.http.delete<void>(
-        interpolate(DESELECT_SINGLE_COMIC_URL, { comicId: args.comic.comicId })
-      );
-    }
   }
 }

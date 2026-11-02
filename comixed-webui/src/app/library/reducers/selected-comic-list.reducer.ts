@@ -61,6 +61,18 @@ export const selectedComicListReducer = createReducer(
   on(SelectedComicListActions.selectComicFailure, state => ({
     ...state,
     busy: false
+  })),
+  on(SelectedComicListActions.selectByReadState, state => ({
+    ...state,
+    busy: true
+  })),
+  on(SelectedComicListActions.selectByReadStateSuccess, state => ({
+    ...state,
+    busy: false
+  })),
+  on(SelectedComicListActions.selectByReadStateFailure, state => ({
+    ...state,
+    busy: false
   }))
 );
 

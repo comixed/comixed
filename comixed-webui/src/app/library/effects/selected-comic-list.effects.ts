@@ -21,24 +21,24 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { SelectedComicListActions } from '../actions/selected-comic-list.actions';
 import { catchError, map, of, switchMap, tap } from 'rxjs';
 import { LoggerService } from '@angular-ru/cdk/logger';
-import { ComicService } from '@app/library/services/comic-service';
 import { AlertService } from '@app/services/alert-service';
 import { TranslateService } from '@ngx-translate/core';
+import { ComicSelectionService } from '@app/library/services/comic-selection-service';
 
 @Injectable()
 export class SelectedComicListEffects {
   readonly logger = inject(LoggerService);
-  readonly comicService = inject(ComicService);
+  readonly comicSelectionService = inject(ComicSelectionService);
   readonly alertService = inject(AlertService);
   readonly translateService = inject(TranslateService);
-
   readonly actions$ = inject(Actions);
+
   load$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(SelectedComicListActions.load),
       tap(() => this.logger.debug('Loading select comic id list')),
       switchMap(() =>
-        this.comicService.loadSelectComicIds().pipe(
+        this.comicSelectionService.loadSelectComicIds().pipe(
           tap(response => this.logger.debug('Response received:', response)),
           map(response =>
             SelectedComicListActions.loadSuccess({ comicIds: response })
@@ -69,7 +69,7 @@ export class SelectedComicListEffects {
       ofType(SelectedComicListActions.selectComic),
       tap(action => this.logger.debug('Selecting a single comic:', action)),
       switchMap(action =>
-        this.comicService
+        this.comicSelectionService
           .singleComicSelection({
             comic: action.comic,
             selected: action.selected
@@ -94,6 +94,41 @@ export class SelectedComicListEffects {
           this.translateService.instant('app.effects.general-failure')
         );
         return of(SelectedComicListActions.selectComicFailure());
+      })
+    );
+  });
+
+  selectByReadState$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(SelectedComicListActions.selectByReadState),
+      tap(action => this.logger.debug('Selecting by read state:', action)),
+      switchMap(action =>
+        this.comicSelectionService
+          .setSelectedByReadState({
+            readState: action.readState,
+            selected: action.selected
+          })
+          .pipe(
+            tap(response => this.logger.debug('Response received:', response)),
+            map(() => SelectedComicListActions.selectByReadStateSuccess()),
+            catchError(error => {
+              this.logger.error('Service failure:', error);
+              this.alertService.error(
+                this.translateService.instant(
+                  'selected-comic-list-effects.select-by-read-state.service-failure',
+                  { readState: action.readState }
+                )
+              );
+              return of(SelectedComicListActions.selectByReadStateFailure());
+            })
+          )
+      ),
+      catchError(error => {
+        this.logger.error('General failure:', error);
+        this.alertService.error(
+          this.translateService.instant('app.effects.general-failure')
+        );
+        return of(SelectedComicListActions.selectByReadStateFailure());
       })
     );
   });

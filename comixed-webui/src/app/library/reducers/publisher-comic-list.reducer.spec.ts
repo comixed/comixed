@@ -24,11 +24,11 @@ import {
 } from '../reducers/publisher-comic-list.reducer';
 import { beforeEach } from 'vitest';
 import { Action } from '@ngrx/store';
-import { COMIC_1 } from '@app/library/library-fixtures';
+import { COMIC_1, COMIC_2 } from '@app/library/library-fixtures';
 import { PublisherComicListActions } from '@app/library/actions/publisher-comic-list.actions';
 
 describe('PublisherComicList Reducer', () => {
-  const TEST_COMIC_LIST = [COMIC_1];
+  const TEST_COMIC_LIST = [COMIC_1, COMIC_2];
   const TEST_COVER_MONTH_LIST = [1, 3, 4, 7, 9, 12];
   const TEST_COVER_YEAR_LIST = [1965, 1971, 1986, 1996, 1998, 2006];
   const TEST_TOTAL = 920;

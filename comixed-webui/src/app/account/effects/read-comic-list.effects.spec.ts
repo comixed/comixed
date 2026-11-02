@@ -20,7 +20,6 @@ import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { firstValueFrom, Observable, of, throwError } from 'rxjs';
 import { ReadComicListEffects } from './read-comic-list.effects';
-import { hot } from 'vitest-marbles';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
 import { vi } from 'vitest';
 import { ReadComicListActions } from '@app/account/actions/read-comic-list.actions';
@@ -54,7 +53,6 @@ describe('ReadComicListEffects', () => {
   });
 
   it('should be created', () => {
-    actions$ = hot('', {});
     expect(effects).toBeTruthy();
   });
 

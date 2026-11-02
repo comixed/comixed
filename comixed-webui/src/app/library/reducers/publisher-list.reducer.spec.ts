@@ -19,7 +19,7 @@
 import { beforeEach } from 'vitest';
 import { Action } from '@ngrx/store';
 import { PublisherListActions } from '@app/library/actions/publisher-list.actions';
-import { PUBLISHER_1 } from '@app/library/library-fixtures';
+import { PUBLISHER_1, PUBLISHER_2 } from '@app/library/library-fixtures';
 import {
   initialPublisherListState,
   publisherListAdapter,
@@ -28,7 +28,7 @@ import {
 } from '@app/library/reducers/publisher-list.reducer';
 
 describe('PublisherList Reducer', () => {
-  const TEST_PUBLISHER_LIST = [PUBLISHER_1];
+  const TEST_PUBLISHER_LIST = [PUBLISHER_1, PUBLISHER_2];
   const TEST_TOTAL = 61;
 
   let state: PublisherListState;

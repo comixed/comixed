@@ -53,7 +53,7 @@ export const publisherSeriesListReducer = createReducer(
   }),
   on(PublisherSeriesListActions.loadFailure, state => ({
     ...state,
-    busy: true
+    busy: false
   }))
 );
 

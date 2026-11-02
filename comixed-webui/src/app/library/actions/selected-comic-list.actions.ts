@@ -28,6 +28,9 @@ export const SelectedComicListActions = createActionGroup({
     UpdateList: props<{ comicIds: number[] }>(),
     SelectComic: props<{ comic: Comic; selected: boolean }>(),
     SelectComicSuccess: emptyProps(),
-    SelectComicFailure: emptyProps()
+    SelectComicFailure: emptyProps(),
+    SelectByReadState: props<{ readState: boolean; selected: boolean }>(),
+    SelectByReadStateSuccess: emptyProps(),
+    SelectByReadStateFailure: emptyProps()
   }
 });

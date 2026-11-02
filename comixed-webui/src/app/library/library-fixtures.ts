@@ -177,6 +177,12 @@ export const PUBLISHER_1: Publisher = {
   issueCount: 86
 };
 
+export const PUBLISHER_2: Publisher = {
+  name: 'The Second Publisher',
+  seriesCount: 12,
+  issueCount: 55
+};
+
 export const SERIES_1: Series = {
   name: 'The Series Name',
   publisher: 'The Series Publisher',

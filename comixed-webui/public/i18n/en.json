@@ -338,6 +338,12 @@
   "series-comic-list-effects": {
     "load": {
       "service-failure": "Failed to load comics for series {seriesName}..."
+    },
+    "selected-by-read-state": {
+      "service-failure": "Failed to select comics by {readFlag, select, true{read} other{unread}} state..."
+    },
+    "select-comic": {
+      "service-failure": "Failed to selected state on comic..."
     }
   },
   "series-comic-list-page": {

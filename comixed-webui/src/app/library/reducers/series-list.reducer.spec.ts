@@ -24,11 +24,11 @@ import {
 } from '@app/library/reducers/series-list.reducer';
 import { beforeEach } from 'vitest';
 import { Action } from '@ngrx/store';
-import { SERIES_1 } from '@app/library/library-fixtures';
+import { SERIES_1, SERIES_2 } from '@app/library/library-fixtures';
 import { SeriesListActions } from '@app/library/actions/series-list.actions';
 
 describe('SeriesList Reducer', () => {
-  const TEST_SERIES_LIST = [SERIES_1];
+  const TEST_SERIES_LIST = [SERIES_2, SERIES_1];
   const TEST_TOTAL = 129;
 
   let state: SeriesListState;

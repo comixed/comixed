@@ -12,7 +12,13 @@
 >
   <ng-template #header>
     <tr>
-      <th></th>
+      <th>
+        <p-check-box
+          id="all-comics-select-input"
+          [binary]="true"
+          (onChange)="selectAll.emit($event.checked)"
+        />
+      </th>
       <th>{{ "comic-table.label.thumbnail" | translate }}</th>
       <th>{{ "comic-table.label.comic-state" | translate }}</th>
       <th>{{ "comic-table.label.publisher" | translate }}</th>

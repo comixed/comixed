@@ -25,10 +25,10 @@ import {
 import { beforeEach } from 'vitest';
 import { Action } from '@ngrx/store';
 import { PublisherSeriesListActions } from '@app/library/actions/publisher-series-list.actions';
-import { SERIES_1 } from '@app/library/library-fixtures';
+import { SERIES_1, SERIES_2 } from '@app/library/library-fixtures';
 
 describe('PublisherSeriesList Reducer', () => {
-  const TEST_SERIES_LIST = [SERIES_1];
+  const TEST_SERIES_LIST = [SERIES_2, SERIES_1];
   const TEST_SERIES_TOTAL = 320;
 
   let state: PublisherSeriesListState;
@@ -102,6 +102,23 @@ describe('PublisherSeriesList Reducer', () => {
         expect(
           publisherSeriesListAdapter.getSelectors().selectAll(state)
         ).toStrictEqual(TEST_SERIES_LIST);
+      });
+    });
+
+    describe('failure', () => {
+      beforeEach(() => {
+        state = publisherSeriesListReducer(
+          publisherSeriesListAdapter.setAll([], {
+            ...state,
+            busy: true,
+            total: 0
+          }),
+          PublisherSeriesListActions.loadFailure()
+        );
+      });
+
+      it('should clear the busy flag', () => {
+        expect(state.busy).toBeFalsy();
       });
     });
   });

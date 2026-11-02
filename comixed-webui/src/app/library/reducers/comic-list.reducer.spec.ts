@@ -19,7 +19,7 @@
 import { beforeEach, Mock } from 'vitest';
 import { Action } from '@ngrx/store';
 import { ComicListActions } from '@app/library/actions/comic-list.actions';
-import { COMIC_1 } from '@app/library/library-fixtures';
+import { COMIC_1, COMIC_2 } from '@app/library/library-fixtures';
 import {
   comicListAdapter,
   comicListReducer,
@@ -29,7 +29,8 @@ import {
 
 describe('ComicList Reducer', () => {
   const TEST_COMIC = COMIC_1;
-  const TEST_COMIC_LIST = [TEST_COMIC];
+  const TEST_OTHER_COMIC = COMIC_2;
+  const TEST_COMIC_LIST = [TEST_COMIC, TEST_OTHER_COMIC];
   const TEST_TOTAL_COUNT = 717;
   const TEST_FILTER_COUNT = 129;
   const TEST_COVER_MONTH_LIST = [1, 3, 4, 7, 9, 12];

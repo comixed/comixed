@@ -71,7 +71,26 @@ describe('ComicTable', () => {
     );
   });
 
-  describe('toggling a comic selection', () => {
+  describe('toggling all comic selection', () => {
+    let previousSelectionState: boolean;
+    let selectAllEmitSpy: Mock;
+
+    beforeEach(() => {
+      selectAllEmitSpy = vi.spyOn(component.selectAll, 'emit');
+      const checkbox: HTMLInputElement = fixture.nativeElement.querySelector(
+        `#all-comics-select-input input`
+      );
+      previousSelectionState = checkbox.checked;
+      checkbox.click();
+      fixture.detectChanges();
+    });
+
+    it('should emit a select all event', () => {
+      expect(selectAllEmitSpy).toHaveBeenCalledWith(!previousSelectionState);
+    });
+  });
+
+  describe('toggling a single comic selection', () => {
     const TEST_COMIC = TEST_COMIC_LIST[0];
     let previousSelectionState: boolean;
     let dispatchSpy: Mock;
