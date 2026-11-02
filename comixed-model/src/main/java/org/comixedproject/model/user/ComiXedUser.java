@@ -91,9 +91,7 @@ public class ComiXedUser {
   private List<ComiXedUserPreference> preferences = new ArrayList<>();
 
   @ElementCollection
-  @CollectionTable(
-      name = "read_comic_books_v4",
-      joinColumns = @JoinColumn(name = "comixed_user_id"))
+  @CollectionTable(name = "read_comics_v4", joinColumns = @JoinColumn(name = "comixed_user_id"))
   @Column(name = "comic_id")
   @JsonView(View.UserListView.class)
   @Getter
