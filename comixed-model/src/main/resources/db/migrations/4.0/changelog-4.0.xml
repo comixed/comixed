@@ -33,6 +33,7 @@
     <include file="/db/migrations/4.0/015_2785_update_reading_list_entries.xml"/>
     <include file="/db/migrations/4.0/016_2785_delete_comic_details.xml"/>
     <include file="/db/migrations/4.0/017_2785_recreate_views.xml"/>
-    <!-- include file="/db/migrations/4.0/018_2443_add_next_and_previous_issue_to_displayable_comics_view.xml"/ -->
+    <include file="/db/migrations/4.0/018_2443_add_next_and_previous_issue_to_displayable_comics_view.xml"/>
+    <include file="/db/migrations/4.0/019_2785_create_read_comics_table.xml"/>
 
 </databaseChangeLog>

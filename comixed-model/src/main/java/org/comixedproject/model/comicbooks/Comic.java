@@ -415,7 +415,7 @@ public class Comic implements StatefulItem<ComicState>, PublicationDetail {
   private Date lastModifiedDate = new Date();
 
   @ElementCollection
-  @CollectionTable(name = "read_comic_books_v4", joinColumns = @JoinColumn(name = "comic_id"))
+  @CollectionTable(name = "read_comics_v4", joinColumns = @JoinColumn(name = "comic_id"))
   @Column(name = "comixed_user_id")
   @JsonView(View.UserListView.class)
   @Getter
