@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="019_2785_create_read_comics_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="read_comic_books_v4"/>
+        </preConditions>
+
+        <createTable tableName="read_comics_v4">
+            <column name="read_comic_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="read_comics_v4_pk"/>
+            </column>
+
+            <column name="comixed_user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="comic_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="read_comics_v4" baseColumnNames="comixed_user_id"
+                                 constraintName="read_comics_v4_comixed_user_fk"
+                                 referencedTableName="comixed_users_v4"
+                                 referencedColumnNames="comixed_user_id"/>
+
+        <addForeignKeyConstraint baseTableName="read_comics_v4" baseColumnNames="comic_id"
+                                 constraintName="read_comics_v4_comic_fk"
+                                 referencedTableName="comics_v4"
+                                 referencedColumnNames="comic_id"/>
+
+        <createIndex tableName="read_comics_v4" indexName="read_comics_v4_comixed_user_idx">
+            <column name="comixed_user_id"/>
+        </createIndex>
+
+        <createIndex tableName="read_comics_v4" indexName="read_comics_v4_comic_idx">
+            <column name="comic_id"/>
+        </createIndex>
+
+        <sql>INSERT INTO read_comics_v4(comixed_user_id, comic_id)
+             SELECT comixed_user_id, comic_detail_id
+             FROM read_comic_books_v4</sql>
+
+        <dropTable tableName="read_comic_books_v4" />
+
+    </changeSet>
+</databaseChangeLog>
