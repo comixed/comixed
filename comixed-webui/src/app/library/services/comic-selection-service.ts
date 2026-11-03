@@ -22,6 +22,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { interpolate } from '@app/app-functions';
 import {
+  CLEAR_COMIC_SELECTIONS_URL,
   DESELECT_SINGLE_COMIC_URL,
   LOAD_SELECTED_COMIC_ID_LIST_URL,
   SELECT_SINGLE_COMIC_URL,
@@ -40,6 +41,11 @@ export class ComicSelectionService {
     return this.http.get<number[]>(
       interpolate(LOAD_SELECTED_COMIC_ID_LIST_URL)
     );
+  }
+
+  clearSelections(): Observable<void> {
+    this.logger.debug('Clearing the comic selections');
+    return this.http.delete<void>(interpolate(CLEAR_COMIC_SELECTIONS_URL));
   }
 
   singleComicSelection(args: {

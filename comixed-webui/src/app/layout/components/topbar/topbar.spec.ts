@@ -40,11 +40,15 @@ import { USER_ADMIN, USER_READER } from '@app/account/account-fixtures';
 import { By } from '@angular/platform-browser';
 import {
   initialSelectedComicListState,
-  SELECTED_COMIC_LIST_FEATURE_KEY
+  SELECTED_COMIC_LIST_FEATURE_KEY,
+  selectedComicListAdapter
 } from '@app/library/reducers/selected-comic-list.reducer';
 import { DialogService } from '@openng/optimus-ui/dynamicdialog';
+import { ReadComicListActions } from '@app/account/actions/read-comic-list.actions';
+import { SelectedComicListActions } from '@app/library/actions/selected-comic-list.actions';
 
 describe('Topbar', () => {
+  const TEST_COMIC_IDS = [1, 3, 5, 7, 11, 13];
   const initialState = {
     [USER_FEATURE_KEY]: initialUserState,
     [REMOTE_LIBRARY_FEATURE_KEY]: initialRemoteLibraryState,
@@ -84,6 +88,13 @@ describe('Topbar', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should reload the menu when the language changes', async () => {
+    component.menuitems.set([]);
+    component.translateService.use('fr');
+    await fixture.whenStable();
+    expect(component.menuitems()).not.toStrictEqual([]);
+  });
+
   describe('when the user is not authenticated', () => {
     beforeEach(() => {
       store.setState({
@@ -97,8 +108,8 @@ describe('Topbar', () => {
       fixture.detectChanges();
     });
 
-    it('should not show the home button', () => {
-      expect(fixture.debugElement.query(By.css('#home-button'))).toBeNull();
+    it('should not show the menu bar', () => {
+      expect(fixture.debugElement.query(By.css('#top-menubar'))).toBeNull();
     });
 
     it('should not show the logout button', () => {
@@ -119,14 +130,8 @@ describe('Topbar', () => {
       fixture.detectChanges();
     });
 
-    it('should show the home button', () => {
-      expect(fixture.debugElement.query(By.css('#home-button'))).not.toBeNull();
-    });
-
-    it('should not display the import button', () => {
-      expect(
-        fixture.debugElement.query(By.css('#import-comics-button'))
-      ).toBeNull();
+    it('should show the menu bar', () => {
+      expect(fixture.debugElement.query(By.css('#top-menubar'))).not.toBeNull();
     });
 
     it('should show the logout button', () => {
@@ -149,10 +154,98 @@ describe('Topbar', () => {
       fixture.detectChanges();
     });
 
-    it('should display the import button', () => {
-      expect(
-        fixture.debugElement.query(By.css('#import-comics-button'))
-      ).not.toBeNull();
+    it('should show the menu bar', () => {
+      expect(fixture.debugElement.query(By.css('#top-menubar'))).not.toBeNull();
+    });
+  });
+
+  describe('when there are comic selections', () => {
+    beforeEach(() => {
+      store.setState({
+        ...initialState,
+        [USER_FEATURE_KEY]: {
+          ...initialUserState,
+          checked: true,
+          user: USER_READER
+        },
+        [SELECTED_COMIC_LIST_FEATURE_KEY]: selectedComicListAdapter.setAll(
+          TEST_COMIC_IDS,
+          initialSelectedComicListState
+        )
+      });
+      fixture.detectChanges();
+    });
+
+    describe('clearing selections', () => {
+      let item: HTMLInputElement;
+
+      beforeEach(() => {
+        item = document.querySelector(
+          '#topbar-clear-selections a.p-menubar-item-link'
+        ) as HTMLInputElement;
+      });
+
+      it('should enable the menu item', () => {
+        expect(item.disabled).toBeFalsy();
+      });
+
+      it('should dispatch an action', async () => {
+        const dispatchSpy = vi.spyOn(component.store, 'dispatch');
+        item.click();
+        fixture.detectChanges();
+        await fixture.whenStable();
+        expect(dispatchSpy).toHaveBeenCalledWith(
+          SelectedComicListActions.clearSelections()
+        );
+      });
+    });
+
+    describe('marking selected item as read', () => {
+      let item: HTMLInputElement;
+
+      beforeEach(() => {
+        item = document.querySelector(
+          '#topbar-mark-comics-read a.p-menubar-item-link'
+        ) as HTMLInputElement;
+      });
+
+      it('should enable the menu item', () => {
+        expect(item.disabled).toBeFalsy();
+      });
+
+      it('should dispatch an action', async () => {
+        const dispatchSpy = vi.spyOn(component.store, 'dispatch');
+        item.click();
+        fixture.detectChanges();
+        await fixture.whenStable();
+        expect(dispatchSpy).toHaveBeenCalledWith(
+          ReadComicListActions.markSelectedComics({ readState: true })
+        );
+      });
+    });
+
+    describe('marking selected item as unread', () => {
+      let item: HTMLInputElement;
+
+      beforeEach(() => {
+        item = document.querySelector(
+          '#topbar-mark-comics-unread a.p-menubar-item-link'
+        ) as HTMLInputElement;
+      });
+
+      it('should enable the menu item', () => {
+        expect(item.disabled).toBeFalsy();
+      });
+
+      it('should dispatch an action', async () => {
+        const dispatchSpy = vi.spyOn(component.store, 'dispatch');
+        item.click();
+        fixture.detectChanges();
+        await fixture.whenStable();
+        expect(dispatchSpy).toHaveBeenCalledWith(
+          ReadComicListActions.markSelectedComics({ readState: false })
+        );
+      });
     });
   });
 });

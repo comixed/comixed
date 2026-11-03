@@ -336,6 +336,9 @@
     }
   },
   "series-comic-list-effects": {
+    "clear-selections": {
+      "service-failure": "Failed to clear selections..."
+    },
     "load": {
       "service-failure": "Failed to load comics for series {seriesName}..."
     },
@@ -395,9 +398,35 @@
     "view-details": "View details for {name}..."
   },
   "topbar": {
+    "menu": {
+      "admin": {
+        "import": "Import comics...",
+        "item": "Admin",
+        "settings": "Settings..."
+      },
+      "home": {
+        "item": "Home"
+      },
+      "selected-comics": {
+        "batch-scrape": "Batch scrape",
+        "delete": {
+          "item": "Deletion",
+          "mark": "Mark for removal...",
+          "unmark": "Unmark"
+        },
+        "deselect-all": "Clear selections...",
+        "item": "Selected Comics",
+        "organize": "Organize...",
+        "read": {
+          "item": "Read State",
+          "mark-read": "Mark as read",
+          "mark-unread": "Unmark"
+        },
+        "rescan": "Rescan...",
+        "scrape": "Scrape metadata..."
+      }
+    },
     "tooltip": {
-      "home-button": "Go to the dashboard...",
-      "import-button": "Import comic files...",
       "logout-button": "Log out of the server..."
     }
   },

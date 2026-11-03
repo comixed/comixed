@@ -64,6 +64,35 @@ export class SelectedComicListEffects {
     );
   });
 
+  clearSelections$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(SelectedComicListActions.clearSelections),
+      tap(() => this.logger.debug('Clearing selections')),
+      switchMap(() =>
+        this.comicSelectionService.clearSelections().pipe(
+          tap(response => this.logger.debug('Response received:', response)),
+          map(() => SelectedComicListActions.clearSelectionsSuccess()),
+          catchError(error => {
+            this.logger.error('Service failure:', error);
+            this.alertService.error(
+              this.translateService.instant(
+                'selected-comic-list-effects.clear-selections.service-failure'
+              )
+            );
+            return of(SelectedComicListActions.clearSelectionsFailure());
+          })
+        )
+      ),
+      catchError(error => {
+        this.logger.error('General failure:', error);
+        this.alertService.error(
+          this.translateService.instant('app.effects.general-failure')
+        );
+        return of(SelectedComicListActions.clearSelectionsFailure());
+      })
+    );
+  });
+
   selectComic$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(SelectedComicListActions.selectComic),

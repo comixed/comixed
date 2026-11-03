@@ -25,6 +25,7 @@ import {
 import { provideHttpClient } from '@angular/common/http';
 import { interpolate } from '@app/app-functions';
 import {
+  CLEAR_COMIC_SELECTIONS_URL,
   DESELECT_SINGLE_COMIC_URL,
   LOAD_SELECTED_COMIC_ID_LIST_URL,
   SELECT_SINGLE_COMIC_URL,
@@ -71,6 +72,19 @@ describe('ComicSelectionService', () => {
     );
     expect(req.request.method).toEqual('GET');
     req.flush(serverResponse);
+    httpController.verify();
+  });
+
+  it('should clear the selections', () => {
+    service
+      .clearSelections()
+      .subscribe({ next: () => expect(true).toBeTruthy() });
+
+    const req = httpController.expectOne(
+      interpolate(CLEAR_COMIC_SELECTIONS_URL)
+    );
+    expect(req.request.method).toEqual('DELETE');
+    req.flush(of(undefined));
     httpController.verify();
   });
 

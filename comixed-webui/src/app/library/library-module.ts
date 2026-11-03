@@ -41,6 +41,7 @@ import { seriesComicListsFeature } from '@app/library/reducers/series-comic-list
 import { SeriesComicListEffects } from '@app/library/effects/series-comic-list.effects';
 import { selectedComicListsFeature } from '@app/library/reducers/selected-comic-list.reducer';
 import { SelectedComicListEffects } from '@app/library/effects/selected-comic-list.effects';
+import { comicDetailFeature } from '@app/library/reducers/comic-detail.reducer';
 
 @NgModule({
   declarations: [],
@@ -56,6 +57,7 @@ import { SelectedComicListEffects } from '@app/library/effects/selected-comic-li
     StoreModule.forFeature(tagListsFeature),
     StoreModule.forFeature(comicListFeature),
     StoreModule.forFeature(selectedComicListsFeature),
+    StoreModule.forFeature(comicDetailFeature),
     EffectsModule.forFeature([
       RemoteLibraryEffects,
       ComicFileListEffects,
@@ -67,7 +69,8 @@ import { SelectedComicListEffects } from '@app/library/effects/selected-comic-li
       TagListEffects,
       ComicDetailEffects,
       ComicListEffects,
-      SelectedComicListEffects
+      SelectedComicListEffects,
+      ComicDetailEffects
     ])
   ]
 })

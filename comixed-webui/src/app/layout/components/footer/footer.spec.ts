@@ -18,31 +18,90 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Footer } from './footer';
-import { provideMockStore } from '@ngrx/store/testing';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { provideTranslateService } from '@ngx-translate/core';
 import {
   initialUserState,
   USER_FEATURE_KEY
 } from '@app/account/reducers/user.reducer';
+import { beforeEach } from 'vitest';
+import { By } from '@angular/platform-browser';
+import { USER_READER } from '@app/account/account-fixtures';
+import { provideRouter } from '@angular/router';
+import {
+  initialRemoteLibraryState,
+  REMOTE_LIBRARY_FEATURE_KEY
+} from '@app/library/reducers/remote-library.reducer';
+import {
+  initialSelectedComicListState,
+  SELECTED_COMIC_LIST_FEATURE_KEY
+} from '@app/library/reducers/selected-comic-list.reducer';
+import {
+  BATCH_PROCESS_LIST_FEATURE_KEY,
+  initialBatchProcessListState
+} from '@app/batch/reducers/batch-process-list.reducer';
 
 describe('Footer', () => {
-  const initialState = { [USER_FEATURE_KEY]: initialUserState };
+  const TEST_USER = USER_READER;
+  const initialState = {
+    [USER_FEATURE_KEY]: initialUserState,
+    [REMOTE_LIBRARY_FEATURE_KEY]: initialRemoteLibraryState,
+    [SELECTED_COMIC_LIST_FEATURE_KEY]: initialSelectedComicListState,
+    [BATCH_PROCESS_LIST_FEATURE_KEY]: initialBatchProcessListState
+  };
 
   let component: Footer;
   let fixture: ComponentFixture<Footer>;
+  let store: MockStore;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [Footer],
-      providers: [provideTranslateService(), provideMockStore({ initialState })]
+      providers: [
+        provideRouter([
+          {
+            path: '*',
+            redirectTo: ''
+          }
+        ]),
+        provideTranslateService(),
+        provideMockStore({ initialState })
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(Footer);
     component = fixture.componentInstance;
+    store = TestBed.inject(MockStore);
     await fixture.whenStable();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should not show the library statistics panel', () => {
+    expect(
+      fixture.debugElement.query(By.css('#library-statistics'))
+    ).toBeNull();
+  });
+
+  describe('when the user is authenticated', () => {
+    beforeEach(() => {
+      store.setState({
+        ...initialState,
+        [USER_FEATURE_KEY]: {
+          ...initialUserState,
+          checked: true,
+          user: TEST_USER
+        }
+      });
+      fixture.detectChanges();
+    });
+
+    it('should show the library statistics panel', () => {
+      expect(
+        fixture.debugElement.query(By.css('#library-statistics'))
+      ).not.toBeNull();
+    });
   });
 });

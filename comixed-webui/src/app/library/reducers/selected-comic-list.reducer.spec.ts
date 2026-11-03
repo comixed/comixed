@@ -111,6 +111,45 @@ describe('SelectedComicList Reducer', () => {
     });
   });
 
+  describe('clearing selections', () => {
+    beforeEach(() => {
+      state = selectedComicListReducer(
+        { ...state, busy: false },
+        SelectedComicListActions.clearSelections()
+      );
+    });
+
+    it('should set the busy flag', () => {
+      expect(state.busy).toBeTruthy();
+    });
+
+    describe('success', () => {
+      beforeEach(() => {
+        state = selectedComicListReducer(
+          { ...state, busy: true },
+          SelectedComicListActions.clearSelectionsSuccess()
+        );
+      });
+
+      it('should clear the busy flag', () => {
+        expect(state.busy).toBeFalsy();
+      });
+    });
+
+    describe('failure', () => {
+      beforeEach(() => {
+        state = selectedComicListReducer(
+          { ...state, busy: true },
+          SelectedComicListActions.clearSelectionsFailure()
+        );
+      });
+
+      it('should clear the busy flag', () => {
+        expect(state.busy).toBeFalsy();
+      });
+    });
+  });
+
   describe('toggling a comic', () => {
     beforeEach(() => {
       state = selectedComicListReducer(

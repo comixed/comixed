@@ -53,6 +53,18 @@ export const selectedComicListReducer = createReducer(
   on(SelectedComicListActions.updateList, (state, action) => {
     return selectedComicListAdapter.setAll(action.comicIds, state);
   }),
+  on(SelectedComicListActions.clearSelections, state => ({
+    ...state,
+    busy: true
+  })),
+  on(SelectedComicListActions.clearSelectionsSuccess, state => ({
+    ...state,
+    busy: false
+  })),
+  on(SelectedComicListActions.clearSelectionsFailure, state => ({
+    ...state,
+    busy: false
+  })),
   on(SelectedComicListActions.selectComic, state => ({ ...state, busy: true })),
   on(SelectedComicListActions.selectComicSuccess, state => ({
     ...state,

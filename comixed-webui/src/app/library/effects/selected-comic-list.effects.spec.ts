@@ -112,6 +112,58 @@ describe('SelectedComicListEffects', () => {
     });
   });
 
+  describe('clearing the selections', () => {
+    it('should dispatch an action on success', async () => {
+      const action = SelectedComicListActions.clearSelections();
+      const outcome = SelectedComicListActions.clearSelectionsSuccess();
+
+      const clearSpy = vi
+        .spyOn(comicSelectionService, 'clearSelections')
+        .mockReturnValue(of(undefined));
+
+      actions$ = of(action);
+      await expect(firstValueFrom(effects.clearSelections$)).resolves.toEqual(
+        outcome
+      );
+      expect(clearSpy).toHaveBeenCalled();
+    });
+
+    it('should dispatch an action on service failure', async () => {
+      const serviceResponse = new Error('Service failure');
+      const action = SelectedComicListActions.clearSelections();
+      const outcome = SelectedComicListActions.clearSelectionsFailure();
+
+      const clearSpy = vi
+        .spyOn(comicSelectionService, 'clearSelections')
+        .mockReturnValue(throwError(() => serviceResponse));
+      const alertSpy = vi.spyOn(alertService, 'error');
+
+      actions$ = of(action);
+      await expect(firstValueFrom(effects.clearSelections$)).resolves.toEqual(
+        outcome
+      );
+      expect(clearSpy).toHaveBeenCalled();
+      expect(alertSpy).toHaveBeenCalled();
+    });
+
+    it('should dispatch an action on general failure', async () => {
+      const action = SelectedComicListActions.clearSelections();
+      const outcome = SelectedComicListActions.clearSelectionsFailure();
+
+      const clearSpy = vi
+        .spyOn(comicSelectionService, 'clearSelections')
+        .mockThrow(new Error('General failure'));
+      const alertSpy = vi.spyOn(alertService, 'error');
+
+      actions$ = of(action);
+      await expect(firstValueFrom(effects.clearSelections$)).resolves.toEqual(
+        outcome
+      );
+      expect(clearSpy).toHaveBeenCalled();
+      expect(alertSpy).toHaveBeenCalled();
+    });
+  });
+
   describe('selecting comics', () => {
     it('should dispatch an action on success', async () => {
       const action = SelectedComicListActions.selectComic({

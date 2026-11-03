@@ -36,12 +36,17 @@ import {
   initialMessagingState,
   MESSAGING_FEATURE_KEY
 } from '@app/messaging/reducers/messaging.reducer';
+import {
+  initialSelectedComicListState,
+  SELECTED_COMIC_LIST_FEATURE_KEY
+} from '@app/library/reducers/selected-comic-list.reducer';
 
 describe('App', () => {
   const initialState = {
     [EXISTING_ADMIN_ACCOUNT_FEATURE_KEY]: initialExistingAdminAccountState,
     [USER_FEATURE_KEY]: initialUserState,
-    [MESSAGING_FEATURE_KEY]: initialMessagingState
+    [MESSAGING_FEATURE_KEY]: initialMessagingState,
+    [SELECTED_COMIC_LIST_FEATURE_KEY]: initialSelectedComicListState
   };
   let component: App;
   let fixture: ComponentFixture<App>;
