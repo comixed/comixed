@@ -18,10 +18,10 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Topbar } from '@app/layout/components/topbar/topbar';
-import { Renderer2 } from '@angular/core';
+import { Component, Renderer2 } from '@angular/core';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
 import { provideTranslateService } from '@ngx-translate/core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import {
   initialUserState,
@@ -47,6 +47,9 @@ import { DialogService } from '@openng/optimus-ui/dynamicdialog';
 import { ReadComicListActions } from '@app/account/actions/read-comic-list.actions';
 import { SelectedComicListActions } from '@app/library/actions/selected-comic-list.actions';
 
+@Component({ template: '<h1>Test Component</h1>' })
+class TestComponent {}
+
 describe('Topbar', () => {
   const TEST_COMIC_IDS = [1, 3, 5, 7, 11, 13];
   const initialState = {
@@ -59,12 +62,15 @@ describe('Topbar', () => {
   let component: Topbar;
   let fixture: ComponentFixture<Topbar>;
   let store: MockStore;
+  let router: Router;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [Topbar],
       providers: [
-        provideRouter([{ path: '*', redirectTo: '' }]),
+        provideRouter([
+          { path: 'admin/settings/library', component: TestComponent }
+        ]),
         provideLogger({ minLevel: LoggerLevel.OFF }),
         provideTranslateService(),
         provideMockStore({ initialState }),
@@ -79,6 +85,7 @@ describe('Topbar', () => {
     }).compileComponents();
 
     store = TestBed.inject(MockStore);
+    router = TestBed.inject(Router);
     fixture = TestBed.createComponent(Topbar);
     component = fixture.componentInstance;
     await fixture.whenStable();
@@ -156,6 +163,27 @@ describe('Topbar', () => {
 
     it('should show the menu bar', () => {
       expect(fixture.debugElement.query(By.css('#top-menubar'))).not.toBeNull();
+    });
+
+    describe('going to the library settings page', () => {
+      let item: HTMLInputElement;
+
+      beforeEach(() => {
+        item = document.querySelector(
+          '#topbar-library-settings-page a.p-menubar-item-link'
+        ) as HTMLInputElement;
+      });
+
+      it('should enable the menu item', () => {
+        expect(item.disabled).toBeFalsy();
+      });
+
+      it('should redirect the browser', async () => {
+        item.click();
+        fixture.detectChanges();
+        await fixture.whenStable();
+        expect(router.url).toBe('/admin/settings/library');
+      });
     });
   });
 

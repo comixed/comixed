@@ -219,9 +219,20 @@ export class Topbar {
             routerLink: '/library/import'
           },
           {
-            label: this.translateService.instant('topbar.menu.admin.settings'),
+            label: this.translateService.instant(
+              'topbar.menu.admin.settings.item'
+            ),
             icon: 'pi pi-cog',
-            routerLink: '/library/settings'
+            items: [
+              {
+                id: 'topbar-library-settings-page',
+                label: this.translateService.instant(
+                  'topbar.menu.admin.settings.library'
+                ),
+                icon: 'pi pi-book',
+                routerLink: '/admin/settings/library'
+              }
+            ]
           }
         ]
       }

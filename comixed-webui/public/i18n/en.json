@@ -3,6 +3,7 @@
     "button": {
       "cancel": "Cancel",
       "confirm": "Confirm",
+      "reset": "Reset",
       "submit": "Submit"
     },
     "effects": {
@@ -252,6 +253,43 @@
       "verify-password": "Verify your password..."
     }
   },
+  "library-settings-page": {
+    "label": {
+      "create-external-metadata": "Maintain external metadata files for comics",
+      "delete-empty-directories": "Delete empty directories when organizing",
+      "delete-when-purging": "Delete comic files when purging the library",
+      "do-not-recreate-archives": "Never recreate a comic file",
+      "do-not-update-internal-metadata": "Do not update metadata files inside comics",
+      "exclusive-batch-access": "Batch processes have exclusive access to comic files",
+      "file-renaming-rule": "File Naming Rule",
+      "ignore-unscraped-comics": "Ignore unscraped comics when organizing",
+      "manage-blocked-pages": "Maintain a list of blocked page hashes",
+      "page-renaming-rule": "Page Naming Rule",
+      "root-directory": "Library Root Directory",
+      "strip-html-from-metadata": "Strip HTML out of metadata",
+      "variable-name": "Variable Name",
+      "variable-use": "What It Holds"
+    },
+    "page-title": "Library Settings",
+    "text": {
+      "file-system-settings-title": "File System Settings",
+      "other-settings-title": "Features",
+      "variable-definition-title": "File System Variables"
+    },
+    "trail-title": "Library",
+    "variable": {
+      "comic-renaming-rule-cover-date": "The cover date.",
+      "comic-renaming-rule-imprint": "The imprint name",
+      "comic-renaming-rule-issue": "The issue number",
+      "comic-renaming-rule-issue-with-length": "The issue number padded to the specified length.",
+      "comic-renaming-rule-published-year": "The year of publication.",
+      "comic-renaming-rule-publisher": "The publisher name.",
+      "comic-renaming-rule-series": "The series name",
+      "comic-renaming-rule-title": "The issue title",
+      "comic-renaming-rule-volume": "The volume",
+      "page-renaming-rule-index": "The current page number (ONLY USED FOR PAGE)."
+    }
+  },
   "library-statistics-panel": {
     "segment": {
       "batch-processes": "Processes",
@@ -378,6 +416,9 @@
     },
     "trail-title": "Series"
   },
+  "settings": {
+    "trail-title": "Settings"
+  },
   "tag-list-effects": {
     "load": {
       "service-failure": "Failed to load tag entries..."
@@ -402,7 +443,10 @@
       "admin": {
         "import": "Import comics...",
         "item": "Admin",
-        "settings": "Settings..."
+        "settings": {
+          "item": "Settings...",
+          "library": "Library settings..."
+        }
       },
       "home": {
         "item": "Home"

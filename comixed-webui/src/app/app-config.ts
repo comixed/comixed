@@ -49,6 +49,8 @@ import { EffectsModule } from '@ngrx/effects';
 import { environment } from '../environments/environment';
 import { BatchModule } from '@app/batch/batch-module';
 import { DialogService } from '@openng/optimus-ui/dynamicdialog';
+import { AdminModule } from '@app/admin/admin-module';
+import { SettingsModule } from '@app/settings/settings-module';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -80,6 +82,8 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(
       StoreModule.forRoot({}, {}),
       EffectsModule.forRoot([]),
+      AdminModule,
+      SettingsModule,
       BatchModule,
       AccountModule,
       LibraryModule,
