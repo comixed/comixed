@@ -231,6 +231,14 @@ export class Topbar {
                 ),
                 icon: 'pi pi-book',
                 routerLink: '/admin/settings/library'
+              },
+              {
+                id: 'topbar-metadata-settings-page',
+                label: this.translateService.instant(
+                  'topbar.menu.admin.settings.metadata'
+                ),
+                icon: 'pi pi-cloud',
+                routerLink: '/admin/settings/metadata'
               }
             ]
           }

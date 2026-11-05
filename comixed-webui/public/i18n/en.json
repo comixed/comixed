@@ -16,7 +16,7 @@
       "publisher": "[publisher]",
       "series": "[series]",
       "version": "ComiXed v{version}",
-      "yes-or-no": "{value, select, true{Yes} other{no}}"
+      "yes-or-no": "{value, select, true{Yes} other{No}}"
     }
   },
   "batch-process-list-effects": {
@@ -313,6 +313,23 @@
     },
     "title": "Login"
   },
+  "metadata-source-list-effects": {
+    "load": {
+      "service-failure": "Failed to load the metadata source list..."
+    },
+    "save": {
+      "service-failure": "Failed to save the metadata source..."
+    }
+  },
+  "metadata-source-list-page": {
+    "label": {
+      "preferred": "Preferred?",
+      "properties": "Properties",
+      "source-name": "Metadata Source Name"
+    },
+    "page-title": "Metadata Source List",
+    "trail-title": "Metadata Sources"
+  },
   "publisher-comic-list-page": {
     "label": {
       "series": "Series Name",
@@ -445,7 +462,8 @@
         "item": "Admin",
         "settings": {
           "item": "Settings...",
-          "library": "Library settings..."
+          "library": "Library settings...",
+          "metadata": "Metadata settings..."
         }
       },
       "home": {

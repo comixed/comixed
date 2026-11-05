@@ -109,7 +109,7 @@ describe('RemoteLibraryEffects', () => {
 
       const loadSpy = vi
         .spyOn(libraryService, 'loadState')
-        .mockThrow(new Error('General failure'));
+        .mockThrow(new Error('Expected'));
       const alertSpy = vi.spyOn(alertService, 'error');
 
       actions$ = of(action);

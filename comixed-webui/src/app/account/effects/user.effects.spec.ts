@@ -139,7 +139,7 @@ describe('UserEffects', () => {
 
       const loginSpy = vi
         .spyOn(accountService, 'login')
-        .mockThrow(new Error('General failure'));
+        .mockThrow(new Error('Expected'));
       const alertSpy = vi.spyOn(alertService, 'error');
 
       actions$ = of(action);
@@ -190,7 +190,7 @@ describe('UserEffects', () => {
 
       const loadSpy = vi
         .spyOn(accountService, 'loadUser')
-        .mockThrow(new Error('General failure'));
+        .mockThrow(new Error('Expected'));
       const alertSpy = vi.spyOn(alertService, 'error');
 
       actions$ = of(action);
@@ -257,7 +257,7 @@ describe('UserEffects', () => {
 
       const saveSpy = vi
         .spyOn(accountService, 'saveUserPreference')
-        .mockThrow(new Error('General failure'));
+        .mockThrow(new Error('Expected'));
       const alertSpy = vi.spyOn(alertService, 'error');
 
       actions$ = of(action);

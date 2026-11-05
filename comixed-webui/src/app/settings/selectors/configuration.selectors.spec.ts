@@ -45,12 +45,12 @@ describe('Configuration Selectors', () => {
     state = configurationAdapter.setAll(TEST_CONFIGURATION_OPTION_LIST, {
       ...initialConfigurationState,
       total: TEST_TOTAL,
-      loading: false
+      busy: false
     });
   });
 
   describe('selecting the busy flag', () => {
-    it('returns false when loading', () => {
+    it('returns false when busy', () => {
       expect(
         selectConfigurationBusy({
           [CONFIGURATION_FEATURE_KEY]: { ...state, busy: false }
@@ -58,7 +58,7 @@ describe('Configuration Selectors', () => {
       ).toBeFalsy();
     });
 
-    it('returns true when loading', () => {
+    it('returns true when busy', () => {
       expect(
         selectConfigurationBusy({
           [CONFIGURATION_FEATURE_KEY]: { ...state, busy: true }

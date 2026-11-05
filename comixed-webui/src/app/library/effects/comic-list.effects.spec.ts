@@ -219,7 +219,7 @@ describe('ComicListEffects', () => {
 
       const loadSpy = vi
         .spyOn(libraryService, 'loadComicListByFilter')
-        .mockThrow(new Error('General failure'));
+        .mockThrow(new Error('Expected'));
       const alertSpy = vi.spyOn(alertService, 'error');
 
       actions$ = of(action);
@@ -332,7 +332,7 @@ describe('ComicListEffects', () => {
 
       const loadSpy = vi
         .spyOn(libraryService, 'loadByReadState')
-        .mockThrow(new Error('General failure'));
+        .mockThrow(new Error('Expected'));
       const alertSpy = vi.spyOn(alertService, 'error');
 
       actions$ = of(action);

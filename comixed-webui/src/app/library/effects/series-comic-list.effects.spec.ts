@@ -125,7 +125,7 @@ describe('SeriesComicListEffects', () => {
 
       const loadSpy = vi
         .spyOn(collectionService, 'loadSeriesComicList')
-        .mockThrow(new Error('General failure'));
+        .mockThrow(new Error('Expected'));
       const alertSpy = vi.spyOn(alertService, 'error');
 
       actions$ = of(action);

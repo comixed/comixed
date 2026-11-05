@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { MetadataSource } from '@app/library/models/metadata-source';
+import { MetadataSource } from '@app/settings/models/metadata-source';
 
 export interface ComicMetadataSource {
   metadataSource: MetadataSource;

@@ -123,7 +123,7 @@ describe('ExistingAdminAccountEffects', () => {
 
       const checkSpy = vi
         .spyOn(accountService, 'checkForAdminAccount')
-        .mockThrow(new Error('General failure'));
+        .mockThrow(new Error('Expected'));
       const alertSpy = vi.spyOn(alertService, 'error');
 
       actions$ = of(action);
@@ -192,7 +192,7 @@ describe('ExistingAdminAccountEffects', () => {
 
       const createSpy = vi
         .spyOn(accountService, 'createAdminAccount')
-        .mockThrow(new Error('General failure'));
+        .mockThrow(new Error('Expected'));
       const alertSpy = vi.spyOn(alertService, 'error');
 
       actions$ = of(action);

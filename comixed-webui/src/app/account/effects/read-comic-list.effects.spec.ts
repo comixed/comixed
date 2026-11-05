@@ -103,7 +103,7 @@ describe('ReadComicListEffects', () => {
 
       const markComicsSpy = vi
         .spyOn(readComicService, 'markSelectedComics')
-        .mockThrow(new Error('General failure'));
+        .mockThrow(new Error('Expected'));
       const alertSpy = vi.spyOn(alertService, 'error');
 
       actions$ = of(action);

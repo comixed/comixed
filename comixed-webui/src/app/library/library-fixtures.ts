@@ -25,13 +25,13 @@ import { PageType } from '@app/library/models/page-type';
 import { ComicTag } from '@app/library/models/comic-tag';
 import { ComicTagType } from '@app/library/models/comic-tag-type';
 import { ComicMetadataSource } from '@app/library/models/comic-metadata-source';
-import { MetadataSource } from '@app/library/models/metadata-source';
 import { ArchiveType } from '@app/library/models/archive-type';
 import { ComicType } from '@app/library/models/comic-type';
 import { Publisher } from '@app/library/models/publisher';
 import { Series } from '@app/library/models/series';
 import { Issue } from '@app/library/models/issue';
 import { CollectionEntry } from '@app/library/models/collection-entry';
+import { METADATA_SOURCE_1 } from '@app/settings/settings-fixtures';
 
 export const REMOTE_LIBRARY: RemoteLibrary = {
   totalComics: 71765,
@@ -153,16 +153,6 @@ export const COMIC_TAG_4: ComicTag = {
 export const COMIC_TAG_5: ComicTag = {
   type: ComicTagType.STORY,
   value: 'The Story'
-};
-
-export const METADATA_SOURCE_1: MetadataSource = {
-  metadataSourceId: 3000,
-  name: 'The Metadata Source',
-  version: '1.0.1',
-  available: true,
-  homepage: 'http://the-metadat-source',
-  preferred: true,
-  properties: []
 };
 
 export const METADATA_1: ComicMetadataSource = {

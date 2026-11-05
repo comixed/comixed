@@ -106,7 +106,7 @@ describe('ConfigurationEffects', () => {
 
       const loadSpy = vi
         .spyOn(configurationService, 'load')
-        .mockThrow(new Error('General error'));
+        .mockThrow(new Error('Expected'));
       const errorSpy = vi.spyOn(alertService, 'error');
 
       actions$ = of(action);
@@ -163,7 +163,7 @@ describe('ConfigurationEffects', () => {
 
       const loadSpy = vi
         .spyOn(configurationService, 'save')
-        .mockThrow(new Error('General error'));
+        .mockThrow(new Error('Expected'));
       const errorSpy = vi.spyOn(alertService, 'error');
 
       actions$ = of(action);

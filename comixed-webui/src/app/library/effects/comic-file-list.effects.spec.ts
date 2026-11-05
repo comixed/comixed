@@ -117,7 +117,7 @@ describe('ComicFileListEffects', () => {
 
       const loadSpy = vi
         .spyOn(comicFileService, 'loadFromSession')
-        .mockThrow(new Error('General failure'));
+        .mockThrow(new Error('Expected'));
       const alertSpy = vi.spyOn(alertService, 'error');
 
       actions$ = of(action);
@@ -183,7 +183,7 @@ describe('ComicFileListEffects', () => {
 
       const loadSpy = vi
         .spyOn(comicFileService, 'loadFromDisk')
-        .mockThrow(new Error('General failure'));
+        .mockThrow(new Error('Expected'));
       const alertSpy = vi.spyOn(alertService, 'error');
 
       actions$ = of(action);
@@ -260,7 +260,7 @@ describe('ComicFileListEffects', () => {
 
       const toggleSpy = vi
         .spyOn(comicFileService, 'setComicFileSelected')
-        .mockThrow(new Error('General failure'));
+        .mockThrow(new Error('Expected'));
       const alertSpy = vi.spyOn(alertService, 'error');
 
       actions$ = of(action);
@@ -313,7 +313,7 @@ describe('ComicFileListEffects', () => {
 
       const importSpy = vi
         .spyOn(comicFileService, 'import')
-        .mockThrow(new Error('General failure'));
+        .mockThrow(new Error('Expected'));
       const alertSpy = vi.spyOn(alertService, 'error');
 
       actions$ = of(action);

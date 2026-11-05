@@ -128,7 +128,7 @@ describe('ComicDetailEffects', () => {
 
       const loadSpy = vi
         .spyOn(comicService, 'load')
-        .mockThrow(new Error('General failure'));
+        .mockThrow(new Error('Expected'));
       const alertSpy = vi.spyOn(alertService, 'error');
 
       actions$ = of(action);
@@ -216,7 +216,7 @@ describe('ComicDetailEffects', () => {
 
       const saveSpy = vi
         .spyOn(comicService, 'save')
-        .mockThrow(new Error('General failure'));
+        .mockThrow(new Error('Expected'));
       const alertSpy = vi.spyOn(alertService, 'error');
 
       actions$ = of(action);

@@ -16,14 +16,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { MetadataSourceProperty } from '@app/library/models/metadata-source-property';
+import { createActionGroup, emptyProps, props } from '@ngrx/store';
+import { MetadataSource } from '@app/settings/models/metadata-source';
 
-export interface MetadataSource {
-  metadataSourceId: number;
-  name: string;
-  version: string;
-  homepage: string;
-  preferred: boolean;
-  available: boolean;
-  properties: MetadataSourceProperty[];
-}
+export const MetadataSourceListActions = createActionGroup({
+  source: 'Metadata Source List',
+  events: {
+    SetSelected: props<{ selected: MetadataSource }>(),
+    Load: emptyProps(),
+    LoadSuccess: props<{ entries: MetadataSource[] }>(),
+    LoadFailure: emptyProps(),
+    Save: props<{ source: MetadataSource }>(),
+    SaveSuccess: props<{ entries: MetadataSource[] }>(),
+    SaveFailure: emptyProps()
+  }
+});

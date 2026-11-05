@@ -20,3 +20,7 @@ import { API_ROOT_URL } from '@app/app-constants';
 
 export const LOAD_CONFIGURATION_URL = `${API_ROOT_URL}/admin/config`;
 export const SAVE_CONFIGURATION_URL = `${API_ROOT_URL}/admin/config`;
+
+export const LOAD_METADATA_SOURCE_LIST_URL = `${API_ROOT_URL}/metadata/sources`;
+export const CREATE_METADATA_SOURCE_URL = `${API_ROOT_URL}/metadata/sources`;
+export const UPDATE_METADATA_SOURCE_URL = `${API_ROOT_URL}/metadata/sources/\${sourceId}`;

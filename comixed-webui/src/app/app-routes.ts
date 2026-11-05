@@ -33,6 +33,7 @@ import { PublisherComicListPage } from '@app/library/pages/publisher-comic-list-
 import { BatchProcessListPage } from '@app/batch/pages/batch-process-list-page/batch-process-list-page';
 import { SeriesComicListPage } from '@app/library/pages/series-comic-list-page/series-comic-list-page';
 import { LibrarySettingsPage } from '@app/admin/pages/library-settings-page/library-settings-page';
+import { MetadataSettingsPage } from '@app/admin/pages/metadata-settings-page/metadata-settings-page';
 
 export const appRoutes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/dashboard' },
@@ -46,6 +47,11 @@ export const appRoutes: Routes = [
   {
     path: 'admin/settings/library',
     component: LibrarySettingsPage,
+    canActivate: [adminGuard]
+  },
+  {
+    path: 'admin/settings/metadata',
+    component: MetadataSettingsPage,
     canActivate: [adminGuard]
   },
   {

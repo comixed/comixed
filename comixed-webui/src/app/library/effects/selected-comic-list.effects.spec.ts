@@ -102,7 +102,7 @@ describe('SelectedComicListEffects', () => {
 
       const loadSpy = vi
         .spyOn(comicSelectionService, 'loadSelectComicIds')
-        .mockThrow(new Error('General failure'));
+        .mockThrow(new Error('Expected'));
       const alertSpy = vi.spyOn(alertService, 'error');
 
       actions$ = of(action);
@@ -152,7 +152,7 @@ describe('SelectedComicListEffects', () => {
 
       const clearSpy = vi
         .spyOn(comicSelectionService, 'clearSelections')
-        .mockThrow(new Error('General failure'));
+        .mockThrow(new Error('Expected'));
       const alertSpy = vi.spyOn(alertService, 'error');
 
       actions$ = of(action);
@@ -219,7 +219,7 @@ describe('SelectedComicListEffects', () => {
 
       const selectSpy = vi
         .spyOn(comicSelectionService, 'singleComicSelection')
-        .mockThrow(new Error('General failure'));
+        .mockThrow(new Error('Expected'));
       const alertSpy = vi.spyOn(alertService, 'error');
 
       actions$ = of(action);
@@ -289,7 +289,7 @@ describe('SelectedComicListEffects', () => {
 
       const selectSpy = vi
         .spyOn(comicSelectionService, 'setSelectedByReadState')
-        .mockThrow(new Error('General failure'));
+        .mockThrow(new Error('Expected'));
       const alertSpy = vi.spyOn(alertService, 'error');
 
       actions$ = of(action);

@@ -110,7 +110,7 @@ describe('BatchProcessListEffects', () => {
 
       const loadSpy = vi
         .spyOn(batchProcessService, 'loadBatchProcessList')
-        .mockThrow(new Error('General failure'));
+        .mockThrow(new Error('Expected'));
       const alertSpy = vi.spyOn(alertService, 'error');
 
       actions$ = of(action);
@@ -167,7 +167,7 @@ describe('BatchProcessListEffects', () => {
 
       const deleteSpy = vi
         .spyOn(batchProcessService, 'deleteCompletedBatchProcesses')
-        .mockThrow(new Error('General failure'));
+        .mockThrow(new Error('Expected'));
       const alertSpy = vi.spyOn(alertService, 'error');
 
       actions$ = of(action);
