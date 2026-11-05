@@ -8,7 +8,7 @@
       <div class="cx-flex-content-grow-1" style="min-height: 0">
         <p-card class="cx-width-100p cx-height-100p">
           <ng-template #header>
-            <h3>
+            <h3 class="cx-width-100p cx-justify-center cx-no-text-wrap">
               {{
                 "library-settings-page.text.variable-definition-title"
                   | translate
@@ -51,7 +51,7 @@
       <div class="cx-flex-content-grow-1" style="min-height: 0">
         <p-card class="cx-width-100p">
           <ng-template #header>
-            <h3>
+            <h3 class="cx-width-100p cx-justify-center cx-no-text-wrap">
               {{
                 "library-settings-page.text.file-system-settings-title"
                   | translate
@@ -59,52 +59,66 @@
             </h3>
           </ng-template>
 
-          <label for="root-directory-input">
-            {{ "library-settings-page.label.root-directory" | translate }}
-          </label>
-          @if (configurationOptionsBusy()) {
-            <p-skeleton />
-          } @else {
-            <input
-              id="root-directory-input"
-              formControlName="rootDirectory"
-              pInputText
-              class="cx-width-100p"
-            />
-          }
+          <div class="cx-form-field">
+            <label for="root-directory-input">
+              {{ "library-settings-page.label.root-directory" | translate }}
+            </label>
+            @if (configurationOptionsBusy()) {
+              <p-skeleton />
+            } @else {
+              <input
+                id="root-directory-input"
+                formControlName="rootDirectory"
+                pInputText
+                [placeholder]="
+                  'library-settings-page.placeholder.root-directory' | translate
+                "
+              />
+            }
+          </div>
 
-          <label for="comic-renaming-rule-input">
-            {{ "library-settings-page.label.file-renaming-rule" | translate }}
-          </label>
-          @if (configurationOptionsBusy()) {
-            <p-skeleton />
-          } @else {
-            <input
-              id="comic-renaming-rule-input"
-              formControlName="comicRenamingRule"
-              pInputText
-              class="cx-width-100p"
-            />
-          }
+          <div class="cx-form-field">
+            <label for="comic-renaming-rule-input">
+              {{ "library-settings-page.label.file-renaming-rule" | translate }}
+            </label>
+            @if (configurationOptionsBusy()) {
+              <p-skeleton />
+            } @else {
+              <input
+                id="comic-renaming-rule-input"
+                formControlName="comicRenamingRule"
+                pInputText
+                [placeholder]="
+                  'library-settings-page.placeholder.file-renaming-rule'
+                    | translate
+                "
+              />
+            }
+          </div>
 
-          <label for="page-renaming-rule-input">
-            {{ "library-settings-page.label.page-renaming-rule" | translate }}
-          </label>
-          @if (configurationOptionsBusy()) {
-            <p-skeleton />
-          } @else {
-            <input
-              id="page-renaming-rule-input"
-              formControlName="pageRenamingRule"
-              pInputText
-              class="cx-width-100p"
-            />
-          }
+          <div class="cx-form-field">
+            <label for="page-renaming-rule-input">
+              {{ "library-settings-page.label.page-renaming-rule" | translate }}
+            </label>
+            @if (configurationOptionsBusy()) {
+              <p-skeleton />
+            } @else {
+              <input
+                id="page-renaming-rule-input"
+                formControlName="pageRenamingRule"
+                pInputText
+                [placeholder]="
+                  'library-settings-page.placeholder.page-renaming-rule'
+                    | translate
+                "
+              />
+            }
+          </div>
         </p-card>
 
         <p-card class="cx-width-100p">
           <ng-template #header>
-            <h3>
+            <h3 class="cx-width-100p cx-justify-center cx-no-text-wrap">
               {{
                 "library-settings-page.text.other-settings-title" | translate
               }}

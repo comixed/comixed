@@ -78,7 +78,7 @@ describe('DashboardComponent', () => {
       component.translateService.use('fr');
     });
 
-    it('updates the tab title', () => {
+    it('should update the tab title', () => {
       expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
     });
   });

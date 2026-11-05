@@ -73,7 +73,7 @@ describe('MetadataSettingsPage', () => {
       component.translateService.use('fr');
     });
 
-    it('updates the tab title', () => {
+    it('should update the tab title', () => {
       expect(setTitleSpy).toHaveBeenCalled();
     });
   });

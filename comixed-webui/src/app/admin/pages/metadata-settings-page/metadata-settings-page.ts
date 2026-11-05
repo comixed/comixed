@@ -33,12 +33,12 @@ import {
   QUERY_PARAM_PAGE_SIZE
 } from '@app/library/library-constants';
 import { QueryParameterService } from '@app/layout/services/query-parameter.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TitleService } from '@app/layout/services/title-service';
 import { MenuItem } from '@openng/optimus-ui/api';
 
 @Component({
-  imports: [Breadcrumb, Card, TableModule, TranslatePipe],
+  imports: [Breadcrumb, Card, TableModule, TranslatePipe, RouterLink],
   selector: 'app-metadata-settings-page',
   styleUrl: './metadata-settings-page.scss',
   templateUrl: './metadata-settings-page.html'

@@ -178,13 +178,13 @@ describe('MetadataSourceList Reducer', () => {
     describe('success', () => {
       beforeEach(() => {
         state = metadataSourceListReducer(
-          metadataSourceListAdapter.setAll([], {
+          metadataSourceListAdapter.setAll([TEST_PREFERRED_METADATA_SOURCE], {
             ...state,
             busy: true,
             selected: null
           }),
           MetadataSourceListActions.saveSuccess({
-            entries: TEST_METADATA_SOURCE_LIST
+            entry: TEST_OTHER_METADATA_SOURCE
           })
         );
       });
@@ -195,8 +195,11 @@ describe('MetadataSourceList Reducer', () => {
 
       it('should update the metadata source list', () => {
         expect(
-          metadataSourceListAdapter.getSelectors().selectAll(state)
-        ).toStrictEqual(TEST_METADATA_SOURCE_LIST);
+          metadataSourceListAdapter
+            .getSelectors()
+            .selectAll(state)
+            .includes(TEST_OTHER_METADATA_SOURCE)
+        ).toBeTruthy();
       });
 
       it('should preset the selected source to the preferred source', () => {
@@ -207,13 +210,13 @@ describe('MetadataSourceList Reducer', () => {
     describe('success with no preferred source', () => {
       beforeEach(() => {
         state = metadataSourceListReducer(
-          metadataSourceListAdapter.setAll([], {
+          metadataSourceListAdapter.setAll([TEST_OTHER_METADATA_SOURCE], {
             ...state,
             busy: true,
             selected: null
           }),
           MetadataSourceListActions.saveSuccess({
-            entries: [TEST_OTHER_METADATA_SOURCE]
+            entry: TEST_OTHER_METADATA_SOURCE
           })
         );
       });
