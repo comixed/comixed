@@ -60,11 +60,19 @@ export const metadataSourceListReducer = createReducer(
   })),
   on(MetadataSourceListActions.save, state => ({ ...state, busy: true })),
   on(MetadataSourceListActions.saveSuccess, (state, action) => {
-    return metadataSourceListAdapter.setAll(action.entries, {
+    let result = metadataSourceListAdapter.upsertOne(action.entry, {
       ...state,
-      busy: false,
-      selected: action.entries.find(entry => entry.preferred) || null
+      busy: false
     });
+    result = {
+      ...result,
+      selected:
+        metadataSourceListAdapter
+          .getSelectors()
+          .selectAll(result)
+          .find(entry => entry.preferred) || null
+    };
+    return result;
   }),
   on(MetadataSourceListActions.saveFailure, state => ({
     ...state,

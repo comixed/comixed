@@ -156,3 +156,17 @@ h8 {
   flex-shrink: 2;
   align-self: stretch;
 }
+
+// form fields
+
+.cx-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  margin-bottom: 1rem;
+}
+
+.cx-form-field-control {
+  display: block;
+  width: 100%;
+}

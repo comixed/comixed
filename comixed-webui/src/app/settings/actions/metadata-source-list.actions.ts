@@ -27,7 +27,7 @@ export const MetadataSourceListActions = createActionGroup({
     LoadSuccess: props<{ entries: MetadataSource[] }>(),
     LoadFailure: emptyProps(),
     Save: props<{ source: MetadataSource }>(),
-    SaveSuccess: props<{ entries: MetadataSource[] }>(),
+    SaveSuccess: props<{ entry: MetadataSource }>(),
     SaveFailure: emptyProps()
   }
 });

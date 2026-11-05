@@ -41,10 +41,10 @@ export class MetadataSourceService {
     );
   }
 
-  save(args: { source: MetadataSource }): Observable<MetadataSource[]> {
+  save(args: { source: MetadataSource }): Observable<MetadataSource> {
     if (!args.source.metadataSourceId) {
       this.logger.debug('Creating metadata source:', args);
-      return this.client.post<MetadataSource[]>(
+      return this.client.post<MetadataSource>(
         interpolate(CREATE_METADATA_SOURCE_URL),
         {
           sourceName: args.source.name,
@@ -54,7 +54,7 @@ export class MetadataSourceService {
       );
     } else {
       this.logger.debug('Updating metadata source:', args);
-      return this.client.put<MetadataSource[]>(
+      return this.client.put<MetadataSource>(
         interpolate(UPDATE_METADATA_SOURCE_URL, {
           sourceId: args.source.metadataSourceId
         }),

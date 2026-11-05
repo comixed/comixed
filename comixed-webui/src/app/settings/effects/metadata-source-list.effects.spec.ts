@@ -115,12 +115,12 @@ describe('MetadataSourceListEffects', () => {
 
   describe('saving the metadata source list', () => {
     it('should dispatch an action on success', async () => {
-      const serviceResponse = TEST_METADATA_SOURCE_LIST;
+      const serviceResponse = TEST_METADATA_SOURCE;
       const action = MetadataSourceListActions.save({
         source: TEST_METADATA_SOURCE
       });
       const outcome = MetadataSourceListActions.saveSuccess({
-        entries: TEST_METADATA_SOURCE_LIST
+        entry: TEST_METADATA_SOURCE
       });
 
       const loadSpy = vi

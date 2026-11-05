@@ -42,6 +42,7 @@ describe('MetadataSourceService', () => {
     metadataSourceId: null
   };
   const TEST_METADATA_SOURCE = METADATA_SOURCE_1;
+  const TEST_SAVED_METADATA_SOURCE = METADATA_SOURCE_2;
   const TEST_METADATA_SOURCE_LIST = [METADATA_SOURCE_1, METADATA_SOURCE_2];
 
   let service: MetadataSourceService;
@@ -80,10 +81,10 @@ describe('MetadataSourceService', () => {
   });
 
   it('should create a metadata source', () => {
-    const serverResponse = TEST_METADATA_SOURCE_LIST;
+    const serverResponse = TEST_SAVED_METADATA_SOURCE;
 
     service.save({ source: TEST_NEW_METADATA_SOURCE }).subscribe({
-      next: response => expect(response).toEqual(TEST_METADATA_SOURCE_LIST)
+      next: response => expect(response).toEqual(TEST_SAVED_METADATA_SOURCE)
     });
 
     const req = httpController.expectOne(
@@ -100,10 +101,10 @@ describe('MetadataSourceService', () => {
   });
 
   it('should update a metadata source', () => {
-    const serverResponse = TEST_METADATA_SOURCE_LIST;
+    const serverResponse = TEST_SAVED_METADATA_SOURCE;
 
     service.save({ source: TEST_METADATA_SOURCE }).subscribe({
-      next: response => expect(response).toEqual(TEST_METADATA_SOURCE_LIST)
+      next: response => expect(response).toEqual(TEST_SAVED_METADATA_SOURCE)
     });
 
     const req = httpController.expectOne(

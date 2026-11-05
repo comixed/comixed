@@ -18,21 +18,35 @@
     <ng-template #header>
       <tr>
         <th>{{ "metadata-source-list-page.label.source-name" | translate }}</th>
+        <th>
+          {{ "metadata-source-list-page.label.source-version" | translate }}
+        </th>
+        <th>
+          {{ "metadata-source-list-page.label.source-homepage" | translate }}
+        </th>
         <th>{{ "metadata-source-list-page.label.preferred" | translate }}</th>
-        <th>{{ "metadata-source-list-page.label.properties" | translate }}</th>
+        <th>{{ "metadata-source-list-page.label.available" | translate }}</th>
       </tr>
     </ng-template>
 
     <ng-template #body let-source>
       <tr>
         <td>
-          {{ source.name }}
+          <a [routerLink]="['/admin/settings/metadata', source.name]">
+            {{ source.name }}
+          </a>
+        </td>
+        <td>{{ source.version }}</td>
+        <td>
+          <a [href]="source.homepage" [target]="source.name">
+            {{ source.homepage }}
+          </a>
         </td>
         <td>
           {{ "app.text.yes-or-no" | translate: { value: source.preferred } }}
         </td>
         <td>
-          {{ source.properties.length }}
+          {{ "app.text.yes-or-no" | translate: { value: source.available } }}
         </td>
       </tr>
     </ng-template>

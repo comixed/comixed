@@ -72,7 +72,7 @@ export class MetadataSourceListEffects {
         this.metadataSourceService.save({ source: action.source }).pipe(
           tap(response => this.logger.debug('Response received:', response)),
           map(response =>
-            MetadataSourceListActions.saveSuccess({ entries: response })
+            MetadataSourceListActions.saveSuccess({ entry: response })
           ),
           catchError(error => {
             this.logger.error('Service failure:', error);
