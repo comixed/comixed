@@ -5,6 +5,8 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
     <changeSet id="018_2443_add_next_and_previous_issue_to_displayable_comics_view.xml" author="mcpierce">
 
+        <dropView viewName="displayable_comics_view" />
+
         <createView replaceIfExists="true" viewName="displayable_comics_view">
 <![CDATA[
             SELECT DISTINCT c.comic_id                      as comic_id,

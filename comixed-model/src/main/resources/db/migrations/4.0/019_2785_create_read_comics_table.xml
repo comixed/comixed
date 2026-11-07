@@ -42,7 +42,7 @@
         </createIndex>
 
         <sql>INSERT INTO read_comics_v4(comixed_user_id, comic_id)
-             SELECT comixed_user_id, comic_detail_id
+             SELECT comixed_user_id, comic_id
              FROM read_comic_books_v4</sql>
 
         <dropTable tableName="read_comic_books_v4" />
