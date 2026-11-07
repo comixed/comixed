@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="019.01_2705_delete_read_comic_books_unique_constraint_user_comic_detail.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <indexExists tableName="read_comic_books" indexName="read_comic_books_unique_comixed_user_comic_detail"/>
+        </preConditions>
+
+        <dropUniqueConstraint tableName="read_comic_books"
+                              constraintName="read_comic_books_unique_comixed_user_comic_detail"/>
+
+    </changeSet>
+</databaseChangeLog>

@@ -25,6 +25,7 @@
     <include file="/db/migrations/4.0/create_tables/017_2705_create_metadata_sources_table.xml"/>
     <include file="/db/migrations/4.0/create_tables/018_2705_create_metadata_source_properties_table.xml"/>
     <include file="/db/migrations/4.0/create_tables/019_2705_create_comic_metadata_sources_table.xml"/>
+    <include file="/db/migrations/4.0/create_tables/019.01_2705_delete_read_comic_books_unique_constraint_user_comic_detail.xml"/>
     <include file="/db/migrations/4.0/create_tables/020_2705_create_read_comic_books_table.xml"/>
     <include file="/db/migrations/4.0/create_tables/021_2705_create_reading_lists_table.xml"/>
     <include file="/db/migrations/4.0/create_tables/022_2705_create_reading_list_entries_table.xml"/>
