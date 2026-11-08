@@ -17,6 +17,7 @@
  */
 
 import { BatchProcess } from '@app/batch/models/batch-process';
+import { BatchProcessingStatus } from '@app/batch/models/batch-processing-status';
 
 export const BATCH_PROCESS_1: BatchProcess = {
   jobId: 10000,
@@ -44,4 +45,18 @@ export const BATCH_PROCESS_2: BatchProcess = {
   running: true,
   exitStatus: '',
   errors: ''
+};
+
+export const BATCH_PROCESSING_STATUS_1: BatchProcessingStatus = {
+  jobId: 104,
+  stepName: 'step.1',
+  total: 100,
+  processed: 75
+};
+
+export const BATCH_PROCESSING_STATUS_2: BatchProcessingStatus = {
+  jobId: 105,
+  stepName: 'step.2',
+  total: 200,
+  processed: 75
 };

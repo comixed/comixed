@@ -26,18 +26,36 @@ import {
   initialBatchProcessListState
 } from '@app/batch/reducers/batch-process-list.reducer';
 import { provideTranslateService } from '@ngx-translate/core';
-import { BATCH_PROCESS_1, BATCH_PROCESS_2 } from '@app/batch/batch-fixtures';
+import {
+  BATCH_PROCESS_1,
+  BATCH_PROCESS_2,
+  BATCH_PROCESSING_STATUS_1,
+  BATCH_PROCESSING_STATUS_2
+} from '@app/batch/batch-fixtures';
 import { provideRouter } from '@angular/router';
 import { beforeEach, Mock } from 'vitest';
 import { BatchProcessListActions } from '@app/batch/actions/batch-process-list.actions';
 import { Confirmation, ConfirmationService } from '@openng/optimus-ui/api';
+import {
+  BATCH_PROCESSING_STATUS_FEATURE_KEY,
+  batchProcessingStatusAdapter,
+  initialBatchProcessingStatusState
+} from '@app/batch/reducers/batch-processing-status.reducer';
 
 describe('BatchProcessListPage', () => {
   const TEST_BATCH_PROCESS_LIST = [BATCH_PROCESS_1, BATCH_PROCESS_2];
+  const TEST_BATCH_PROCESSING_STATUS_LIST = [
+    BATCH_PROCESSING_STATUS_1,
+    BATCH_PROCESSING_STATUS_2
+  ];
   const initialState = {
     [BATCH_PROCESS_LIST_FEATURE_KEY]: batchProcessListAdapter.setAll(
       TEST_BATCH_PROCESS_LIST,
       { ...initialBatchProcessListState }
+    ),
+    [BATCH_PROCESSING_STATUS_FEATURE_KEY]: batchProcessingStatusAdapter.setAll(
+      TEST_BATCH_PROCESSING_STATUS_LIST,
+      initialBatchProcessingStatusState
     )
   };
 

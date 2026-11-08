@@ -24,13 +24,16 @@ import {
   initialMessagingState,
   MESSAGING_FEATURE_KEY
 } from '@app/messaging/reducers/messaging.reducer';
-import { Mock } from 'vitest';
+import { beforeEach, Mock } from 'vitest';
 import {
-  BATCH_PROCESS_LIST_UPDATE_TOPIC,
   DELETE_COMPLETED_BATCH_PROCESSES_URL,
   LOAD_BATCH_PROCESS_LIST_URL
 } from '@app/batch/batch-constants';
-import { BATCH_PROCESS_1, BATCH_PROCESS_2 } from '@app/batch/batch-fixtures';
+import {
+  BATCH_PROCESS_1,
+  BATCH_PROCESS_2,
+  BATCH_PROCESSING_STATUS_1
+} from '@app/batch/batch-fixtures';
 import {
   HttpTestingController,
   provideHttpClientTesting
@@ -39,6 +42,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { interpolate } from '@app/app-functions';
 import { BatchProcessListActions } from '@app/batch/actions/batch-process-list.actions';
 import { Subscription } from 'rxjs';
+import { BatchProcessingStatusActions } from '@app/batch/actions/batch-processing-status.actions';
 
 describe('BatchProcessService', () => {
   const initialState = { [MESSAGING_FEATURE_KEY]: initialMessagingState };
@@ -48,6 +52,7 @@ describe('BatchProcessService', () => {
     TEST_BATCH_PROCESS,
     TEST_OTHER_BATCH_PROCESS
   ];
+  const TEST_BATCH_PROCESSING_STATUS = BATCH_PROCESSING_STATUS_1;
 
   let service: BatchProcessService;
   let store: MockStore;
@@ -79,9 +84,7 @@ describe('BatchProcessService', () => {
       dispatchSpy = vi.spyOn(service.store, 'dispatch');
       subscribeSpy = vi
         .spyOn(service.webSocketService, 'subscribe')
-        .mockImplementation((topic, callback) => {
-          expect(topic).toStrictEqual(BATCH_PROCESS_LIST_UPDATE_TOPIC);
-          callback(TEST_OTHER_BATCH_PROCESS);
+        .mockImplementation(() => {
           return new Subscription();
         });
       store.setState({
@@ -90,18 +93,40 @@ describe('BatchProcessService', () => {
       });
     });
 
-    it('should subscribe to batch process updates', () => {
-      expect(subscribeSpy).toHaveBeenCalled();
-    });
-
-    it('should process updates', () => {
-      expect(dispatchSpy).toHaveBeenCalledWith(
-        BatchProcessListActions.update({ update: TEST_OTHER_BATCH_PROCESS })
-      );
+    it('should subscribe to topics', () => {
+      expect(subscribeSpy).toHaveBeenCalledTimes(2);
     });
 
     it('should load the batch process list', () => {
       expect(dispatchSpy).toHaveBeenCalledWith(BatchProcessListActions.load());
+    });
+
+    describe('batch list updates', () => {
+      beforeEach(() => {
+        dispatchSpy.mockClear();
+        subscribeSpy.mock.calls[0][1](TEST_BATCH_PROCESS);
+      });
+
+      it('should dispatch an action', () => {
+        expect(dispatchSpy).toHaveBeenCalledWith(
+          BatchProcessListActions.update({ update: TEST_BATCH_PROCESS })
+        );
+      });
+    });
+
+    describe('status updates', () => {
+      beforeEach(() => {
+        dispatchSpy.mockClear();
+        subscribeSpy.mock.calls[1][1](TEST_BATCH_PROCESSING_STATUS);
+      });
+
+      it('should dispatch an action', () => {
+        expect(dispatchSpy).toHaveBeenCalledWith(
+          BatchProcessingStatusActions.updateReceived({
+            update: TEST_BATCH_PROCESSING_STATUS
+          })
+        );
+      });
     });
   });
 

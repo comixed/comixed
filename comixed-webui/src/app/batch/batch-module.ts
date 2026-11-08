@@ -22,12 +22,14 @@ import { StoreModule } from '@ngrx/store';
 import { batchProcessListFeature } from '@app/batch/reducers/batch-process-list.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { BatchProcessListEffects } from '@app/batch/effects/batch-process-list.effects';
+import { batchProcessingStatusFeature } from '@app/batch/reducers/batch-processing-status.reducer';
 
 @NgModule({
   declarations: [],
   imports: [
     CommonModule,
     StoreModule.forFeature(batchProcessListFeature),
+    StoreModule.forFeature(batchProcessingStatusFeature),
     EffectsModule.forFeature([BatchProcessListEffects])
   ]
 })

@@ -3,7 +3,7 @@
   "version": "4.1-SNAPSHOT",
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "format": "node_modules/.bin/prettier --write 'src/**/*.{ts,json,html,scss}'",
+    "format": "node_modules/.bin/prettier --write '**/*.{ts,json,html,scss}'",
     "start": "ng serve",
     "build": "ng build",
     "test": "ng test --coverage",
@@ -32,6 +32,7 @@
   "packageManager": "pnpm@12.11.2",
   "dependencies": {
     "@angular-ru/cdk": "^19.0.0",
+    "@angular/animations": "^22.2.5",
     "@angular/cdk": "~22.2.2",
     "@angular/common": "^22.2.2",
     "@angular/compiler": "^22.2.2",

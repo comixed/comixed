@@ -40,7 +40,6 @@
       "job-id": "ID",
       "job-name": "Name",
       "last-update-time": "Last Updated",
-      "running": "Is Running?",
       "start-time": "Started",
       "status": "Status"
     },

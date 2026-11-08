@@ -23,6 +23,7 @@ import { WebSocketService } from '@app/messaging/services/web-socket-service';
 import { selectMessagingStarted } from '@app/messaging/selectors/messaging.selectors';
 import {
   BATCH_PROCESS_LIST_UPDATE_TOPIC,
+  BATCH_PROCESSING_STATUS_UPDATE_TOPIC,
   DELETE_COMPLETED_BATCH_PROCESSES_URL,
   LOAD_BATCH_PROCESS_LIST_URL
 } from '@app/batch/batch-constants';
@@ -31,6 +32,8 @@ import { BatchProcessListActions } from '@app/batch/actions/batch-process-list.a
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { interpolate } from '@app/app-functions';
+import { BatchProcessingStatus } from '@app/batch/models/batch-processing-status';
+import { BatchProcessingStatusActions } from '@app/batch/actions/batch-processing-status.actions';
 
 @Service()
 class BatchProcessService {
@@ -53,6 +56,16 @@ class BatchProcessService {
           );
           this.logger.trace('Loading batch process list');
           this.store.dispatch(BatchProcessListActions.load());
+          this.logger.trace('Subscribing to batch status updates');
+          this.webSocketService.subscribe<BatchProcessingStatus>(
+            BATCH_PROCESSING_STATUS_UPDATE_TOPIC,
+            update => {
+              this.logger.debug('Batch processing statusupdate received');
+              this.store.dispatch(
+                BatchProcessingStatusActions.updateReceived({ update })
+              );
+            }
+          );
         }
       }
     });

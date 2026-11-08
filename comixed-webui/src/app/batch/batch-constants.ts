@@ -23,3 +23,5 @@ export const DELETE_COMPLETED_BATCH_PROCESSES_URL = `${API_ROOT_URL}/admin/proce
 
 export const BATCH_PROCESS_LIST_UPDATE_TOPIC =
   '/topic/batch-process-list.update';
+export const BATCH_PROCESSING_STATUS_UPDATE_TOPIC =
+  '/topic/load-comic-books.status';

@@ -30,7 +30,7 @@ import { SeriesListPage } from '@app/library/pages/series-list-page/series-list-
 import { TagListPage } from '@app/library/pages/tag-list-page/tag-list-page';
 import { PublisherSeriesListPage } from '@app/library/pages/publisher-series-list-page/publisher-series-list-page';
 import { PublisherComicListPage } from '@app/library/pages/publisher-comic-list-page/publisher-comic-list-page.component';
-import { BatchProcessListPage } from '@app/batch/pages/batch-process-list-page/batch-process-list-page';
+import { BatchProcessListPage } from '@app/admin/pages/batch-process-list-page/batch-process-list-page';
 import { SeriesComicListPage } from '@app/library/pages/series-comic-list-page/series-comic-list-page';
 import { LibrarySettingsPage } from '@app/admin/pages/library-settings-page/library-settings-page';
 import { MetadataSettingsPage } from '@app/admin/pages/metadata-settings-page/metadata-settings-page';

@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import {
@@ -24,7 +24,7 @@ import {
   selectBatchProcessListEntries
 } from '@app/batch/selectors/batch-process-list.selectors';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { DatePipe } from '@angular/common';
+import { DatePipe, DecimalPipe } from '@angular/common';
 import { TableModule } from '@openng/optimus-ui/table';
 import { Card } from '@openng/optimus-ui/card';
 import { Breadcrumb } from '@openng/optimus-ui/breadcrumb';
@@ -33,6 +33,10 @@ import { TitleService } from '@app/layout/services/title-service';
 import { Button } from '@openng/optimus-ui/button';
 import { Tooltip } from '@openng/optimus-ui/tooltip';
 import { BatchProcessListActions } from '@app/batch/actions/batch-process-list.actions';
+import { BatchProcessStatusRecord } from '@app/admin/models/batch-process-status-record';
+import { selectBatchProcessStatusEntries } from '@app/batch/selectors/batch-processing-status.selectors';
+import { ProgressBar } from '@openng/optimus-ui/progressbar';
+import { BatchProcessingStatus } from '@app/batch/models/batch-processing-status';
 
 @Component({
   imports: [
@@ -42,7 +46,9 @@ import { BatchProcessListActions } from '@app/batch/actions/batch-process-list.a
     Card,
     Breadcrumb,
     Button,
-    Tooltip
+    Tooltip,
+    ProgressBar,
+    DecimalPipe
   ],
   selector: 'app-batch-list-page',
   styleUrl: './batch-process-list-page.scss',
@@ -62,6 +68,21 @@ export class BatchProcessListPage {
   readonly batchProcessListEntries = this.store.selectSignal(
     selectBatchProcessListEntries
   );
+  readonly batchProcessingStatusEntries = this.store.selectSignal(
+    selectBatchProcessStatusEntries
+  );
+  readonly batchProcessStatusRowEntries = computed<BatchProcessStatusRecord[]>(
+    () =>
+      this.batchProcessListEntries().map(entry => {
+        return {
+          process: entry,
+          status:
+            this.batchProcessingStatusEntries().find(
+              status => status.jobId === entry.jobId
+            ) || null
+        } as BatchProcessStatusRecord;
+      })
+  );
   readonly batchProcessListRows = signal(10);
 
   constructor() {
@@ -69,6 +90,12 @@ export class BatchProcessListPage {
       next: () => this.doLoadTranslations()
     });
     this.doLoadTranslations();
+  }
+
+  progressFor(status: BatchProcessingStatus): number {
+    const numerator = status?.processed || 0;
+    const denominator = status?.total || 1;
+    return (numerator / denominator) * 100.0;
   }
 
   onDeleteCompletedProcesses(): void {
