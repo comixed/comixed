@@ -67,7 +67,6 @@ import { comicDetailFeature } from '@app/library/reducers/comic-detail.reducer';
       SeriesListEffects,
       SeriesComicListEffects,
       TagListEffects,
-      ComicDetailEffects,
       ComicListEffects,
       SelectedComicListEffects,
       ComicDetailEffects

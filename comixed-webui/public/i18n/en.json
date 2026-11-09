@@ -194,6 +194,27 @@
       }
     }
   },
+  "duplicate-comic-effects": {
+    "load": {
+      "service-failure": "Failed to load duplicate comic details..."
+    }
+  },
+  "duplicate-comic-list-page": {
+    "label": {
+      "cover-date": "Cover Date",
+      "duplicate-count": "# of Duplicates",
+      "issue-number": "Issue #",
+      "publisher": "Publisher",
+      "series": "Series",
+      "volume": "Volume"
+    },
+    "page-title": "Duplicate Comics",
+    "trail-title": "Duplicate Comics"
+  },
+  "duplicate-comic-page": {
+    "page-title": "Duplicate: {publisher} {series} V{volume} #{issueNumber}",
+    "trail-title": "{publisher} {series} V{volume} #{issueNumber}"
+  },
   "existing-admin-account-effects": {
     "create-admin-account": {
       "service-failure": "Failed to create admin account: {email}"

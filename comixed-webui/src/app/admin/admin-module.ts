@@ -18,9 +18,20 @@
 
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { StoreModule } from '@ngrx/store';
+import { duplicateComicListFeature } from '@app/admin/reducers/duplicate-comic-list.reducer';
+import { EffectsModule } from '@ngrx/effects';
+import { DuplicateComicEffects } from '@app/admin/effects/duplicate-comic.effects';
+import { duplicateComicFeature } from '@app/admin/reducers/duplicate-comic.reducer';
+import { DuplicateComicListEffects } from '@app/admin/effects/duplicate-comic-list.effects';
 
 @NgModule({
   declarations: [],
-  imports: [CommonModule]
+  imports: [
+    CommonModule,
+    StoreModule.forFeature(duplicateComicListFeature),
+    StoreModule.forFeature(duplicateComicFeature),
+    EffectsModule.forFeature([DuplicateComicListEffects, DuplicateComicEffects])
+  ]
 })
 export class AdminModule {}

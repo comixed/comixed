@@ -35,6 +35,8 @@ import { SeriesComicListPage } from '@app/library/pages/series-comic-list-page/s
 import { LibrarySettingsPage } from '@app/admin/pages/library-settings-page/library-settings-page';
 import { MetadataSettingsPage } from '@app/admin/pages/metadata-settings-page/metadata-settings-page';
 import { MetadataSourcePage } from '@app/admin/pages/metadata-source-page/metadata-source-page';
+import { DuplicateComicListPage } from '@app/admin/pages/duplicate-comic-list-page/duplicate-comic-list-page';
+import { DuplicateComicPage } from '@app/admin/pages/duplicate-comic-page/duplicate-comic-page';
 
 export const appRoutes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/dashboard' },
@@ -59,6 +61,29 @@ export const appRoutes: Routes = [
     path: 'admin/settings/metadata/:sourceName',
     component: MetadataSourcePage,
     canActivate: [adminGuard]
+  },
+  {
+    path: 'admin/library/unscraped',
+    component: ComicListPage,
+    data: { unscraped: true },
+    canActivate: [readerGuard]
+  },
+  {
+    path: 'admin/library/duplicates',
+    component: DuplicateComicListPage,
+    data: { duplicates: true },
+    canActivate: [readerGuard]
+  },
+  {
+    path: 'admin/library/duplicates/:publisherName/:seriesName/:volume/:issueNumber/:coverDate',
+    component: DuplicateComicPage,
+    canActivate: [readerGuard]
+  },
+  {
+    path: 'admin/library/deleted',
+    component: ComicListPage,
+    data: { deleted: true },
+    canActivate: [readerGuard]
   },
   {
     path: 'dashboard',
@@ -110,24 +135,6 @@ export const appRoutes: Routes = [
     path: 'library/comics/read',
     component: ComicListPage,
     data: { readState: true },
-    canActivate: [readerGuard]
-  },
-  {
-    path: 'library/comics/unscraped',
-    component: ComicListPage,
-    data: { unscraped: true },
-    canActivate: [readerGuard]
-  },
-  {
-    path: 'library/comics/duplicates',
-    component: ComicListPage,
-    data: { duplicates: true },
-    canActivate: [readerGuard]
-  },
-  {
-    path: 'library/comics/deleted',
-    component: ComicListPage,
-    data: { deleted: true },
     canActivate: [readerGuard]
   },
   {

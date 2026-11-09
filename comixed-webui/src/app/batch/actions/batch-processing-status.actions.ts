@@ -20,7 +20,7 @@ import { createActionGroup, props } from '@ngrx/store';
 import { BatchProcessingStatus } from '@app/batch/models/batch-processing-status';
 
 export const BatchProcessingStatusActions = createActionGroup({
-  source: 'BatchProcessingStatus/API',
+  source: 'Batch Processing Status',
   events: {
     UpdateReceived: props<{ update: BatchProcessingStatus }>()
   }

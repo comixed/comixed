@@ -24,21 +24,21 @@
     <p-button
       [label]="'library-statistics-panel.segment.unscraped-comics' | translate"
       [badge]="unscrapedComics().toString()"
-      [routerLink]="['/library/comics/unscraped']"
+      [routerLink]="['/admin/library/unscraped']"
       severity="contrast"
     />
 
     <p-button
       [label]="'library-statistics-panel.segment.duplicate-comics' | translate"
       [badge]="duplicateComics().toString()"
-      [routerLink]="['/library/comics/duplicates']"
+      [routerLink]="['/admin/library/duplicates']"
       severity="danger"
     />
 
     <p-button
       [label]="'library-statistics-panel.segment.deleted-comics' | translate"
       [badge]="deletedComics().toString()"
-      [routerLink]="['/library/comics/deleted']"
+      [routerLink]="['/admin/library/deleted']"
       severity="danger"
     />
 

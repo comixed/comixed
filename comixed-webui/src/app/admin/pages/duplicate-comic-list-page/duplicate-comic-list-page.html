@@ -1,0 +1,57 @@
+<p-card class="cx-width-100p">
+  <ng-template #header>
+    <p-breadcrumb [model]="trail()" [home]="home" />
+  </ng-template>
+
+  <p-table
+    [value]="duplicateComicListEntries()"
+    [lazy]="true"
+    (onLazyLoad)="onLoad($event)"
+    dataKey="tagValue"
+    [paginator]="true"
+    stripedRows
+    [first]="duplicateComicListFirst()"
+    [rows]="duplicateComicListRows()"
+    [totalRecords]="duplicateComicListTotal()"
+    [loading]="duplicateComicListBusy()"
+  >
+    <ng-template #header>
+      <tr>
+        <th>{{ "duplicate-comic-list-page.label.publisher" | translate }}</th>
+        <th>{{ "duplicate-comic-list-page.label.series" | translate }}</th>
+        <th>{{ "duplicate-comic-list-page.label.volume" | translate }}</th>
+        <th>
+          {{ "duplicate-comic-list-page.label.issue-number" | translate }}
+        </th>
+        <th>{{ "duplicate-comic-list-page.label.cover-date" | translate }}</th>
+        <th>
+          {{ "duplicate-comic-list-page.label.duplicate-count" | translate }}
+        </th>
+      </tr>
+    </ng-template>
+
+    <ng-template #body let-duplicate>
+      <tr>
+        <td>{{ duplicate.publisher }}</td>
+        <td>{{ duplicate.series }}</td>
+        <td>{{ duplicate.volume }}</td>
+        <td>
+          <a
+            [routerLink]="[
+              '/admin/library/duplicates',
+              duplicate.publisher,
+              duplicate.series,
+              duplicate.volume,
+              duplicate.issueNumber,
+              duplicate.coverDate
+            ]"
+          >
+            {{ duplicate.issueNumber }}
+          </a>
+        </td>
+        <td>{{ duplicate.coverDate | date: "mediumDate" }}</td>
+        <td>{{ duplicate.count | number }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</p-card>
