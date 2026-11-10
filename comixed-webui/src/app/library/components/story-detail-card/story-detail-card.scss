@@ -1,3 +1,29 @@
+.cx-flex-content-container-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.cx-flex-content-grow-1 {
+  flex: 0 0 auto;
+}
+
 p-card {
+  display: block;
+  width: min(20vw, 300px);
+  max-width: 100%;
+}
+
+img {
+  display: block;
+  height: auto;
+  width: 100%;
+}
+
+app-story-detail-card {
+  display: block;
+  flex: 0 0 auto;
   width: min(20vw, 300px);
 }

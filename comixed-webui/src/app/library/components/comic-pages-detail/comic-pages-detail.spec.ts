@@ -18,18 +18,24 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ComicPagesDetail } from '@app/library/components/comic-pages-detail/comic-pages-detail';
+import { COMIC_PAGE_1, COMIC_PAGE_2 } from '@app/library/library-fixtures';
+import { provideTranslateService } from '@ngx-translate/core';
 
 describe('ComicPagesDetail', () => {
+  const TEST_COMIC_PAGE_LIST = [COMIC_PAGE_1, COMIC_PAGE_2];
+
   let component: ComicPagesDetail;
   let fixture: ComponentFixture<ComicPagesDetail>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ComicPagesDetail]
+      imports: [ComicPagesDetail],
+      providers: [provideTranslateService()]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicPagesDetail);
     component = fixture.componentInstance;
+    component.pages = TEST_COMIC_PAGE_LIST;
     await fixture.whenStable();
   });
 

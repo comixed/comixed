@@ -19,6 +19,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { COMIC_TAG_1 } from '@app/library/library-fixtures';
 import { StoryDetailCard } from '@app/library/components/story-detail-card/story-detail-card';
+import { provideTranslateService } from '@ngx-translate/core';
 
 describe('StoryDetailCard', () => {
   const TEST_TAG = COMIC_TAG_1;
@@ -29,7 +30,8 @@ describe('StoryDetailCard', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [StoryDetailCard]
+      imports: [StoryDetailCard],
+      providers: [provideTranslateService()]
     }).compileComponents();
 
     fixture = TestBed.createComponent(StoryDetailCard);

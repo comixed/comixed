@@ -76,6 +76,7 @@ export const COMIC_1: Comic = {
   nextIssueId: 1001,
   previousIssueId: 1002,
   description: 'This is the first issue in our test library',
+  notes: 'This is the notes for the first issue in our test library',
   pageCount: 28,
   storeDate: new Date().getTime(),
   coverDate: new Date().getTime(),
@@ -106,6 +107,7 @@ export const COMIC_2: Comic = {
   nextIssueId: 1002,
   previousIssueId: 1003,
   description: 'This is the second issue in our test library',
+  notes: 'This is the notes for the second issue in our test library',
   pageCount: 22,
   storeDate: new Date().getTime(),
   coverDate: new Date().getTime(),
@@ -123,7 +125,20 @@ export const COMIC_PAGE_1: ComicPage = {
   index: 0,
   pageNumber: 0,
   pageType: PageType.FRONT_COVER,
-  hash: 'thepagehash',
+  hash: 'thepagehash1',
+  width: 640,
+  height: 480,
+  blocked: false,
+  deleted: false
+};
+
+export const COMIC_PAGE_2: ComicPage = {
+  comicPageId: 2001,
+  filename: 'page2.png',
+  index: 1,
+  pageNumber: 1,
+  pageType: PageType.LETTERS,
+  hash: 'thepagehash2',
   width: 640,
   height: 480,
   blocked: false,

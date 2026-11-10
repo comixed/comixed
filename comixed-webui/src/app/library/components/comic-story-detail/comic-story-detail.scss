@@ -1,7 +1,9 @@
 .cx-flex-content-container-row {
   flex-wrap: wrap;
+  align-content: stretch;
 }
 
 .cx-flex-content-grow-1 {
+  height: 350px;
   width: min(100vw, 200px);
 }

@@ -2,7 +2,7 @@
 
 #app-portal {
   position: fixed;
-  overflow-y: auto;
+  overflow-y: scroll;
   background-color: transparent;
   top: 70px;
   left: $cx-margin-width;

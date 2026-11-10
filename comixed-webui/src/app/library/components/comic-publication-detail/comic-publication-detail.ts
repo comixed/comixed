@@ -37,9 +37,8 @@ import { IftaLabel } from '@openng/optimus-ui/iftalabel';
 import { InputText } from '@openng/optimus-ui/inputtext';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Button } from '@openng/optimus-ui/button';
-import { Skeleton } from '@openng/optimus-ui/skeleton';
 import { DatePicker } from '@openng/optimus-ui/datepicker';
-import { Fluid } from '@openng/optimus-ui/fluid';
+import { Textarea } from '@openng/optimus-ui/textarea';
 
 @Component({
   imports: [
@@ -49,9 +48,8 @@ import { Fluid } from '@openng/optimus-ui/fluid';
     InputText,
     TranslatePipe,
     Button,
-    Skeleton,
     DatePicker,
-    Fluid
+    Textarea
   ],
   selector: 'app-comic-publication-detail',
   styleUrl: './comic-publication-detail.scss',
@@ -72,9 +70,20 @@ export class ComicPublicationDetail {
       series: new FormControl(''),
       volume: new FormControl(''),
       issueNumber: new FormControl(''),
+      title: new FormControl(''),
+      notes: new FormControl({ value: '', disabled: true }),
+      sortName: new FormControl(''),
+      filename: new FormControl({ value: '', disabled: true }),
+      archiveType: new FormControl({ value: '', disabled: true }),
+      comicType: new FormControl({ value: '', disabled: true }),
+      comicState: new FormControl({ value: '', disabled: true }),
       coverDate: new FormControl<Date | null>(null),
       storeDate: new FormControl<Date | null>(null),
-      addedDate: new FormControl<Date | null>({ value: null, disabled: true })
+      addedDate: new FormControl<Date | null>({ value: null, disabled: true }),
+      lastModifiedDate: new FormControl<Date | null>({
+        value: null,
+        disabled: true
+      })
     });
   }
 
@@ -95,6 +104,19 @@ export class ComicPublicationDetail {
     this.publicationForm.controls['series'].setValue(comic.series);
     this.publicationForm.controls['volume'].setValue(comic.volume);
     this.publicationForm.controls['issueNumber'].setValue(comic.issueNumber);
+    this.publicationForm.controls['title'].setValue(comic.title);
+    this.publicationForm.controls['sortName'].setValue(comic.sortName);
+    this.publicationForm.controls['filename'].setValue(comic.filename);
+    this.publicationForm.controls['archiveType'].setValue(
+      comic.archiveType.toString()
+    );
+    this.publicationForm.controls['comicType'].setValue(
+      comic.comicType.toString()
+    );
+    this.publicationForm.controls['comicState'].setValue(
+      comic.comicState.toString()
+    );
+    this.publicationForm.controls['notes'].setValue(comic.notes);
     this.publicationForm.controls['coverDate'].setValue(
       Number(comic.coverDate) ? new Date(comic.coverDate as number) : null
     );
@@ -103,6 +125,11 @@ export class ComicPublicationDetail {
     );
     this.publicationForm.controls['addedDate'].setValue(
       Number(comic.addedDate) ? new Date(comic.addedDate as number) : null
+    );
+    this.publicationForm.controls['lastModifiedDate'].setValue(
+      Number(comic.lastModifiedDate)
+        ? new Date(comic.lastModifiedDate as number)
+        : null
     );
   }
 

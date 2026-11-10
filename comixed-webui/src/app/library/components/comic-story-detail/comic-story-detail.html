@@ -1,6 +1,14 @@
 <p-accordion value="0">
   <p-accordion-panel value="0">
     <p-accordion-header>
+      <span>{{ "comic-story-detail.label.description" | translate }}</span>
+    </p-accordion-header>
+    <p-accordion-content>
+      <span [innerHTML]="comicDetail().description"></span>
+    </p-accordion-content>
+  </p-accordion-panel>
+  <p-accordion-panel value="1">
+    <p-accordion-header>
       <span>
         {{ "comic-story-detail.label.characters" | translate }}
         <p-badge [value]="characterTags().length" />
@@ -9,14 +17,16 @@
     <p-accordion-content>
       <div class="cx-flex-content-container-row">
         @for (tag of characterTags(); track tag.type + tag.value) {
-          <div class="cx-flex-content-grow-1">
-            <app-story-detail-card [value]="tag.value"></app-story-detail-card>
-          </div>
+          <app-story-detail-card
+            [value]="tag.value"
+            [image]="'/images/library/character.png'"
+            [routerLink]="['/library/characters', tag.value]"
+          ></app-story-detail-card>
         }
       </div>
     </p-accordion-content>
   </p-accordion-panel>
-  <p-accordion-panel value="1">
+  <p-accordion-panel value="2">
     <p-accordion-header>
       <span>
         {{ "comic-story-detail.label.teams" | translate }}
@@ -26,14 +36,16 @@
     <p-accordion-content>
       <div class="cx-flex-content-container-row">
         @for (tag of teamTags(); track tag.type + tag.value) {
-          <div class="cx-flex-content-grow-1">
-            <app-story-detail-card [value]="tag.value"></app-story-detail-card>
-          </div>
+          <app-story-detail-card
+            [value]="tag.value"
+            [image]="'/images/library/team.png'"
+            [routerLink]="['/library/teams', tag.value]"
+          ></app-story-detail-card>
         }
       </div>
     </p-accordion-content>
   </p-accordion-panel>
-  <p-accordion-panel value="2">
+  <p-accordion-panel value="3">
     <p-accordion-header>
       <span>
         {{ "comic-story-detail.label.locations" | translate }}
@@ -43,14 +55,16 @@
     <p-accordion-content>
       <div class="cx-flex-content-container-row">
         @for (tag of locationTags(); track tag.type + tag.value) {
-          <div class="cx-flex-content-grow-1">
-            <app-story-detail-card [value]="tag.value"></app-story-detail-card>
-          </div>
+          <app-story-detail-card
+            [value]="tag.value"
+            [image]="'/images/library/location.png'"
+            [routerLink]="['/library/locations', tag.value]"
+          ></app-story-detail-card>
         }
       </div>
     </p-accordion-content>
   </p-accordion-panel>
-  <p-accordion-panel value="3">
+  <p-accordion-panel value="4">
     <p-accordion-header>
       <span>
         {{ "comic-story-detail.label.stories" | translate }}
@@ -60,14 +74,16 @@
     <p-accordion-content>
       <div class="cx-flex-content-container-row">
         @for (tag of storyTags(); track tag.type + tag.value) {
-          <div class="cx-flex-content-grow-1">
-            <app-story-detail-card [value]="tag.value"></app-story-detail-card>
-          </div>
+          <app-story-detail-card
+            [value]="tag.value"
+            [image]="'/images/library/story.png'"
+            [routerLink]="['/library/stories', tag.value]"
+          ></app-story-detail-card>
         }
       </div>
     </p-accordion-content>
   </p-accordion-panel>
-  <p-accordion-panel value="4">
+  <p-accordion-panel value="5">
     <p-accordion-header>
       <span>
         {{ "comic-story-detail.label.credits" | translate }}
@@ -77,12 +93,11 @@
     <p-accordion-content>
       <div class="cx-flex-content-container-row">
         @for (tag of creditTags(); track tag.type + tag.value) {
-          <div class="cx-flex-content-grow-1">
-            <app-story-detail-card
-              [type]="tag.type"
-              [value]="tag.value"
-            ></app-story-detail-card>
-          </div>
+          <app-story-detail-card
+            [type]="tag.type"
+            [value]="tag.value"
+            [image]="'/images/library/credit.png'"
+          ></app-story-detail-card>
         }
       </div>
     </p-accordion-content>

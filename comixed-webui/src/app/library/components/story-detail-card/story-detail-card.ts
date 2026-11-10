@@ -18,9 +18,10 @@
 
 import { Component, Input, signal } from '@angular/core';
 import { Card } from '@openng/optimus-ui/card';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
-  imports: [Card],
+  imports: [Card, TranslatePipe],
   selector: 'app-story-detail-card',
   styleUrl: './story-detail-card.scss',
   templateUrl: './story-detail-card.html'
@@ -29,9 +30,10 @@ export class StoryDetailCard {
   readonly cardType = signal('');
   readonly cardValue = signal('');
   readonly cardLink = signal('');
+  readonly cardImage = signal('');
 
   @Input() set type(type: string) {
-    this.cardType.set(type);
+    this.cardType.set('story-detail-card.label.' + type.toString());
   }
 
   @Input() set value(value: string) {
@@ -40,5 +42,9 @@ export class StoryDetailCard {
 
   @Input() set link(link: string) {
     this.cardLink.set(link);
+  }
+
+  @Input() set image(image: string) {
+    this.cardImage.set(image);
   }
 }

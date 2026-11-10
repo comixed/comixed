@@ -31,17 +31,17 @@ import { QUERY_PARAM_COMIC_DETAIL_TAB } from '@app/library/library-constants';
 import { COMIC_1 } from '@app/library/library-fixtures';
 import { ComicDetailAction } from '@app/library/actions/comic-detail.actions';
 import { TitleService } from '@app/layout/services/title-service';
-import { ComicDetailPage } from '@app/library/pages/comic-detail-page/comic-detail-page';
+import { ComicPage } from '@app/library/pages/comic-page/comic-page';
 
-describe('ComicDetailPage', () => {
+describe('ComicPage', () => {
   const initialState = { [COMIC_DETAIL_FEATURE_KEY]: initialComicDetailState };
 
-  let component: ComicDetailPage;
-  let fixture: ComponentFixture<ComicDetailPage>;
+  let component: ComicPage;
+  let fixture: ComponentFixture<ComicPage>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ComicDetailPage],
+      imports: [ComicPage],
       providers: [
         provideLogger({ minLevel: LoggerLevel.OFF }),
         provideTranslateService(),
@@ -52,7 +52,7 @@ describe('ComicDetailPage', () => {
       ]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ComicDetailPage);
+    fixture = TestBed.createComponent(ComicPage);
     component = fixture.componentInstance;
     // not fond of this hack, but it lets the MVP move forward
     const ResizeObserverMock = vi.fn(

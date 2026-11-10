@@ -102,30 +102,38 @@
     }
   },
   "comic-pages-detail": {
-    "label": {
-      "blocked": "Blocked",
-      "dimensions": "Dimensions",
-      "filename": "Filename",
-      "hash": "File Hash",
-      "page-number": "Page #",
-      "page-type": "Page Type"
+    "tooltip": {
+      "toggle-blocking-hash": "Toggle blocking this page hash",
+      "toggle-page-deletion": "Toggle marking this page for deletion"
     }
   },
   "comic-publication-detail": {
     "label": {
       "added-date": "Added",
+      "archive-type": "Archive Type",
+      "comic-state": "Comic State",
+      "comic-type": "Comic Type",
       "cover-date": "Cover Date",
+      "filename": "Filename",
       "imprint": "Imprint",
       "issue-number": "Issue #",
+      "last-modified-date": "Last Modified Date",
+      "notes": "Notes",
       "publisher": "Publisher",
       "series": "Series",
       "store-date": "Store Date",
+      "title": "Title",
       "volume": "Volume"
+    },
+    "title": {
+      "file-info": "File Details",
+      "publication-info": "Publication Details"
     }
   },
   "comic-story-detail": {
     "label": {
       "characters": "Characters",
+      "description": "Description",
       "credits": "Credits",
       "locations": "Locations",
       "stories": "Stories",
@@ -481,6 +489,18 @@
   },
   "settings": {
     "trail-title": "Settings"
+  },
+  "story-detail-card": {
+    "label": {
+      "COLORIST": "Colorist",
+      "COVER": "Cover Artist",
+      "EDITOR": "Editor",
+      "INKER": "Inker",
+      "LETTERER": "Letterer",
+      "OTHER": "Other",
+      "PENCILLER": "Penciller",
+      "WRITER": "Writer"
+    }
   },
   "tag-list-effects": {
     "load": {

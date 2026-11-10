@@ -21,12 +21,24 @@ import { ComicPage } from '@app/library/models/comic-page';
 import { FormsModule } from '@angular/forms';
 import { Comic, NO_COMIC } from '@app/library/models/comic';
 import { TableModule } from '@openng/optimus-ui/table';
-import { DataView } from '@openng/optimus-ui/dataview';
+import { GalleriaModule } from '@openng/optimus-ui/galleria';
 import { ComicPageUrlPipe } from '@app/library/pipes/comic-page-url-pipe';
 import { Card } from '@openng/optimus-ui/card';
+import { Button } from '@openng/optimus-ui/button';
+import { Tooltip } from '@openng/optimus-ui/tooltip';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
-  imports: [FormsModule, TableModule, DataView, ComicPageUrlPipe, Card],
+  imports: [
+    FormsModule,
+    TableModule,
+    GalleriaModule,
+    ComicPageUrlPipe,
+    Card,
+    Button,
+    Tooltip,
+    TranslatePipe
+  ],
   selector: 'app-comic-pages-detail',
   styleUrl: './comic-pages-detail.scss',
   templateUrl: './comic-pages-detail.html'
@@ -35,6 +47,7 @@ export class ComicPagesDetail {
   readonly isLoading = signal(false);
   readonly comicDetail = signal<Comic>(NO_COMIC);
   readonly comicPages = signal<ComicPage[]>([]);
+  readonly currentPage = signal(0);
 
   @Input() set loading(loading: boolean) {
     this.isLoading.set(loading);

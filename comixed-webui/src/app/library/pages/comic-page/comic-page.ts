@@ -62,7 +62,6 @@ import { Comic } from '@app/library/models/comic';
     Breadcrumb,
     TranslatePipe,
     ComicDetailTrailPipe,
-    ComicTitlePipe,
     Tabs,
     Tab,
     TabList,
@@ -75,10 +74,10 @@ import { Comic } from '@app/library/models/comic';
     ComicPublicationDetail
   ],
   selector: 'app-comic-detail-page',
-  styleUrl: './comic-detail-page.scss',
-  templateUrl: './comic-detail-page.html'
+  styleUrl: './comic-page.scss',
+  templateUrl: './comic-page.html'
 })
-export class ComicDetailPage {
+export class ComicPage {
   readonly logger = inject(LoggerService);
   readonly translateService = inject(TranslateService);
   readonly queryParameterService = inject(QueryParameterService);

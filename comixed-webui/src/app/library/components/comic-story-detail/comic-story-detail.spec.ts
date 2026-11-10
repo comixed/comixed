@@ -21,6 +21,7 @@ import { provideTranslateService } from '@ngx-translate/core';
 import { ComicTagType } from '@app/library/models/comic-tag-type';
 import { ComicTag } from '@app/library/models/comic-tag';
 import { ComicStoryDetail } from '@app/library/components/comic-story-detail/comic-story-detail';
+import { provideRouter } from '@angular/router';
 
 describe('ComicStoryDetail', () => {
   const TEST_TAGS: ComicTag[] = Object.keys(ComicTagType).map(tagType => {
@@ -35,7 +36,10 @@ describe('ComicStoryDetail', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ComicStoryDetail],
-      providers: [provideTranslateService()]
+      providers: [
+        provideRouter([{ path: '*', redirectTo: '' }]),
+        provideTranslateService()
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicStoryDetail);

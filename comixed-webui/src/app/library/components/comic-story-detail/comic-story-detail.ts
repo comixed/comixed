@@ -28,6 +28,8 @@ import { Comic, NO_COMIC } from '@app/library/models/comic';
 import { ComicTag } from '@app/library/models/comic-tag';
 import { Badge } from '@openng/optimus-ui/badge';
 import { StoryDetailCard } from '@app/library/components/story-detail-card/story-detail-card';
+import { ComicTagType } from '@app/library/models/comic-tag-type';
+import { RouterLink } from '@angular/router';
 
 const NON_CREDIT_TAGS = ['CHARACTER', 'TEAM', 'LOCATION', 'STORY'];
 
@@ -39,7 +41,8 @@ const NON_CREDIT_TAGS = ['CHARACTER', 'TEAM', 'LOCATION', 'STORY'];
     AccordionContent,
     TranslatePipe,
     Badge,
-    StoryDetailCard
+    StoryDetailCard,
+    RouterLink
   ],
   selector: 'app-comic-story-detail',
   styleUrl: './comic-story-detail.scss',
@@ -66,4 +69,6 @@ export class ComicStoryDetail {
       tags.filter(entry => !NON_CREDIT_TAGS.includes(entry.type))
     );
   }
+
+  protected readonly ComicTagType = ComicTagType;
 }

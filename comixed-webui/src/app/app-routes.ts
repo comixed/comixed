@@ -22,7 +22,7 @@ import { LoginPage } from '@app/account/pages/login-page/login-page';
 import { ComicListPage } from '@app/library/pages/comic-list-page/comic-list-page';
 import { ImportComicsPage } from '@app/library/pages/import-comics-page/import-comics-page';
 import { InitialAccountPage } from '@app/account/pages/initial-account-page/initial-account-page';
-import { ComicDetailPage } from '@app/library/pages/comic-detail-page/comic-detail-page';
+import { ComicPage } from '@app/library/pages/comic-page/comic-page';
 import { readerGuard } from '@app/account/guards/reader-guard';
 import { adminGuard } from '@app/account/guards/admin-guard';
 import { PublisherListPage } from '@app/library/pages/publisher-list-page/publisher-list-page';
@@ -139,12 +139,17 @@ export const appRoutes: Routes = [
   },
   {
     path: 'library/comics/:comicId',
-    component: ComicDetailPage,
+    component: ComicPage,
     canActivate: [readerGuard]
   },
   {
     path: 'library/:tagType',
     component: TagListPage,
+    canActivate: [readerGuard]
+  },
+  {
+    path: 'library/:tagType/:tagValue',
+    component: ComicListPage,
     canActivate: [readerGuard]
   }
 ];

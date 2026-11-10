@@ -1,0 +1,54 @@
+<p-card>
+  <ng-template #header>
+    <p-breadcrumb [model]="comic() | comicDetailTrail" [home]="home" />
+  </ng-template>
+
+  <div id="comic-cover-container">
+    <app-comic-cover [comic]="comic()!"></app-comic-cover>
+  </div>
+
+  <p-tabs lazy [value]="currentTab()" (valueChange)="onTabChanged($event)">
+    <p-tablist>
+      <p-tab [value]="'publication'">
+        {{ "comic-detail-page.label.publication" | translate }}
+      </p-tab>
+      <p-tab [value]="'story'">
+        {{ "comic-detail-page.label.story" | translate }}
+      </p-tab>
+      <p-tab [value]="'pages'">
+        <span>
+          {{ "comic-detail-page.label.pages" | translate }}
+        </span>
+      </p-tab>
+      <p-tab [value]="'metadata'">
+        {{ "comic-detail-page.label.metadata" | translate }}
+      </p-tab>
+    </p-tablist>
+    <p-tabpanels>
+      <p-tabpanel [value]="'publication'">
+        <app-comic-publication-detail
+          [comic]="comic()"
+          [loading]="loading()"
+          (updateComic)="onUpdateComic($event)"
+        ></app-comic-publication-detail>
+      </p-tabpanel>
+      <p-tabpanel [value]="'story'">
+        <app-comic-story-detail
+          [comic]="comic()"
+          [tags]="tags()"
+        ></app-comic-story-detail>
+      </p-tabpanel>
+      <p-tabpanel [value]="'pages'">
+        <app-comic-pages-detail
+          [style]="{ 'min-height': 0 }"
+          [comic]="comic()"
+          [loading]="loading()"
+          [pages]="pages()"
+        ></app-comic-pages-detail>
+      </p-tabpanel>
+      <p-tabpanel [value]="'metadata'">
+        <app-comic-metadata-detail></app-comic-metadata-detail>
+      </p-tabpanel>
+    </p-tabpanels>
+  </p-tabs>
+</p-card>

@@ -39,6 +39,7 @@ export interface Comic {
   nextIssueId?: number;
   previousIssueId?: number;
   description: string;
+  notes: string;
   pageCount: number;
   storeDate: number | null;
   coverDate: number | null;
@@ -67,6 +68,7 @@ export const NO_COMIC: Comic = {
   sortName: '',
   title: '',
   description: '',
+  notes: '',
   pageCount: 0,
   coverDate: null,
   storeDate: null,
