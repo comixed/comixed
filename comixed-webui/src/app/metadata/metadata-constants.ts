@@ -15,19 +15,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
+import { API_ROOT_URL } from '@app/app-constants';
 
-import { createActionGroup, emptyProps, props } from '@ngrx/store';
-import { MetadataSource } from '@app/settings/models/metadata-source';
+export const CREATE_METADATA_SOURCE_URL = `${API_ROOT_URL}/metadata/sources`;
+export const LOAD_METADATA_SOURCE_LIST_URL = `${API_ROOT_URL}/metadata/sources`;
+export const UPDATE_METADATA_SOURCE_URL = `${API_ROOT_URL}/metadata/sources/\${metadataSourceId}`;
 
-export const MetadataSourceListActions = createActionGroup({
-  source: 'Metadata Source List',
-  events: {
-    SetSelected: props<{ selected: MetadataSource }>(),
-    Load: emptyProps(),
-    LoadSuccess: props<{ entries: MetadataSource[] }>(),
-    LoadFailure: emptyProps(),
-    Save: props<{ source: MetadataSource }>(),
-    SaveSuccess: props<{ entry: MetadataSource }>(),
-    SaveFailure: emptyProps()
-  }
-});
+export const LOAD_SCRAPING_VOLUMES_URL = `${API_ROOT_URL}/metadata/sources/\${metadataSourceId}/volumes`;
+export const LOAD_SCRAPING_ISSUE_URL = `${API_ROOT_URL}/metadata/sources/\${metadataSourceId}/volumes/\${volumeId}/issues/\${issueNumber}`;
+
+export const SCRAPE_SINGLE_BOOK_COMIC_URL = `${API_ROOT_URL}/metadata/sources/\${metadataSourceId}/comics/single/\${comicId}`;

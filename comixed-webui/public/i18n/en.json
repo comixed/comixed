@@ -4,6 +4,7 @@
       "cancel": "Cancel",
       "confirm": "Confirm",
       "reset": "Reset",
+      "select": "Select",
       "submit": "Submit"
     },
     "effects": {
@@ -99,6 +100,29 @@
     "page-title": "{pageType, select, SELECTED{Selected} READ{Read} UNSCRAPED{Unscraped} DUPLICATE{Duplicate} DELETED{Deleted} other{All} } Comics",
     "tooltip": {
       "toggle-unread": "Toggle showing read/unread comics..."
+    }
+  },
+  "comic-metadata-detail": {
+    "issue-selected": {
+      "confirmation-message": "Are you sure you want to replace the metadata using this issue?",
+      "confirmation-title": "Metadata Issue Selected"
+    },
+    "option": {
+      "100-records": "100 Records",
+      "500-records": "500 Records",
+      "1000-records": "1000 Records",
+      "all-records": "All Records"
+    },
+    "label": {
+      "issue-number": "Issue #",
+      "match-publisher": "Match Publisher",
+      "maximum-records": "Maximum Records To Retrieve",
+      "metadata-source": "Metadata Source",
+      "publisher": "Publisher",
+      "reference-id": "Reference #",
+      "series": "Series",
+      "skip-cache": "Skip Cache",
+      "volume": "Volume"
     }
   },
   "comic-pages-detail": {
@@ -433,6 +457,18 @@
     "message": "Do you want to mark the selected comics as READ or UNREAD?",
     "title": "Selected Comics Read State"
   },
+  "scraping-volume-table": {
+    "label": {
+      "issue-count": "# of Issues",
+      "publisher": "Publisher",
+      "series": "Series",
+      "start-year": "Start Year"
+    },
+    "tooltip": {
+      "reset-volumes": "Reset volumes and go back...",
+      "select-issue": "Scrape metadata from this issue..."
+    }
+  },
   "selected-comic-list-effects": {
     "select-by-filter": "Failed to set selected state on comics...",
     "select-by-read-state": "Failed to select comics by read state..."
@@ -494,6 +530,17 @@
   },
   "settings": {
     "trail-title": "Settings"
+  },
+  "single-comic-scraping-effects": {
+    "load-volumes": {
+      "service-failure": "Failed to load scraping volumes..."
+    },
+    "load-issue": {
+      "no-issue-found": "No issue was found using {sourceName}..."
+    },
+    "scrape-comic": {
+      "service-failure": "Failed to scrape comic..."
+    }
   },
   "story-detail-card": {
     "label": {

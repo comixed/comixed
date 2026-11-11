@@ -26,12 +26,12 @@ import {
   initialMetadataSourceListState,
   METADATA_SOURCE_LIST_FEATURE_KEY,
   metadataSourceListAdapter
-} from '@app/settings/reducers/metadata-source-list.reducer';
+} from '@app/metadata/reducers/metadata-source-list.reducer';
 import { beforeEach, Mock } from 'vitest';
 import {
   METADATA_SOURCE_1,
   METADATA_SOURCE_2
-} from '@app/settings/settings-fixtures';
+} from '@app/metadata/metadata-fixtures';
 
 describe('MetadataSettingsPage', () => {
   const TEST_METADATA_SOURCE_LIST = [METADATA_SOURCE_1, METADATA_SOURCE_2];

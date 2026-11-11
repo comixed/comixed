@@ -16,24 +16,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createFeatureSelector, createSelector } from '@ngrx/store';
-import {
-  METADATA_SOURCE_LIST_FEATURE_KEY,
-  metadataSourceListAdapter,
-  MetadataSourceListState
-} from '@app/settings/reducers/metadata-source-list.reducer';
+import { createActionGroup, emptyProps, props } from '@ngrx/store';
+import { MetadataSource } from '@app/metadata/models/metadata-source';
 
-const selectMetadataSourceListState =
-  createFeatureSelector<MetadataSourceListState>(
-    METADATA_SOURCE_LIST_FEATURE_KEY
-  );
-
-export const selectMetadataSourceListBusy = createSelector(
-  selectMetadataSourceListState,
-  state => state.busy
-);
-
-export const selectMetadataSourceListEntries = createSelector(
-  selectMetadataSourceListState,
-  state => metadataSourceListAdapter.getSelectors().selectAll(state)
-);
+export const MetadataSourceListActions = createActionGroup({
+  source: 'Metadata Source List',
+  events: {
+    SetSelected: props<{ selected: MetadataSource | null }>(),
+    Load: emptyProps(),
+    LoadSuccess: props<{ entries: MetadataSource[] }>(),
+    LoadFailure: emptyProps(),
+    Save: props<{ source: MetadataSource }>(),
+    SaveSuccess: props<{ entry: MetadataSource }>(),
+    SaveFailure: emptyProps()
+  }
+});

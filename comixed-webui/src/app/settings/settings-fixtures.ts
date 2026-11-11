@@ -17,7 +17,6 @@
  */
 
 import { ConfigurationOption } from '@app/settings/models/configuration-option';
-import { MetadataSource } from '@app/settings/models/metadata-source';
 
 export const TEST_CONFIGURATION_OPTIONS_1: ConfigurationOption = {
   name: 'settings1.name',
@@ -27,24 +26,4 @@ export const TEST_CONFIGURATION_OPTIONS_1: ConfigurationOption = {
 export const TEST_CONFIGURATION_OPTIONS_2: ConfigurationOption = {
   name: 'settings2.name',
   value: 'settings2.value'
-};
-
-export const METADATA_SOURCE_1: MetadataSource = {
-  metadataSourceId: 3000,
-  name: 'The Metadata Source',
-  version: '1.0.1',
-  available: true,
-  homepage: 'http://the-metadata-source',
-  preferred: false,
-  properties: [{ name: 'metadata-source.property-1', value: 'something' }]
-};
-
-export const METADATA_SOURCE_2: MetadataSource = {
-  metadataSourceId: 3001,
-  name: 'The Other Metadata Source',
-  version: '1.0.2',
-  available: true,
-  homepage: 'http://the-metadata-source',
-  preferred: false,
-  properties: [{ name: 'metadata-source.property-1', value: 'something else' }]
 };

@@ -1,1 +1,133 @@
-<p>comic-metadata-detail works!</p>
+@if (scrapingVolumeEntries().length > 0) {
+  <app-scraping-volume-table
+    id="scraping-volume-table"
+    [metadataSource]="metadataSource()!"
+    [issueNumber]="issueNumber"
+    [skipCache]="skipCache"
+    (issueSelected)="onIssueSelected($event)"
+  ></app-scraping-volume-table>
+} @else {
+  <p-card id="scraping-volume-form">
+    <form [formGroup]="scrapingForm">
+      <div class="cx-form-grid">
+        <div class="scraping-options">
+          <p-ifta-label>
+            <p-select
+              id="max-records-select"
+              formControlName="maximumRecords"
+              [options]="maximumRecordOptions"
+              [optionLabel]=""
+              optionValue="value"
+            >
+              <ng-template #item let-option>
+                {{ option.label | translate }}
+              </ng-template>
+              <ng-template #selectedItem let-option>
+                {{ option.label | translate }}
+              </ng-template>
+            </p-select>
+            <label for="max-records-select">
+              {{ "comic-metadata-detail.label.maximum-records" | translate }}
+            </label>
+          </p-ifta-label>
+
+          <p-checkbox
+            id="match-publisher-option"
+            formControlName="matchPublisher"
+            [binary]="true"
+          />
+          <label for="match-publisher-option">
+            {{ "comic-metadata-detail.label.match-publisher" | translate }}
+          </label>
+
+          <p-checkbox
+            id="skip-cache-option"
+            formControlName="skipCache"
+            [binary]="true"
+          />
+          <label for="skip-cache-option">
+            {{ "comic-metadata-detail.label.skip-cache" | translate }}
+          </label>
+        </div>
+
+        <div class="cx-form-field-wide">
+          <p-ifta-label>
+            <p-select
+              id="metadata-source-select"
+              class="cx-width-100p"
+              [options]="metadataSourceList()"
+              optionLabel="name"
+              optionValue="metadataSourceId"
+              formControlName="metadataSource"
+              (onChange)="onSelectMetadataSource($event.value)"
+            ></p-select>
+            <label for="metadata-source-select">
+              {{ "comic-metadata-detail.label.metadata-source" | translate }}
+            </label>
+          </p-ifta-label>
+        </div>
+
+        <div class="cx-form-field">
+          <p-ifta-label>
+            <label for="publisher-input">
+              {{ "comic-metadata-detail.label.publisher" | translate }}
+            </label>
+            <input
+              id="publisher-input"
+              pInputText
+              formControlName="publisher"
+            />
+          </p-ifta-label>
+        </div>
+
+        <div class="cx-form-field">
+          <p-ifta-label>
+            <label for="series-input">
+              {{ "comic-metadata-detail.label.series" | translate }}
+            </label>
+            <input id="series-input" pInputText formControlName="series" />
+          </p-ifta-label>
+        </div>
+
+        <div class="cx-form-field">
+          <p-ifta-label>
+            <label for="volume-input">
+              {{ "comic-metadata-detail.label.volume" | translate }}
+            </label>
+            <input id="series-input" pInputText formControlName="volume" />
+          </p-ifta-label>
+        </div>
+
+        <div class="cx-form-field">
+          <p-ifta-label>
+            <label for="issue-number-input">
+              {{ "comic-metadata-detail.label.issue-number" | translate }}
+            </label>
+            <input id="series-input" pInputText formControlName="issueNumber" />
+          </p-ifta-label>
+        </div>
+      </div>
+    </form>
+
+    <ng-template #footer>
+      <div class="cx-width-100p cx-justify-end">
+        <p-button
+          id="reset-form-button"
+          icon="pi pi-undo"
+          severity="danger"
+          [label]="'app.button.reset' | translate"
+          [disabled]="!scrapingForm.dirty"
+          (onClick)="onResetForm()"
+        />
+        <p-button
+          id="submit-form-button"
+          icon="pi pi-send"
+          severity="primary"
+          [label]="'app.button.submit' | translate"
+          [disabled]="!scrapingForm.valid"
+          (onClick)="onLoadVolumes()"
+        />
+      </div>
+    </ng-template>
+  </p-card>
+}

@@ -18,16 +18,16 @@
 
 import { inject, Service } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { MetadataSource } from '@app/settings/models/metadata-source';
+import { MetadataSource } from '@app/metadata/models/metadata-source';
 import { Observable } from 'rxjs';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { interpolate } from '@app/app-functions';
+import { SaveMetadataSourceRequest } from '@app/metadata/models/net/save-metadata-source-request';
 import {
   CREATE_METADATA_SOURCE_URL,
   LOAD_METADATA_SOURCE_LIST_URL,
   UPDATE_METADATA_SOURCE_URL
-} from '@app/settings/settings-constants';
-import { SaveMetadataSourceRequest } from '@app/settings/models/net/save-metadata-source-request';
+} from '@app/metadata/metadata-constants';
 
 @Service()
 export class MetadataSourceService {
@@ -56,7 +56,7 @@ export class MetadataSourceService {
       this.logger.debug('Updating metadata source:', args);
       return this.client.put<MetadataSource>(
         interpolate(UPDATE_METADATA_SOURCE_URL, {
-          sourceId: args.source.metadataSourceId
+          metadataSourceId: args.source.metadataSourceId
         }),
         {
           sourceName: args.source.name,

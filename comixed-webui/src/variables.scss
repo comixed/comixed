@@ -11,4 +11,7 @@ $cx-portal-height: calc(
         (2 * $cx-margin-width)
     )
 );
+
 $cx-portal-width: calc(100vw - (2 * $cx-margin-width));
+
+$cx-max-image-width: 1000px;

@@ -16,14 +16,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { MetadataSourceProperty } from '@app/settings/models/metadata-source-property';
+import { Pipe, PipeTransform } from '@angular/core';
+import { ScrapingIssue } from '@app/metadata/models/scraping-issue';
 
-export interface MetadataSource {
-  metadataSourceId: number | null;
-  name: string;
-  version: string;
-  homepage: string;
-  preferred: boolean;
-  available: boolean;
-  properties: MetadataSourceProperty[];
+@Pipe({
+  name: 'scrapingIssueTitle'
+})
+export class ScrapingIssueTitlePipe implements PipeTransform {
+  transform(value: ScrapingIssue): string {
+    return `${value.name} #${value.issueNumber}`;
+  }
 }

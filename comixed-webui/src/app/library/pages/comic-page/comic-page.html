@@ -47,7 +47,9 @@
         ></app-comic-pages-detail>
       </p-tabpanel>
       <p-tabpanel [value]="'metadata'">
-        <app-comic-metadata-detail></app-comic-metadata-detail>
+        <app-comic-metadata-detail
+          [comic]="comic()"
+        ></app-comic-metadata-detail>
       </p-tabpanel>
     </p-tabpanels>
   </p-tabs>

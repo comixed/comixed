@@ -27,16 +27,16 @@ import {
   initialMetadataSourceListState,
   METADATA_SOURCE_LIST_FEATURE_KEY,
   metadataSourceListAdapter
-} from '@app/settings/reducers/metadata-source-list.reducer';
-import {
-  METADATA_SOURCE_1,
-  METADATA_SOURCE_2
-} from '@app/settings/settings-fixtures';
+} from '@app/metadata/reducers/metadata-source-list.reducer';
 import { beforeEach, Mock } from 'vitest';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Subject } from 'rxjs';
-import { MetadataSourceListActions } from '@app/settings/actions/metadata-source-list.actions';
-import { MetadataSource } from '@app/settings/models/metadata-source';
+import { MetadataSourceListActions } from '@app/metadata/actions/metadata-source-list.actions';
+import { MetadataSource } from '@app/metadata/models/metadata-source';
+import {
+  METADATA_SOURCE_1,
+  METADATA_SOURCE_2
+} from '@app/metadata/metadata-fixtures';
 
 describe('MetadataSourcePage', () => {
   const TEST_SOURCE = METADATA_SOURCE_1;

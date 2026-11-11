@@ -31,7 +31,8 @@ import { Publisher } from '@app/library/models/publisher';
 import { Series } from '@app/library/models/series';
 import { Issue } from '@app/library/models/issue';
 import { CollectionEntry } from '@app/library/models/collection-entry';
-import { METADATA_SOURCE_1 } from '@app/settings/settings-fixtures';
+
+import { METADATA_SOURCE_1 } from '@app/metadata/metadata-fixtures';
 
 export const REMOTE_LIBRARY: RemoteLibrary = {
   totalComics: 71765,

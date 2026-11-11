@@ -16,7 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { REMOTE_LIBRARY_FEATURE_KEY, RemoteLibraryState } from '../reducers/remote-library.reducer';
+import {
+  REMOTE_LIBRARY_FEATURE_KEY,
+  RemoteLibraryState
+} from '../reducers/remote-library.reducer';
 import { beforeEach } from 'vitest';
 import { initialUserState } from '@app/account/reducers/user.reducer';
 import { REMOTE_LIBRARY } from '@app/library/library-fixtures';

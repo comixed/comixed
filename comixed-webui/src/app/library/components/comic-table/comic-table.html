@@ -44,11 +44,13 @@
         />
       </td>
       <td>
-        <img
-          [src]="comic.item | comicCoverUrl"
-          class="comic-cover"
-          [alt]="comic.item.baseFilename"
-        />
+        <a [routerLink]="['/library/comics', comic.item.comicId]">
+          <img
+            [src]="comic.item | comicCoverUrl"
+            class="comic-cover"
+            [alt]="comic.item.baseFilename"
+          />
+        </a>
       </td>
       <td>
         <fa-icon

@@ -21,14 +21,14 @@ import {
   metadataSourceListAdapter,
   metadataSourceListReducer,
   MetadataSourceListState
-} from '../reducers/metadata-source-list.reducer';
+} from './metadata-source-list.reducer';
 import { beforeEach } from 'vitest';
 import { Action } from '@ngrx/store';
-import { MetadataSourceListActions } from '@app/settings/actions/metadata-source-list.actions';
+import { MetadataSourceListActions } from '@app/metadata/actions/metadata-source-list.actions';
 import {
   METADATA_SOURCE_1,
   METADATA_SOURCE_2
-} from '@app/settings/settings-fixtures';
+} from '@app/metadata/metadata-fixtures';
 
 describe('MetadataSourceList Reducer', () => {
   const TEST_PREFERRED_METADATA_SOURCE = {

@@ -20,18 +20,18 @@ import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { firstValueFrom, Observable, of, throwError } from 'rxjs';
 import { MetadataSourceListEffects } from './metadata-source-list.effects';
-import { MetadataSourceService } from '@app/settings/services/metadata-source-service';
+import { MetadataSourceService } from '@app/metadata/services/metadata-source-service';
 import { AlertService } from '@app/services/alert-service';
 import { MessageService } from '@openng/optimus-ui/api';
 import { expect, vi } from 'vitest';
-import {
-  METADATA_SOURCE_1,
-  METADATA_SOURCE_2
-} from '@app/settings/settings-fixtures';
-import { MetadataSourceListActions } from '@app/settings/actions/metadata-source-list.actions';
+import { MetadataSourceListActions } from '@app/metadata/actions/metadata-source-list.actions';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
 import { HttpErrorResponse } from '@angular/common/http';
 import { provideTranslateService } from '@ngx-translate/core';
+import {
+  METADATA_SOURCE_1,
+  METADATA_SOURCE_2
+} from '@app/metadata/metadata-fixtures';
 
 describe('MetadataSourceListEffects', () => {
   const TEST_METADATA_SOURCE = METADATA_SOURCE_1;

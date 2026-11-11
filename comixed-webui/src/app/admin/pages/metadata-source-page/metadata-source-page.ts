@@ -37,11 +37,11 @@ import {
 import { InputText } from '@openng/optimus-ui/inputtext';
 import { Checkbox } from '@openng/optimus-ui/checkbox';
 import { Button } from '@openng/optimus-ui/button';
-import { MetadataSourceProperty } from '@app/settings/models/metadata-source-property';
+import { MetadataSourceProperty } from '@app/metadata/models/metadata-source-property';
 import { Store } from '@ngrx/store';
-import { selectMetadataSourceListEntries } from '@app/settings/selectors/metadata-source-list.selectors';
-import { MetadataSource } from '@app/settings/models/metadata-source';
-import { MetadataSourceListActions } from '@app/settings/actions/metadata-source-list.actions';
+import { selectMetadataSourceListEntries } from '@app/metadata/selectors/metadata-source-list.selectors';
+import { MetadataSource } from '@app/metadata/models/metadata-source';
+import { MetadataSourceListActions } from '@app/metadata/actions/metadata-source-list.actions';
 import { Actions, ofType } from '@ngrx/effects';
 import { tap } from 'rxjs';
 

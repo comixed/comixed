@@ -75,6 +75,7 @@ import { FormsModule } from '@angular/forms';
 export class ComicTable {
   @Output() loadComics = new EventEmitter<TableLazyLoadEvent>();
   @Output() selectAll = new EventEmitter<boolean>();
+
   readonly comicEntries = signal<Comic[]>([]);
   readonly comicListFirst = signal(0);
   readonly comicListRows = signal(10);

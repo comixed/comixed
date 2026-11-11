@@ -20,7 +20,7 @@ import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { MetadataSourceListActions } from '../actions/metadata-source-list.actions';
 import { LoggerService } from '@angular-ru/cdk/logger';
-import { MetadataSourceService } from '@app/settings/services/metadata-source-service';
+import { MetadataSourceService } from '@app/metadata/services/metadata-source-service';
 import { AlertService } from '@app/services/alert-service';
 import { TranslateService } from '@ngx-translate/core';
 import { catchError, map, of, switchMap, tap } from 'rxjs';

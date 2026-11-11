@@ -18,19 +18,20 @@
 
 import { beforeEach } from 'vitest';
 import {
-  METADATA_SOURCE_1,
-  METADATA_SOURCE_2
-} from '@app/settings/settings-fixtures';
-import {
   initialMetadataSourceListState,
   METADATA_SOURCE_LIST_FEATURE_KEY,
   metadataSourceListAdapter,
   MetadataSourceListState
-} from '@app/settings/reducers/metadata-source-list.reducer';
+} from '@app/metadata/reducers/metadata-source-list.reducer';
 import {
   selectMetadataSourceListBusy,
-  selectMetadataSourceListEntries
-} from '@app/settings/selectors/metadata-source-list.selectors';
+  selectMetadataSourceListEntries,
+  selectMetadataSourceListSelected
+} from '@app/metadata/selectors/metadata-source-list.selectors';
+import {
+  METADATA_SOURCE_1,
+  METADATA_SOURCE_2
+} from '@app/metadata/metadata-fixtures';
 
 describe('MetadataSourceList Selectors', () => {
   const TEST_PREFERRED_METADATA_SOURCE = {
@@ -76,5 +77,29 @@ describe('MetadataSourceList Selectors', () => {
         [METADATA_SOURCE_LIST_FEATURE_KEY]: { ...state }
       })
     ).toStrictEqual(TEST_METADATA_SOURCE_LIST);
+  });
+
+  describe('the selected source', () => {
+    it('should return the selected when present', () => {
+      expect(
+        selectMetadataSourceListSelected({
+          [METADATA_SOURCE_LIST_FEATURE_KEY]: {
+            ...state,
+            selected: TEST_PREFERRED_METADATA_SOURCE
+          }
+        })
+      ).toStrictEqual(TEST_PREFERRED_METADATA_SOURCE);
+    });
+
+    it('should return null when none are selected', () => {
+      expect(
+        selectMetadataSourceListSelected({
+          [METADATA_SOURCE_LIST_FEATURE_KEY]: {
+            ...state,
+            selected: null
+          }
+        })
+      ).toBeNull();
+    });
   });
 });

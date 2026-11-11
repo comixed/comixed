@@ -18,8 +18,8 @@
 
 import { createFeature, createReducer, on } from '@ngrx/store';
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
-import { MetadataSource } from '@app/settings/models/metadata-source';
-import { MetadataSourceListActions } from '@app/settings/actions/metadata-source-list.actions';
+import { MetadataSource } from '@app/metadata/models/metadata-source';
+import { MetadataSourceListActions } from '@app/metadata/actions/metadata-source-list.actions';
 
 export const METADATA_SOURCE_LIST_FEATURE_KEY = 'metadata_source_list_State';
 

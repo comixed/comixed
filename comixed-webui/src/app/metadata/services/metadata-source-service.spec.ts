@@ -18,10 +18,6 @@
 
 import { TestBed } from '@angular/core/testing';
 import { MetadataSourceService } from './metadata-source-service';
-import {
-  METADATA_SOURCE_1,
-  METADATA_SOURCE_2
-} from '@app/settings/settings-fixtures';
 import { provideHttpClient } from '@angular/common/http';
 import {
   HttpTestingController,
@@ -29,12 +25,16 @@ import {
 } from '@angular/common/http/testing';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
 import { interpolate } from '@app/app-functions';
+import { SaveMetadataSourceRequest } from '@app/metadata/models/net/save-metadata-source-request';
 import {
   CREATE_METADATA_SOURCE_URL,
   LOAD_METADATA_SOURCE_LIST_URL,
   UPDATE_METADATA_SOURCE_URL
-} from '@app/settings/settings-constants';
-import { SaveMetadataSourceRequest } from '@app/settings/models/net/save-metadata-source-request';
+} from '@app/metadata/metadata-constants';
+import {
+  METADATA_SOURCE_1,
+  METADATA_SOURCE_2
+} from '@app/metadata/metadata-fixtures';
 
 describe('MetadataSourceService', () => {
   const TEST_NEW_METADATA_SOURCE = {
@@ -109,7 +109,7 @@ describe('MetadataSourceService', () => {
 
     const req = httpController.expectOne(
       interpolate(UPDATE_METADATA_SOURCE_URL, {
-        sourceId: TEST_METADATA_SOURCE.metadataSourceId
+        metadataSourceId: TEST_METADATA_SOURCE.metadataSourceId
       })
     );
     expect(req.request.method).toEqual('PUT');

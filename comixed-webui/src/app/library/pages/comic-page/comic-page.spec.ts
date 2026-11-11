@@ -32,9 +32,22 @@ import { COMIC_1 } from '@app/library/library-fixtures';
 import { ComicDetailAction } from '@app/library/actions/comic-detail.actions';
 import { TitleService } from '@app/layout/services/title-service';
 import { ComicPage } from '@app/library/pages/comic-page/comic-page';
+import {
+  initialSingleComicScrapingState,
+  SINGLE_COMIC_SCRAPING_FEATURE_KEY
+} from '@app/metadata/reducers/single-comic-scraping.reducer';
+import {
+  initialMetadataSourceListState,
+  METADATA_SOURCE_LIST_FEATURE_KEY
+} from '@app/metadata/reducers/metadata-source-list.reducer';
+import { ConfirmationService } from '@openng/optimus-ui/api';
 
 describe('ComicPage', () => {
-  const initialState = { [COMIC_DETAIL_FEATURE_KEY]: initialComicDetailState };
+  const initialState = {
+    [COMIC_DETAIL_FEATURE_KEY]: initialComicDetailState,
+    [METADATA_SOURCE_LIST_FEATURE_KEY]: initialMetadataSourceListState,
+    [SINGLE_COMIC_SCRAPING_FEATURE_KEY]: initialSingleComicScrapingState
+  };
 
   let component: ComicPage;
   let fixture: ComponentFixture<ComicPage>;
@@ -48,7 +61,8 @@ describe('ComicPage', () => {
         provideRouter([{ path: '*', redirectTo: '' }]),
         provideMockStore({ initialState }),
         QueryParameterService,
-        TitleService
+        TitleService,
+        ConfirmationService
       ]
     }).compileComponents();
 

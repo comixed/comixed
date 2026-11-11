@@ -21,9 +21,9 @@ import { LoggerService } from '@angular-ru/cdk/logger';
 import {
   selectMetadataSourceListBusy,
   selectMetadataSourceListEntries
-} from '@app/settings/selectors/metadata-source-list.selectors';
+} from '@app/metadata/selectors/metadata-source-list.selectors';
 import { Store } from '@ngrx/store';
-import { MetadataSourceListActions } from '@app/settings/actions/metadata-source-list.actions';
+import { MetadataSourceListActions } from '@app/metadata/actions/metadata-source-list.actions';
 import { Breadcrumb } from '@openng/optimus-ui/breadcrumb';
 import { Card } from '@openng/optimus-ui/card';
 import { TableLazyLoadEvent, TableModule } from '@openng/optimus-ui/table';

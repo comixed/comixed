@@ -16,10 +16,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { MetadataSourceProperty } from '@app/settings/models/metadata-source-property';
-
-export interface SaveMetadataSourceRequest {
-  sourceName: string;
-  preferred: boolean;
-  properties: MetadataSourceProperty[];
+export interface LoadScrapingIssueRequest {
+  skipCache: boolean;
 }
