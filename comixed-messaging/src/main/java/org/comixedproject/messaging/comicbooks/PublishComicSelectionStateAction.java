@@ -18,7 +18,7 @@
 
 package org.comixedproject.messaging.comicbooks;
 
-import java.util.List;
+import java.util.Set;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.messaging.AbstractPublishAction;
 import org.comixedproject.messaging.PublishingException;
@@ -41,7 +41,7 @@ public class PublishComicSelectionStateAction extends AbstractPublishAction<Comi
   @Override
   public void publish(final ComicSelectionEvent event) throws PublishingException {
     final ComiXedUser user = event.getUser();
-    final List<Long> comicIds = event.getComicIds();
+    final Set<Long> comicIds = event.getComicIds();
     log.debug(
         "Publishing update of {} selected comic book id for user: email={}", comicIds.size(), user);
     this.doPublishToUser(

@@ -433,6 +433,10 @@
     "message": "Do you want to mark the selected comics as READ or UNREAD?",
     "title": "Selected Comics Read State"
   },
+  "selected-comic-list-effects": {
+    "select-by-filter": "Failed to set selected state on comics...",
+    "select-by-read-state": "Failed to select comics by read state..."
+  },
   "selected-comic-toolbar": {
     "tooltip": {
       "batch-scrape": "Batch scrape the selected comics...",

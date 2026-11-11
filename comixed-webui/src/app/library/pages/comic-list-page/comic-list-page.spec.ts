@@ -169,6 +169,32 @@ describe('ComicListPage', () => {
     it('should return the correct target state', () => {
       expect(component.targetComicState).toBe(ComicState.CHANGED);
     });
+
+    describe('selecting all comics', () => {
+      const TEST_SELECTED = Math.random() > 0.5;
+
+      let dispatchSpy: Mock;
+
+      beforeEach(() => {
+        dispatchSpy = vi.spyOn(component.store, 'dispatch');
+        component.onSelectAll(TEST_SELECTED);
+      });
+
+      it('should dispatch an action', () => {
+        expect(dispatchSpy).toHaveBeenCalledWith(
+          SelectedComicListActions.selectByFilter({
+            coverMonth: null,
+            coverYear: null,
+            archiveType: null,
+            comicType: null,
+            comicState: ComicState.CHANGED,
+            unscrapedState: false,
+            searchText: '',
+            selected: TEST_SELECTED
+          })
+        );
+      });
+    });
   });
 
   describe('deleted comics', () => {
@@ -185,6 +211,32 @@ describe('ComicListPage', () => {
 
     it('should return the correct target state', () => {
       expect(component.targetComicState).toBe(ComicState.DELETED);
+    });
+
+    describe('selecting all comics', () => {
+      const TEST_SELECTED = Math.random() > 0.5;
+
+      let dispatchSpy: Mock;
+
+      beforeEach(() => {
+        dispatchSpy = vi.spyOn(component.store, 'dispatch');
+        component.onSelectAll(TEST_SELECTED);
+      });
+
+      it('should dispatch an action', () => {
+        expect(dispatchSpy).toHaveBeenCalledWith(
+          SelectedComicListActions.selectByFilter({
+            coverMonth: null,
+            coverYear: null,
+            archiveType: null,
+            comicType: null,
+            comicState: ComicState.DELETED,
+            unscrapedState: false,
+            searchText: '',
+            selected: TEST_SELECTED
+          })
+        );
+      });
     });
   });
 

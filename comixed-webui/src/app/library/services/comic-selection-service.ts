@@ -26,10 +26,15 @@ import {
   DESELECT_SINGLE_COMIC_URL,
   LOAD_SELECTED_COMIC_ID_LIST_URL,
   SELECT_SINGLE_COMIC_URL,
+  SET_SELECTED_BY_FILTER_URL,
   SET_SELECTED_BY_READ_STATE_URL
 } from '@app/library/library-constants';
 import { Comic } from '@app/library/models/comic';
 import { SetSelectedByReadStateRequest } from '@app/library/models/net/set-selected-by-read-state-request';
+import { ArchiveType } from '@app/library/models/archive-type';
+import { ComicType } from '@app/library/models/comic-type';
+import { ComicState } from '@app/library/models/comic-state';
+import { MultipleComicSelectionRequest } from '@app/library/models/net/multiple-comic-selection-request';
 
 @Service()
 export class ComicSelectionService {
@@ -75,5 +80,28 @@ export class ComicSelectionService {
       unreadOnly: !args.readState,
       selected: args.selected
     } as SetSelectedByReadStateRequest);
+  }
+
+  setSelectedByFilter(args: {
+    coverYear: number | null;
+    coverMonth: number | null;
+    archiveType: ArchiveType | null;
+    comicType: ComicType | null;
+    comicState: ComicState | null;
+    unscrapedState: boolean;
+    searchText: string;
+    selected: boolean;
+  }): Observable<void> {
+    this.logger.trace('Selecting by filter state:', args);
+    return this.http.post<void>(interpolate(SET_SELECTED_BY_FILTER_URL), {
+      coverYear: args.coverYear,
+      coverMonth: args.coverMonth,
+      archiveType: args.archiveType,
+      comicType: args.comicType,
+      comicState: args.comicState,
+      unscrapedState: args.unscrapedState,
+      searchText: args.searchText,
+      selected: args.selected
+    } as MultipleComicSelectionRequest);
   }
 }

@@ -26,6 +26,9 @@ import { beforeEach } from 'vitest';
 import { Action } from '@ngrx/store';
 import { SelectedComicListActions } from '@app/library/actions/selected-comic-list.actions';
 import { COMIC_1 } from '@app/library/library-fixtures';
+import { ArchiveType } from '@app/library/models/archive-type';
+import { ComicType } from '@app/library/models/comic-type';
+import { ComicState } from '@app/library/models/comic-state';
 
 describe('SelectedComicList Reducer', () => {
   const TEST_COMIC_IDS = [
@@ -237,6 +240,60 @@ describe('SelectedComicList Reducer', () => {
             busy: true
           },
           SelectedComicListActions.selectByReadStateFailure()
+        );
+      });
+
+      it('should clear the busy flag', () => {
+        expect(state.busy).toBeFalsy();
+      });
+    });
+  });
+
+  describe('toggling all comics by filter', () => {
+    beforeEach(() => {
+      state = selectedComicListReducer(
+        { ...state, busy: false },
+        SelectedComicListActions.selectByFilter({
+          coverMonth: 7,
+          coverYear: 1965,
+          archiveType: ArchiveType.CB7,
+          comicType: ComicType.ISSUE,
+          comicState: ComicState.CHANGED,
+          unscrapedState: false,
+          searchText: '',
+          selected: true
+        })
+      );
+    });
+
+    it('should set the busy flag', () => {
+      expect(state.busy).toBeTruthy();
+    });
+
+    describe('success', () => {
+      beforeEach(() => {
+        state = selectedComicListReducer(
+          {
+            ...state,
+            busy: true
+          },
+          SelectedComicListActions.selectByFilterSuccess()
+        );
+      });
+
+      it('should clear the busy flag', () => {
+        expect(state.busy).toBeFalsy();
+      });
+    });
+
+    describe('failure', () => {
+      beforeEach(() => {
+        state = selectedComicListReducer(
+          {
+            ...state,
+            busy: true
+          },
+          SelectedComicListActions.selectByFilterFailure()
         );
       });
 

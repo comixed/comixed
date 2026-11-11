@@ -29,12 +29,22 @@ import { MessageService } from '@openng/optimus-ui/api';
 import { SelectedComicListActions } from '@app/library/actions/selected-comic-list.actions';
 import { COMIC_1 } from '@app/library/library-fixtures';
 import { ComicSelectionService } from '@app/library/services/comic-selection-service';
+import { ArchiveType } from '@app/library/models/archive-type';
+import { ComicState } from '@app/library/models/comic-state';
+import { ComicType } from '@app/library/models/comic-type';
 
 describe('SelectedComicListEffects', () => {
   const TEST_COMIC_ID_LIST = [3, 6, 8, 15, 72, 63, 129];
   const TEST_COMIC = COMIC_1;
   const TEST_READ_STATE = Math.random() > 0.5;
   const TEST_SELECTED = Math.random() > 0.5;
+  const TEST_COVER_MONTH = 7;
+  const TEST_COVER_YEAR = 1965;
+  const TEST_ARCHIVE_TYPE = ArchiveType.CB7;
+  const TEST_COMIC_STATE = ComicState.DISCOVERED;
+  const TEST_COMIC_TYPE = ComicType.ISSUE;
+  const TEST_SEARCH_TEXT = 'Some search text';
+  const TEST_UNSCRAPED_STATE = Math.random() > 0.5;
 
   let actions$: Observable<unknown>;
   let effects: SelectedComicListEffects;
@@ -298,6 +308,112 @@ describe('SelectedComicListEffects', () => {
       );
       expect(selectSpy).toHaveBeenCalledWith({
         readState: TEST_READ_STATE,
+        selected: TEST_SELECTED
+      });
+      expect(alertSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('selecting by filter', () => {
+    it('should dispatch an action on success', async () => {
+      const action = SelectedComicListActions.selectByFilter({
+        coverMonth: TEST_COVER_MONTH,
+        coverYear: TEST_COVER_YEAR,
+        archiveType: TEST_ARCHIVE_TYPE,
+        comicType: TEST_COMIC_TYPE,
+        comicState: TEST_COMIC_STATE,
+        unscrapedState: TEST_UNSCRAPED_STATE,
+        searchText: TEST_SEARCH_TEXT,
+        selected: TEST_SELECTED
+      });
+      const outcome = SelectedComicListActions.selectByFilterSuccess();
+
+      const selectSpy = vi
+        .spyOn(comicSelectionService, 'setSelectedByFilter')
+        .mockReturnValue(of(undefined));
+
+      actions$ = of(action);
+      await expect(firstValueFrom(effects.selectByFilter$)).resolves.toEqual(
+        outcome
+      );
+      expect(selectSpy).toHaveBeenCalledWith({
+        coverMonth: TEST_COVER_MONTH,
+        coverYear: TEST_COVER_YEAR,
+        archiveType: TEST_ARCHIVE_TYPE,
+        comicType: TEST_COMIC_TYPE,
+        comicState: TEST_COMIC_STATE,
+        unscrapedState: TEST_UNSCRAPED_STATE,
+        searchText: TEST_SEARCH_TEXT,
+        selected: TEST_SELECTED
+      });
+    });
+
+    it('should dispatch an action on service failure', async () => {
+      const serviceResponse = new Error('Service failure');
+      const action = SelectedComicListActions.selectByFilter({
+        coverMonth: TEST_COVER_MONTH,
+        coverYear: TEST_COVER_YEAR,
+        archiveType: TEST_ARCHIVE_TYPE,
+        comicType: TEST_COMIC_TYPE,
+        comicState: TEST_COMIC_STATE,
+        unscrapedState: TEST_UNSCRAPED_STATE,
+        searchText: TEST_SEARCH_TEXT,
+        selected: TEST_SELECTED
+      });
+      const outcome = SelectedComicListActions.selectByFilterFailure();
+
+      const selectSpy = vi
+        .spyOn(comicSelectionService, 'setSelectedByFilter')
+        .mockReturnValue(throwError(() => serviceResponse));
+      const alertSpy = vi.spyOn(alertService, 'error');
+
+      actions$ = of(action);
+      await expect(firstValueFrom(effects.selectByFilter$)).resolves.toEqual(
+        outcome
+      );
+      expect(selectSpy).toHaveBeenCalledWith({
+        coverMonth: TEST_COVER_MONTH,
+        coverYear: TEST_COVER_YEAR,
+        archiveType: TEST_ARCHIVE_TYPE,
+        comicType: TEST_COMIC_TYPE,
+        comicState: TEST_COMIC_STATE,
+        unscrapedState: TEST_UNSCRAPED_STATE,
+        searchText: TEST_SEARCH_TEXT,
+        selected: TEST_SELECTED
+      });
+      expect(alertSpy).toHaveBeenCalled();
+    });
+
+    it('should dispatch an action on general failure', async () => {
+      const action = SelectedComicListActions.selectByFilter({
+        coverMonth: TEST_COVER_MONTH,
+        coverYear: TEST_COVER_YEAR,
+        archiveType: TEST_ARCHIVE_TYPE,
+        comicType: TEST_COMIC_TYPE,
+        comicState: TEST_COMIC_STATE,
+        unscrapedState: TEST_UNSCRAPED_STATE,
+        searchText: TEST_SEARCH_TEXT,
+        selected: TEST_SELECTED
+      });
+      const outcome = SelectedComicListActions.selectByFilterFailure();
+
+      const selectSpy = vi
+        .spyOn(comicSelectionService, 'setSelectedByFilter')
+        .mockThrow(new Error('Expected'));
+      const alertSpy = vi.spyOn(alertService, 'error');
+
+      actions$ = of(action);
+      await expect(firstValueFrom(effects.selectByFilter$)).resolves.toEqual(
+        outcome
+      );
+      expect(selectSpy).toHaveBeenCalledWith({
+        coverMonth: TEST_COVER_MONTH,
+        coverYear: TEST_COVER_YEAR,
+        archiveType: TEST_ARCHIVE_TYPE,
+        comicType: TEST_COMIC_TYPE,
+        comicState: TEST_COMIC_STATE,
+        unscrapedState: TEST_UNSCRAPED_STATE,
+        searchText: TEST_SEARCH_TEXT,
         selected: TEST_SELECTED
       });
       expect(alertSpy).toHaveBeenCalled();

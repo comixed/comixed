@@ -104,7 +104,7 @@ class ComicServiceTest {
   @Captor private ArgumentCaptor<Date> endDateArgumentCaptor;
 
   private List<CollectionEntry> collectionEntryList = new ArrayList<>();
-  private final List<Long> idList = new ArrayList<>();
+  private final Set<Long> idList = new HashSet<>();
   private Set<Date> coverDateSet = new HashSet<>();
 
   @BeforeEach
@@ -695,7 +695,7 @@ class ComicServiceTest {
     comicList.add(comic);
     when(comicRepository.getAllIds()).thenReturn(idList);
 
-    final List<Long> result = service.getAllIds();
+    final Set<Long> result = service.getAllIds();
 
     assertNotNull(result);
     assertSame(idList, result);

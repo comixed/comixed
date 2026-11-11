@@ -25,8 +25,9 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.Principal;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.model.net.lists.DeleteReadingListsRequest;
@@ -66,10 +67,10 @@ class ReadingListControllerTest {
   @Mock private DownloadDocument downloadDocument;
   @Mock private MultipartFile multipartFile;
   @Mock private InputStream inputStream;
-  @Mock private List<Long> readingListIdList;
+  @Mock private Set<Long> readingListIdList;
   @Mock private HttpSession session;
 
-  private List selectedIdList = new ArrayList();
+  private Set<Long> selectedIdList = new HashSet<>();
 
   @BeforeEach
   void setUp() throws IOException, ComicSelectionException {
@@ -79,7 +80,7 @@ class ReadingListControllerTest {
         .thenReturn(String.format("%s.csv", TEST_READING_LIST_NAME));
     Mockito.when(session.getAttribute(LIBRARY_SELECTIONS)).thenReturn(TEST_ENCODED_SELECTIONS);
     Mockito.when(comicSelectionService.decodeSelections(Mockito.any())).thenReturn(selectedIdList);
-    Mockito.when(comicSelectionService.encodeSelections(Mockito.anyList()))
+    Mockito.when(comicSelectionService.encodeSelections(Mockito.anySet()))
         .thenReturn(TEST_REENCODED_SELECTIONS);
   }
 
@@ -181,7 +182,7 @@ class ReadingListControllerTest {
   void removeComicsFromReadingList_serviceException() throws ReadingListException {
     Mockito.doThrow(ReadingListException.class)
         .when(readingListService)
-        .removeComicsFromList(Mockito.anyString(), Mockito.anyLong(), Mockito.anyList());
+        .removeComicsFromList(Mockito.anyString(), Mockito.anyLong(), Mockito.anySet());
 
     assertThrows(
         ReadingListException.class,
@@ -245,7 +246,7 @@ class ReadingListControllerTest {
   void deleteReadingLists_serviceException() throws ReadingListException {
     Mockito.doThrow(ReadingListException.class)
         .when(readingListService)
-        .deleteReadingLists(Mockito.anyString(), Mockito.anyList());
+        .deleteReadingLists(Mockito.anyString(), Mockito.anySet());
 
     assertThrows(
         ReadingListException.class,

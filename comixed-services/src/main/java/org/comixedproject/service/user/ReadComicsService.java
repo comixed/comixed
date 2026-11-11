@@ -18,7 +18,7 @@
 
 package org.comixedproject.service.user;
 
-import java.util.List;
+import java.util.Set;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.user.ComiXedUser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,7 +85,7 @@ public class ReadComicsService {
    */
   @Transactional(rollbackFor = Throwable.class)
   @Async
-  public void markSelectionsAsRead(final String email, final List<Long> idList)
+  public void markSelectionsAsRead(final String email, final Set<Long> idList)
       throws ReadComicsException {
     try {
       final ComiXedUser user = this.userService.findByEmail(email);
@@ -106,7 +106,7 @@ public class ReadComicsService {
    */
   @Transactional(rollbackFor = Throwable.class)
   @Async
-  public void unmarkSelectionsAsRead(final String email, final List<Long> idList)
+  public void unmarkSelectionsAsRead(final String email, final Set<Long> idList)
       throws ReadComicsException {
     try {
       log.debug("Loading user: {}", email);

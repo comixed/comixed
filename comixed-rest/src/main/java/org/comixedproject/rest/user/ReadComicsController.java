@@ -23,8 +23,8 @@ import static org.comixedproject.rest.comicbooks.ComicSelectionController.LIBRAR
 import io.micrometer.core.annotation.Timed;
 import jakarta.servlet.http.HttpSession;
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.service.comicbooks.ComicSelectionException;
 import org.comixedproject.service.comicbooks.ComicSelectionService;
@@ -101,10 +101,10 @@ public class ReadComicsController {
       throws ComicSelectionException, ReadComicsException {
     final String email = principal.getName();
     log.info("Marking selected comic books as read by {}", email);
-    final List<Long> selectedIds =
+    final Set<Long> selectedIds =
         this.comicSelectionService.decodeSelections(httpSession.getAttribute(LIBRARY_SELECTIONS));
-    this.readComicsService.markSelectionsAsRead(email, new ArrayList<>(selectedIds));
-    this.comicSelectionService.clearSelectedComics(email, new ArrayList<>(selectedIds));
+    this.readComicsService.markSelectionsAsRead(email, new HashSet<>(selectedIds));
+    this.comicSelectionService.clearSelectedComics(email, new HashSet<>(selectedIds));
     httpSession.setAttribute(
         LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selectedIds));
   }
@@ -124,9 +124,9 @@ public class ReadComicsController {
       throws ComicSelectionException, ReadComicsException {
     final String email = principal.getName();
     log.info("Unmarking selected comic books as read by {}", email);
-    final List<Long> selectedIds =
+    final Set<Long> selectedIds =
         this.comicSelectionService.decodeSelections(httpSession.getAttribute(LIBRARY_SELECTIONS));
-    this.readComicsService.unmarkSelectionsAsRead(email, new ArrayList<>(selectedIds));
+    this.readComicsService.unmarkSelectionsAsRead(email, new HashSet<>(selectedIds));
     this.comicSelectionService.clearSelectedComics(email, selectedIds);
     httpSession.setAttribute(
         LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selectedIds));

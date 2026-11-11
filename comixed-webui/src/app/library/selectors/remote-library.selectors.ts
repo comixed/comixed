@@ -82,7 +82,7 @@ export const selectRemoteLibraryStates = createSelector(
 
 export const selectRemoteLibraryChangedState = createSelector(
   selectRemoteLibraryState,
-  state => state.states.filter(entry => entry.name === ComicState.CHANGED)
+  state => state.states.find(entry => entry.name === ComicState.CHANGED)?.count || 0
 );
 
 export const selectRemoteLibraryArchiveTypes = createSelector(

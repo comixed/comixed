@@ -29,6 +29,7 @@ import jakarta.servlet.http.HttpSession;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import org.comixedproject.model.comicbooks.ComicTagType;
 import org.comixedproject.model.net.comicbooks.*;
 import org.comixedproject.opds.OPDSUtils;
@@ -65,7 +66,7 @@ class ComicSelectionControllerTest {
   @Mock private UserService userService;
   @Mock private OPDSUtils opdsUtils;
   @Mock private HttpSession httpSession;
-  @Mock private List<Long> selectedIds;
+  @Mock private Set<Long> selectedIds;
   @Mock private Principal principal;
 
   private List<Long> comicIdList = new ArrayList<>();
@@ -74,14 +75,14 @@ class ComicSelectionControllerTest {
   void setUp() throws ComicSelectionException, ComiXedUserException {
     when(httpSession.getAttribute(LIBRARY_SELECTIONS)).thenReturn(TEST_ENCODED_SELECTIONS);
     when(comicSelectionService.decodeSelections(TEST_ENCODED_SELECTIONS)).thenReturn(selectedIds);
-    when(comicSelectionService.encodeSelections(anyList())).thenReturn(TEST_REENCODED_SELECTIONS);
+    when(comicSelectionService.encodeSelections(anySet())).thenReturn(TEST_REENCODED_SELECTIONS);
     when(principal.getName()).thenReturn(TEST_EMAIL);
     when(userService.getComicIdsForUser(anyString(), anyBoolean())).thenReturn(comicIdList);
   }
 
   @Test
   void getAllSelections() throws ComicSelectionException {
-    final List result = controller.getAllSelections(httpSession);
+    final Set<Long> result = controller.getAllSelections(httpSession);
 
     assertNotNull(result);
     assertEquals(selectedIds, result);

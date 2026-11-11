@@ -19,7 +19,7 @@
 package org.comixedproject.model.net.comicbooks;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.List;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,7 +35,7 @@ import org.comixedproject.model.comicbooks.ComicType;
 public class EditMultipleComicsRequest {
   @JsonProperty("ids")
   @Getter
-  private List<Long> ids;
+  private Set<Long> ids;
 
   @JsonProperty("publisher")
   @Getter

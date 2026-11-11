@@ -18,6 +18,9 @@
 
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
 import { Comic } from '@app/library/models/comic';
+import { ArchiveType } from '@app/library/models/archive-type';
+import { ComicType } from '@app/library/models/comic-type';
+import { ComicState } from '@app/library/models/comic-state';
 
 export const SelectedComicListActions = createActionGroup({
   source: 'Select Comic List',
@@ -34,6 +37,18 @@ export const SelectedComicListActions = createActionGroup({
     SelectComicFailure: emptyProps(),
     SelectByReadState: props<{ readState: boolean; selected: boolean }>(),
     SelectByReadStateSuccess: emptyProps(),
-    SelectByReadStateFailure: emptyProps()
+    SelectByReadStateFailure: emptyProps(),
+    SelectByFilter: props<{
+      coverYear: number | null;
+      coverMonth: number | null;
+      archiveType: ArchiveType | null;
+      comicType: ComicType | null;
+      comicState: ComicState | null;
+      unscrapedState: boolean;
+      searchText: string;
+      selected: boolean;
+    }>(),
+    SelectByFilterSuccess: emptyProps(),
+    SelectByFilterFailure: emptyProps()
   }
 });

@@ -144,8 +144,7 @@ export class SelectedComicListEffects {
               this.logger.error('Service failure:', error);
               this.alertService.error(
                 this.translateService.instant(
-                  'selected-comic-list-effects.select-by-read-state.service-failure',
-                  { readState: action.readState }
+                  'selected-comic-list-effects.select-by-read-state.service-failure'
                 )
               );
               return of(SelectedComicListActions.selectByReadStateFailure());
@@ -158,6 +157,46 @@ export class SelectedComicListEffects {
           this.translateService.instant('app.effects.general-failure')
         );
         return of(SelectedComicListActions.selectByReadStateFailure());
+      })
+    );
+  });
+
+  selectByFilter$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(SelectedComicListActions.selectByFilter),
+      tap(action => this.logger.debug('Selecting by filter:', action)),
+      switchMap(action =>
+        this.comicSelectionService
+          .setSelectedByFilter({
+            coverMonth: action.coverMonth,
+            coverYear: action.coverYear,
+            archiveType: action.archiveType,
+            comicType: action.comicType,
+            comicState: action.comicState,
+            unscrapedState: action.unscrapedState,
+            searchText: action.searchText,
+            selected: action.selected
+          })
+          .pipe(
+            tap(response => this.logger.debug('Response received:', response)),
+            map(() => SelectedComicListActions.selectByFilterSuccess()),
+            catchError(error => {
+              this.logger.error('Service failure:', error);
+              this.alertService.error(
+                this.translateService.instant(
+                  'selected-comic-list-effects.select-by-filter.service-failure'
+                )
+              );
+              return of(SelectedComicListActions.selectByFilterFailure());
+            })
+          )
+      ),
+      catchError(error => {
+        this.logger.error('General failure:', error);
+        this.alertService.error(
+          this.translateService.instant('app.effects.general-failure')
+        );
+        return of(SelectedComicListActions.selectByFilterFailure());
       })
     );
   });

@@ -16,10 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import {
-  REMOTE_LIBRARY_FEATURE_KEY,
-  RemoteLibraryState
-} from '../reducers/remote-library.reducer';
+import { REMOTE_LIBRARY_FEATURE_KEY, RemoteLibraryState } from '../reducers/remote-library.reducer';
 import { beforeEach } from 'vitest';
 import { initialUserState } from '@app/account/reducers/user.reducer';
 import { REMOTE_LIBRARY } from '@app/library/library-fixtures';
@@ -42,7 +39,16 @@ import {
 import { ComicState } from '@app/library/models/comic-state';
 
 describe('RemoteLibrary Selectors', () => {
-  const TEST_REMOTE_LIBRARY = REMOTE_LIBRARY;
+  const TEST_CHANGED_COMIC_COUNT = 29;
+  const TEST_REMOTE_LIBRARY = {
+    ...REMOTE_LIBRARY,
+    states: [
+      {
+        name: ComicState.CHANGED,
+        count: TEST_CHANGED_COMIC_COUNT
+      }
+    ]
+  };
 
   let state: RemoteLibraryState;
 
@@ -142,11 +148,7 @@ describe('RemoteLibrary Selectors', () => {
   it('should select the list of changed comics', () => {
     expect(
       selectRemoteLibraryChangedState({ [REMOTE_LIBRARY_FEATURE_KEY]: state })
-    ).toStrictEqual(
-      TEST_REMOTE_LIBRARY.states.filter(
-        entry => entry.name === ComicState.CHANGED.toString()
-      )
-    );
+    ).toBe(TEST_CHANGED_COMIC_COUNT);
   });
 
   it('should select the list of archive types', () => {

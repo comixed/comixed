@@ -87,7 +87,7 @@ class ReadingListServiceTest {
   @Captor private ArgumentCaptor<CsvRowEncoder> rowEncoderArgumentCaptor;
   @Captor private ArgumentCaptor<CsvRowDecoder> rowDecoderArgumentCaptor;
 
-  private List<Long> idList = new ArrayList<>();
+  private Set<Long> idList = new HashSet<>();
   private List<Long> entryIdList = new ArrayList<>();
   private List<Comic> comicList = new ArrayList<>();
 
@@ -248,7 +248,7 @@ class ReadingListServiceTest {
 
   @Test
   void addComicsToListNoSuchList() {
-    List<Long> ids = new ArrayList<>();
+    Set<Long> ids = new HashSet<>();
     when(readingListRepository.getById(anyLong())).thenReturn(null);
 
     assertThrows(

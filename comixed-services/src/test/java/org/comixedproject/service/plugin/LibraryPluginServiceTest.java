@@ -21,10 +21,7 @@ package org.comixedproject.service.plugin;
 import static org.comixedproject.service.plugin.LibraryPluginService.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.plugin.PublishLibraryPluginUpdateAction;
@@ -82,7 +79,7 @@ class LibraryPluginServiceTest {
   private List<LibraryPluginProperty> pluginProperties = new ArrayList<>();
   private Map<String, String> pluginPropertyMap = new HashMap<>();
   private List<LibraryPluginProperty> libraryPluginPropertyList = new ArrayList<>();
-  private List<Long> comicIdList = new ArrayList<>();
+  private Set<Long> comicIdList = new HashSet<>();
 
   @BeforeEach
   void setUp() throws ComiXedUserException, PluginRuntimeException {

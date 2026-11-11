@@ -215,6 +215,20 @@ export class ComicListPage {
           selected
         })
       );
+    } else {
+      this.logger.debug('Setting selected by filter');
+      this.store.dispatch(
+        SelectedComicListActions.selectByFilter({
+          coverMonth: null,
+          coverYear: null,
+          archiveType: null,
+          comicType: null,
+          comicState: this.targetComicState,
+          unscrapedState: this.unscrapedComics(),
+          searchText: '',
+          selected
+        })
+      );
     }
   }
 

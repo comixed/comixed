@@ -46,6 +46,7 @@ export const LOAD_SELECTED_COMIC_ID_LIST_URL = `${API_ROOT_URL}/comics/selection
 export const SELECT_SINGLE_COMIC_URL = `${API_ROOT_URL}/comics/selections/\${comicId}`;
 export const DESELECT_SINGLE_COMIC_URL = `${API_ROOT_URL}/comics/selections/\${comicId}`;
 export const SET_SELECTED_BY_READ_STATE_URL = `${API_ROOT_URL}/comics/selections/unread`;
+export const SET_SELECTED_BY_FILTER_URL = `${API_ROOT_URL}/comics/selections/multiple`;
 export const CLEAR_COMIC_SELECTIONS_URL = `${API_ROOT_URL}/comics/selections/clear`;
 
 // query parameters

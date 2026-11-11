@@ -49,7 +49,7 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
    * @return the id list
    */
   @Query("SELECT c.comicId FROM Comic c")
-  List<Long> getAllIds();
+  Set<Long> getAllIds();
 
   /**
    * Returns the set of all cover dates for comics that have not been read by the specified user.
@@ -434,7 +434,7 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
   @Modifying
   @Query(
       "UPDATE Comic c SET c.batchScraping = TRUE WHERE c.comicId IN (:ids) AND c.batchScraping IS FALSE AND c.metadata IS NOT NULL")
-  void prepareForBatchScraping(@Param("ids") List<Long> ids);
+  void prepareForBatchScraping(@Param("ids") Set<Long> ids);
 
   /**
    * Returns the number of comic books that are marked for an can be batch scraped.
@@ -462,7 +462,7 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
   @Modifying
   @Query(
       "UPDATE Comic d SET d.updatingMetadata = TRUE WHERE d.comicId IN (:ids) AND d.updatingMetadata IS FALSE")
-  void prepareForMetadataUpdate(@Param("ids") List<Long> ids);
+  void prepareForMetadataUpdate(@Param("ids") Set<Long> ids);
 
   /**
    * Returns unprocessed comics that have their file loaded flag turned off.
@@ -548,7 +548,7 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
   @Modifying
   @Query(
       "UPDATE Comic c SET c.organizing = true WHERE c.comicId IN (:ids) AND c.organizing IS FALSE")
-  void markForOrganizationById(@Param("ids") List<Long> ids);
+  void markForOrganizationById(@Param("ids") Set<Long> ids);
 
   @Modifying
   @Query("UPDATE Comic c SET c.organizing = true")
@@ -582,7 +582,7 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
   @Modifying
   @Query("UPDATE Comic c SET c.targetArchiveType = :archiveType WHERE c.comicId IN (:ids)")
   void markForRecreationById(
-      @Param("ids") List<Long> ids, @Param("archiveType") final ArchiveType archiveType);
+      @Param("ids") Set<Long> ids, @Param("archiveType") final ArchiveType archiveType);
 
   @Query("SELECT COUNT(c) FROM Comic c WHERE c.targetArchiveType IS NOT NULL")
   long getRecreatingCount();
