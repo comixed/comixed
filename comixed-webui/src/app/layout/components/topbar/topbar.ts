@@ -27,11 +27,13 @@ import {
   selectUserIsAdmin
 } from '@app/account/selectors/user.selectors';
 import { Menubar } from '@openng/optimus-ui/menubar';
-import { MenuItem } from '@openng/optimus-ui/api';
+import { ConfirmationService, MenuItem } from '@openng/optimus-ui/api';
 import { selectSelectedComicListCount } from '@app/library/selectors/selected-comic-list.selectors';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReadComicListActions } from '@app/account/actions/read-comic-list.actions';
 import { SelectedComicListActions } from '@app/library/actions/selected-comic-list.actions';
+import { ArchiveType } from '@app/library/models/archive-type';
+import { RecreateComicFilesActions } from '@app/library/actions/recreate-comic-files.actions';
 
 @Component({
   imports: [Button, TranslatePipe, Tooltip, Menubar],
@@ -42,6 +44,7 @@ import { SelectedComicListActions } from '@app/library/actions/selected-comic-li
 export class Topbar {
   readonly logger = inject(LoggerService);
   readonly translateService = inject(TranslateService);
+  readonly confirmationService = inject(ConfirmationService);
   readonly store = inject(Store);
   readonly menuitems = signal<MenuItem[]>([]);
   readonly isAuthenticated = signal(false);
@@ -162,6 +165,34 @@ export class Topbar {
           },
           {
             label: this.translateService.instant(
+              'topbar.menu.selected-comics.recreate.root'
+            ),
+            icon: 'pi pi-folder',
+            items: [
+              {
+                id: 'topbar-recreate-as-cbz',
+                label: this.translateService.instant(
+                  'topbar.menu.selected-comics.recreate.cbz'
+                ),
+                disabled: this.selectedCount === 0,
+                command: () => {
+                  this.doConfirmRecreate(ArchiveType.CBZ);
+                }
+              },
+              {
+                id: 'topbar-recreate-as-cb7',
+                label: this.translateService.instant(
+                  'topbar.menu.selected-comics.recreate.cb7'
+                ),
+                disabled: this.selectedCount === 0,
+                command: () => {
+                  this.doConfirmRecreate(ArchiveType.CB7);
+                }
+              }
+            ]
+          },
+          {
+            label: this.translateService.instant(
               'topbar.menu.selected-comics.scrape'
             ),
             icon: 'pi pi-cloud',
@@ -245,5 +276,29 @@ export class Topbar {
         ]
       }
     ]);
+  }
+
+  private doConfirmRecreate(targetArchiveType: ArchiveType): void {
+    const count = this.selectedCount;
+    this.confirmationService.confirm({
+      header: this.translateService.instant(
+        'topbar.recreate-selected-comics.confirmation-title'
+      ),
+      message: this.translateService.instant(
+        'topbar.recreate-selected-comics.confirmation-message',
+        { count, targetArchiveType }
+      ),
+      accept: () => {
+        this.logger.debug(
+          'Dispatching recreate selected comics action:',
+          targetArchiveType
+        );
+        this.store.dispatch(
+          RecreateComicFilesActions.recreateSelectedComics({
+            targetArchiveType
+          })
+        );
+      }
+    });
   }
 }

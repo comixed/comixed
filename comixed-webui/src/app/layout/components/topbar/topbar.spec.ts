@@ -35,7 +35,7 @@ import {
   BATCH_PROCESS_LIST_FEATURE_KEY,
   initialBatchProcessListState
 } from '@app/batch/reducers/batch-process-list.reducer';
-import { beforeEach } from 'vitest';
+import { beforeEach, Mock } from 'vitest';
 import { USER_ADMIN, USER_READER } from '@app/account/account-fixtures';
 import { By } from '@angular/platform-browser';
 import {
@@ -46,6 +46,9 @@ import {
 import { DialogService } from '@openng/optimus-ui/dynamicdialog';
 import { ReadComicListActions } from '@app/account/actions/read-comic-list.actions';
 import { SelectedComicListActions } from '@app/library/actions/selected-comic-list.actions';
+import { ConfirmationService } from '@openng/optimus-ui/api';
+import { RecreateComicFilesActions } from '@app/library/actions/recreate-comic-files.actions';
+import { ArchiveType } from '@app/library/models/archive-type';
 
 @Component({ template: '<h1>Test Component</h1>' })
 class TestComponent {}
@@ -80,7 +83,8 @@ describe('Topbar', () => {
             setStyle: vi.fn()
           }
         },
-        DialogService
+        DialogService,
+        ConfirmationService
       ]
     }).compileComponents();
 
@@ -272,6 +276,88 @@ describe('Topbar', () => {
         await fixture.whenStable();
         expect(dispatchSpy).toHaveBeenCalledWith(
           ReadComicListActions.markSelectedComics({ readState: false })
+        );
+      });
+    });
+
+    describe('converting to cbz', () => {
+      let item: HTMLInputElement;
+      let dispatchSpy: Mock;
+      let confirmSpy: Mock;
+
+      beforeEach(() => {
+        item = document.querySelector(
+          '#topbar-recreate-as-cbz a.p-menubar-item-link'
+        ) as HTMLInputElement;
+        dispatchSpy = vi.spyOn(store, 'dispatch');
+        confirmSpy = vi
+          .spyOn(component.confirmationService, 'confirm')
+          .mockImplementation(confirm => {
+            confirm.accept?.();
+            return component.confirmationService;
+          });
+      });
+
+      it('should enable the menu item', () => {
+        expect(item.disabled).toBeFalsy();
+      });
+
+      it('should confirm with the user', async () => {
+        item.click();
+        fixture.detectChanges();
+        await fixture.whenStable();
+        expect(confirmSpy).toHaveBeenCalled();
+      });
+
+      it('should dispatch an action', async () => {
+        item.click();
+        fixture.detectChanges();
+        await fixture.whenStable();
+        expect(dispatchSpy).toHaveBeenCalledWith(
+          RecreateComicFilesActions.recreateSelectedComics({
+            targetArchiveType: ArchiveType.CBZ
+          })
+        );
+      });
+    });
+
+    describe('converting to cb7', () => {
+      let item: HTMLInputElement;
+      let dispatchSpy: Mock;
+      let confirmSpy: Mock;
+
+      beforeEach(() => {
+        item = document.querySelector(
+          '#topbar-recreate-as-cb7 a.p-menubar-item-link'
+        ) as HTMLInputElement;
+        dispatchSpy = vi.spyOn(store, 'dispatch');
+        confirmSpy = vi
+          .spyOn(component.confirmationService, 'confirm')
+          .mockImplementation(confirm => {
+            confirm.accept?.();
+            return component.confirmationService;
+          });
+      });
+
+      it('should enable the menu item', () => {
+        expect(item.disabled).toBeFalsy();
+      });
+
+      it('should confirm with the user', async () => {
+        item.click();
+        fixture.detectChanges();
+        await fixture.whenStable();
+        expect(confirmSpy).toHaveBeenCalled();
+      });
+
+      it('should dispatch an action', async () => {
+        item.click();
+        fixture.detectChanges();
+        await fixture.whenStable();
+        expect(dispatchSpy).toHaveBeenCalledWith(
+          RecreateComicFilesActions.recreateSelectedComics({
+            targetArchiveType: ArchiveType.CB7
+          })
         );
       });
     });

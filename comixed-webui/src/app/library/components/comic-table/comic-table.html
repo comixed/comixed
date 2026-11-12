@@ -20,6 +20,7 @@
         />
       </th>
       <th>{{ "comic-table.label.thumbnail" | translate }}</th>
+      <th>{{ "comic-table.label.archive-type" | translate }}</th>
       <th>{{ "comic-table.label.comic-state" | translate }}</th>
       <th>{{ "comic-table.label.publisher" | translate }}</th>
       <th>{{ "comic-table.label.series" | translate }}</th>
@@ -51,6 +52,9 @@
             [alt]="comic.item.baseFilename"
           />
         </a>
+      </td>
+      <td>
+        {{ comic.item.archiveType }}
       </td>
       <td>
         <fa-icon

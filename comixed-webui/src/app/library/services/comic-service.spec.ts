@@ -33,16 +33,23 @@ import {
 } from '@app/library/library-fixtures';
 import {
   LOAD_COMIC_URL,
+  RECREATE_COMIC_FILE_URL,
+  RECREATE_SELECTED_COMIC_FILES_URL,
   UPDATE_COMIC_URL
 } from '@app/library/library-constants';
 import { interpolate } from '@app/app-functions';
 import { UpdateComicRequest } from '@app/library/models/net/update-comic-request';
+import { RecreateComicFileRequest } from '@app/library/models/net/recreate-comic-file-request';
+import { of } from 'rxjs';
+import { ArchiveType } from '@app/library/models/archive-type';
+import { RecreateSelectedComicFilesRequest } from '@app/library/models/net/recreate-selected-comic-files-request';
 
 describe('ComicService', () => {
   const TEST_COMIC = COMIC_1;
   const TEST_PAGES = [COMIC_PAGE_1];
   const TEST_TAGS = [COMIC_TAG_1];
   const TEST_METADATA = METADATA_1;
+  const TEST_ARCHIVE_TYPE = ArchiveType.CB7;
 
   let service: ComicService;
   let httpController: HttpTestingController;
@@ -126,6 +133,47 @@ describe('ComicService', () => {
       storeDate: TEST_COMIC.storeDate
     } as UpdateComicRequest);
     req.flush(serverResponse);
+    httpController.verify();
+  });
+
+  it('should recreate a comic', () => {
+    const serverResponse = undefined;
+
+    service
+      .recreateComic({
+        comic: TEST_COMIC,
+        archiveType: TEST_ARCHIVE_TYPE
+      })
+      .subscribe({ next: () => expect(true).toBeTruthy() });
+
+    const req = httpController.expectOne(
+      interpolate(RECREATE_COMIC_FILE_URL, { comicId: TEST_COMIC.comicId })
+    );
+    expect(req.request.method).toEqual('PUT');
+    expect(req.request.body).toEqual({
+      archiveType: TEST_ARCHIVE_TYPE
+    } as RecreateComicFileRequest);
+    req.flush(of(serverResponse));
+    httpController.verify();
+  });
+
+  it('should recreate selected comic', () => {
+    const serverResponse = undefined;
+
+    service
+      .recreateSelectedComics({
+        archiveType: TEST_ARCHIVE_TYPE
+      })
+      .subscribe({ next: () => expect(true).toBeTruthy() });
+
+    const req = httpController.expectOne(
+      interpolate(RECREATE_SELECTED_COMIC_FILES_URL)
+    );
+    expect(req.request.method).toEqual('PUT');
+    expect(req.request.body).toEqual({
+      archiveType: TEST_ARCHIVE_TYPE
+    } as RecreateSelectedComicFilesRequest);
+    req.flush(of(serverResponse));
     httpController.verify();
   });
 });

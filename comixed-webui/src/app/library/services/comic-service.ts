@@ -22,12 +22,18 @@ import { LoggerService } from '@angular-ru/cdk/logger';
 import { Observable } from 'rxjs';
 import {
   LOAD_COMIC_URL,
+  RECREATE_COMIC_FILE_URL,
+  RECREATE_SELECTED_COMIC_FILES_URL,
   UPDATE_COMIC_URL
 } from '@app/library/library-constants';
 import { interpolate } from '@app/app-functions';
 import { LoadComicDetailResponse } from '@app/library/models/net/load-comic-detail-response';
 import { ComicType } from '@app/library/models/comic-type';
 import { UpdateComicRequest } from '@app/library/models/net/update-comic-request';
+import { ArchiveType } from '@app/library/models/archive-type';
+import { Comic } from '@app/library/models/comic';
+import { RecreateComicFileRequest } from '@app/library/models/net/recreate-comic-file-request';
+import { RecreateSelectedComicFilesRequest } from '@app/library/models/net/recreate-selected-comic-files-request';
 
 @Service()
 export class ComicService {
@@ -70,5 +76,25 @@ export class ComicService {
         storeDate: args.storeDate
       } as UpdateComicRequest
     );
+  }
+
+  recreateComic(args: {
+    comic: Comic;
+    archiveType: ArchiveType;
+  }): Observable<void> {
+    this.logger.debug('Recreating comic file:', args);
+    return this.http.put<void>(
+      interpolate(RECREATE_COMIC_FILE_URL, { comicId: args.comic.comicId }),
+      {
+        archiveType: args.archiveType
+      } as RecreateComicFileRequest
+    );
+  }
+
+  recreateSelectedComics(args: { archiveType: ArchiveType }): Observable<void> {
+    this.logger.debug('Recreating selected comic files:', args);
+    return this.http.put<void>(interpolate(RECREATE_SELECTED_COMIC_FILES_URL), {
+      archiveType: args.archiveType
+    } as RecreateSelectedComicFilesRequest);
   }
 }

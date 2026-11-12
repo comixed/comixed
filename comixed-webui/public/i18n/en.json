@@ -167,6 +167,7 @@
   "comic-table": {
     "label": {
       "added-date": "Added",
+      "archive-type": "Archive Type",
       "comic-state": "State",
       "cover-date": "Cover Date",
       "issue-number": "Issue #",
@@ -457,6 +458,10 @@
     "message": "Do you want to mark the selected comics as READ or UNREAD?",
     "title": "Selected Comics Read State"
   },
+  "recreate-comic-files-effects": {
+    "service-failure": "Failed to start converting selected comics...",
+    "service-success": "Converting selected comics to {targetArchiveType} started..."
+  },
   "scraping-volume-table": {
     "label": {
       "issue-count": "# of Issues",
@@ -602,9 +607,18 @@
           "mark-read": "Mark as read",
           "mark-unread": "Unmark"
         },
+        "recreate": {
+          "cb7": "Convert To CB7...",
+          "cbz": "Convert To CBZ...",
+          "root": "Recreate Comic Files"
+        },
         "rescan": "Rescan...",
         "scrape": "Scrape metadata..."
       }
+    },
+    "recreate-selected-comics": {
+      "confirmation-message": "Are you sure you want to convert the {count, plural, =1{selected comic} other{# selected comics}} to {targetArchiveType}?",
+      "confirmation-title": "Recreate Comic Files"
     },
     "tooltip": {
       "logout-button": "Log out of the server..."
