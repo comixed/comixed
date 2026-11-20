@@ -1,5 +1,5 @@
 /*
- * ComiXed - A digital comic book library management application.
+ * ComiXed - A digital comic book library management application.thi
  * Copyright (C) 2026, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,6 +20,7 @@ import { inject, Service } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { HttpClient } from '@angular/common/http';
 import {
+  BATCH_SCRAPE_SELECTED_COMICS_URL,
   COMIC_LIST_UPDATE_TOPIC,
   LOAD_COMICS_BY_FILTER_URL,
   LOAD_LIBRARY_STATE_URL,
@@ -171,5 +172,13 @@ export class LibraryService {
         } as LoadSelectedComicsRequest
       );
     }
+  }
+
+  batchScrapeComics(): Observable<void> {
+    this.logger.debug('Starting the batch scraping process');
+    return this.http.post<void>(
+      interpolate(BATCH_SCRAPE_SELECTED_COMICS_URL),
+      {} as unknown
+    );
   }
 }

@@ -49,6 +49,7 @@ import { SelectedComicListActions } from '@app/library/actions/selected-comic-li
 import { ConfirmationService } from '@openng/optimus-ui/api';
 import { RecreateComicFilesActions } from '@app/library/actions/recreate-comic-files.actions';
 import { ArchiveType } from '@app/library/models/archive-type';
+import { BatchScrapeComicsActions } from '@app/library/actions/batch-scrape-comics.actions';
 
 @Component({ template: '<h1>Test Component</h1>' })
 class TestComponent {}
@@ -280,85 +281,142 @@ describe('Topbar', () => {
       });
     });
 
-    describe('converting to cbz', () => {
-      let item: HTMLInputElement;
-      let dispatchSpy: Mock;
-      let confirmSpy: Mock;
-
+    describe('admin functions', () => {
       beforeEach(() => {
-        item = document.querySelector(
-          '#topbar-recreate-as-cbz a.p-menubar-item-link'
-        ) as HTMLInputElement;
-        dispatchSpy = vi.spyOn(store, 'dispatch');
-        confirmSpy = vi
-          .spyOn(component.confirmationService, 'confirm')
-          .mockImplementation(confirm => {
-            confirm.accept?.();
-            return component.confirmationService;
-          });
-      });
-
-      it('should enable the menu item', () => {
-        expect(item.disabled).toBeFalsy();
-      });
-
-      it('should confirm with the user', async () => {
-        item.click();
+        store.setState({
+          ...initialState,
+          [USER_FEATURE_KEY]: {
+            ...initialUserState,
+            checked: true,
+            user: USER_ADMIN
+          },
+          [SELECTED_COMIC_LIST_FEATURE_KEY]: selectedComicListAdapter.setAll(
+            TEST_COMIC_IDS,
+            initialSelectedComicListState
+          )
+        });
         fixture.detectChanges();
-        await fixture.whenStable();
-        expect(confirmSpy).toHaveBeenCalled();
       });
 
-      it('should dispatch an action', async () => {
-        item.click();
-        fixture.detectChanges();
-        await fixture.whenStable();
-        expect(dispatchSpy).toHaveBeenCalledWith(
-          RecreateComicFilesActions.recreateSelectedComics({
-            targetArchiveType: ArchiveType.CBZ
-          })
-        );
+      describe('converting to cbz', () => {
+        let item: HTMLInputElement;
+        let dispatchSpy: Mock;
+        let confirmSpy: Mock;
+
+        beforeEach(() => {
+          item = document.querySelector(
+            '#topbar-recreate-as-cbz a.p-menubar-item-link'
+          ) as HTMLInputElement;
+          dispatchSpy = vi.spyOn(store, 'dispatch');
+          confirmSpy = vi
+            .spyOn(component.confirmationService, 'confirm')
+            .mockImplementation(confirm => {
+              confirm.accept?.();
+              return component.confirmationService;
+            });
+        });
+
+        it('should enable the menu item', () => {
+          expect(item.disabled).toBeFalsy();
+        });
+
+        it('should confirm with the user', async () => {
+          item.click();
+          fixture.detectChanges();
+          await fixture.whenStable();
+          expect(confirmSpy).toHaveBeenCalled();
+        });
+
+        it('should dispatch an action', async () => {
+          item.click();
+          fixture.detectChanges();
+          await fixture.whenStable();
+          expect(dispatchSpy).toHaveBeenCalledWith(
+            RecreateComicFilesActions.recreateSelectedComics({
+              targetArchiveType: ArchiveType.CBZ
+            })
+          );
+        });
       });
-    });
 
-    describe('converting to cb7', () => {
-      let item: HTMLInputElement;
-      let dispatchSpy: Mock;
-      let confirmSpy: Mock;
+      describe('converting to cb7', () => {
+        let item: HTMLInputElement;
+        let dispatchSpy: Mock;
+        let confirmSpy: Mock;
 
-      beforeEach(() => {
-        item = document.querySelector(
-          '#topbar-recreate-as-cb7 a.p-menubar-item-link'
-        ) as HTMLInputElement;
-        dispatchSpy = vi.spyOn(store, 'dispatch');
-        confirmSpy = vi
-          .spyOn(component.confirmationService, 'confirm')
-          .mockImplementation(confirm => {
-            confirm.accept?.();
-            return component.confirmationService;
-          });
+        beforeEach(() => {
+          item = document.querySelector(
+            '#topbar-recreate-as-cb7 a.p-menubar-item-link'
+          ) as HTMLInputElement;
+          dispatchSpy = vi.spyOn(store, 'dispatch');
+          confirmSpy = vi
+            .spyOn(component.confirmationService, 'confirm')
+            .mockImplementation(confirm => {
+              confirm.accept?.();
+              return component.confirmationService;
+            });
+        });
+
+        it('should enable the menu item', () => {
+          expect(item.disabled).toBeFalsy();
+        });
+
+        it('should confirm with the user', async () => {
+          item.click();
+          fixture.detectChanges();
+          await fixture.whenStable();
+          expect(confirmSpy).toHaveBeenCalled();
+        });
+
+        it('should dispatch an action', async () => {
+          item.click();
+          fixture.detectChanges();
+          await fixture.whenStable();
+          expect(dispatchSpy).toHaveBeenCalledWith(
+            RecreateComicFilesActions.recreateSelectedComics({
+              targetArchiveType: ArchiveType.CB7
+            })
+          );
+        });
       });
 
-      it('should enable the menu item', () => {
-        expect(item.disabled).toBeFalsy();
-      });
+      describe('starting batch scraping', () => {
+        let item: HTMLInputElement;
+        let dispatchSpy: Mock;
+        let confirmSpy: Mock;
 
-      it('should confirm with the user', async () => {
-        item.click();
-        fixture.detectChanges();
-        await fixture.whenStable();
-        expect(confirmSpy).toHaveBeenCalled();
-      });
+        beforeEach(() => {
+          item = document.querySelector(
+            '#topbar-start-batch-scraping a.p-menubar-item-link'
+          ) as HTMLInputElement;
+          dispatchSpy = vi.spyOn(store, 'dispatch');
+          confirmSpy = vi
+            .spyOn(component.confirmationService, 'confirm')
+            .mockImplementation(confirm => {
+              confirm.accept?.();
+              return component.confirmationService;
+            });
+        });
 
-      it('should dispatch an action', async () => {
-        item.click();
-        fixture.detectChanges();
-        await fixture.whenStable();
-        expect(dispatchSpy).toHaveBeenCalledWith(
-          RecreateComicFilesActions.recreateSelectedComics({
-            targetArchiveType: ArchiveType.CB7
-          })
-        );
+        it('should enable the menu item', () => {
+          expect(item.disabled).toBeFalsy();
+        });
+
+        it('should confirm with the user', async () => {
+          item.click();
+          fixture.detectChanges();
+          await fixture.whenStable();
+          expect(confirmSpy).toHaveBeenCalled();
+        });
+
+        it('should dispatch an action', async () => {
+          item.click();
+          fixture.detectChanges();
+          await fixture.whenStable();
+          expect(dispatchSpy).toHaveBeenCalledWith(
+            BatchScrapeComicsActions.startBatchScraping()
+          );
+        });
       });
     });
   });

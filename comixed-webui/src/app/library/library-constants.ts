@@ -52,6 +52,8 @@ export const CLEAR_COMIC_SELECTIONS_URL = `${API_ROOT_URL}/comics/selections/cle
 export const RECREATE_COMIC_FILE_URL = `${API_ROOT_URL}/library/conversion/\${comicId}`;
 export const RECREATE_SELECTED_COMIC_FILES_URL = `${API_ROOT_URL}/library/conversion/selected`;
 
+export const BATCH_SCRAPE_SELECTED_COMICS_URL = `${API_ROOT_URL}/metadata/scraping/selected/batch`;
+
 // query parameters
 export const QUERY_PARAM_COMIC_DETAIL_TAB = 'comic-detail-tab';
 export const QUERY_PARAM_PAGE_INDEX = 'index';

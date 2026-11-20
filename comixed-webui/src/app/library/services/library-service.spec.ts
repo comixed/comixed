@@ -27,6 +27,7 @@ import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
 import { interpolate } from '@app/app-functions';
 import { COMIC_1, REMOTE_LIBRARY } from '@app/library/library-fixtures';
 import {
+  BATCH_SCRAPE_SELECTED_COMICS_URL,
   LOAD_COMICS_BY_FILTER_URL,
   LOAD_LIBRARY_STATE_URL,
   LOAD_READ_COMICS_URL,
@@ -48,6 +49,7 @@ import { ComicState } from '@app/library/models/comic-state';
 import { LoadComicsByFilterRequest } from '@app/library/models/net/load-comics-by-filter-request';
 import { LoadSelectedComicsRequest } from '@app/library/models/net/load-selected-comics-request';
 import { Mock } from 'vitest';
+import { of } from 'rxjs';
 
 describe('LibraryService', () => {
   const initialState = {
@@ -243,7 +245,7 @@ describe('LibraryService', () => {
     httpController.verify();
   });
 
-  it('should load read uncomics', () => {
+  it('should load unread comics', () => {
     const serverResponse = TEST_COMIC_LIST;
 
     service
@@ -267,6 +269,20 @@ describe('LibraryService', () => {
       sortDirection: TEST_SORT_DIRECTION
     } as LoadSelectedComicsRequest);
     req.flush(serverResponse);
+    httpController.verify();
+  });
+
+  it('should batch scrape comics', () => {
+    service
+      .batchScrapeComics()
+      .subscribe({ next: () => expect(true).toBeTruthy() });
+
+    const req = httpController.expectOne(
+      interpolate(BATCH_SCRAPE_SELECTED_COMICS_URL)
+    );
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({} as unknown);
+    req.flush(of(undefined));
     httpController.verify();
   });
 });

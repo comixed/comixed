@@ -34,6 +34,7 @@ import { ReadComicListActions } from '@app/account/actions/read-comic-list.actio
 import { SelectedComicListActions } from '@app/library/actions/selected-comic-list.actions';
 import { ArchiveType } from '@app/library/models/archive-type';
 import { RecreateComicFilesActions } from '@app/library/actions/recreate-comic-files.actions';
+import { BatchScrapeComicsActions } from '@app/library/actions/batch-scrape-comics.actions';
 
 @Component({
   imports: [Button, TranslatePipe, Tooltip, Menubar],
@@ -200,12 +201,14 @@ export class Topbar {
             visible: this.isAdmin
           },
           {
+            id: 'topbar-start-batch-scraping',
             label: this.translateService.instant(
               'topbar.menu.selected-comics.batch-scrape'
             ),
             icon: 'pi pi-database',
             disabled: !this.isAdmin,
-            visible: this.isAdmin
+            visible: this.isAdmin,
+            command: () => this.doStartBatchScraping()
           },
           {
             label: this.translateService.instant(
@@ -298,6 +301,22 @@ export class Topbar {
             targetArchiveType
           })
         );
+      }
+    });
+  }
+
+  private doStartBatchScraping(): void {
+    this.confirmationService.confirm({
+      header: this.translateService.instant(
+        'topbar.start-batch-scraping.confirmation-title'
+      ),
+      message: this.translateService.instant(
+        'topbar.start-batch-scraping.confirmation-message',
+        { count: this.selectedCount }
+      ),
+      accept: () => {
+        this.logger.debug('Initiating batch scraping process');
+        this.store.dispatch(BatchScrapeComicsActions.startBatchScraping());
       }
     });
   }

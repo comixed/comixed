@@ -50,6 +50,12 @@
       "delete-completed-processes": "Delete completed batch processes"
     }
   },
+  "batch-scrape-comics-effects": {
+    "start-batch-scraping": {
+      "service-failure": "Failed to start batch scraping...",
+      "service-success": "Batch scraping started..."
+    }
+  },
   "comic-cover": {
     "button": {
       "download-file": "Download",
@@ -619,6 +625,10 @@
     "recreate-selected-comics": {
       "confirmation-message": "Are you sure you want to convert the {count, plural, =1{selected comic} other{# selected comics}} to {targetArchiveType}?",
       "confirmation-title": "Recreate Comic Files"
+    },
+    "start-batch-scraping": {
+      "confirmation-message": "Are you sure you want to start batch scraping {count, plural, =1{the selected comic book} other{# selected comic books}}?",
+      "confirmation-title": "Batch Scraping"
     },
     "tooltip": {
       "logout-button": "Log out of the server..."
