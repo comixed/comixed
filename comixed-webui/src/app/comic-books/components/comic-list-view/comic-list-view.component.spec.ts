@@ -257,6 +257,54 @@ describe('ComicListViewComponent', () => {
     });
   });
 
+  describe('checking select all checkbox state', () => {
+    beforeEach(() => {
+      component.totalComics = COMICS.length;
+    });
+
+    describe('when no comics are selected', () => {
+      beforeEach(() => {
+        component.selectedIds = [];
+      });
+
+      it('indicates not all are selected', () => {
+        expect(component.allSelected).toBeFalse();
+      });
+
+      it('indicates not partially selected', () => {
+        expect(component.partiallySelected).toBeFalse();
+      });
+    });
+
+    describe('when some comics are selected', () => {
+      beforeEach(() => {
+        component.selectedIds = [COMICS[0].comicId];
+      });
+
+      it('indicates not all are selected', () => {
+        expect(component.allSelected).toBeFalse();
+      });
+
+      it('indicates partially selected', () => {
+        expect(component.partiallySelected).toBeTrue();
+      });
+    });
+
+    describe('when all comics are selected', () => {
+      beforeEach(() => {
+        component.selectedIds = COMICS.map(comic => comic.comicId);
+      });
+
+      it('indicates all are selected', () => {
+        expect(component.allSelected).toBeTrue();
+      });
+
+      it('indicates not partially selected', () => {
+        expect(component.partiallySelected).toBeFalse();
+      });
+    });
+  });
+
   describe('getting icons for comic states', () => {
     describe('when missing', () => {
       it('shows the correct icon', () => {
