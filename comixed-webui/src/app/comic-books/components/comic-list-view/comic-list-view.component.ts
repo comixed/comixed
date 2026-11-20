@@ -271,6 +271,19 @@ export class ComicListViewComponent implements OnInit, AfterViewInit {
     ].filter(entry => !!entry);
   }
 
+  get allSelected(): boolean {
+    return (
+      this.selectedIds.length > 0 &&
+      this.selectedIds.length === this.totalComics
+    );
+  }
+
+  get partiallySelected(): boolean {
+    return (
+      this.selectedIds.length > 0 && this.selectedIds.length < this.totalComics
+    );
+  }
+
   private _selectedIds: number[] = [];
 
   get selectedIds(): number[] {
