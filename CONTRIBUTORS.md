@@ -16,3 +16,4 @@ what it is today.
  * Sathwik Hejamady Bhat <sathwikhbhat@gmail.com>
  * Joran Van Belle <joran.vanbelle@live.be>
  * Ayush Thakur <ayushwork0@gmail.com>
+ * Satyam Kumar <satyamk.1107@gmail.com>
