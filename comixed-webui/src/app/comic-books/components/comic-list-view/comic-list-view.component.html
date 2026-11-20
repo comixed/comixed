@@ -129,9 +129,8 @@
               [disabled]="
                 dataSource.data.length === 0 || (selectionBusy$ | async)
               "
-              [checked]="
-                selectedIds.length > 0 && selectedIds.length === totalComics
-              "
+              [checked]="allSelected"
+              [indeterminate]="partiallySelected"
               (change)="selectAll.emit($event.checked)"
               (keyup)="selectAll.emit($event.checked)"
               (click)="$event.stopPropagation()"
