@@ -32,7 +32,9 @@ import {
   LOAD_LIBRARY_STATE_URL,
   LOAD_READ_COMICS_URL,
   LOAD_SELECTED_COMICS_URL,
-  LOAD_UNREAD_COMICS_URL
+  LOAD_UNREAD_COMICS_URL,
+  ORGANIZE_ALL_COMICS_URL,
+  ORGANIZE_SELECTED_COMICS_URL
 } from '@app/library/library-constants';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import {
@@ -280,6 +282,32 @@ describe('LibraryService', () => {
     const req = httpController.expectOne(
       interpolate(BATCH_SCRAPE_SELECTED_COMICS_URL)
     );
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({} as unknown);
+    req.flush(of(undefined));
+    httpController.verify();
+  });
+
+  it('should organize selected comics', () => {
+    service
+      .organizeSelectedComics()
+      .subscribe({ next: () => expect(true).toBeTruthy() });
+
+    const req = httpController.expectOne(
+      interpolate(ORGANIZE_SELECTED_COMICS_URL)
+    );
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({} as unknown);
+    req.flush(of(undefined));
+    httpController.verify();
+  });
+
+  it('should organize the entire library', () => {
+    service
+      .organizeAllComics()
+      .subscribe({ next: () => expect(true).toBeTruthy() });
+
+    const req = httpController.expectOne(interpolate(ORGANIZE_ALL_COMICS_URL));
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({} as unknown);
     req.flush(of(undefined));

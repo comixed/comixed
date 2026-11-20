@@ -35,6 +35,7 @@ import { SelectedComicListActions } from '@app/library/actions/selected-comic-li
 import { ArchiveType } from '@app/library/models/archive-type';
 import { RecreateComicFilesActions } from '@app/library/actions/recreate-comic-files.actions';
 import { BatchScrapeComicsActions } from '@app/library/actions/batch-scrape-comics.actions';
+import { LibraryOrganizationActions } from '@app/library/actions/library-organization.actions';
 
 @Component({
   imports: [Button, TranslatePipe, Tooltip, Menubar],
@@ -212,19 +213,42 @@ export class Topbar {
           },
           {
             label: this.translateService.instant(
-              'topbar.menu.selected-comics.organize'
-            ),
-            icon: 'pi pi-folder-plus',
-            disabled: !this.isAdmin,
-            visible: this.isAdmin
-          },
-          {
-            label: this.translateService.instant(
               'topbar.menu.selected-comics.rescan'
             ),
             icon: 'pi pi-barcode',
             disabled: !this.isAdmin,
             visible: this.isAdmin
+          },
+          {
+            separator: true,
+            disabled: !this.isAdmin,
+            visible: this.isAdmin
+          },
+          {
+            label: this.translateService.instant(
+              'topbar.menu.selected-comics.organize.root'
+            ),
+            icon: 'pi pi-folder-plus',
+            items: [
+              {
+                id: 'topbar-organize-selected-comics',
+                label: this.translateService.instant(
+                  'topbar.menu.selected-comics.organize.selected-comics'
+                ),
+                disabled: !this.isAdmin || !this.selectedCount,
+                visible: this.isAdmin,
+                command: () => this.doOrganizeSelectedComics()
+              },
+              {
+                id: 'topbar-organize-all-comics',
+                label: this.translateService.instant(
+                  'topbar.menu.selected-comics.organize.all-comics'
+                ),
+                disabled: !this.isAdmin,
+                visible: this.isAdmin,
+                command: () => this.doOrganizeAllComics()
+              }
+            ]
           },
           {
             separator: true
@@ -317,6 +341,40 @@ export class Topbar {
       accept: () => {
         this.logger.debug('Initiating batch scraping process');
         this.store.dispatch(BatchScrapeComicsActions.startBatchScraping());
+      }
+    });
+  }
+
+  private doOrganizeSelectedComics() {
+    this.confirmationService.confirm({
+      header: this.translateService.instant(
+        'topbar.organize-selected-comics.confirmation-title'
+      ),
+      message: this.translateService.instant(
+        'topbar.organize-selected-comics.confirmation-message',
+        { count: this.selectedCount }
+      ),
+      accept: () => {
+        this.logger.debug('Initiating organizing selected comics');
+        this.store.dispatch(
+          LibraryOrganizationActions.organizeSelectedComics()
+        );
+      }
+    });
+  }
+
+  private doOrganizeAllComics() {
+    this.confirmationService.confirm({
+      header: this.translateService.instant(
+        'topbar.organize-all-comics.confirmation-title'
+      ),
+      message: this.translateService.instant(
+        'topbar.organize-all-comics.confirmation-message',
+        { count: this.selectedCount }
+      ),
+      accept: () => {
+        this.logger.debug('Initiating organizing all comics');
+        this.store.dispatch(LibraryOrganizationActions.organizeAllComics());
       }
     });
   }

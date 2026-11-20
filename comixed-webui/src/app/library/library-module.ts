@@ -46,6 +46,8 @@ import { recreateComicFilesFeature } from '@app/library/reducers/recreate-comic-
 import { RecreateComicFilesEffects } from '@app/library/effects/recreate-comic-files.effects';
 import { batchScrapeComicsFeature } from '@app/library/reducers/batch-scrape-comics.reducer';
 import { BatchScrapeComicsEffects } from '@app/library/effects/batch-scrape-comics.effects';
+import { libraryOrganizationFeature } from '@app/library/reducers/library-organization.reducer';
+import { LibraryOrganizationEffects } from '@app/library/effects/library-organization.effects';
 
 @NgModule({
   declarations: [],
@@ -63,6 +65,7 @@ import { BatchScrapeComicsEffects } from '@app/library/effects/batch-scrape-comi
     StoreModule.forFeature(selectedComicListsFeature),
     StoreModule.forFeature(recreateComicFilesFeature),
     StoreModule.forFeature(batchScrapeComicsFeature),
+    StoreModule.forFeature(libraryOrganizationFeature),
     StoreModule.forFeature(comicDetailFeature),
     EffectsModule.forFeature([
       RemoteLibraryEffects,
@@ -77,6 +80,7 @@ import { BatchScrapeComicsEffects } from '@app/library/effects/batch-scrape-comi
       SelectedComicListEffects,
       RecreateComicFilesEffects,
       BatchScrapeComicsEffects,
+      LibraryOrganizationEffects,
       ComicDetailEffects
     ])
   ]

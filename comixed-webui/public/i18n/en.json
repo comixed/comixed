@@ -312,6 +312,16 @@
       "verify-password": "Verify your password..."
     }
   },
+  "library-organization-effects": {
+    "organize-all-comics": {
+      "service-failure": "Failed to start organizing the entire library...",
+      "service-success": "Organizing the entire library..."
+    },
+    "organize-selected-comics": {
+      "service-failure": "Failed to start organizing selected comics...",
+      "service-success": "Organizing selected comics started..."
+    }
+  },
   "library-settings-page": {
     "label": {
       "create-external-metadata": "Maintain external metadata files for comics",
@@ -607,7 +617,11 @@
         },
         "deselect-all": "Clear selections...",
         "item": "Selected Comics",
-        "organize": "Organize...",
+        "organize": {
+          "all-comics": "All comics...",
+          "root": "Organization",
+          "selected-comics": "Selected comics..."
+        },
         "read": {
           "item": "Read State",
           "mark-read": "Mark as read",
@@ -621,6 +635,14 @@
         "rescan": "Rescan...",
         "scrape": "Scrape metadata..."
       }
+    },
+    "organize-all-comics": {
+      "confirmation-message": "Are you sure you want to organize the entire library?",
+      "confirmation-title": "Organize All Comics"
+    },
+    "organize-selected-comics": {
+      "confirmation-message": "Are you sure you want to organize {count, plural, =1{the selected comic book} other{# selected comic books}}?",
+      "confirmation-title": "Organize Selected Comics"
     },
     "recreate-selected-comics": {
       "confirmation-message": "Are you sure you want to convert the {count, plural, =1{selected comic} other{# selected comics}} to {targetArchiveType}?",

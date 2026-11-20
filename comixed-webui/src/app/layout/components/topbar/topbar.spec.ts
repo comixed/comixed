@@ -50,6 +50,7 @@ import { ConfirmationService } from '@openng/optimus-ui/api';
 import { RecreateComicFilesActions } from '@app/library/actions/recreate-comic-files.actions';
 import { ArchiveType } from '@app/library/models/archive-type';
 import { BatchScrapeComicsActions } from '@app/library/actions/batch-scrape-comics.actions';
+import { LibraryOrganizationActions } from '@app/library/actions/library-organization.actions';
 
 @Component({ template: '<h1>Test Component</h1>' })
 class TestComponent {}
@@ -415,6 +416,84 @@ describe('Topbar', () => {
           await fixture.whenStable();
           expect(dispatchSpy).toHaveBeenCalledWith(
             BatchScrapeComicsActions.startBatchScraping()
+          );
+        });
+      });
+
+      describe('organizing selected comics', () => {
+        let item: HTMLInputElement;
+        let dispatchSpy: Mock;
+        let confirmSpy: Mock;
+
+        beforeEach(() => {
+          item = document.querySelector(
+            '#topbar-organize-selected-comics a.p-menubar-item-link'
+          ) as HTMLInputElement;
+          dispatchSpy = vi.spyOn(store, 'dispatch');
+          confirmSpy = vi
+            .spyOn(component.confirmationService, 'confirm')
+            .mockImplementation(confirm => {
+              confirm.accept?.();
+              return component.confirmationService;
+            });
+        });
+
+        it('should enable the menu item', () => {
+          expect(item.disabled).toBeFalsy();
+        });
+
+        it('should confirm with the user', async () => {
+          item.click();
+          fixture.detectChanges();
+          await fixture.whenStable();
+          expect(confirmSpy).toHaveBeenCalled();
+        });
+
+        it('should dispatch an action', async () => {
+          item.click();
+          fixture.detectChanges();
+          await fixture.whenStable();
+          expect(dispatchSpy).toHaveBeenCalledWith(
+            LibraryOrganizationActions.organizeSelectedComics()
+          );
+        });
+      });
+
+      describe('organizing all comics', () => {
+        let item: HTMLInputElement;
+        let dispatchSpy: Mock;
+        let confirmSpy: Mock;
+
+        beforeEach(() => {
+          item = document.querySelector(
+            '#topbar-organize-all-comics a.p-menubar-item-link'
+          ) as HTMLInputElement;
+          dispatchSpy = vi.spyOn(store, 'dispatch');
+          confirmSpy = vi
+            .spyOn(component.confirmationService, 'confirm')
+            .mockImplementation(confirm => {
+              confirm.accept?.();
+              return component.confirmationService;
+            });
+        });
+
+        it('should enable the menu item', () => {
+          expect(item.disabled).toBeFalsy();
+        });
+
+        it('should confirm with the user', async () => {
+          item.click();
+          fixture.detectChanges();
+          await fixture.whenStable();
+          expect(confirmSpy).toHaveBeenCalled();
+        });
+
+        it('should dispatch an action', async () => {
+          item.click();
+          fixture.detectChanges();
+          await fixture.whenStable();
+          expect(dispatchSpy).toHaveBeenCalledWith(
+            LibraryOrganizationActions.organizeAllComics()
           );
         });
       });

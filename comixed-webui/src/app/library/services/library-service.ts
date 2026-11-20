@@ -27,6 +27,8 @@ import {
   LOAD_READ_COMICS_URL,
   LOAD_SELECTED_COMICS_URL,
   LOAD_UNREAD_COMICS_URL,
+  ORGANIZE_ALL_COMICS_URL,
+  ORGANIZE_SELECTED_COMICS_URL,
   REMOTE_LIBRARY_STATE_TOPIC
 } from '@app/library/library-constants';
 import { interpolate } from '@app/app-functions';
@@ -178,6 +180,22 @@ export class LibraryService {
     this.logger.debug('Starting the batch scraping process');
     return this.http.post<void>(
       interpolate(BATCH_SCRAPE_SELECTED_COMICS_URL),
+      {} as unknown
+    );
+  }
+
+  organizeSelectedComics(): Observable<void> {
+    this.logger.debug('Organizing selected comics');
+    return this.http.post<void>(
+      interpolate(ORGANIZE_SELECTED_COMICS_URL),
+      {} as unknown
+    );
+  }
+
+  organizeAllComics(): Observable<void> {
+    this.logger.debug('Organizing all comics');
+    return this.http.post<void>(
+      interpolate(ORGANIZE_ALL_COMICS_URL),
       {} as unknown
     );
   }
