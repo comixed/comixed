@@ -46,6 +46,8 @@ import { MetadataSource } from '@app/metadata/models/metadata-source';
 import { ScrapingIssue } from '@app/metadata/models/scraping-issue';
 import { ConfirmationService } from '@openng/optimus-ui/api';
 import { Checkbox } from '@openng/optimus-ui/checkbox';
+import { ScrapeFilenameActions } from '@app/metadata/actions/scrape-filename.actions';
+import { selectScrapeFilenameData } from '@app/metadata/selectors/scrape-filename.selectors';
 
 @Component({
   imports: [
@@ -92,13 +94,10 @@ export class ComicMetadataDetail implements OnInit {
   constructor() {
     this.logger.trace('Creating scraping form');
     this.scrapingForm = this.formBuilder.group({
-      metadataSource: new FormControl(null, {
+      metadataSource: new FormControl<number | null>(null, {
         validators: [Validators.required]
       }),
-      publisher: new FormControl<number | null>(null, {
-        nonNullable: true,
-        validators: [Validators.required]
-      }),
+      publisher: new FormControl(''),
       series: new FormControl('', {
         nonNullable: true,
         validators: [Validators.required]
@@ -108,10 +107,7 @@ export class ComicMetadataDetail implements OnInit {
         nonNullable: true,
         validators: [Validators.required]
       }),
-      matchPublisher: new FormControl(false, {
-        nonNullable: true,
-        validators: [Validators.required]
-      }),
+      matchPublisher: new FormControl(false),
       maximumRecords: new FormControl(0, {
         nonNullable: true,
         validators: [Validators.required]
@@ -127,6 +123,27 @@ export class ComicMetadataDetail implements OnInit {
           this.scrapingForm.controls['metadataSource'].setValue(
             source?.metadataSourceId || null
           );
+        }
+      });
+    this.store
+      .select(selectScrapeFilenameData)
+      .pipe(takeUntilDestroyed())
+      .subscribe({
+        next: data => {
+          if (data.series?.length > 0) {
+            this.scrapingForm.controls['series'].setValue(data.series);
+            this.scrapingForm.markAsDirty();
+          }
+          if (data.volume?.length > 0) {
+            this.scrapingForm.controls['volume'].setValue(data.volume);
+            this.scrapingForm.markAsDirty();
+          }
+          if (data.issueNumber?.length > 0) {
+            this.scrapingForm.controls['issueNumber'].setValue(
+              data.issueNumber
+            );
+            this.scrapingForm.markAsDirty();
+          }
         }
       });
   }
@@ -185,12 +202,20 @@ export class ComicMetadataDetail implements OnInit {
     });
   }
 
+  protected onScrapeFilename(): void {
+    this.logger.debug('Scraping filename:', this.comicDetail().filename);
+    this.store.dispatch(
+      ScrapeFilenameActions.scrapeComic({ comic: this.comicDetail() })
+    );
+  }
+
   protected onResetForm(): void {
     this.logger.trace('Resetting form');
     this.doLoadForm();
   }
 
   protected onLoadVolumes(): void {
+    const metadataSource = this.metadataSource()!;
     const publisher = this.scrapingForm.controls['publisher'].value;
     const series = this.scrapingForm.controls['series'].value;
     const matchPublisher = this.matchPublisher;
@@ -199,7 +224,7 @@ export class ComicMetadataDetail implements OnInit {
 
     this.store.dispatch(
       SingleComicScrapingActions.loadVolumes({
-        metadataSource: this.metadataSourceList()[0],
+        metadataSource,
         publisher,
         series,
         matchPublisher,

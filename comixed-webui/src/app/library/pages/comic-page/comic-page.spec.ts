@@ -41,12 +41,17 @@ import {
   METADATA_SOURCE_LIST_FEATURE_KEY
 } from '@app/metadata/reducers/metadata-source-list.reducer';
 import { ConfirmationService } from '@openng/optimus-ui/api';
+import {
+  initialScrapeFilenameState,
+  SCRAPE_FILENAME_FEATURE_KEY
+} from '@app/metadata/reducers/scrape-filename.reducer';
 
 describe('ComicPage', () => {
   const initialState = {
     [COMIC_DETAIL_FEATURE_KEY]: initialComicDetailState,
     [METADATA_SOURCE_LIST_FEATURE_KEY]: initialMetadataSourceListState,
-    [SINGLE_COMIC_SCRAPING_FEATURE_KEY]: initialSingleComicScrapingState
+    [SINGLE_COMIC_SCRAPING_FEATURE_KEY]: initialSingleComicScrapingState,
+    [SCRAPE_FILENAME_FEATURE_KEY]: initialScrapeFilenameState
   };
 
   let component: ComicPage;

@@ -26,6 +26,7 @@ import {
   singleComicScrapingAdapter
 } from '@app/metadata/reducers/single-comic-scraping.reducer';
 import {
+  METADATA_SOURCE_1,
   SCRAPING_VOLUME_1,
   SCRAPING_VOLUME_2
 } from '@app/metadata/metadata-fixtures';
@@ -35,16 +36,27 @@ import {
   METADATA_SOURCE_LIST_FEATURE_KEY
 } from '@app/metadata/reducers/metadata-source-list.reducer';
 import { ConfirmationService } from '@openng/optimus-ui/api';
-import { beforeEach } from 'vitest';
+import { beforeEach, Mock } from 'vitest';
 import { COMIC_1 } from '@app/library/library-fixtures';
+import { ScrapeFilenameActions } from '@app/metadata/actions/scrape-filename.actions';
+import { SingleComicScrapingActions } from '@app/metadata/actions/single-comic-scraping.actions';
+import {
+  initialScrapeFilenameState,
+  SCRAPE_FILENAME_FEATURE_KEY
+} from '@app/metadata/reducers/scrape-filename.reducer';
 
 describe('ComicMetadataDetail', () => {
   const TEST_SCRAPING_VOLUME_LIST = [SCRAPING_VOLUME_1, SCRAPING_VOLUME_2];
+  const TEST_METADATA_SOURCE = METADATA_SOURCE_1;
+  const TEST_COMIC = COMIC_1;
   const initialState = {
     [SINGLE_COMIC_SCRAPING_FEATURE_KEY]: initialSingleComicScrapingState,
-    [METADATA_SOURCE_LIST_FEATURE_KEY]: initialMetadataSourceListState
+    [SCRAPE_FILENAME_FEATURE_KEY]: initialScrapeFilenameState,
+    [METADATA_SOURCE_LIST_FEATURE_KEY]: {
+      ...initialMetadataSourceListState,
+      selected: TEST_METADATA_SOURCE
+    }
   };
-  const TEST_COMIC = COMIC_1;
 
   let component: ComicMetadataDetail;
   let fixture: ComponentFixture<ComicMetadataDetail>;
@@ -97,6 +109,26 @@ describe('ComicMetadataDetail', () => {
     });
   });
 
+  describe('clicking the scrape filename button', () => {
+    let dispatchSpy: Mock;
+
+    beforeEach(() => {
+      dispatchSpy = vi.spyOn(store, 'dispatch');
+      const button: HTMLButtonElement = fixture.nativeElement.querySelector(
+        '#scrape-filename-button button'
+      );
+      expect(button).not.toBeNull();
+      button.click();
+      fixture.detectChanges();
+    });
+
+    it('should dispatch an action to scrape the filename', () => {
+      expect(dispatchSpy).toHaveBeenCalledWith(
+        ScrapeFilenameActions.scrapeComic({ comic: TEST_COMIC })
+      );
+    });
+  });
+
   describe('clicking the reset button', () => {
     beforeEach(() => {
       component.scrapingForm.controls['publisher'].setValue('changed');
@@ -134,6 +166,33 @@ describe('ComicMetadataDetail', () => {
       expect(
         component.scrapingForm.controls['issueNumber'].value
       ).toStrictEqual(TEST_COMIC.issueNumber);
+    });
+  });
+
+  describe('clicking the submit button', () => {
+    let dispatchSpy: Mock;
+
+    beforeEach(() => {
+      dispatchSpy = vi.spyOn(store, 'dispatch');
+      const button: HTMLButtonElement = fixture.nativeElement.querySelector(
+        '#submit-form-button button'
+      );
+      expect(button).not.toBeNull();
+      button.click();
+      fixture.detectChanges();
+    });
+
+    it('should dispatch an action to load volumes', () => {
+      expect(dispatchSpy).toHaveBeenCalledWith(
+        SingleComicScrapingActions.loadVolumes({
+          metadataSource: TEST_METADATA_SOURCE,
+          publisher: TEST_COMIC.publisher,
+          series: TEST_COMIC.series,
+          matchPublisher: false,
+          maximumRecords: 0,
+          skipCache: false
+        })
+      );
     });
   });
 });

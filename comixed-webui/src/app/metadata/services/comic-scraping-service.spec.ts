@@ -33,6 +33,7 @@ import {
 import {
   LOAD_SCRAPING_ISSUE_URL,
   LOAD_SCRAPING_VOLUMES_URL,
+  SCRAPE_FILENAME_URL,
   SCRAPE_SINGLE_BOOK_COMIC_URL
 } from '@app/metadata/metadata-constants';
 import { interpolate } from '@app/app-functions';
@@ -40,7 +41,8 @@ import { LoadScrapingVolumesRequest } from '@app/metadata/models/net/load-scrapi
 import { LoadScrapingIssueRequest } from '@app/metadata/models/net/load-scraping-issue-request';
 import { COMIC_1 } from '@app/library/library-fixtures';
 import { ScrapeSingleIssueRequest } from '@app/metadata/models/net/scrape-single-issue-request';
-import { of } from 'rxjs';
+import { ScrapeFilenameResponse } from '@app/metadata/models/net/scrape-filename-response';
+import { ScrapeFilenameRequest } from '@app/metadata/models/net/scrape-filename-request';
 
 describe('ComicScrapingService', () => {
   const TEST_PUBLISHER = 'The Publisher';
@@ -55,6 +57,7 @@ describe('ComicScrapingService', () => {
   const TEST_ISSUE_NUMBER = '717';
   const TEST_ISSUE_ID = TEST_SCRAPING_ISSUE.id;
   const TEST_COMIC = COMIC_1;
+  const TEST_VOLUME = '2026';
 
   let service: ComicScrapingService;
   let httpController: HttpTestingController;
@@ -163,7 +166,32 @@ describe('ComicScrapingService', () => {
       pageSize: 10,
       pageNumber: 0
     } as ScrapeSingleIssueRequest);
-    req.flush(of(undefined));
+    req.flush(null);
+    httpController.verify();
+  });
+
+  it('should scrape a comic filename', () => {
+    const serverResponse = {
+      series: TEST_SERIES,
+      volume: TEST_VOLUME,
+      issueNumber: TEST_ISSUE_NUMBER,
+      found: true
+    } as ScrapeFilenameResponse;
+
+    service
+      .scrapeFilename({
+        comic: TEST_COMIC
+      })
+      .subscribe({
+        next: response => expect(response).toStrictEqual(serverResponse)
+      });
+
+    const req = httpController.expectOne(interpolate(SCRAPE_FILENAME_URL));
+    expect(req.request.method).toStrictEqual('POST');
+    expect(req.request.body).toStrictEqual({
+      filename: TEST_COMIC.filename
+    } as ScrapeFilenameRequest);
+    req.flush(serverResponse);
     httpController.verify();
   });
 });

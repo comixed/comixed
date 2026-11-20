@@ -112,6 +112,13 @@
     <ng-template #footer>
       <div class="cx-width-100p cx-justify-end">
         <p-button
+          id="scrape-filename-button"
+          icon="pi pi-compass"
+          severity="warn"
+          [label]="'comic-metadata-detail.button.scrape-filename' | translate"
+          (onClick)="onScrapeFilename()"
+        />
+        <p-button
           id="reset-form-button"
           icon="pi pi-undo"
           severity="danger"

@@ -26,6 +26,7 @@ import { interpolate } from '@app/app-functions';
 import {
   LOAD_SCRAPING_ISSUE_URL,
   LOAD_SCRAPING_VOLUMES_URL,
+  SCRAPE_FILENAME_URL,
   SCRAPE_SINGLE_BOOK_COMIC_URL
 } from '@app/metadata/metadata-constants';
 import { LoadScrapingVolumesRequest } from '@app/metadata/models/net/load-scraping-volumes-request';
@@ -33,6 +34,8 @@ import { ScrapingIssue } from '@app/metadata/models/scraping-issue';
 import { LoadScrapingIssueRequest } from '@app/metadata/models/net/load-scraping-issue-request';
 import { Comic } from '@app/library/models/comic';
 import { ScrapeSingleIssueRequest } from '@app/metadata/models/net/scrape-single-issue-request';
+import { ScrapeFilenameResponse } from '@app/metadata/models/net/scrape-filename-response';
+import { ScrapeFilenameRequest } from '@app/metadata/models/net/scrape-filename-request';
 
 @Service()
 export class ComicScrapingService {
@@ -99,6 +102,16 @@ export class ComicScrapingService {
         pageNumber: 0,
         pageSize: 10
       } as ScrapeSingleIssueRequest
+    );
+  }
+
+  scrapeFilename(args: { comic: Comic }): Observable<ScrapeFilenameResponse> {
+    this.logger.debug('Scraping comic filename:', args);
+    return this.http.post<ScrapeFilenameResponse>(
+      interpolate(SCRAPE_FILENAME_URL),
+      {
+        filename: args.comic.filename
+      } as ScrapeFilenameRequest
     );
   }
 }

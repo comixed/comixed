@@ -109,6 +109,9 @@
     }
   },
   "comic-metadata-detail": {
+    "button": {
+      "scrape-filename": "Scrape Filename"
+    },
     "issue-selected": {
       "confirmation-message": "Are you sure you want to replace the metadata using this issue?",
       "confirmation-title": "Metadata Issue Selected"
@@ -467,6 +470,11 @@
   "recreate-comic-files-effects": {
     "service-failure": "Failed to start converting selected comics...",
     "service-success": "Converting selected comics to {targetArchiveType} started..."
+  },
+  "scrape-filename-effects": {
+    "scrape-comic": {
+      "service-failure": "Failed to scrape data from the filename..."
+    }
   },
   "scraping-volume-table": {
     "label": {

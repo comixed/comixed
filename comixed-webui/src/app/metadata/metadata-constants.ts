@@ -25,3 +25,5 @@ export const LOAD_SCRAPING_VOLUMES_URL = `${API_ROOT_URL}/metadata/sources/\${me
 export const LOAD_SCRAPING_ISSUE_URL = `${API_ROOT_URL}/metadata/sources/\${metadataSourceId}/volumes/\${volumeId}/issues/\${issueNumber}`;
 
 export const SCRAPE_SINGLE_BOOK_COMIC_URL = `${API_ROOT_URL}/metadata/sources/\${metadataSourceId}/comics/single/\${comicId}`;
+
+export const SCRAPE_FILENAME_URL = `${API_ROOT_URL}/files/metadata`;
