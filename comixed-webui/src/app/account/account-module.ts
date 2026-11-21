@@ -26,11 +26,13 @@ import { userFeature } from '@app/account/reducers/user.reducer';
 import { UserEffects } from '@app/account/effects/user.effects';
 import { readComicListFeature } from '@app/account/reducers/read-comic-list.reducer';
 import { ReadComicListEffects } from '@app/account/effects/read-comic-list.effects';
+import { AccountRouting } from '@app/account/account-routing';
 
 @NgModule({
   declarations: [],
   imports: [
     CommonModule,
+    AccountRouting,
     StoreModule.forFeature(existingAdminAccountFeature),
     StoreModule.forFeature(userFeature),
     StoreModule.forFeature(readComicListFeature),

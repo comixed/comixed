@@ -97,7 +97,10 @@ export class ComicMetadataDetail implements OnInit {
       metadataSource: new FormControl<number | null>(null, {
         validators: [Validators.required]
       }),
-      publisher: new FormControl(''),
+      publisher: new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required]
+      }),
       series: new FormControl('', {
         nonNullable: true,
         validators: [Validators.required]

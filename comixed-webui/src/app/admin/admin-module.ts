@@ -24,11 +24,13 @@ import { EffectsModule } from '@ngrx/effects';
 import { DuplicateComicEffects } from '@app/admin/effects/duplicate-comic.effects';
 import { duplicateComicFeature } from '@app/admin/reducers/duplicate-comic.reducer';
 import { DuplicateComicListEffects } from '@app/admin/effects/duplicate-comic-list.effects';
+import { AdminRouting } from '@app/admin/admin-routing';
 
 @NgModule({
   declarations: [],
   imports: [
     CommonModule,
+    AdminRouting,
     StoreModule.forFeature(duplicateComicListFeature),
     StoreModule.forFeature(duplicateComicFeature),
     EffectsModule.forFeature([DuplicateComicListEffects, DuplicateComicEffects])

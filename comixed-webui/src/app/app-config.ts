@@ -52,6 +52,7 @@ import { DialogService } from '@openng/optimus-ui/dynamicdialog';
 import { AdminModule } from '@app/admin/admin-module';
 import { SettingsModule } from '@app/settings/settings-module';
 import { MetadataModule } from '@app/metadata/metadata-module';
+import { DashboardModule } from '@app/dashboard/dashboard-module';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -84,6 +85,7 @@ export const appConfig: ApplicationConfig = {
       StoreModule.forRoot({}, {}),
       EffectsModule.forRoot([]),
       AdminModule,
+      DashboardModule,
       MetadataModule,
       SettingsModule,
       BatchModule,

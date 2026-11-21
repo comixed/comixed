@@ -55,6 +55,7 @@ import { WebSocketService } from '@app/messaging/services/web-socket-service';
 import { LoadComicDetailResponse } from '@app/library/models/net/load-comic-detail-response';
 import { interpolate } from '@app/app-functions';
 import { Comic } from '@app/library/models/comic';
+import { selectUserIsAdmin } from '@app/account/selectors/user.selectors';
 
 @Component({
   imports: [
@@ -92,6 +93,7 @@ export class ComicPage {
   readonly comic = this.store.selectSignal(selectComicDetail);
   readonly tags = this.store.selectSignal(selectComicDetailTags);
   readonly pages = this.store.selectSignal(selectComicDetailPages);
+  readonly isAdmin = this.store.selectSignal(selectUserIsAdmin);
   readonly currentTab = signal('publication');
 
   comicId = 0;
@@ -154,4 +156,6 @@ export class ComicPage {
     const pageTitle = this.comicTitlePipe.transform(this.comic());
     this.titleService.setTitle(pageTitle);
   }
+
+  protected readonly selectUserIsAdmin = selectUserIsAdmin;
 }

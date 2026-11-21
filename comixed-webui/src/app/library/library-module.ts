@@ -48,11 +48,13 @@ import { batchScrapeComicsFeature } from '@app/library/reducers/batch-scrape-com
 import { BatchScrapeComicsEffects } from '@app/library/effects/batch-scrape-comics.effects';
 import { libraryOrganizationFeature } from '@app/library/reducers/library-organization.reducer';
 import { LibraryOrganizationEffects } from '@app/library/effects/library-organization.effects';
+import { LibraryRouting } from '@app/library/library-routing';
 
 @NgModule({
   declarations: [],
   imports: [
     CommonModule,
+    LibraryRouting,
     StoreModule.forFeature(remoteLibraryFeature),
     StoreModule.forFeature(comicFileListsFeature),
     StoreModule.forFeature(publisherListsFeature),

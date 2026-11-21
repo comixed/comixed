@@ -20,9 +20,11 @@
           {{ "comic-detail-page.label.pages" | translate }}
         </span>
       </p-tab>
-      <p-tab [value]="'metadata'">
-        {{ "comic-detail-page.label.metadata" | translate }}
-      </p-tab>
+      @if (isAdmin()) {
+        <p-tab [value]="'metadata'">
+          {{ "comic-detail-page.label.metadata" | translate }}
+        </p-tab>
+      }
     </p-tablist>
     <p-tabpanels>
       <p-tabpanel [value]="'publication'">
