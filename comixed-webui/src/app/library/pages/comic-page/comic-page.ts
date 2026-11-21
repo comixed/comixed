@@ -19,7 +19,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { Card } from '@openng/optimus-ui/card';
 import { Breadcrumb } from '@openng/optimus-ui/breadcrumb';
-import { MenuItem } from '@openng/optimus-ui/api';
+import { ConfirmationService, MenuItem } from '@openng/optimus-ui/api';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/layout/services/title-service';
@@ -56,6 +56,9 @@ import { LoadComicDetailResponse } from '@app/library/models/net/load-comic-deta
 import { interpolate } from '@app/app-functions';
 import { Comic } from '@app/library/models/comic';
 import { selectUserIsAdmin } from '@app/account/selectors/user.selectors';
+import { Button } from '@openng/optimus-ui/button';
+import { ComicRemovalActions } from '@app/library/actions/comic-removal.actions';
+import { Tooltip } from '@openng/optimus-ui/tooltip';
 
 @Component({
   imports: [
@@ -72,7 +75,9 @@ import { selectUserIsAdmin } from '@app/account/selectors/user.selectors';
     ComicPagesDetail,
     ComicStoryDetail,
     ComicMetadataDetail,
-    ComicPublicationDetail
+    ComicPublicationDetail,
+    Button,
+    Tooltip
   ],
   selector: 'app-comic-detail-page',
   styleUrl: './comic-page.scss',
@@ -88,6 +93,7 @@ export class ComicPage {
   readonly titleService = inject(TitleService);
   readonly comicTitlePipe = new ComicTitlePipe();
   readonly webSocketService = inject(WebSocketService);
+  readonly confirmationService = inject(ConfirmationService);
 
   readonly loading = this.store.selectSignal(selectComicDetailLoaded);
   readonly comic = this.store.selectSignal(selectComicDetail);
@@ -99,6 +105,7 @@ export class ComicPage {
   comicId = 0;
   trail = signal<MenuItem[]>([]);
   readonly home: MenuItem = { icon: 'pi pi-home', routerLink: ['/'] };
+  protected readonly selectUserIsAdmin = selectUserIsAdmin;
 
   constructor() {
     this.activatedRoute.params.subscribe({
@@ -152,10 +159,32 @@ export class ComicPage {
     this.store.dispatch(ComicDetailAction.save({ comic }));
   }
 
+  onMarkForRemoval(removal: boolean): void {
+    this.confirmationService.confirm({
+      header: this.translateService.instant(
+        'comic-page.mark-for-removal.confirmation-title',
+        { removal }
+      ),
+      message: this.translateService.instant(
+        'comic-page.mark-for-removal.confirmation-message',
+        { removal }
+      ),
+      accept: () => {
+        if (removal) {
+          this.store.dispatch(
+            ComicRemovalActions.markOneForRemoval({ comic: this.comic() })
+          );
+        } else {
+          this.store.dispatch(
+            ComicRemovalActions.unmarkOneForRemoval({ comic: this.comic() })
+          );
+        }
+      }
+    });
+  }
+
   private doLoadTranslations() {
     const pageTitle = this.comicTitlePipe.transform(this.comic());
     this.titleService.setTitle(pageTitle);
   }
-
-  protected readonly selectUserIsAdmin = selectUserIsAdmin;
 }
