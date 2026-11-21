@@ -1,30 +1,32 @@
-## Changes Need To Be Discussed First
+## Description
 
-Before opening a pull request, please be sure to announce your changes in [the
-developer mailing list](https://www.freelists.org/list/comixed-dev) (and subscribe if you
-haven't already). This will help speed up getting your pull request reviewed and merged.
+<!-- Describe what this pull request changes and why. -->
 
-**NOTE:** You can erase any parts of this template that are not applicable to your PR,
-including this top section.
+Fixes #
 
-## Status
-READY/IN DEVELOPMENT/HOLD
+## Pull Request Title Convention
 
-## Does this PR contain migrations?
-YES | NO
+This repository uses **Conventional Commits** and **Squash Merging** to automate releases and versioning. Please ensure your **Pull Request Title** follows the format `<type>(<optional-scope>): <lowercase description>`:
 
-## Before You Submit Your PR:
-- [ ] Have you announced your PR on the comixed-dev mailing list?
-- [ ] New feature (non-breaking change which adds functionality)
-- [ ] Bug fix (non-breaking change which fixes an issue)
-- [ ] Refactors existing code (code changes for efficiency or maintainability)
-- [ ] Updates runtime dependencies but does not add new functionality
-- [ ] Security fix (be sure to include the CVE in the commit message) 
-- [ ] Breaking change (fix or feature that would cause existing functionality to change)
-- [ ] My code follows the code style of this project.
-- [ ] My change requires a change to the documentation.
-- [ ] I have updated the documentation accordingly.
-- [ ] I have read the **CONTRIBUTING** document.
-- [ ] I have added tests to cover my changes.
-- [ ] All new and existing tests passed.
+* `feat: ...` — New feature (triggers a **minor** version bump)
+* `fix: ...` — Bug fix (triggers a **patch** version bump)
+* `feat!: ...` or `fix!: ...` — Breaking change (triggers a **major** version bump)
+* `docs:`, `chore:`, `refactor:`, `test:`, `ci:`, `build:` — Non-release maintenance changes
 
+**Examples:**
+* `feat(webui): add comic cover grid zoom slider`
+* `fix(batch): prevent duplicate page hash imports`
+* `docs: update docker volume configuration guide`
+
+## Type of Change
+
+- [ ] Bug fix (`fix:`)
+- [ ] New feature (`feat:`)
+- [ ] Breaking change (`feat!:` / `fix!:`)
+- [ ] Documentation or maintenance (`docs:`, `chore:`, `refactor:`, `test:`)
+
+## Checklist
+
+- [ ] My PR title follows the Conventional Commits format above
+- [ ] I have run `./mvnw test` locally and all tests pass
+- [ ] I have updated documentation (`README.md`, `CONFIGURATION.md`, etc.) where applicable

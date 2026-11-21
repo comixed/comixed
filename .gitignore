@@ -16,3 +16,4 @@ ComiXed*Installer.exe
 CHANGELOG.md
 comixed-release-*.zip
 comixed-release-*.tar.gz
+.flattened-pom.xml

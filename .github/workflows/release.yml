@@ -1,0 +1,117 @@
+name: Build and Release
+
+on:
+  push:
+    branches:
+      - main
+      - 'release/v*.*'
+
+permissions:
+  contents: write      # Push version commits, git tags, and GitHub Releases
+  issues: write        # Comment on resolved issues
+  pull-requests: write # Comment on merged PRs
+  packages: write      # Push packages/images if using GHCR
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    outputs:
+      new_release_published: ${{ steps.semantic.outputs.new_release_published }}
+      new_release_version: ${{ steps.semantic.outputs.new_release_version }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Full git history required for semantic-release
+
+      - name: Set up JDK 25
+        uses: actions/setup-java@v4
+        with:
+          java-version: '25'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Cache pnpm store
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.local/share/pnpm/store
+            comixed-webui/node
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+
+      - name: Set up Node.js for semantic-release
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install semantic-release and plugins
+        run: |
+          npm install --no-save \
+            semantic-release \
+            @semantic-release/changelog \
+            @semantic-release/exec \
+            @semantic-release/git \
+            @semantic-release/github
+
+      - name: Run semantic-release
+        id: semantic
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx semantic-release
+
+      - name: Upload release archive for Docker job
+        if: steps.semantic.outputs.new_release_published == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: comixed-release-zip
+          path: comixed-release/target/*.zip
+          retention-days: 1
+
+  docker:
+    needs: release
+    if: needs.release.outputs.new_release_published == 'true'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout release tag
+        uses: actions/checkout@v4
+        with:
+          ref: v${{ needs.release.outputs.new_release_version }}
+
+      - name: Download release archive
+        uses: actions/download-artifact@v4
+        with:
+          name: comixed-release-zip
+          path: comixed-release/target
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Set Docker tags
+        id: docker_tags
+        run: |
+          VERSION="${{ needs.release.outputs.new_release_version }}"
+          TAGS="comixed/comixed:${VERSION}"
+          if [[ "${{ github.ref }}" == refs/heads/release/* ]]; then
+            TAGS="${TAGS},comixed/comixed:latest"
+          fi
+          echo "tags=${TAGS}" >> "$GITHUB_OUTPUT"
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./docker/Dockerfile
+          push: true
+          build-args: |
+            VERSION=${{ needs.release.outputs.new_release_version }}
+          tags: ${{ steps.docker_tags.outputs.tags }}
