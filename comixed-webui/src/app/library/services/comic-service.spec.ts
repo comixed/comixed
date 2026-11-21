@@ -37,6 +37,7 @@ import {
   MARK_SINGLE_COMIC_FOR_REMOVAL_URL,
   RECREATE_COMIC_FILE_URL,
   RECREATE_SELECTED_COMIC_FILES_URL,
+  RESCAN_SELECTED_COMICS_URL,
   UNMARK_SELECTED_COMICS_FOR_REMOVAL_URL,
   UNMARK_SINGLE_COMIC_FOR_REMOVAL_URL,
   UPDATE_COMIC_URL
@@ -242,6 +243,20 @@ describe('ComicService', () => {
 
     const req = httpController.expectOne(
       interpolate(UNMARK_SELECTED_COMICS_FOR_REMOVAL_URL)
+    );
+    expect(req.request.method).toEqual('PUT');
+    expect(req.request.body).toEqual({} as unknown);
+    req.flush(of(undefined));
+    httpController.verify();
+  });
+
+  it('should rescan selected comics', () => {
+    service
+      .rescanSelectedComics()
+      .subscribe({ next: () => expect(true).toBeTruthy() });
+
+    const req = httpController.expectOne(
+      interpolate(RESCAN_SELECTED_COMICS_URL)
     );
     expect(req.request.method).toEqual('PUT');
     expect(req.request.body).toEqual({} as unknown);

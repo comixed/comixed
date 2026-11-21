@@ -37,6 +37,7 @@ import { RecreateComicFilesActions } from '@app/library/actions/recreate-comic-f
 import { BatchScrapeComicsActions } from '@app/library/actions/batch-scrape-comics.actions';
 import { LibraryOrganizationActions } from '@app/library/actions/library-organization.actions';
 import { ComicRemovalActions } from '@app/library/actions/comic-removal.actions';
+import { RescanComicsActions } from '@app/library/actions/rescan-comics.actions';
 
 @Component({
   imports: [Button, TranslatePipe, Tooltip, Menubar],
@@ -215,12 +216,14 @@ export class Topbar {
             command: () => this.doStartBatchScraping()
           },
           {
+            id: 'topbar-rescan-selected-comics',
             label: this.translateService.instant(
               'topbar.menu.selected-comics.rescan'
             ),
             icon: 'pi pi-barcode',
-            disabled: !this.isAdmin,
-            visible: this.isAdmin
+            disabled: !this.isAdmin || this.selectedCount === 0,
+            visible: this.isAdmin,
+            command: () => this.doRescanComics()
           },
           {
             separator: true,
@@ -403,6 +406,22 @@ export class Topbar {
           this.logger.debug('Unmarking selected comics for removal');
           this.store.dispatch(ComicRemovalActions.unmarkSelectionsForRemoval());
         }
+      }
+    });
+  }
+
+  private doRescanComics() {
+    this.confirmationService.confirm({
+      header: this.translateService.instant(
+        'topbar.rescan-comics.confirmation-title'
+      ),
+      message: this.translateService.instant(
+        'topbar.rescan-comics.confirmation-message',
+        { count: this.selectedCount }
+      ),
+      accept: () => {
+        this.logger.debug('Initiating rescanning selected comics');
+        this.store.dispatch(RescanComicsActions.rescanSelectedComics());
       }
     });
   }

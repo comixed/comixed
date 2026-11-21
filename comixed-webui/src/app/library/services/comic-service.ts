@@ -26,6 +26,7 @@ import {
   MARK_SINGLE_COMIC_FOR_REMOVAL_URL,
   RECREATE_COMIC_FILE_URL,
   RECREATE_SELECTED_COMIC_FILES_URL,
+  RESCAN_SELECTED_COMICS_URL,
   UNMARK_SELECTED_COMICS_FOR_REMOVAL_URL,
   UNMARK_SINGLE_COMIC_FOR_REMOVAL_URL,
   UPDATE_COMIC_URL
@@ -135,5 +136,13 @@ export class ComicService {
         {} as unknown
       );
     }
+  }
+
+  rescanSelectedComics() {
+    this.logger.debug('Rescanning selected comics');
+    return this.http.put<void>(
+      interpolate(RESCAN_SELECTED_COMICS_URL),
+      {} as unknown
+    );
   }
 }
