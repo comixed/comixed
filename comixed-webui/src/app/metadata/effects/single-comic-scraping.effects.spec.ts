@@ -153,31 +153,63 @@ describe('SingleComicScrapingEffects', () => {
   });
 
   describe('loading a scraping issue', () => {
-    it('should dispatch an action on success', async () => {
-      const serviceResponse = TEST_SCRAPING_ISSUE;
-      const action = SingleComicScrapingActions.loadIssue({
-        metadataSource: TEST_METADATA_SOURCE,
-        volumeId: TEST_SCRAPING_VOLUME_LIST[0].id,
-        issueNumber: TEST_ISSUE_NUMBER,
-        skipCache: TEST_SKIP_CACHE
-      });
-      const outcome = SingleComicScrapingActions.loadIssueSuccess({
-        issue: TEST_SCRAPING_ISSUE
+    describe('should dispatch an action on success', () => {
+      it('fires an action when an issue is found', async () => {
+        const serviceResponse = TEST_SCRAPING_ISSUE;
+        const action = SingleComicScrapingActions.loadIssue({
+          metadataSource: TEST_METADATA_SOURCE,
+          volumeId: TEST_SCRAPING_VOLUME_LIST[0].id,
+          issueNumber: TEST_ISSUE_NUMBER,
+          skipCache: TEST_SKIP_CACHE
+        });
+        const outcome = SingleComicScrapingActions.loadIssueSuccess({
+          issue: TEST_SCRAPING_ISSUE
+        });
+
+        const loadSpy = vi
+          .spyOn(comicScrapingService, 'loadIssue')
+          .mockReturnValue(of(serviceResponse));
+
+        actions$ = of(action);
+        await expect(firstValueFrom(effects.loadIssue$)).resolves.toEqual(
+          outcome
+        );
+        expect(loadSpy).toHaveBeenCalledWith({
+          metadataSource: TEST_METADATA_SOURCE,
+          volumeId: TEST_SCRAPING_VOLUME_LIST[0].id,
+          issueNumber: TEST_ISSUE_NUMBER,
+          skipCache: TEST_SKIP_CACHE
+        });
       });
 
-      const loadSpy = vi
-        .spyOn(comicScrapingService, 'loadIssue')
-        .mockReturnValue(of(serviceResponse));
+      it('fires an action when an issue was not found', async () => {
+        const serviceResponse = null;
+        const action = SingleComicScrapingActions.loadIssue({
+          metadataSource: TEST_METADATA_SOURCE,
+          volumeId: TEST_SCRAPING_VOLUME_LIST[0].id,
+          issueNumber: TEST_ISSUE_NUMBER,
+          skipCache: TEST_SKIP_CACHE
+        });
+        const outcome = SingleComicScrapingActions.loadIssueSuccess({
+          issue: null
+        });
 
-      actions$ = of(action);
-      await expect(firstValueFrom(effects.loadIssue$)).resolves.toEqual(
-        outcome
-      );
-      expect(loadSpy).toHaveBeenCalledWith({
-        metadataSource: TEST_METADATA_SOURCE,
-        volumeId: TEST_SCRAPING_VOLUME_LIST[0].id,
-        issueNumber: TEST_ISSUE_NUMBER,
-        skipCache: TEST_SKIP_CACHE
+        const loadSpy = vi
+          .spyOn(comicScrapingService, 'loadIssue')
+          .mockReturnValue(of(serviceResponse));
+        const infoSpy = vi.spyOn(alertService, 'info');
+
+        actions$ = of(action);
+        await expect(firstValueFrom(effects.loadIssue$)).resolves.toEqual(
+          outcome
+        );
+        expect(loadSpy).toHaveBeenCalledWith({
+          metadataSource: TEST_METADATA_SOURCE,
+          volumeId: TEST_SCRAPING_VOLUME_LIST[0].id,
+          issueNumber: TEST_ISSUE_NUMBER,
+          skipCache: TEST_SKIP_CACHE
+        });
+        expect(infoSpy).toHaveBeenCalled();
       });
     });
 

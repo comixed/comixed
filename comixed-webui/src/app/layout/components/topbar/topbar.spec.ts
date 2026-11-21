@@ -52,6 +52,7 @@ import { ArchiveType } from '@app/library/models/archive-type';
 import { BatchScrapeComicsActions } from '@app/library/actions/batch-scrape-comics.actions';
 import { LibraryOrganizationActions } from '@app/library/actions/library-organization.actions';
 import { ComicRemovalActions } from '@app/library/actions/comic-removal.actions';
+import { RescanComicsActions } from '@app/library/actions/rescan-comics.actions';
 
 @Component({ template: '<h1>Test Component</h1>' })
 class TestComponent {}
@@ -235,7 +236,7 @@ describe('Topbar', () => {
       });
     });
 
-    describe('marking selected item as read', () => {
+    describe('marking selected comics as read', () => {
       let item: HTMLInputElement;
 
       beforeEach(() => {
@@ -259,7 +260,7 @@ describe('Topbar', () => {
       });
     });
 
-    describe('marking selected item as unread', () => {
+    describe('marking selected comics as unread', () => {
       let item: HTMLInputElement;
 
       beforeEach(() => {
@@ -499,7 +500,7 @@ describe('Topbar', () => {
         });
       });
 
-      describe('marking selected item for removal', () => {
+      describe('marking selected comics for removal', () => {
         let item: HTMLInputElement;
         let confirmSpy: Mock;
 
@@ -542,7 +543,7 @@ describe('Topbar', () => {
         });
       });
 
-      describe('unmarking selected item for removal', () => {
+      describe('unmarking selected comics for removal', () => {
         let item: HTMLInputElement;
         let confirmSpy: Mock;
 
@@ -580,6 +581,49 @@ describe('Topbar', () => {
           it('should dispatch an action', async () => {
             expect(dispatchSpy).toHaveBeenCalledWith(
               ComicRemovalActions.unmarkSelectionsForRemoval()
+            );
+          });
+        });
+      });
+
+      describe('rescanning selected comics', () => {
+        let item: HTMLInputElement;
+        let confirmSpy: Mock;
+
+        beforeEach(() => {
+          confirmSpy = vi
+            .spyOn(component.confirmationService, 'confirm')
+            .mockImplementation((confirm: Confirmation) => {
+              confirm.accept?.();
+              return component.confirmationService;
+            });
+          item = document.querySelector(
+            '#topbar-rescan-selected-comics a.p-menubar-item-link'
+          ) as HTMLInputElement;
+          expect(item).not.toBeNull();
+        });
+
+        it('should enable the menu item', () => {
+          expect(item.disabled).toBeFalsy();
+        });
+
+        describe('selecting the item ', () => {
+          let dispatchSpy: Mock;
+
+          beforeEach(async () => {
+            dispatchSpy = vi.spyOn(component.store, 'dispatch');
+            item.click();
+            fixture.detectChanges();
+            await fixture.whenStable();
+          });
+
+          it('should confirm with the user', () => {
+            expect(confirmSpy).toHaveBeenCalled();
+          });
+
+          it('should dispatch an action', async () => {
+            expect(dispatchSpy).toHaveBeenCalledWith(
+              RescanComicsActions.rescanSelectedComics()
             );
           });
         });

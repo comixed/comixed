@@ -51,6 +51,8 @@ import { LibraryOrganizationEffects } from '@app/library/effects/library-organiz
 import { LibraryRouting } from '@app/library/library-routing';
 import { comicRemovalFeature } from '@app/library/reducers/comic-removal.reducer';
 import { ComicRemovalEffects } from '@app/library/effects/comic-removal.effects';
+import { rescanComicsFeature } from '@app/library/reducers/rescan-comics.reducer';
+import { RescanComicsEffects } from '@app/library/effects/rescan-comics.effects';
 
 @NgModule({
   declarations: [],
@@ -68,6 +70,7 @@ import { ComicRemovalEffects } from '@app/library/effects/comic-removal.effects'
     StoreModule.forFeature(comicListFeature),
     StoreModule.forFeature(selectedComicListsFeature),
     StoreModule.forFeature(recreateComicFilesFeature),
+    StoreModule.forFeature(rescanComicsFeature),
     StoreModule.forFeature(batchScrapeComicsFeature),
     StoreModule.forFeature(libraryOrganizationFeature),
     StoreModule.forFeature(comicRemovalFeature),
@@ -84,6 +87,7 @@ import { ComicRemovalEffects } from '@app/library/effects/comic-removal.effects'
       ComicListEffects,
       SelectedComicListEffects,
       RecreateComicFilesEffects,
+      RescanComicsEffects,
       BatchScrapeComicsEffects,
       LibraryOrganizationEffects,
       ComicRemovalEffects,
