@@ -1,0 +1,5 @@
+# Ignore everything in the repository by default
+*
+
+# Allow only the built release archive needed by docker/Dockerfile
+!comixed-release/target/*.zip

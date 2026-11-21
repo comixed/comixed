@@ -1,29 +1,33 @@
 FROM eclipse-temurin:25-jre
 
-RUN apt-get update
-RUN apt-get install -y --no-install-recommends \
-       unzip \
-       wget \
-       bash \
-       locales \
-       locales-all
-RUN rm -rf /var/lib/apt/lists/*
-RUN locale-gen "en_US.UTF-8"
+ARG VERSION
+ENV COMIXED_VERSION=${VERSION}
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+      unzip \
+      bash \
+      locales \
+      locales-all && \
+    rm -rf /var/lib/apt/lists/* && \
+    locale-gen "en_US.UTF-8"
 
 ENV LC_ALL=en_US.UTF-8
 ENV LANG=en_US.UTF-8
 ENV LANGUAGE=en_US.UTF-8
 
 LABEL maintainer="The ComiXed Project comixed-dev@freelists.org"
+LABEL org.opencontainers.image.version="${VERSION}"
 
 RUN mkdir /app /ul
+COPY comixed-release/target/*.zip /ul/comixed-release.zip
+
 WORKDIR /ul
-RUN wget -q -O comixed-release.zip https://github.com/comixed/comixed/releases/download/v4.1-SNAPSHOT/comixed-release-4.1-SNAPSHOT.zip
-RUN (cd /app; unzip /ul/*.zip)
-RUN rm *.zip
+RUN (cd /app && unzip /ul/comixed-release.zip) && \
+    rm -rf /ul
+
 WORKDIR /app
-RUN rm -r /ul
-RUN chmod +x /app/comixed-release/bin/run.sh
+RUN chmod +x /app/comixed-release/bin/run.sh /app/comixed-release/bin/docker-run.sh
 
 ENV PATH="$JAVA_HOME/bin:${PATH}"
 
