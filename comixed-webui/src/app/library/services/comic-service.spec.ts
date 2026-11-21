@@ -33,8 +33,12 @@ import {
 } from '@app/library/library-fixtures';
 import {
   LOAD_COMIC_URL,
+  MARK_SELECTED_COMICS_FOR_REMOVAL_URL,
+  MARK_SINGLE_COMIC_FOR_REMOVAL_URL,
   RECREATE_COMIC_FILE_URL,
   RECREATE_SELECTED_COMIC_FILES_URL,
+  UNMARK_SELECTED_COMICS_FOR_REMOVAL_URL,
+  UNMARK_SINGLE_COMIC_FOR_REMOVAL_URL,
   UPDATE_COMIC_URL
 } from '@app/library/library-constants';
 import { interpolate } from '@app/app-functions';
@@ -174,6 +178,74 @@ describe('ComicService', () => {
       archiveType: TEST_ARCHIVE_TYPE
     } as RecreateSelectedComicFilesRequest);
     req.flush(of(serverResponse));
+    httpController.verify();
+  });
+
+  it('should mark single comics for removal', () => {
+    service
+      .singleComicRemoval({
+        comic: TEST_COMIC,
+        removal: true
+      })
+      .subscribe({ next: () => expect(true).toBeTruthy() });
+
+    const req = httpController.expectOne(
+      interpolate(MARK_SINGLE_COMIC_FOR_REMOVAL_URL, {
+        comicId: TEST_COMIC.comicId
+      })
+    );
+    expect(req.request.method).toEqual('DELETE');
+    req.flush(of(undefined));
+    httpController.verify();
+  });
+
+  it('should unmark single comics for removal', () => {
+    service
+      .singleComicRemoval({
+        comic: TEST_COMIC,
+        removal: false
+      })
+      .subscribe({ next: () => expect(true).toBeTruthy() });
+
+    const req = httpController.expectOne(
+      interpolate(UNMARK_SINGLE_COMIC_FOR_REMOVAL_URL, {
+        comicId: TEST_COMIC.comicId
+      })
+    );
+    expect(req.request.method).toEqual('PUT');
+    expect(req.request.body).toEqual({} as unknown);
+    req.flush(of(undefined));
+    httpController.verify();
+  });
+
+  it('should mark selected comics for removal', () => {
+    service
+      .selectedComicsRemoval({
+        removal: true
+      })
+      .subscribe({ next: () => expect(true).toBeTruthy() });
+
+    const req = httpController.expectOne(
+      interpolate(MARK_SELECTED_COMICS_FOR_REMOVAL_URL)
+    );
+    expect(req.request.method).toEqual('DELETE');
+    req.flush(of(undefined));
+    httpController.verify();
+  });
+
+  it('should unmark selected comics for removal', () => {
+    service
+      .selectedComicsRemoval({
+        removal: false
+      })
+      .subscribe({ next: () => expect(true).toBeTruthy() });
+
+    const req = httpController.expectOne(
+      interpolate(UNMARK_SELECTED_COMICS_FOR_REMOVAL_URL)
+    );
+    expect(req.request.method).toEqual('PUT');
+    expect(req.request.body).toEqual({} as unknown);
+    req.flush(of(undefined));
     httpController.verify();
   });
 });

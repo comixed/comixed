@@ -19,7 +19,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LoggerLevel, provideLogger } from '@angular-ru/cdk/logger';
 import { provideTranslateService } from '@ngx-translate/core';
-import { provideMockStore } from '@ngrx/store/testing';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import {
   COMIC_DETAIL_FEATURE_KEY,
   initialComicDetailState
@@ -40,7 +40,7 @@ import {
   initialMetadataSourceListState,
   METADATA_SOURCE_LIST_FEATURE_KEY
 } from '@app/metadata/reducers/metadata-source-list.reducer';
-import { ConfirmationService } from '@openng/optimus-ui/api';
+import { Confirmation, ConfirmationService } from '@openng/optimus-ui/api';
 import {
   initialScrapeFilenameState,
   SCRAPE_FILENAME_FEATURE_KEY
@@ -49,11 +49,16 @@ import {
   initialUserState,
   USER_FEATURE_KEY
 } from '@app/account/reducers/user.reducer';
+import { ComicRemovalActions } from '@app/library/actions/comic-removal.actions';
 
-describe('ComicPage', () => {
+describe.only('ComicPage', () => {
+  const TEST_COMIC = COMIC_1;
   const initialState = {
     [USER_FEATURE_KEY]: initialUserState,
-    [COMIC_DETAIL_FEATURE_KEY]: initialComicDetailState,
+    [COMIC_DETAIL_FEATURE_KEY]: {
+      ...initialComicDetailState,
+      comic: TEST_COMIC
+    },
     [METADATA_SOURCE_LIST_FEATURE_KEY]: initialMetadataSourceListState,
     [SINGLE_COMIC_SCRAPING_FEATURE_KEY]: initialSingleComicScrapingState,
     [SCRAPE_FILENAME_FEATURE_KEY]: initialScrapeFilenameState
@@ -61,6 +66,7 @@ describe('ComicPage', () => {
 
   let component: ComicPage;
   let fixture: ComponentFixture<ComicPage>;
+  let store: MockStore;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -78,15 +84,7 @@ describe('ComicPage', () => {
 
     fixture = TestBed.createComponent(ComicPage);
     component = fixture.componentInstance;
-    // not fond of this hack, but it lets the MVP move forward
-    const ResizeObserverMock = vi.fn(
-      class {
-        disconnect = vi.fn();
-        observe = vi.fn();
-        unobserve = vi.fn();
-      }
-    );
-    vi.stubGlobal('ResizeObserver', ResizeObserverMock);
+    store = TestBed.inject(MockStore);
     await fixture.whenStable();
   });
 
@@ -139,6 +137,58 @@ describe('ComicPage', () => {
     it('dispatches an action', () => {
       expect(dispatchSpy).toHaveBeenCalledWith(
         ComicDetailAction.save({ comic: TEST_COMIC })
+      );
+    });
+  });
+
+  describe('marking a comic for removal', () => {
+    let confirmSpy: Mock;
+    let dispatchSpy: Mock;
+
+    beforeEach(() => {
+      confirmSpy = vi
+        .spyOn(component.confirmationService, 'confirm')
+        .mockImplementation((confirm: Confirmation) => {
+          confirm.accept?.();
+          return component.confirmationService;
+        });
+      dispatchSpy = vi.spyOn(store, 'dispatch');
+      component.onMarkForRemoval(true);
+    });
+
+    it('should confirm with the user', () => {
+      expect(confirmSpy).toHaveBeenCalled();
+    });
+
+    it('should dispatch an action to remove the comic', () => {
+      expect(dispatchSpy).toHaveBeenCalledWith(
+        ComicRemovalActions.markOneForRemoval({ comic: TEST_COMIC })
+      );
+    });
+  });
+
+  describe('unmarking a comic for removal', () => {
+    let confirmSpy: Mock;
+    let dispatchSpy: Mock;
+
+    beforeEach(() => {
+      confirmSpy = vi
+        .spyOn(component.confirmationService, 'confirm')
+        .mockImplementation((confirm: Confirmation) => {
+          confirm.accept?.();
+          return component.confirmationService;
+        });
+      dispatchSpy = vi.spyOn(store, 'dispatch');
+      component.onMarkForRemoval(false);
+    });
+
+    it('should confirm with the user', () => {
+      expect(confirmSpy).toHaveBeenCalled();
+    });
+
+    it('should dispatch an action to remove the comic', () => {
+      expect(dispatchSpy).toHaveBeenCalledWith(
+        ComicRemovalActions.unmarkOneForRemoval({ comic: TEST_COMIC })
       );
     });
   });

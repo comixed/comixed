@@ -22,8 +22,12 @@ import { LoggerService } from '@angular-ru/cdk/logger';
 import { Observable } from 'rxjs';
 import {
   LOAD_COMIC_URL,
+  MARK_SELECTED_COMICS_FOR_REMOVAL_URL,
+  MARK_SINGLE_COMIC_FOR_REMOVAL_URL,
   RECREATE_COMIC_FILE_URL,
   RECREATE_SELECTED_COMIC_FILES_URL,
+  UNMARK_SELECTED_COMICS_FOR_REMOVAL_URL,
+  UNMARK_SINGLE_COMIC_FOR_REMOVAL_URL,
   UPDATE_COMIC_URL
 } from '@app/library/library-constants';
 import { interpolate } from '@app/app-functions';
@@ -96,5 +100,40 @@ export class ComicService {
     return this.http.put<void>(interpolate(RECREATE_SELECTED_COMIC_FILES_URL), {
       archiveType: args.archiveType
     } as RecreateSelectedComicFilesRequest);
+  }
+
+  singleComicRemoval(args: {
+    comic: Comic;
+    removal: boolean;
+  }): Observable<void> {
+    this.logger.debug('Single comic removal:', args);
+    if (args.removal) {
+      return this.http.delete<void>(
+        interpolate(MARK_SINGLE_COMIC_FOR_REMOVAL_URL, {
+          comicId: args.comic.comicId
+        })
+      );
+    } else {
+      return this.http.put<void>(
+        interpolate(UNMARK_SINGLE_COMIC_FOR_REMOVAL_URL, {
+          comicId: args.comic.comicId
+        }),
+        {} as unknown
+      );
+    }
+  }
+
+  selectedComicsRemoval(args: { removal: boolean }): Observable<void> {
+    this.logger.debug('Selected comic removal:', args);
+    if (args.removal) {
+      return this.http.delete<void>(
+        interpolate(MARK_SELECTED_COMICS_FOR_REMOVAL_URL)
+      );
+    } else {
+      return this.http.put<void>(
+        interpolate(UNMARK_SELECTED_COMICS_FOR_REMOVAL_URL),
+        {} as unknown
+      );
+    }
   }
 }
