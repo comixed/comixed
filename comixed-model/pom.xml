@@ -6,11 +6,11 @@
   <parent>
     <groupId>org.comixedproject</groupId>
     <artifactId>comixed</artifactId>
-    <version>${comixed.semver}</version>
+    <version>${revision}</version>
   </parent>
   <groupId>org.comixedproject</groupId>
   <artifactId>comixed-model</artifactId>
-  <version>${comixed.semver}</version>
+  <version>${revision}</version>
   <name>comixed-model</name>
   <url>http://www.comixedproject.org</url>
   <dependencies>

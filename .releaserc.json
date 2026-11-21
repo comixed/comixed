@@ -1,0 +1,57 @@
+{
+  "branches": [
+    "stable",
+    {
+      "name": "release/v+([0-9]).+([0-9])",
+      "range": "${name.replace(/^release\\/v/, '')}.x",
+      "channel": "${name.replace(/^release\\//, '')}"
+    },
+    {
+      "name": "main",
+      "prerelease": "dev"
+    }
+  ],
+  "tagFormat": "v${version}",
+  "plugins": [
+    "@semantic-release/commit-analyzer",
+    "@semantic-release/release-notes-generator",
+    [
+      "@semantic-release/changelog",
+      {
+        "changelogFile": "CHANGELOG.md"
+      }
+    ],
+    [
+      "@semantic-release/exec",
+      {
+        "prepareCmd": "npm --prefix comixed-webui version ${nextRelease.version} --no-git-tag-version --package-lock=false && ./mvnw versions:set-property -Dproperty=revision -DnewVersion=${nextRelease.version} -DgenerateBackupPoms=false && ./mvnw clean package -DskipTests"
+      }
+    ],
+    [
+      "@semantic-release/git",
+      {
+        "assets": [
+          "pom.xml",
+          "comixed-webui/package.json",
+          "CHANGELOG.md"
+        ],
+        "message": "chore(release): v${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+      }
+    ],
+    [
+      "@semantic-release/github",
+      {
+        "assets": [
+          {
+            "path": "comixed-release/target/*.zip",
+            "label": "ComiXed Release Archive (ZIP)"
+          },
+          {
+            "path": "comixed-release/target/*.tar.gz",
+            "label": "ComiXed Release Archive (TAR.GZ)"
+          }
+        ]
+      }
+    ]
+  ]
+}
