@@ -62,6 +62,9 @@ export const UNMARK_SINGLE_COMIC_FOR_REMOVAL_URL = `${API_ROOT_URL}/comics/\${co
 export const MARK_SELECTED_COMICS_FOR_REMOVAL_URL = `${API_ROOT_URL}/comics/mark/deleted/selected`;
 export const UNMARK_SELECTED_COMICS_FOR_REMOVAL_URL = `${API_ROOT_URL}/comics/mark/deleted/selected`;
 
+export const RESCAN_SINGLE_COMIC_URL = `${API_ROOT_URL}/library/rescan/\${comicId}`;
+export const RESCAN_SELECTED_COMICS_URL = `${API_ROOT_URL}/library/rescan/selected`;
+
 // query parameters
 export const QUERY_PARAM_COMIC_DETAIL_TAB = 'comic-detail-tab';
 export const QUERY_PARAM_PAGE_INDEX = 'index';

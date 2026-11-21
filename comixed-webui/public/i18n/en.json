@@ -509,6 +509,12 @@
     "service-failure": "Failed to start converting selected comics...",
     "service-success": "Converting selected comics to {targetArchiveType} started..."
   },
+  "rescan-comics-effects": {
+    "rescan-selected-comics": {
+      "service-failure": "Failed to start rescanning selected comics...",
+      "service-success": "Rescanning selected comics started..."
+    }
+  },
   "scrape-filename-effects": {
     "scrape-comic": {
       "service-failure": "Failed to scrape data from the filename..."
@@ -683,6 +689,10 @@
     "recreate-selected-comics": {
       "confirmation-message": "Are you sure you want to convert the {count, plural, =1{selected comic} other{# selected comics}} to {targetArchiveType}?",
       "confirmation-title": "Recreate Comic Files"
+    },
+    "rescan-comics": {
+      "confirmation-message": "Are you sure you want to rescan the {count, plural, =1{selected comic book} other{# selected comic books}}?",
+      "confirmation-title": "Rescan Selected Comics"
     },
     "selected-comic-removal": {
       "confirmation-message": "Are you should you want to {removal, select, true{mark} other{unmark}} {count, plural, =1{this comic book} other{# comic books}} for removal?",

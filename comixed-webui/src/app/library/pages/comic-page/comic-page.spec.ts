@@ -51,7 +51,7 @@ import {
 } from '@app/account/reducers/user.reducer';
 import { ComicRemovalActions } from '@app/library/actions/comic-removal.actions';
 
-describe.only('ComicPage', () => {
+describe('ComicPage', () => {
   const TEST_COMIC = COMIC_1;
   const initialState = {
     [USER_FEATURE_KEY]: initialUserState,
