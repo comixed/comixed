@@ -49,6 +49,8 @@ import { BatchScrapeComicsEffects } from '@app/library/effects/batch-scrape-comi
 import { libraryOrganizationFeature } from '@app/library/reducers/library-organization.reducer';
 import { LibraryOrganizationEffects } from '@app/library/effects/library-organization.effects';
 import { LibraryRouting } from '@app/library/library-routing';
+import { comicRemovalFeature } from '@app/library/reducers/comic-removal.reducer';
+import { ComicRemovalEffects } from '@app/library/effects/comic-removal.effects';
 
 @NgModule({
   declarations: [],
@@ -68,6 +70,7 @@ import { LibraryRouting } from '@app/library/library-routing';
     StoreModule.forFeature(recreateComicFilesFeature),
     StoreModule.forFeature(batchScrapeComicsFeature),
     StoreModule.forFeature(libraryOrganizationFeature),
+    StoreModule.forFeature(comicRemovalFeature),
     StoreModule.forFeature(comicDetailFeature),
     EffectsModule.forFeature([
       RemoteLibraryEffects,
@@ -83,6 +86,7 @@ import { LibraryRouting } from '@app/library/library-routing';
       RecreateComicFilesEffects,
       BatchScrapeComicsEffects,
       LibraryOrganizationEffects,
+      ComicRemovalEffects,
       ComicDetailEffects
     ])
   ]

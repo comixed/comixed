@@ -134,6 +134,16 @@
       "volume": "Volume"
     }
   },
+  "comic-page": {
+    "mark-for-removal": {
+      "confirmation-message": "Are you sure you want to {removal, select, true{mark} other{unmark}} this comic for removal?",
+      "confirmation-title": "{removal, select, true{Mark} other{Unmark}} Comic For Removal"
+    },
+    "tooltip": {
+      "mark-comic-for-removal": "Mark this comic for removal...",
+      "unmark-comic-for-removal": "Unmark this comic for removal..."
+    }
+  },
   "comic-pages-detail": {
     "tooltip": {
       "toggle-blocking-hash": "Toggle blocking this page hash",
@@ -161,6 +171,24 @@
     "title": {
       "file-info": "File Details",
       "publication-info": "Publication Details"
+    }
+  },
+  "comic-removal-effects": {
+    "mark-one-for-removal": {
+      "service-failure": "Failed to mark comic for removal...",
+      "service-success": "Comic marked for removal..."
+    },
+    "mark-selections-for-removal": {
+      "service-failure": "Failed to mark selected for removal...",
+      "service-success": "Selected comics marked for removal..."
+    },
+    "unmark-one-for-removal": {
+      "service-failure": "Failed to unmark comic for removal...",
+      "service-success": "Comic unmarked for removal..."
+    },
+    "unmark-selections-for-removal": {
+      "service-failure": "Failed to unmark selected for removal...",
+      "service-success": "Selected comics unmarked for removal..."
     }
   },
   "comic-story-detail": {
@@ -655,6 +683,10 @@
     "recreate-selected-comics": {
       "confirmation-message": "Are you sure you want to convert the {count, plural, =1{selected comic} other{# selected comics}} to {targetArchiveType}?",
       "confirmation-title": "Recreate Comic Files"
+    },
+    "selected-comic-removal": {
+      "confirmation-message": "Are you should you want to {removal, select, true{mark} other{unmark}} {count, plural, =1{this comic book} other{# comic books}} for removal?",
+      "confirmation-title": "{removal, select, true{Mark} other{Unmark}} Comics For Removal"
     },
     "start-batch-scraping": {
       "confirmation-message": "Are you sure you want to start batch scraping {count, plural, =1{the selected comic book} other{# selected comic books}}?",

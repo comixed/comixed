@@ -57,6 +57,11 @@ export const BATCH_SCRAPE_SELECTED_COMICS_URL = `${API_ROOT_URL}/metadata/scrapi
 export const ORGANIZE_SELECTED_COMICS_URL = `${API_ROOT_URL}/library/organize`;
 export const ORGANIZE_ALL_COMICS_URL = `${API_ROOT_URL}/library/organize/all`;
 
+export const MARK_SINGLE_COMIC_FOR_REMOVAL_URL = `${API_ROOT_URL}/comics/\${comicId}`;
+export const UNMARK_SINGLE_COMIC_FOR_REMOVAL_URL = `${API_ROOT_URL}/comics/\${comicId}/undelete`;
+export const MARK_SELECTED_COMICS_FOR_REMOVAL_URL = `${API_ROOT_URL}/comics/mark/deleted/selected`;
+export const UNMARK_SELECTED_COMICS_FOR_REMOVAL_URL = `${API_ROOT_URL}/comics/mark/deleted/selected`;
+
 // query parameters
 export const QUERY_PARAM_COMIC_DETAIL_TAB = 'comic-detail-tab';
 export const QUERY_PARAM_PAGE_INDEX = 'index';

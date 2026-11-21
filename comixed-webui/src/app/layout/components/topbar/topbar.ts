@@ -36,6 +36,7 @@ import { ArchiveType } from '@app/library/models/archive-type';
 import { RecreateComicFilesActions } from '@app/library/actions/recreate-comic-files.actions';
 import { BatchScrapeComicsActions } from '@app/library/actions/batch-scrape-comics.actions';
 import { LibraryOrganizationActions } from '@app/library/actions/library-organization.actions';
+import { ComicRemovalActions } from '@app/library/actions/comic-removal.actions';
 
 @Component({
   imports: [Button, TranslatePipe, Tooltip, Menubar],
@@ -149,7 +150,8 @@ export class Topbar {
                   'topbar.menu.selected-comics.delete.mark'
                 ),
                 icon: 'pi pi-times-circle',
-                disabled: this.selectedCount === 0
+                disabled: this.selectedCount === 0 || !this.isAdmin,
+                command: () => this.doMarkSelectedComicsForRemoval(true)
               },
               {
                 id: 'topbar-unmark-for-removal',
@@ -157,7 +159,8 @@ export class Topbar {
                   'topbar.menu.selected-comics.delete.unmark'
                 ),
                 icon: 'pi pi-ban',
-                disabled: this.selectedCount === 0
+                disabled: this.selectedCount === 0 || !this.isAdmin,
+                command: () => this.doMarkSelectedComicsForRemoval(false)
               }
             ]
           },
@@ -375,6 +378,31 @@ export class Topbar {
       accept: () => {
         this.logger.debug('Initiating organizing all comics');
         this.store.dispatch(LibraryOrganizationActions.organizeAllComics());
+      }
+    });
+  }
+
+  private doMarkSelectedComicsForRemoval(removal: boolean) {
+    this.confirmationService.confirm({
+      header: this.translateService.instant(
+        'topbar.selected-comic-removal.confirmation-title',
+        { removal }
+      ),
+      message: this.translateService.instant(
+        'topbar.selected-comic-removal.confirmation-message',
+        {
+          count: this.selectedCount,
+          removal
+        }
+      ),
+      accept: () => {
+        if (removal) {
+          this.logger.debug('Marking selected comics for removal');
+          this.store.dispatch(ComicRemovalActions.markSelectionsForRemoval());
+        } else {
+          this.logger.debug('Unmarking selected comics for removal');
+          this.store.dispatch(ComicRemovalActions.unmarkSelectionsForRemoval());
+        }
       }
     });
   }
