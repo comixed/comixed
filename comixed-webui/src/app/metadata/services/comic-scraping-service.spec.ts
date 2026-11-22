@@ -31,18 +31,29 @@ import {
   SCRAPING_VOLUME_2
 } from '@app/metadata/metadata-fixtures';
 import {
+  LOAD_MULTI_COMIC_SCRAPING_ENTRIES_URL,
   LOAD_SCRAPING_ISSUE_URL,
   LOAD_SCRAPING_VOLUMES_URL,
+  REMOVE_MULTI_COMIC_ENTRY_URL,
   SCRAPE_FILENAME_URL,
-  SCRAPE_SINGLE_BOOK_COMIC_URL
+  SCRAPE_MULTI_COMIC_ENTRY_URL,
+  SCRAPE_SINGLE_COMIC_URL,
+  START_MULTI_COMIC_SCRAPING_URL
 } from '@app/metadata/metadata-constants';
 import { interpolate } from '@app/app-functions';
 import { LoadScrapingVolumesRequest } from '@app/metadata/models/net/load-scraping-volumes-request';
 import { LoadScrapingIssueRequest } from '@app/metadata/models/net/load-scraping-issue-request';
-import { COMIC_1 } from '@app/library/library-fixtures';
+import { COMIC_1, COMIC_2 } from '@app/library/library-fixtures';
 import { ScrapeSingleIssueRequest } from '@app/metadata/models/net/scrape-single-issue-request';
 import { ScrapeFilenameResponse } from '@app/metadata/models/net/scrape-filename-response';
 import { ScrapeFilenameRequest } from '@app/metadata/models/net/scrape-filename-request';
+import { StartMultiComicScrapingResponse } from '@app/metadata/models/net/start-multi-comic-scraping-response';
+import { StartMultiComicScrapingRequest } from '@app/metadata/models/net/start-multi-comic-scraping-request';
+import { LoadMultiComicScrapingRequest } from '@app/metadata/models/net/load-multi-comic-scraping-request';
+import { LoadMultiComicScrapingResponse } from '@app/metadata/models/net/load-multi-comic-scraping-response';
+import { RemoveMultiComicScrapingResponse } from '@app/metadata/models/net/remove-multi-comic-scraping-response';
+import { ScrapeMultiComicEntryResponse } from '@app/metadata/models/net/scrape-multi-comic-entry-response';
+import { ScrapeMultiComicEntryRequest } from '@app/metadata/models/net/scrape-multi-comic-entry-request';
 
 describe('ComicScrapingService', () => {
   const TEST_PUBLISHER = 'The Publisher';
@@ -58,6 +69,10 @@ describe('ComicScrapingService', () => {
   const TEST_ISSUE_ID = TEST_SCRAPING_ISSUE.id;
   const TEST_COMIC = COMIC_1;
   const TEST_VOLUME = '2026';
+  const TEST_COMIC_LIST = [COMIC_1, COMIC_2];
+  const TEST_INDEX = 3;
+  const TEST_SIZE = 10;
+  const TEST_TOTAL = 129;
 
   let service: ComicScrapingService;
   let httpController: HttpTestingController;
@@ -154,7 +169,7 @@ describe('ComicScrapingService', () => {
       });
 
     const req = httpController.expectOne(
-      interpolate(SCRAPE_SINGLE_BOOK_COMIC_URL, {
+      interpolate(SCRAPE_SINGLE_COMIC_URL, {
         metadataSourceId: TEST_METADATA_SOURCE.metadataSourceId,
         comicId: TEST_COMIC.comicId
       })
@@ -191,6 +206,130 @@ describe('ComicScrapingService', () => {
     expect(req.request.body).toStrictEqual({
       filename: TEST_COMIC.filename
     } as ScrapeFilenameRequest);
+    req.flush(serverResponse);
+    httpController.verify();
+  });
+
+  it('should start multi-comic scraping', () => {
+    const serverResponse = {
+      comics: TEST_COMIC_LIST,
+      pageNumber: TEST_INDEX,
+      pageSize: TEST_SIZE,
+      totalComics: TEST_TOTAL
+    } as StartMultiComicScrapingResponse;
+
+    service
+      .startMultiComicScraping({
+        index: TEST_INDEX,
+        size: TEST_SIZE
+      })
+      .subscribe({
+        next: response => expect(response).toStrictEqual(serverResponse)
+      });
+
+    const req = httpController.expectOne(
+      interpolate(START_MULTI_COMIC_SCRAPING_URL)
+    );
+    expect(req.request.method).toStrictEqual('PUT');
+    expect(req.request.body).toStrictEqual({
+      pageNumber: TEST_INDEX,
+      pageSize: TEST_SIZE
+    } as StartMultiComicScrapingRequest);
+    req.flush(serverResponse);
+    httpController.verify();
+  });
+
+  it('should load multi-comic scraping entries', () => {
+    const serverResponse = {
+      comics: TEST_COMIC_LIST,
+      pageNumber: TEST_INDEX,
+      pageSize: TEST_SIZE,
+      totalComics: TEST_TOTAL
+    } as LoadMultiComicScrapingResponse;
+
+    service
+      .loadMultiComicScraping({
+        index: TEST_INDEX,
+        size: TEST_SIZE
+      })
+      .subscribe({
+        next: response => expect(response).toStrictEqual(serverResponse)
+      });
+
+    const req = httpController.expectOne(
+      interpolate(LOAD_MULTI_COMIC_SCRAPING_ENTRIES_URL)
+    );
+    expect(req.request.method).toStrictEqual('POST');
+    expect(req.request.body).toStrictEqual({
+      pageNumber: TEST_INDEX,
+      pageSize: TEST_SIZE
+    } as LoadMultiComicScrapingRequest);
+    req.flush(serverResponse);
+    httpController.verify();
+  });
+
+  it('should remove entries from multi-comic scraping', () => {
+    const serverResponse = {
+      comics: TEST_COMIC_LIST,
+      pageNumber: TEST_INDEX,
+      pageSize: TEST_SIZE,
+      totalComics: TEST_TOTAL
+    } as RemoveMultiComicScrapingResponse;
+
+    service
+      .removeMultiComicScraping({
+        comic: TEST_COMIC,
+        size: TEST_SIZE
+      })
+      .subscribe({
+        next: response => expect(response).toStrictEqual(serverResponse)
+      });
+
+    const req = httpController.expectOne(
+      interpolate(REMOVE_MULTI_COMIC_ENTRY_URL, {
+        comicId: TEST_COMIC.comicId,
+        size: TEST_SIZE
+      })
+    );
+    expect(req.request.method).toStrictEqual('DELETE');
+    req.flush(serverResponse);
+    httpController.verify();
+  });
+
+  it('should scrape a multi-comic entry', () => {
+    const serverResponse = {
+      comics: TEST_COMIC_LIST,
+      pageNumber: TEST_INDEX,
+      pageSize: TEST_SIZE,
+      totalComics: TEST_TOTAL
+    } as ScrapeMultiComicEntryResponse;
+
+    service
+      .scrapeMultiComicEntry({
+        metadataSource: TEST_METADATA_SOURCE,
+        issueId: TEST_ISSUE_ID,
+        comic: TEST_COMIC,
+        skipCache: TEST_SKIP_CACHE,
+        index: TEST_INDEX,
+        size: TEST_SIZE
+      })
+      .subscribe({
+        next: response => expect(response).toStrictEqual(serverResponse)
+      });
+
+    const req = httpController.expectOne(
+      interpolate(SCRAPE_MULTI_COMIC_ENTRY_URL, {
+        metadataSourceId: TEST_METADATA_SOURCE.metadataSourceId,
+        comicId: TEST_COMIC.comicId
+      })
+    );
+    expect(req.request.method).toStrictEqual('POST');
+    expect(req.request.body).toEqual({
+      issueId: TEST_ISSUE_ID,
+      skipCache: TEST_SKIP_CACHE,
+      pageNumber: TEST_INDEX,
+      pageSize: TEST_SIZE
+    } as ScrapeMultiComicEntryRequest);
     req.flush(serverResponse);
     httpController.verify();
   });

@@ -50,9 +50,20 @@ import {
   USER_FEATURE_KEY
 } from '@app/account/reducers/user.reducer';
 import { ComicRemovalActions } from '@app/library/actions/comic-removal.actions';
+import { ScrapingIssueSelectedEvent } from '@app/library/models/ux/scraping-issue-selected-event';
+import { By } from '@angular/platform-browser';
+import {
+  METADATA_SOURCE_2,
+  SCRAPING_ISSUE_1
+} from '@app/metadata/metadata-fixtures';
+import { USER_ADMIN } from '@app/account/account-fixtures';
+import { SingleComicScrapingActions } from '@app/metadata/actions/single-comic-scraping.actions';
 
 describe('ComicPage', () => {
   const TEST_COMIC = COMIC_1;
+  const TEST_METADATA_SOURCE = METADATA_SOURCE_2;
+  const TEST_SCRAPING_ISSUE = SCRAPING_ISSUE_1;
+  const TEST_SKIP_CACHE = Math.random() > 0.5;
   const initialState = {
     [USER_FEATURE_KEY]: initialUserState,
     [COMIC_DETAIL_FEATURE_KEY]: {
@@ -189,6 +200,54 @@ describe('ComicPage', () => {
     it('should dispatch an action to remove the comic', () => {
       expect(dispatchSpy).toHaveBeenCalledWith(
         ComicRemovalActions.unmarkOneForRemoval({ comic: TEST_COMIC })
+      );
+    });
+  });
+
+  describe('when a scraping issue is selected', () => {
+    let confirmSpy: Mock;
+    let event: ScrapingIssueSelectedEvent;
+    let dispatchSpy: Mock;
+
+    beforeEach(() => {
+      store.setState({
+        ...initialState,
+        [USER_FEATURE_KEY]: { ...initialUserState, user: USER_ADMIN }
+      });
+      component.currentTab.set('metadata');
+      fixture.detectChanges();
+      confirmSpy = vi
+        .spyOn(component.confirmationService, 'confirm')
+        .mockImplementation((confirm: Confirmation) => {
+          confirm.accept?.();
+          return component.confirmationService;
+        });
+      dispatchSpy = vi.spyOn(store, 'dispatch');
+      const child = fixture.debugElement.query(
+        By.css('#comic-metadata-detail')
+      );
+      expect(child).not.toBeNull();
+      event = {
+        metadataSource: TEST_METADATA_SOURCE,
+        issue: TEST_SCRAPING_ISSUE,
+        skipCache: TEST_SKIP_CACHE
+      };
+      child.triggerEventHandler('issueSelected', event);
+      fixture.detectChanges();
+    });
+
+    it('confirms with the user', () => {
+      expect(confirmSpy).toHaveBeenCalled();
+    });
+
+    it('should dispatch an action to scrape the comic', () => {
+      expect(dispatchSpy).toHaveBeenCalledWith(
+        SingleComicScrapingActions.scrapeComic({
+          metadataSource: TEST_METADATA_SOURCE,
+          issueId: TEST_SCRAPING_ISSUE.id,
+          comic: TEST_COMIC,
+          skipCache: TEST_SKIP_CACHE
+        })
       );
     });
   });

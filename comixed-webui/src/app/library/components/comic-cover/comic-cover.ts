@@ -45,6 +45,8 @@ export class ComicCover {
   readonly comicTitle = signal('');
   readonly comicSubtitle = signal('');
 
+  @Input() showActions = true;
+
   @Input() set comic(comic: Comic) {
     this.comicDetail.set(comic);
     this.comicTitle.set(comic.title);

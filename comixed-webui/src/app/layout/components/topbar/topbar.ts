@@ -38,6 +38,7 @@ import { BatchScrapeComicsActions } from '@app/library/actions/batch-scrape-comi
 import { LibraryOrganizationActions } from '@app/library/actions/library-organization.actions';
 import { ComicRemovalActions } from '@app/library/actions/comic-removal.actions';
 import { RescanComicsActions } from '@app/library/actions/rescan-comics.actions';
+import { MultiComicScrapingActions } from '@app/metadata/actions/multi-comic-scraping.actions';
 
 @Component({
   imports: [Button, TranslatePipe, Tooltip, Menubar],
@@ -198,12 +199,14 @@ export class Topbar {
             ]
           },
           {
+            id: 'topbar-start-multi-comic-scraping',
             label: this.translateService.instant(
               'topbar.menu.selected-comics.scrape'
             ),
             icon: 'pi pi-cloud',
-            disabled: !this.isAdmin,
-            visible: this.isAdmin
+            disabled: !this.isAdmin || this.selectedCount === 0,
+            visible: this.isAdmin,
+            command: () => this.doStartMultiComicScraping()
           },
           {
             id: 'topbar-start-batch-scraping',
@@ -211,7 +214,7 @@ export class Topbar {
               'topbar.menu.selected-comics.batch-scrape'
             ),
             icon: 'pi pi-database',
-            disabled: !this.isAdmin,
+            disabled: !this.isAdmin || this.selectedCount === 0,
             visible: this.isAdmin,
             command: () => this.doStartBatchScraping()
           },
@@ -280,7 +283,18 @@ export class Topbar {
           {
             label: this.translateService.instant('topbar.menu.admin.import'),
             icon: 'pi pi-file-import',
-            routerLink: '/library/import'
+            routerLink: 'admin/library/import'
+          },
+          {
+            label: this.translateService.instant(
+              'topbar.menu.admin.multi-comic-scraping'
+            ),
+            icon: 'pi pi-cloud',
+            routerLink: 'admin/library/scraping/multi'
+          },
+          {
+            separator: true,
+            visible: this.isAdmin
           },
           {
             label: this.translateService.instant(
@@ -422,6 +436,24 @@ export class Topbar {
       accept: () => {
         this.logger.debug('Initiating rescanning selected comics');
         this.store.dispatch(RescanComicsActions.rescanSelectedComics());
+      }
+    });
+  }
+
+  private doStartMultiComicScraping() {
+    this.confirmationService.confirm({
+      header: this.translateService.instant(
+        'topbar.start-multi-comic-scraping.confirmation-title'
+      ),
+      message: this.translateService.instant(
+        'topbar.start-multi-comic-scraping.confirmation-message',
+        { count: this.selectedCount }
+      ),
+      accept: () => {
+        this.logger.debug('Initiating multi-comic scraping');
+        this.store.dispatch(
+          MultiComicScrapingActions.startScraping({ size: 10 })
+        );
       }
     });
   }

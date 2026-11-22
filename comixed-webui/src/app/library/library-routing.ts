@@ -19,8 +19,6 @@
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { readerGuard } from '@app/account/guards/reader-guard';
-import { ImportComicsPage } from '@app/library/pages/import-comics-page/import-comics-page';
-import { adminGuard } from '@app/account/guards/admin-guard';
 import { PublisherListPage } from '@app/library/pages/publisher-list-page/publisher-list-page';
 import { SeriesListPage } from '@app/library/pages/series-list-page/series-list-page';
 import { PublisherComicListPage } from '@app/library/pages/publisher-comic-list-page/publisher-comic-list-page.component';
@@ -31,11 +29,6 @@ import { ComicPage } from '@app/library/pages/comic-page/comic-page';
 import { TagListPage } from '@app/library/pages/tag-list-page/tag-list-page';
 
 const routes: Routes = [
-  {
-    path: 'library/import',
-    component: ImportComicsPage,
-    canActivate: [adminGuard]
-  },
   {
     path: 'library/publishers',
     component: PublisherListPage,

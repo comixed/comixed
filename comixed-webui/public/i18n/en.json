@@ -321,7 +321,8 @@
     },
     "tooltip": {
       "import-comics-button": "There {selected, plural, =1{is 1} other{are #}} files selected..."
-    }
+    },
+    "trail-title": "Import Comics"
   },
   "initial-account-page": {
     "create-account": {
@@ -457,6 +458,41 @@
       "confirmation-title": "Save {sourceName}"
     }
   },
+  "multi-comic-scraping-effects": {
+    "load-comics": {
+      "service-failure": "Failed to load the current multi-comic scraping state..."
+    },
+    "remove-comic": {
+      "service-failure": "Failed to remove comic from queue...",
+      "service-success": "Comic removed from queue..."
+    },
+    "scrape-comic": {
+      "service-failure": "Failed to scrape comic..."
+    },
+    "start-scraping": {
+      "service-failure": "Failed to start multi-comic scraping..."
+    }
+  },
+  "multi-comic-scraping-page": {
+    "issue-selected": {
+      "confirmation-message": "Are you sure you want to replace the metadata using this issue?",
+      "confirmation-title": "Metadata Issue Selected"
+    },
+    "label": {
+      "action": "",
+      "issue-number": "Issue #",
+      "publisher": "Publisher",
+      "series": "Series",
+      "thumbnail": "Cover",
+      "volume": "Volume"
+    },
+    "page-title": "Multi-Book Scraping",
+    "tab-title": "Multi-Book Scraping",
+    "tooltip": {
+      "remove-comic": "Remove this comic from the scraping queue...",
+      "select-comic": "Scrape this comic..."
+    }
+  },
   "publisher-comic-list-page": {
     "label": {
       "series": "Series Name",
@@ -506,8 +542,10 @@
     "title": "Selected Comics Read State"
   },
   "recreate-comic-files-effects": {
-    "service-failure": "Failed to start converting selected comics...",
-    "service-success": "Converting selected comics to {targetArchiveType} started..."
+    "recreate-selected-comics": {
+      "service-failure": "Failed to start converting selected comics...",
+      "service-success": "Converting selected comics to {targetArchiveType} started..."
+    }
   },
   "rescan-comics-effects": {
     "rescan-selected-comics": {
@@ -599,7 +637,8 @@
       "service-failure": "Failed to load scraping volumes..."
     },
     "load-issue": {
-      "no-issue-found": "No issue was found using {sourceName}..."
+      "no-issue-found": "No issue was found using {sourceName}...",
+      "service-failure": "Failed to load any issues..."
     },
     "scrape-comic": {
       "service-failure": "Failed to scrape comic..."
@@ -641,6 +680,7 @@
       "admin": {
         "import": "Import comics...",
         "item": "Admin",
+        "multi-comic-scraping": "Multi-Comic Scraping...",
         "settings": {
           "item": "Settings...",
           "library": "Library settings...",
@@ -701,6 +741,10 @@
     "start-batch-scraping": {
       "confirmation-message": "Are you sure you want to start batch scraping {count, plural, =1{the selected comic book} other{# selected comic books}}?",
       "confirmation-title": "Batch Scraping"
+    },
+    "start-multi-comic-scraping": {
+      "confirmation-message": "Are you sure you want to start scraping {count, plural, =1{one comic book} other{# comic books}}?",
+      "confirmation-title": "Start Multi-Comic Scraping"
     },
     "tooltip": {
       "logout-button": "Log out of the server..."

@@ -24,6 +24,10 @@ export const UPDATE_METADATA_SOURCE_URL = `${API_ROOT_URL}/metadata/sources/\${m
 export const LOAD_SCRAPING_VOLUMES_URL = `${API_ROOT_URL}/metadata/sources/\${metadataSourceId}/volumes`;
 export const LOAD_SCRAPING_ISSUE_URL = `${API_ROOT_URL}/metadata/sources/\${metadataSourceId}/volumes/\${volumeId}/issues/\${issueNumber}`;
 
-export const SCRAPE_SINGLE_BOOK_COMIC_URL = `${API_ROOT_URL}/metadata/sources/\${metadataSourceId}/comics/single/\${comicId}`;
+export const SCRAPE_SINGLE_COMIC_URL = `${API_ROOT_URL}/metadata/sources/\${metadataSourceId}/comics/single/\${comicId}`;
+export const START_MULTI_COMIC_SCRAPING_URL = `${API_ROOT_URL}/metadata/scraping/selected`;
+export const LOAD_MULTI_COMIC_SCRAPING_ENTRIES_URL = `${API_ROOT_URL}/metadata/scraping/load`;
+export const REMOVE_MULTI_COMIC_ENTRY_URL = `${API_ROOT_URL}/metadata/scraping/\${comicId}?pageSize=\${size}`;
+export const SCRAPE_MULTI_COMIC_ENTRY_URL = `${API_ROOT_URL}/metadata/sources/\${metadataSourceId}/comics/multi/\${comicId}`;
 
 export const SCRAPE_FILENAME_URL = `${API_ROOT_URL}/files/metadata`;

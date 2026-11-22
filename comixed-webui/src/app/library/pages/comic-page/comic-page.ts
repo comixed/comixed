@@ -59,6 +59,8 @@ import { selectUserIsAdmin } from '@app/account/selectors/user.selectors';
 import { Button } from '@openng/optimus-ui/button';
 import { ComicRemovalActions } from '@app/library/actions/comic-removal.actions';
 import { Tooltip } from '@openng/optimus-ui/tooltip';
+import { SingleComicScrapingActions } from '@app/metadata/actions/single-comic-scraping.actions';
+import { ScrapingIssueSelectedEvent } from '@app/library/models/ux/scraping-issue-selected-event';
 
 @Component({
   imports: [
@@ -179,6 +181,28 @@ export class ComicPage {
             ComicRemovalActions.unmarkOneForRemoval({ comic: this.comic() })
           );
         }
+      }
+    });
+  }
+
+  onIssueSelected(event: ScrapingIssueSelectedEvent): void {
+    this.confirmationService.confirm({
+      header: this.translateService.instant(
+        'comic-metadata-detail.issue-selected.confirmation-title'
+      ),
+      message: this.translateService.instant(
+        'comic-metadata-detail.issue-selected.confirmation-message'
+      ),
+      accept: () => {
+        this.logger.debug('Scraping comic using issue:', event);
+        this.store.dispatch(
+          SingleComicScrapingActions.scrapeComic({
+            metadataSource: event.metadataSource,
+            issueId: event.issue.id,
+            comic: this.comic(),
+            skipCache: event.skipCache
+          })
+        );
       }
     });
   }

@@ -1,5 +1,5 @@
 <p-card>
-  <ng-template #header>
+  <ng-template #title>
     <div class="cx-width-100p cx-justify-center">
       <p-breadcrumb [model]="comic() | comicDetailTrail" [home]="home" />
 
@@ -76,7 +76,9 @@
       </p-tabpanel>
       <p-tabpanel [value]="'metadata'">
         <app-comic-metadata-detail
+          id="comic-metadata-detail"
           [comic]="comic()"
+          (issueSelected)="onIssueSelected($event)"
         ></app-comic-metadata-detail>
       </p-tabpanel>
     </p-tabpanels>

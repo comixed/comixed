@@ -154,7 +154,11 @@ describe('ScrapingVolumeTable', () => {
       });
 
       it('should emit the issue', () => {
-        expect(emitSpy).toHaveBeenCalledWith(TEST_SCRAPING_ISSUE);
+        expect(emitSpy).toHaveBeenCalledWith({
+          metadataSource: TEST_METADATA_SOURCE,
+          issue: TEST_SCRAPING_ISSUE,
+          skipCache: TEST_SKIP_CACHE
+        });
       });
     });
   });

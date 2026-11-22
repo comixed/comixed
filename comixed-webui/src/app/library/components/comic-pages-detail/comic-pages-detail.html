@@ -1,7 +1,7 @@
 <div class="comic-pages-container">
   @for (page of comicPages(); track page.comicPageId) {
     <p-card>
-      <ng-template #header>
+      <ng-template #title>
         <div>{{ page.filename }}</div>
       </ng-template>
 

@@ -1,13 +1,13 @@
 <form [formGroup]="configurationForm">
   <p-card class="cx-width-100p">
-    <ng-template #header>
+    <ng-template #title>
       <p-breadcrumb [model]="trail()" [home]="home" />
     </ng-template>
 
     <div class="cx-width-100p cx-flex-content-container-row">
       <div class="cx-flex-content-grow-1" style="min-height: 0">
         <p-card class="cx-width-100p cx-height-100p">
-          <ng-template #header>
+          <ng-template #title>
             <h3 class="cx-width-100p cx-justify-center cx-no-text-wrap">
               {{
                 "library-settings-page.text.variable-definition-title"
@@ -50,7 +50,7 @@
 
       <div class="cx-flex-content-grow-1" style="min-height: 0">
         <p-card class="cx-width-100p">
-          <ng-template #header>
+          <ng-template #title>
             <h3 class="cx-width-100p cx-justify-center cx-no-text-wrap">
               {{
                 "library-settings-page.text.file-system-settings-title"
@@ -117,7 +117,7 @@
         </p-card>
 
         <p-card class="cx-width-100p">
-          <ng-template #header>
+          <ng-template #title>
             <h3 class="cx-width-100p cx-justify-center cx-no-text-wrap">
               {{
                 "library-settings-page.text.other-settings-title" | translate

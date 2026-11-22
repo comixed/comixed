@@ -53,6 +53,7 @@ import { BatchScrapeComicsActions } from '@app/library/actions/batch-scrape-comi
 import { LibraryOrganizationActions } from '@app/library/actions/library-organization.actions';
 import { ComicRemovalActions } from '@app/library/actions/comic-removal.actions';
 import { RescanComicsActions } from '@app/library/actions/rescan-comics.actions';
+import { MultiComicScrapingActions } from '@app/metadata/actions/multi-comic-scraping.actions';
 
 @Component({ template: '<h1>Test Component</h1>' })
 class TestComponent {}
@@ -624,6 +625,49 @@ describe('Topbar', () => {
           it('should dispatch an action', async () => {
             expect(dispatchSpy).toHaveBeenCalledWith(
               RescanComicsActions.rescanSelectedComics()
+            );
+          });
+        });
+      });
+
+      describe('scraping selected comics', () => {
+        let item: HTMLInputElement;
+        let confirmSpy: Mock;
+
+        beforeEach(() => {
+          confirmSpy = vi
+            .spyOn(component.confirmationService, 'confirm')
+            .mockImplementation((confirm: Confirmation) => {
+              confirm.accept?.();
+              return component.confirmationService;
+            });
+          item = document.querySelector(
+            '#topbar-start-multi-comic-scraping a.p-menubar-item-link'
+          ) as HTMLInputElement;
+          expect(item).not.toBeNull();
+        });
+
+        it('should enable the menu item', () => {
+          expect(item.disabled).toBeFalsy();
+        });
+
+        describe('selecting the item ', () => {
+          let dispatchSpy: Mock;
+
+          beforeEach(async () => {
+            dispatchSpy = vi.spyOn(component.store, 'dispatch');
+            item.click();
+            fixture.detectChanges();
+            await fixture.whenStable();
+          });
+
+          it('should confirm with the user', () => {
+            expect(confirmSpy).toHaveBeenCalled();
+          });
+
+          it('should dispatch an action', async () => {
+            expect(dispatchSpy).toHaveBeenCalledWith(
+              MultiComicScrapingActions.startScraping({ size: 10 })
             );
           });
         });
