@@ -16,7 +16,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, inject, Input, OnInit, signal } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  OnInit,
+  Output,
+  signal
+} from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { selectSingleComicScrapingEntries } from '@app/metadata/selectors/single-comic-scraping.selectors';
@@ -43,11 +51,11 @@ import { ScrapingVolumeTable } from '@app/library/components/scraping-volume-tab
 import { Select } from '@openng/optimus-ui/select';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MetadataSource } from '@app/metadata/models/metadata-source';
-import { ScrapingIssue } from '@app/metadata/models/scraping-issue';
 import { ConfirmationService } from '@openng/optimus-ui/api';
 import { Checkbox } from '@openng/optimus-ui/checkbox';
 import { ScrapeFilenameActions } from '@app/metadata/actions/scrape-filename.actions';
 import { selectScrapeFilenameData } from '@app/metadata/selectors/scrape-filename.selectors';
+import { ScrapingIssueSelectedEvent } from '@app/library/models/ux/scraping-issue-selected-event';
 
 @Component({
   imports: [
@@ -90,6 +98,8 @@ export class ComicMetadataDetail implements OnInit {
   ];
 
   scrapingForm: FormGroup;
+
+  @Output() issueSelected = new EventEmitter<ScrapingIssueSelectedEvent>();
 
   constructor() {
     this.logger.trace('Creating scraping form');
@@ -181,28 +191,6 @@ export class ComicMetadataDetail implements OnInit {
   ngOnInit(): void {
     this.logger.trace('Loading metadata source list');
     this.store.dispatch(MetadataSourceListActions.load());
-  }
-
-  onIssueSelected(issue: ScrapingIssue): void {
-    this.confirmationService.confirm({
-      header: this.translateService.instant(
-        'comic-metadata-detail.issue-selected.confirmation-title'
-      ),
-      message: this.translateService.instant(
-        'comic-metadata-detail.issue-selected.confirmation-message'
-      ),
-      accept: () => {
-        this.logger.debug('Scraping comic using issue:', issue);
-        this.store.dispatch(
-          SingleComicScrapingActions.scrapeComic({
-            metadataSource: this.metadataSource()!,
-            comic: this.comicDetail(),
-            issueId: issue.id,
-            skipCache: this.skipCache
-          })
-        );
-      }
-    });
   }
 
   protected onScrapeFilename(): void {

@@ -182,7 +182,7 @@ export class ImportComicsPage {
       this.translateService.instant('import-comics-page.page-title')
     );
     this.trail.set([
-      { label: this.translateService.instant('import-comics-page.page-title') }
+      { label: this.translateService.instant('import-comics-page.trail-title') }
     ]);
     this.maximumOptions = [
       {

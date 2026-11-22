@@ -24,10 +24,14 @@ import { LoggerService } from '@angular-ru/cdk/logger';
 import { HttpClient } from '@angular/common/http';
 import { interpolate } from '@app/app-functions';
 import {
+  LOAD_MULTI_COMIC_SCRAPING_ENTRIES_URL,
   LOAD_SCRAPING_ISSUE_URL,
   LOAD_SCRAPING_VOLUMES_URL,
+  REMOVE_MULTI_COMIC_ENTRY_URL,
   SCRAPE_FILENAME_URL,
-  SCRAPE_SINGLE_BOOK_COMIC_URL
+  SCRAPE_MULTI_COMIC_ENTRY_URL,
+  SCRAPE_SINGLE_COMIC_URL,
+  START_MULTI_COMIC_SCRAPING_URL
 } from '@app/metadata/metadata-constants';
 import { LoadScrapingVolumesRequest } from '@app/metadata/models/net/load-scraping-volumes-request';
 import { ScrapingIssue } from '@app/metadata/models/scraping-issue';
@@ -36,6 +40,13 @@ import { Comic } from '@app/library/models/comic';
 import { ScrapeSingleIssueRequest } from '@app/metadata/models/net/scrape-single-issue-request';
 import { ScrapeFilenameResponse } from '@app/metadata/models/net/scrape-filename-response';
 import { ScrapeFilenameRequest } from '@app/metadata/models/net/scrape-filename-request';
+import { StartMultiComicScrapingResponse } from '@app/metadata/models/net/start-multi-comic-scraping-response';
+import { StartMultiComicScrapingRequest } from '@app/metadata/models/net/start-multi-comic-scraping-request';
+import { LoadMultiComicScrapingResponse } from '@app/metadata/models/net/load-multi-comic-scraping-response';
+import { LoadMultiComicScrapingRequest } from '@app/metadata/models/net/load-multi-comic-scraping-request';
+import { RemoveMultiComicScrapingResponse } from '@app/metadata/models/net/remove-multi-comic-scraping-response';
+import { ScrapeMultiComicEntryResponse } from '@app/metadata/models/net/scrape-multi-comic-entry-response';
+import { ScrapeMultiComicEntryRequest } from '@app/metadata/models/net/scrape-multi-comic-entry-request';
 
 @Service()
 export class ComicScrapingService {
@@ -92,7 +103,7 @@ export class ComicScrapingService {
   }): Observable<void> {
     this.logger.debug('Scraping comic:', args);
     return this.http.put<void>(
-      interpolate(SCRAPE_SINGLE_BOOK_COMIC_URL, {
+      interpolate(SCRAPE_SINGLE_COMIC_URL, {
         metadataSourceId: args.metadataSource.metadataSourceId,
         comicId: args.comic.comicId
       }),
@@ -112,6 +123,70 @@ export class ComicScrapingService {
       {
         filename: args.comic.filename
       } as ScrapeFilenameRequest
+    );
+  }
+
+  startMultiComicScraping(args: {
+    index: number;
+    size: number;
+  }): Observable<StartMultiComicScrapingResponse> {
+    this.logger.debug('Starting multi-comic scraping:', args);
+    return this.http.put<StartMultiComicScrapingResponse>(
+      interpolate(START_MULTI_COMIC_SCRAPING_URL),
+      {
+        pageNumber: args.index,
+        pageSize: args.size
+      } as StartMultiComicScrapingRequest
+    );
+  }
+
+  loadMultiComicScraping(args: {
+    index: number;
+    size: number;
+  }): Observable<LoadMultiComicScrapingResponse> {
+    this.logger.debug('Loading multi-comic scraping entries:', args);
+    return this.http.post<LoadMultiComicScrapingResponse>(
+      interpolate(LOAD_MULTI_COMIC_SCRAPING_ENTRIES_URL),
+      {
+        pageNumber: args.index,
+        pageSize: args.size
+      } as LoadMultiComicScrapingRequest
+    );
+  }
+
+  removeMultiComicScraping(args: {
+    comic: Comic;
+    size: number;
+  }): Observable<RemoveMultiComicScrapingResponse> {
+    this.logger.debug('Removing comic from multi-comic scraping:', args);
+    return this.http.delete<RemoveMultiComicScrapingResponse>(
+      interpolate(REMOVE_MULTI_COMIC_ENTRY_URL, {
+        comicId: args.comic.comicId,
+        size: args.size
+      })
+    );
+  }
+
+  scrapeMultiComicEntry(args: {
+    comic: Comic;
+    index: number;
+    issueId: string;
+    metadataSource: MetadataSource;
+    size: number;
+    skipCache: boolean;
+  }): Observable<ScrapeMultiComicEntryResponse> {
+    this.logger.debug('Scraping comic from multi-comic session:', args);
+    return this.http.post<ScrapeMultiComicEntryResponse>(
+      interpolate(SCRAPE_MULTI_COMIC_ENTRY_URL, {
+        metadataSourceId: args.metadataSource.metadataSourceId,
+        comicId: args.comic.comicId
+      }),
+      {
+        issueId: args.issueId,
+        skipCache: args.skipCache,
+        pageNumber: args.index,
+        pageSize: args.size
+      } as ScrapeMultiComicEntryRequest
     );
   }
 }

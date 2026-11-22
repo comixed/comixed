@@ -26,6 +26,8 @@ import { metadataSourceListsFeature } from '@app/metadata/reducers/metadata-sour
 import { MetadataSourceListEffects } from '@app/metadata/effects/metadata-source-list.effects';
 import { scrapeFilenameFeature } from '@app/metadata/reducers/scrape-filename.reducer';
 import { ScrapeFilenameEffects } from '@app/metadata/effects/scrape-filename.effects';
+import { multiComicScrapingFeature } from '@app/metadata/reducers/multi-comic-scraping.reducer';
+import { MultiComicScrapingEffects } from '@app/metadata/effects/multi-comic-scraping.effects';
 
 @NgModule({
   declarations: [],
@@ -33,10 +35,12 @@ import { ScrapeFilenameEffects } from '@app/metadata/effects/scrape-filename.eff
     CommonModule,
     StoreModule.forFeature(metadataSourceListsFeature),
     StoreModule.forFeature(singleComicScrapingsFeature),
+    StoreModule.forFeature(multiComicScrapingFeature),
     StoreModule.forFeature(scrapeFilenameFeature),
     EffectsModule.forFeature([
       MetadataSourceListEffects,
       SingleComicScrapingEffects,
+      MultiComicScrapingEffects,
       ScrapeFilenameEffects
     ])
   ]

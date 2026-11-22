@@ -4,7 +4,7 @@
     [metadataSource]="metadataSource()!"
     [issueNumber]="issueNumber"
     [skipCache]="skipCache"
-    (issueSelected)="onIssueSelected($event)"
+    (issueSelected)="issueSelected.emit($event)"
   ></app-scraping-volume-table>
 } @else {
   <p-card id="scraping-volume-form">

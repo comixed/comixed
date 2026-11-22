@@ -1,13 +1,11 @@
 <p-card class="cx-width-100p cx-height-100p">
-  <ng-template #header>
-    <div class="cx-width-100p cx-justify-end cx-padding-15">
-      <p-button
-        id="unzoom-button"
-        icon="pi pi-times"
-        severity="danger"
-        (onClick)="unzoom.emit()"
-      />
-    </div>
+  <ng-template #title>
+    <p-button
+      id="unzoom-button"
+      icon="pi pi-times"
+      severity="danger"
+      (onClick)="unzoom.emit()"
+    />
     <div class="cx-width-100p cx-justify-center">
       <h2 class="cx-width-100p cx-justify-center cx-no-text-wrap">
         {{ dataTitle() }}

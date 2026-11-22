@@ -18,7 +18,6 @@
 
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
-import { readerGuard } from '@app/account/guards/reader-guard';
 import { ComicListPage } from '@app/library/pages/comic-list-page/comic-list-page';
 import { DuplicateComicPage } from '@app/admin/pages/duplicate-comic-page/duplicate-comic-page';
 import { BatchProcessListPage } from '@app/admin/pages/batch-process-list-page/batch-process-list-page';
@@ -27,18 +26,48 @@ import { LibrarySettingsPage } from '@app/admin/pages/library-settings-page/libr
 import { MetadataSettingsPage } from '@app/admin/pages/metadata-settings-page/metadata-settings-page';
 import { MetadataSourcePage } from '@app/admin/pages/metadata-source-page/metadata-source-page';
 import { DuplicateComicListPage } from '@app/admin/pages/duplicate-comic-list-page/duplicate-comic-list-page';
+import { MultiComicScrapingPage } from '@app/admin/pages/multi-comic-scraping-page/multi-comic-scraping-page';
+import { ImportComicsPage } from '@app/admin/pages/import-comics-page/import-comics-page';
 
 const routes: Routes = [
   {
+    path: 'admin/library/import',
+    component: ImportComicsPage,
+    canActivate: [adminGuard]
+  },
+  {
+    path: 'admin/library/unscraped',
+    component: ComicListPage,
+    data: { unscrapedComics: true },
+    canActivate: [adminGuard]
+  },
+  {
+    path: 'admin/library/changed',
+    component: ComicListPage,
+    data: { changedComics: true },
+    canActivate: [adminGuard]
+  },
+  {
+    path: 'admin/library/duplicates',
+    component: DuplicateComicListPage,
+    data: { duplicateComics: true },
+    canActivate: [adminGuard]
+  },
+  {
     path: 'admin/library/duplicates/:publisherName/:seriesName/:volume/:issueNumber/:coverDate',
     component: DuplicateComicPage,
-    canActivate: [readerGuard]
+    canActivate: [adminGuard]
   },
   {
     path: 'admin/library/deleted',
     component: ComicListPage,
     data: { deletedComics: true },
-    canActivate: [readerGuard]
+    canActivate: [adminGuard]
+  },
+  {
+    path: 'admin/library/scraping/multi',
+    component: MultiComicScrapingPage,
+    canActivate: [adminGuard]
   },
   {
     path: 'admin/processes',
@@ -59,24 +88,6 @@ const routes: Routes = [
     path: 'admin/settings/metadata/:sourceName',
     component: MetadataSourcePage,
     canActivate: [adminGuard]
-  },
-  {
-    path: 'admin/library/unscraped',
-    component: ComicListPage,
-    data: { unscrapedComics: true },
-    canActivate: [readerGuard]
-  },
-  {
-    path: 'admin/library/changed',
-    component: ComicListPage,
-    data: { changedComics: true },
-    canActivate: [readerGuard]
-  },
-  {
-    path: 'admin/library/duplicates',
-    component: DuplicateComicListPage,
-    data: { duplicateComics: true },
-    canActivate: [readerGuard]
   }
 ];
 

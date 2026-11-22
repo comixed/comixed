@@ -44,6 +44,8 @@ import {
   initialScrapeFilenameState,
   SCRAPE_FILENAME_FEATURE_KEY
 } from '@app/metadata/reducers/scrape-filename.reducer';
+import { By } from '@angular/platform-browser';
+import { ScrapingVolumeTable } from '@app/library/components/scraping-volume-table/scraping-volume-table';
 
 describe('ComicMetadataDetail', () => {
   const TEST_SCRAPING_VOLUME_LIST = [SCRAPING_VOLUME_1, SCRAPING_VOLUME_2];
@@ -64,7 +66,7 @@ describe('ComicMetadataDetail', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ComicMetadataDetail],
+      imports: [ComicMetadataDetail, ScrapingVolumeTable],
       providers: [
         provideLogger({ minLevel: LoggerLevel.OFF }),
         provideTranslateService(),
@@ -106,6 +108,33 @@ describe('ComicMetadataDetail', () => {
       expect(
         fixture.nativeElement.querySelector('#scraping-volume-table')
       ).not.toBeNull();
+    });
+  });
+
+  describe('when an issue was selected', () => {
+    beforeEach(() => {
+      store.setState({
+        ...initialState,
+        [SINGLE_COMIC_SCRAPING_FEATURE_KEY]: singleComicScrapingAdapter.setAll(
+          TEST_SCRAPING_VOLUME_LIST,
+          initialSingleComicScrapingState
+        )
+      });
+    });
+
+    it('notifies the parent component', () => {
+      const issueNumber = 42;
+      const emitSpy = vi.spyOn(component.issueSelected, 'emit');
+
+      fixture.detectChanges();
+
+      const child = fixture.debugElement.query(
+        By.directive(ScrapingVolumeTable)
+      );
+
+      child.triggerEventHandler('issueSelected', issueNumber);
+
+      expect(emitSpy).toHaveBeenCalledWith(issueNumber);
     });
   });
 

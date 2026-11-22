@@ -29,7 +29,7 @@ import {
   comicFileListAdapter,
   initialComicFileListState
 } from '@app/library/reducers/comic-file-list.reducer';
-import { ImportComicsPage } from '@app/library/pages/import-comics-page/import-comics-page';
+import { ImportComicsPage } from '@app/admin/pages/import-comics-page/import-comics-page';
 import { Confirmation, ConfirmationService } from '@openng/optimus-ui/api';
 import { USER_ADMIN } from '@app/account/account-fixtures';
 import { IMPORT_ROOT_DIRECTORY_PREFERENCE } from '@app/account/user-preferences';

@@ -41,7 +41,7 @@ import { ScrapingIssueTitlePipe } from '@app/metadata/pipes/scraping-issue-title
 import { Card } from '@openng/optimus-ui/card';
 import { Button } from '@openng/optimus-ui/button';
 import { Tooltip } from '@openng/optimus-ui/tooltip';
-import { ScrapingIssue } from '@app/metadata/models/scraping-issue';
+import { ScrapingIssueSelectedEvent } from '@app/library/models/ux/scraping-issue-selected-event';
 
 @Component({
   imports: [
@@ -76,7 +76,7 @@ export class ScrapingVolumeTable {
   @Input() issueNumber = '';
   @Input() skipCache = false;
 
-  @Output() issueSelected = new EventEmitter<ScrapingIssue>();
+  @Output() issueSelected = new EventEmitter<ScrapingIssueSelectedEvent>();
 
   onRowSelect(selectedVolume: ScrapingVolume | ScrapingVolume[] | null): void {
     if (selectedVolume && !Array.isArray(selectedVolume)) {
@@ -94,5 +94,13 @@ export class ScrapingVolumeTable {
 
   onResetVolumes(): void {
     this.store.dispatch(SingleComicScrapingActions.resetVolumes());
+  }
+
+  onIssueSelected(): void {
+    this.issueSelected.emit({
+      metadataSource: this.metadataSource,
+      issue: this.scrapingIssue()!,
+      skipCache: this.skipCache
+    });
   }
 }
