@@ -4,9 +4,12 @@ name: Build and Release
 on:
   push:
     branches:
-      - main
       - 'release/**'
       - 'epic/**'
+
+  schedule:
+    # Run the nightly build once per day at 06:00 UTC
+    - cron: '0 6 * * *'
 
 permissions:
   contents: write
