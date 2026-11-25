@@ -67,7 +67,7 @@
     "chart.js": "^4.5.1",
     "color-string": "^2.0.1",
     "css-what": "^7.0.0",
-    "d3-color": "~3.1.0",
+    "d3-color": "~3.1.1",
     "debug": "^4",
     "deepmerge-ts": "^8.0.0",
     "engine.io": "~6",
