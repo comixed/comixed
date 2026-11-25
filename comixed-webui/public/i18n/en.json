@@ -2,6 +2,7 @@
   "app": {
     "button": {
       "cancel": "Cancel",
+      "choose": "Choose",
       "confirm": "Confirm",
       "reset": "Reset",
       "select": "Select",
@@ -291,6 +292,53 @@
     },
     "has-existing": {
       "service-failure": "Failed to check for an existing admin account..."
+    }
+  },
+  "filename-scraping-rule-list-effects": {
+    "load-rules": {
+      "service-failure": "Failed to load the filename scraping rules..."
+    },
+    "save-rules": {
+      "service-failure": "Failed to save the filename scraping rules...",
+      "service-success": "Filename scraping rules saved..."
+    },
+    "upload-file": {
+      "service-failure": "Failed to upload filename scraping rules...",
+      "service-success": "Filename scraping rules uploaded..."
+    }
+  },
+  "filename-scraping-rule-list-page": {
+    "label": {
+      "cover-date-format": "Cover Date Format",
+      "cover-date-position": "Cover Date Position",
+      "issue-number-position": "Issue Number Position",
+      "name": "Rule Name",
+      "rule": "Rule Details",
+      "series-position": "Series Position",
+      "volume-position": "Volume Position"
+    },
+    "page-title": "Filename Scraping Rules",
+    "remove-rule": {
+      "confirmation-message": "Are you sure you want to remove this rule?",
+      "confirmation-title": "Remove Filename Scraping Rule"
+    },
+    "save-rules": {
+      "confirmation-message": "Are you sure you want to save the filename scraping rules?",
+      "confirmation-title": "Save Filename Scraping Rules"
+    },
+    "text": {
+      "no-cover-date-position": "[no cover date]",
+      "no-date-format": "[no format]",
+      "no-issue-number-position": "[no issue #]",
+      "no-name": "[no name defined]",
+      "no-rule": "[no rule defined]",
+      "no-series-position": "[no series]",
+      "no-volume-position": "[no volume]"
+    },
+    "trail-title": "Filename Scraping Rules",
+    "upload-file": {
+      "confirmation-message": "Are you sure you want to upload this file?",
+      "confirmation-title": "Upload Filename Scraping Rules File"
     }
   },
   "import-comics-page": {
@@ -682,6 +730,7 @@
         "item": "Admin",
         "multi-comic-scraping": "Multi-Comic Scraping...",
         "settings": {
+          "filenames": "Filenames rules...",
           "item": "Settings...",
           "library": "Library settings...",
           "metadata": "Metadata settings..."

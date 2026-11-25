@@ -31,3 +31,8 @@ export const REMOVE_MULTI_COMIC_ENTRY_URL = `${API_ROOT_URL}/metadata/scraping/\
 export const SCRAPE_MULTI_COMIC_ENTRY_URL = `${API_ROOT_URL}/metadata/sources/\${metadataSourceId}/comics/multi/\${comicId}`;
 
 export const SCRAPE_FILENAME_URL = `${API_ROOT_URL}/files/metadata`;
+
+export const LOAD_FILENAME_SCRAPING_RULES_URL = `${API_ROOT_URL}/admin/scraping/rules`;
+export const SAVE_FILENAME_SCRAPING_RULES_URL = `${API_ROOT_URL}/admin/scraping/rules`;
+export const DOWNLOAD_FILENAME_SCRAPING_RULES_FILE_URL = `${API_ROOT_URL}/admin/scraping/rules/file`;
+export const UPLOAD_FILENAME_SCRAPING_RULES_URL = `${API_ROOT_URL}/admin/scraping/rules/file`;

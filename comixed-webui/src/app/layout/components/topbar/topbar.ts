@@ -290,7 +290,7 @@ export class Topbar {
               'topbar.menu.admin.multi-comic-scraping'
             ),
             icon: 'pi pi-cloud',
-            routerLink: 'admin/library/scraping/multi'
+            routerLink: 'admin/scraping/multi'
           },
           {
             separator: true,
@@ -317,6 +317,14 @@ export class Topbar {
                 ),
                 icon: 'pi pi-cloud',
                 routerLink: '/admin/settings/metadata'
+              },
+              {
+                id: 'topbar-filename-settings-page',
+                label: this.translateService.instant(
+                  'topbar.menu.admin.settings.filenames'
+                ),
+                icon: 'pi pi-cloud',
+                routerLink: '/admin/settings/metadata/filenames'
               }
             ]
           }

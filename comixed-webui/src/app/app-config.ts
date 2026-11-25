@@ -53,6 +53,7 @@ import { AdminModule } from '@app/admin/admin-module';
 import { SettingsModule } from '@app/settings/settings-module';
 import { MetadataModule } from '@app/metadata/metadata-module';
 import { DashboardModule } from '@app/dashboard/dashboard-module';
+import { FileTransfersModule } from '@app/file-transfers/file-transfers-module';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -84,6 +85,7 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(
       StoreModule.forRoot({}, {}),
       EffectsModule.forRoot([]),
+      FileTransfersModule,
       AdminModule,
       DashboardModule,
       MetadataModule,
