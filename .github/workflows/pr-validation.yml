@@ -72,7 +72,7 @@ jobs:
 
       - name: Set up Chrome for Angular tests (x64)
         if: runner.arch == 'X64'
-        uses: browser-actions/setup-chrome@v1
+        uses: browser-actions/setup-chrome@v2
 
       - name: Set up Chromium for Angular tests (ARM64 / act)
         if: runner.arch == 'ARM64'
