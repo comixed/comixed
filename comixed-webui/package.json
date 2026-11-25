@@ -142,6 +142,6 @@
     "protractor": "~7.0.0",
     "ts-node": "~10.9.2",
     "typescript": "^5.9.2",
-    "typescript-eslint": "^8.68.0"
+    "typescript-eslint": "^8.73.0"
   }
 }
