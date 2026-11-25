@@ -6,7 +6,119 @@ updates:
       interval: "weekly"
     commit-message:
       prefix: "chore"
-      include: "scope"
+      include: "root"
+
+  - package-ecosystem: "maven"
+    directory: "/comixed-model"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore"
+      include: "model"
+
+  - package-ecosystem: "maven"
+    directory: "/comixed-state"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore"
+      include: "state"
+
+  - package-ecosystem: "maven"
+    directory: "/comixed-repositories"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore"
+      include: "repositories"
+
+  - package-ecosystem: "maven"
+    directory: "/comixed-adaptors"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore"
+      include: "adaptors"
+
+  - package-ecosystem: "maven"
+    directory: "/comixed-messaging"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore"
+      include: "messaging"
+
+  - package-ecosystem: "maven"
+    directory: "/comixed-services"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore"
+      include: "services"
+
+  - package-ecosystem: "maven"
+    directory: "/comixed-batch"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore"
+      include: "batch"
+
+  - package-ecosystem: "maven"
+    directory: "/comixed-metadata"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore"
+      include: "metadata"
+
+  - package-ecosystem: "maven"
+    directory: "/comixed-plugins"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore"
+      include: "plugins"
+
+  - package-ecosystem: "maven"
+    directory: "/comixed-auth"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore"
+      include: "auth"
+
+  - package-ecosystem: "maven"
+    directory: "/comixed-http"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore"
+      include: "http"
+
+  - package-ecosystem: "maven"
+    directory: "/comixed-opds"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore"
+      include: "opds"
+
+  - package-ecosystem: "maven"
+    directory: "/comixed-reader"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore"
+      include: "reader"
+
+  - package-ecosystem: "maven"
+    directory: "/comixed-rest"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore"
+      include: "rest"
 
   - package-ecosystem: "npm"
     directory: "/comixed-webui"
@@ -14,7 +126,23 @@ updates:
       interval: "weekly"
     commit-message:
       prefix: "chore"
-      include: "scope"
+      include: "webui"
+
+  - package-ecosystem: "maven"
+    directory: "/comixed-app"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore"
+      include: "app"
+
+  - package-ecosystem: "maven"
+    directory: "/comixed-release"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore"
+      include: "release"
 
   - package-ecosystem: "github-actions"
     directory: "/"
