@@ -20,6 +20,11 @@
         "prepareCmd": "cd comixed-webui && pnpm pkg set \"version=${nextRelease.version}\" && cd .. && case \"$RELEASE_BRANCH\" in release/*) mvn versions:set-property -Dproperty=revision -DnewVersion=${nextRelease.version} -DgenerateBackupPoms=false ;; *) echo \"Leaving Maven development version unchanged on $RELEASE_BRANCH\" ;; esac"
       }
     ],
-    "@semantic-release/github"
+    [
+      "@semantic-release/github",
+      {
+        "successComment": false
+      }
+    ]
   ]
 }

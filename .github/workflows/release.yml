@@ -77,6 +77,46 @@ jobs:
             @semantic-release/exec \
             @semantic-release/github
 
+      - name: Configure epic prerelease identifier
+        if: startsWith(github.ref_name, 'epic/')
+        shell: bash
+        run: |
+          if [[ "$GITHUB_REF_NAME" =~ ^epic/issue-([0-9]+)$ ]]; then
+            ISSUE_ID="${BASH_REMATCH[1]}"
+          else
+            echo "::error::Epic branch must use the format epic/issue-1234"
+            exit 1
+          fi
+
+          ISSUE_ID="$ISSUE_ID" node <<'EOF'
+          const fs = require('fs');
+
+          const config = JSON.parse(
+            fs.readFileSync('.releaserc.json', 'utf8')
+          );
+
+          const epicBranch = config.branches.find(
+            branch =>
+              typeof branch === 'object' &&
+              branch.name === 'epic/**'
+          );
+
+          if (!epicBranch) {
+            throw new Error('Epic branch configuration not found');
+          }
+
+          epicBranch.prerelease = `epic.${process.env.ISSUE_ID}`;
+
+          fs.writeFileSync(
+            '.releaserc.json',
+            JSON.stringify(config, null, 2) + '\n'
+          );
+
+          console.log(
+            `Epic prerelease identifier: ${epicBranch.prerelease}`
+          );
+          EOF
+
       - name: Record existing tags
         run: |
           git tag --list | sort > "$RUNNER_TEMP/tags-before"
