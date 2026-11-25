@@ -4,88 +4,124 @@ on:
   push:
     branches:
       - main
-      - 'release/v*.*'
+      - 'release/**'
       - 'epic/**'
 
 permissions:
-  contents: write      # Push version commits, git tags, and GitHub Releases
-  issues: write        # Comment on resolved issues
-  pull-requests: write # Comment on merged PRs
-  packages: write      # Push packages/images if using GHCR
+  contents: write
+  issues: write
+  pull-requests: write
+  packages: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   release:
+    name: Create Release
     runs-on: ubuntu-latest
+
+    env:
+      RELEASE_BRANCH: ${{ github.ref_name }}
+
     outputs:
-      new_release_published: ${{ steps.semantic.outputs.new_release_published }}
-      new_release_version: ${{ steps.semantic.outputs.new_release_version }}
+      version: ${{ steps.release-version.outputs.version }}
+      branch: ${{ steps.release-branch.outputs.branch }}
 
     steps:
-      - name: Checkout repository
+      - name: Check out repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Full git history required for semantic-release
+          fetch-depth: 0
 
-      - name: Set up JDK 25
+      # Fetch the Git notes used by semantic-release to track
+      # release channels for existing tags.
+      - name: Fetch semantic-release notes
+        run: |
+          git fetch origin refs/notes/semantic-release:refs/notes/semantic-release
+
+      - name: Set up Java
         uses: actions/setup-java@v4
         with:
+          distribution: temurin
           java-version: '25'
-          distribution: 'temurin'
           cache: maven
 
-      - name: Cache pnpm store
-        uses: actions/cache@v4
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
         with:
-          path: |
-            ~/.local/share/pnpm/store
-            comixed-webui/node
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-
+          version: 12.10.1
+          run_install: false
 
-      - name: Set up Node.js for semantic-release
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24.15.0'
+          cache: pnpm
+          cache-dependency-path: comixed-webui/pnpm-lock.yaml
 
-      - name: Install semantic-release and plugins
+      - name: Install semantic-release
         run: |
-          npm install --no-save \
-            semantic-release \
-            @semantic-release/changelog \
+          npm install --no-save --no-package-lock \
+            semantic-release@25.0.9 \
+            @semantic-release/commit-analyzer \
+            @semantic-release/release-notes-generator \
             @semantic-release/exec \
-            @semantic-release/git \
             @semantic-release/github
 
       - name: Run semantic-release
-        id: semantic
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npx semantic-release
 
-      - name: Upload release archive for Docker job
-        if: steps.semantic.outputs.new_release_published == 'true'
+      - name: Determine released version
+        id: release-version
+        run: |
+          TAG=$(git tag --points-at HEAD --sort=-version:refname | head -n 1)
+
+          if [[ "$TAG" =~ ^v[0-9] ]]; then
+            VERSION="${TAG#v}"
+            echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+            echo "Released version: $VERSION"
+          else
+            echo "No release was published."
+            echo "version=" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Determine release branch
+        id: release-branch
+        run: |
+          echo "branch=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+
+      - name: Build application
+        if: steps.release-version.outputs.version != ''
+        run: mvn -B -DskipTests package
+
+      - name: Upload release artifact
+        if: steps.release-version.outputs.version != ''
         uses: actions/upload-artifact@v4
         with:
-          name: comixed-release-zip
+          name: comixed-release
           path: comixed-release/target/*.zip
-          retention-days: 1
+          if-no-files-found: error
 
   docker:
+    name: Build and Publish Docker Image
     needs: release
-    if: needs.release.outputs.new_release_published == 'true'
+    if: needs.release.outputs.version != ''
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout release tag
+      - name: Check out release tag
         uses: actions/checkout@v4
         with:
-          ref: v${{ needs.release.outputs.new_release_version }}
+          ref: v${{ needs.release.outputs.version }}
 
-      - name: Download release archive
+      - name: Download release artifact
         uses: actions/download-artifact@v4
         with:
-          name: comixed-release-zip
+          name: comixed-release
           path: comixed-release/target
 
       - name: Set up Docker Buildx
@@ -97,22 +133,95 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Set Docker tags
-        id: docker_tags
+      - name: Determine Docker tags
+        id: docker-tags
         run: |
-          VERSION="${{ needs.release.outputs.new_release_version }}"
+          VERSION="${{ needs.release.outputs.version }}"
+          BRANCH="${{ needs.release.outputs.branch }}"
+
           TAGS="comixed/comixed:${VERSION}"
-          if [[ "${{ github.ref }}" == refs/heads/release/* ]]; then
+
+          if [[ "$BRANCH" == release/* ]]; then
             TAGS="${TAGS},comixed/comixed:latest"
           fi
+
           echo "tags=${TAGS}" >> "$GITHUB_OUTPUT"
 
-      - name: Build and push Docker image
+      - name: Build and publish Docker image
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: ./docker/Dockerfile
           push: true
-          build-args: |
-            VERSION=${{ needs.release.outputs.new_release_version }}
-          tags: ${{ steps.docker_tags.outputs.tags }}
+          tags: ${{ steps.docker-tags.outputs.tags }}
+
+  version-bump:
+    name: Create Version Bump Pull Request
+    needs: release
+    if: >-
+      needs.release.outputs.version != '' &&
+      startsWith(needs.release.outputs.branch, 'release/')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out release branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.release.outputs.branch }}
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: maven
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 12.10.1
+          run_install: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24.15.0'
+
+      - name: Update Maven version
+        env:
+          VERSION: ${{ needs.release.outputs.version }}
+        run: |
+          mvn -B versions:set-property \
+            -Dproperty=revision \
+            -DnewVersion="${VERSION}" \
+            -DgenerateBackupPoms=false
+
+      - name: Update Angular version
+        env:
+          VERSION: ${{ needs.release.outputs.version }}
+        working-directory: comixed-webui
+        run: pnpm pkg set "version=${VERSION}"
+
+      - name: Create version bump pull request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: automation/version-bump-${{ needs.release.outputs.version }}
+          base: ${{ needs.release.outputs.branch }}
+          delete-branch: true
+          commit-message: >-
+            chore(release): update version to
+            ${{ needs.release.outputs.version }}
+          title: >-
+            chore(release): update version to
+            ${{ needs.release.outputs.version }}
+          body: |
+            This pull request updates the project versions following
+            the release of ${{ needs.release.outputs.version }}.
+
+            - Updates the root Maven revision property.
+            - Updates the Angular package version.
+
+            These changes prepare the release branch for subsequent development.
+          add-paths: |
+            pom.xml
+            comixed-webui/package.json
