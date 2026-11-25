@@ -41,3 +41,9 @@ Object.defineProperty(window, 'matchMedia', {
     dispatchEvent: vi.fn()
   }))
 });
+
+vi.mock('ngx-filesaver', () => ({
+  FileSaverService: class {
+    save = vi.fn();
+  }
+}));

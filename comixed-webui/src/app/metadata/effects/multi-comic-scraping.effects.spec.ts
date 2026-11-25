@@ -60,7 +60,7 @@ describe('MultiComicScrapingEffects', () => {
         MultiComicScrapingEffects,
         provideRouter([
           {
-            path: 'admin/library/scraping/multi',
+            path: 'admin/scraping/multi',
             redirectTo: ''
           }
         ]),

@@ -1,0 +1,170 @@
+<p-card class="cx-width-100p">
+  <ng-template #title>
+    <p-breadcrumb [model]="trail()" [home]="home" />
+    <div class="cx-width-100p cx-justify-center">
+      <p-fileupload
+        #upload
+        mode="basic"
+        [chooseLabel]="'app.button.choose' | translate"
+        chooseIcon="pi pi-upload"
+        [customUpload]="true"
+        (uploadHandler)="onUploadFile($event)"
+      />
+      <div class="cx-spacer"></div>
+      <p-button
+        id="upload-rules-file-button"
+        severity="secondary"
+        icon="pi pi-upload"
+        (onClick)="upload.upload()"
+      />
+      <p-button
+        id="download-rules-file-button"
+        severity="secondary"
+        icon="pi pi-download"
+        (onClick)="onDownload()"
+      />
+      <p-button
+        id="add-rule-button"
+        severity="contrast"
+        icon="pi pi-plus"
+        (onClick)="onAddRule()"
+      />
+      <p-button
+        id="save-rules-button"
+        severity="primary"
+        icon="pi pi-save"
+        (onClick)="onSaveRules()"
+      />
+    </div>
+  </ng-template>
+
+  <p-table
+    [value]="filenameScrapingRuleListEntries()"
+    dataKey="id"
+    [paginator]="true"
+    paginatorPosition="both"
+    stripedRows
+    selectionMode="single"
+    [first]="filenameScrapingRuleListFirst()"
+    [rows]="filenameScrapingRuleListRows()"
+    [totalRecords]="filenameScrapingRuleListEntries().length"
+    [loading]="filenameScrapingRuleListBusy()"
+  >
+    <ng-template #header>
+      <tr>
+        <th>{{ "filename-scraping-rule-list-page.label.name" | translate }}</th>
+        <th>{{ "filename-scraping-rule-list-page.label.rule" | translate }}</th>
+        <th>
+          {{
+            "filename-scraping-rule-list-page.label.series-position" | translate
+          }}
+        </th>
+        <th>
+          {{
+            "filename-scraping-rule-list-page.label.volume-position" | translate
+          }}
+        </th>
+        <th>
+          {{
+            "filename-scraping-rule-list-page.label.issue-number-position"
+              | translate
+          }}
+        </th>
+        <th>
+          {{
+            "filename-scraping-rule-list-page.label.cover-date-position"
+              | translate
+          }}
+        </th>
+        <th>
+          {{
+            "filename-scraping-rule-list-page.label.cover-date-format"
+              | translate
+          }}
+        </th>
+      </tr>
+    </ng-template>
+
+    <ng-template #body let-entry>
+      <tr>
+        <td>
+          <p-inputgroup>
+            <input
+              pInputText
+              [ngModel]="entry.name"
+              (ngModelChange)="
+                onUpdateRule(entry.filenameScrapingRuleId, { name: $event })
+              "
+            />
+            <p-inputgroup-addon>
+              <p-button
+                [id]="`delete-rule-button-${entry.filenameScrapingRuleId}`"
+                severity="danger"
+                icon="pi pi-times"
+                (click)="onRemoveRule(entry.filenameScrapingRuleId)"
+              />
+            </p-inputgroup-addon>
+          </p-inputgroup>
+        </td>
+        <td>
+          <input
+            pInputText
+            [ngModel]="entry.rule"
+            (ngModelChange)="
+              onUpdateRule(entry.filenameScrapingRuleId, { rule: $event })
+            "
+          />
+        </td>
+        <td>
+          <p-input-number
+            [ngModel]="entry.seriesPosition"
+            (ngModelChange)="
+              onUpdateRule(entry.filenameScrapingRuleId, {
+                seriesPosition: $event
+              })
+            "
+          />
+        </td>
+        <td>
+          <p-input-number
+            [ngModel]="entry.volumePosition"
+            (ngModelChange)="
+              onUpdateRule(entry.filenameScrapingRuleId, {
+                volumePosition: $event
+              })
+            "
+          />
+        </td>
+        <td>
+          <p-input-number
+            [ngModel]="entry.issueNumberPosition"
+            (ngModelChange)="
+              onUpdateRule(entry.filenameScrapingRuleId, {
+                issueNumberPosition: $event
+              })
+            "
+          />
+        </td>
+        <td>
+          <p-input-number
+            [ngModel]="entry.coverDatePosition"
+            (ngModelChange)="
+              onUpdateRule(entry.filenameScrapingRuleId, {
+                coverDatePosition: $event
+              })
+            "
+          />
+        </td>
+        <td>
+          <input
+            pInputText
+            [ngModel]="entry.dateFormat"
+            (ngModelChange)="
+              onUpdateRule(entry.filenameScrapingRuleId, { dateFormat: $event })
+            "
+          />
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</p-card>

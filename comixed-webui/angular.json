@@ -23,6 +23,7 @@
           "builder": "@angular/build:application",
           "options": {
             "allowedCommonJsDependencies": [
+              "file-saver",
               "lodash",
               "sockjs-client",
               "@messageformat/core",

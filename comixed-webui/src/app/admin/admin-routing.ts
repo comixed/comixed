@@ -28,6 +28,7 @@ import { MetadataSourcePage } from '@app/admin/pages/metadata-source-page/metada
 import { DuplicateComicListPage } from '@app/admin/pages/duplicate-comic-list-page/duplicate-comic-list-page';
 import { MultiComicScrapingPage } from '@app/admin/pages/multi-comic-scraping-page/multi-comic-scraping-page';
 import { ImportComicsPage } from '@app/admin/pages/import-comics-page/import-comics-page';
+import { FilenameScrapingRulesPage } from '@app/admin/pages/filename-scraping-rules-page/filename-scraping-rules-page';
 
 const routes: Routes = [
   {
@@ -65,7 +66,7 @@ const routes: Routes = [
     canActivate: [adminGuard]
   },
   {
-    path: 'admin/library/scraping/multi',
+    path: 'admin/scraping/multi',
     component: MultiComicScrapingPage,
     canActivate: [adminGuard]
   },
@@ -82,6 +83,11 @@ const routes: Routes = [
   {
     path: 'admin/settings/metadata',
     component: MetadataSettingsPage,
+    canActivate: [adminGuard]
+  },
+  {
+    path: 'admin/settings/metadata/filenames',
+    component: FilenameScrapingRulesPage,
     canActivate: [adminGuard]
   },
   {

@@ -28,6 +28,8 @@ import { scrapeFilenameFeature } from '@app/metadata/reducers/scrape-filename.re
 import { ScrapeFilenameEffects } from '@app/metadata/effects/scrape-filename.effects';
 import { multiComicScrapingFeature } from '@app/metadata/reducers/multi-comic-scraping.reducer';
 import { MultiComicScrapingEffects } from '@app/metadata/effects/multi-comic-scraping.effects';
+import { filenameScrapingRuleListsFeature } from '@app/metadata/reducers/filename-scraping-rule-list.reducer';
+import { FilenameScrapingRuleListEffects } from '@app/metadata/effects/filename-scraping-rule-list.effects';
 
 @NgModule({
   declarations: [],
@@ -36,11 +38,13 @@ import { MultiComicScrapingEffects } from '@app/metadata/effects/multi-comic-scr
     StoreModule.forFeature(metadataSourceListsFeature),
     StoreModule.forFeature(singleComicScrapingsFeature),
     StoreModule.forFeature(multiComicScrapingFeature),
+    StoreModule.forFeature(filenameScrapingRuleListsFeature),
     StoreModule.forFeature(scrapeFilenameFeature),
     EffectsModule.forFeature([
       MetadataSourceListEffects,
       SingleComicScrapingEffects,
       MultiComicScrapingEffects,
+      FilenameScrapingRuleListEffects,
       ScrapeFilenameEffects
     ])
   ]

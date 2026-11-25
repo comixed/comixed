@@ -247,6 +247,9 @@ importers:
       chart.js:
         specifier: ^4.6.1
         version: 4.6.2
+      file-saver:
+        specifier: ^2.0.5
+        version: 2.0.5
       lodash:
         specifier: ^4.18.1
         version: 4.18.1
@@ -256,6 +259,9 @@ importers:
       ngx-bootstrap:
         specifier: ^22.0.0
         version: 22.0.0(@angular/common@22.3.0(@angular/core@22.3.0(@angular/compiler@22.3.0)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.3.0(@angular/compiler@22.3.0)(rxjs@7.8.2)(zone.js@0.16.3))(@angular/forms@22.3.0(@angular/common@22.3.0(@angular/core@22.3.0(@angular/compiler@22.3.0)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.3.0(@angular/compiler@22.3.0)(rxjs@7.8.2)(zone.js@0.16.3))(@angular/platform-browser@22.3.0(@angular/animations@22.3.0(@angular/core@22.3.0(@angular/compiler@22.3.0)(rxjs@7.8.2)(zone.js@0.16.3)))(@angular/common@22.3.0(@angular/core@22.3.0(@angular/compiler@22.3.0)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.3.0(@angular/compiler@22.3.0)(rxjs@7.8.2)(zone.js@0.16.3)))(rxjs@7.8.2))(rxjs@7.8.2)
+      ngx-filesaver:
+        specifier: ^22.0.0
+        version: 22.0.0(@types/file-saver@2.0.7)(file-saver@2.0.5)
       ngx-scrollbar:
         specifier: ^19.1.5
         version: 19.1.5(@angular/cdk@22.3.0(1decb1449f82e881a5f88d709619a26e))(@angular/common@22.3.0(@angular/core@22.3.0(@angular/compiler@22.3.0)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.3.0(@angular/compiler@22.3.0)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2)
@@ -1993,6 +1999,9 @@ packages:
   '@types/estree@1.0.10':
     resolution: {integrity: sha512-lTyOMnOcmRBzdCv6/4zUZCrEhV0xrqQiUZBZtVcbmLHBXKLnN8q89v/wKRF/Q0HbwVsqbIG3o5HDoFl9sduM+g==}
 
+  '@types/file-saver@2.0.7':
+    resolution: {integrity: sha512-dNKVfHd/jk0SkR/exKGj2ggkB45MAkzvWCaqLUUgkyjITkGNzH8H+yUwr+BLJUBjZOe9w8X3wgmXhZDRg1ED6A==}
+
   '@types/gensync@1.0.5':
     resolution: {integrity: sha512-MbsRCT7mTikHwKZ0X+LVUTLRrZZRLipTuXEO9qOYO+zmjMVk81axyClMROf6uoPD9MRVu46bx8zoR0Ad9q3NAg==}
 
@@ -2504,6 +2513,9 @@ packages:
   file-entry-cache@11.1.5:
     resolution: {integrity: sha512-+PFTHITI08JIGhnNpGNI8T8inUpgZfk3GNEqfT9R2zZV2iFXg3CvqzSl/uEhs7TSGujYRELEANyDvS8Fj7+S7Q==}
 
+  file-saver@2.0.5:
+    resolution: {integrity: sha512-P9bmyZ3h/PRG+Nzga+rbdI4OEpNDzAVyy74uVO9ATgzLK6VtAsYybF/+TOCvrc0MO793d6+42lLyZTw7/ArVzA==}
+
   find-up@5.0.0:
     resolution: {integrity: sha512-78/PXT1wlLLDgTzDs7sjq9hzz0vXD+zn+7wypEe4fXQxCmdmqfGsEPQxmiCSQI3ajFV91bVSsvNtrJRiW6nGng==}
     engines: {node: '>=10'}
@@ -2859,6 +2871,12 @@ packages:
       '@angular/core': ^22.0.0
       '@angular/forms': ^22.0.0
       rxjs: ^6.5.3 || ^7.4.0
+
+  ngx-filesaver@22.0.0:
+    resolution: {integrity: sha512-SH8SVi6SEqUXjhnrVaaxVgajqwb0vgqlWzp/4roqvmkEONBfCtmRB0AgGRrhmf3FHBWFnc8bt6H3B4KPtm8Oiw==}
+    peerDependencies:
+      '@types/file-saver': ^2.0.7
+      file-saver: ^2.0.5
 
   ngx-scrollbar@19.1.5:
     resolution: {integrity: sha512-bEFWnGYiahZLRUfqkdq+NF8VR297rv07FNs2oX3dXoVlUN8SyytohhRjubTJBIqSYeOeCmJjW27sV+ekqCTq0A==}
@@ -4877,6 +4895,8 @@ snapshots:
 
   '@types/estree@1.0.10': {}
 
+  '@types/file-saver@2.0.7': {}
+
   '@types/gensync@1.0.5': {}
 
   '@types/jasmine@7.0.0': {}
@@ -5417,6 +5437,8 @@ snapshots:
     dependencies:
       flat-cache: 6.1.23
 
+  file-saver@2.0.5: {}
+
   find-up@5.0.0:
     dependencies:
       locate-path: 6.0.0
@@ -5750,6 +5772,12 @@ snapshots:
       '@angular/core': 22.3.0(@angular/compiler@22.3.0)(rxjs@7.8.2)(zone.js@0.16.3)
       '@angular/forms': 22.3.0(@angular/common@22.3.0(@angular/core@22.3.0(@angular/compiler@22.3.0)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.3.0(@angular/compiler@22.3.0)(rxjs@7.8.2)(zone.js@0.16.3))(@angular/platform-browser@22.3.0(@angular/animations@22.3.0(@angular/core@22.3.0(@angular/compiler@22.3.0)(rxjs@7.8.2)(zone.js@0.16.3)))(@angular/common@22.3.0(@angular/core@22.3.0(@angular/compiler@22.3.0)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.3.0(@angular/compiler@22.3.0)(rxjs@7.8.2)(zone.js@0.16.3)))(rxjs@7.8.2)
       rxjs: 7.8.2
+      tslib: 2.9.1
+
+  ngx-filesaver@22.0.0(@types/file-saver@2.0.7)(file-saver@2.0.5):
+    dependencies:
+      '@types/file-saver': 2.0.7
+      file-saver: 2.0.5
       tslib: 2.9.1
 
   ngx-scrollbar@19.1.5(@angular/cdk@22.3.0(1decb1449f82e881a5f88d709619a26e))(@angular/common@22.3.0(@angular/core@22.3.0(@angular/compiler@22.3.0)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.3.0(@angular/compiler@22.3.0)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2):

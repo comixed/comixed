@@ -53,7 +53,7 @@ export class MultiComicScrapingEffects {
             tap(response => this.logger.debug('Response received:', response)),
             tap(response => {
               if (response.comics.length > 0) {
-                this.router.navigateByUrl('/admin/library/scraping/multi');
+                this.router.navigateByUrl('/admin/scraping/multi');
               }
             }),
             map(response =>

@@ -18,6 +18,7 @@
 import { MetadataSource } from '@app/metadata/models/metadata-source';
 import { ScrapingVolume } from '@app/metadata/models/scraping-volume';
 import { ScrapingIssue } from '@app/metadata/models/scraping-issue';
+import { FilenameScrapingRule } from '@app/metadata/models/filename-scraping-rule';
 
 export const METADATA_SOURCE_1: MetadataSource = {
   metadataSourceId: 3000,
@@ -68,4 +69,28 @@ export const SCRAPING_ISSUE_1: ScrapingIssue = {
   storeDate: new Date().getTime(),
   coverUrl: 'http://localhost/scraping-issue-cover',
   description: 'This is a test scraping issue.'
+};
+
+export const FILENAME_SCRAPING_RULE_1: FilenameScrapingRule = {
+  filenameScrapingRuleId: 7000,
+  priority: 0,
+  name: 'The first rule',
+  rule: 'The rule text',
+  seriesPosition: 1,
+  volumePosition: 2,
+  issueNumberPosition: 3,
+  coverDatePosition: 4,
+  dateFormat: 'YYYYmmdd'
+};
+
+export const FILENAME_SCRAPING_RULE_2: FilenameScrapingRule = {
+  filenameScrapingRuleId: 7001,
+  priority: 1,
+  name: 'The second rule',
+  rule: 'The rule text',
+  seriesPosition: 4,
+  volumePosition: 3,
+  issueNumberPosition: 2,
+  coverDatePosition: null,
+  dateFormat: null
 };
