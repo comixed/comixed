@@ -1,3 +1,4 @@
+
 name: Build and Release
 
 on:
@@ -35,11 +36,14 @@ jobs:
         with:
           fetch-depth: 0
 
-      # Fetch the Git notes used by semantic-release to track
-      # release channels for existing tags.
       - name: Fetch semantic-release notes
         run: |
-          git fetch origin refs/notes/semantic-release:refs/notes/semantic-release
+          if git ls-remote --exit-code origin refs/notes/semantic-release >/dev/null; then
+            git fetch origin refs/notes/semantic-release:refs/notes/semantic-release
+          else
+            echo "::error::The semantic-release notes reference does not exist on origin."
+            exit 1
+          fi
 
       - name: Set up Java
         uses: actions/setup-java@v4
@@ -70,6 +74,10 @@ jobs:
             @semantic-release/exec \
             @semantic-release/github
 
+      - name: Record existing tags
+        run: |
+          git tag --list | sort > "$RUNNER_TEMP/tags-before"
+
       - name: Run semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -78,15 +86,27 @@ jobs:
       - name: Determine released version
         id: release-version
         run: |
-          TAG=$(git tag --points-at HEAD --sort=-version:refname | head -n 1)
+          git tag --list | sort > "$RUNNER_TEMP/tags-after"
 
-          if [[ "$TAG" =~ ^v[0-9] ]]; then
-            VERSION="${TAG#v}"
+          NEW_TAGS=$(comm -13 \
+            "$RUNNER_TEMP/tags-before" \
+            "$RUNNER_TEMP/tags-after")
+
+          VERSION=""
+
+          while IFS= read -r TAG; do
+            if [[ "$TAG" =~ ^v[0-9] ]]; then
+              VERSION="${TAG#v}"
+              break
+            fi
+          done <<< "$NEW_TAGS"
+
+          if [[ -n "$VERSION" ]]; then
             echo "version=$VERSION" >> "$GITHUB_OUTPUT"
             echo "Released version: $VERSION"
           else
-            echo "No release was published."
             echo "version=" >> "$GITHUB_OUTPUT"
+            echo "No release was published."
           fi
 
       - name: Determine release branch
@@ -109,7 +129,9 @@ jobs:
   docker:
     name: Build and Publish Docker Image
     needs: release
-    if: needs.release.outputs.version != ''
+    if: >-
+      needs.release.outputs.version != '' &&
+      startsWith(needs.release.outputs.branch, 'release/')
     runs-on: ubuntu-latest
 
     steps:
@@ -133,26 +155,16 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Determine Docker tags
-        id: docker-tags
-        run: |
-          VERSION="${{ needs.release.outputs.version }}"
-          BRANCH="${{ needs.release.outputs.branch }}"
-
-          TAGS="comixed/comixed:${VERSION}"
-
-          if [[ "$BRANCH" == release/* ]]; then
-            TAGS="${TAGS},comixed/comixed:latest"
-          fi
-
-          echo "tags=${TAGS}" >> "$GITHUB_OUTPUT"
-
       - name: Build and publish Docker image
         uses: docker/build-push-action@v6
         with:
           context: .
           push: true
-          tags: ${{ steps.docker-tags.outputs.tags }}
+          build-args: |
+            VERSION=${{ needs.release.outputs.version }}
+          tags: |
+            comixed/comixed:${{ needs.release.outputs.version }}
+            comixed/comixed:latest
 
   version-bump:
     name: Create Version Bump Pull Request
@@ -199,7 +211,8 @@ jobs:
         env:
           VERSION: ${{ needs.release.outputs.version }}
         working-directory: comixed-webui
-        run: pnpm pkg set "version=${VERSION}"
+        run: |
+          pnpm pkg set "version=${VERSION}"
 
       - name: Create version bump pull request
         uses: peter-evans/create-pull-request@v7
