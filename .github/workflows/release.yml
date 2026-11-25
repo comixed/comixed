@@ -103,7 +103,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: comixed-release
-          path: comixed-release/target/*.zip
+          path: '*.zip'
           if-no-files-found: error
 
   docker:
