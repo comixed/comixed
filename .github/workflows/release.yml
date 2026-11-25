@@ -1,88 +1,133 @@
+
 name: Build and Release
 
 on:
-  push:
+  pull_request:
+    types: [closed]
     branches:
       - main
-      - 'release/v*.*'
-      - 'epic/**'
+      - epic/**
+  push:
+    branches:
+      - release/**
+
+concurrency:
+  group: release-${{ github.event.pull_request.base.ref || github.ref }}
+  cancel-in-progress: false
 
 permissions:
-  contents: write      # Push version commits, git tags, and GitHub Releases
-  issues: write        # Comment on resolved issues
-  pull-requests: write # Comment on merged PRs
-  packages: write      # Push packages/images if using GHCR
+  contents: write
+  issues: write
+  pull-requests: write
+  packages: write
 
 jobs:
   release:
+    name: Create Release
+    if: >-
+      github.event_name == 'push' ||
+      (github.event_name == 'pull_request' &&
+       github.event.pull_request.merged == true)
+
     runs-on: ubuntu-latest
+
+    env:
+      RELEASE_BRANCH: ${{ github.event.pull_request.base.ref || github.ref_name }}
+
     outputs:
-      new_release_published: ${{ steps.semantic.outputs.new_release_published }}
-      new_release_version: ${{ steps.semantic.outputs.new_release_version }}
+      version: ${{ steps.release_version.outputs.version }}
+      branch: ${{ env.RELEASE_BRANCH }}
 
     steps:
-      - name: Checkout repository
+      - name: Checkout target branch
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Full git history required for semantic-release
+          ref: ${{ github.event.pull_request.base.ref || github.ref_name }}
+          fetch-depth: 0
 
-      - name: Set up JDK 25
+      - name: Set up Java
         uses: actions/setup-java@v4
         with:
+          distribution: temurin
           java-version: '25'
-          distribution: 'temurin'
           cache: maven
 
-      - name: Cache pnpm store
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24.15.0'
+
+      - name: Enable pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@12.10.1 --activate
+
+      - name: Cache pnpm
         uses: actions/cache@v4
         with:
-          path: |
-            ~/.local/share/pnpm/store
-            comixed-webui/node
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          path: ~/.local/share/pnpm/store
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('comixed-webui/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-
 
-      - name: Set up Node.js for semantic-release
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install semantic-release and plugins
+      - name: Install semantic-release
         run: |
           npm install --no-save \
             semantic-release \
             @semantic-release/changelog \
+            @semantic-release/commit-analyzer \
             @semantic-release/exec \
             @semantic-release/git \
-            @semantic-release/github
+            @semantic-release/github \
+            @semantic-release/release-notes-generator
 
       - name: Run semantic-release
-        id: semantic
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npx semantic-release
 
-      - name: Upload release archive for Docker job
-        if: steps.semantic.outputs.new_release_published == 'true'
+      - name: Determine released version
+        id: release_version
+        shell: bash
+        run: |
+          TAG=$(git tag --points-at HEAD --sort=-version:refname | head -n 1)
+
+          if [[ "$TAG" =~ ^v[0-9] ]]; then
+            VERSION="${TAG#v}"
+            echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+            echo "Released version: $VERSION"
+          else
+            echo "No release was published."
+            echo "version=" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build release package
+        if: steps.release_version.outputs.version != ''
+        run: mvn -B -DskipTests package
+
+      - name: Upload release package
+        if: steps.release_version.outputs.version != ''
         uses: actions/upload-artifact@v4
         with:
           name: comixed-release-zip
           path: comixed-release/target/*.zip
+          if-no-files-found: error
           retention-days: 1
 
   docker:
+    name: Build and Push Docker Image
     needs: release
-    if: needs.release.outputs.new_release_published == 'true'
+    if: needs.release.outputs.version != ''
+
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout release tag
         uses: actions/checkout@v4
         with:
-          ref: v${{ needs.release.outputs.new_release_version }}
+          ref: v${{ needs.release.outputs.version }}
 
-      - name: Download release archive
+      - name: Download release package
         uses: actions/download-artifact@v4
         with:
           name: comixed-release-zip
@@ -97,22 +142,30 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Set Docker tags
+      - name: Prepare Docker tags
         id: docker_tags
+        shell: bash
+        env:
+          VERSION: ${{ needs.release.outputs.version }}
+          RELEASE_BRANCH: ${{ needs.release.outputs.branch }}
         run: |
-          VERSION="${{ needs.release.outputs.new_release_version }}"
           TAGS="comixed/comixed:${VERSION}"
-          if [[ "${{ github.ref }}" == refs/heads/release/* ]]; then
-            TAGS="${TAGS},comixed/comixed:latest"
+
+          if [[ "$RELEASE_BRANCH" == release/* ]]; then
+            TAGS="${TAGS}"$'\n'"comixed/comixed:latest"
           fi
-          echo "tags=${TAGS}" >> "$GITHUB_OUTPUT"
+
+          {
+            echo "tags<<EOF"
+            echo "$TAGS"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: ./docker/Dockerfile
           push: true
           build-args: |
-            VERSION=${{ needs.release.outputs.new_release_version }}
+            VERSION=${{ needs.release.outputs.version }}
           tags: ${{ steps.docker_tags.outputs.tags }}
