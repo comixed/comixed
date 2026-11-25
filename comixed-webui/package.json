@@ -100,7 +100,7 @@
     "sockjs-client": "^1.5.0",
     "ssri": "^12.0.0",
     "terser": "~5.43.1",
-    "tough-cookie": "~6.0.0",
+    "tough-cookie": "~6.1.0",
     "tslib": "^2.0.0",
     "ua-parser-js": "^2.0.10",
     "uuid": "^14.0.2",
