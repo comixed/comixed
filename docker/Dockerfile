@@ -1,3 +1,4 @@
+
 FROM eclipse-temurin:25-jre
 
 ARG VERSION
@@ -29,7 +30,7 @@ RUN (cd /app && unzip /ul/comixed-release.zip) && \
 WORKDIR /app
 RUN chmod +x /app/comixed-release/bin/run.sh /app/comixed-release/bin/docker-run.sh
 
-ENV PATH="$JAVA_HOME/bin:${PATH}"
+ENV PATH="${JAVA_HOME}/bin:${PATH}"
 
 EXPOSE 7171
 VOLUME /library
