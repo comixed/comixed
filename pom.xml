@@ -43,7 +43,7 @@
   <properties>
     <revision>5.0-SNAPSHOT</revision>
     <assembly.name>local</assembly.name>
-    <maven-git-code-format.version>5.4</maven-git-code-format.version>
+    <maven-git-code-format.version>6.2</maven-git-code-format.version>
     <git-code-format-maven-plugin.version>5.4</git-code-format-maven-plugin.version>
     <java.version>25</java.version>
     <jackson-bom.version>3.1.8</jackson-bom.version>
