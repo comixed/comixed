@@ -84,7 +84,7 @@
     "@vitest/coverage-v8": "^5.1.1",
     "angular-eslint": "22.8.0",
     "eslint": "^10.15.0",
-    "jsdom": "^28.1.0",
+    "jsdom": "^31.0.1",
     "postcss": "^8.5.33",
     "prettier": "^3.10.1",
     "tailwindcss": "^4.3.5",
