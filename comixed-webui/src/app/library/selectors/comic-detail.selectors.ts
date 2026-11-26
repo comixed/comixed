@@ -45,3 +45,8 @@ export const selectComicDetailPages = createSelector(
   selectComicDetailState,
   state => state.pages
 );
+
+export const selectComicDetailMetadata = createSelector(
+  selectComicDetailState,
+  state => state.metadata
+);

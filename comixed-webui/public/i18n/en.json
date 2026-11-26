@@ -140,6 +140,9 @@
       "series": "Series",
       "skip-cache": "Skip Cache",
       "volume": "Volume"
+    },
+    "tooltip": {
+      "scrape-by-reference-id": "Scrape this comic using the reference id..."
     }
   },
   "comic-page": {

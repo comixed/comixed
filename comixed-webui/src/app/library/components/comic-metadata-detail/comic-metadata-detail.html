@@ -9,11 +9,12 @@
 } @else {
   <p-card id="scraping-volume-form">
     <form [formGroup]="scrapingForm">
-      <div class="cx-form-grid">
-        <div class="scraping-options">
+      <div class="cx-flex-content-container-row">
+        <div class="cx-flex-content-grow-1">
           <p-ifta-label>
             <p-select
               id="max-records-select"
+              class="cx-width-100p"
               formControlName="maximumRecords"
               [options]="maximumRecordOptions"
               [optionLabel]=""
@@ -30,7 +31,9 @@
               {{ "comic-metadata-detail.label.maximum-records" | translate }}
             </label>
           </p-ifta-label>
+        </div>
 
+        <div class="cx-flex-content-grow-1 cx-justify-center-vertical">
           <p-checkbox
             id="match-publisher-option"
             formControlName="matchPublisher"
@@ -39,7 +42,6 @@
           <label for="match-publisher-option">
             {{ "comic-metadata-detail.label.match-publisher" | translate }}
           </label>
-
           <p-checkbox
             id="skip-cache-option"
             formControlName="skipCache"
@@ -49,11 +51,14 @@
             {{ "comic-metadata-detail.label.skip-cache" | translate }}
           </label>
         </div>
+      </div>
 
-        <div class="cx-form-field-wide">
+      <div class="cx-flex-content-container-row">
+        <div class="cx-flex-content-grow-2">
           <p-ifta-label>
             <p-select
               id="metadata-source-select"
+              #metadataSource
               class="cx-width-100p"
               [options]="metadataSourceList()"
               optionLabel="name"
@@ -67,43 +72,98 @@
           </p-ifta-label>
         </div>
 
-        <div class="cx-form-field">
+        @if (!multiScrapingMode()) {
+          <div class="cx-flex-content-grow-1">
+            <p-ifta-label>
+              <label for="reference-id">
+                {{ "comic-metadata-detail.label.reference-id" | translate }}
+              </label>
+              <p-input-group>
+                <input
+                  id="reference-id"
+                  #referenceId
+                  class="cx-width-100p"
+                  pInputText
+                  formControlName="referenceId"
+                />
+                <p-inputgroup-addon>
+                  <p-button
+                    id="scrape-comic-by-reference-id"
+                    severity="primary"
+                    icon="pi pi-cloud"
+                    [disabled]="
+                      scrapingVolumeBusy() ||
+                      scrapingFilenameBusy() ||
+                      metadataSource.value === null ||
+                      referenceId.value?.length === 0
+                    "
+                    [pTooltip]="
+                      'comic-metadata-detail.tooltip.scrape-by-reference-id'
+                        | translate
+                    "
+                    (onClick)="onScrapeByReferenceId(referenceId.value)"
+                  />
+                </p-inputgroup-addon>
+              </p-input-group>
+            </p-ifta-label>
+          </div>
+        }
+      </div>
+
+      <div class="cx-flex-content-container-row">
+        <div class="cx-flex-content-grow-1">
           <p-ifta-label>
             <label for="publisher-input">
               {{ "comic-metadata-detail.label.publisher" | translate }}
             </label>
             <input
               id="publisher-input"
+              class="cx-width-100p"
               pInputText
               formControlName="publisher"
             />
           </p-ifta-label>
         </div>
 
-        <div class="cx-form-field">
+        <div class="cx-flex-content-grow-1">
           <p-ifta-label>
             <label for="series-input">
               {{ "comic-metadata-detail.label.series" | translate }}
             </label>
-            <input id="series-input" pInputText formControlName="series" />
+            <input
+              id="series-input"
+              class="cx-width-100p"
+              pInputText
+              formControlName="series"
+            />
           </p-ifta-label>
         </div>
 
-        <div class="cx-form-field">
+        <div class="cx-flex-content-grow-1">
           <p-ifta-label>
             <label for="volume-input">
               {{ "comic-metadata-detail.label.volume" | translate }}
             </label>
-            <input id="series-input" pInputText formControlName="volume" />
+            <input
+              id="series-input"
+              class="cx-width-100p"
+              pInputText
+              formControlName="volume"
+            />
           </p-ifta-label>
         </div>
 
-        <div class="cx-form-field">
+        <div class="cx-flex-content-grow-1">
           <p-ifta-label>
             <label for="issue-number-input">
               {{ "comic-metadata-detail.label.issue-number" | translate }}
             </label>
-            <input id="series-input" pInputText formControlName="issueNumber" />
+            <input
+              id="series-input"
+              class="cx-width-100p"
+              pInputText
+              formControlName="issueNumber"
+            />
           </p-ifta-label>
         </div>
       </div>
@@ -116,6 +176,7 @@
           icon="pi pi-compass"
           severity="warn"
           [label]="'comic-metadata-detail.button.scrape-filename' | translate"
+          [disabled]="scrapingVolumeBusy() || scrapingFilenameBusy()"
           (onClick)="onScrapeFilename()"
         />
         <p-button
@@ -124,6 +185,7 @@
           severity="danger"
           [label]="'app.button.reset' | translate"
           [disabled]="!scrapingForm.dirty"
+          [disabled]="scrapingVolumeBusy() || scrapingFilenameBusy()"
           (onClick)="onResetForm()"
         />
         <p-button
@@ -132,6 +194,7 @@
           severity="primary"
           [label]="'app.button.submit' | translate"
           [disabled]="!scrapingForm.valid"
+          [disabled]="scrapingVolumeBusy() || scrapingFilenameBusy()"
           (onClick)="onLoadVolumes()"
         />
       </div>

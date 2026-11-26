@@ -30,6 +30,7 @@ import { ComicDetailAction } from '@app/library/actions/comic-detail.actions';
 import {
   selectComicDetail,
   selectComicDetailLoaded,
+  selectComicDetailMetadata,
   selectComicDetailPages,
   selectComicDetailTags
 } from '@app/library/selectors/comic-detail.selectors';
@@ -98,9 +99,10 @@ export class ComicPage {
   readonly confirmationService = inject(ConfirmationService);
 
   readonly loading = this.store.selectSignal(selectComicDetailLoaded);
-  readonly comic = this.store.selectSignal(selectComicDetail);
-  readonly tags = this.store.selectSignal(selectComicDetailTags);
-  readonly pages = this.store.selectSignal(selectComicDetailPages);
+  readonly comicDetail = this.store.selectSignal(selectComicDetail);
+  readonly comicTags = this.store.selectSignal(selectComicDetailTags);
+  readonly comicPages = this.store.selectSignal(selectComicDetailPages);
+  readonly comicMetadata = this.store.selectSignal(selectComicDetailMetadata);
   readonly isAdmin = this.store.selectSignal(selectUserIsAdmin);
   readonly currentTab = signal('publication');
 
@@ -174,11 +176,13 @@ export class ComicPage {
       accept: () => {
         if (removal) {
           this.store.dispatch(
-            ComicRemovalActions.markOneForRemoval({ comic: this.comic() })
+            ComicRemovalActions.markOneForRemoval({ comic: this.comicDetail() })
           );
         } else {
           this.store.dispatch(
-            ComicRemovalActions.unmarkOneForRemoval({ comic: this.comic() })
+            ComicRemovalActions.unmarkOneForRemoval({
+              comic: this.comicDetail()
+            })
           );
         }
       }
@@ -199,7 +203,7 @@ export class ComicPage {
           SingleComicScrapingActions.scrapeComic({
             metadataSource: event.metadataSource,
             issueId: event.issue.id,
-            comic: this.comic(),
+            comic: this.comicDetail(),
             skipCache: event.skipCache
           })
         );
@@ -208,7 +212,7 @@ export class ComicPage {
   }
 
   private doLoadTranslations() {
-    const pageTitle = this.comicTitlePipe.transform(this.comic());
+    const pageTitle = this.comicTitlePipe.transform(this.comicDetail());
     this.titleService.setTitle(pageTitle);
   }
 }

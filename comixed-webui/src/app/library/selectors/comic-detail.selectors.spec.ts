@@ -25,19 +25,22 @@ import {
 import {
   selectComicDetail,
   selectComicDetailLoaded,
+  selectComicDetailMetadata,
   selectComicDetailPages,
   selectComicDetailTags
 } from '@app/library/selectors/comic-detail.selectors';
 import {
   COMIC_1,
   COMIC_PAGE_1,
-  COMIC_TAG_1
+  COMIC_TAG_1,
+  METADATA_1
 } from '@app/library/library-fixtures';
 
 describe('User Selectors', () => {
   const TEST_COMIC = COMIC_1;
   const TEST_TAGS = [COMIC_TAG_1];
   const TEST_PAGES = [COMIC_PAGE_1];
+  const TEST_METADATA = METADATA_1;
 
   let state: ComicDetailState;
 
@@ -101,5 +104,16 @@ describe('User Selectors', () => {
         }
       })
     ).toBe(TEST_PAGES);
+  });
+
+  it('should return the metadata', () => {
+    expect(
+      selectComicDetailMetadata({
+        [COMIC_DETAIL_FEATURE_KEY]: {
+          ...initialComicDetailState,
+          metadata: TEST_METADATA
+        }
+      })
+    ).toBe(TEST_METADATA);
   });
 });

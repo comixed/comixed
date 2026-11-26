@@ -4,12 +4,11 @@
       <h3>
         {{ "comic-publication-detail.title.publication-info" | translate }}
       </h3>
-      <div class="cx-form-grid">
-        <!-- Publisher -->
-        <div class="cx-form-field">
+      <div class="cx-flex-content-container-row">
+        <div class="cx-flex-content-grow-1">
           <p-ifta-label>
             <label for="publisher-input">
-              {{ "comic-publication-detail.label.notes" | translate }}
+              {{ "comic-publication-detail.label.publisher" | translate }}
             </label>
             <input
               id="publisher-input"
@@ -20,8 +19,7 @@
           </p-ifta-label>
         </div>
 
-        <!-- Imprint -->
-        <div class="cx-form-field">
+        <div class="cx-flex-content-grow-1">
           <p-ifta-label>
             <label for="imprint-input">
               {{ "comic-publication-detail.label.imprint" | translate }}
@@ -34,56 +32,55 @@
             />
           </p-ifta-label>
         </div>
+      </div>
 
-        <!-- Series -->
-        <div class="cx-form-grid">
-          <div class="cx-form-field">
-            <p-ifta-label>
-              <label for="series-input">
-                {{ "comic-publication-detail.label.series" | translate }}
-              </label>
-              <input
-                id="series-input"
-                class="cx-width-100p"
-                formControlName="series"
-                pInputText
-              />
-            </p-ifta-label>
-          </div>
-
-          <!-- Volume -->
-          <div class="cx-form-field">
-            <p-ifta-label>
-              <label for="volume-input">
-                {{ "comic-publication-detail.label.volume" | translate }}
-              </label>
-              <input
-                id="volume-input"
-                class="cx-width-100p"
-                formControlName="volume"
-                pInputText
-              />
-            </p-ifta-label>
-          </div>
-
-          <!-- Issue Number -->
-          <div class="cx-form-field">
-            <p-ifta-label>
-              <label for="issue-number-input">
-                {{ "comic-publication-detail.label.issue-number" | translate }}
-              </label>
-              <input
-                id="issue-number-input"
-                class="cx-width-100p"
-                formControlName="issueNumber"
-                pInputText
-              />
-            </p-ifta-label>
-          </div>
+      <div class="cx-flex-content-container-row">
+        <div class="cx-flex-content-grow-1">
+          <p-ifta-label>
+            <label for="series-input">
+              {{ "comic-publication-detail.label.series" | translate }}
+            </label>
+            <input
+              id="series-input"
+              class="cx-width-100p"
+              formControlName="series"
+              pInputText
+            />
+          </p-ifta-label>
         </div>
 
-        <!-- Title -->
-        <div class="cx-form-field cx-form-field-wide">
+        <div class="cx-flex-content-grow-1">
+          <p-ifta-label>
+            <label for="volume-input">
+              {{ "comic-publication-detail.label.volume" | translate }}
+            </label>
+            <input
+              id="volume-input"
+              class="cx-width-100p"
+              formControlName="volume"
+              pInputText
+            />
+          </p-ifta-label>
+        </div>
+
+        <div class="cx-flex-content-grow-1">
+          <p-ifta-label>
+            <label for="issue-number-input">
+              {{ "comic-publication-detail.label.issue-number" | translate }}
+            </label>
+            <input
+              id="issue-number-input"
+              class="cx-width-100p"
+              formControlName="issueNumber"
+              pInputText
+            />
+          </p-ifta-label>
+        </div>
+      </div>
+
+      <!-- Title -->
+      <div class="cx-flex-content-container-row">
+        <div class="cx-flex-content-grow-1">
           <p-ifta-label>
             <label for="title-input">
               {{ "comic-publication-detail.label.title" | translate }}
@@ -96,8 +93,10 @@
             />
           </p-ifta-label>
         </div>
+      </div>
 
-        <div class="cx-form-field">
+      <div class="cx-flex-content-container-row">
+        <div class="cx-flex-content-grow-1">
           <label for="cover-date-input">
             {{ "comic-publication-detail.label.cover-date" | translate }}
           </label>
@@ -107,9 +106,7 @@
             [showIcon]="true"
             [showClear]="true"
           />
-        </div>
 
-        <div class="cx-form-field">
           <label for="store-date-input">
             {{ "comic-publication-detail.label.store-date" | translate }}
           </label>
@@ -121,12 +118,23 @@
           />
         </div>
       </div>
+
+      <div class="form-actions">
+        <p-button
+          id="save-publication-changes"
+          icon="pi pi-save"
+          severity="primary"
+          [label]="'app.button.submit' | translate"
+          [disabled]="!publicationForm.valid || isLoading()"
+          (onClick)="onUpdateComic()"
+        />
+      </div>
     </section>
 
     <section class="form-section">
       <h3>{{ "comic-publication-detail.title.file-info" | translate }}</h3>
-      <div class="cx-form-grid">
-        <div class="cx-form-field cx-form-field-wide">
+      <div class="cx-flex-content-container-row">
+        <div class="cx-flex-content-grow-1">
           <p-ifta-label>
             <label for="filename-input">
               {{ "comic-publication-detail.label.filename" | translate }}
@@ -135,11 +143,15 @@
               id="filename-input"
               formControlName="filename"
               pInputText
+              class="cx-width-100p"
               readonly
             />
           </p-ifta-label>
         </div>
-        <div class="cx-form-field cx-form-field-wide">
+      </div>
+
+      <div class="cx-flex-content-container-row">
+        <div class="cx-flex-content-grow-1">
           <p-ifta-label>
             <label for="notes-input">
               {{ "comic-publication-detail.label.notes" | translate }}
@@ -148,12 +160,15 @@
               id="notes-input"
               formControlName="notes"
               pInputTextarea
+              class="cx-width-100p"
               readonly
             />
           </p-ifta-label>
         </div>
+      </div>
 
-        <div class="cx-form-field">
+      <div class="cx-flex-content-container-row">
+        <div class="cx-flex-content-grow-1">
           <p-ifta-label>
             <label for="comic-type-input">
               {{ "comic-publication-detail.label.comic-type" | translate }}
@@ -162,12 +177,13 @@
               id="comic-type-input"
               formControlName="comicType"
               pInputText
+              class="cx-width-100p"
               readonly
             />
           </p-ifta-label>
         </div>
 
-        <div class="cx-form-field">
+        <div class="cx-flex-content-grow-1">
           <p-ifta-label>
             <label for="archive-type-input">
               {{ "comic-publication-detail.label.archive-type" | translate }}
@@ -177,12 +193,13 @@
               class="cx-width-100p"
               formControlName="archiveType"
               pInputText
+              class="cx-width-100p"
               readonly
             />
           </p-ifta-label>
         </div>
 
-        <div class="cx-form-field">
+        <div class="cx-flex-content-grow-1">
           <p-ifta-label>
             <label for="comic-state-input">
               {{ "comic-publication-detail.label.comic-state" | translate }}
@@ -191,14 +208,15 @@
               id="comic-state-input"
               formControlName="comicState"
               pInputText
+              class="cx-width-100p"
               readonly
             />
           </p-ifta-label>
         </div>
       </div>
 
-      <div class="cx-form-grid">
-        <div class="cx-form-field">
+      <div class="cx-flex-content-container-row">
+        <div class="cx-flex-content-grow-1">
           <label for="added-date-input">
             {{ "comic-publication-detail.label.added-date" | translate }}
           </label>
@@ -207,9 +225,7 @@
             inputId="added-date-input"
             [showIcon]="true"
           />
-        </div>
 
-        <div class="cx-form-field">
           <label for="last-modified-date-input">
             {{
               "comic-publication-detail.label.last-modified-date" | translate
@@ -223,18 +239,5 @@
         </div>
       </div>
     </section>
-
-    <ng-template #footer>
-      <div class="form-actions">
-        <p-button
-          id="save-publication-changes"
-          icon="pi pi-save"
-          severity="primary"
-          [label]="'app.button.submit' | translate"
-          [disabled]="!publicationForm.valid || isLoading()"
-          (onClick)="onUpdateComic()"
-        />
-      </div>
-    </ng-template>
   </p-card>
 </form>

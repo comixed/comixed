@@ -37,7 +37,7 @@ import {
 } from '@app/metadata/reducers/metadata-source-list.reducer';
 import { ConfirmationService } from '@openng/optimus-ui/api';
 import { beforeEach, Mock } from 'vitest';
-import { COMIC_1 } from '@app/library/library-fixtures';
+import { COMIC_1, METADATA_1 } from '@app/library/library-fixtures';
 import { ScrapeFilenameActions } from '@app/metadata/actions/scrape-filename.actions';
 import { SingleComicScrapingActions } from '@app/metadata/actions/single-comic-scraping.actions';
 import {
@@ -51,6 +51,9 @@ describe('ComicMetadataDetail', () => {
   const TEST_SCRAPING_VOLUME_LIST = [SCRAPING_VOLUME_1, SCRAPING_VOLUME_2];
   const TEST_METADATA_SOURCE = METADATA_SOURCE_1;
   const TEST_COMIC = COMIC_1;
+  const TEST_METADATA = METADATA_1;
+  const TEST_ISSUE_ID = TEST_METADATA.referenceId;
+  const TEST_SKIP_CACHE = Math.random() > 0.5;
   const initialState = {
     [SINGLE_COMIC_SCRAPING_FEATURE_KEY]: initialSingleComicScrapingState,
     [SCRAPE_FILENAME_FEATURE_KEY]: initialScrapeFilenameState,
@@ -135,6 +138,35 @@ describe('ComicMetadataDetail', () => {
       child.triggerEventHandler('issueSelected', issueNumber);
 
       expect(emitSpy).toHaveBeenCalledWith(issueNumber);
+    });
+  });
+
+  describe('clicking the scrape by reference id button', () => {
+    let dispatchSpy: Mock;
+
+    beforeEach(() => {
+      component.multiMode = false;
+      component.metadata = TEST_METADATA;
+      component.skipCache = TEST_SKIP_CACHE;
+      fixture.detectChanges();
+      dispatchSpy = vi.spyOn(store, 'dispatch');
+      const button: HTMLButtonElement = fixture.nativeElement.querySelector(
+        '#scrape-comic-by-reference-id button'
+      );
+      expect(button).not.toBeNull();
+      button.click();
+      fixture.detectChanges();
+    });
+
+    it('should dispatch an action to scrape the filename', () => {
+      expect(dispatchSpy).toHaveBeenCalledWith(
+        SingleComicScrapingActions.scrapeComic({
+          metadataSource: TEST_METADATA_SOURCE,
+          issueId: TEST_ISSUE_ID,
+          comic: TEST_COMIC,
+          skipCache: TEST_SKIP_CACHE
+        })
+      );
     });
   });
 

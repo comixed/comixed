@@ -76,6 +76,11 @@ h8 {
   align-items: end;
 }
 
+.cx-justify-center-vertical {
+  display: flex;
+  align-items: center;
+}
+
 .cx-no-text-wrap {
   white-space: nowrap;
   overflow: hidden;
@@ -83,6 +88,10 @@ h8 {
 }
 
 .cx-width-25p {
+  width: 25%;
+}
+
+.cx-width-50p {
   width: 75%;
 }
 
@@ -165,43 +174,6 @@ h8 {
   flex-grow: 2;
   flex-shrink: 2;
   align-self: stretch;
-}
-
-// forms
-
-.cx-form-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.1rem 1rem;
-}
-
-.cx-form-field {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  gap: 0.5rem;
-}
-
-.cx-form-field input {
-  width: 100%;
-}
-
-.cx-form-field-wide {
-  grid-column: 1 / -1;
-}
-
-// form fields
-
-.cx-form-field {
-  display: flex;
-  flex-direction: column;
-  gap: 0.375rem;
-  margin-bottom: 1rem;
-}
-
-.cx-form-field-control {
-  display: block;
-  width: 100%;
 }
 
 // optimus-ui stylings
