@@ -279,8 +279,8 @@ importers:
         version: 0.16.3
     devDependencies:
       '@angular-eslint/builder':
-        specifier: 22.5.0
-        version: 22.5.0(chokidar@6.0.0)(eslint@10.15.0(jiti@2.7.0)(supports-color@8.1.1))(typescript@6.0.3)
+        specifier: 22.8.0
+        version: 22.8.0(chokidar@6.0.0)(eslint@10.15.0(jiti@2.7.0)(supports-color@8.1.1))(typescript@6.0.3)
       '@angular/build':
         specifier: ^22.3.0
         version: 22.3.0(@angular/compiler-cli@22.3.0(@angular/compiler@22.3.0)(typescript@6.0.3))(@angular/compiler@22.3.0)(@angular/core@22.3.0(@angular/compiler@22.3.0)(rxjs@7.8.2)(zone.js@0.16.3))(@angular/platform-browser@22.3.0(@angular/animations@22.3.0(@angular/core@22.3.0(@angular/compiler@22.3.0)(rxjs@7.8.2)(zone.js@0.16.3)))(@angular/common@22.3.0(@angular/core@22.3.0(@angular/compiler@22.3.0)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.3.0(@angular/compiler@22.3.0)(rxjs@7.8.2)(zone.js@0.16.3)))(jiti@2.7.0)(postcss@8.5.33)(supports-color@8.1.1)(tailwindcss@4.3.5)(tslib@2.9.1)(typescript@6.0.3)(vitest@5.1.1)
@@ -378,12 +378,6 @@ packages:
   '@angular-devkit/schematics@22.3.0':
     resolution: {integrity: sha512-+g8v7Kh6GMirUslVz1cumWkVMJ22Zr0Id1SkE6DOK3fsvqi8WeyTXe+Lh/m365lrBsPjBES+FAjjroZFvpmz+A==}
     engines: {node: ^22.22.3 || ^24.15.0 || >=26.0.0, npm: ^6.11.0 || ^7.5.6 || >=8.0.0, yarn: '>= 1.13.0'}
-
-  '@angular-eslint/builder@22.5.0':
-    resolution: {integrity: sha512-bChGIHOApVk3eXaAfCOxxb54tToIttSzADEUpuBN6cs7Jp7OO96lNpMktv9IPvxfyVrhbriocwNy33jhpRSt0Q==}
-    peerDependencies:
-      eslint: ^9.0.0 || ^10.0.0
-      typescript: '*'
 
   '@angular-eslint/builder@22.8.0':
     resolution: {integrity: sha512-A6DocmcoqdVwWDeSQ3h/qdj/v2lly2Yu4l0ccC2J46JR93k89bdHaj8DwM1pel7KyGyOYPnNw95iwr7T4GEUSA==}
@@ -2281,6 +2275,10 @@ packages:
     resolution: {integrity: sha512-DkVaaQHymRhpYEYo9x1oo7Q7B0Y6KJUsjm3c9eTyFDby4MHLBTwZ6ZDWBel5zrYxj1WsZgC5oLpiz+93MluXeA==}
     engines: {node: '>=20.19.0'}
 
+  brace-expansion@5.0.13:
+    resolution: {integrity: sha512-Vh3dmFbc4wZeox7M9I/0L9GfFd83Su4+yCck/OF9Gi/P/dAHn0RT7X4K9R7gMNMhDck3DvhR6QXsnQdjjgwNvQ==}
+    engines: {node: 20 || >=22}
+
   brace-expansion@5.1.0:
     resolution: {integrity: sha512-aa11Dv491GKnYqxaul3aRJ0szew7yMJMfZPnqD44NjGrZXoj62l41OEDDpdpC4eE2P88vBFfLuSyRhpG91NUvg==}
     engines: {node: 20 || >=22}
@@ -3676,15 +3674,6 @@ snapshots:
       magic-string: 1.4.5
       ora: 10.0.0
       rxjs: 7.8.2
-    transitivePeerDependencies:
-      - chokidar
-
-  '@angular-eslint/builder@22.5.0(chokidar@6.0.0)(eslint@10.15.0(jiti@2.7.0)(supports-color@8.1.1))(typescript@6.0.3)':
-    dependencies:
-      '@angular-devkit/architect': 0.2203.0(chokidar@6.0.0)
-      '@angular-devkit/core': 22.3.0(chokidar@6.0.0)
-      eslint: 10.15.0(jiti@2.7.0)(supports-color@8.1.1)
-      typescript: 6.0.3
     transitivePeerDependencies:
       - chokidar
 
@@ -5242,6 +5231,10 @@ snapshots:
 
   boolbase@2.0.0: {}
 
+  brace-expansion@5.0.13:
+    dependencies:
+      balanced-match: 4.0.4
+
   brace-expansion@5.1.0:
     dependencies:
       balanced-match: 4.0.4
@@ -5831,7 +5824,7 @@ snapshots:
 
   minimatch@10.2.6:
     dependencies:
-      brace-expansion: 5.1.0
+      brace-expansion: 5.0.13
 
   minimatch@11.0.9:
     dependencies:
