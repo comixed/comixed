@@ -64,7 +64,7 @@
     <plugins>
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
-        <version>3.2.0</version>
+        <version>3.8.0</version>
         <configuration>
           <outputDirectory>..</outputDirectory>
           <finalName>${project.name}</finalName>
