@@ -82,7 +82,7 @@
     "@types/lodash": "^4.17.27",
     "@types/sockjs-client": "^1.5.4",
     "@vitest/coverage-v8": "^5.1.1",
-    "angular-eslint": "22.5.0",
+    "angular-eslint": "22.8.0",
     "eslint": "^10.15.0",
     "jsdom": "^28.1.0",
     "postcss": "^8.5.33",
