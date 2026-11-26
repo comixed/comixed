@@ -19,14 +19,19 @@
 package org.comixedproject.adaptors.file;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import org.apache.tika.Tika;
 import org.apache.tika.detect.Detector;
+import org.apache.tika.io.TikaInputStream;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.mime.MediaType;
+import org.apache.tika.parser.ParseContext;
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.archive.ArchiveAdaptor;
 import org.comixedproject.adaptors.archive.model.ArchiveEntryType;
@@ -64,18 +69,18 @@ class FileTypeAdaptorTest {
   @Mock private ContentAdaptorRegistry contentAdaptorRegistry;
   @Mock private ContentAdaptor contentAdaptor;
 
-  @Captor private ArgumentCaptor<? extends InputStream> argumentCaptorInputStream;
+  @Captor private ArgumentCaptor<? extends TikaInputStream> argumentCaptorTikaInputStream;
 
   private FileTypeAdaptor.ArchiveAdaptorDefinition archiveAdaptorEntry =
       new FileTypeAdaptor.ArchiveAdaptorDefinition(
           TEST_MEDIA_TYPE.getSubtype(), TEST_BEAN_NAME, TEST_ARCHIVE_TYPE, TEST_EXTENSION);
-  private ByteArrayInputStream inputStream = new ByteArrayInputStream(TEST_CONTENT);
+  private TikaInputStream inputStream = TikaInputStream.get(new ByteArrayInputStream(TEST_CONTENT));
 
   @BeforeEach
   void setUp() {
-    Mockito.when(tika.getDetector()).thenReturn(detector);
+    when(tika.getDetector()).thenReturn(detector);
     adaptor.getArchiveAdaptors().add(archiveAdaptorEntry);
-    Mockito.when(contentAdaptor.getArchiveEntryType()).thenReturn(TEST_ARCHIVE_ENTRY_TYPE);
+    when(contentAdaptor.getArchiveEntryType()).thenReturn(TEST_ARCHIVE_ENTRY_TYPE);
   }
 
   @Test
@@ -99,9 +104,9 @@ class FileTypeAdaptorTest {
 
   @Test
   void getArchiveAdaptorFor_filenameSubtypeMatch() throws AdaptorException, IOException {
-    Mockito.when(detector.detect(Mockito.any(InputStream.class), Mockito.any(Metadata.class)))
+    when(detector.detect(any(TikaInputStream.class), any(Metadata.class), any(ParseContext.class)))
         .thenReturn(TEST_MEDIA_TYPE);
-    Mockito.when(applicationContext.getBean(TEST_BEAN_NAME, ArchiveAdaptor.class))
+    when(applicationContext.getBean(TEST_BEAN_NAME, ArchiveAdaptor.class))
         .thenReturn(archiveAdaptor);
 
     final ArchiveAdaptor result = adaptor.getArchiveAdaptorFor(TEST_ARCHIVE_FILENAME);
@@ -114,9 +119,9 @@ class FileTypeAdaptorTest {
   void getArchiveAdaptorFor_filenameFileExtensionMatch() throws AdaptorException, IOException {
     archiveAdaptorEntry.setFormat(TEST_FORMAT + "z");
 
-    Mockito.when(detector.detect(Mockito.any(InputStream.class), Mockito.any(Metadata.class)))
+    when(detector.detect(any(TikaInputStream.class), any(Metadata.class), any(ParseContext.class)))
         .thenReturn(TEST_MEDIA_TYPE);
-    Mockito.when(applicationContext.getBean(TEST_BEAN_NAME, ArchiveAdaptor.class))
+    when(applicationContext.getBean(TEST_BEAN_NAME, ArchiveAdaptor.class))
         .thenReturn(archiveAdaptor);
 
     final ArchiveAdaptor result = adaptor.getArchiveAdaptorFor(TEST_ARCHIVE_FILENAME);
@@ -132,7 +137,7 @@ class FileTypeAdaptorTest {
 
   @Test
   void getArchiveAdaptorFor_archiveType() throws AdaptorException {
-    Mockito.when(applicationContext.getBean(TEST_BEAN_NAME, ArchiveAdaptor.class))
+    when(applicationContext.getBean(TEST_BEAN_NAME, ArchiveAdaptor.class))
         .thenReturn(archiveAdaptor);
 
     final ArchiveAdaptor result =
@@ -152,7 +157,7 @@ class FileTypeAdaptorTest {
 
   @Test
   void getArchiveEntryType() {
-    Mockito.when(contentAdaptorRegistry.getContentAdaptorForContentType(Mockito.anyString()))
+    when(contentAdaptorRegistry.getContentAdaptorForContentType(anyString()))
         .thenReturn(contentAdaptor);
 
     final ArchiveEntryType result = adaptor.getArchiveEntryType(TEST_MEDIA_TYPE.getSubtype());
@@ -160,59 +165,58 @@ class FileTypeAdaptorTest {
     assertNotNull(result);
     assertSame(TEST_ARCHIVE_ENTRY_TYPE, result);
 
-    Mockito.verify(contentAdaptorRegistry, Mockito.times(1))
-        .getContentAdaptorForContentType(TEST_MEDIA_TYPE.getSubtype());
+    verify(contentAdaptorRegistry).getContentAdaptorForContentType(TEST_MEDIA_TYPE.getSubtype());
   }
 
   @Test
   void getTypeFor_invalidInput() throws IOException {
-    Mockito.when(detector.detect(Mockito.any(), Mockito.any())).thenThrow(IOException.class);
+    when(detector.detect(any(), any(), any())).thenThrow(IOException.class);
 
     final String result = adaptor.getType(inputStream);
 
     assertNull(result);
 
-    Mockito.verify(detector, Mockito.times(1)).detect(inputStream, metadata);
+    verify(detector).detect(inputStream, metadata, new ParseContext());
   }
 
   @Test
   void getType() throws IOException {
-    Mockito.when(detector.detect(Mockito.any(), Mockito.any())).thenReturn(TEST_MEDIA_TYPE);
+    when(detector.detect(any(), any(), any())).thenReturn(TEST_MEDIA_TYPE);
 
     final String result = adaptor.getType(inputStream);
 
     assertNotNull(result);
     assertEquals(TEST_MEDIA_TYPE.getType(), result);
 
-    Mockito.verify(detector, Mockito.times(1)).detect(inputStream, metadata);
+    verify(detector).detect(inputStream, metadata, new ParseContext());
   }
 
   @Test
   void getMimeTypeFor_invalidInput() throws IOException {
-    Mockito.when(detector.detect(Mockito.any(), Mockito.any())).thenThrow(IOException.class);
+    when(detector.detect(any(), any(), any())).thenThrow(IOException.class);
 
     final String result = adaptor.getMimeTypeFor(inputStream);
 
     assertNull(result);
 
-    Mockito.verify(detector, Mockito.times(1)).detect(inputStream, metadata);
+    verify(detector).detect(inputStream, metadata, new ParseContext());
   }
 
   @Test
   void getMimeType() throws IOException {
-    Mockito.when(detector.detect(Mockito.any(), Mockito.any())).thenReturn(TEST_MEDIA_TYPE);
+    when(detector.detect(any(), any(), any())).thenReturn(TEST_MEDIA_TYPE);
 
     final String result = adaptor.getMimeTypeFor(inputStream);
 
     assertNotNull(result);
     assertEquals(TEST_MEDIA_TYPE.toString(), result);
 
-    Mockito.verify(detector, Mockito.times(1)).detect(inputStream, metadata);
+    verify(detector).detect(inputStream, metadata, new ParseContext());
   }
 
   @Test
   void getContentAdaptorFor_unknownMimeType() throws IOException, AdaptorException {
-    Mockito.when(detector.detect(Mockito.any(InputStream.class), Mockito.any(Metadata.class)))
+    when(detector.detect(any(TikaInputStream.class), any(Metadata.class), any(ParseContext.class)))
         .thenThrow(IOException.class);
 
     final ContentAdaptor result = adaptor.getContentAdaptorFor(TEST_ENTRY_FILENAME, TEST_CONTENT);
@@ -222,9 +226,10 @@ class FileTypeAdaptorTest {
 
   @Test
   void getContentAdaptorFor() throws IOException, AdaptorException {
-    Mockito.when(detector.detect(argumentCaptorInputStream.capture(), Mockito.any(Metadata.class)))
+    when(detector.detect(
+            argumentCaptorTikaInputStream.capture(), any(Metadata.class), any(ParseContext.class)))
         .thenReturn(TEST_MEDIA_TYPE);
-    Mockito.when(contentAdaptorRegistry.getContentAdaptor(Mockito.anyString(), Mockito.anyString()))
+    when(contentAdaptorRegistry.getContentAdaptor(anyString(), anyString()))
         .thenReturn(contentAdaptor);
 
     final ContentAdaptor result = adaptor.getContentAdaptorFor(TEST_ENTRY_FILENAME, TEST_CONTENT);
@@ -232,9 +237,8 @@ class FileTypeAdaptorTest {
     assertNotNull(result);
     assertSame(contentAdaptor, result);
 
-    Mockito.verify(detector, Mockito.times(1))
-        .detect(argumentCaptorInputStream.getValue(), metadata);
-    Mockito.verify(contentAdaptorRegistry, Mockito.times(1))
+    verify(detector).detect(argumentCaptorTikaInputStream.getValue(), metadata, new ParseContext());
+    verify(contentAdaptorRegistry)
         .getContentAdaptor(TEST_ENTRY_FILENAME, TEST_MEDIA_TYPE.getSubtype());
   }
 }
