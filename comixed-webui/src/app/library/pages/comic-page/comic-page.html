@@ -1,12 +1,12 @@
 <p-card>
   <ng-template #title>
     <div class="cx-width-100p cx-justify-center">
-      <p-breadcrumb [model]="comic() | comicDetailTrail" [home]="home" />
+      <p-breadcrumb [model]="comicDetail() | comicDetailTrail" [home]="home" />
 
       <div class="cx-spacer"></div>
 
       @if (isAdmin()) {
-        @if (comic().comicState === "DELETED") {
+        @if (comicDetail().comicState === "DELETED") {
           <p-button
             id="unmark-comic-for-removal"
             icon="pi pi-trash"
@@ -30,7 +30,7 @@
   </ng-template>
 
   <div id="comic-cover-container">
-    <app-comic-cover [comic]="comic()!"></app-comic-cover>
+    <app-comic-cover [comic]="comicDetail()!"></app-comic-cover>
   </div>
 
   <p-tabs lazy [value]="currentTab()" (valueChange)="onTabChanged($event)">
@@ -55,29 +55,30 @@
     <p-tabpanels>
       <p-tabpanel [value]="'publication'">
         <app-comic-publication-detail
-          [comic]="comic()"
+          [comic]="comicDetail()"
           [loading]="loading()"
           (updateComic)="onUpdateComic($event)"
         ></app-comic-publication-detail>
       </p-tabpanel>
       <p-tabpanel [value]="'story'">
         <app-comic-story-detail
-          [comic]="comic()"
-          [tags]="tags()"
+          [comic]="comicDetail()"
+          [tags]="comicTags()"
         ></app-comic-story-detail>
       </p-tabpanel>
       <p-tabpanel [value]="'pages'">
         <app-comic-pages-detail
           [style]="{ 'min-height': 0 }"
-          [comic]="comic()"
+          [comic]="comicDetail()"
           [loading]="loading()"
-          [pages]="pages()"
+          [pages]="comicPages()"
         ></app-comic-pages-detail>
       </p-tabpanel>
       <p-tabpanel [value]="'metadata'">
         <app-comic-metadata-detail
           id="comic-metadata-detail"
-          [comic]="comic()"
+          [comic]="comicDetail()"
+          [metadata]="comicMetadata()"
           (issueSelected)="onIssueSelected($event)"
         ></app-comic-metadata-detail>
       </p-tabpanel>

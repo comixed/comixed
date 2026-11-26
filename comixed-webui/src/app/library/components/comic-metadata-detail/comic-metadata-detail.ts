@@ -27,7 +27,10 @@ import {
 } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
-import { selectSingleComicScrapingEntries } from '@app/metadata/selectors/single-comic-scraping.selectors';
+import {
+  selectSingleComicScrapingBusy,
+  selectSingleComicScrapingEntries
+} from '@app/metadata/selectors/single-comic-scraping.selectors';
 import { Comic, NO_COMIC } from '@app/library/models/comic';
 import { Button } from '@openng/optimus-ui/button';
 import { SingleComicScrapingActions } from '@app/metadata/actions/single-comic-scraping.actions';
@@ -54,8 +57,15 @@ import { MetadataSource } from '@app/metadata/models/metadata-source';
 import { ConfirmationService } from '@openng/optimus-ui/api';
 import { Checkbox } from '@openng/optimus-ui/checkbox';
 import { ScrapeFilenameActions } from '@app/metadata/actions/scrape-filename.actions';
-import { selectScrapeFilenameData } from '@app/metadata/selectors/scrape-filename.selectors';
+import {
+  selectScrapeFilenameBusy,
+  selectScrapeFilenameData
+} from '@app/metadata/selectors/scrape-filename.selectors';
 import { ScrapingIssueSelectedEvent } from '@app/library/models/ux/scraping-issue-selected-event';
+import { ComicMetadataSource } from '@app/library/models/comic-metadata-source';
+import { InputGroup } from '@openng/optimus-ui/inputgroup';
+import { InputGroupAddon } from '@openng/optimus-ui/inputgroupaddon';
+import { Tooltip } from '@openng/optimus-ui/tooltip';
 
 @Component({
   imports: [
@@ -67,7 +77,10 @@ import { ScrapingIssueSelectedEvent } from '@app/library/models/ux/scraping-issu
     IftaLabel,
     ScrapingVolumeTable,
     Select,
-    Checkbox
+    Checkbox,
+    InputGroup,
+    InputGroupAddon,
+    Tooltip
   ],
   selector: 'app-comic-metadata-detail',
   styleUrl: './comic-metadata-detail.scss',
@@ -78,6 +91,7 @@ export class ComicMetadataDetail implements OnInit {
   readonly store = inject(Store);
   readonly confirmationService = inject(ConfirmationService);
   readonly translateService = inject(TranslateService);
+  readonly multiScrapingMode = signal(false);
   readonly metadataSource = this.store.selectSignal(
     selectMetadataSourceListSelected
   );
@@ -86,6 +100,12 @@ export class ComicMetadataDetail implements OnInit {
   );
   readonly scrapingVolumeEntries = this.store.selectSignal(
     selectSingleComicScrapingEntries
+  );
+  readonly scrapingVolumeBusy = this.store.selectSignal(
+    selectSingleComicScrapingBusy
+  );
+  readonly scrapingFilenameBusy = this.store.selectSignal(
+    selectScrapeFilenameBusy
   );
   readonly comicDetail = signal(NO_COMIC);
   readonly formBuilder = inject(FormBuilder);
@@ -107,6 +127,7 @@ export class ComicMetadataDetail implements OnInit {
       metadataSource: new FormControl<number | null>(null, {
         validators: [Validators.required]
       }),
+      referenceId: new FormControl<string | null>(null),
       publisher: new FormControl('', {
         nonNullable: true,
         validators: [Validators.required]
@@ -166,6 +187,15 @@ export class ComicMetadataDetail implements OnInit {
     this.doLoadForm();
   }
 
+  @Input() set metadata(metadata: ComicMetadataSource | null) {
+    if (metadata !== null) {
+      this.scrapingForm.controls['metadataSource'].setValue(
+        metadata?.metadataSource?.metadataSourceId
+      );
+      this.scrapingForm.controls['referenceId'].setValue(metadata?.referenceId);
+    }
+  }
+
   get issueNumber(): string {
     return this.scrapingForm.controls['issueNumber'].value;
   }
@@ -178,13 +208,33 @@ export class ComicMetadataDetail implements OnInit {
     return this.scrapingForm.controls['maximumRecords'].value;
   }
 
+  set skipCache(skipCache: boolean) {
+    this.scrapingForm.controls['skipCache'].setValue(skipCache);
+  }
+
   get skipCache(): boolean {
     return this.scrapingForm.controls['skipCache'].value;
+  }
+
+  @Input() set multiMode(mode: boolean) {
+    this.multiScrapingMode.set(mode);
   }
 
   onSelectMetadataSource(source: MetadataSource | null) {
     this.store.dispatch(
       MetadataSourceListActions.setSelected({ selected: source })
+    );
+  }
+
+  onScrapeByReferenceId(referenceId: string) {
+    this.logger.info('Initiating scraping a comic by reference id');
+    this.store.dispatch(
+      SingleComicScrapingActions.scrapeComic({
+        metadataSource: this.metadataSource()!,
+        issueId: referenceId,
+        comic: this.comicDetail(),
+        skipCache: this.skipCache
+      })
     );
   }
 
