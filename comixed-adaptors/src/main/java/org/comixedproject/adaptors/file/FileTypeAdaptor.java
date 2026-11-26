@@ -27,8 +27,10 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tika.Tika;
+import org.apache.tika.io.TikaInputStream;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.mime.MediaType;
+import org.apache.tika.parser.ParseContext;
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.archive.ArchiveAdaptor;
 import org.comixedproject.adaptors.archive.model.ArchiveEntryType;
@@ -173,7 +175,10 @@ public class FileTypeAdaptor {
     MediaType result = null;
 
     input.mark(Integer.MAX_VALUE);
-    result = this.tika.getDetector().detect(input, this.metadata);
+    result =
+        this.tika
+            .getDetector()
+            .detect(TikaInputStream.get(input), this.metadata, new ParseContext());
     input.reset();
 
     log.trace("result={}", result);
