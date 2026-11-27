@@ -258,7 +258,7 @@ jobs:
           pnpm pkg set "version=${VERSION}"
 
       - name: Create version bump pull request
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: automation/version-bump-${{ needs.release.outputs.version }}
