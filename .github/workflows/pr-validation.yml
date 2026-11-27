@@ -61,7 +61,7 @@ jobs:
           cache: maven
 
       - name: Cache pnpm store
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: |
             ~/.local/share/pnpm/store
