@@ -1,6 +1,6 @@
 {
   "name": "comixed",
-  "version": "4.1-SNAPSHOT",
+  "version": "5.0-SNAPSHOT",
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "format": "node_modules/.bin/prettier --write '**/*.{ts,json,html,scss}'",
