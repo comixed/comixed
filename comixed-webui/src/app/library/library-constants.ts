@@ -29,6 +29,7 @@ export const LOAD_SELECTED_COMICS_URL = `${API_ROOT_URL}/comics/selected`;
 export const LOAD_COMICS_BY_FILTER_URL = `${API_ROOT_URL}/comics/filtered`;
 export const LOAD_UNREAD_COMICS_URL = `${API_ROOT_URL}/comics/unread`;
 export const LOAD_READ_COMICS_URL = `${API_ROOT_URL}/comics/read`;
+export const LOAD_COMICS_BY_TAG_TYPE_AND_VALUE_URL = `${API_ROOT_URL}/comics/collections/\${tagType}/\${tagValue}`;
 
 export const LOAD_COMIC_URL = `${API_ROOT_URL}/comics/\${comicId}`;
 export const GET_COMIC_COVER_URL = `${API_ROOT_URL}/comics/\${id}/cover/content`;

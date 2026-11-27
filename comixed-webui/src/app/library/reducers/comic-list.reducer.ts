@@ -50,6 +50,10 @@ export const comicListReducer = createReducer(
   initialComicListState,
   on(ComicListActions.loadByFilters, state => ({ ...state, busy: true })),
   on(ComicListActions.loadByReadState, state => ({ ...state, busy: true })),
+  on(ComicListActions.loadByTagTypeAndValue, state => ({
+    ...state,
+    busy: true
+  })),
   on(ComicListActions.loadSuccess, (state, action) => {
     return comicListAdapter.setAll(action.comicList, {
       ...state,

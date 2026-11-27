@@ -23,6 +23,7 @@ import {
   BATCH_SCRAPE_SELECTED_COMICS_URL,
   COMIC_LIST_UPDATE_TOPIC,
   LOAD_COMICS_BY_FILTER_URL,
+  LOAD_COMICS_BY_TAG_TYPE_AND_VALUE_URL,
   LOAD_LIBRARY_STATE_URL,
   LOAD_READ_COMICS_URL,
   LOAD_SELECTED_COMICS_URL,
@@ -46,6 +47,7 @@ import { Store } from '@ngrx/store';
 import { ComicListActions } from '@app/library/actions/comic-list.actions';
 import { selectMessagingStarted } from '@app/messaging/selectors/messaging.selectors';
 import { RemoteLibraryActions } from '@app/library/actions/remote-library.actions';
+import { ComicTagType } from '@app/library/models/comic-tag-type';
 
 @Service()
 export class LibraryService {
@@ -174,6 +176,29 @@ export class LibraryService {
         } as LoadSelectedComicsRequest
       );
     }
+  }
+
+  loadByTagTypeAndValue(args: {
+    tagType: ComicTagType;
+    tagValue: string;
+    pageSize: number;
+    pageIndex: number;
+    sortBy: string;
+    sortDirection: string;
+  }): Observable<LoadComicListResponse> {
+    this.logger.debug('Loading comics by tag type and value:', args);
+    return this.http.post<LoadComicListResponse>(
+      interpolate(LOAD_COMICS_BY_TAG_TYPE_AND_VALUE_URL, {
+        tagType: args.tagType,
+        tagValue: args.tagValue
+      }),
+      {
+        pageSize: args.pageSize,
+        pageIndex: args.pageIndex,
+        sortBy: args.sortBy,
+        sortDirection: args.sortDirection
+      } as LoadSelectedComicsRequest
+    );
   }
 
   batchScrapeComics(): Observable<void> {

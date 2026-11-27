@@ -26,6 +26,7 @@ import {
   ComicListState,
   initialComicListState
 } from '@app/library/reducers/comic-list.reducer';
+import { ComicTagType } from '@app/library/models/comic-tag-type';
 
 describe('ComicList Reducer', () => {
   const TEST_COMIC = COMIC_1;
@@ -35,6 +36,8 @@ describe('ComicList Reducer', () => {
   const TEST_FILTER_COUNT = 129;
   const TEST_COVER_MONTH_LIST = [1, 3, 4, 7, 9, 12];
   const TEST_COVER_YEAR_LIST = [1965, 1971, 1986, 1996, 1998, 2006];
+  const TEST_TAG_TYPE = ComicTagType.LOCATION;
+  const TEST_TAG_VALUE = 'New York City';
 
   let state: ComicListState;
 
@@ -111,6 +114,26 @@ describe('ComicList Reducer', () => {
         { ...state, busy: false },
         ComicListActions.loadByReadState({
           unreadOnly: true,
+          pageSize: 10,
+          pageIndex: 5,
+          sortBy: '',
+          sortDirection: ''
+        })
+      );
+    });
+
+    it('should set the busy flag', () => {
+      expect(state.busy).toBeTruthy();
+    });
+  });
+
+  describe('loading comic list by tag type and value', () => {
+    beforeEach(() => {
+      state = comicListReducer(
+        { ...state, busy: false },
+        ComicListActions.loadByTagTypeAndValue({
+          tagType: TEST_TAG_TYPE,
+          tagValue: TEST_TAG_VALUE,
           pageSize: 10,
           pageIndex: 5,
           sortBy: '',

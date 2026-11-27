@@ -27,7 +27,11 @@
 
     <ng-template #body let-tag>
       <tr>
-        <td>{{ tag.tagValue }}</td>
+        <td>
+          <a [routerLink]="['/library', tagRoute(), tag.tagValue]">
+            {{ tag.tagValue }}
+          </a>
+        </td>
         <td>{{ tag.comicCount }}</td>
       </tr>
     </ng-template>

@@ -21,6 +21,7 @@ import { Comic } from '@app/library/models/comic';
 import { ArchiveType } from '@app/library/models/archive-type';
 import { ComicType } from '@app/library/models/comic-type';
 import { ComicState } from '@app/library/models/comic-state';
+import { ComicTagType } from '@app/library/models/comic-tag-type';
 
 export const ComicListActions = createActionGroup({
   source: 'Comic List',
@@ -46,6 +47,14 @@ export const ComicListActions = createActionGroup({
     }>(),
     LoadByReadState: props<{
       unreadOnly: boolean;
+      pageSize: number;
+      pageIndex: number;
+      sortBy: string;
+      sortDirection: string;
+    }>(),
+    LoadByTagTypeAndValue: props<{
+      tagType: ComicTagType;
+      tagValue: string;
       pageSize: number;
       pageIndex: number;
       sortBy: string;

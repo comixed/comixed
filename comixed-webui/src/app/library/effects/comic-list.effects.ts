@@ -134,4 +134,52 @@ export class ComicListEffects {
       })
     );
   });
+
+  loadByTagTypeAndValue$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(ComicListActions.loadByTagTypeAndValue),
+      tap(action =>
+        this.logger.debug('Loading comics by tag type and value:', action)
+      ),
+      switchMap(action =>
+        this.libraryService
+          .loadByTagTypeAndValue({
+            tagType: action.tagType,
+            tagValue: action.tagValue,
+            pageSize: action.pageSize,
+            pageIndex: action.pageIndex,
+            sortBy: action.sortBy,
+            sortDirection: action.sortDirection
+          })
+          .pipe(
+            tap(response => this.logger.debug('Response received:', response)),
+            map(response =>
+              ComicListActions.loadSuccess({
+                comicList: response.comics,
+                totalCount: response.totalCount,
+                filterCount: response.filteredCount,
+                coverMonthList: response.coverMonths,
+                coverYearList: response.coverYears
+              })
+            ),
+            catchError(error => {
+              this.logger.error('Service failure:', error);
+              this.alertService.error(
+                this.translateService.instant(
+                  'comic-list-effects.load-by-read-state.service-failure'
+                )
+              );
+              return of(ComicListActions.loadFailure());
+            })
+          )
+      ),
+      catchError(error => {
+        this.logger.error('General failure:', error);
+        this.alertService.error(
+          this.translateService.instant('app.effects.general-failure')
+        );
+        return of(ComicListActions.loadFailure());
+      })
+    );
+  });
 }
