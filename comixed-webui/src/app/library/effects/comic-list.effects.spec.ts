@@ -34,6 +34,7 @@ import {
   initialMessagingState,
   MESSAGING_FEATURE_KEY
 } from '@app/messaging/reducers/messaging.reducer';
+import { ComicTagType } from '@app/library/models/comic-tag-type';
 
 describe('ComicListEffects', () => {
   const TEST_COMIC = COMIC_1;
@@ -46,6 +47,8 @@ describe('ComicListEffects', () => {
   const TEST_SIZE = 50;
   const TEST_SORT_BY = 'publisher';
   const TEST_SORT_DIRECTION = 'desc';
+  const TEST_TAG_TYPE = ComicTagType.STORY;
+  const TEST_TAG_VALUE = 'Age of Ultron';
   const initialState = { [MESSAGING_FEATURE_KEY]: initialMessagingState };
 
   let actions$: Observable<unknown>;
@@ -341,6 +344,113 @@ describe('ComicListEffects', () => {
       );
       expect(loadSpy).toHaveBeenCalledWith({
         unreadOnly: true,
+        pageIndex: TEST_INDEX,
+        pageSize: TEST_SIZE,
+        sortBy: TEST_SORT_BY,
+        sortDirection: TEST_SORT_DIRECTION
+      });
+      expect(alertSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('loading a list of comics by tag type and value', () => {
+    it('should dispatch an action on success', async () => {
+      const serviceResponse = {
+        comics: TEST_COMIC_LIST,
+        coverMonths: TEST_COVER_MONTH_LIST,
+        coverYears: TEST_COVER_YEAR_LIST,
+        totalCount: TEST_TOTAL_COUNT,
+        filteredCount: TEST_FILTER_COUNT
+      } as LoadComicListResponse;
+      const action = ComicListActions.loadByTagTypeAndValue({
+        tagType: TEST_TAG_TYPE,
+        tagValue: TEST_TAG_VALUE,
+        pageIndex: TEST_INDEX,
+        pageSize: TEST_SIZE,
+        sortBy: TEST_SORT_BY,
+        sortDirection: TEST_SORT_DIRECTION
+      });
+      const outcome = ComicListActions.loadSuccess({
+        comicList: TEST_COMIC_LIST,
+        coverMonthList: TEST_COVER_MONTH_LIST,
+        coverYearList: TEST_COVER_YEAR_LIST,
+        totalCount: TEST_TOTAL_COUNT,
+        filterCount: TEST_FILTER_COUNT
+      });
+
+      const loadSpy = vi
+        .spyOn(libraryService, 'loadByTagTypeAndValue')
+        .mockReturnValue(of(serviceResponse));
+
+      actions$ = of(action);
+      await expect(
+        firstValueFrom(effects.loadByTagTypeAndValue$)
+      ).resolves.toEqual(outcome);
+      expect(loadSpy).toHaveBeenCalledWith({
+        tagType: TEST_TAG_TYPE,
+        tagValue: TEST_TAG_VALUE,
+        pageIndex: TEST_INDEX,
+        pageSize: TEST_SIZE,
+        sortBy: TEST_SORT_BY,
+        sortDirection: TEST_SORT_DIRECTION
+      });
+    });
+
+    it('should dispatch an action on service failure', async () => {
+      const serviceResponse = new Error('Service failure');
+      const action = ComicListActions.loadByTagTypeAndValue({
+        tagType: TEST_TAG_TYPE,
+        tagValue: TEST_TAG_VALUE,
+        pageIndex: TEST_INDEX,
+        pageSize: TEST_SIZE,
+        sortBy: TEST_SORT_BY,
+        sortDirection: TEST_SORT_DIRECTION
+      });
+      const outcome = ComicListActions.loadFailure();
+
+      const loadSpy = vi
+        .spyOn(libraryService, 'loadByTagTypeAndValue')
+        .mockReturnValue(throwError(() => serviceResponse));
+      const alertSpy = vi.spyOn(alertService, 'error');
+
+      actions$ = of(action);
+      await expect(
+        firstValueFrom(effects.loadByTagTypeAndValue$)
+      ).resolves.toEqual(outcome);
+      expect(loadSpy).toHaveBeenCalledWith({
+        tagType: TEST_TAG_TYPE,
+        tagValue: TEST_TAG_VALUE,
+        pageIndex: TEST_INDEX,
+        pageSize: TEST_SIZE,
+        sortBy: TEST_SORT_BY,
+        sortDirection: TEST_SORT_DIRECTION
+      });
+      expect(alertSpy).toHaveBeenCalled();
+    });
+
+    it('should dispatch an action on general failure', async () => {
+      const action = ComicListActions.loadByTagTypeAndValue({
+        tagType: TEST_TAG_TYPE,
+        tagValue: TEST_TAG_VALUE,
+        pageIndex: TEST_INDEX,
+        pageSize: TEST_SIZE,
+        sortBy: TEST_SORT_BY,
+        sortDirection: TEST_SORT_DIRECTION
+      });
+      const outcome = ComicListActions.loadFailure();
+
+      const loadSpy = vi
+        .spyOn(libraryService, 'loadByTagTypeAndValue')
+        .mockThrow(new Error('Expected'));
+      const alertSpy = vi.spyOn(alertService, 'error');
+
+      actions$ = of(action);
+      await expect(
+        firstValueFrom(effects.loadByTagTypeAndValue$)
+      ).resolves.toEqual(outcome);
+      expect(loadSpy).toHaveBeenCalledWith({
+        tagType: TEST_TAG_TYPE,
+        tagValue: TEST_TAG_VALUE,
         pageIndex: TEST_INDEX,
         pageSize: TEST_SIZE,
         sortBy: TEST_SORT_BY,

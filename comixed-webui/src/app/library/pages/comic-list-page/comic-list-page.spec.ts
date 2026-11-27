@@ -31,6 +31,7 @@ import { beforeEach, Mock } from 'vitest';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { SelectedComicListActions } from '@app/library/actions/selected-comic-list.actions';
 import { ComicState } from '@app/library/models/comic-state';
+import { FileSaverService } from 'ngx-filesaver';
 
 describe('ComicListPage', () => {
   const initialState = { [COMIC_LIST_FEATURE_KEY]: initialComicListState };
@@ -63,7 +64,8 @@ describe('ComicListPage', () => {
         provideLogger({ minLevel: LoggerLevel.OFF }),
         provideTranslateService(),
         provideMockStore({ initialState }),
-        MessageService
+        MessageService,
+        FileSaverService
       ]
     }).compileComponents();
 
@@ -249,6 +251,11 @@ describe('ComicListPage', () => {
     it('should return the read page type', () => {
       component.readComics.set(true);
       expect(component.getPageType()).toStrictEqual('READ');
+    });
+
+    it('should return the tagged page type', () => {
+      component.taggedComics.set(true);
+      expect(component.getPageType()).toStrictEqual('TAGGED');
     });
 
     it('should return the changed page type', () => {

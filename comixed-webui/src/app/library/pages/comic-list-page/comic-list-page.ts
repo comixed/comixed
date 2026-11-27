@@ -47,6 +47,11 @@ import { FormsModule } from '@angular/forms';
 import { Tooltip } from '@openng/optimus-ui/tooltip';
 import { SelectedComicListActions } from '@app/library/actions/selected-comic-list.actions';
 import { ComicState } from '@app/library/models/comic-state';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import {
+  ComicTagType,
+  comicTagTypeFromString
+} from '@app/library/models/comic-tag-type';
 
 @Component({
   imports: [
@@ -94,10 +99,14 @@ export class ComicListPage {
   readonly changedComics = signal(false);
   readonly unscrapedComics = signal(false);
   readonly duplicateComics = signal(false);
+  readonly taggedComics = signal(false);
   readonly deletedComics = signal(false);
 
+  readonly tagType = signal<ComicTagType | null>(null);
+  readonly tagValue = signal('');
+
   constructor() {
-    this.activatedRoute.data.subscribe({
+    this.activatedRoute.data.pipe(takeUntilDestroyed()).subscribe({
       next: data => {
         this.logger.debug('Activated route data updated:', data);
         this.selectedComics.set(data['selectedComics'] === true);
@@ -105,10 +114,19 @@ export class ComicListPage {
         this.unscrapedComics.set(data['unscrapedComics'] === true);
         this.changedComics.set(data['changedComics'] === true);
         this.duplicateComics.set(data['duplicateComics'] === true);
+        this.taggedComics.set(data['taggedComics'] === true);
         this.deletedComics.set(data['deletedComics'] === true);
       }
     });
-    this.activatedRoute.queryParams.subscribe({
+    this.activatedRoute.paramMap.pipe(takeUntilDestroyed()).subscribe({
+      next: params => {
+        if (params.has('tagType')) {
+          this.tagType.set(comicTagTypeFromString(params.get('tagType') || ''));
+          this.tagValue.set(params.get('tagValue') || '');
+        }
+      }
+    });
+    this.activatedRoute.queryParams.pipe(takeUntilDestroyed()).subscribe({
       next: params => {
         const page = +params[QUERY_PARAM_PAGE_INDEX] || 0;
         const size = +params[QUERY_PARAM_PAGE_SIZE] || 10;
@@ -121,6 +139,17 @@ export class ComicListPage {
           this.store.dispatch(
             ComicListActions.loadByReadState({
               unreadOnly: this.readFlag() === false,
+              pageIndex: page,
+              pageSize: size,
+              sortBy: '',
+              sortDirection: ''
+            })
+          );
+        } else if (this.taggedComics()) {
+          this.store.dispatch(
+            ComicListActions.loadByTagTypeAndValue({
+              tagType: this.tagType()!,
+              tagValue: this.tagValue(),
               pageIndex: page,
               pageSize: size,
               sortBy: '',
@@ -152,7 +181,7 @@ export class ComicListPage {
         }
       }
     });
-    this.translateService.onLangChange.subscribe({
+    this.translateService.onLangChange.pipe(takeUntilDestroyed()).subscribe({
       next: () => this.doLoadTranslations()
     });
     this.doLoadTranslations();
@@ -181,6 +210,9 @@ export class ComicListPage {
     }
     if (this.readComics()) {
       return 'READ';
+    }
+    if (this.taggedComics()) {
+      return 'TAGGED';
     }
     if (this.changedComics()) {
       return 'CHANGED';
@@ -233,11 +265,26 @@ export class ComicListPage {
   }
 
   private doLoadTranslations() {
-    const pageTitle = this.translateService.instant(
-      'comic-list-page.page-title',
-      { pageType: this.getPageType() }
-    );
+    const pageTitle = this.taggedComics()
+      ? this.translateService.instant('comic-list-page.page-title-with-tag', {
+          tagType: this.tagType(),
+          tagValue: this.tagValue()
+        })
+      : this.translateService.instant('comic-list-page.page-title', {
+          pageType: this.getPageType()
+        });
     this.titleService.setTitle(pageTitle);
-    this.trail.set([{ label: pageTitle }]);
+    this.trail.set(
+      this.taggedComics()
+        ? [
+            {
+              label: this.translateService.instant(
+                `comic-list-page.trail.${this.tagType()}`
+              )
+            },
+            { label: this.tagValue() }
+          ]
+        : [{ label: pageTitle }]
+    );
   }
 }

@@ -29,6 +29,7 @@ import { COMIC_1, REMOTE_LIBRARY } from '@app/library/library-fixtures';
 import {
   BATCH_SCRAPE_SELECTED_COMICS_URL,
   LOAD_COMICS_BY_FILTER_URL,
+  LOAD_COMICS_BY_TAG_TYPE_AND_VALUE_URL,
   LOAD_LIBRARY_STATE_URL,
   LOAD_READ_COMICS_URL,
   LOAD_SELECTED_COMICS_URL,
@@ -52,6 +53,8 @@ import { LoadComicsByFilterRequest } from '@app/library/models/net/load-comics-b
 import { LoadSelectedComicsRequest } from '@app/library/models/net/load-selected-comics-request';
 import { Mock } from 'vitest';
 import { of } from 'rxjs';
+import { LoadComicsByTagTypeAndValueRequest } from '@app/library/models/net/load-comics-by-tag-type-and-value-request';
+import { ComicTagType } from '@app/library/models/comic-tag-type';
 
 describe('LibraryService', () => {
   const initialState = {
@@ -75,6 +78,8 @@ describe('LibraryService', () => {
   const TEST_PAGE_COUNT = 22;
   const TEST_SORT_BY = 'series';
   const TEST_SORT_DIRECTION = 'asc';
+  const TEST_TAG_TYPE = ComicTagType.CHARACTER;
+  const TEST_TAG_VALUE = 'Tag.value';
 
   let service: LibraryService;
   let httpController: HttpTestingController;
@@ -270,6 +275,39 @@ describe('LibraryService', () => {
       sortBy: TEST_SORT_BY,
       sortDirection: TEST_SORT_DIRECTION
     } as LoadSelectedComicsRequest);
+    req.flush(serverResponse);
+    httpController.verify();
+  });
+
+  it('should load comics by tag type and value', () => {
+    const serverResponse = TEST_COMIC_LIST;
+
+    service
+      .loadByTagTypeAndValue({
+        tagType: TEST_TAG_TYPE,
+        tagValue: TEST_TAG_VALUE,
+        pageSize: TEST_PAGE_SIZE,
+        pageIndex: TEST_PAGE_INDEX,
+        sortBy: TEST_SORT_BY,
+        sortDirection: TEST_SORT_DIRECTION
+      })
+      .subscribe({
+        next: response => expect(response).toStrictEqual(serverResponse)
+      });
+
+    const req = httpController.expectOne(
+      interpolate(LOAD_COMICS_BY_TAG_TYPE_AND_VALUE_URL, {
+        tagType: TEST_TAG_TYPE,
+        tagValue: TEST_TAG_VALUE
+      })
+    );
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      pageSize: TEST_PAGE_SIZE,
+      pageIndex: TEST_PAGE_INDEX,
+      sortBy: TEST_SORT_BY,
+      sortDirection: TEST_SORT_DIRECTION
+    } as LoadComicsByTagTypeAndValueRequest);
     req.flush(serverResponse);
     httpController.verify();
   });

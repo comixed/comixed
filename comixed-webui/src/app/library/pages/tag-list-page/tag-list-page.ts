@@ -20,7 +20,7 @@ import { Component, inject, signal } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/layout/services/title-service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import {
   ComicTagType,
   comicTagTypeFromString
@@ -43,7 +43,7 @@ import {
 import { QueryParameterService } from '@app/layout/services/query-parameter.service';
 
 @Component({
-  imports: [TranslatePipe, Card, TableModule, Breadcrumb],
+  imports: [TranslatePipe, Card, TableModule, Breadcrumb, RouterLink],
   selector: 'app-tag-list-page',
   styleUrl: './tag-list-page.scss',
   templateUrl: './tag-list-page.html'
@@ -61,6 +61,7 @@ export class TagListPage {
   readonly router = inject(Router);
   readonly trail = signal<MenuItem[]>([]);
   readonly tagType = signal(ComicTagType.STORY);
+  readonly tagRoute = signal('stories');
   readonly tagListFirst = signal(0);
   readonly tagListRows = signal(10);
 
@@ -72,6 +73,7 @@ export class TagListPage {
       next: data => {
         try {
           this.tagType.set(comicTagTypeFromString(data['tagType']));
+          this.tagRoute.set(data['tagType']);
         } catch (error) {
           this.logger.error('Could not determine tag type', error);
           this.router.navigateByUrl('/');

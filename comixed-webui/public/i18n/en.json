@@ -105,8 +105,15 @@
       "unread-only": "Unread"
     },
     "page-title": "{pageType, select, SELECTED{Selected} READ{Read} UNSCRAPED{Unscraped} DUPLICATE{Duplicate} DELETED{Deleted} other{All} } Comics",
+    "page-title-with-tag": "{tagType}: {tagValue}",
     "tooltip": {
       "toggle-unread": "Toggle showing read/unread comics..."
+    },
+    "trail": {
+      "CHARACTER": "Characters",
+      "LOCATION": "Locations",
+      "STORY": "Stories",
+      "TEAM": "Teams"
     }
   },
   "comic-metadata-detail": {

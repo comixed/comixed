@@ -84,7 +84,8 @@ const routes: Routes = [
   {
     path: 'library/:tagType/:tagValue',
     component: ComicListPage,
-    canActivate: [readerGuard]
+    canActivate: [readerGuard],
+    data: { taggedComics: true }
   }
 ];
 
